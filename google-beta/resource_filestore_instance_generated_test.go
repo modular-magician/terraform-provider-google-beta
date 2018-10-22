@@ -22,7 +22,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccFilestoreInstance_filestoreInstanceBasicExample(t *testing.T) {
+func TestAccFilestoreInstance_FilestoreInstanceBasicExample(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -31,7 +31,7 @@ func TestAccFilestoreInstance_filestoreInstanceBasicExample(t *testing.T) {
 		CheckDestroy: testAccCheckFilestoreInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFilestoreInstance_filestoreInstanceBasicExample(acctest.RandString(10)),
+				Config: testAccFilestoreInstance_FilestoreInstanceBasicExample(acctest.RandString(10)),
 			},
 			{
 				ResourceName:            "google_filestore_instance.instance",
@@ -43,7 +43,7 @@ func TestAccFilestoreInstance_filestoreInstanceBasicExample(t *testing.T) {
 	})
 }
 
-func testAccFilestoreInstance_filestoreInstanceBasicExample(val string) string {
+func testAccFilestoreInstance_FilestoreInstanceBasicExample(val string) string {
 	return fmt.Sprintf(`
 resource "google_filestore_instance" "instance" {
   name = "test-instance-%s"
