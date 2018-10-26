@@ -172,8 +172,8 @@ resource "google_compute_forwarding_rule" "foobar" {
   ip_protocol = "UDP"
   name        = "%s"
   port_range  = "80-81"
-  target      = "${google_compute_target_pool.foo-tp.self_link}"
-  labels      = {"foo" = "bar"}
+	target      = "${google_compute_target_pool.foo-tp.self_link}"
+	labels      = {"foo" = "bar"}
 }
 `, poolName, ruleName)
 }
@@ -195,8 +195,8 @@ resource "google_compute_forwarding_rule" "foobar" {
   ip_protocol = "UDP"
   name        = "%s"
   port_range  = "80-81"
-  target      = "${google_compute_target_pool.bar-tp.self_link}"
-  labels      = {"baz" = "qux"}
+	target      = "${google_compute_target_pool.bar-tp.self_link}"
+	labels      = {"baz" = "qux"}
 }
 `, poolName, poolName, ruleName)
 }
