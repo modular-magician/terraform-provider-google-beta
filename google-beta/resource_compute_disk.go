@@ -252,19 +252,9 @@ func resourceComputeDisk() *schema.Resource {
 			customdiff.ForceNewIfChange("size", isDiskShrinkage)),
 
 		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-			},
 			"disk_encryption_key": {
 				Type:     schema.TypeList,
-				Optional: true,
+				Required: true,
 				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
@@ -286,6 +276,80 @@ func resourceComputeDisk() *schema.Resource {
 						},
 					},
 				},
+			},
+			"name": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+			"snapshot": {
+				Type:             schema.TypeString,
+				Required:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
+			},
+			"source_image_encryption_key": {
+				Type:     schema.TypeList,
+				Required: true,
+				ForceNew: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"kms_key_self_link": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							ForceNew:         true,
+							DiffSuppressFunc: compareSelfLinkRelativePaths,
+						},
+						"raw_key": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+						},
+						"sha256": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
+			"source_image_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"source_snapshot_encryption_key": {
+				Type:     schema.TypeList,
+				Required: true,
+				ForceNew: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"kms_key_self_link": {
+							Type:             schema.TypeString,
+							Optional:         true,
+							ForceNew:         true,
+							DiffSuppressFunc: compareSelfLinkRelativePaths,
+						},
+						"raw_key": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+						},
+						"sha256": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
+			"source_snapshot_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"description": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"image": {
 				Type:             schema.TypeString,
@@ -302,62 +366,6 @@ func resourceComputeDisk() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 				Optional: true,
-			},
-			"snapshot": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				ForceNew:         true,
-				DiffSuppressFunc: compareSelfLinkOrResourceName,
-			},
-			"source_image_encryption_key": {
-				Type:     schema.TypeList,
-				Optional: true,
-				ForceNew: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"kms_key_self_link": {
-							Type:             schema.TypeString,
-							Optional:         true,
-							ForceNew:         true,
-							DiffSuppressFunc: compareSelfLinkRelativePaths,
-						},
-						"raw_key": {
-							Type:     schema.TypeString,
-							Optional: true,
-							ForceNew: true,
-						},
-						"sha256": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-					},
-				},
-			},
-			"source_snapshot_encryption_key": {
-				Type:     schema.TypeList,
-				Optional: true,
-				ForceNew: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"kms_key_self_link": {
-							Type:             schema.TypeString,
-							Optional:         true,
-							ForceNew:         true,
-							DiffSuppressFunc: compareSelfLinkRelativePaths,
-						},
-						"raw_key": {
-							Type:     schema.TypeString,
-							Optional: true,
-							ForceNew: true,
-						},
-						"sha256": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-					},
-				},
 			},
 			"type": {
 				Type:             schema.TypeString,
@@ -391,11 +399,11 @@ func resourceComputeDisk() *schema.Resource {
 			},
 			"source_image_id": {
 				Type:     schema.TypeString,
-				Computed: true,
+				Required: true,
 			},
 			"source_snapshot_id": {
 				Type:     schema.TypeString,
-				Computed: true,
+				Required: true,
 			},
 			"users": {
 				Type:     schema.TypeList,

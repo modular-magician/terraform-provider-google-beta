@@ -84,57 +84,21 @@ The following arguments are supported:
   characters must be a dash, lowercase letter, or digit, except the last
   character, which cannot be a dash.
 
-
-- - -
-
-
-* `description` -
-  (Optional)
-  An optional description of this resource. Provide this property when
-  you create the resource.
-
-* `labels` -
-  (Optional)
-  Labels to apply to this disk.  A list of key->value pairs.
-
-* `size` -
-  (Optional)
-  Size of the persistent disk, specified in GB. You can specify this
-  field when creating a persistent disk using the sourceImage or
-  sourceSnapshot parameter, or specify it alone to create an empty
-  persistent disk.
-  If you specify this field along with sourceImage or sourceSnapshot,
-  the value of sizeGb must not be less than the size of the sourceImage
-  or the size of the snapshot.
-
-* `type` -
-  (Optional)
-  URL of the disk type resource describing which disk type to use to
-  create the disk. Provide this when creating the disk.
-
-* `image` -
-  (Optional)
-  The image from which to initialize this disk. This can be
-  one of: the image's `self_link`, `projects/{project}/global/images/{image}`,
-  `projects/{project}/global/images/family/{family}`, `global/images/{image}`,
-  `global/images/family/{family}`, `family/{family}`, `{project}/{family}`,
-  `{project}/{image}`, `{family}`, or `{image}`. If referred by family, the
-  images names must include the family name. If they don't, use the
-  [google_compute_image data source](/docs/providers/google/d/datasource_compute_image.html).
-  For instance, the image `centos-6-v20180104` includes its family name `centos-6`.
-  These images can be referred by family name here.
-
-* `zone` -
-  (Optional)
-  A reference to the zone where the disk resides.
-
 * `source_image_encryption_key` -
-  (Optional)
+  (Required)
   The customer-supplied encryption key of the source image. Required if
   the source image is protected by a customer-supplied encryption key.  Structure is documented below.
 
+* `source_image_id` -
+  (Required)
+  The ID value of the image used to create this disk. This value
+  identifies the exact image that was used to create this persistent
+  disk. For example, if you created the persistent disk from an image
+  that was later deleted and recreated under the same name, the source
+  image ID would identify the exact version of the image that was used.
+
 * `disk_encryption_key` -
-  (Optional)
+  (Required)
   Encrypts the disk using a customer-supplied encryption key.
   After you encrypt a disk with a customer-supplied key, you must
   provide the same key if you use the disk later (e.g. to create a disk
@@ -146,7 +110,7 @@ The following arguments are supported:
   you do not need to provide a key to use the disk later.  Structure is documented below.
 
 * `snapshot` -
-  (Optional)
+  (Required)
   The source snapshot used to create this disk. You can provide this as
   a partial or full URL to the resource. For example, the following are
   valid values:
@@ -156,12 +120,19 @@ The following arguments are supported:
   * `snapshot`
 
 * `source_snapshot_encryption_key` -
-  (Optional)
+  (Required)
   The customer-supplied encryption key of the source snapshot. Required
   if the source snapshot is protected by a customer-supplied encryption
   key.  Structure is documented below.
-* `project` - (Optional) The ID of the project in which the resource belongs.
-    If it is not provided, the provider project is used.
+
+* `source_snapshot_id` -
+  (Required)
+  The unique ID of the snapshot used to create this disk. This value
+  identifies the exact snapshot that was used to create this persistent
+  disk. For example, if you created the persistent disk from a snapshot
+  that was later deleted and recreated under the same name, the source
+  snapshot ID would identify the exact version of the snapshot that was
+  used.
 
 
 The `source_image_encryption_key` block supports:
@@ -218,6 +189,52 @@ The `source_snapshot_encryption_key` block supports:
   The RFC 4648 base64 encoded SHA-256 hash of the customer-supplied
   encryption key that protects this resource.
 
+- - -
+
+
+* `description` -
+  (Optional)
+  An optional description of this resource. Provide this property when
+  you create the resource.
+
+* `labels` -
+  (Optional)
+  Labels to apply to this disk.  A list of key->value pairs.
+
+* `size` -
+  (Optional)
+  Size of the persistent disk, specified in GB. You can specify this
+  field when creating a persistent disk using the sourceImage or
+  sourceSnapshot parameter, or specify it alone to create an empty
+  persistent disk.
+  If you specify this field along with sourceImage or sourceSnapshot,
+  the value of sizeGb must not be less than the size of the sourceImage
+  or the size of the snapshot.
+
+* `type` -
+  (Optional)
+  URL of the disk type resource describing which disk type to use to
+  create the disk. Provide this when creating the disk.
+
+* `image` -
+  (Optional)
+  The image from which to initialize this disk. This can be
+  one of: the image's `self_link`, `projects/{project}/global/images/{image}`,
+  `projects/{project}/global/images/family/{family}`, `global/images/{image}`,
+  `global/images/family/{family}`, `family/{family}`, `{project}/{family}`,
+  `{project}/{image}`, `{family}`, or `{image}`. If referred by family, the
+  images names must include the family name. If they don't, use the
+  [google_compute_image data source](/docs/providers/google/d/datasource_compute_image.html).
+  For instance, the image `centos-6-v20180104` includes its family name `centos-6`.
+  These images can be referred by family name here.
+
+* `zone` -
+  (Optional)
+  A reference to the zone where the disk resides.
+* `project` - (Optional) The ID of the project in which the resource belongs.
+    If it is not provided, the provider project is used.
+
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -241,6 +258,7 @@ In addition to the arguments listed above, the following computed attributes are
   project/zones/zone/instances/instance
 
 * `source_image_id` -
+  (Required)
   The ID value of the image used to create this disk. This value
   identifies the exact image that was used to create this persistent
   disk. For example, if you created the persistent disk from an image
@@ -248,6 +266,7 @@ In addition to the arguments listed above, the following computed attributes are
   image ID would identify the exact version of the image that was used.
 
 * `source_snapshot_id` -
+  (Required)
   The unique ID of the snapshot used to create this disk. This value
   identifies the exact snapshot that was used to create this persistent
   disk. For example, if you created the persistent disk from a snapshot
