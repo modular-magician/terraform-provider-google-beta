@@ -104,7 +104,6 @@ func Provider() terraform.ResourceProvider {
 			GeneratedBinaryAuthorizationResourcesMap,
 			GeneratedContainerAnalysisResourcesMap,
 			GeneratedFilestoreResourcesMap,
-			GeneratedAccessContextManagerResourcesMap,
 			// end beta-only products
 			GeneratedComputeResourcesMap,
 			GeneratedRedisResourcesMap,
