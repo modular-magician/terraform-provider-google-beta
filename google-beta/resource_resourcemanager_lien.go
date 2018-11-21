@@ -177,22 +177,22 @@ func resourceResourceManagerLienRead(d *schema.ResourceData, meta interface{}) e
 		return err
 	}
 
-	if err := d.Set("name", flattenResourceManagerLienName(res["name"])); err != nil {
+	if err := d.Set("name", flattenResourceManagerLienName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
-	if err := d.Set("reason", flattenResourceManagerLienReason(res["reason"])); err != nil {
+	if err := d.Set("reason", flattenResourceManagerLienReason(res["reason"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
-	if err := d.Set("origin", flattenResourceManagerLienOrigin(res["origin"])); err != nil {
+	if err := d.Set("origin", flattenResourceManagerLienOrigin(res["origin"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
-	if err := d.Set("create_time", flattenResourceManagerLienCreateTime(res["createTime"])); err != nil {
+	if err := d.Set("create_time", flattenResourceManagerLienCreateTime(res["createTime"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
-	if err := d.Set("parent", flattenResourceManagerLienParent(res["parent"])); err != nil {
+	if err := d.Set("parent", flattenResourceManagerLienParent(res["parent"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
-	if err := d.Set("restrictions", flattenResourceManagerLienRestrictions(res["restrictions"])); err != nil {
+	if err := d.Set("restrictions", flattenResourceManagerLienRestrictions(res["restrictions"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
 
@@ -248,23 +248,23 @@ func flattenResourceManagerLienName(v interface{}) interface{} {
 	return NameFromSelfLinkStateFunc(v)
 }
 
-func flattenResourceManagerLienReason(v interface{}) interface{} {
+func flattenResourceManagerLienReason(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
-func flattenResourceManagerLienOrigin(v interface{}) interface{} {
+func flattenResourceManagerLienOrigin(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
-func flattenResourceManagerLienCreateTime(v interface{}) interface{} {
+func flattenResourceManagerLienCreateTime(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
-func flattenResourceManagerLienParent(v interface{}) interface{} {
+func flattenResourceManagerLienParent(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
-func flattenResourceManagerLienRestrictions(v interface{}) interface{} {
+func flattenResourceManagerLienRestrictions(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
