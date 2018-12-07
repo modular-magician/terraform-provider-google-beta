@@ -190,7 +190,7 @@ func resourceContainerCluster() *schema.Resource {
 				Type:     schema.TypeList,
 				Computed: true,
 				MaxItems: 1,
-				Optional: true,
+				Removed:  "This field is in beta. Use it in the the google-beta provider instead. See https://terraform.io/docs/providers/google/provider_versions.html for more details.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
@@ -236,7 +236,8 @@ func resourceContainerCluster() *schema.Resource {
 			},
 
 			"enable_binary_authorization": {
-				Default:  false,
+				Removed:  "This field is in beta. Use it in the the google-beta provider instead. See https://terraform.io/docs/providers/google/provider_versions.html for more details.",
+				Computed: true,
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
@@ -252,7 +253,8 @@ func resourceContainerCluster() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 				ForceNew: true,
-				Default:  false,
+				Removed:  "This field is in beta. Use it in the the google-beta provider instead. See https://terraform.io/docs/providers/google/provider_versions.html for more details.",
+				Computed: true,
 			},
 
 			"enable_legacy_abac": {
@@ -427,10 +429,11 @@ func resourceContainerCluster() *schema.Resource {
 			},
 
 			"pod_security_policy_config": {
-				DiffSuppressFunc: podSecurityPolicyCfgSuppress,
-				Type:             schema.TypeList,
-				Optional:         true,
-				MaxItems:         1,
+				// Remove return nil from expand when this is removed for good.
+				Removed:  "This field is in beta. Use it in the the google-beta provider instead. See https://terraform.io/docs/providers/google/provider_versions.html for more details.",
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {

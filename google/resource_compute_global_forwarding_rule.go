@@ -56,6 +56,7 @@ func resourceComputeGlobalForwardingRule() *schema.Resource {
 			},
 
 			"labels": &schema.Schema{
+				Removed:  "This field is in beta. Use it in the the google-beta provider instead. See https://terraform.io/docs/providers/google/provider_versions.html for more details.",
 				Type:     schema.TypeMap,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -63,6 +64,7 @@ func resourceComputeGlobalForwardingRule() *schema.Resource {
 			},
 
 			"label_fingerprint": &schema.Schema{
+				Removed:  "This field is in beta. Use it in the the google-beta provider instead. See https://terraform.io/docs/providers/google/provider_versions.html for more details.",
 				Type:     schema.TypeString,
 				Computed: true,
 			},

@@ -858,15 +858,7 @@ resource "google_compute_instance_template" "template" {
 resource "google_compute_instance_group_manager" "manager" {
   name               = "%s"
   base_instance_name = "disk-igm"
-  version {
-    instance_template  = "${google_compute_instance_template.template.self_link}"
-    name               = "primary"
-  }
-  update_policy {
-    minimal_action        = "RESTART"
-    type                  = "PROACTIVE"
-    max_unavailable_fixed = 1
-  }
+  instance_template  = "${google_compute_instance_template.template.self_link}"
   zone               = "us-central1-a"
   target_size        = 1
 }`, diskName, mgrName)

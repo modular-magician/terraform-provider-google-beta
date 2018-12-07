@@ -142,6 +142,7 @@ var schemaNodeConfig = &schema.Schema{
 			},
 
 			"taint": {
+				Removed:          "This field is in beta. Use it in the the google-beta provider instead. See https://terraform.io/docs/providers/google/provider_versions.html for more details.",
 				Type:             schema.TypeList,
 				Optional:         true,
 				ForceNew:         true,
@@ -169,6 +170,7 @@ var schemaNodeConfig = &schema.Schema{
 			},
 
 			"workload_metadata_config": {
+				Removed:  "This field is in beta. Use it in the the google-beta provider instead. See https://terraform.io/docs/providers/google/provider_versions.html for more details.",
 				Type:     schema.TypeList,
 				Optional: true,
 				ForceNew: true,
@@ -280,27 +282,6 @@ func expandNodeConfig(v interface{}) *containerBeta.NodeConfig {
 	if v, ok := nodeConfig["min_cpu_platform"]; ok {
 		nc.MinCpuPlatform = v.(string)
 	}
-	if v, ok := nodeConfig["taint"]; ok && len(v.([]interface{})) > 0 {
-		taints := v.([]interface{})
-		nodeTaints := make([]*containerBeta.NodeTaint, 0, len(taints))
-		for _, raw := range taints {
-			data := raw.(map[string]interface{})
-			taint := &containerBeta.NodeTaint{
-				Key:    data["key"].(string),
-				Value:  data["value"].(string),
-				Effect: data["effect"].(string),
-			}
-			nodeTaints = append(nodeTaints, taint)
-		}
-		nc.Taints = nodeTaints
-	}
-
-	if v, ok := nodeConfig["workload_metadata_config"]; ok && len(v.([]interface{})) > 0 {
-		conf := v.([]interface{})[0].(map[string]interface{})
-		nc.WorkloadMetadataConfig = &containerBeta.WorkloadMetadataConfig{
-			NodeMetadata: conf["node_metadata"].(string),
-		}
-	}
 
 	return nc
 }
@@ -313,20 +294,18 @@ func flattenNodeConfig(c *containerBeta.NodeConfig) []map[string]interface{} {
 	}
 
 	config = append(config, map[string]interface{}{
-		"machine_type":             c.MachineType,
-		"disk_size_gb":             c.DiskSizeGb,
-		"disk_type":                c.DiskType,
-		"guest_accelerator":        flattenContainerGuestAccelerators(c.Accelerators),
-		"local_ssd_count":          c.LocalSsdCount,
-		"service_account":          c.ServiceAccount,
-		"metadata":                 c.Metadata,
-		"image_type":               c.ImageType,
-		"labels":                   c.Labels,
-		"tags":                     c.Tags,
-		"preemptible":              c.Preemptible,
-		"min_cpu_platform":         c.MinCpuPlatform,
-		"taint":                    flattenTaints(c.Taints),
-		"workload_metadata_config": flattenWorkloadMetadataConfig(c.WorkloadMetadataConfig),
+		"machine_type":      c.MachineType,
+		"disk_size_gb":      c.DiskSizeGb,
+		"disk_type":         c.DiskType,
+		"guest_accelerator": flattenContainerGuestAccelerators(c.Accelerators),
+		"local_ssd_count":   c.LocalSsdCount,
+		"service_account":   c.ServiceAccount,
+		"metadata":          c.Metadata,
+		"image_type":        c.ImageType,
+		"labels":            c.Labels,
+		"tags":              c.Tags,
+		"preemptible":       c.Preemptible,
+		"min_cpu_platform":  c.MinCpuPlatform,
 	})
 
 	if len(c.OauthScopes) > 0 {
@@ -342,28 +321,6 @@ func flattenContainerGuestAccelerators(c []*containerBeta.AcceleratorConfig) []m
 		result = append(result, map[string]interface{}{
 			"count": accel.AcceleratorCount,
 			"type":  accel.AcceleratorType,
-		})
-	}
-	return result
-}
-
-func flattenTaints(c []*containerBeta.NodeTaint) []map[string]interface{} {
-	result := []map[string]interface{}{}
-	for _, taint := range c {
-		result = append(result, map[string]interface{}{
-			"key":    taint.Key,
-			"value":  taint.Value,
-			"effect": taint.Effect,
-		})
-	}
-	return result
-}
-
-func flattenWorkloadMetadataConfig(c *containerBeta.WorkloadMetadataConfig) []map[string]interface{} {
-	result := []map[string]interface{}{}
-	if c != nil {
-		result = append(result, map[string]interface{}{
-			"node_metadata": c.NodeMetadata,
 		})
 	}
 	return result

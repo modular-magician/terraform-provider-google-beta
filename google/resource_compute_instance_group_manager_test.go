@@ -128,6 +128,28 @@ func TestAccInstanceGroupManager_updateLifecycle(t *testing.T) {
 	})
 }
 
+func TestAccInstanceGroupManager_updateStrategy(t *testing.T) {
+	t.Parallel()
+
+	igm := fmt.Sprintf("igm-test-%s", acctest.RandString(10))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckInstanceGroupManagerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccInstanceGroupManager_updateStrategy(igm),
+			},
+			{
+				ResourceName:      "google_compute_instance_group_manager.igm-update-strategy",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func TestAccInstanceGroupManager_updatePolicy(t *testing.T) {
 	t.Parallel()
 
@@ -328,10 +350,7 @@ func testAccInstanceGroupManager_basic(template, target, igm1, igm2 string) stri
 	resource "google_compute_instance_group_manager" "igm-basic" {
 		description = "Terraform test instance group manager"
 		name = "%s"
-		version {
-			name = "prod"
-			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
-		}
+		instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		target_pools = ["${google_compute_target_pool.igm-basic.self_link}"]
 		base_instance_name = "igm-basic"
 		zone = "us-central1-c"
@@ -341,10 +360,7 @@ func testAccInstanceGroupManager_basic(template, target, igm1, igm2 string) stri
 	resource "google_compute_instance_group_manager" "igm-no-tp" {
 		description = "Terraform test instance group manager"
 		name = "%s"
-		version {
-			name = "prod"
-			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
-		}
+		instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		base_instance_name = "igm-no-tp"
 		zone = "us-central1-c"
 		target_size = 2
@@ -387,10 +403,7 @@ func testAccInstanceGroupManager_targetSizeZero(template, igm string) string {
 	resource "google_compute_instance_group_manager" "igm-basic" {
 		description = "Terraform test instance group manager"
 		name = "%s"
-		version {
-			name = "prod"
-			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
-		}
+		instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		base_instance_name = "igm-basic"
 		zone = "us-central1-c"
 	}
@@ -438,10 +451,7 @@ func testAccInstanceGroupManager_update(template, target, igm string) string {
 	resource "google_compute_instance_group_manager" "igm-update" {
 		description = "Terraform test instance group manager"
 		name = "%s"
-		version {
-			name = "prod"
-			instance_template = "${google_compute_instance_template.igm-update.self_link}"
-		}
+		instance_template = "${google_compute_instance_template.igm-update.self_link}"
 		target_pools = ["${google_compute_target_pool.igm-update.self_link}"]
 		base_instance_name = "igm-update"
 		zone = "us-central1-c"
@@ -526,10 +536,7 @@ func testAccInstanceGroupManager_update2(template1, target1, target2, template2,
 	resource "google_compute_instance_group_manager" "igm-update" {
 		description = "Terraform test instance group manager"
 		name = "%s"
-		version {
-			name = "prod"
-			instance_template = "${google_compute_instance_template.igm-update2.self_link}"
-		}
+		instance_template = "${google_compute_instance_template.igm-update2.self_link}"
 		target_pools = [
 			"${google_compute_target_pool.igm-update.self_link}",
 			"${google_compute_target_pool.igm-update2.self_link}",
@@ -582,10 +589,7 @@ func testAccInstanceGroupManager_updateLifecycle(tag, igm string) string {
 	resource "google_compute_instance_group_manager" "igm-update" {
 		description = "Terraform test instance group manager"
 		name = "%s"
-		version {
-			name = "prod"
-			instance_template = "${google_compute_instance_template.igm-update.self_link}"
-		}
+		instance_template = "${google_compute_instance_template.igm-update.self_link}"
 		base_instance_name = "igm-update"
 		zone = "us-central1-c"
 		target_size = 2
@@ -594,6 +598,52 @@ func testAccInstanceGroupManager_updateLifecycle(tag, igm string) string {
 			port = 8080
 		}
 	}`, tag, igm)
+}
+
+func testAccInstanceGroupManager_updateStrategy(igm string) string {
+	return fmt.Sprintf(`
+	data "google_compute_image" "my_image" {
+		family  = "debian-9"
+		project = "debian-cloud"
+	}
+
+	resource "google_compute_instance_template" "igm-update-strategy" {
+		machine_type = "n1-standard-1"
+		can_ip_forward = false
+		tags = ["terraform-testing"]
+
+		disk {
+			source_image = "${data.google_compute_image.my_image.self_link}"
+			auto_delete = true
+			boot = true
+		}
+
+		network_interface {
+			network = "default"
+		}
+
+		service_account {
+			scopes = ["userinfo-email", "compute-ro", "storage-ro"]
+		}
+
+		lifecycle {
+			create_before_destroy = true
+		}
+	}
+
+	resource "google_compute_instance_group_manager" "igm-update-strategy" {
+		description = "Terraform test instance group manager"
+		name = "%s"
+		instance_template = "${google_compute_instance_template.igm-update-strategy.self_link}"
+		base_instance_name = "igm-update-strategy"
+		zone = "us-central1-c"
+		target_size = 2
+		update_strategy = "REPLACE"
+		named_port {
+			name = "customhttp"
+			port = 8080
+		}
+	}`, igm)
 }
 
 func testAccInstanceGroupManager_rollingUpdatePolicy(igm string) string {
@@ -828,10 +878,7 @@ func testAccInstanceGroupManager_separateRegions(igm1, igm2 string) string {
 	resource "google_compute_instance_group_manager" "igm-basic" {
 		description = "Terraform test instance group manager"
 		name = "%s"
-		version {
-			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
-			name = "prod"
-		}
+		instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		base_instance_name = "igm-basic"
 		zone = "us-central1-c"
 		target_size = 2
@@ -840,10 +887,7 @@ func testAccInstanceGroupManager_separateRegions(igm1, igm2 string) string {
 	resource "google_compute_instance_group_manager" "igm-basic-2" {
 		description = "Terraform test instance group manager"
 		name = "%s"
-		version {
-			name = "prod"
-			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
-		}
+		instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		base_instance_name = "igm-basic-2"
 		zone = "us-west1-b"
 		target_size = 2

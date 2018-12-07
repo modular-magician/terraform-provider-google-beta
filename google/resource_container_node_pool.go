@@ -85,6 +85,7 @@ var schemaNodePool = map[string]*schema.Schema{
 	},
 
 	"max_pods_per_node": &schema.Schema{
+		Removed:  "This field is in beta. Use it in the the google-beta provider instead. See https://terraform.io/docs/providers/google/provider_versions.html for more details.",
 		Type:     schema.TypeInt,
 		Optional: true,
 		ForceNew: true,

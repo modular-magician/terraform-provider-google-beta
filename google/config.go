@@ -160,7 +160,7 @@ func (c *Config) loadAndValidate() error {
 	client.Transport = logging.NewTransport("Google", client.Transport)
 
 	terraformVersion := httpclient.UserAgentString()
-	providerVersion := fmt.Sprintf("terraform-provider-google-beta/%s", version.ProviderVersion)
+	providerVersion := fmt.Sprintf("terraform-provider-google/%s", version.ProviderVersion)
 	terraformWebsite := "(+https://www.terraform.io)"
 	userAgent := fmt.Sprintf("%s %s %s", terraformVersion, terraformWebsite, providerVersion)
 
