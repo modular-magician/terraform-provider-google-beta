@@ -13,15 +13,16 @@
 #
 # ----------------------------------------------------------------------------
 layout: "google"
-page_title: "Google: google_spanner_database"
-sidebar_current: "docs-google-spanner-database"
+page_title: "Google: google_spanner_instance_config"
+sidebar_current: "docs-google-spanner-instance-config"
 description: |-
-  A Cloud Spanner Database which is hosted on a Spanner instance.
+  A possible configuration for a Cloud Spanner instance.
 ---
 
-# google\_spanner\_database
+# google\_spanner\_instance\_config
 
-A Cloud Spanner Database which is hosted on a Spanner instance.
+A possible configuration for a Cloud Spanner instance. Configurations
+define the geographic placement of nodes and their replication.
 
 
 
@@ -30,27 +31,14 @@ A Cloud Spanner Database which is hosted on a Spanner instance.
 The following arguments are supported:
 
 
-* `name` -
-  (Required)
-  A unique identifier for the database, which cannot be changed after
-  the instance is created. Values are of the form
-  projects/<project>/instances/[a-z][-a-z0-9]*[a-z0-9]. The final
-  segment of the name must be between 6 and 30 characters in length.
-
-* `instance` -
-  (Required)
-  The instance to create the database on.
-
 
 - - -
 
 
-* `ddl` -
+* `name` -
   (Optional)
-  An optional list of DDL statements to run inside the newly created
-  database. Statements can create tables, indexes, etc. These statements
-  execute atomically with the creation of the database: if there is an
-  error in any statement, the database is not created.
+  A unique identifier for the instance configuration. Values are of the
+  form projects/<project>/instanceConfigs/[a-z][-a-z0-9]*
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -60,8 +48,8 @@ The following arguments are supported:
 In addition to the arguments listed above, the following computed attributes are exported:
 
 
-* `state` -
-  An explanation of the status.
+* `display_name` -
+  The name of this instance configuration as it appears in UIs.
 
 
 ## Timeouts
@@ -70,15 +58,17 @@ This resource provides the following
 [Timeouts](/docs/configuration/resources.html#timeouts) configuration options:
 
 - `create` - Default is 4 minutes.
+- `update` - Default is 4 minutes.
 - `delete` - Default is 4 minutes.
 
 ## Import
 
-Database can be imported using any of these accepted formats:
+InstanceConfig can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_spanner_database.default instances/{{instance}}/databases/{{name}}
-$ terraform import google_spanner_database.default {{instance}}/{{name}}
+$ terraform import google_spanner_instance_config.default projects/{{project}}/instanceConfigs/{{name}}
+$ terraform import google_spanner_instance_config.default {{project}}/{{name}}
+$ terraform import google_spanner_instance_config.default {{name}}
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`
