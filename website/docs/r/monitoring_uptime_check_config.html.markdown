@@ -243,6 +243,9 @@ The `monitored_resource` block supports:
 In addition to the arguments listed above, the following computed attributes are exported:
 
 
+* `update_mask` -
+  The list of fields being updated.
+
 * `name` -
   A unique resource name for this UptimeCheckConfig. The format is projects/[PROJECT_ID]/uptimeCheckConfigs/[UPTIME_CHECK_ID].
 

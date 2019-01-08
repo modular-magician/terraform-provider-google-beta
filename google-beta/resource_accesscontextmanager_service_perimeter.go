@@ -110,6 +110,10 @@ func resourceAccessContextManagerServicePerimeter() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"update_mask": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"update_time": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -232,6 +236,9 @@ func resourceAccessContextManagerServicePerimeterRead(d *schema.ResourceData, me
 		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
 	}
 	if err := d.Set("status", flattenAccessContextManagerServicePerimeterStatus(res["status"], d)); err != nil {
+		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
+	}
+	if err := d.Set("update_mask", flattenAccessContextManagerServicePerimeterUpdateMask(res["updateMask"], d)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
 	}
 	if err := d.Set("name", flattenAccessContextManagerServicePerimeterName(res["name"], d)); err != nil {
@@ -412,6 +419,10 @@ func flattenAccessContextManagerServicePerimeterStatusUnrestrictedServices(v int
 }
 
 func flattenAccessContextManagerServicePerimeterStatusRestrictedServices(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterUpdateMask(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 

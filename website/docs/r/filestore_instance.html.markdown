@@ -144,6 +144,9 @@ In addition to the arguments listed above, the following computed attributes are
   Server-specified ETag for the instance resource to prevent
   simultaneous updates from overwriting each other.
 
+* `update_mask` -
+  The list of fields being updated.
+
 
 ## Timeouts
 

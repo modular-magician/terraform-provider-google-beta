@@ -155,6 +155,10 @@ func resourceAccessContextManagerAccessLevel() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"update_mask": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -258,6 +262,9 @@ func resourceAccessContextManagerAccessLevelRead(d *schema.ResourceData, meta in
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}
 	if err := d.Set("basic", flattenAccessContextManagerAccessLevelBasic(res["basic"], d)); err != nil {
+		return fmt.Errorf("Error reading AccessLevel: %s", err)
+	}
+	if err := d.Set("update_mask", flattenAccessContextManagerAccessLevelUpdateMask(res["updateMask"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}
 	if err := d.Set("name", flattenAccessContextManagerAccessLevelName(res["name"], d)); err != nil {
@@ -506,6 +513,10 @@ func flattenAccessContextManagerAccessLevelBasicConditionsDevicePolicyOsConstrai
 }
 
 func flattenAccessContextManagerAccessLevelBasicConditionsDevicePolicyOsConstraintsOsType(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerAccessLevelUpdateMask(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 

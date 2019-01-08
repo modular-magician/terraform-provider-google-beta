@@ -61,6 +61,10 @@ func resourceAppengineFirewallRule() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
+			"update_mask": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -151,6 +155,9 @@ func resourceAppengineFirewallRuleRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}
 	if err := d.Set("action", flattenAppengineFirewallRuleAction(res["action"], d)); err != nil {
+		return fmt.Errorf("Error reading FirewallRule: %s", err)
+	}
+	if err := d.Set("update_mask", flattenAppengineFirewallRuleUpdateMask(res["updateMask"], d)); err != nil {
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}
 	if err := d.Set("priority", flattenAppengineFirewallRulePriority(res["priority"], d)); err != nil {
@@ -271,6 +278,10 @@ func flattenAppengineFirewallRuleSourceRange(v interface{}, d *schema.ResourceDa
 }
 
 func flattenAppengineFirewallRuleAction(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenAppengineFirewallRuleUpdateMask(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
