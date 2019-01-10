@@ -26,19 +26,18 @@ information, see Creating VLAN Attachments.
 
 
 
-## Example Usage - Interconnect Attachment Basic
-
+## Example Usage
 
 ```hcl
-resource "google_compute_interconnect_attachment" "on_prem" {
-  name         = "on-prem-attachment"
-  interconnect = "my-interconnect-id"
-  router       = "${google_compute_router.foobar.self_link}"
+resource "google_compute_router" "foobar" {
+  name    = "my-router"
+  network = "${google_compute_network.foobar.name}"
 }
 
-resource "google_compute_router" "foobar" {
-  name    = "router"
-  network = "${google_compute_network.foobar.name}"
+resource "google_compute_interconnect_attachment" "default" {
+  name         = "test-interconnect"
+  interconnect = "my-interconnect-id"
+  router       = "${google_compute_router.foobar.self_link}"
 }
 ```
 
