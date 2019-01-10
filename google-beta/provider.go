@@ -1,15 +1,13 @@
 package google
 
 import (
-	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 
 	"github.com/hashicorp/terraform/helper/mutexkv"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
-
-	googleoauth "golang.org/x/oauth2/google"
 )
 
 // Global MutexKV
@@ -28,12 +26,6 @@ func Provider() terraform.ResourceProvider {
 					"GCLOUD_KEYFILE_JSON",
 				}, nil),
 				ValidateFunc: validateCredentials,
-			},
-
-			"access_token": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ConflictsWith: []string{"credentials"},
 			},
 
 			"project": {
@@ -262,17 +254,12 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+	credentials := d.Get("credentials").(string)
 	config := Config{
-		Project: d.Get("project").(string),
-		Region:  d.Get("region").(string),
-		Zone:    d.Get("zone").(string),
-	}
-
-	// Add credential source
-	if v, ok := d.GetOk("access_token"); ok {
-		config.AccessToken = v.(string)
-	} else if v, ok := d.GetOk("credentials"); ok {
-		config.Credentials = v.(string)
+		Credentials: credentials,
+		Project:     d.Get("project").(string),
+		Region:      d.Get("region").(string),
+		Zone:        d.Get("zone").(string),
 	}
 
 	if err := config.loadAndValidate(); err != nil {
@@ -291,9 +278,10 @@ func validateCredentials(v interface{}, k string) (warnings []string, errors []e
 	if _, err := os.Stat(creds); err == nil {
 		return
 	}
-	if _, err := googleoauth.CredentialsFromJSON(context.Background(), []byte(creds)); err != nil {
+	var account accountFile
+	if err := json.Unmarshal([]byte(creds), &account); err != nil {
 		errors = append(errors,
-			fmt.Errorf("JSON credentials in %q are not valid: %s", creds, err))
+			fmt.Errorf("credentials are not valid JSON '%s': %s", creds, err))
 	}
 
 	return
