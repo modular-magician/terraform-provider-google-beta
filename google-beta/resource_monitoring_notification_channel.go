@@ -313,8 +313,48 @@ func resourceMonitoringNotificationChannelImport(d *schema.ResourceData, meta in
 	return []*schema.ResourceData{d}, nil
 }
 
+// Some labels are obfuscated for monitoring channels - this method
+// checks to see if the value read from the server looks like the obfuscated
+// version of the state value, and will just use the state value if so.
+// This avoids a permadiff.
 func flattenMonitoringNotificationChannelLabels(v interface{}, d *schema.ResourceData) interface{} {
-	return v
+	if v == nil {
+		return v
+	}
+	readLabels := v.(map[string]interface{})
+
+	stateV, ok := d.GetOk("labels")
+	if !ok {
+		return v
+	}
+	stateLabels := stateV.(map[string]interface{})
+
+	for k, serverV := range readLabels {
+		stateRawV, ok := stateLabels[k]
+		if !ok {
+			continue
+		}
+
+		serverLabel := serverV.(string)
+		stateLabel := stateRawV.(string)
+		if stateLabel == serverLabel {
+			continue
+		}
+		if len(stateLabel) != len(serverLabel) {
+			continue
+		}
+
+		replace := true
+		for i := 0; i < len(stateLabel); i++ {
+			if serverLabel[i] != '*' && stateLabel[i] != serverLabel[i] {
+				replace = false
+			}
+		}
+		if replace {
+			readLabels[k] = stateLabel
+		}
+	}
+	return readLabels
 }
 
 func flattenMonitoringNotificationChannelName(v interface{}, d *schema.ResourceData) interface{} {
