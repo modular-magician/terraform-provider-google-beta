@@ -313,8 +313,53 @@ func resourceMonitoringNotificationChannelImport(d *schema.ResourceData, meta in
 	return []*schema.ResourceData{d}, nil
 }
 
+// Some labels are obfuscated for monitoring channels - this method
+// checks to see if the value read from the server looks like the obfuscated
+// version of the state value, and will just use the state value if so.
+// e.g. if the value is "SECRET", the server will return "**CRET"
+// This avoids a permadiff.
 func flattenMonitoringNotificationChannelLabels(v interface{}, d *schema.ResourceData) interface{} {
-	return v
+	if v == nil {
+		return v
+	}
+	readLabels := v.(map[string]interface{})
+
+	stateLabelsRaw, ok := d.GetOk("labels")
+	if !ok {
+		return v
+	}
+	stateLabels := stateLabelsRaw.(map[string]interface{})
+
+	for k, serverV := range readLabels {
+		stateV, ok := stateLabels[k]
+		if !ok {
+			continue
+		}
+		useStateV := isMonitoringNotificationChannelLabelsObfuscated(serverV.(string), stateV.(string))
+		if useStateV {
+			readLabels[k] = stateV.(string)
+		}
+	}
+	return readLabels
+}
+
+func isMonitoringNotificationChannelLabelsObfuscated(stateLabel, serverLabel string) bool {
+	if stateLabel == serverLabel {
+		return false
+	}
+
+	if len(stateLabel) != len(serverLabel) {
+		return false
+	}
+
+	// Check if value read from GCP has either the same character or replaced
+	// it with '*'
+	for i := 0; i < len(stateLabel); i++ {
+		if serverLabel[i] != '*' && stateLabel[i] != serverLabel[i] {
+			return false
+		}
+	}
+	return true
 }
 
 func flattenMonitoringNotificationChannelName(v interface{}, d *schema.ResourceData) interface{} {
