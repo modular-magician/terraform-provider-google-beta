@@ -318,6 +318,9 @@ func resourceRedisInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	if err := d.Set("tier", flattenRedisInstanceTier(res["tier"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	if err := d.Set("update_mask", flattenRedisInstanceUpdateMask(res["updateMask"], d)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
 
 	return nil
 }
@@ -358,17 +361,21 @@ func resourceRedisInstanceUpdate(d *schema.ResourceData, meta interface{}) error
 
 	log.Printf("[DEBUG] Updating Instance %q: %#v", d.Id(), obj)
 	updateMask := []string{}
+
 	if d.HasChange("display_name") {
 		updateMask = append(updateMask, "displayName")
 	}
+
 	if d.HasChange("labels") {
 		updateMask = append(updateMask, "labels")
 	}
-	if d.HasChange("memory_size_gb") {
-		updateMask = append(updateMask, "memorySizeGb")
-	}
+
 	if d.HasChange("redis_configs") {
 		updateMask = append(updateMask, "redisConfigs")
+	}
+
+	if d.HasChange("memory_size_gb") {
+		updateMask = append(updateMask, "memorySizeGb")
 	}
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
@@ -528,6 +535,10 @@ func flattenRedisInstanceReservedIpRange(v interface{}, d *schema.ResourceData) 
 }
 
 func flattenRedisInstanceTier(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenRedisInstanceUpdateMask(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 

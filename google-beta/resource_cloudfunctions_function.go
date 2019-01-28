@@ -190,13 +190,6 @@ func resourceCloudFunctionsFunction() *schema.Resource {
 				Computed: true,
 			},
 
-			"service_account_email": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
-			},
-
 			"environment_variables": {
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -319,10 +312,9 @@ func resourceCloudFunctionsCreate(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	function := &cloudfunctions.CloudFunction{
-		Name:                cloudFuncId.cloudFunctionId(),
-		Runtime:             d.Get("runtime").(string),
-		ServiceAccountEmail: d.Get("service_account_email").(string),
-		ForceSendFields:     []string{},
+		Name:            cloudFuncId.cloudFunctionId(),
+		Runtime:         d.Get("runtime").(string),
+		ForceSendFields: []string{},
 	}
 
 	sourceRepos := d.Get("source_repository").([]interface{})
@@ -414,7 +406,6 @@ func resourceCloudFunctionsRead(d *schema.ResourceData, meta interface{}) error 
 	d.Set("timeout", timeout)
 	d.Set("labels", function.Labels)
 	d.Set("runtime", function.Runtime)
-	d.Set("service_account_email", function.ServiceAccountEmail)
 	d.Set("environment_variables", function.EnvironmentVariables)
 	if function.SourceArchiveUrl != "" {
 		// sourceArchiveUrl should always be a Google Cloud Storage URL (e.g. gs://bucket/object)

@@ -153,6 +153,9 @@ func resourceAppEngineFirewallRuleRead(d *schema.ResourceData, meta interface{})
 	if err := d.Set("action", flattenAppEngineFirewallRuleAction(res["action"], d)); err != nil {
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}
+	if err := d.Set("update_mask", flattenAppEngineFirewallRuleUpdateMask(res["updateMask"], d)); err != nil {
+		return fmt.Errorf("Error reading FirewallRule: %s", err)
+	}
 	if err := d.Set("priority", flattenAppEngineFirewallRulePriority(res["priority"], d)); err != nil {
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}
@@ -271,6 +274,10 @@ func flattenAppEngineFirewallRuleSourceRange(v interface{}, d *schema.ResourceDa
 }
 
 func flattenAppEngineFirewallRuleAction(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenAppEngineFirewallRuleUpdateMask(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 

@@ -181,6 +181,9 @@ In addition to the arguments listed above, the following computed attributes are
 * `port` -
   The port number of the exposed Redis endpoint.
 
+* `update_mask` -
+  The update mask (internal only)
+
 
 ## Timeouts
 

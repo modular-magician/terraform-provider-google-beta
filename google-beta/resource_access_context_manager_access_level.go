@@ -260,6 +260,9 @@ func resourceAccessContextManagerAccessLevelRead(d *schema.ResourceData, meta in
 	if err := d.Set("basic", flattenAccessContextManagerAccessLevelBasic(res["basic"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}
+	if err := d.Set("update_mask", flattenAccessContextManagerAccessLevelUpdateMask(res["updateMask"], d)); err != nil {
+		return fmt.Errorf("Error reading AccessLevel: %s", err)
+	}
 	if err := d.Set("name", flattenAccessContextManagerAccessLevelName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}
@@ -506,6 +509,10 @@ func flattenAccessContextManagerAccessLevelBasicConditionsDevicePolicyOsConstrai
 }
 
 func flattenAccessContextManagerAccessLevelBasicConditionsDevicePolicyOsConstraintsOsType(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerAccessLevelUpdateMask(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 

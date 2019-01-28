@@ -188,6 +188,14 @@ The `os_constraints` block supports:
   (Optional)
   The operating system type of the device.
 
+## Attributes Reference
+
+In addition to the arguments listed above, the following computed attributes are exported:
+
+
+* `update_mask` -
+  The list of fields being updated.
+
 
 ## Timeouts
 

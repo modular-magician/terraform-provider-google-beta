@@ -263,6 +263,9 @@ func resourceFilestoreInstanceRead(d *schema.ResourceData, meta interface{}) err
 	if err := d.Set("etag", flattenFilestoreInstanceEtag(res["etag"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	if err := d.Set("update_mask", flattenFilestoreInstanceUpdateMask(res["updateMask"], d)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
 
 	return nil
 }
@@ -489,6 +492,10 @@ func flattenFilestoreInstanceNetworksIpAddresses(v interface{}, d *schema.Resour
 }
 
 func flattenFilestoreInstanceEtag(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenFilestoreInstanceUpdateMask(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 

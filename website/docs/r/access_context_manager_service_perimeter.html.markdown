@@ -192,6 +192,9 @@ In addition to the arguments listed above, the following computed attributes are
 * `update_time` -
   Time the AccessPolicy was updated in UTC.
 
+* `update_mask` -
+  The list of fields being updated.
+
 
 ## Timeouts
 
