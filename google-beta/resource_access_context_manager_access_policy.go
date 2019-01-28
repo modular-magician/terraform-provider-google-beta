@@ -165,6 +165,9 @@ func resourceAccessContextManagerAccessPolicyRead(d *schema.ResourceData, meta i
 	if err := d.Set("update_time", flattenAccessContextManagerAccessPolicyUpdateTime(res["updateTime"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessPolicy: %s", err)
 	}
+	if err := d.Set("update_mask", flattenAccessContextManagerAccessPolicyUpdateMask(res["updateMask"], d)); err != nil {
+		return fmt.Errorf("Error reading AccessPolicy: %s", err)
+	}
 	if err := d.Set("parent", flattenAccessContextManagerAccessPolicyParent(res["parent"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessPolicy: %s", err)
 	}
@@ -287,6 +290,10 @@ func flattenAccessContextManagerAccessPolicyCreateTime(v interface{}, d *schema.
 }
 
 func flattenAccessContextManagerAccessPolicyUpdateTime(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerAccessPolicyUpdateMask(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 

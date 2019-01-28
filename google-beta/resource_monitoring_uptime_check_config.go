@@ -351,6 +351,9 @@ func resourceMonitoringUptimeCheckConfigRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
 
+	if err := d.Set("update_mask", flattenMonitoringUptimeCheckConfigUpdateMask(res["updateMask"], d)); err != nil {
+		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
+	}
 	if err := d.Set("name", flattenMonitoringUptimeCheckConfigName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
@@ -545,6 +548,10 @@ func resourceMonitoringUptimeCheckConfigImport(d *schema.ResourceData, meta inte
 	parseImportId([]string{"(?P<name>.+)"}, d, config)
 
 	return []*schema.ResourceData{d}, nil
+}
+
+func flattenMonitoringUptimeCheckConfigUpdateMask(v interface{}, d *schema.ResourceData) interface{} {
+	return v
 }
 
 func flattenMonitoringUptimeCheckConfigName(v interface{}, d *schema.ResourceData) interface{} {

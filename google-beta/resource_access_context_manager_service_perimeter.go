@@ -234,6 +234,9 @@ func resourceAccessContextManagerServicePerimeterRead(d *schema.ResourceData, me
 	if err := d.Set("status", flattenAccessContextManagerServicePerimeterStatus(res["status"], d)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
 	}
+	if err := d.Set("update_mask", flattenAccessContextManagerServicePerimeterUpdateMask(res["updateMask"], d)); err != nil {
+		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
+	}
 	if err := d.Set("name", flattenAccessContextManagerServicePerimeterName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
 	}
@@ -412,6 +415,10 @@ func flattenAccessContextManagerServicePerimeterStatusUnrestrictedServices(v int
 }
 
 func flattenAccessContextManagerServicePerimeterStatusRestrictedServices(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterUpdateMask(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
