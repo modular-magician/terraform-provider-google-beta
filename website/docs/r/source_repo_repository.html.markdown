@@ -55,6 +55,8 @@ The following arguments are supported:
   The repo name may contain slashes. eg, `name/with/slash`
 
 
+The `name` block supports:
+
 - - -
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
@@ -72,6 +74,10 @@ In addition to the arguments listed above, the following computed attributes are
 * `size` -
   The disk usage of the repo, in bytes.
 
+
+The `url` block contains:
+
+The `size` block contains:
 
 ## Timeouts
 

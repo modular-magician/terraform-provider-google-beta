@@ -81,6 +81,12 @@ The following arguments are supported:
   Format: accessPolicies/{policy_id}/accessLevels/{short_name}
 
 
+The `title` block supports:
+
+The `parent` block supports:
+
+The `name` block supports:
+
 - - -
 
 
@@ -93,100 +99,7 @@ The following arguments are supported:
   A set of predefined conditions for the access level and a combining function.  Structure is documented below.
 
 
-The `basic` block supports:
-
-* `combining_function` -
-  (Optional)
-  How the conditions list should be combined to determine if a request
-  is granted this AccessLevel. If AND is used, each Condition in
-  conditions must be satisfied for the AccessLevel to be applied. If
-  OR is used, at least one Condition in conditions must be satisfied
-  for the AccessLevel to be applied. Defaults to AND if unspecified.
-
-* `conditions` -
-  (Required)
-  A set of requirements for the AccessLevel to be granted.  Structure is documented below.
-
-
-The `conditions` block supports:
-
-* `ip_subnetworks` -
-  (Optional)
-  A list of CIDR block IP subnetwork specification. May be IPv4
-  or IPv6.
-  Note that for a CIDR IP address block, the specified IP address
-  portion must be properly truncated (i.e. all the host bits must
-  be zero) or the input is considered malformed. For example,
-  "192.0.2.0/24" is accepted but "192.0.2.1/24" is not. Similarly,
-  for IPv6, "2001:db8::/32" is accepted whereas "2001:db8::1/32"
-  is not. The originating IP of a request must be in one of the
-  listed subnets in order for this Condition to be true.
-  If empty, all IP addresses are allowed.
-
-* `required_access_levels` -
-  (Optional)
-  A list of other access levels defined in the same Policy,
-  referenced by resource name. Referencing an AccessLevel which
-  does not exist is an error. All access levels listed must be
-  granted for the Condition to be true.
-  Format: accessPolicies/{policy_id}/accessLevels/{short_name}
-
-* `members` -
-  (Optional)
-  An allowed list of members (users, groups, service accounts).
-  The signed-in user originating the request must be a part of one
-  of the provided members. If not specified, a request may come
-  from any user (logged in/not logged in, not present in any
-  groups, etc.).
-  Formats: `user:{emailid}`, `group:{emailid}`, `serviceAccount:{emailid}`
-
-* `negate` -
-  (Optional)
-  Whether to negate the Condition. If true, the Condition becomes
-  a NAND over its non-empty fields, each field must be false for
-  the Condition overall to be satisfied. Defaults to false.
-
-* `device_policy` -
-  (Optional)
-  Device specific restrictions, all restrictions must hold for
-  the Condition to be true. If not specified, all devices are
-  allowed.  Structure is documented below.
-
-
-The `device_policy` block supports:
-
-* `require_screen_lock` -
-  (Optional)
-  Whether or not screenlock is required for the DevicePolicy
-  to be true. Defaults to false.
-
-* `allowed_encryption_statuses` -
-  (Optional)
-  A list of allowed encryptions statuses.
-  An empty list allows all statuses.
-
-* `allowed_device_management_levels` -
-  (Optional)
-  A list of allowed device management levels.
-  An empty list allows all management levels.
-
-* `os_constraints` -
-  (Optional)
-  A list of allowed OS versions.
-  An empty list allows all types and all versions.  Structure is documented below.
-
-
-The `os_constraints` block supports:
-
-* `minimum_version` -
-  (Optional)
-  The minimum allowed OS version. If not set, any version
-  of this OS satisfies the constraint.
-  Format: "major.minor.patch" such as "10.5.301", "9.2.1".
-
-* `os_type` -
-  (Optional)
-  The operating system type of the device.
+The `description` block supports:
 
 
 ## Timeouts

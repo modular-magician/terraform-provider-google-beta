@@ -99,6 +99,14 @@ The following arguments are supported:
   The access permission for the entity.
 
 
+The `bucket` block supports:
+
+The `entity` block supports:
+
+The `object` block supports:
+
+The `role` block supports:
+
 - - -
 
 
@@ -124,15 +132,13 @@ In addition to the arguments listed above, the following computed attributes are
   The project team associated with the entity  Structure is documented below.
 
 
-The `project_team` block contains:
+The `domain` block contains:
 
-* `project_number` -
-  (Optional)
-  The project team associated with the entity
+The `email` block contains:
 
-* `team` -
-  (Optional)
-  The team.
+The `entity_id` block contains:
+
+The `generation` block contains:
 
 ## Timeouts
 

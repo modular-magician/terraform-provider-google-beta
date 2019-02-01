@@ -115,78 +115,17 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
-The `trigger_template` block supports:
+The `description` block supports:
 
-* `project_id` -
-  (Optional)
-  ID of the project that owns the Cloud Source Repository. If
-  omitted, the project ID requesting the build is assumed.
+The `disabled` block supports:
 
-* `repo_name` -
-  (Optional)
-  Name of the Cloud Source Repository. If omitted, the name "default" is assumed.
+The `substitutions` block supports:
 
-* `dir` -
-  (Optional)
-  Directory, relative to the source root, in which to run the build.
-  This must be a relative path. If a step's dir is specified and
-  is an absolute path, this value is ignored for that step's
-  execution.
+The `filename` block supports:
 
-* `branch_name` -
-  (Optional)
-  Name of the branch to build.
+The `ignored_files` block supports:
 
-* `tag_name` -
-  (Optional)
-  Name of the tag to build.
-
-* `commit_sha` -
-  (Optional)
-  Explicit commit SHA to build.
-
-The `build` block supports:
-
-* `tags` -
-  (Optional)
-  Tags for annotation of a Build. These are not docker tags.
-
-* `images` -
-  (Optional)
-  A list of images to be pushed upon the successful completion of all build steps.
-  The images are pushed using the builder service account's credentials.
-  The digests of the pushed images will be stored in the Build resource's results field.
-  If any of the images fail to be pushed, the build status is marked FAILURE.
-
-* `step` -
-  (Optional)
-  The operations to be performed on the workspace.  Structure is documented below.
-
-
-The `step` block supports:
-
-* `name` -
-  (Optional)
-  The name of the container image that will run this particular build step.
-  If the image is available in the host's Docker daemon's cache, it will be
-  run directly. If not, the host will attempt to pull the image first, using
-  the builder service account's credentials if necessary.
-  The Docker daemon's cache will already have the latest versions of all of
-  the officially supported build steps (https://github.com/GoogleCloudPlatform/cloud-builders).
-  The Docker daemon will also have cached many of the layers for some popular
-  images, like "ubuntu", "debian", but they will be refreshed at the time
-  you attempt to use them.
-  If you built an image in a previous build step, it will be stored in the
-  host's Docker daemon's cache and is available to use as the name for a
-  later build step.
-
-* `args` -
-  (Optional)
-  A list of arguments that will be presented to the step when it is started.
-  If the image used to run the step's container has an entrypoint, the args
-  are used as arguments to that entrypoint. If the image does not define an
-  entrypoint, the first element in args is used as the entrypoint, and the
-  remainder will be used as arguments.
+The `included_files` block supports:
 
 ## Attributes Reference
 
@@ -199,6 +138,10 @@ In addition to the arguments listed above, the following computed attributes are
 * `create_time` -
   Time when the trigger was created.
 
+
+The `trigger_id` block contains:
+
+The `create_time` block contains:
 
 ## Timeouts
 

@@ -97,6 +97,12 @@ The following arguments are supported:
   The network that this route applies to.
 
 
+The `dest_range` block supports:
+
+The `name` block supports:
+
+The `network` block supports:
+
 - - -
 
 
@@ -147,6 +153,20 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `description` block supports:
+
+The `priority` block supports:
+
+The `tags` block supports:
+
+The `next_hop_gateway` block supports:
+
+The `next_hop_instance` block supports:
+
+The `next_hop_ip` block supports:
+
+The `next_hop_vpn_tunnel` block supports:
+
 * `next_hop_instance_zone` - (Optional when `next_hop_instance` is
   specified)  The zone of the instance specified in
   `next_hop_instance`.  Omit if `next_hop_instance` is specified as
@@ -161,6 +181,8 @@ In addition to the arguments listed above, the following computed attributes are
   URL to a Network that should handle matching packets.
 * `self_link` - The URI of the created resource.
 
+
+The `next_hop_network` block contains:
 
 ## Timeouts
 

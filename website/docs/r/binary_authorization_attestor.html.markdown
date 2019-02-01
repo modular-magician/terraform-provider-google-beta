@@ -86,57 +86,7 @@ The following arguments are supported:
   A Container Analysis ATTESTATION_AUTHORITY Note, created by the user.  Structure is documented below.
 
 
-The `attestation_authority_note` block supports:
-
-* `note_reference` -
-  (Required)
-  The resource name of a ATTESTATION_AUTHORITY Note, created by the
-  user. If the Note is in a different project from the Attestor, it
-  should be specified in the format `projects/*/notes/*` (or the legacy
-  `providers/*/notes/*`). This field may not be updated.
-  An attestation by this attestor is stored as a Container Analysis
-  ATTESTATION_AUTHORITY Occurrence that names a container image
-  and that links to this Note.
-
-* `public_keys` -
-  (Optional)
-  Public keys that verify attestations signed by this attestor. This
-  field may be updated.
-  If this field is non-empty, one of the specified public keys must
-  verify that an attestation was signed by this attestor for the
-  image specified in the admission request.
-  If this field is empty, this attestor always returns that no valid
-  attestations exist.  Structure is documented below.
-
-* `delegation_service_account_email` -
-  This field will contain the service account email address that
-  this Attestor will use as the principal when querying Container
-  Analysis. Attestor administrators must grant this service account
-  the IAM role needed to read attestations from the noteReference in
-  Container Analysis (containeranalysis.notes.occurrences.viewer).
-  This email address is fixed for the lifetime of the Attestor, but
-  callers should not make any other assumptions about the service
-  account email; future versions may use an email based on a
-  different naming pattern.
-
-
-The `public_keys` block supports:
-
-* `comment` -
-  (Optional)
-  A descriptive comment. This field may be updated.
-
-* `id` -
-  This field will be overwritten with key ID information, for
-  example, an identifier extracted from a PGP public key. This
-  field may not be updated.
-
-* `ascii_armored_pgp_public_key` -
-  (Required)
-  ASCII-armored representation of a PGP public key, as the
-  entire output by the command
-  `gpg --export --armor foo@example.com` (either LF or CRLF
-  line endings).
+The `name` block supports:
 
 - - -
 
@@ -148,6 +98,8 @@ The `public_keys` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+
+The `description` block supports:
 
 
 ## Timeouts

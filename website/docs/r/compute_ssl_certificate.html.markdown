@@ -175,6 +175,10 @@ The following arguments are supported:
   The write-only private key in PEM format.
 
 
+The `certificate` block supports:
+
+The `private_key` block supports:
+
 - - -
 
 
@@ -195,6 +199,10 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `description` block supports:
+
+The `name` block supports:
+
 * `name_prefix` - (Optional) Creates a unique name beginning with the
  specified prefix. Conflicts with `name`.
 
@@ -210,6 +218,10 @@ In addition to the arguments listed above, the following computed attributes are
   The unique identifier for the resource.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
+
+The `certificate_id` block contains:
 
 ## Timeouts
 

@@ -69,6 +69,12 @@ The following arguments are supported:
   letter, or digit, except the last character, which cannot be a dash.
 
 
+The `interconnect` block supports:
+
+The `router` block supports:
+
+The `name` block supports:
+
 - - -
 
 
@@ -97,6 +103,14 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `description` block supports:
+
+The `candidate_subnets` block supports:
+
+The `vlan_tag8021q` block supports:
+
+The `region` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -123,11 +137,13 @@ In addition to the arguments listed above, the following computed attributes are
 * `self_link` - The URI of the created resource.
 
 
-The `private_interconnect_info` block contains:
+The `cloud_router_ip_address` block contains:
 
-* `tag8021q` -
-  802.1q encapsulation tag to be used for traffic between
-  Google and the customer, going to and from this network and region.
+The `customer_router_ip_address` block contains:
+
+The `google_reference_id` block contains:
+
+The `creation_timestamp` block contains:
 
 ## Timeouts
 

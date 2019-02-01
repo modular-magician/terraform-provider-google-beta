@@ -79,6 +79,8 @@ The following arguments are supported:
   last character, which cannot be a dash.
 
 
+The `name` block supports:
+
 - - -
 
 
@@ -120,25 +122,17 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
-The `raw_disk` block supports:
+The `description` block supports:
 
-* `container_type` -
-  (Optional)
-  The format used to encode and transmit the block device, which
-  should be TAR. This is just a container and transmission format
-  and not a runtime format. Provided by the client when the disk
-  image is created.
+The `disk_size_gb` block supports:
 
-* `sha1` -
-  (Optional)
-  An optional SHA1 checksum of the disk image before unpackaging.
-  This is provided by the client when the disk image is created.
+The `family` block supports:
 
-* `source` -
-  (Required)
-  The full Google Cloud Storage URL where disk storage is stored
-  You must provide either this property or the sourceDisk property
-  but not both.
+The `labels` block supports:
+
+The `licenses` block supports:
+
+The `source_disk` block supports:
 
 ## Attributes Reference
 
@@ -157,6 +151,12 @@ In addition to the arguments listed above, the following computed attributes are
   internally during updates.
 * `self_link` - The URI of the created resource.
 
+
+The `archive_size_bytes` block contains:
+
+The `creation_timestamp` block contains:
+
+The `label_fingerprint` block contains:
 
 ## Timeouts
 

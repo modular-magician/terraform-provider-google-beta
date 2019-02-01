@@ -80,6 +80,10 @@ The following arguments are supported:
   A reference to the network to which this router belongs.
 
 
+The `name` block supports:
+
+The `network` block supports:
+
 - - -
 
 
@@ -98,48 +102,9 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
-The `bgp` block supports:
+The `description` block supports:
 
-* `asn` -
-  (Required)
-  Local BGP Autonomous System Number (ASN). Must be an RFC6996
-  private ASN, either 16-bit or 32-bit. The value will be fixed for
-  this router resource. All VPN tunnels that link to this router
-  will have the same local ASN.
-
-* `advertise_mode` -
-  (Optional)
-  User-specified flag to indicate which mode to use for advertisement.
-  Valid values of this enum field are: DEFAULT, CUSTOM
-
-* `advertised_groups` -
-  (Optional)
-  User-specified list of prefix groups to advertise in custom mode.
-  This field can only be populated if advertiseMode is CUSTOM and
-  is advertised to all peers of the router. These groups will be
-  advertised in addition to any specified prefixes. Leave this field
-  blank to advertise no custom groups.
-  This enum field has the one valid value: ALL_SUBNETS
-
-* `advertised_ip_ranges` -
-  (Optional)
-  User-specified list of individual IP ranges to advertise in
-  custom mode. This field can only be populated if advertiseMode
-  is CUSTOM and is advertised to all peers of the router. These IP
-  ranges will be advertised in addition to any specified groups.
-  Leave this field blank to advertise no custom IP ranges.  Structure is documented below.
-
-
-The `advertised_ip_ranges` block supports:
-
-* `range` -
-  (Optional)
-  The IP range to advertise. The value must be a
-  CIDR-formatted string.
-
-* `description` -
-  (Optional)
-  User-specified description for the IP range.
+The `region` block supports:
 
 ## Attributes Reference
 
@@ -150,6 +115,8 @@ In addition to the arguments listed above, the following computed attributes are
   Creation timestamp in RFC3339 text format.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
 
 ## Timeouts
 

@@ -44,6 +44,8 @@ The following arguments are supported:
   The name of the job.
 
 
+The `name` block supports:
+
 - - -
 
 
@@ -92,123 +94,13 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
-The `retry_config` block supports:
+The `description` block supports:
 
-* `retry_count` -
-  (Optional)
-  The number of attempts that the system will make to run a 
-  job using the exponential backoff procedure described by maxDoublings.
-  Values greater than 5 and negative values are not allowed.
+The `schedule` block supports:
 
-* `max_retry_duration` -
-  (Optional)
-  The time limit for retrying a failed job, measured from time when an execution was first attempted. 
-  If specified with retryCount, the job will be retried until both limits are reached.
-  A duration in seconds with up to nine fractional digits, terminated by 's'.
+The `time_zone` block supports:
 
-* `min_backoff_duration` -
-  (Optional)
-  The minimum amount of time to wait before retrying a job after it fails.
-  A duration in seconds with up to nine fractional digits, terminated by 's'.
-
-* `max_backoff_duration` -
-  (Optional)
-  The maximum amount of time to wait before retrying a job after it fails.
-  A duration in seconds with up to nine fractional digits, terminated by 's'.
-
-* `max_doublings` -
-  (Optional)
-  The time between retries will double maxDoublings times.
-  A job's retry interval starts at minBackoffDuration, 
-  then doubles maxDoublings times, then increases linearly, 
-  and finally retries retries at intervals of maxBackoffDuration up to retryCount times.
-
-The `pubsub_target` block supports:
-
-* `topic_name` -
-  (Required)
-  The name of the Cloud Pub/Sub topic to which messages will be published when a job is delivered. 
-  The topic name must be in the same format as required by PubSub's PublishRequest.name, 
-  for example projects/PROJECT_ID/topics/TOPIC_ID.
-
-* `data` -
-  (Optional)
-  The message payload for PubsubMessage.
-  Pubsub message must contain either non-empty data, or at least one attribute.
-
-* `attributes` -
-  (Optional)
-  Attributes for PubsubMessage.
-  Pubsub message must contain either non-empty data, or at least one attribute.
-
-The `app_engine_http_target` block supports:
-
-* `http_method` -
-  (Optional)
-  Which HTTP method to use for the request.
-
-* `app_engine_routing` -
-  (Optional)
-  App Engine Routing setting for the job.  Structure is documented below.
-
-* `relative_uri` -
-  (Required)
-  The relative URI.
-  The relative URL must begin with "/" and must be a valid HTTP relative URL. 
-  It can contain a path, query string arguments, and \# fragments. 
-  If the relative URL is empty, then the root path "/" will be used. 
-  No spaces are allowed, and the maximum length allowed is 2083 characters
-
-* `body` -
-  (Optional)
-  HTTP request body. 
-  A request body is allowed only if the HTTP method is POST or PUT. 
-  It will result in invalid argument error to set a body on a job with an incompatible HttpMethod.
-
-* `headers` -
-  (Optional)
-  HTTP request headers.
-  This map contains the header field names and values. 
-  Headers can be set when the job is created.
-
-
-The `app_engine_routing` block supports:
-
-* `service` -
-  (Optional)
-  App service.
-  By default, the job is sent to the service which is the default service when the job is attempted.
-
-* `version` -
-  (Optional)
-  App version.
-  By default, the job is sent to the version which is the default version when the job is attempted.
-
-* `instance` -
-  (Optional)
-  App instance.
-  By default, the job is sent to an instance which is available when the job is attempted.
-
-The `http_target` block supports:
-
-* `uri` -
-  (Required)
-  The full URI path that the request will be sent to.
-
-* `http_method` -
-  (Optional)
-  Which HTTP method to use for the request.
-
-* `body` -
-  (Optional)
-  HTTP request body. 
-  A request body is allowed only if the HTTP method is POST, PUT, or PATCH. 
-  It is an error to set body on a job with an incompatible HttpMethod.
-
-* `headers` -
-  (Optional)
-  This map contains the header field names and values. 
-  Repeated headers are not supported, but a header value can contain commas.
+The `region` block supports:
 
 
 ## Timeouts

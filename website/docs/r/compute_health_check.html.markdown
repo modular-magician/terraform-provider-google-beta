@@ -77,6 +77,8 @@ The following arguments are supported:
   last character, which cannot be a dash.
 
 
+The `name` block supports:
+
 - - -
 
 
@@ -125,113 +127,15 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
-The `http_health_check` block supports:
+The `check_interval_sec` block supports:
 
-* `host` -
-  (Optional)
-  The value of the host header in the HTTP health check request.
-  If left empty (default value), the public IP on behalf of which this health
-  check is performed will be used.
+The `description` block supports:
 
-* `request_path` -
-  (Optional)
-  The request path of the HTTP health check request.
-  The default value is /.
+The `healthy_threshold` block supports:
 
-* `response` -
-  (Optional)
-  The bytes to match against the beginning of the response data. If left empty
-  (the default value), any response will indicate health. The response data
-  can only be ASCII.
+The `timeout_sec` block supports:
 
-* `port` -
-  (Optional)
-  The TCP port number for the HTTP health check request.
-  The default value is 80.
-
-* `proxy_header` -
-  (Optional)
-  Specifies the type of proxy header to append before sending data to the
-  backend, either NONE or PROXY_V1. The default is NONE.
-
-The `https_health_check` block supports:
-
-* `host` -
-  (Optional)
-  The value of the host header in the HTTPS health check request.
-  If left empty (default value), the public IP on behalf of which this health
-  check is performed will be used.
-
-* `request_path` -
-  (Optional)
-  The request path of the HTTPS health check request.
-  The default value is /.
-
-* `response` -
-  (Optional)
-  The bytes to match against the beginning of the response data. If left empty
-  (the default value), any response will indicate health. The response data
-  can only be ASCII.
-
-* `port` -
-  (Optional)
-  The TCP port number for the HTTPS health check request.
-  The default value is 443.
-
-* `proxy_header` -
-  (Optional)
-  Specifies the type of proxy header to append before sending data to the
-  backend, either NONE or PROXY_V1. The default is NONE.
-
-The `tcp_health_check` block supports:
-
-* `request` -
-  (Optional)
-  The application data to send once the TCP connection has been
-  established (default value is empty). If both request and response are
-  empty, the connection establishment alone will indicate health. The request
-  data can only be ASCII.
-
-* `response` -
-  (Optional)
-  The bytes to match against the beginning of the response data. If left empty
-  (the default value), any response will indicate health. The response data
-  can only be ASCII.
-
-* `port` -
-  (Optional)
-  The TCP port number for the TCP health check request.
-  The default value is 443.
-
-* `proxy_header` -
-  (Optional)
-  Specifies the type of proxy header to append before sending data to the
-  backend, either NONE or PROXY_V1. The default is NONE.
-
-The `ssl_health_check` block supports:
-
-* `request` -
-  (Optional)
-  The application data to send once the SSL connection has been
-  established (default value is empty). If both request and response are
-  empty, the connection establishment alone will indicate health. The request
-  data can only be ASCII.
-
-* `response` -
-  (Optional)
-  The bytes to match against the beginning of the response data. If left empty
-  (the default value), any response will indicate health. The response data
-  can only be ASCII.
-
-* `port` -
-  (Optional)
-  The TCP port number for the SSL health check request.
-  The default value is 443.
-
-* `proxy_header` -
-  (Optional)
-  Specifies the type of proxy header to append before sending data to the
-  backend, either NONE or PROXY_V1. The default is NONE.
+The `unhealthy_threshold` block supports:
 
 ## Attributes Reference
 
@@ -245,6 +149,10 @@ In addition to the arguments listed above, the following computed attributes are
   The type of the health check. One of HTTP, HTTPS, TCP, or SSL.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
+
+The `type` block contains:
 
 ## Timeouts
 

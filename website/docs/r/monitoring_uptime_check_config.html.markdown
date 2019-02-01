@@ -105,6 +105,10 @@ The following arguments are supported:
   The maximum amount of time to wait for the request to complete (must be between 1 and 60 seconds). Accepted formats https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Duration
 
 
+The `display_name` block supports:
+
+The `timeout` block supports:
+
 - - -
 
 
@@ -147,96 +151,11 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
-The `content_matchers` block supports:
+The `period` block supports:
 
-* `content` -
-  (Optional)
-  String or regex content to match (max 1024 bytes)
+The `selected_regions` block supports:
 
-The `internal_checkers` block supports:
-
-* `gcp_zone` -
-  (Optional)
-  The GCP zone the uptime check should egress from. Only respected for internal uptime checks, where internal_network is specified.
-
-* `peer_project_id` -
-  (Optional)
-  The GCP project_id where the internal checker lives. Not necessary the same as the workspace project.
-
-* `name` -
-  (Optional)
-  A unique resource name for this InternalChecker. The format is projects/[PROJECT_ID]/internalCheckers/[INTERNAL_CHECKER_ID]. PROJECT_ID is the stackdriver workspace project for the uptime check config associated with the internal checker.
-
-* `network` -
-  (Optional)
-  The GCP VPC network (https://cloud.google.com/vpc/docs/vpc) where the internal resource lives (ex: "default").
-
-* `display_name` -
-  (Optional)
-  The checker's human-readable name. The display name should be unique within a Stackdriver Workspace in order to make it easier to identify; however, uniqueness is not enforced.
-
-The `http_check` block supports:
-
-* `auth_info` -
-  (Optional)
-  The authentication information. Optional when creating an HTTP check; defaults to empty.  Structure is documented below.
-
-* `port` -
-  (Optional)
-  The port to the page to run the check against. Will be combined with host (specified within the MonitoredResource) and path to construct the full URL. Optional (defaults to 80 without SSL, or 443 with SSL).
-
-* `headers` -
-  (Optional)
-  The list of headers to send as part of the uptime check request. If two headers have the same key and different values, they should be entered as a single header, with the value being a comma-separated list of all the desired values as described at https://www.w3.org/Protocols/rfc2616/rfc2616.txt (page 31). Entering two separate headers with the same key in a Create call will cause the first to be overwritten by the second. The maximum number of headers allowed is 100.
-
-* `path` -
-  (Optional)
-  The path to the page to run the check against. Will be combined with the host (specified within the MonitoredResource) and port to construct the full URL. Optional (defaults to "/").
-
-* `use_ssl` -
-  (Optional)
-  If true, use HTTPS instead of HTTP to run the check.
-
-* `mask_headers` -
-  (Optional)
-  Boolean specifiying whether to encrypt the header information. Encryption should be specified for any headers related to authentication that you do not wish to be seen when retrieving the configuration. The server will be responsible for encrypting the headers. On Get/List calls, if mask_headers is set to True then the headers will be obscured with ******.
-
-
-The `auth_info` block supports:
-
-* `password` -
-  (Optional)
-  The password to authenticate.
-
-* `username` -
-  (Optional)
-  The username to authenticate.
-
-The `tcp_check` block supports:
-
-* `port` -
-  (Required)
-  The port to the page to run the check against. Will be combined with host (specified within the MonitoredResource) to construct the full URL.
-
-The `resource_group` block supports:
-
-* `resource_type` -
-  (Optional)
-  The resource type of the group members.
-
-* `group_id` -
-  (Optional)
-  The group of resources being monitored. Should be the `name` of a group
-
-The `monitored_resource` block supports:
-
-* `type` -
-  (Required)
-  The monitored resource type. This field must match the type field of a MonitoredResourceDescriptor (https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.monitoredResourceDescriptors#MonitoredResourceDescriptor) object. For example, the type of a Compute Engine VM instance is gce_instance. For a list of types, see Monitoring resource types (https://cloud.google.com/monitoring/api/resources) and Logging resource types (https://cloud.google.com/logging/docs/api/v2/resource-list).
-
-* `labels` -
-  (Required)
-  Values for all of the labels listed in the associated monitored resource descriptor. For example, Compute Engine VM instances use the labels "project_id", "instance_id", and "zone".
+The `is_internal` block supports:
 
 ## Attributes Reference
 
@@ -246,6 +165,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `name` -
   A unique resource name for this UptimeCheckConfig. The format is projects/[PROJECT_ID]/uptimeCheckConfigs/[UPTIME_CHECK_ID].
 
+
+The `name` block contains:
 
 ## Timeouts
 
