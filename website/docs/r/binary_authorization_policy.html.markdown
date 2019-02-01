@@ -82,27 +82,6 @@ The following arguments are supported:
   rule.  Structure is documented below.
 
 
-The `default_admission_rule` block supports:
-
-* `evaluation_mode` -
-  (Required)
-  How this admission rule will be evaluated.
-
-* `require_attestations_by` -
-  (Optional)
-  The resource names of the attestors that must attest to a
-  container image. If the attestor is in a different project from the
-  policy, it should be specified in the format `projects/*/attestors/*`.
-  Each attestor must exist before a policy can reference it. To add an
-  attestor to a policy the principal issuing the policy change
-  request must be able to read the attestor resource.
-  Note: this field must be non-empty when the evaluation_mode field
-  specifies REQUIRE_ATTESTATION, otherwise it must be empty.
-
-* `enforcement_mode` -
-  (Required)
-  The action when a pod creation is denied by the admission rule.
-
 - - -
 
 
@@ -131,37 +110,7 @@ The `default_admission_rule` block supports:
     If it is not provided, the provider project is used.
 
 
-The `admission_whitelist_patterns` block supports:
-
-* `name_pattern` -
-  (Optional)
-  An image name pattern to whitelist, in the form
-  `registry/path/to/image`. This supports a trailing * as a
-  wildcard, but this is allowed only in text after the registry/
-  part.
-
-The `cluster_admission_rules` block supports:
-
-* `cluster` - (Required) The identifier for this object. Format specified above.
-
-* `evaluation_mode` -
-  (Optional)
-  How this admission rule will be evaluated.
-
-* `require_attestations_by` -
-  (Optional)
-  The resource names of the attestors that must attest to a
-  container image. If the attestor is in a different project from the
-  policy, it should be specified in the format `projects/*/attestors/*`.
-  Each attestor must exist before a policy can reference it. To add an
-  attestor to a policy the principal issuing the policy change
-  request must be able to read the attestor resource.
-  Note: this field must be non-empty when the evaluation_mode field
-  specifies REQUIRE_ATTESTATION, otherwise it must be empty.
-
-* `enforcement_mode` -
-  (Optional)
-  The action when a pod creation is denied by the admission rule.
+The `description` block supports:
 
 
 ## Timeouts

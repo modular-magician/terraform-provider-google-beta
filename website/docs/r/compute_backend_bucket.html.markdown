@@ -79,6 +79,10 @@ The following arguments are supported:
   last character, which cannot be a dash.
 
 
+The `bucket_name` block supports:
+
+The `name` block supports:
+
 - - -
 
 
@@ -94,6 +98,10 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `description` block supports:
+
+The `enable_cdn` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -103,6 +111,8 @@ In addition to the arguments listed above, the following computed attributes are
   Creation timestamp in RFC3339 text format.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
 
 ## Timeouts
 

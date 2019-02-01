@@ -93,6 +93,10 @@ The following arguments are supported:
   A reference to the disk used to create this snapshot.
 
 
+The `name` block supports:
+
+The `source_disk` block supports:
+
 - - -
 
 
@@ -122,23 +126,11 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
-The `snapshot_encryption_key` block supports:
+The `description` block supports:
 
-* `raw_key` -
-  (Optional)
-  Specifies a 256-bit customer-supplied encryption key, encoded in
-  RFC 4648 base64 to either encrypt or decrypt this resource.
+The `labels` block supports:
 
-* `sha256` -
-  The RFC 4648 base64 encoded SHA-256 hash of the customer-supplied
-  encryption key that protects this resource.
-
-The `source_disk_encryption_key` block supports:
-
-* `raw_key` -
-  (Optional)
-  Specifies a 256-bit customer-supplied encryption key, encoded in
-  RFC 4648 base64 to either encrypt or decrypt this resource.
+The `zone` block supports:
 
 ## Attributes Reference
 
@@ -170,6 +162,18 @@ In addition to the arguments listed above, the following computed attributes are
   internally during updates.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
+
+The `snapshot_id` block contains:
+
+The `disk_size_gb` block contains:
+
+The `storage_bytes` block contains:
+
+The `licenses` block contains:
+
+The `label_fingerprint` block contains:
 
 ## Timeouts
 

@@ -104,6 +104,10 @@ The following arguments are supported:
   to the BackendService.
 
 
+The `name` block supports:
+
+The `url_map` block supports:
+
 - - -
 
 
@@ -113,6 +117,8 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+
+The `description` block supports:
 
 ## Attributes Reference
 
@@ -126,6 +132,10 @@ In addition to the arguments listed above, the following computed attributes are
   The unique identifier for the resource.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
+
+The `proxy_id` block contains:
 
 ## Timeouts
 

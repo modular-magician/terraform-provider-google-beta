@@ -537,6 +537,10 @@ func flattenComputeSnapshotSnapshotEncryptionKeySha256(v interface{}, d *schema.
 	return v
 }
 
+func flattenComputeSnapshotSnapshotEncryptionKeyKmsKeyName(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
 func expandComputeSnapshotName(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
@@ -599,6 +603,13 @@ func expandComputeSnapshotSnapshotEncryptionKey(v interface{}, d *schema.Resourc
 		transformed["sha256"] = transformedSha256
 	}
 
+	transformedKmsKeyName, err := expandComputeSnapshotSnapshotEncryptionKeyKmsKeyName(original["kms_key_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedKmsKeyName); val.IsValid() && !isEmptyValue(val) {
+		transformed["kmsKeyName"] = transformedKmsKeyName
+	}
+
 	return transformed, nil
 }
 
@@ -607,6 +618,10 @@ func expandComputeSnapshotSnapshotEncryptionKeyRawKey(v interface{}, d *schema.R
 }
 
 func expandComputeSnapshotSnapshotEncryptionKeySha256(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeSnapshotSnapshotEncryptionKeyKmsKeyName(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -626,10 +641,32 @@ func expandComputeSnapshotSourceDiskEncryptionKey(v interface{}, d *schema.Resou
 		transformed["rawKey"] = transformedRawKey
 	}
 
+	transformedSha256, err := expandComputeSnapshotSourceDiskEncryptionKeySha256(original["sha256"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSha256); val.IsValid() && !isEmptyValue(val) {
+		transformed["sha256"] = transformedSha256
+	}
+
+	transformedKmsKeyName, err := expandComputeSnapshotSourceDiskEncryptionKeyKmsKeyName(original["kms_key_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedKmsKeyName); val.IsValid() && !isEmptyValue(val) {
+		transformed["kmsKeyName"] = transformedKmsKeyName
+	}
+
 	return transformed, nil
 }
 
 func expandComputeSnapshotSourceDiskEncryptionKeyRawKey(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeSnapshotSourceDiskEncryptionKeySha256(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeSnapshotSourceDiskEncryptionKeyKmsKeyName(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

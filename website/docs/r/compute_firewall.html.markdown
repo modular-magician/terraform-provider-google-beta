@@ -92,6 +92,10 @@ The following arguments are supported:
   The name or self_link of the network to attach this firewall to.
 
 
+The `name` block supports:
+
+The `network` block supports:
+
 - - -
 
 
@@ -202,41 +206,27 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
-The `allow` block supports:
+The `description` block supports:
 
-* `protocol` -
-  (Required)
-  The IP protocol to which this rule applies. The protocol type is
-  required when creating a firewall rule. This value can either be
-  one of the following well known protocol strings (tcp, udp,
-  icmp, esp, ah, sctp), or the IP protocol number.
+The `destination_ranges` block supports:
 
-* `ports` -
-  (Optional)
-  An optional list of ports to which this rule applies. This field
-  is only applicable for UDP or TCP protocol. Each entry must be
-  either an integer or a range. If not specified, this rule
-  applies to connections through any port.
-  Example inputs include: ["22"], ["80","443"], and
-  ["12345-12349"].
+The `direction` block supports:
 
-The `deny` block supports:
+The `disabled` block supports:
 
-* `protocol` -
-  (Required)
-  The IP protocol to which this rule applies. The protocol type is
-  required when creating a firewall rule. This value can either be
-  one of the following well known protocol strings (tcp, udp,
-  icmp, esp, ah, sctp), or the IP protocol number.
+The `enable_logging` block supports:
 
-* `ports` -
-  (Optional)
-  An optional list of ports to which this rule applies. This field
-  is only applicable for UDP or TCP protocol. Each entry must be
-  either an integer or a range. If not specified, this rule
-  applies to connections through any port.
-  Example inputs include: ["22"], ["80","443"], and
-  ["12345-12349"].
+The `priority` block supports:
+
+The `source_ranges` block supports:
+
+The `source_service_accounts` block supports:
+
+The `source_tags` block supports:
+
+The `target_service_accounts` block supports:
+
+The `target_tags` block supports:
 
 ## Attributes Reference
 
@@ -247,6 +237,8 @@ In addition to the arguments listed above, the following computed attributes are
   Creation timestamp in RFC3339 text format.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
 
 ## Timeouts
 

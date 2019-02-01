@@ -102,6 +102,10 @@ The following arguments are supported:
   URLs of the zones where the disk should be replicated to.
 
 
+The `name` block supports:
+
+The `replica_zones` block supports:
+
 - - -
 
 
@@ -164,35 +168,17 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
-The `disk_encryption_key` block supports:
+The `description` block supports:
 
-* `raw_key` -
-  (Optional)
-  Specifies a 256-bit customer-supplied encryption key, encoded in
-  RFC 4648 base64 to either encrypt or decrypt this resource.
+The `labels` block supports:
 
-* `sha256` -
-  The RFC 4648 base64 encoded SHA-256 hash of the customer-supplied
-  encryption key that protects this resource.
+The `size` block supports:
 
-* `kms_key_name` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
-  The name of the encryption key that is stored in Google Cloud KMS.
+The `type` block supports:
 
-The `source_snapshot_encryption_key` block supports:
+The `region` block supports:
 
-* `raw_key` -
-  (Optional)
-  Specifies a 256-bit customer-supplied encryption key, encoded in
-  RFC 4648 base64 to either encrypt or decrypt this resource.
-
-* `kms_key_name` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
-  The name of the encryption key that is stored in Google Cloud KMS.
-
-* `sha256` -
-  The RFC 4648 base64 encoded SHA-256 hash of the customer-supplied
-  encryption key that protects this resource.
+The `snapshot` block supports:
 
 ## Attributes Reference
 
@@ -225,6 +211,18 @@ In addition to the arguments listed above, the following computed attributes are
   used.
 * `self_link` - The URI of the created resource.
 
+
+The `label_fingerprint` block contains:
+
+The `creation_timestamp` block contains:
+
+The `last_attach_timestamp` block contains:
+
+The `last_detach_timestamp` block contains:
+
+The `users` block contains:
+
+The `source_snapshot_id` block contains:
 
 ## Timeouts
 

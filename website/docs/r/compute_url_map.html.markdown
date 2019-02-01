@@ -131,6 +131,10 @@ The following arguments are supported:
   character, which cannot be a dash.
 
 
+The `default_service` block supports:
+
+The `name` block supports:
+
 - - -
 
 
@@ -155,75 +159,7 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
-The `host_rule` block supports:
-
-* `description` -
-  (Optional)
-  An optional description of this HostRule. Provide this property
-  when you create the resource.
-
-* `hosts` -
-  (Required)
-  The list of host patterns to match. They must be valid
-  hostnames, except * will match any string of ([a-z0-9-.]*). In
-  that case, * must be the first character and must be followed in
-  the pattern by either - or ..
-
-* `path_matcher` -
-  (Required)
-  The name of the PathMatcher to use to match the path portion of
-  the URL if the hostRule matches the URL's host portion.
-
-The `path_matcher` block supports:
-
-* `default_service` -
-  (Required)
-  The backend service or backend bucket to use when none of the given paths match.
-
-* `description` -
-  (Optional)
-  An optional description of this resource.
-
-* `name` -
-  (Required)
-  The name to which this PathMatcher is referred by the HostRule.
-
-* `path_rule` -
-  (Optional)
-  The list of path rules.  Structure is documented below.
-
-
-The `path_rule` block supports:
-
-* `paths` -
-  (Required)
-  The list of path patterns to match. Each must start with /
-  and the only place a * is allowed is at the end following
-  a /. The string fed to the path matcher does not include
-  any text after the first ? or #, and those chars are not
-  allowed here.
-
-* `service` -
-  (Required)
-  The backend service or backend bucket to use if any of the given paths match.
-
-The `test` block supports:
-
-* `description` -
-  (Optional)
-  Description of this test case.
-
-* `host` -
-  (Required)
-  Host portion of the URL.
-
-* `path` -
-  (Required)
-  Path portion of the URL.
-
-* `service` -
-  (Required)
-  The backend service or backend bucket link that should be matched by this test.
+The `description` block supports:
 
 ## Attributes Reference
 
@@ -241,6 +177,12 @@ In addition to the arguments listed above, the following computed attributes are
   updates of this resource.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
+
+The `map_id` block contains:
+
+The `fingerprint` block contains:
 
 ## Timeouts
 

@@ -72,6 +72,8 @@ The following arguments are supported:
   last character, which cannot be a dash.
 
 
+The `name` block supports:
+
 - - -
 
 
@@ -120,6 +122,22 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `check_interval_sec` block supports:
+
+The `description` block supports:
+
+The `healthy_threshold` block supports:
+
+The `host` block supports:
+
+The `port` block supports:
+
+The `request_path` block supports:
+
+The `timeout_sec` block supports:
+
+The `unhealthy_threshold` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -129,6 +147,8 @@ In addition to the arguments listed above, the following computed attributes are
   Creation timestamp in RFC3339 text format.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
 
 ## Timeouts
 

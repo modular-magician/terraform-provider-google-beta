@@ -85,6 +85,10 @@ The following arguments are supported:
   belong to this group.
 
 
+The `display_name` block supports:
+
+The `filter` block supports:
+
 - - -
 
 
@@ -103,6 +107,10 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `parent_name` block supports:
+
+The `is_cluster` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -112,6 +120,8 @@ In addition to the arguments listed above, the following computed attributes are
   A unique identifier for this group. The format is
   "projects/{project_id_or_number}/groups/{group_id}".
 
+
+The `name` block contains:
 
 ## Timeouts
 

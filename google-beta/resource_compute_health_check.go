@@ -650,6 +650,10 @@ func flattenComputeHealthCheckHttpHealthCheckPort(v interface{}, d *schema.Resou
 	return v
 }
 
+func flattenComputeHealthCheckHttpHealthCheckPortName(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
 func flattenComputeHealthCheckHttpHealthCheckProxyHeader(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
@@ -697,6 +701,10 @@ func flattenComputeHealthCheckHttpsHealthCheckPort(v interface{}, d *schema.Reso
 	return v
 }
 
+func flattenComputeHealthCheckHttpsHealthCheckPortName(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
 func flattenComputeHealthCheckHttpsHealthCheckProxyHeader(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
@@ -738,6 +746,10 @@ func flattenComputeHealthCheckTcpHealthCheckPort(v interface{}, d *schema.Resour
 	return v
 }
 
+func flattenComputeHealthCheckTcpHealthCheckPortName(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
 func flattenComputeHealthCheckTcpHealthCheckProxyHeader(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
@@ -776,6 +788,10 @@ func flattenComputeHealthCheckSslHealthCheckPort(v interface{}, d *schema.Resour
 			return intVal
 		} // let terraform core handle it if we can't convert the string to an int.
 	}
+	return v
+}
+
+func flattenComputeHealthCheckSslHealthCheckPortName(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
@@ -844,6 +860,13 @@ func expandComputeHealthCheckHttpHealthCheck(v interface{}, d *schema.ResourceDa
 		transformed["port"] = transformedPort
 	}
 
+	transformedPortName, err := expandComputeHealthCheckHttpHealthCheckPortName(original["port_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPortName); val.IsValid() && !isEmptyValue(val) {
+		transformed["portName"] = transformedPortName
+	}
+
 	transformedProxyHeader, err := expandComputeHealthCheckHttpHealthCheckProxyHeader(original["proxy_header"], d, config)
 	if err != nil {
 		return nil, err
@@ -867,6 +890,10 @@ func expandComputeHealthCheckHttpHealthCheckResponse(v interface{}, d *schema.Re
 }
 
 func expandComputeHealthCheckHttpHealthCheckPort(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeHealthCheckHttpHealthCheckPortName(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -911,6 +938,13 @@ func expandComputeHealthCheckHttpsHealthCheck(v interface{}, d *schema.ResourceD
 		transformed["port"] = transformedPort
 	}
 
+	transformedPortName, err := expandComputeHealthCheckHttpsHealthCheckPortName(original["port_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPortName); val.IsValid() && !isEmptyValue(val) {
+		transformed["portName"] = transformedPortName
+	}
+
 	transformedProxyHeader, err := expandComputeHealthCheckHttpsHealthCheckProxyHeader(original["proxy_header"], d, config)
 	if err != nil {
 		return nil, err
@@ -934,6 +968,10 @@ func expandComputeHealthCheckHttpsHealthCheckResponse(v interface{}, d *schema.R
 }
 
 func expandComputeHealthCheckHttpsHealthCheckPort(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeHealthCheckHttpsHealthCheckPortName(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -971,6 +1009,13 @@ func expandComputeHealthCheckTcpHealthCheck(v interface{}, d *schema.ResourceDat
 		transformed["port"] = transformedPort
 	}
 
+	transformedPortName, err := expandComputeHealthCheckTcpHealthCheckPortName(original["port_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPortName); val.IsValid() && !isEmptyValue(val) {
+		transformed["portName"] = transformedPortName
+	}
+
 	transformedProxyHeader, err := expandComputeHealthCheckTcpHealthCheckProxyHeader(original["proxy_header"], d, config)
 	if err != nil {
 		return nil, err
@@ -990,6 +1035,10 @@ func expandComputeHealthCheckTcpHealthCheckResponse(v interface{}, d *schema.Res
 }
 
 func expandComputeHealthCheckTcpHealthCheckPort(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeHealthCheckTcpHealthCheckPortName(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1027,6 +1076,13 @@ func expandComputeHealthCheckSslHealthCheck(v interface{}, d *schema.ResourceDat
 		transformed["port"] = transformedPort
 	}
 
+	transformedPortName, err := expandComputeHealthCheckSslHealthCheckPortName(original["port_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPortName); val.IsValid() && !isEmptyValue(val) {
+		transformed["portName"] = transformedPortName
+	}
+
 	transformedProxyHeader, err := expandComputeHealthCheckSslHealthCheckProxyHeader(original["proxy_header"], d, config)
 	if err != nil {
 		return nil, err
@@ -1046,6 +1102,10 @@ func expandComputeHealthCheckSslHealthCheckResponse(v interface{}, d *schema.Res
 }
 
 func expandComputeHealthCheckSslHealthCheckPort(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeHealthCheckSslHealthCheckPortName(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
