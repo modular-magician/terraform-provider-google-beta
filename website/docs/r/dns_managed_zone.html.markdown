@@ -71,6 +71,10 @@ The following arguments are supported:
   Must be unique within the project.
 
 
+The `dns_name` block supports:
+
+The `name` block supports:
+
 - - -
 
 
@@ -85,6 +89,10 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `description` block supports:
+
+The `labels` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -94,6 +102,8 @@ In addition to the arguments listed above, the following computed attributes are
   Delegate your managed_zone to these virtual name servers;
   defined by the server
 
+
+The `name_servers` block contains:
 
 ## Timeouts
 

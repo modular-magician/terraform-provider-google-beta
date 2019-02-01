@@ -79,6 +79,12 @@ The following arguments are supported:
   unique per project and between 4 and 30 characters in length.
 
 
+The `name` block supports:
+
+The `config` block supports:
+
+The `display_name` block supports:
+
 - - -
 
 
@@ -94,6 +100,10 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `num_nodes` block supports:
+
+The `labels` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -102,6 +112,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `state` -
   Instance status: `CREATING` or `READY`.
 
+
+The `state` block contains:
 
 ## Timeouts
 

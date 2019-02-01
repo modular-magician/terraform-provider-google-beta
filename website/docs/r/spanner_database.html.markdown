@@ -69,6 +69,10 @@ The following arguments are supported:
   The instance to create the database on.
 
 
+The `name` block supports:
+
+The `instance` block supports:
+
 - - -
 
 
@@ -82,6 +86,8 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `ddl` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -90,6 +96,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `state` -
   An explanation of the status of the database.
 
+
+The `state` block contains:
 
 ## Timeouts
 

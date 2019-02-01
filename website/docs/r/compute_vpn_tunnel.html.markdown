@@ -134,6 +134,14 @@ The following arguments are supported:
   gateway and the peer VPN gateway.
 
 
+The `name` block supports:
+
+The `target_vpn_gateway` block supports:
+
+The `peer_ip` block supports:
+
+The `shared_secret` block supports:
+
 - - -
 
 
@@ -176,6 +184,20 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `description` block supports:
+
+The `router` block supports:
+
+The `ike_version` block supports:
+
+The `local_traffic_selector` block supports:
+
+The `remote_traffic_selector` block supports:
+
+The `labels` block supports:
+
+The `region` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -195,6 +217,14 @@ In addition to the arguments listed above, the following computed attributes are
   Detailed status message for the VPN tunnel.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
+
+The `shared_secret_hash` block contains:
+
+The `label_fingerprint` block contains:
+
+The `detailed_status` block contains:
 
 ## Timeouts
 

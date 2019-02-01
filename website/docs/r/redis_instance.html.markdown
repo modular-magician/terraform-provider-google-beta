@@ -92,6 +92,10 @@ The following arguments are supported:
   Redis memory size in GiB.
 
 
+The `name` block supports:
+
+The `memory_size_gb` block supports:
+
 - - -
 
 
@@ -158,6 +162,26 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `alternative_location_id` block supports:
+
+The `authorized_network` block supports:
+
+The `display_name` block supports:
+
+The `labels` block supports:
+
+The `redis_configs` block supports:
+
+The `location_id` block supports:
+
+The `redis_version` block supports:
+
+The `reserved_ip_range` block supports:
+
+The `tier` block supports:
+
+The `region` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -181,6 +205,14 @@ In addition to the arguments listed above, the following computed attributes are
 * `port` -
   The port number of the exposed Redis endpoint.
 
+
+The `create_time` block contains:
+
+The `current_location_id` block contains:
+
+The `host` block contains:
+
+The `port` block contains:
 
 ## Timeouts
 

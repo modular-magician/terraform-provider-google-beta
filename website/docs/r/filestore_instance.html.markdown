@@ -88,35 +88,11 @@ The following arguments are supported:
   The name of the Filestore zone of the instance.
 
 
-The `file_shares` block supports:
+The `name` block supports:
 
-* `name` -
-  (Required)
-  The name of the fileshare (16 characters or less)
+The `tier` block supports:
 
-* `capacity_gb` -
-  (Required)
-  File share capacity in GB.
-
-The `networks` block supports:
-
-* `network` -
-  (Required)
-  The name of the GCE VPC network to which the
-  instance is connected.
-
-* `modes` -
-  (Required)
-  IP versions for which the instance has
-  IP addresses assigned.
-
-* `reserved_ip_range` -
-  (Optional)
-  A /29 CIDR block that identifies the range of IP
-  addresses reserved for this instance.
-
-* `ip_addresses` -
-  A list of IPv4 or IPv6 addresses.
+The `zone` block supports:
 
 - - -
 
@@ -132,6 +108,10 @@ The `networks` block supports:
     If it is not provided, the provider project is used.
 
 
+The `description` block supports:
+
+The `labels` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -144,6 +124,10 @@ In addition to the arguments listed above, the following computed attributes are
   Server-specified ETag for the instance resource to prevent
   simultaneous updates from overwriting each other.
 
+
+The `create_time` block contains:
+
+The `etag` block contains:
 
 ## Timeouts
 

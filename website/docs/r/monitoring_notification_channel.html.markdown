@@ -66,6 +66,10 @@ The following arguments are supported:
   An optional human-readable name for this notification channel. It is recommended that you specify a non-empty and unique name in order to make it easier to identify the channels in your project, though this is not enforced. The display name is limited to 512 Unicode characters.
 
 
+The `type` block supports:
+
+The `display_name` block supports:
+
 - - -
 
 
@@ -99,6 +103,14 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `labels` block supports:
+
+The `user_labels` block supports:
+
+The `description` block supports:
+
+The `enabled` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -112,6 +124,10 @@ In addition to the arguments listed above, the following computed attributes are
 * `verification_status` -
   Indicates whether this channel has been verified or not. On a ListNotificationChannels or GetNotificationChannel operation, this field is expected to be populated.If the value is UNVERIFIED, then it indicates that the channel is non-functioning (it both requires verification and lacks verification); otherwise, it is assumed that the channel works.If the channel is neither VERIFIED nor UNVERIFIED, it implies that the channel is of a type that does not require verification or that this specific channel has been exempted from verification because it was created prior to verification being required for channels of this type.This field cannot be modified using a standard UpdateNotificationChannel operation. To change the value of this field, you must call VerifyNotificationChannel.
 
+
+The `name` block contains:
+
+The `verification_status` block contains:
 
 ## Timeouts
 

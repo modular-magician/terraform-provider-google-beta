@@ -107,6 +107,12 @@ The following arguments are supported:
   Only networks that are in the distributed mode can have subnetworks.
 
 
+The `ip_cidr_range` block supports:
+
+The `name` block supports:
+
+The `network` block supports:
+
 - - -
 
 
@@ -139,21 +145,13 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
-The `secondary_ip_range` block supports:
+The `description` block supports:
 
-* `range_name` -
-  (Required)
-  The name associated with this subnetwork secondary range, used
-  when adding an alias IP range to a VM instance. The name must
-  be 1-63 characters long, and comply with RFC1035. The name
-  must be unique within the subnetwork.
+The `enable_flow_logs` block supports:
 
-* `ip_cidr_range` -
-  (Required)
-  The range of IP addresses belonging to this subnetwork secondary
-  range. Provide this property when you create the subnetwork.
-  Ranges must be unique and non-overlapping with all primary and
-  secondary IP ranges within a network. Only IPv4 is supported.
+The `private_ip_google_access` block supports:
+
+The `region` block supports:
 
 ## Attributes Reference
 
@@ -172,6 +170,12 @@ In addition to the arguments listed above, the following computed attributes are
   updates of this resource.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
+
+The `gateway_address` block contains:
+
+The `fingerprint` block contains:
 
 ## Timeouts
 

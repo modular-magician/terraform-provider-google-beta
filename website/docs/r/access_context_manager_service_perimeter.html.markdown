@@ -98,6 +98,12 @@ The following arguments are supported:
   Format: accessPolicies/{policy_id}/servicePerimeters/{short_name}
 
 
+The `title` block supports:
+
+The `parent` block supports:
+
+The `name` block supports:
+
 - - -
 
 
@@ -130,56 +136,9 @@ The following arguments are supported:
   perimeter content and boundaries.  Structure is documented below.
 
 
-The `status` block supports:
+The `description` block supports:
 
-* `resources` -
-  (Optional)
-  A list of GCP resources that are inside of the service perimeter.
-  Currently only projects are allowed.
-  Format: projects/{project_number}
-
-* `access_levels` -
-  (Optional)
-  A list of AccessLevel resource names that allow resources within
-  the ServicePerimeter to be accessed from the internet.
-  AccessLevels listed must be in the same policy as this
-  ServicePerimeter. Referencing a nonexistent AccessLevel is a
-  syntax error. If no AccessLevel names are listed, resources within
-  the perimeter can only be accessed via GCP calls with request
-  origins within the perimeter. For Service Perimeter Bridge, must
-  be empty.
-  Format: accessPolicies/{policy_id}/accessLevels/{access_level_name}
-
-* `unrestricted_services` -
-  (Optional)
-  GCP services that are not subject to the Service Perimeter
-  restrictions. May contain a list of services or a single wildcard
-  "*". For example, if logging.googleapis.com is unrestricted, users
-  can access logs inside the perimeter as if the perimeter doesn't
-  exist, and it also means VMs inside the perimeter can access logs
-  outside the perimeter.
-  The wildcard means that unless explicitly specified by
-  "restrictedServices" list, any service is treated as unrestricted.
-  One of the fields "restrictedServices", "unrestrictedServices"
-  must contain a wildcard "*", otherwise the Service Perimeter
-  specification is invalid. It also means that both field being
-  empty is invalid as well. "unrestrictedServices" can be empty if
-  and only if "restrictedServices" list contains a "*" wildcard.
-
-* `restricted_services` -
-  (Optional)
-  GCP services that are subject to the Service Perimeter
-  restrictions. May contain a list of services or a single wildcard
-  "*". For example, if storage.googleapis.com is specified, access
-  to the storage buckets inside the perimeter must meet the
-  perimeter's access restrictions.
-  Wildcard means that unless explicitly specified by
-  "unrestrictedServices" list, any service is treated as restricted.
-  One of the fields "restrictedServices", "unrestrictedServices"
-  must contain a wildcard "*", otherwise the Service Perimeter
-  specification is invalid. It also means that both field being
-  empty is invalid as well. "restrictedServices" can be empty if and
-  only if "unrestrictedServices" list contains a "*" wildcard.
+The `perimeter_type` block supports:
 
 ## Attributes Reference
 
@@ -192,6 +151,10 @@ In addition to the arguments listed above, the following computed attributes are
 * `update_time` -
   Time the AccessPolicy was updated in UTC.
 
+
+The `create_time` block contains:
+
+The `update_time` block contains:
 
 ## Timeouts
 

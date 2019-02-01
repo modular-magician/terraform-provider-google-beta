@@ -63,6 +63,10 @@ The following arguments are supported:
   Human readable title. Does not affect behavior.
 
 
+The `parent` block supports:
+
+The `title` block supports:
+
 - - -
 
 
@@ -81,6 +85,12 @@ In addition to the arguments listed above, the following computed attributes are
 * `update_time` -
   Time the AccessPolicy was updated in UTC.
 
+
+The `name` block contains:
+
+The `create_time` block contains:
+
+The `update_time` block contains:
 
 ## Timeouts
 

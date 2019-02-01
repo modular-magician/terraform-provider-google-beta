@@ -75,6 +75,8 @@ The following arguments are supported:
   character, which cannot be a dash.
 
 
+The `name` block supports:
+
 - - -
 
 
@@ -116,6 +118,14 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `description` block supports:
+
+The `profile` block supports:
+
+The `min_tls_version` block supports:
+
+The `custom_features` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -132,6 +142,12 @@ In addition to the arguments listed above, the following computed attributes are
   object. This field is used in optimistic locking.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
+
+The `enabled_features` block contains:
+
+The `fingerprint` block contains:
 
 ## Timeouts
 

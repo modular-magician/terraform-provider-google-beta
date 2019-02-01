@@ -74,6 +74,10 @@ The following arguments are supported:
   The action to take if this rule matches.
 
 
+The `source_range` block supports:
+
+The `action` block supports:
+
 - - -
 
 
@@ -91,6 +95,10 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+
+The `description` block supports:
+
+The `priority` block supports:
 
 
 ## Timeouts

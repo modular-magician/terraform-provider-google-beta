@@ -74,6 +74,14 @@ The following arguments are supported:
   e.g. ['resourcemanager.projects.delete']
 
 
+The `reason` block supports:
+
+The `origin` block supports:
+
+The `parent` block supports:
+
+The `restrictions` block supports:
+
 - - -
 
 
@@ -89,6 +97,10 @@ In addition to the arguments listed above, the following computed attributes are
 * `create_time` -
   Time of creation
 
+
+The `name` block contains:
+
+The `create_time` block contains:
 
 ## Timeouts
 

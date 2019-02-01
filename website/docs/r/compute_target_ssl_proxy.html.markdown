@@ -97,6 +97,12 @@ The following arguments are supported:
   one SSL certificate must be specified.
 
 
+The `name` block supports:
+
+The `backend_service` block supports:
+
+The `ssl_certificates` block supports:
+
 - - -
 
 
@@ -118,6 +124,12 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `description` block supports:
+
+The `proxy_header` block supports:
+
+The `ssl_policy` block supports:
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -130,6 +142,10 @@ In addition to the arguments listed above, the following computed attributes are
   The unique identifier for the resource.
 * `self_link` - The URI of the created resource.
 
+
+The `creation_timestamp` block contains:
+
+The `proxy_id` block contains:
 
 ## Timeouts
 
