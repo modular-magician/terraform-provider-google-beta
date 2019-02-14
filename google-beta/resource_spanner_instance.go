@@ -61,7 +61,7 @@ func resourceSpannerInstance() *schema.Resource {
 				Computed:     true,
 				Optional:     true,
 				ForceNew:     true,
-				ValidateFunc: validateRegexp(`^(?:[a-z](?:[-_a-z0-9]{4,28}[a-z0-9])?)$`),
+				ValidateFunc: validateRegexp(`^(?:[a-z](?:[-_a-z0-9]{0,62}[a-z0-9])?)$`),
 			},
 			"labels": {
 				Type:     schema.TypeMap,
