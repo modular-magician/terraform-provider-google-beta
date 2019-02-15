@@ -348,9 +348,7 @@ func SignString(toSign []byte, cfg *jwt.Config) ([]byte, error) {
 
 	// Hash string
 	hasher := sha256.New()
-	if _, err := hasher.Write(toSign); err != nil {
-		return nil, errwrap.Wrapf("failed to calculate sha256: {{err}}", err)
-	}
+	hasher.Write(toSign)
 
 	// Sign string
 	signed, err := rsa.SignPKCS1v15(rand.Reader, pk, crypto.SHA256, hasher.Sum(nil))

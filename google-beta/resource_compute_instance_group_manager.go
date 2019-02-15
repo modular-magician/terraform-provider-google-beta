@@ -566,9 +566,9 @@ func resourceComputeInstanceGroupManagerDelete(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		instanceGroup, igErr := config.clientComputeBeta.InstanceGroups.Get(
+		instanceGroup, err := config.clientComputeBeta.InstanceGroups.Get(
 			project, zone, name).Do()
-		if igErr != nil {
+		if err != nil {
 			return fmt.Errorf("Error getting instance group size: %s", err)
 		}
 

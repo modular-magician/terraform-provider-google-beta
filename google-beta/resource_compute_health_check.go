@@ -464,9 +464,6 @@ func resourceComputeHealthCheckUpdate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	obj, err = resourceComputeHealthCheckEncoder(d, meta, obj)
-	if err != nil {
-		return err
-	}
 
 	url, err := replaceVars(d, config, "https://www.googleapis.com/compute/beta/projects/{{project}}/global/healthChecks/{{name}}")
 	if err != nil {

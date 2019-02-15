@@ -73,7 +73,7 @@ func TestComputeFirewallMigrateState_empty(t *testing.T) {
 
 	// should handle non-nil but empty
 	is = &terraform.InstanceState{}
-	_, err = resourceComputeFirewallMigrateState(0, is, meta)
+	is, err = resourceComputeFirewallMigrateState(0, is, meta)
 
 	if err != nil {
 		t.Fatalf("err: %#v", err)

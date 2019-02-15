@@ -141,9 +141,6 @@ func testAccCheckDataSourceComputeAddressDestroy(resource_name string) resource.
 		}
 
 		addressId, err := parseComputeAddressId(rs.Primary.ID, nil)
-		if err != nil {
-			return err
-		}
 
 		_, err = config.clientCompute.Addresses.Get(
 			config.Project, addressId.Region, addressId.Name).Do()

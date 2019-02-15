@@ -134,12 +134,10 @@ func resourceGoogleServiceAccountUpdate(d *schema.ResourceData, meta interface{}
 
 func resourceGoogleServiceAccountImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
-	if err := parseImportId([]string{
+	parseImportId([]string{
 		"projects/(?P<project>[^/]+)/serviceAccounts/(?P<email>[^/]+)",
 		"(?P<project>[^/]+)/(?P<email>[^/]+)",
-		"(?P<email>[^/]+)"}, d, config); err != nil {
-		return nil, err
-	}
+		"(?P<email>[^/]+)"}, d, config)
 
 	// Replace import id for the resource id
 	id, err := replaceVars(d, config, "projects/{{project}}/serviceAccounts/{{email}}")

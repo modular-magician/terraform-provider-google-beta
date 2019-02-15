@@ -252,9 +252,6 @@ func resourceSpannerInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	obj, err = resourceSpannerInstanceUpdateEncoder(d, meta, obj)
-	if err != nil {
-		return err
-	}
 
 	url, err := replaceVars(d, config, "https://spanner.googleapis.com/v1/projects/{{project}}/instances/{{name}}")
 	if err != nil {

@@ -130,9 +130,7 @@ func resourceGoogleProjectServicesDelete(d *schema.ResourceData, meta interface{
 	config := meta.(*Config)
 	services := resourceServices(d)
 	for _, s := range services {
-		if err := disableService(s, d.Id(), config, true); err != nil {
-			return err
-		}
+		disableService(s, d.Id(), config, true)
 	}
 	d.SetId("")
 	return nil

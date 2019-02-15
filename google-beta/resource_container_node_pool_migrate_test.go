@@ -1,9 +1,8 @@
 package google
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform/terraform"
+	"testing"
 )
 
 func TestContainerNodePoolMigrateState(t *testing.T) {
@@ -58,7 +57,7 @@ func TestContainerNodePoolMigrateState_empty(t *testing.T) {
 
 	// should handle non-nil but empty
 	is = &terraform.InstanceState{}
-	_, err = resourceContainerNodePoolMigrateState(0, is, meta)
+	is, err = resourceContainerNodePoolMigrateState(0, is, meta)
 
 	if err != nil {
 		t.Fatalf("err: %#v", err)

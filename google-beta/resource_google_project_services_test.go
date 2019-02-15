@@ -44,9 +44,7 @@ func TestAccProjectServices_basic(t *testing.T) {
 			{
 				PreConfig: func() {
 					config := testAccProvider.Meta().(*Config)
-					if err := enableService(oobService, pid, config); err != nil {
-						t.Fatalf("Error enabling %q: %v", oobService, err)
-					}
+					enableService(oobService, pid, config)
 				},
 				Config: testAccProjectAssociateServicesBasic(services2, pid, pname, org),
 				Check: resource.ComposeTestCheckFunc(
@@ -89,9 +87,7 @@ func TestAccProjectServices_authoritative(t *testing.T) {
 			{
 				PreConfig: func() {
 					config := testAccProvider.Meta().(*Config)
-					if err := enableService(oobService, pid, config); err != nil {
-						t.Fatalf("Error enabling %q: %v", oobService, err)
-					}
+					enableService(oobService, pid, config)
 				},
 				Config: testAccProjectAssociateServicesBasic(services, pid, pname, org),
 				Check: resource.ComposeTestCheckFunc(
@@ -130,9 +126,7 @@ func TestAccProjectServices_authoritative2(t *testing.T) {
 				PreConfig: func() {
 					config := testAccProvider.Meta().(*Config)
 					for _, s := range oobServices {
-						if err := enableService(s, pid, config); err != nil {
-							t.Fatalf("Error enabling %q: %v", s, err)
-						}
+						enableService(s, pid, config)
 					}
 				},
 				Config: testAccProjectAssociateServicesBasic(services, pid, pname, org),

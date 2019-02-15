@@ -66,9 +66,7 @@ func TestSetOmittedFields(t *testing.T) {
 		},
 	}
 	output := &OutputOuter{}
-	if err := Convert(input, output); err != nil {
-		t.Errorf("Error converting: %v", err)
-	}
+	Convert(input, output)
 	if input.NotOmitted != output.NotOmitted ||
 		!reflect.DeepEqual(input.Omitted, output.Omitted) ||
 		!reflect.DeepEqual(input.Struct, output.Struct) ||

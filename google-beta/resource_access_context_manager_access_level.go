@@ -291,9 +291,6 @@ func resourceAccessContextManagerAccessLevelUpdate(d *schema.ResourceData, meta 
 	}
 
 	obj, err = resourceAccessContextManagerAccessLevelEncoder(d, meta, obj)
-	if err != nil {
-		return err
-	}
 
 	url, err := replaceVars(d, config, "https://accesscontextmanager.googleapis.com/v1beta/{{name}}")
 	if err != nil {
@@ -380,9 +377,7 @@ func resourceAccessContextManagerAccessLevelImport(d *schema.ResourceData, meta 
 	config := meta.(*Config)
 
 	// current import_formats can't import ids with forward slashes in them.
-	if err := parseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
-		return nil, err
-	}
+	parseImportId([]string{"(?P<name>.+)"}, d, config)
 	stringParts := strings.Split(d.Get("name").(string), "/")
 	d.Set("parent", fmt.Sprintf("%s/%s", stringParts[0], stringParts[1]))
 	return []*schema.ResourceData{d}, nil

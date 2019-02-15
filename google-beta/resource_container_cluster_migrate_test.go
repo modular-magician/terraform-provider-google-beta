@@ -67,7 +67,7 @@ func TestContainerClusterMigrateState_empty(t *testing.T) {
 
 	// should handle non-nil but empty
 	is = &terraform.InstanceState{}
-	_, err = resourceContainerClusterMigrateState(0, is, meta)
+	is, err = resourceContainerClusterMigrateState(0, is, meta)
 
 	if err != nil {
 		t.Fatalf("err: %#v", err)
