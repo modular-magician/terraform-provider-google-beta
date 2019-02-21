@@ -24,6 +24,8 @@ description: |-
 An SslCertificate resource, used for HTTPS load balancing. This resource
 provides a mechanism to upload an SSL key and certificate to
 the load balancer to serve secure connections from the user.
+For a certificate managed by Google, see the ManagedSslCertificate
+resource.
 
 
 To get more information about SslCertificate, see:
@@ -191,6 +193,7 @@ The following arguments are supported:
   first character must be a lowercase letter, and all following
   characters must be a dash, lowercase letter, or digit, except the last
   character, which cannot be a dash.
+  These are in the same namespace as the managed SSL certificates.
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
