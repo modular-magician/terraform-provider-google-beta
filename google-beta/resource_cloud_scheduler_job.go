@@ -47,12 +47,6 @@ func resourceCloudSchedulerJob() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"region": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-				ForceNew: true,
-			},
 			"app_engine_http_target": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -176,6 +170,12 @@ func resourceCloudSchedulerJob() *schema.Resource {
 				},
 				ConflictsWith: []string{"app_engine_http_target", "http_target"},
 			},
+			"region": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional: true,
+				ForceNew: true,
+			},
 			"retry_config": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -260,6 +260,12 @@ func resourceCloudSchedulerJobCreate(d *schema.ResourceData, meta interface{}) e
 	} else if v, ok := d.GetOkExists("time_zone"); !isEmptyValue(reflect.ValueOf(timeZoneProp)) && (ok || !reflect.DeepEqual(v, timeZoneProp)) {
 		obj["timeZone"] = timeZoneProp
 	}
+	regionProp, err := expandCloudSchedulerJobRegion(d.Get("region"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("region"); !isEmptyValue(reflect.ValueOf(regionProp)) && (ok || !reflect.DeepEqual(v, regionProp)) {
+		obj["region"] = regionProp
+	}
 	retryConfigProp, err := expandCloudSchedulerJobRetryConfig(d.Get("retry_config"), d, config)
 	if err != nil {
 		return err
@@ -329,14 +335,6 @@ func resourceCloudSchedulerJobRead(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
 
-	region, err := getRegion(d, config)
-	if err != nil {
-		return err
-	}
-	if err := d.Set("region", region); err != nil {
-		return fmt.Errorf("Error reading Job: %s", err)
-	}
-
 	if err := d.Set("name", flattenCloudSchedulerJobName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
@@ -347,6 +345,9 @@ func resourceCloudSchedulerJobRead(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
 	if err := d.Set("time_zone", flattenCloudSchedulerJobTimeZone(res["timeZone"], d)); err != nil {
+		return fmt.Errorf("Error reading Job: %s", err)
+	}
+	if err := d.Set("region", flattenCloudSchedulerJobRegion(res["region"], d)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
 	if err := d.Set("retry_config", flattenCloudSchedulerJobRetryConfig(res["retryConfig"], d)); err != nil {
@@ -416,6 +417,10 @@ func flattenCloudSchedulerJobSchedule(v interface{}, d *schema.ResourceData) int
 }
 
 func flattenCloudSchedulerJobTimeZone(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenCloudSchedulerJobRegion(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
@@ -675,6 +680,10 @@ func expandCloudSchedulerJobSchedule(v interface{}, d *schema.ResourceData, conf
 }
 
 func expandCloudSchedulerJobTimeZone(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudSchedulerJobRegion(v interface{}, d *schema.ResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
