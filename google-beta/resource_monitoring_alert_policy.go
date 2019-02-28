@@ -20,9 +20,6 @@ import (
 	"reflect"
 	"strconv"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
 )
 
 func resourceMonitoringAlertPolicy() *schema.Resource {

@@ -20,10 +20,6 @@ import (
 	"reflect"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
-	accesscontextmanager "google.golang.org/api/accesscontextmanager/v1beta"
 )
 
 func resourceAccessContextManagerServicePerimeter() *schema.Resource {

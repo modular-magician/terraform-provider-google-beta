@@ -22,11 +22,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/customdiff"
-	"github.com/hashicorp/terraform/helper/schema"
-	"google.golang.org/api/compute/v1"
-	"google.golang.org/api/googleapi"
 )
 
 const (

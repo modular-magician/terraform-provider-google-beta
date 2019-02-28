@@ -21,10 +21,6 @@ import (
 	"reflect"
 	"regexp"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/hashcode"
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
 )
 
 func defaultBinaryAuthorizationPolicy(project string) map[string]interface{} {

@@ -21,9 +21,6 @@ import (
 	"reflect"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
-	accesscontextmanager "google.golang.org/api/accesscontextmanager/v1beta"
 )
 
 func resourceAccessContextManagerAccessPolicy() *schema.Resource {

@@ -19,8 +19,6 @@ import (
 	"log"
 	"reflect"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceSpannerDatabase() *schema.Resource {

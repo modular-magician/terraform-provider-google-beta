@@ -20,8 +20,6 @@ import (
 	"reflect"
 	"regexp"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceBinaryAuthorizationAttestor() *schema.Resource {

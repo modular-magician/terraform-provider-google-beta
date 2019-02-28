@@ -20,10 +20,6 @@ import (
 	"reflect"
 	"strconv"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
-	"google.golang.org/api/compute/v1"
 )
 
 func resourceComputeSslCertificate() *schema.Resource {

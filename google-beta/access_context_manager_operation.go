@@ -1,9 +1,5 @@
 package google
 
-import (
-	accesscontextmanager "google.golang.org/api/accesscontextmanager/v1beta"
-)
-
 type AccessContextManagerOperationWaiter struct {
 	Service *accesscontextmanager.OperationsService
 	CommonOperationWaiter

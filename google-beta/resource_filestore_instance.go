@@ -22,8 +22,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
 	filestore "google.golang.org/api/file/v1beta1"
 )
 

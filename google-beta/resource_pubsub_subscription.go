@@ -22,8 +22,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourcePubsubSubscription() *schema.Resource {
