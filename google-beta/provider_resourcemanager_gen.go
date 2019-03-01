@@ -17,5 +17,6 @@ package google
 import "github.com/hashicorp/terraform/helper/schema"
 
 var GeneratedResourceManagerResourcesMap = map[string]*schema.Resource{
-	"google_resource_manager_lien": resourceResourceManagerLien(),
+	"google_resource_manager_lien":   resourceResourceManagerLien(),
+	"google_resource_manager_folder": resourceResourceManagerFolder(),
 }
