@@ -13,6 +13,7 @@ import (
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
+var testAccProvidersOiCS map[string]terraform.ResourceProvider
 var testAccProvider *schema.Provider
 var testAccRandomProvider *schema.Provider
 
@@ -63,6 +64,11 @@ func init() {
 	testAccProviders = map[string]terraform.ResourceProvider{
 		"google": testAccProvider,
 		"random": testAccRandomProvider,
+	}
+
+	testAccProvidersOiCS = map[string]terraform.ResourceProvider{
+		"google-beta": testAccProvider,
+		"random":      testAccRandomProvider,
 	}
 }
 
