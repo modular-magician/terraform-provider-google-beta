@@ -186,43 +186,43 @@ func resourceComputeUrlMapCreate(d *schema.ResourceData, meta interface{}) error
 	defaultServiceProp, err := expandComputeUrlMapDefaultService(d.Get("default_service"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("default_service"); !isEmptyValue(reflect.ValueOf(defaultServiceProp)) && (ok || !reflect.DeepEqual(v, defaultServiceProp)) {
+	} else if v := d.Get("default_service"); !isEmptyValue(reflect.ValueOf(defaultServiceProp)) {
 		obj["defaultService"] = defaultServiceProp
 	}
 	descriptionProp, err := expandComputeUrlMapDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v := d.Get("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	hostRulesProp, err := expandComputeUrlMapHost_rule(d.Get("host_rule"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("host_rule"); !isEmptyValue(reflect.ValueOf(hostRulesProp)) && (ok || !reflect.DeepEqual(v, hostRulesProp)) {
+	} else if v := d.Get("host_rule"); !isEmptyValue(reflect.ValueOf(hostRulesProp)) {
 		obj["hostRules"] = hostRulesProp
 	}
 	fingerprintProp, err := expandComputeUrlMapFingerprint(d.Get("fingerprint"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("fingerprint"); !isEmptyValue(reflect.ValueOf(fingerprintProp)) && (ok || !reflect.DeepEqual(v, fingerprintProp)) {
+	} else if v := d.Get("fingerprint"); !isEmptyValue(reflect.ValueOf(fingerprintProp)) {
 		obj["fingerprint"] = fingerprintProp
 	}
 	nameProp, err := expandComputeUrlMapName(d.Get("name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+	} else if v := d.Get("name"); !isEmptyValue(reflect.ValueOf(nameProp)) {
 		obj["name"] = nameProp
 	}
 	pathMatchersProp, err := expandComputeUrlMapPath_matcher(d.Get("path_matcher"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("path_matcher"); !isEmptyValue(reflect.ValueOf(pathMatchersProp)) && (ok || !reflect.DeepEqual(v, pathMatchersProp)) {
+	} else if v := d.Get("path_matcher"); !isEmptyValue(reflect.ValueOf(pathMatchersProp)) {
 		obj["pathMatchers"] = pathMatchersProp
 	}
 	testsProp, err := expandComputeUrlMapTest(d.Get("test"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("test"); !isEmptyValue(reflect.ValueOf(testsProp)) && (ok || !reflect.DeepEqual(v, testsProp)) {
+	} else if v := d.Get("test"); !isEmptyValue(reflect.ValueOf(testsProp)) {
 		obj["tests"] = testsProp
 	}
 
@@ -331,43 +331,43 @@ func resourceComputeUrlMapUpdate(d *schema.ResourceData, meta interface{}) error
 	defaultServiceProp, err := expandComputeUrlMapDefaultService(d.Get("default_service"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("default_service"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, defaultServiceProp)) {
+	} else if v := d.Get("default_service"); !isEmptyValue(reflect.ValueOf(defaultServiceProp)) {
 		obj["defaultService"] = defaultServiceProp
 	}
 	descriptionProp, err := expandComputeUrlMapDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v := d.Get("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	hostRulesProp, err := expandComputeUrlMapHost_rule(d.Get("host_rule"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("host_rule"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, hostRulesProp)) {
+	} else if v := d.Get("host_rule"); !isEmptyValue(reflect.ValueOf(hostRulesProp)) {
 		obj["hostRules"] = hostRulesProp
 	}
 	fingerprintProp, err := expandComputeUrlMapFingerprint(d.Get("fingerprint"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("fingerprint"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, fingerprintProp)) {
+	} else if v := d.Get("fingerprint"); !isEmptyValue(reflect.ValueOf(fingerprintProp)) {
 		obj["fingerprint"] = fingerprintProp
 	}
 	nameProp, err := expandComputeUrlMapName(d.Get("name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+	} else if v := d.Get("name"); !isEmptyValue(reflect.ValueOf(nameProp)) {
 		obj["name"] = nameProp
 	}
 	pathMatchersProp, err := expandComputeUrlMapPath_matcher(d.Get("path_matcher"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("path_matcher"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, pathMatchersProp)) {
+	} else if v := d.Get("path_matcher"); !isEmptyValue(reflect.ValueOf(pathMatchersProp)) {
 		obj["pathMatchers"] = pathMatchersProp
 	}
 	testsProp, err := expandComputeUrlMapTest(d.Get("test"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("test"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, testsProp)) {
+	} else if v := d.Get("test"); !isEmptyValue(reflect.ValueOf(testsProp)) {
 		obj["tests"] = testsProp
 	}
 
