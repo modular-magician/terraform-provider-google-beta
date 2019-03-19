@@ -103,6 +103,77 @@ resource "google_compute_route" "route1" {
   next_hop_vpn_tunnel = "${google_compute_vpn_tunnel.tunnel1.self_link}"
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=vpn_tunnel_beta&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Vpn Tunnel Beta
+
+
+```hcl
+resource "google_compute_vpn_tunnel" "tunnel1" {
+  name          = "tunnel1"
+  peer_ip       = "15.0.0.120"
+  shared_secret = "a secret message"
+
+  target_vpn_gateway = "${google_compute_vpn_gateway.target_gateway.self_link}"
+
+  depends_on = [
+    "google_compute_forwarding_rule.fr_esp",
+    "google_compute_forwarding_rule.fr_udp500",
+    "google_compute_forwarding_rule.fr_udp4500",
+  ]
+
+  labels {
+    foo = bar
+}
+
+resource "google_compute_vpn_gateway" "target_gateway" {
+  name    = "vpn1"
+  network = "${google_compute_network.network1.self_link}"
+}
+
+resource "google_compute_network" "network1" {
+  name       = "network1"
+}
+
+resource "google_compute_address" "vpn_static_ip" {
+  name   = "vpn-static-ip"
+}
+
+resource "google_compute_forwarding_rule" "fr_esp" {
+  name        = "fr-esp"
+  ip_protocol = "ESP"
+  ip_address  = "${google_compute_address.vpn_static_ip.address}"
+  target      = "${google_compute_vpn_gateway.target_gateway.self_link}"
+}
+
+resource "google_compute_forwarding_rule" "fr_udp500" {
+  name        = "fr-udp500"
+  ip_protocol = "UDP"
+  port_range  = "500"
+  ip_address  = "${google_compute_address.vpn_static_ip.address}"
+  target      = "${google_compute_vpn_gateway.target_gateway.self_link}"
+}
+
+resource "google_compute_forwarding_rule" "fr_udp4500" {
+  name        = "fr-udp4500"
+  ip_protocol = "UDP"
+  port_range  = "4500"
+  ip_address  = "${google_compute_address.vpn_static_ip.address}"
+  target      = "${google_compute_vpn_gateway.target_gateway.self_link}"
+}
+
+resource "google_compute_route" "route1" {
+  name       = "route1"
+  network    = "${google_compute_network.network1.name}"
+  dest_range = "15.0.0.0/24"
+  priority   = 1000
+
+  next_hop_vpn_tunnel = "${google_compute_vpn_tunnel.tunnel1.self_link}"
+}
+```
 
 ## Argument Reference
 
@@ -166,7 +237,7 @@ The following arguments are supported:
   Only IPv4 is supported.
 
 * `labels` -
-  (Optional)
+  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
   Labels to apply to this VpnTunnel.
 
 * `region` -
