@@ -151,33 +151,6 @@ func resourceResourceManagerLienRead(d *schema.ResourceData, meta interface{}) e
 		return handleNotFoundError(err, d, fmt.Sprintf("ResourceManagerLien %q", d.Id()))
 	}
 
-	// Extract the object we're interested in from the list response.
-	itemsList_ := res["liens"]
-	var itemsList []interface{}
-	if itemsList_ != nil {
-		itemsList = itemsList_.([]interface{})
-	}
-	listObj := make([]map[string]interface{}, len(itemsList))
-	for i, item := range itemsList {
-		listObj[i] = item.(map[string]interface{})
-	}
-	res = nil
-	for _, item := range listObj {
-		thisName := d.Get("name")
-		thatName := flattenResourceManagerLienName(item["name"], d)
-		log.Printf("[DEBUG] Checking equality of %#v, %#v", thatName, thisName)
-		if !reflect.DeepEqual(thatName, thisName) {
-			continue
-		}
-		res = item
-		break
-	}
-	if res == nil {
-		// Object isn't there any more - remove it from the state.
-		log.Printf("[DEBUG] Removing ResourceManagerLien because it couldn't be matched.")
-		d.SetId("")
-		return nil
-	}
 	res, err = resourceResourceManagerLienDecoder(d, meta, res)
 	if err != nil {
 		return err
