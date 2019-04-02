@@ -95,6 +95,13 @@ func resourceAccessContextManagerServicePerimeter() *schema.Resource {
 								Type: schema.TypeString,
 							},
 						},
+						"unrestricted_services": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
 					},
 				},
 			},
@@ -156,7 +163,7 @@ func resourceAccessContextManagerServicePerimeterCreate(d *schema.ResourceData, 
 		return err
 	}
 
-	url, err := replaceVars(d, config, "https://accesscontextmanager.googleapis.com/v1/{{parent}}/servicePerimeters")
+	url, err := replaceVars(d, config, "https://accesscontextmanager.googleapis.com/v1beta/{{parent}}/servicePerimeters")
 	if err != nil {
 		return err
 	}
@@ -192,7 +199,7 @@ func resourceAccessContextManagerServicePerimeterCreate(d *schema.ResourceData, 
 func resourceAccessContextManagerServicePerimeterRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	url, err := replaceVars(d, config, "https://accesscontextmanager.googleapis.com/v1/{{name}}")
+	url, err := replaceVars(d, config, "https://accesscontextmanager.googleapis.com/v1beta/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -255,7 +262,7 @@ func resourceAccessContextManagerServicePerimeterUpdate(d *schema.ResourceData, 
 		return err
 	}
 
-	url, err := replaceVars(d, config, "https://accesscontextmanager.googleapis.com/v1/{{name}}")
+	url, err := replaceVars(d, config, "https://accesscontextmanager.googleapis.com/v1beta/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -300,7 +307,7 @@ func resourceAccessContextManagerServicePerimeterUpdate(d *schema.ResourceData, 
 func resourceAccessContextManagerServicePerimeterDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	url, err := replaceVars(d, config, "https://accesscontextmanager.googleapis.com/v1/{{name}}")
+	url, err := replaceVars(d, config, "https://accesscontextmanager.googleapis.com/v1beta/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -372,6 +379,8 @@ func flattenAccessContextManagerServicePerimeterStatus(v interface{}, d *schema.
 		flattenAccessContextManagerServicePerimeterStatusResources(original["resources"], d)
 	transformed["access_levels"] =
 		flattenAccessContextManagerServicePerimeterStatusAccessLevels(original["accessLevels"], d)
+	transformed["unrestricted_services"] =
+		flattenAccessContextManagerServicePerimeterStatusUnrestrictedServices(original["unrestrictedServices"], d)
 	transformed["restricted_services"] =
 		flattenAccessContextManagerServicePerimeterStatusRestrictedServices(original["restrictedServices"], d)
 	return []interface{}{transformed}
@@ -381,6 +390,10 @@ func flattenAccessContextManagerServicePerimeterStatusResources(v interface{}, d
 }
 
 func flattenAccessContextManagerServicePerimeterStatusAccessLevels(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusUnrestrictedServices(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
@@ -427,6 +440,13 @@ func expandAccessContextManagerServicePerimeterStatus(v interface{}, d Terraform
 		transformed["accessLevels"] = transformedAccessLevels
 	}
 
+	transformedUnrestrictedServices, err := expandAccessContextManagerServicePerimeterStatusUnrestrictedServices(original["unrestricted_services"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUnrestrictedServices); val.IsValid() && !isEmptyValue(val) {
+		transformed["unrestrictedServices"] = transformedUnrestrictedServices
+	}
+
 	transformedRestrictedServices, err := expandAccessContextManagerServicePerimeterStatusRestrictedServices(original["restricted_services"], d, config)
 	if err != nil {
 		return nil, err
@@ -442,6 +462,10 @@ func expandAccessContextManagerServicePerimeterStatusResources(v interface{}, d 
 }
 
 func expandAccessContextManagerServicePerimeterStatusAccessLevels(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusUnrestrictedServices(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
