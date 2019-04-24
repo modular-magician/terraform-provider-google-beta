@@ -117,12 +117,6 @@ The following arguments are supported:
   This is used for internal load balancing.
   (not used for external load balancing)
 
-* `ip_version` -
-  (Optional)
-  The IP Version that will be used by this forwarding rule. Valid
-  options are IPV4 or IPV6. This can only be specified for a global
-  forwarding rule.
-
 * `load_balancing_scheme` -
   (Optional)
   This signifies what the ForwardingRule will be used for and can only
