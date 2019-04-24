@@ -304,6 +304,7 @@ func resourceComputeBackendService() *schema.Resource {
 			"load_balancing_scheme": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"INTERNAL", "EXTERNAL", ""}, false),
 				Default:      "EXTERNAL",
 			},
