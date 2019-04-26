@@ -144,6 +144,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 		GeneratedBinaryAuthorizationResourcesMap,
 		GeneratedContainerAnalysisResourcesMap,
 		GeneratedFilestoreResourcesMap,
+		GeneratedSecurityScannerResourcesMap,
 		// end beta-only products
 		GeneratedAccessContextManagerResourcesMap,
 		GeneratedAppEngineResourcesMap,
