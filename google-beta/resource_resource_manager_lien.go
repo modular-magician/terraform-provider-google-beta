@@ -123,6 +123,16 @@ func resourceResourceManagerLienCreate(d *schema.ResourceData, meta interface{})
 	}
 	d.SetId(id)
 
+	waitErr := resourceManagerOperationWaitTime(
+		config, res, "Creating Lien",
+		int(d.Timeout(schema.TimeoutCreate).Minutes()))
+
+	if waitErr != nil {
+		// The resource didn't actually create
+		d.SetId("")
+		return fmt.Errorf("Error waiting to create Lien: %s", waitErr)
+	}
+
 	log.Printf("[DEBUG] Finished creating Lien %q: %#v", d.Id(), res)
 
 	// This resource is unusual - instead of returning an Operation from
@@ -211,6 +221,14 @@ func resourceResourceManagerLienDelete(d *schema.ResourceData, meta interface{})
 	res, err := sendRequestWithTimeout(config, "DELETE", url, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return handleNotFoundError(err, d, "Lien")
+	}
+
+	err = resourceManagerOperationWaitTime(
+		config, res, "Deleting Lien",
+		int(d.Timeout(schema.TimeoutDelete).Minutes()))
+
+	if err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Finished deleting Lien %q: %#v", d.Id(), res)
