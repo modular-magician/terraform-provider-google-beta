@@ -44,8 +44,10 @@ To get more information about BackendService, see:
 
 ```hcl
 resource "google_compute_backend_service" "default" {
-  name          = "backend-service"
-  health_checks = ["${google_compute_http_health_check.default.self_link}"]
+  name                            = "backend-service"
+  health_checks                   = ["${google_compute_http_health_check.default.self_link}"]
+  connection_draining_timeout_sec = 10
+  session_affinity                = "CLIENT_IP"
 }
 
 resource "google_compute_http_health_check" "default" {

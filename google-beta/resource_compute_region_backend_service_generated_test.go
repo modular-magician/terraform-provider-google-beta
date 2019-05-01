@@ -24,7 +24,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccComputeBackendService_backendServiceBasicExample(t *testing.T) {
+func TestAccComputeRegionBackendService_regionBackendServiceBasicExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -34,13 +34,13 @@ func TestAccComputeBackendService_backendServiceBasicExample(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckComputeBackendServiceDestroy,
+		CheckDestroy: testAccCheckComputeRegionBackendServiceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccComputeBackendService_backendServiceBasicExample(context),
+				Config: testAccComputeRegionBackendService_regionBackendServiceBasicExample(context),
 			},
 			{
-				ResourceName:      "google_compute_backend_service.default",
+				ResourceName:      "google_compute_region_backend_service.default",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -48,27 +48,29 @@ func TestAccComputeBackendService_backendServiceBasicExample(t *testing.T) {
 	})
 }
 
-func testAccComputeBackendService_backendServiceBasicExample(context map[string]interface{}) string {
+func testAccComputeRegionBackendService_regionBackendServiceBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
-resource "google_compute_backend_service" "default" {
-  name                            = "backend-service-%{random_suffix}"
-  health_checks                   = ["${google_compute_http_health_check.default.self_link}"]
-  connection_draining_timeout_sec = 10
-  session_affinity                = "CLIENT_IP"
+resource "google_compute_region_backend_service" "default" {
+  name          = "region-backend-service-%{random_suffix}"
+  region        = "us-central1"
+  health_checks = ["${google_compute_health_check.default.self_link}"]
 }
 
-resource "google_compute_http_health_check" "default" {
+resource "google_compute_health_check" "default" {
   name               = "health-check-%{random_suffix}"
-  request_path       = "/"
   check_interval_sec = 1
   timeout_sec        = 1
+
+  tcp_health_check {
+    port = "80"
+  }
 }
 `, context)
 }
 
-func testAccCheckComputeBackendServiceDestroy(s *terraform.State) error {
+func testAccCheckComputeRegionBackendServiceDestroy(s *terraform.State) error {
 	for name, rs := range s.RootModule().Resources {
-		if rs.Type != "google_compute_backend_service" {
+		if rs.Type != "google_compute_region_backend_service" {
 			continue
 		}
 		if strings.HasPrefix(name, "data.") {
@@ -77,14 +79,14 @@ func testAccCheckComputeBackendServiceDestroy(s *terraform.State) error {
 
 		config := testAccProvider.Meta().(*Config)
 
-		url, err := replaceVarsForTest(rs, "https://www.googleapis.com/compute/beta/projects/{{project}}/global/backendServices/{{name}}")
+		url, err := replaceVarsForTest(rs, "https://www.googleapis.com/compute/beta/projects/{{project}}/regions/{{region}}/backendServices/{{name}}")
 		if err != nil {
 			return err
 		}
 
 		_, err = sendRequest(config, "GET", url, nil)
 		if err == nil {
-			return fmt.Errorf("ComputeBackendService still exists at %s", url)
+			return fmt.Errorf("ComputeRegionBackendService still exists at %s", url)
 		}
 	}
 
