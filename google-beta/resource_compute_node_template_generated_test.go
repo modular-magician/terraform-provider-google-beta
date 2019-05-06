@@ -67,6 +67,51 @@ resource "google_compute_node_template" "template" {
 `, context)
 }
 
+func TestAccComputeNodeTemplate_nodeTemplateServerBindingExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(10),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
+		CheckDestroy: testAccCheckComputeNodeTemplateDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeNodeTemplate_nodeTemplateServerBindingExample(context),
+			},
+		},
+	})
+}
+
+func testAccComputeNodeTemplate_nodeTemplateServerBindingExample(context map[string]interface{}) string {
+	return Nprintf(`
+provider "google-beta" {
+  region = "us-central1"
+  zone   = "us-central1-a"
+}
+
+data "google_compute_node_types" "central1a" {
+  provider = "google-beta"
+  zone = "us-central1-a"
+}
+
+resource "google_compute_node_template" "template" {
+  provider = "google-beta"
+
+  name = "soletenant-with-licenses-%{random_suffix}"
+  region = "us-central1"
+  node_type = "${data.google_compute_node_types.central1a.names[0]}"
+
+  server_binding {
+    type = "RESTART_NODE_ON_MINIMAL_SERVERS"
+  }
+}
+`, context)
+}
+
 func testAccCheckComputeNodeTemplateDestroy(s *terraform.State) error {
 	for name, rs := range s.RootModule().Resources {
 		if rs.Type != "google_compute_node_template" {
