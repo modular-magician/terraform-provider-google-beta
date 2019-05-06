@@ -1,4 +1,4 @@
-<% wrap_layout :inner do %>
+\<% wrap_layout :inner do %>
   <% content_for :sidebar do %>
   <div class="docs-sidebar hidden-print affix-top" role="complementary">
   <ul class="nav docs-sidenav">
@@ -356,6 +356,16 @@
     <ul class="nav nav-visible">
       <li<%= sidebar_current("docs-google-cloud-scheduler-job") %>>
       <a href="/docs/providers/google/r/cloud_scheduler_job.html">google_cloud_scheduler_job</a>
+      </li>
+    </ul>
+    </li>
+
+
+    <li<%= sidebar_current("docs-google-security-scanner") %>>
+    <a href="#">Google Cloud Security Scanner Resources</a>
+    <ul class="nav nav-visible">
+      <li<%= sidebar_current("docs-google-security-scanner-scan-config") %>>
+      <a href="/docs/providers/google/r/security_scanner_scan_config.html">google_security_scanner_scan_config</a>
       </li>
     </ul>
     </li>
