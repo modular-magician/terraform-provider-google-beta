@@ -140,9 +140,13 @@ func resourceContainerAnalysisNoteRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading Note: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenContainerAnalysisNoteName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Note: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("attestation_authority", flattenContainerAnalysisNoteAttestationAuthority(res["attestationAuthority"], d)); err != nil {
 		return fmt.Errorf("Error reading Note: %s", err)
 	}

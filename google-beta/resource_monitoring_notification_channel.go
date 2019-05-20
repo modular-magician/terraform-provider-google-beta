@@ -186,27 +186,43 @@ func resourceMonitoringNotificationChannelRead(d *schema.ResourceData, meta inte
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenMonitoringNotificationChannelLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenMonitoringNotificationChannelName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("verification_status", flattenMonitoringNotificationChannelVerificationStatus(res["verificationStatus"], d)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("type", flattenMonitoringNotificationChannelType(res["type"], d)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("user_labels", flattenMonitoringNotificationChannelUserLabels(res["userLabels"], d)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenMonitoringNotificationChannelDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("display_name", flattenMonitoringNotificationChannelDisplayName(res["displayName"], d)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("enabled", flattenMonitoringNotificationChannelEnabled(res["enabled"], d)); err != nil {
 		return fmt.Errorf("Error reading NotificationChannel: %s", err)
 	}

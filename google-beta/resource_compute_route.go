@@ -258,36 +258,58 @@ func resourceComputeRouteRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("dest_range", flattenComputeRouteDestRange(res["destRange"], d)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeRouteDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeRouteName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("network", flattenComputeRouteNetwork(res["network"], d)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("priority", flattenComputeRoutePriority(res["priority"], d)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("tags", flattenComputeRouteTags(res["tags"], d)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("next_hop_gateway", flattenComputeRouteNextHopGateway(res["nextHopGateway"], d)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("next_hop_instance", flattenComputeRouteNextHopInstance(res["nextHopInstance"], d)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("next_hop_ip", flattenComputeRouteNextHopIp(res["nextHopIp"], d)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("next_hop_vpn_tunnel", flattenComputeRouteNextHopVpnTunnel(res["nextHopVpnTunnel"], d)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("next_hop_network", flattenComputeRouteNextHopNetwork(res["nextHopNetwork"], d)); err != nil {
 		return fmt.Errorf("Error reading Route: %s", err)
 	}

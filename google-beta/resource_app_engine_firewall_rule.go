@@ -144,15 +144,23 @@ func resourceAppEngineFirewallRuleRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenAppEngineFirewallRuleDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("source_range", flattenAppEngineFirewallRuleSourceRange(res["sourceRange"], d)); err != nil {
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("action", flattenAppEngineFirewallRuleAction(res["action"], d)); err != nil {
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("priority", flattenAppEngineFirewallRulePriority(res["priority"], d)); err != nil {
 		return fmt.Errorf("Error reading FirewallRule: %s", err)
 	}

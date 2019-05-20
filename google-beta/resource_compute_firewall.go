@@ -390,51 +390,83 @@ func resourceComputeFirewallRead(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("allow", flattenComputeFirewallAllow(res["allowed"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeFirewallCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("deny", flattenComputeFirewallDeny(res["denied"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeFirewallDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("destination_ranges", flattenComputeFirewallDestinationRanges(res["destinationRanges"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("direction", flattenComputeFirewallDirection(res["direction"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("disabled", flattenComputeFirewallDisabled(res["disabled"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("enable_logging", flattenComputeFirewallEnableLogging(res["enableLogging"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeFirewallName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("network", flattenComputeFirewallNetwork(res["network"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("priority", flattenComputeFirewallPriority(res["priority"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("source_ranges", flattenComputeFirewallSourceRanges(res["sourceRanges"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("source_service_accounts", flattenComputeFirewallSourceServiceAccounts(res["sourceServiceAccounts"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("source_tags", flattenComputeFirewallSourceTags(res["sourceTags"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("target_service_accounts", flattenComputeFirewallTargetServiceAccounts(res["targetServiceAccounts"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("target_tags", flattenComputeFirewallTargetTags(res["targetTags"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}

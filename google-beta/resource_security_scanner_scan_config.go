@@ -280,33 +280,53 @@ func resourceSecurityScannerScanConfigRead(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenSecurityScannerScanConfigName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("display_name", flattenSecurityScannerScanConfigDisplayName(res["displayName"], d)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("max_qps", flattenSecurityScannerScanConfigMaxQps(res["maxQps"], d)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("starting_urls", flattenSecurityScannerScanConfigStartingUrls(res["startingUrls"], d)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("authentication", flattenSecurityScannerScanConfigAuthentication(res["authentication"], d)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("user_agent", flattenSecurityScannerScanConfigUserAgent(res["userAgent"], d)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("blacklist_patterns", flattenSecurityScannerScanConfigBlacklistPatterns(res["blacklistPatterns"], d)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("schedule", flattenSecurityScannerScanConfigSchedule(res["schedule"], d)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("target_platforms", flattenSecurityScannerScanConfigTargetPlatforms(res["targetPlatforms"], d)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("export_to_security_command_center", flattenSecurityScannerScanConfigExportToSecurityCommandCenter(res["exportToSecurityCommandCenter"], d)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}

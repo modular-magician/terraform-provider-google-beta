@@ -286,36 +286,58 @@ func resourceComputeAddressRead(d *schema.ResourceData, meta interface{}) error 
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("address", flattenComputeAddressAddress(res["address"], d)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("address_type", flattenComputeAddressAddressType(res["addressType"], d)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeAddressCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeAddressDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeAddressName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("network_tier", flattenComputeAddressNetworkTier(res["networkTier"], d)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("subnetwork", flattenComputeAddressSubnetwork(res["subnetwork"], d)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("users", flattenComputeAddressUsers(res["users"], d)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenComputeAddressLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("label_fingerprint", flattenComputeAddressLabelFingerprint(res["labelFingerprint"], d)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("region", flattenComputeAddressRegion(res["region"], d)); err != nil {
 		return fmt.Errorf("Error reading Address: %s", err)
 	}

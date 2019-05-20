@@ -587,60 +587,98 @@ func resourceComputeDiskRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("label_fingerprint", flattenComputeDiskLabelFingerprint(res["labelFingerprint"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeDiskCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeDiskDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("last_attach_timestamp", flattenComputeDiskLastAttachTimestamp(res["lastAttachTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("last_detach_timestamp", flattenComputeDiskLastDetachTimestamp(res["lastDetachTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenComputeDiskLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeDiskName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("size", flattenComputeDiskSize(res["sizeGb"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("users", flattenComputeDiskUsers(res["users"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("physical_block_size_bytes", flattenComputeDiskPhysicalBlockSizeBytes(res["physicalBlockSizeBytes"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("type", flattenComputeDiskType(res["type"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("image", flattenComputeDiskImage(res["sourceImage"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("zone", flattenComputeDiskZone(res["zone"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("source_image_encryption_key", flattenComputeDiskSourceImageEncryptionKey(res["sourceImageEncryptionKey"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("source_image_id", flattenComputeDiskSourceImageId(res["sourceImageId"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("disk_encryption_key", flattenComputeDiskDiskEncryptionKey(res["diskEncryptionKey"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("snapshot", flattenComputeDiskSnapshot(res["sourceSnapshot"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("source_snapshot_encryption_key", flattenComputeDiskSourceSnapshotEncryptionKey(res["sourceSnapshotEncryptionKey"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("source_snapshot_id", flattenComputeDiskSourceSnapshotId(res["sourceSnapshotId"], d)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}

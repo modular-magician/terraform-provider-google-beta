@@ -206,27 +206,43 @@ func resourceComputeManagedSslCertificateRead(d *schema.ResourceData, meta inter
 		return fmt.Errorf("Error reading ManagedSslCertificate: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeManagedSslCertificateCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedSslCertificate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeManagedSslCertificateDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedSslCertificate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("certificate_id", flattenComputeManagedSslCertificateCertificate_id(res["id"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedSslCertificate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeManagedSslCertificateName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedSslCertificate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("managed", flattenComputeManagedSslCertificateManaged(res["managed"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedSslCertificate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("type", flattenComputeManagedSslCertificateType(res["type"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedSslCertificate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("subject_alternative_names", flattenComputeManagedSslCertificateSubjectAlternativeNames(res["subjectAlternativeNames"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedSslCertificate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("expire_time", flattenComputeManagedSslCertificateExpireTime(res["expireTime"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedSslCertificate: %s", err)
 	}

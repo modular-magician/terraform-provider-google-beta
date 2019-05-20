@@ -168,21 +168,33 @@ func resourceResourceManagerLienRead(d *schema.ResourceData, meta interface{}) e
 		return err
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenResourceManagerLienName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("reason", flattenResourceManagerLienReason(res["reason"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("origin", flattenResourceManagerLienOrigin(res["origin"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("create_time", flattenResourceManagerLienCreateTime(res["createTime"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("parent", flattenResourceManagerLienParent(res["parent"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("restrictions", flattenResourceManagerLienRestrictions(res["restrictions"], d)); err != nil {
 		return fmt.Errorf("Error reading Lien: %s", err)
 	}

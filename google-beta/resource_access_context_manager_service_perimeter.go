@@ -202,24 +202,38 @@ func resourceAccessContextManagerServicePerimeterRead(d *schema.ResourceData, me
 		return handleNotFoundError(err, d, fmt.Sprintf("AccessContextManagerServicePerimeter %q", d.Id()))
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("title", flattenAccessContextManagerServicePerimeterTitle(res["title"], d)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenAccessContextManagerServicePerimeterDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("create_time", flattenAccessContextManagerServicePerimeterCreateTime(res["createTime"], d)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("update_time", flattenAccessContextManagerServicePerimeterUpdateTime(res["updateTime"], d)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("perimeter_type", flattenAccessContextManagerServicePerimeterPerimeterType(res["perimeterType"], d)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("status", flattenAccessContextManagerServicePerimeterStatus(res["status"], d)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenAccessContextManagerServicePerimeterName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading ServicePerimeter: %s", err)
 	}

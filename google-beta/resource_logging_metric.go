@@ -288,24 +288,38 @@ func resourceLoggingMetricRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Metric: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenLoggingMetricName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Metric: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenLoggingMetricDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Metric: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("filter", flattenLoggingMetricFilter(res["filter"], d)); err != nil {
 		return fmt.Errorf("Error reading Metric: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("metric_descriptor", flattenLoggingMetricMetricDescriptor(res["metricDescriptor"], d)); err != nil {
 		return fmt.Errorf("Error reading Metric: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("label_extractors", flattenLoggingMetricLabelExtractors(res["labelExtractors"], d)); err != nil {
 		return fmt.Errorf("Error reading Metric: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("value_extractor", flattenLoggingMetricValueExtractor(res["valueExtractor"], d)); err != nil {
 		return fmt.Errorf("Error reading Metric: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("bucket_options", flattenLoggingMetricBucketOptions(res["bucketOptions"], d)); err != nil {
 		return fmt.Errorf("Error reading Metric: %s", err)
 	}

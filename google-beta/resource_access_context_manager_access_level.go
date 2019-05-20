@@ -244,15 +244,23 @@ func resourceAccessContextManagerAccessLevelRead(d *schema.ResourceData, meta in
 		return handleNotFoundError(err, d, fmt.Sprintf("AccessContextManagerAccessLevel %q", d.Id()))
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("title", flattenAccessContextManagerAccessLevelTitle(res["title"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenAccessContextManagerAccessLevelDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("basic", flattenAccessContextManagerAccessLevelBasic(res["basic"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenAccessContextManagerAccessLevelName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessLevel: %s", err)
 	}

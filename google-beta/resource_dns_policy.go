@@ -215,21 +215,33 @@ func resourceDnsPolicyRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("alternative_name_server_config", flattenDnsPolicyAlternativeNameServerConfig(res["alternativeNameServerConfig"], d)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenDnsPolicyDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("enable_inbound_forwarding", flattenDnsPolicyEnableInboundForwarding(res["enableInboundForwarding"], d)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("enable_logging", flattenDnsPolicyEnableLogging(res["enableLogging"], d)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenDnsPolicyName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("networks", flattenDnsPolicyNetworks(res["networks"], d)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}

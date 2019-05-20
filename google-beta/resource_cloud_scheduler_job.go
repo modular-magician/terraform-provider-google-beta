@@ -337,27 +337,43 @@ func resourceCloudSchedulerJobRead(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenCloudSchedulerJobName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenCloudSchedulerJobDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("schedule", flattenCloudSchedulerJobSchedule(res["schedule"], d)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("time_zone", flattenCloudSchedulerJobTimeZone(res["timeZone"], d)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("retry_config", flattenCloudSchedulerJobRetryConfig(res["retryConfig"], d)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("pubsub_target", flattenCloudSchedulerJobPubsubTarget(res["pubsubTarget"], d)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("app_engine_http_target", flattenCloudSchedulerJobAppEngineHttpTarget(res["appEngineHttpTarget"], d)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("http_target", flattenCloudSchedulerJobHttpTarget(res["httpTarget"], d)); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}

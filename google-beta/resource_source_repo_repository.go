@@ -119,12 +119,18 @@ func resourceSourceRepoRepositoryRead(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenSourceRepoRepositoryName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("url", flattenSourceRepoRepositoryUrl(res["url"], d)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("size", flattenSourceRepoRepositorySize(res["size"], d)); err != nil {
 		return fmt.Errorf("Error reading Repository: %s", err)
 	}

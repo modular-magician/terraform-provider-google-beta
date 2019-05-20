@@ -204,27 +204,43 @@ func resourceComputeTargetHttpsProxyRead(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("Error reading TargetHttpsProxy: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeTargetHttpsProxyCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpsProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeTargetHttpsProxyDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpsProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("proxy_id", flattenComputeTargetHttpsProxyProxyId(res["id"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpsProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeTargetHttpsProxyName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpsProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("quic_override", flattenComputeTargetHttpsProxyQuicOverride(res["quicOverride"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpsProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ssl_certificates", flattenComputeTargetHttpsProxySslCertificates(res["sslCertificates"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpsProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ssl_policy", flattenComputeTargetHttpsProxySslPolicy(res["sslPolicy"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpsProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("url_map", flattenComputeTargetHttpsProxyUrlMap(res["urlMap"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpsProxy: %s", err)
 	}

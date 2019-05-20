@@ -436,45 +436,73 @@ func resourceComputeVpnTunnelRead(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeVpnTunnelCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeVpnTunnelName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeVpnTunnelDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("target_vpn_gateway", flattenComputeVpnTunnelTargetVpnGateway(res["targetVpnGateway"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("router", flattenComputeVpnTunnelRouter(res["router"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("peer_ip", flattenComputeVpnTunnelPeerIp(res["peerIp"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("shared_secret_hash", flattenComputeVpnTunnelSharedSecretHash(res["sharedSecretHash"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ike_version", flattenComputeVpnTunnelIkeVersion(res["ikeVersion"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("local_traffic_selector", flattenComputeVpnTunnelLocalTrafficSelector(res["localTrafficSelector"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("remote_traffic_selector", flattenComputeVpnTunnelRemoteTrafficSelector(res["remoteTrafficSelector"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenComputeVpnTunnelLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("label_fingerprint", flattenComputeVpnTunnelLabelFingerprint(res["labelFingerprint"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("detailed_status", flattenComputeVpnTunnelDetailedStatus(res["detailedStatus"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("region", flattenComputeVpnTunnelRegion(res["region"], d)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}

@@ -364,39 +364,63 @@ func resourceComputeSubnetworkRead(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeSubnetworkCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeSubnetworkDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("gateway_address", flattenComputeSubnetworkGatewayAddress(res["gatewayAddress"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ip_cidr_range", flattenComputeSubnetworkIpCidrRange(res["ipCidrRange"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeSubnetworkName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("network", flattenComputeSubnetworkNetwork(res["network"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("enable_flow_logs", flattenComputeSubnetworkEnableFlowLogs(res["enableFlowLogs"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("fingerprint", flattenComputeSubnetworkFingerprint(res["fingerprint"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("secondary_ip_range", flattenComputeSubnetworkSecondaryIpRange(res["secondaryIpRanges"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("private_ip_google_access", flattenComputeSubnetworkPrivateIpGoogleAccess(res["privateIpGoogleAccess"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("region", flattenComputeSubnetworkRegion(res["region"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("log_config", flattenComputeSubnetworkLogConfig(res["logConfig"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}

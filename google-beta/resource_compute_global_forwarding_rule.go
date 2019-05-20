@@ -271,30 +271,48 @@ func resourceComputeGlobalForwardingRuleRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading GlobalForwardingRule: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeGlobalForwardingRuleDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading GlobalForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ip_address", flattenComputeGlobalForwardingRuleIPAddress(res["IPAddress"], d)); err != nil {
 		return fmt.Errorf("Error reading GlobalForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ip_protocol", flattenComputeGlobalForwardingRuleIPProtocol(res["IPProtocol"], d)); err != nil {
 		return fmt.Errorf("Error reading GlobalForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ip_version", flattenComputeGlobalForwardingRuleIpVersion(res["ipVersion"], d)); err != nil {
 		return fmt.Errorf("Error reading GlobalForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenComputeGlobalForwardingRuleLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading GlobalForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("label_fingerprint", flattenComputeGlobalForwardingRuleLabelFingerprint(res["labelFingerprint"], d)); err != nil {
 		return fmt.Errorf("Error reading GlobalForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeGlobalForwardingRuleName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading GlobalForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("port_range", flattenComputeGlobalForwardingRulePortRange(res["portRange"], d)); err != nil {
 		return fmt.Errorf("Error reading GlobalForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("target", flattenComputeGlobalForwardingRuleTarget(res["target"], d)); err != nil {
 		return fmt.Errorf("Error reading GlobalForwardingRule: %s", err)
 	}

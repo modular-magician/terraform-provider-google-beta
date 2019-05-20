@@ -180,21 +180,33 @@ func resourceComputeTargetTcpProxyRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeTargetTcpProxyCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeTargetTcpProxyDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("proxy_id", flattenComputeTargetTcpProxyProxyId(res["id"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeTargetTcpProxyName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("proxy_header", flattenComputeTargetTcpProxyProxyHeader(res["proxyHeader"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("backend_service", flattenComputeTargetTcpProxyBackendService(res["service"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}

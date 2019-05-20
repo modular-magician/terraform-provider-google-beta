@@ -232,24 +232,38 @@ func resourceFilestoreInstanceRead(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenFilestoreInstanceDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("create_time", flattenFilestoreInstanceCreateTime(res["createTime"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("tier", flattenFilestoreInstanceTier(res["tier"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenFilestoreInstanceLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("file_shares", flattenFilestoreInstanceFileShares(res["fileShares"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("networks", flattenFilestoreInstanceNetworks(res["networks"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("etag", flattenFilestoreInstanceEtag(res["etag"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}

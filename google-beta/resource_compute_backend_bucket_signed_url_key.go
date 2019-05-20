@@ -170,6 +170,8 @@ func resourceComputeBackendBucketSignedUrlKeyRead(d *schema.ResourceData, meta i
 		return fmt.Errorf("Error reading BackendBucketSignedUrlKey: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeBackendBucketSignedUrlKeyName(res["keyName"], d)); err != nil {
 		return fmt.Errorf("Error reading BackendBucketSignedUrlKey: %s", err)
 	}

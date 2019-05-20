@@ -277,30 +277,48 @@ func resourceDnsManagedZoneRead(d *schema.ResourceData, meta interface{}) error 
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenDnsManagedZoneDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("dns_name", flattenDnsManagedZoneDnsName(res["dnsName"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenDnsManagedZoneName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name_servers", flattenDnsManagedZoneNameServers(res["nameServers"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenDnsManagedZoneLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("visibility", flattenDnsManagedZoneVisibility(res["visibility"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("private_visibility_config", flattenDnsManagedZonePrivateVisibilityConfig(res["privateVisibilityConfig"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("forwarding_config", flattenDnsManagedZoneForwardingConfig(res["forwardingConfig"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("peering_config", flattenDnsManagedZonePeeringConfig(res["peeringConfig"], d)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}

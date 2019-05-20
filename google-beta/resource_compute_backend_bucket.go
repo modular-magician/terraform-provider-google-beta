@@ -193,21 +193,33 @@ func resourceComputeBackendBucketRead(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error reading BackendBucket: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("bucket_name", flattenComputeBackendBucketBucketName(res["bucketName"], d)); err != nil {
 		return fmt.Errorf("Error reading BackendBucket: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("cdn_policy", flattenComputeBackendBucketCdnPolicy(res["cdnPolicy"], d)); err != nil {
 		return fmt.Errorf("Error reading BackendBucket: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeBackendBucketCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading BackendBucket: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeBackendBucketDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading BackendBucket: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("enable_cdn", flattenComputeBackendBucketEnableCdn(res["enableCdn"], d)); err != nil {
 		return fmt.Errorf("Error reading BackendBucket: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeBackendBucketName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading BackendBucket: %s", err)
 	}

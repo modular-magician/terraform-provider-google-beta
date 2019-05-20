@@ -274,48 +274,78 @@ func resourceRedisInstanceRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("alternative_location_id", flattenRedisInstanceAlternativeLocationId(res["alternativeLocationId"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("authorized_network", flattenRedisInstanceAuthorizedNetwork(res["authorizedNetwork"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("create_time", flattenRedisInstanceCreateTime(res["createTime"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("current_location_id", flattenRedisInstanceCurrentLocationId(res["currentLocationId"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("display_name", flattenRedisInstanceDisplayName(res["displayName"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("host", flattenRedisInstanceHost(res["host"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenRedisInstanceLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("redis_configs", flattenRedisInstanceRedisConfigs(res["redisConfigs"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("location_id", flattenRedisInstanceLocationId(res["locationId"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenRedisInstanceName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("memory_size_gb", flattenRedisInstanceMemorySizeGb(res["memorySizeGb"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("port", flattenRedisInstancePort(res["port"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("redis_version", flattenRedisInstanceRedisVersion(res["redisVersion"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("reserved_ip_range", flattenRedisInstanceReservedIpRange(res["reservedIpRange"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("tier", flattenRedisInstanceTier(res["tier"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}

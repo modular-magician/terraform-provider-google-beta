@@ -140,18 +140,28 @@ func resourceAccessContextManagerAccessPolicyRead(d *schema.ResourceData, meta i
 		return handleNotFoundError(err, d, fmt.Sprintf("AccessContextManagerAccessPolicy %q", d.Id()))
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenAccessContextManagerAccessPolicyName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("create_time", flattenAccessContextManagerAccessPolicyCreateTime(res["createTime"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("update_time", flattenAccessContextManagerAccessPolicyUpdateTime(res["updateTime"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("parent", flattenAccessContextManagerAccessPolicyParent(res["parent"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("title", flattenAccessContextManagerAccessPolicyTitle(res["title"], d)); err != nil {
 		return fmt.Errorf("Error reading AccessPolicy: %s", err)
 	}

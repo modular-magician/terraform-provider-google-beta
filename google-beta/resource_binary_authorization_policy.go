@@ -234,15 +234,23 @@ func resourceBinaryAuthorizationPolicyRead(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenBinaryAuthorizationPolicyDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("admission_whitelist_patterns", flattenBinaryAuthorizationPolicyAdmissionWhitelistPatterns(res["admissionWhitelistPatterns"], d)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("cluster_admission_rules", flattenBinaryAuthorizationPolicyClusterAdmissionRules(res["clusterAdmissionRules"], d)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("default_admission_rule", flattenBinaryAuthorizationPolicyDefaultAdmissionRule(res["defaultAdmissionRule"], d)); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}

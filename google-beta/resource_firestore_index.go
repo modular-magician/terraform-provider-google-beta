@@ -200,12 +200,18 @@ func resourceFirestoreIndexRead(d *schema.ResourceData, meta interface{}) error 
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenFirestoreIndexName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("query_scope", flattenFirestoreIndexQueryScope(res["queryScope"], d)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("fields", flattenFirestoreIndexFields(res["fields"], d)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}

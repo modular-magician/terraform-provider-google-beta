@@ -164,30 +164,48 @@ func resourceStorageObjectAccessControlRead(d *schema.ResourceData, meta interfa
 		return handleNotFoundError(err, d, fmt.Sprintf("StorageObjectAccessControl %q", d.Id()))
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("bucket", flattenStorageObjectAccessControlBucket(res["bucket"], d)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("domain", flattenStorageObjectAccessControlDomain(res["domain"], d)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("email", flattenStorageObjectAccessControlEmail(res["email"], d)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("entity", flattenStorageObjectAccessControlEntity(res["entity"], d)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("entity_id", flattenStorageObjectAccessControlEntityId(res["entityId"], d)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("generation", flattenStorageObjectAccessControlGeneration(res["generation"], d)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("object", flattenStorageObjectAccessControlObject(res["object"], d)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("project_team", flattenStorageObjectAccessControlProjectTeam(res["projectTeam"], d)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("role", flattenStorageObjectAccessControlRole(res["role"], d)); err != nil {
 		return fmt.Errorf("Error reading ObjectAccessControl: %s", err)
 	}

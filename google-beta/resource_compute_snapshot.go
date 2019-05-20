@@ -301,36 +301,58 @@ func resourceComputeSnapshotRead(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeSnapshotCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("snapshot_id", flattenComputeSnapshotSnapshot_id(res["id"], d)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("disk_size_gb", flattenComputeSnapshotDiskSizeGb(res["diskSizeGb"], d)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeSnapshotName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeSnapshotDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("storage_bytes", flattenComputeSnapshotStorageBytes(res["storageBytes"], d)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("licenses", flattenComputeSnapshotLicenses(res["licenses"], d)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenComputeSnapshotLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("label_fingerprint", flattenComputeSnapshotLabelFingerprint(res["labelFingerprint"], d)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("source_disk", flattenComputeSnapshotSourceDisk(res["sourceDisk"], d)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("snapshot_encryption_key", flattenComputeSnapshotSnapshotEncryptionKey(res["snapshotEncryptionKey"], d)); err != nil {
 		return fmt.Errorf("Error reading Snapshot: %s", err)
 	}

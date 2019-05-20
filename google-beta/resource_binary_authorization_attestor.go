@@ -167,12 +167,18 @@ func resourceBinaryAuthorizationAttestorRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading Attestor: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenBinaryAuthorizationAttestorName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Attestor: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenBinaryAuthorizationAttestorDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Attestor: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("attestation_authority_note", flattenBinaryAuthorizationAttestorAttestationAuthorityNote(res["userOwnedDrydockNote"], d)); err != nil {
 		return fmt.Errorf("Error reading Attestor: %s", err)
 	}

@@ -167,18 +167,28 @@ func resourceComputeTargetHttpProxyRead(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeTargetHttpProxyCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeTargetHttpProxyDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("proxy_id", flattenComputeTargetHttpProxyProxyId(res["id"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeTargetHttpProxyName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("url_map", flattenComputeTargetHttpProxyUrlMap(res["urlMap"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}

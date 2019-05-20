@@ -227,33 +227,53 @@ func resourceComputeHttpHealthCheckRead(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("Error reading HttpHealthCheck: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("check_interval_sec", flattenComputeHttpHealthCheckCheckIntervalSec(res["checkIntervalSec"], d)); err != nil {
 		return fmt.Errorf("Error reading HttpHealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeHttpHealthCheckCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading HttpHealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeHttpHealthCheckDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading HttpHealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("healthy_threshold", flattenComputeHttpHealthCheckHealthyThreshold(res["healthyThreshold"], d)); err != nil {
 		return fmt.Errorf("Error reading HttpHealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("host", flattenComputeHttpHealthCheckHost(res["host"], d)); err != nil {
 		return fmt.Errorf("Error reading HttpHealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeHttpHealthCheckName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading HttpHealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("port", flattenComputeHttpHealthCheckPort(res["port"], d)); err != nil {
 		return fmt.Errorf("Error reading HttpHealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("request_path", flattenComputeHttpHealthCheckRequestPath(res["requestPath"], d)); err != nil {
 		return fmt.Errorf("Error reading HttpHealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("timeout_sec", flattenComputeHttpHealthCheckTimeoutSec(res["timeoutSec"], d)); err != nil {
 		return fmt.Errorf("Error reading HttpHealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("unhealthy_threshold", flattenComputeHttpHealthCheckUnhealthyThreshold(res["unhealthyThreshold"], d)); err != nil {
 		return fmt.Errorf("Error reading HttpHealthCheck: %s", err)
 	}

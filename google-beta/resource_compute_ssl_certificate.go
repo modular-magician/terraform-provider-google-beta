@@ -199,18 +199,28 @@ func resourceComputeSslCertificateRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading SslCertificate: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("certificate", flattenComputeSslCertificateCertificate(res["certificate"], d)); err != nil {
 		return fmt.Errorf("Error reading SslCertificate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeSslCertificateCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading SslCertificate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeSslCertificateDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading SslCertificate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("certificate_id", flattenComputeSslCertificateCertificate_id(res["id"], d)); err != nil {
 		return fmt.Errorf("Error reading SslCertificate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeSslCertificateName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading SslCertificate: %s", err)
 	}

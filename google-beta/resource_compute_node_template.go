@@ -241,27 +241,43 @@ func resourceComputeNodeTemplateRead(d *schema.ResourceData, meta interface{}) e
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeNodeTemplateCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeNodeTemplateDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeNodeTemplateName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("node_affinity_labels", flattenComputeNodeTemplateNodeAffinityLabels(res["nodeAffinityLabels"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("node_type", flattenComputeNodeTemplateNodeType(res["nodeType"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("node_type_flexibility", flattenComputeNodeTemplateNodeTypeFlexibility(res["nodeTypeFlexibility"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("server_binding", flattenComputeNodeTemplateServerBinding(res["serverBinding"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("region", flattenComputeNodeTemplateRegion(res["region"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeTemplate: %s", err)
 	}

@@ -276,54 +276,88 @@ func resourceComputeInterconnectAttachmentRead(d *schema.ResourceData, meta inte
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("cloud_router_ip_address", flattenComputeInterconnectAttachmentCloudRouterIpAddress(res["cloudRouterIpAddress"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("customer_router_ip_address", flattenComputeInterconnectAttachmentCustomerRouterIpAddress(res["customerRouterIpAddress"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("interconnect", flattenComputeInterconnectAttachmentInterconnect(res["interconnect"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeInterconnectAttachmentDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("edge_availability_domain", flattenComputeInterconnectAttachmentEdgeAvailabilityDomain(res["edgeAvailabilityDomain"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("pairing_key", flattenComputeInterconnectAttachmentPairingKey(res["pairingKey"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("partner_asn", flattenComputeInterconnectAttachmentPartnerAsn(res["partnerAsn"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("private_interconnect_info", flattenComputeInterconnectAttachmentPrivateInterconnectInfo(res["privateInterconnectInfo"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("type", flattenComputeInterconnectAttachmentType(res["type"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("state", flattenComputeInterconnectAttachmentState(res["state"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("google_reference_id", flattenComputeInterconnectAttachmentGoogleReferenceId(res["googleReferenceId"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("router", flattenComputeInterconnectAttachmentRouter(res["router"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeInterconnectAttachmentCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeInterconnectAttachmentName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("candidate_subnets", flattenComputeInterconnectAttachmentCandidateSubnets(res["candidateSubnets"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("vlan_tag8021q", flattenComputeInterconnectAttachmentVlanTag8021q(res["vlanTag8021q"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("region", flattenComputeInterconnectAttachmentRegion(res["region"], d)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}

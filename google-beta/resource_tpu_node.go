@@ -277,33 +277,53 @@ func resourceTpuNodeRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Node: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenTpuNodeName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Node: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenTpuNodeDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Node: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("accelerator_type", flattenTpuNodeAcceleratorType(res["acceleratorType"], d)); err != nil {
 		return fmt.Errorf("Error reading Node: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("tensorflow_version", flattenTpuNodeTensorflowVersion(res["tensorflowVersion"], d)); err != nil {
 		return fmt.Errorf("Error reading Node: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("network", flattenTpuNodeNetwork(res["network"], d)); err != nil {
 		return fmt.Errorf("Error reading Node: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("cidr_block", flattenTpuNodeCidrBlock(res["cidrBlock"], d)); err != nil {
 		return fmt.Errorf("Error reading Node: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("service_account", flattenTpuNodeServiceAccount(res["serviceAccount"], d)); err != nil {
 		return fmt.Errorf("Error reading Node: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("scheduling_config", flattenTpuNodeSchedulingConfig(res["schedulingConfig"], d)); err != nil {
 		return fmt.Errorf("Error reading Node: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("network_endpoints", flattenTpuNodeNetworkEndpoints(res["networkEndpoints"], d)); err != nil {
 		return fmt.Errorf("Error reading Node: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenTpuNodeLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading Node: %s", err)
 	}

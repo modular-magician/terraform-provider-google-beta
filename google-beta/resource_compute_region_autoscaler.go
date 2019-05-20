@@ -261,21 +261,33 @@ func resourceComputeRegionAutoscalerRead(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeRegionAutoscalerCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeRegionAutoscalerName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeRegionAutoscalerDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("autoscaling_policy", flattenComputeRegionAutoscalerAutoscalingPolicy(res["autoscalingPolicy"], d)); err != nil {
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("target", flattenComputeRegionAutoscalerTarget(res["target"], d)); err != nil {
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("region", flattenComputeRegionAutoscalerRegion(res["region"], d)); err != nil {
 		return fmt.Errorf("Error reading RegionAutoscaler: %s", err)
 	}

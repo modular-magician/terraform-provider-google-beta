@@ -176,15 +176,23 @@ func resourceSqlDatabaseRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("charset", flattenSqlDatabaseCharset(res["charset"], d)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("collation", flattenSqlDatabaseCollation(res["collation"], d)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenSqlDatabaseName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("instance", flattenSqlDatabaseInstance(res["instance"], d)); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}

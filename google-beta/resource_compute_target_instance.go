@@ -189,21 +189,33 @@ func resourceComputeTargetInstanceRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading TargetInstance: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeTargetInstanceName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetInstance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeTargetInstanceCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetInstance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeTargetInstanceDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetInstance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("instance", flattenComputeTargetInstanceInstance(res["instance"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetInstance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("nat_policy", flattenComputeTargetInstanceNatPolicy(res["natPolicy"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetInstance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("zone", flattenComputeTargetInstanceZone(res["zone"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetInstance: %s", err)
 	}

@@ -209,27 +209,43 @@ func resourceComputeNetworkEndpointGroupRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeNetworkEndpointGroupName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeNetworkEndpointGroupDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("network_endpoint_type", flattenComputeNetworkEndpointGroupNetworkEndpointType(res["networkEndpointType"], d)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("size", flattenComputeNetworkEndpointGroupSize(res["size"], d)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("network", flattenComputeNetworkEndpointGroupNetwork(res["network"], d)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("subnetwork", flattenComputeNetworkEndpointGroupSubnetwork(res["subnetwork"], d)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("default_port", flattenComputeNetworkEndpointGroupDefaultPort(res["defaultPort"], d)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("zone", flattenComputeNetworkEndpointGroupZone(res["zone"], d)); err != nil {
 		return fmt.Errorf("Error reading NetworkEndpointGroup: %s", err)
 	}

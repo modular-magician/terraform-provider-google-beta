@@ -225,27 +225,43 @@ func resourceComputeSslPolicyRead(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeSslPolicyCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeSslPolicyDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeSslPolicyName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("profile", flattenComputeSslPolicyProfile(res["profile"], d)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("min_tls_version", flattenComputeSslPolicyMinTlsVersion(res["minTlsVersion"], d)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("enabled_features", flattenComputeSslPolicyEnabledFeatures(res["enabledFeatures"], d)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("custom_features", flattenComputeSslPolicyCustomFeatures(res["customFeatures"], d)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("fingerprint", flattenComputeSslPolicyFingerprint(res["fingerprint"], d)); err != nil {
 		return fmt.Errorf("Error reading SslPolicy: %s", err)
 	}

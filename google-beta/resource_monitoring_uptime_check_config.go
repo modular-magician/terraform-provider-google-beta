@@ -360,42 +360,68 @@ func resourceMonitoringUptimeCheckConfigRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenMonitoringUptimeCheckConfigName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("uptime_check_id", flattenMonitoringUptimeCheckConfigUptimeCheckId(res["id"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("display_name", flattenMonitoringUptimeCheckConfigDisplayName(res["displayName"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("period", flattenMonitoringUptimeCheckConfigPeriod(res["period"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("timeout", flattenMonitoringUptimeCheckConfigTimeout(res["timeout"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("content_matchers", flattenMonitoringUptimeCheckConfigContentMatchers(res["contentMatchers"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("selected_regions", flattenMonitoringUptimeCheckConfigSelectedRegions(res["selectedRegions"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("is_internal", flattenMonitoringUptimeCheckConfigIsInternal(res["isInternal"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("internal_checkers", flattenMonitoringUptimeCheckConfigInternalCheckers(res["internalCheckers"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("http_check", flattenMonitoringUptimeCheckConfigHttpCheck(res["httpCheck"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("tcp_check", flattenMonitoringUptimeCheckConfigTcpCheck(res["tcpCheck"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("resource_group", flattenMonitoringUptimeCheckConfigResourceGroup(res["resourceGroup"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("monitored_resource", flattenMonitoringUptimeCheckConfigMonitoredResource(res["monitoredResource"], d)); err != nil {
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}

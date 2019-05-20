@@ -193,21 +193,33 @@ func resourceSpannerInstanceRead(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenSpannerInstanceName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("config", flattenSpannerInstanceConfig(res["config"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("display_name", flattenSpannerInstanceDisplayName(res["displayName"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("num_nodes", flattenSpannerInstanceNum_nodes(res["nodeCount"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenSpannerInstanceLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("state", flattenSpannerInstanceState(res["state"], d)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}

@@ -160,18 +160,28 @@ func resourceMonitoringGroupRead(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("parent_name", flattenMonitoringGroupParentName(res["parentName"], d)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenMonitoringGroupName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("is_cluster", flattenMonitoringGroupIsCluster(res["isCluster"], d)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("display_name", flattenMonitoringGroupDisplayName(res["displayName"], d)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("filter", flattenMonitoringGroupFilter(res["filter"], d)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}

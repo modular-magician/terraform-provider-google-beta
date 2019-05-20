@@ -290,30 +290,48 @@ func resourceComputeUrlMapRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeUrlMapCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("default_service", flattenComputeUrlMapDefaultService(res["defaultService"], d)); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeUrlMapDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("host_rule", flattenComputeUrlMapHost_rule(res["hostRules"], d)); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("map_id", flattenComputeUrlMapMap_id(res["id"], d)); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("fingerprint", flattenComputeUrlMapFingerprint(res["fingerprint"], d)); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeUrlMapName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("path_matcher", flattenComputeUrlMapPath_matcher(res["pathMatchers"], d)); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("test", flattenComputeUrlMapTest(res["tests"], d)); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}

@@ -236,27 +236,43 @@ func resourcePubsubSubscriptionRead(d *schema.ResourceData, meta interface{}) er
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenPubsubSubscriptionName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("topic", flattenPubsubSubscriptionTopic(res["topic"], d)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenPubsubSubscriptionLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("push_config", flattenPubsubSubscriptionPushConfig(res["pushConfig"], d)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ack_deadline_seconds", flattenPubsubSubscriptionAckDeadlineSeconds(res["ackDeadlineSeconds"], d)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("message_retention_duration", flattenPubsubSubscriptionMessageRetentionDuration(res["messageRetentionDuration"], d)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("retain_acked_messages", flattenPubsubSubscriptionRetainAckedMessages(res["retainAckedMessages"], d)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("expiration_policy", flattenPubsubSubscriptionExpirationPolicy(res["expirationPolicy"], d)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}

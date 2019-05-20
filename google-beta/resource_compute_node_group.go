@@ -187,21 +187,33 @@ func resourceComputeNodeGroupRead(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error reading NodeGroup: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeNodeGroupCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeNodeGroupDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeNodeGroupName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("node_template", flattenComputeNodeGroupNodeTemplate(res["nodeTemplate"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("size", flattenComputeNodeGroupSize(res["size"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeGroup: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("zone", flattenComputeNodeGroupZone(res["zone"], d)); err != nil {
 		return fmt.Errorf("Error reading NodeGroup: %s", err)
 	}

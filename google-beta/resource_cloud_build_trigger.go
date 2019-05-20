@@ -340,33 +340,53 @@ func resourceCloudBuildTriggerRead(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("trigger_id", flattenCloudBuildTriggerTrigger_id(res["id"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenCloudBuildTriggerDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("disabled", flattenCloudBuildTriggerDisabled(res["disabled"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("create_time", flattenCloudBuildTriggerCreateTime(res["createTime"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("substitutions", flattenCloudBuildTriggerSubstitutions(res["substitutions"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("filename", flattenCloudBuildTriggerFilename(res["filename"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ignored_files", flattenCloudBuildTriggerIgnoredFiles(res["ignoredFiles"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("included_files", flattenCloudBuildTriggerIncludedFiles(res["includedFiles"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("trigger_template", flattenCloudBuildTriggerTriggerTemplate(res["triggerTemplate"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("build", flattenCloudBuildTriggerBuild(res["build"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}

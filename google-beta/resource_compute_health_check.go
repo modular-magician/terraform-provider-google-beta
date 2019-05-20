@@ -355,39 +355,63 @@ func resourceComputeHealthCheckRead(d *schema.ResourceData, meta interface{}) er
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("check_interval_sec", flattenComputeHealthCheckCheckIntervalSec(res["checkIntervalSec"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeHealthCheckCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeHealthCheckDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("healthy_threshold", flattenComputeHealthCheckHealthyThreshold(res["healthyThreshold"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeHealthCheckName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("timeout_sec", flattenComputeHealthCheckTimeoutSec(res["timeoutSec"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("unhealthy_threshold", flattenComputeHealthCheckUnhealthyThreshold(res["unhealthyThreshold"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("type", flattenComputeHealthCheckType(res["type"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("http_health_check", flattenComputeHealthCheckHttpHealthCheck(res["httpHealthCheck"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("https_health_check", flattenComputeHealthCheckHttpsHealthCheck(res["httpsHealthCheck"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("tcp_health_check", flattenComputeHealthCheckTcpHealthCheck(res["tcpHealthCheck"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ssl_health_check", flattenComputeHealthCheckSslHealthCheck(res["sslHealthCheck"], d)); err != nil {
 		return fmt.Errorf("Error reading HealthCheck: %s", err)
 	}

@@ -397,63 +397,103 @@ func resourceComputeForwardingRuleRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_timestamp", flattenComputeForwardingRuleCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("description", flattenComputeForwardingRuleDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ip_address", flattenComputeForwardingRuleIPAddress(res["IPAddress"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ip_protocol", flattenComputeForwardingRuleIPProtocol(res["IPProtocol"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("backend_service", flattenComputeForwardingRuleBackendService(res["backendService"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ip_version", flattenComputeForwardingRuleIpVersion(res["ipVersion"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("load_balancing_scheme", flattenComputeForwardingRuleLoadBalancingScheme(res["loadBalancingScheme"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenComputeForwardingRuleName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("network", flattenComputeForwardingRuleNetwork(res["network"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("port_range", flattenComputeForwardingRulePortRange(res["portRange"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("ports", flattenComputeForwardingRulePorts(res["ports"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("subnetwork", flattenComputeForwardingRuleSubnetwork(res["subnetwork"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("target", flattenComputeForwardingRuleTarget(res["target"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("labels", flattenComputeForwardingRuleLabels(res["labels"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("label_fingerprint", flattenComputeForwardingRuleLabelFingerprint(res["labelFingerprint"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("all_ports", flattenComputeForwardingRuleAllPorts(res["allPorts"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("network_tier", flattenComputeForwardingRuleNetworkTier(res["networkTier"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("service_label", flattenComputeForwardingRuleServiceLabel(res["serviceLabel"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("service_name", flattenComputeForwardingRuleServiceName(res["serviceName"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("region", flattenComputeForwardingRuleRegion(res["region"], d)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}

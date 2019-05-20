@@ -417,30 +417,48 @@ func resourceMonitoringAlertPolicyRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
 
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("name", flattenMonitoringAlertPolicyName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("display_name", flattenMonitoringAlertPolicyDisplayName(res["displayName"], d)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("combiner", flattenMonitoringAlertPolicyCombiner(res["combiner"], d)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("creation_record", flattenMonitoringAlertPolicyCreationRecord(res["creationRecord"], d)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("enabled", flattenMonitoringAlertPolicyEnabled(res["enabled"], d)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("conditions", flattenMonitoringAlertPolicyConditions(res["conditions"], d)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("notification_channels", flattenMonitoringAlertPolicyNotificationChannels(res["notificationChannels"], d)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("user_labels", flattenMonitoringAlertPolicyUserLabels(res["userLabels"], d)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if err := d.Set("documentation", flattenMonitoringAlertPolicyDocumentation(res["documentation"], d)); err != nil {
 		return fmt.Errorf("Error reading AlertPolicy: %s", err)
 	}
