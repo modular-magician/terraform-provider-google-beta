@@ -16,7 +16,7 @@ func TestAccDataSourceGoogleProjectOrganizationPolicy_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceGoogleProjectOrganizationPolicy_basic(project),
-				Check: checkDataSourceStateMatchesResourceState(
+				Check: testAccDataSourceGoogleOrganizationPolicyCheck(
 					"data.google_project_organization_policy.data",
 					"google_project_organization_policy.resource"),
 			},
@@ -40,8 +40,8 @@ resource "google_project_organization_policy" "resource" {
 }
 
 data "google_project_organization_policy" "data" {
-  project     = "${google_project_organization_policy.resource.project}"
+  project     = "%s"
   constraint = "constraints/compute.trustedImageProjects"
 }
-	`, project)
+	`, project, project)
 }
