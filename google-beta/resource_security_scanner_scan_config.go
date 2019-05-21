@@ -318,54 +318,63 @@ func resourceSecurityScannerScanConfigUpdate(d *schema.ResourceData, meta interf
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	displayNameProp, err := expandSecurityScannerScanConfigDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+
 	maxQpsProp, err := expandSecurityScannerScanConfigMaxQps(d.Get("max_qps"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("max_qps"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, maxQpsProp)) {
 		obj["maxQps"] = maxQpsProp
 	}
+
 	startingUrlsProp, err := expandSecurityScannerScanConfigStartingUrls(d.Get("starting_urls"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("starting_urls"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, startingUrlsProp)) {
 		obj["startingUrls"] = startingUrlsProp
 	}
+
 	authenticationProp, err := expandSecurityScannerScanConfigAuthentication(d.Get("authentication"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("authentication"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, authenticationProp)) {
 		obj["authentication"] = authenticationProp
 	}
+
 	userAgentProp, err := expandSecurityScannerScanConfigUserAgent(d.Get("user_agent"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("user_agent"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, userAgentProp)) {
 		obj["userAgent"] = userAgentProp
 	}
+
 	blacklistPatternsProp, err := expandSecurityScannerScanConfigBlacklistPatterns(d.Get("blacklist_patterns"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("blacklist_patterns"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, blacklistPatternsProp)) {
 		obj["blacklistPatterns"] = blacklistPatternsProp
 	}
+
 	scheduleProp, err := expandSecurityScannerScanConfigSchedule(d.Get("schedule"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("schedule"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, scheduleProp)) {
 		obj["schedule"] = scheduleProp
 	}
+
 	targetPlatformsProp, err := expandSecurityScannerScanConfigTargetPlatforms(d.Get("target_platforms"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("target_platforms"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, targetPlatformsProp)) {
 		obj["targetPlatforms"] = targetPlatformsProp
 	}
+
 	exportToSecurityCommandCenterProp, err := expandSecurityScannerScanConfigExportToSecurityCommandCenter(d.Get("export_to_security_command_center"), d, config)
 	if err != nil {
 		return err

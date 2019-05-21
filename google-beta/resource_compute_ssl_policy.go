@@ -260,18 +260,21 @@ func resourceComputeSslPolicyUpdate(d *schema.ResourceData, meta interface{}) er
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	profileProp, err := expandComputeSslPolicyProfile(d.Get("profile"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("profile"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, profileProp)) {
 		obj["profile"] = profileProp
 	}
+
 	minTlsVersionProp, err := expandComputeSslPolicyMinTlsVersion(d.Get("min_tls_version"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("min_tls_version"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, minTlsVersionProp)) {
 		obj["minTlsVersion"] = minTlsVersionProp
 	}
+
 	customFeaturesProp, err := expandComputeSslPolicyCustomFeatures(d.Get("custom_features"), d, config)
 	if err != nil {
 		return err

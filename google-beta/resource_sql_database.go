@@ -199,24 +199,28 @@ func resourceSqlDatabaseUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	charsetProp, err := expandSqlDatabaseCharset(d.Get("charset"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("charset"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, charsetProp)) {
 		obj["charset"] = charsetProp
 	}
+
 	collationProp, err := expandSqlDatabaseCollation(d.Get("collation"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("collation"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, collationProp)) {
 		obj["collation"] = collationProp
 	}
+
 	nameProp, err := expandSqlDatabaseName(d.Get("name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
+
 	instanceProp, err := expandSqlDatabaseInstance(d.Get("instance"), d, config)
 	if err != nil {
 		return err

@@ -183,24 +183,28 @@ func resourceMonitoringGroupUpdate(d *schema.ResourceData, meta interface{}) err
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	parentNameProp, err := expandMonitoringGroupParentName(d.Get("parent_name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("parent_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, parentNameProp)) {
 		obj["parentName"] = parentNameProp
 	}
+
 	isClusterProp, err := expandMonitoringGroupIsCluster(d.Get("is_cluster"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("is_cluster"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, isClusterProp)) {
 		obj["isCluster"] = isClusterProp
 	}
+
 	displayNameProp, err := expandMonitoringGroupDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+
 	filterProp, err := expandMonitoringGroupFilter(d.Get("filter"), d, config)
 	if err != nil {
 		return err

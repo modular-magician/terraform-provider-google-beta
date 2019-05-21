@@ -264,18 +264,21 @@ func resourceAccessContextManagerAccessLevelUpdate(d *schema.ResourceData, meta 
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	titleProp, err := expandAccessContextManagerAccessLevelTitle(d.Get("title"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("title"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, titleProp)) {
 		obj["title"] = titleProp
 	}
+
 	descriptionProp, err := expandAccessContextManagerAccessLevelDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	basicProp, err := expandAccessContextManagerAccessLevelBasic(d.Get("basic"), d, config)
 	if err != nil {
 		return err
