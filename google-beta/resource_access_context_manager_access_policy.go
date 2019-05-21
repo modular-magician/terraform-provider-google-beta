@@ -163,6 +163,7 @@ func resourceAccessContextManagerAccessPolicyUpdate(d *schema.ResourceData, meta
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	titleProp, err := expandAccessContextManagerAccessPolicyTitle(d.Get("title"), d, config)
 	if err != nil {
 		return err

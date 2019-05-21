@@ -262,12 +262,14 @@ func resourceComputeRouterUpdate(d *schema.ResourceData, meta interface{}) error
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	descriptionProp, err := expandComputeRouterDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); ok || !reflect.DeepEqual(v, descriptionProp) {
 		obj["description"] = descriptionProp
 	}
+
 	bgpProp, err := expandComputeRouterBgp(d.Get("bgp"), d, config)
 	if err != nil {
 		return err

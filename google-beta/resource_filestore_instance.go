@@ -261,18 +261,21 @@ func resourceFilestoreInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	descriptionProp, err := expandFilestoreInstanceDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	labelsProp, err := expandFilestoreInstanceLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
+
 	fileSharesProp, err := expandFilestoreInstanceFileShares(d.Get("file_shares"), d, config)
 	if err != nil {
 		return err

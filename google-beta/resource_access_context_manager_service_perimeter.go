@@ -231,18 +231,21 @@ func resourceAccessContextManagerServicePerimeterUpdate(d *schema.ResourceData, 
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	titleProp, err := expandAccessContextManagerServicePerimeterTitle(d.Get("title"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("title"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, titleProp)) {
 		obj["title"] = titleProp
 	}
+
 	descriptionProp, err := expandAccessContextManagerServicePerimeterDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	statusProp, err := expandAccessContextManagerServicePerimeterStatus(d.Get("status"), d, config)
 	if err != nil {
 		return err

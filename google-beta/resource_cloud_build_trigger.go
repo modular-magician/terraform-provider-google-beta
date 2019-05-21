@@ -378,48 +378,56 @@ func resourceCloudBuildTriggerUpdate(d *schema.ResourceData, meta interface{}) e
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	descriptionProp, err := expandCloudBuildTriggerDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	disabledProp, err := expandCloudBuildTriggerDisabled(d.Get("disabled"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("disabled"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, disabledProp)) {
 		obj["disabled"] = disabledProp
 	}
+
 	substitutionsProp, err := expandCloudBuildTriggerSubstitutions(d.Get("substitutions"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("substitutions"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, substitutionsProp)) {
 		obj["substitutions"] = substitutionsProp
 	}
+
 	filenameProp, err := expandCloudBuildTriggerFilename(d.Get("filename"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("filename"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, filenameProp)) {
 		obj["filename"] = filenameProp
 	}
+
 	ignoredFilesProp, err := expandCloudBuildTriggerIgnoredFiles(d.Get("ignored_files"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("ignored_files"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, ignoredFilesProp)) {
 		obj["ignoredFiles"] = ignoredFilesProp
 	}
+
 	includedFilesProp, err := expandCloudBuildTriggerIncludedFiles(d.Get("included_files"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("included_files"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, includedFilesProp)) {
 		obj["includedFiles"] = includedFilesProp
 	}
+
 	triggerTemplateProp, err := expandCloudBuildTriggerTriggerTemplate(d.Get("trigger_template"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("trigger_template"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, triggerTemplateProp)) {
 		obj["triggerTemplate"] = triggerTemplateProp
 	}
+
 	buildProp, err := expandCloudBuildTriggerBuild(d.Get("build"), d, config)
 	if err != nil {
 		return err

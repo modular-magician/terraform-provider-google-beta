@@ -164,24 +164,28 @@ func resourceAppEngineFirewallRuleUpdate(d *schema.ResourceData, meta interface{
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	descriptionProp, err := expandAppEngineFirewallRuleDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	sourceRangeProp, err := expandAppEngineFirewallRuleSourceRange(d.Get("source_range"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("source_range"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, sourceRangeProp)) {
 		obj["sourceRange"] = sourceRangeProp
 	}
+
 	actionProp, err := expandAppEngineFirewallRuleAction(d.Get("action"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("action"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, actionProp)) {
 		obj["action"] = actionProp
 	}
+
 	priorityProp, err := expandAppEngineFirewallRulePriority(d.Get("priority"), d, config)
 	if err != nil {
 		return err

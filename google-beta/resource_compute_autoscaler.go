@@ -290,30 +290,35 @@ func resourceComputeAutoscalerUpdate(d *schema.ResourceData, meta interface{}) e
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	nameProp, err := expandComputeAutoscalerName(d.Get("name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
+
 	descriptionProp, err := expandComputeAutoscalerDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	autoscalingPolicyProp, err := expandComputeAutoscalerAutoscalingPolicy(d.Get("autoscaling_policy"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("autoscaling_policy"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, autoscalingPolicyProp)) {
 		obj["autoscalingPolicy"] = autoscalingPolicyProp
 	}
+
 	targetProp, err := expandComputeAutoscalerTarget(d.Get("target"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("target"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, targetProp)) {
 		obj["target"] = targetProp
 	}
+
 	zoneProp, err := expandComputeAutoscalerZone(d.Get("zone"), d, config)
 	if err != nil {
 		return err

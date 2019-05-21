@@ -402,60 +402,70 @@ func resourceComputeHealthCheckUpdate(d *schema.ResourceData, meta interface{}) 
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	checkIntervalSecProp, err := expandComputeHealthCheckCheckIntervalSec(d.Get("check_interval_sec"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("check_interval_sec"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, checkIntervalSecProp)) {
 		obj["checkIntervalSec"] = checkIntervalSecProp
 	}
+
 	descriptionProp, err := expandComputeHealthCheckDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	healthyThresholdProp, err := expandComputeHealthCheckHealthyThreshold(d.Get("healthy_threshold"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("healthy_threshold"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, healthyThresholdProp)) {
 		obj["healthyThreshold"] = healthyThresholdProp
 	}
+
 	nameProp, err := expandComputeHealthCheckName(d.Get("name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
+
 	timeoutSecProp, err := expandComputeHealthCheckTimeoutSec(d.Get("timeout_sec"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("timeout_sec"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, timeoutSecProp)) {
 		obj["timeoutSec"] = timeoutSecProp
 	}
+
 	unhealthyThresholdProp, err := expandComputeHealthCheckUnhealthyThreshold(d.Get("unhealthy_threshold"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("unhealthy_threshold"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, unhealthyThresholdProp)) {
 		obj["unhealthyThreshold"] = unhealthyThresholdProp
 	}
+
 	httpHealthCheckProp, err := expandComputeHealthCheckHttpHealthCheck(d.Get("http_health_check"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("http_health_check"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, httpHealthCheckProp)) {
 		obj["httpHealthCheck"] = httpHealthCheckProp
 	}
+
 	httpsHealthCheckProp, err := expandComputeHealthCheckHttpsHealthCheck(d.Get("https_health_check"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("https_health_check"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, httpsHealthCheckProp)) {
 		obj["httpsHealthCheck"] = httpsHealthCheckProp
 	}
+
 	tcpHealthCheckProp, err := expandComputeHealthCheckTcpHealthCheck(d.Get("tcp_health_check"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("tcp_health_check"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, tcpHealthCheckProp)) {
 		obj["tcpHealthCheck"] = tcpHealthCheckProp
 	}
+
 	sslHealthCheckProp, err := expandComputeHealthCheckSslHealthCheck(d.Get("ssl_health_check"), d, config)
 	if err != nil {
 		return err

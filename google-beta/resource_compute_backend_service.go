@@ -384,7 +384,7 @@ func resourceComputeBackendServiceCreate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("cdn_policy"); !isEmptyValue(reflect.ValueOf(cdnPolicyProp)) && (ok || !reflect.DeepEqual(v, cdnPolicyProp)) {
 		obj["cdnPolicy"] = cdnPolicyProp
 	}
-	connectionDrainingProp, err := expandComputeBackendServiceConnectionDraining(d, config)
+	connectionDrainingProp, err := expandComputeBackendServiceConnectionDraining(nil, d, config)
 	if err != nil {
 		return err
 	} else if !isEmptyValue(reflect.ValueOf(connectionDrainingProp)) {
@@ -571,12 +571,15 @@ func resourceComputeBackendServiceRead(d *schema.ResourceData, meta interface{})
 	if err := d.Set("cdn_policy", flattenComputeBackendServiceCdnPolicy(res["cdnPolicy"], d)); err != nil {
 		return fmt.Errorf("Error reading BackendService: %s", err)
 	}
-	if v, ok := res["connectionDraining"].(map[string]interface{}); res["connectionDraining"] != nil && ok {
-		if err := d.Set("connection_draining_timeout_sec", flattenComputeBackendServiceConnectionDrainingConnection_draining_timeout_sec(v["drainingTimeoutSec"], d)); err != nil {
-			return fmt.Errorf("Error reading BackendService: %s", err)
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
+	if flattenedProp := flattenComputeBackendServiceConnectionDraining(res["connectionDraining"], d); flattenedProp != nil {
+		casted := flattenedProp.([]interface{})[0]
+		if casted != nil {
+			for k, v := range casted.(map[string]interface{}) {
+				d.Set(k, v)
+			}
 		}
-	} else {
-		d.Set("connection_draining_timeout_sec", nil)
 	}
 	if err := d.Set("creation_timestamp", flattenComputeBackendServiceCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading BackendService: %s", err)
@@ -631,102 +634,119 @@ func resourceComputeBackendServiceUpdate(d *schema.ResourceData, meta interface{
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	affinityCookieTtlSecProp, err := expandComputeBackendServiceAffinityCookieTtlSec(d.Get("affinity_cookie_ttl_sec"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("affinity_cookie_ttl_sec"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, affinityCookieTtlSecProp)) {
 		obj["affinityCookieTtlSec"] = affinityCookieTtlSecProp
 	}
+
 	backendsProp, err := expandComputeBackendServiceBackend(d.Get("backend"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("backend"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, backendsProp)) {
 		obj["backends"] = backendsProp
 	}
+
 	cdnPolicyProp, err := expandComputeBackendServiceCdnPolicy(d.Get("cdn_policy"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("cdn_policy"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, cdnPolicyProp)) {
 		obj["cdnPolicy"] = cdnPolicyProp
 	}
-	connectionDrainingProp, err := expandComputeBackendServiceConnectionDraining(d, config)
+
+	connectionDrainingProp, err := expandComputeBackendServiceConnectionDraining(nil, d, config)
 	if err != nil {
 		return err
-	} else if !isEmptyValue(reflect.ValueOf(connectionDrainingProp)) {
+	} else if v, ok := d.GetOkExists("connection_draining"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, connectionDrainingProp)) {
 		obj["connectionDraining"] = connectionDrainingProp
 	}
+
 	customRequestHeadersProp, err := expandComputeBackendServiceCustomRequestHeaders(d.Get("custom_request_headers"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("custom_request_headers"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, customRequestHeadersProp)) {
 		obj["customRequestHeaders"] = customRequestHeadersProp
 	}
+
 	fingerprintProp, err := expandComputeBackendServiceFingerprint(d.Get("fingerprint"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("fingerprint"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, fingerprintProp)) {
 		obj["fingerprint"] = fingerprintProp
 	}
+
 	descriptionProp, err := expandComputeBackendServiceDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	enableCDNProp, err := expandComputeBackendServiceEnableCDN(d.Get("enable_cdn"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("enable_cdn"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enableCDNProp)) {
 		obj["enableCDN"] = enableCDNProp
 	}
+
 	healthChecksProp, err := expandComputeBackendServiceHealthChecks(d.Get("health_checks"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("health_checks"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, healthChecksProp)) {
 		obj["healthChecks"] = healthChecksProp
 	}
+
 	iapProp, err := expandComputeBackendServiceIap(d.Get("iap"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("iap"); ok || !reflect.DeepEqual(v, iapProp) {
 		obj["iap"] = iapProp
 	}
+
 	loadBalancingSchemeProp, err := expandComputeBackendServiceLoadBalancingScheme(d.Get("load_balancing_scheme"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("load_balancing_scheme"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, loadBalancingSchemeProp)) {
 		obj["loadBalancingScheme"] = loadBalancingSchemeProp
 	}
+
 	nameProp, err := expandComputeBackendServiceName(d.Get("name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
+
 	portNameProp, err := expandComputeBackendServicePortName(d.Get("port_name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("port_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, portNameProp)) {
 		obj["portName"] = portNameProp
 	}
+
 	protocolProp, err := expandComputeBackendServiceProtocol(d.Get("protocol"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("protocol"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, protocolProp)) {
 		obj["protocol"] = protocolProp
 	}
+
 	securityPolicyProp, err := expandComputeBackendServiceSecurityPolicy(d.Get("security_policy"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("security_policy"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, securityPolicyProp)) {
 		obj["securityPolicy"] = securityPolicyProp
 	}
+
 	sessionAffinityProp, err := expandComputeBackendServiceSessionAffinity(d.Get("session_affinity"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("session_affinity"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, sessionAffinityProp)) {
 		obj["sessionAffinity"] = sessionAffinityProp
 	}
+
 	timeoutSecProp, err := expandComputeBackendServiceTimeoutSec(d.Get("timeout_sec"), d, config)
 	if err != nil {
 		return err
@@ -1008,6 +1028,19 @@ func flattenComputeBackendServiceCdnPolicySignedUrlCacheMaxAgeSec(v interface{},
 	return v
 }
 
+func flattenComputeBackendServiceConnectionDraining(v interface{}, d *schema.ResourceData) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["connection_draining_timeout_sec"] =
+		flattenComputeBackendServiceConnectionDrainingConnection_draining_timeout_sec(original["drainingTimeoutSec"], d)
+	return []interface{}{transformed}
+}
 func flattenComputeBackendServiceConnectionDrainingConnection_draining_timeout_sec(v interface{}, d *schema.ResourceData) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
@@ -1329,9 +1362,8 @@ func expandComputeBackendServiceCdnPolicySignedUrlCacheMaxAgeSec(v interface{}, 
 	return v, nil
 }
 
-func expandComputeBackendServiceConnectionDraining(d TerraformResourceData, config *Config) (interface{}, error) {
+func expandComputeBackendServiceConnectionDraining(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	transformed := make(map[string]interface{})
-	// Note that nesting flattened objects won't work because we don't handle them properly here.
 	transformedConnection_draining_timeout_sec, err := expandComputeBackendServiceConnectionDrainingConnection_draining_timeout_sec(d.Get("connection_draining_timeout_sec"), d, config)
 	if err != nil {
 		return nil, err
