@@ -328,42 +328,49 @@ func resourceComputeUrlMapUpdate(d *schema.ResourceData, meta interface{}) error
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	defaultServiceProp, err := expandComputeUrlMapDefaultService(d.Get("default_service"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("default_service"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, defaultServiceProp)) {
 		obj["defaultService"] = defaultServiceProp
 	}
+
 	descriptionProp, err := expandComputeUrlMapDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	hostRulesProp, err := expandComputeUrlMapHost_rule(d.Get("host_rule"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("host_rule"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, hostRulesProp)) {
 		obj["hostRules"] = hostRulesProp
 	}
+
 	fingerprintProp, err := expandComputeUrlMapFingerprint(d.Get("fingerprint"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("fingerprint"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, fingerprintProp)) {
 		obj["fingerprint"] = fingerprintProp
 	}
+
 	nameProp, err := expandComputeUrlMapName(d.Get("name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
+
 	pathMatchersProp, err := expandComputeUrlMapPath_matcher(d.Get("path_matcher"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("path_matcher"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, pathMatchersProp)) {
 		obj["pathMatchers"] = pathMatchersProp
 	}
+
 	testsProp, err := expandComputeUrlMapTest(d.Get("test"), d, config)
 	if err != nil {
 		return err

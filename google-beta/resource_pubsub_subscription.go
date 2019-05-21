@@ -268,36 +268,42 @@ func resourcePubsubSubscriptionUpdate(d *schema.ResourceData, meta interface{}) 
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	labelsProp, err := expandPubsubSubscriptionLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
+
 	pushConfigProp, err := expandPubsubSubscriptionPushConfig(d.Get("push_config"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("push_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, pushConfigProp)) {
 		obj["pushConfig"] = pushConfigProp
 	}
+
 	ackDeadlineSecondsProp, err := expandPubsubSubscriptionAckDeadlineSeconds(d.Get("ack_deadline_seconds"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("ack_deadline_seconds"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, ackDeadlineSecondsProp)) {
 		obj["ackDeadlineSeconds"] = ackDeadlineSecondsProp
 	}
+
 	messageRetentionDurationProp, err := expandPubsubSubscriptionMessageRetentionDuration(d.Get("message_retention_duration"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("message_retention_duration"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, messageRetentionDurationProp)) {
 		obj["messageRetentionDuration"] = messageRetentionDurationProp
 	}
+
 	retainAckedMessagesProp, err := expandPubsubSubscriptionRetainAckedMessages(d.Get("retain_acked_messages"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("retain_acked_messages"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, retainAckedMessagesProp)) {
 		obj["retainAckedMessages"] = retainAckedMessagesProp
 	}
+
 	expirationPolicyProp, err := expandPubsubSubscriptionExpirationPolicy(d.Get("expiration_policy"), d, config)
 	if err != nil {
 		return err

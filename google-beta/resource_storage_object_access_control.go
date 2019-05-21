@@ -199,24 +199,28 @@ func resourceStorageObjectAccessControlUpdate(d *schema.ResourceData, meta inter
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	bucketProp, err := expandStorageObjectAccessControlBucket(d.Get("bucket"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("bucket"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, bucketProp)) {
 		obj["bucket"] = bucketProp
 	}
+
 	entityProp, err := expandStorageObjectAccessControlEntity(d.Get("entity"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("entity"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, entityProp)) {
 		obj["entity"] = entityProp
 	}
+
 	objectProp, err := expandStorageObjectAccessControlObject(d.Get("object"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("object"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, objectProp)) {
 		obj["object"] = objectProp
 	}
+
 	roleProp, err := expandStorageObjectAccessControlRole(d.Get("role"), d, config)
 	if err != nil {
 		return err

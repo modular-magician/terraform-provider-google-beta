@@ -452,42 +452,49 @@ func resourceMonitoringAlertPolicyUpdate(d *schema.ResourceData, meta interface{
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	displayNameProp, err := expandMonitoringAlertPolicyDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+
 	combinerProp, err := expandMonitoringAlertPolicyCombiner(d.Get("combiner"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("combiner"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, combinerProp)) {
 		obj["combiner"] = combinerProp
 	}
+
 	enabledProp, err := expandMonitoringAlertPolicyEnabled(d.Get("enabled"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("enabled"); ok || !reflect.DeepEqual(v, enabledProp) {
 		obj["enabled"] = enabledProp
 	}
+
 	conditionsProp, err := expandMonitoringAlertPolicyConditions(d.Get("conditions"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("conditions"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, conditionsProp)) {
 		obj["conditions"] = conditionsProp
 	}
+
 	notificationChannelsProp, err := expandMonitoringAlertPolicyNotificationChannels(d.Get("notification_channels"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("notification_channels"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, notificationChannelsProp)) {
 		obj["notificationChannels"] = notificationChannelsProp
 	}
+
 	userLabelsProp, err := expandMonitoringAlertPolicyUserLabels(d.Get("user_labels"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("user_labels"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, userLabelsProp)) {
 		obj["userLabels"] = userLabelsProp
 	}
+
 	documentationProp, err := expandMonitoringAlertPolicyDocumentation(d.Get("documentation"), d, config)
 	if err != nil {
 		return err

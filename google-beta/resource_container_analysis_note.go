@@ -154,6 +154,7 @@ func resourceContainerAnalysisNoteUpdate(d *schema.ResourceData, meta interface{
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	attestationAuthorityProp, err := expandContainerAnalysisNoteAttestationAuthority(d.Get("attestation_authority"), d, config)
 	if err != nil {
 		return err

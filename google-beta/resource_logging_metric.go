@@ -317,42 +317,49 @@ func resourceLoggingMetricUpdate(d *schema.ResourceData, meta interface{}) error
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	nameProp, err := expandLoggingMetricName(d.Get("name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
+
 	descriptionProp, err := expandLoggingMetricDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	filterProp, err := expandLoggingMetricFilter(d.Get("filter"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("filter"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, filterProp)) {
 		obj["filter"] = filterProp
 	}
+
 	metricDescriptorProp, err := expandLoggingMetricMetricDescriptor(d.Get("metric_descriptor"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("metric_descriptor"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, metricDescriptorProp)) {
 		obj["metricDescriptor"] = metricDescriptorProp
 	}
+
 	labelExtractorsProp, err := expandLoggingMetricLabelExtractors(d.Get("label_extractors"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("label_extractors"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelExtractorsProp)) {
 		obj["labelExtractors"] = labelExtractorsProp
 	}
+
 	valueExtractorProp, err := expandLoggingMetricValueExtractor(d.Get("value_extractor"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("value_extractor"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, valueExtractorProp)) {
 		obj["valueExtractor"] = valueExtractorProp
 	}
+
 	bucketOptionsProp, err := expandLoggingMetricBucketOptions(d.Get("bucket_options"), d, config)
 	if err != nil {
 		return err

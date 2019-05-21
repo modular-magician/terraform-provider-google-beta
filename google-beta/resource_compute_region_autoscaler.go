@@ -290,30 +290,35 @@ func resourceComputeRegionAutoscalerUpdate(d *schema.ResourceData, meta interfac
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	nameProp, err := expandComputeRegionAutoscalerName(d.Get("name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
+
 	descriptionProp, err := expandComputeRegionAutoscalerDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	autoscalingPolicyProp, err := expandComputeRegionAutoscalerAutoscalingPolicy(d.Get("autoscaling_policy"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("autoscaling_policy"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, autoscalingPolicyProp)) {
 		obj["autoscalingPolicy"] = autoscalingPolicyProp
 	}
+
 	targetProp, err := expandComputeRegionAutoscalerTarget(d.Get("target"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("target"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, targetProp)) {
 		obj["target"] = targetProp
 	}
+
 	regionProp, err := expandComputeRegionAutoscalerRegion(d.Get("region"), d, config)
 	if err != nil {
 		return err

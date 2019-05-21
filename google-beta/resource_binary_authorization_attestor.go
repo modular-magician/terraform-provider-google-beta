@@ -184,18 +184,21 @@ func resourceBinaryAuthorizationAttestorUpdate(d *schema.ResourceData, meta inte
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+
 	nameProp, err := expandBinaryAuthorizationAttestorName(d.Get("name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
+
 	descriptionProp, err := expandBinaryAuthorizationAttestorDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+
 	userOwnedDrydockNoteProp, err := expandBinaryAuthorizationAttestorAttestationAuthorityNote(d.Get("attestation_authority_note"), d, config)
 	if err != nil {
 		return err
