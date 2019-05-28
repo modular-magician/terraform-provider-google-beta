@@ -101,6 +101,89 @@ resource "google_compute_http_health_check" "default" {
 `, context)
 }
 
+func TestAccComputeGlobalForwardingRule_globalForwardingRuleInternalExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(10),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
+		CheckDestroy: testAccCheckComputeGlobalForwardingRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeGlobalForwardingRule_globalForwardingRuleInternalExample(context),
+			},
+		},
+	})
+}
+
+func testAccComputeGlobalForwardingRule_globalForwardingRuleInternalExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_compute_global_forwarding_rule" "default" {
+  provider              = "google-beta"
+  name                  = "global-rule-%{random_suffix}"
+  target                = "${google_compute_target_http_proxy.default.self_link}"
+  port_range            = "80"
+  load_balancing_scheme = "INTERNAL_SELF_MANAGED"
+  ip_address            = "0.0.0.0"
+}
+
+resource "google_compute_target_http_proxy" "default" {
+  provider    = "google-beta"
+  name        = "target-proxy-%{random_suffix}"
+  description = "a description"
+  url_map     = "${google_compute_url_map.default.self_link}"
+}
+
+resource "google_compute_url_map" "default" {
+  provider         = "google-beta"
+  name            = "url-map-target-proxy-%{random_suffix}"
+  description     = "a description"
+  default_service = "${google_compute_backend_service.default.self_link}"
+
+  host_rule {
+    hosts        = ["mysite.com"]
+    path_matcher = "allpaths"
+  }
+
+  path_matcher {
+    name            = "allpaths"
+    default_service = "${google_compute_backend_service.default.self_link}"
+
+    path_rule {
+      paths   = ["/*"]
+      service = "${google_compute_backend_service.default.self_link}"
+    }
+  }
+}
+
+resource "google_compute_backend_service" "default" {
+  provider              = "google-beta"
+  name                  = "backend-%{random_suffix}"
+  port_name             = "http"
+  protocol              = "HTTP"
+  timeout_sec           = 10
+  load_balancing_scheme = "INTERNAL_SELF_MANAGED"
+
+  health_checks = ["${google_compute_health_check.default.self_link}"]
+}
+
+resource "google_compute_health_check" "default" {
+  provider           = "google-beta"
+  name               = "check-backend-%{random_suffix}"
+  check_interval_sec = 1
+  timeout_sec        = 1
+
+  tcp_health_check {
+    port = "80"
+  }
+}
+`, context)
+}
+
 func testAccCheckComputeGlobalForwardingRuleDestroy(s *terraform.State) error {
 	for name, rs := range s.RootModule().Resources {
 		if rs.Type != "google_compute_global_forwarding_rule" {

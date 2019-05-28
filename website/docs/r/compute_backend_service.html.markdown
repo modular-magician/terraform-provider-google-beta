@@ -24,8 +24,10 @@ description: |-
 
 A Backend Service defines a group of virtual machines that will serve
 traffic for load balancing. This resource is a global backend service,
-appropriate for external load balancing. For internal load balancing, use
-a regional backend service instead.
+appropriate for external load balancing or self-managed internal load balancing. 
+For managed internal load balancing, use a regional backend service instead.
+
+Currently self-managed internal load balancing is only available in beta.
 
 
 To get more information about BackendService, see:
@@ -55,6 +57,116 @@ resource "google_compute_http_health_check" "default" {
   timeout_sec        = 1
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=backend_service_global_internal&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Backend Service Global Internal
+
+
+```hcl
+resource "google_compute_global_forwarding_rule" "default" {
+  provider              = "google-beta"
+  name                  = "global-rule"
+  target                = "${google_compute_target_http_proxy.default.self_link}"
+  port_range            = "80"
+  load_balancing_scheme = "INTERNAL_SELF_MANAGED"
+  ip_address            = "0.0.0.0"
+}
+
+resource "google_compute_target_http_proxy" "default" {
+  provider    = "google-beta"
+  name        = "target-proxy"
+  description = "a description"
+  url_map     = "${google_compute_url_map.default.self_link}"
+}
+
+resource "google_compute_url_map" "default" {
+  provider         = "google-beta"
+  name            = "url-map-target-proxy"
+  description     = "a description"
+  default_service = "${google_compute_backend_service.default.self_link}"
+
+  host_rule {
+    hosts        = ["mysite.com"]
+    path_matcher = "allpaths"
+  }
+
+  path_matcher {
+    name            = "allpaths"
+    default_service = "${google_compute_backend_service.default.self_link}"
+
+    path_rule {
+      paths   = ["/*"]
+      service = "${google_compute_backend_service.default.self_link}"
+    }
+  }
+}
+
+resource "google_compute_backend_service" "default" {
+  provider              = "google-beta"
+  name                  = "backend"
+  port_name             = "http"
+  protocol              = "HTTP"
+  timeout_sec           = 10
+  load_balancing_scheme = "INTERNAL_SELF_MANAGED"
+
+  backend {
+    group = "${google_compute_instance_group_manager.foobar.instance_group}"
+    balancing_mode = "RATE"
+    capacity_scaler = 0.4
+    max_rate_per_instance = 50
+  }
+
+  health_checks = ["${google_compute_health_check.default.self_link}"]
+}
+
+data "google_compute_image" "debian_image" {
+  provider = "google-beta"
+  family   = "debian-9"
+  project  = "debian-cloud"
+}
+
+resource "google_compute_instance_group_manager" "foobar" {
+  provider           = "google-beta"
+  name               = "igm-internal"
+  version {
+    instance_template  = "${google_compute_instance_template.foobar.self_link}"
+    name               = "primary"
+  }
+  base_instance_name = "foobar"
+  zone               = "us-central1-f"
+  target_size        = 1
+}
+
+resource "google_compute_instance_template" "foobar" {
+  provider     = "google-beta"
+  name         = "instance-template-internal"
+  machine_type = "n1-standard-1"
+
+  network_interface {
+    network = "default"
+  }
+
+  disk {
+    source_image = "${data.google_compute_image.debian_image.self_link}"
+    auto_delete  = true
+    boot         = true
+  }
+}
+
+resource "google_compute_health_check" "default" {
+  provider           = "google-beta"
+  name               = "check-backend"
+  check_interval_sec = 1
+  timeout_sec        = 1
+
+  tcp_health_check {
+    port = "80"
+  }
+}
+```
 
 ## Argument Reference
 
@@ -66,6 +178,7 @@ The following arguments are supported:
   The list of URLs to the HttpHealthCheck or HttpsHealthCheck resource
   for health checking this BackendService. Currently at most one health
   check can be specified, and a health check is required.
+  For internal load balancing, a URL to a HealthCheck resource must be specified instead.
 
 * `name` -
   (Required)
@@ -123,8 +236,8 @@ The following arguments are supported:
   (Optional)
   Indicates whether the backend service will be used with internal or
   external load balancing. A backend service created for one type of
-  load balancing cannot be used with the other. Must be `EXTERNAL` for
-  a global backend service. Defaults to `EXTERNAL`.
+  load balancing cannot be used with the other. Must be `EXTERNAL` or
+  `INTERNAL_SELF_MANAGED` for a global backend service. Defaults to `EXTERNAL`.
 
 * `port_name` -
   (Optional)
