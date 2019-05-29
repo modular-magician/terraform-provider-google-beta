@@ -18,8 +18,6 @@ import (
 	"fmt"
 	"log"
 	"reflect"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -290,84 +288,40 @@ func flattenNestedResourceManagerLien(d *schema.ResourceData, meta interface{}, 
 		return nil, nil
 	}
 
-	// Final nested resource is either a list of resources we need to filter
-	// or just the resource itself, which we return.
 	switch v.(type) {
 	case []interface{}:
 		break
 	case map[string]interface{}:
-		return v.(map[string]interface{}), nil
+		// Construct list out of single nested resource
+		v = []interface{}{v}
 	default:
-		return nil, fmt.Errorf("invalid value for liens: %v", v)
+		return nil, fmt.Errorf("expected list or map for value liens. Actual value: %v", v)
 	}
 
+	expectedName := d.Get("name")
+
+	// Search list for this resource.
 	items := v.([]interface{})
-	for _, vRaw := range items {
-		item := vRaw.(map[string]interface{})
-		itemIdV := d.Get("name")
-		actualIdV := flattenResourceManagerLienName(item["name"], d)
-		log.Printf("[DEBUG] Checking if item's name (%#v) is equal to resource's (%#v)", itemIdV, actualIdV)
-		if !reflect.DeepEqual(itemIdV, actualIdV) {
+	for _, itemRaw := range items {
+		if itemRaw == nil {
 			continue
 		}
+		item := itemRaw.(map[string]interface{})
+
+		// Decode list item before comparing.
+		item, err := resourceResourceManagerLienDecoder(d, meta, item)
+		if err != nil {
+			return nil, err
+		}
+
+		itemName := flattenResourceManagerLienName(item["name"], d)
+		if !reflect.DeepEqual(itemName, expectedName) {
+			log.Printf("[DEBUG] Skipping item with name= %#v, looking for %#v)", itemName, expectedName)
+			continue
+		}
+		log.Printf("[DEBUG] Found item for resource %q: %#v)", d.Id(), item)
 		return item, nil
 	}
-	return nil, nil
-}
 
-func resourceResourceManagerLienDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// The problem we're trying to solve here is that this property is a Project,
-	// and there are a lot of ways to specify a Project, including the ID vs
-	// Number, which is something that we can't address in a diffsuppress.
-	// Since we can't enforce a particular method of entering the project,
-	// we're just going to have to use whatever the user entered, whether
-	// it's project/projectName, project/12345, projectName, or 12345.
-	// The normal behavior of this method would be 'return res' - and that's
-	// what we'll fall back to if any of our conditions aren't met.  Those
-	// conditions are:
-	// 1) if the new or old values contain '/', the prefix of that is 'projects'.
-	// 2) if either is non-numeric, a project with that ID exists.
-	// 3) the project IDs represented by both the new and old values are the same.
-	config := meta.(*Config)
-	new := res["parent"].(string)
-	old := d.Get("parent").(string)
-	if strings.HasPrefix(new, "projects/") {
-		new = strings.Split(new, "/")[1]
-	}
-	if strings.HasPrefix(old, "projects/") {
-		old = strings.Split(old, "/")[1]
-	}
-	log.Printf("[DEBUG] Trying to figure out whether to use %s or %s", old, new)
-	// If there's still a '/' in there, the value must not be a project ID.
-	if strings.Contains(old, "/") || strings.Contains(new, "/") {
-		return res, nil
-	}
-	// If 'old' isn't entirely numeric, let's assume it's a project ID.
-	// If it's a project ID
-	var oldProjId int64
-	var newProjId int64
-	if oldVal, err := strconv.ParseInt(old, 10, 64); err == nil {
-		log.Printf("[DEBUG] The old value was a real number: %d", oldVal)
-		oldProjId = oldVal
-	} else {
-		pOld, err := config.clientResourceManager.Projects.Get(old).Do()
-		if err != nil {
-			return res, nil
-		}
-		oldProjId = pOld.ProjectNumber
-	}
-	if newVal, err := strconv.ParseInt(new, 10, 64); err == nil {
-		log.Printf("[DEBUG] The new value was a real number: %d", newVal)
-		newProjId = newVal
-	} else {
-		pNew, err := config.clientResourceManager.Projects.Get(new).Do()
-		if err != nil {
-			return res, nil
-		}
-		newProjId = pNew.ProjectNumber
-	}
-	if newProjId == oldProjId {
-		res["parent"] = d.Get("parent")
-	}
-	return res, nil
+	return nil, nil
 }
