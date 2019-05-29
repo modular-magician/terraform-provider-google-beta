@@ -269,18 +269,23 @@ func flattenNestedComputeBackendBucketSignedUrlKey(d *schema.ResourceData, meta 
 
 	items := v.([]interface{})
 	for _, vRaw := range items {
+		if vRaw == nil {
+			continue
+		}
+
 		// If only an id is given in parent resource,
 		// construct a resource map for that id KV pair.
 		item := map[string]interface{}{"keyName": vRaw}
-		itemIdV, err := expandComputeBackendBucketSignedUrlKeyName(d.Get("name"), d, meta.(*Config))
+		expectedName, err := expandComputeBackendBucketSignedUrlKeyName(d.Get("name"), d, meta.(*Config))
 		if err != nil {
 			return nil, err
 		}
-		actualIdV := flattenComputeBackendBucketSignedUrlKeyName(item["keyName"], d)
-		log.Printf("[DEBUG] Checking if item's keyName (%#v) is equal to resource's (%#v)", itemIdV, actualIdV)
-		if !reflect.DeepEqual(itemIdV, actualIdV) {
+		itemName := flattenComputeBackendBucketSignedUrlKeyName(item["keyName"], d)
+		log.Printf("[DEBUG] Checking if item's keyName (%#v) is equal to resource's (%#v)", itemName, expectedName)
+		if !reflect.DeepEqual(itemName, expectedName) {
 			continue
 		}
+
 		return item, nil
 	}
 	return nil, nil

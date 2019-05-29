@@ -151,6 +151,11 @@ func resourceResourceManagerLienRead(d *schema.ResourceData, meta interface{}) e
 		return handleNotFoundError(err, d, fmt.Sprintf("ResourceManagerLien %q", d.Id()))
 	}
 
+	res, err = resourceResourceManagerLienDecoder(d, meta, res)
+	if err != nil {
+		return err
+	}
+
 	res, err = flattenNestedResourceManagerLien(d, meta, res)
 	if err != nil {
 		return err
@@ -161,11 +166,6 @@ func resourceResourceManagerLienRead(d *schema.ResourceData, meta interface{}) e
 		log.Printf("[DEBUG] Removing ResourceManagerLien because it couldn't be matched.")
 		d.SetId("")
 		return nil
-	}
-
-	res, err = resourceResourceManagerLienDecoder(d, meta, res)
-	if err != nil {
-		return err
 	}
 
 	if err := d.Set("name", flattenResourceManagerLienName(res["name"], d)); err != nil {
@@ -303,13 +303,18 @@ func flattenNestedResourceManagerLien(d *schema.ResourceData, meta interface{}, 
 
 	items := v.([]interface{})
 	for _, vRaw := range items {
-		item := vRaw.(map[string]interface{})
-		itemIdV := d.Get("name")
-		actualIdV := flattenResourceManagerLienName(item["name"], d)
-		log.Printf("[DEBUG] Checking if item's name (%#v) is equal to resource's (%#v)", itemIdV, actualIdV)
-		if !reflect.DeepEqual(itemIdV, actualIdV) {
+		if vRaw == nil {
 			continue
 		}
+
+		item := vRaw.(map[string]interface{})
+		expectedName := d.Get("name")
+		itemName := flattenResourceManagerLienName(item["name"], d)
+		log.Printf("[DEBUG] Checking if item's name (%#v) is equal to resource's (%#v)", itemName, expectedName)
+		if !reflect.DeepEqual(itemName, expectedName) {
+			continue
+		}
+
 		return item, nil
 	}
 	return nil, nil
