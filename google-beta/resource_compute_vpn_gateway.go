@@ -19,9 +19,6 @@ import (
 	"log"
 	"reflect"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
-	"google.golang.org/api/compute/v1"
 )
 
 func resourceComputeVpnGateway() *schema.Resource {

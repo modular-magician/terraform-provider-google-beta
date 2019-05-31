@@ -20,9 +20,6 @@ import (
 	"log"
 	"reflect"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/hashcode"
-	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceDnsPolicy() *schema.Resource {

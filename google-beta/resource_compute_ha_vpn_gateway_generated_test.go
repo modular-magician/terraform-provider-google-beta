@@ -21,7 +21,6 @@ import (
 
 	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestAccComputeHaVpnGateway_haVpnGatewayBasicExample(t *testing.T) {
