@@ -17,5 +17,6 @@ package google
 import "github.com/hashicorp/terraform/helper/schema"
 
 var GeneratedKmsResourcesMap = map[string]*schema.Resource{
-	"google_kms_key_ring": resourceKmsKeyRing(),
+	"google_kms_key_ring":   resourceKmsKeyRing(),
+	"google_kms_crypto_key": resourceKmsCryptoKey(),
 }
