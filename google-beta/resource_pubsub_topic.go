@@ -78,7 +78,7 @@ func resourcePubsubTopicCreate(d *schema.ResourceData, meta interface{}) error {
 		obj["labels"] = labelsProp
 	}
 
-	url, err := replaceVars(d, config, "https://pubsub.googleapis.com/v1/projects/{{project}}/topics/{{name}}")
+	url, err := replaceVars(d, config, "{{PubsubBasePath}}projects/{{project}}/topics/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -104,7 +104,7 @@ func resourcePubsubTopicCreate(d *schema.ResourceData, meta interface{}) error {
 func resourcePubsubTopicRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	url, err := replaceVars(d, config, "https://pubsub.googleapis.com/v1/projects/{{project}}/topics/{{name}}")
+	url, err := replaceVars(d, config, "{{PubsubBasePath}}projects/{{project}}/topics/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -135,7 +135,7 @@ func resourcePubsubTopicRead(d *schema.ResourceData, meta interface{}) error {
 func resourcePubsubTopicDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	url, err := replaceVars(d, config, "https://pubsub.googleapis.com/v1/projects/{{project}}/topics/{{name}}")
+	url, err := replaceVars(d, config, "{{PubsubBasePath}}projects/{{project}}/topics/{{name}}")
 	if err != nil {
 		return err
 	}
