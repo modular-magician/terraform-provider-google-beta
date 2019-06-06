@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var SqlDefaultBasePath = "https://www.googleapis.com/sql/v1beta4/"
+
+var SqlBasePathEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_SQL_BASE_PATH",
+	}, SqlDefaultBasePath),
+}
+
 var GeneratedSqlResourcesMap = map[string]*schema.Resource{
 	"google_sql_database": resourceSqlDatabase(),
 }

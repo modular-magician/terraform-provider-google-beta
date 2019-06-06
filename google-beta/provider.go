@@ -69,11 +69,14 @@ func Provider() terraform.ResourceProvider {
 					"CLOUDSDK_COMPUTE_ZONE",
 				}, nil),
 			},
+
 			"scopes": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+
+			"compute_base_path": ComputeBasePathEntry,
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
@@ -312,6 +315,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	for i, scope := range scopes {
 		config.Scopes[i] = scope.(string)
 	}
+
+	config.ComputeBasePath = d.Get("compute_base_path").(string)
 
 	if err := config.LoadAndValidate(); err != nil {
 		return nil, err

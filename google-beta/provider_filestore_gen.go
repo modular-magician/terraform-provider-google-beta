@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var FilestoreDefaultBasePath = "https://file.googleapis.com/v1/"
+
+var FilestoreBasePathEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_FILESTORE_BASE_PATH",
+	}, FilestoreDefaultBasePath),
+}
+
 var GeneratedFilestoreResourcesMap = map[string]*schema.Resource{
 	"google_filestore_instance": resourceFilestoreInstance(),
 }
