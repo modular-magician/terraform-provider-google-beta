@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var ComputeDefaultBasePath = "https://www.googleapis.com/compute/beta/"
+
+var ComputeBasePathEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_COMPUTE_BASE_PATH",
+	}, ComputeDefaultBasePath),
+}
+
 var GeneratedComputeResourcesMap = map[string]*schema.Resource{
 	"google_compute_address":                        resourceComputeAddress(),
 	"google_compute_autoscaler":                     resourceComputeAutoscaler(),

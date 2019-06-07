@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var BinaryAuthorizationDefaultBasePath = "https://binaryauthorization.googleapis.com/v1beta1/"
+
+var BinaryAuthorizationBasePathEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_BINARY_AUTHORIZATION_BASE_PATH",
+	}, BinaryAuthorizationDefaultBasePath),
+}
+
 var GeneratedBinaryAuthorizationResourcesMap = map[string]*schema.Resource{
 	"google_binary_authorization_attestor": resourceBinaryAuthorizationAttestor(),
 	"google_binary_authorization_policy":   resourceBinaryAuthorizationPolicy(),

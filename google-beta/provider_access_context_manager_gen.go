@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var AccessContextManagerDefaultBasePath = "https://accesscontextmanager.googleapis.com/v1/"
+
+var AccessContextManagerBasePathEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_ACCESS_CONTEXT_MANAGER_BASE_PATH",
+	}, AccessContextManagerDefaultBasePath),
+}
+
 var GeneratedAccessContextManagerResourcesMap = map[string]*schema.Resource{
 	"google_access_context_manager_access_policy":     resourceAccessContextManagerAccessPolicy(),
 	"google_access_context_manager_access_level":      resourceAccessContextManagerAccessLevel(),
