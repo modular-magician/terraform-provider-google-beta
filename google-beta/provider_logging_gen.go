@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var LoggingDefaultBasePath = "https://logging.googleapis.com/v2/"
+
+var LoggingCustomEndpointEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_LOGGING_CUSTOM_ENDPOINT",
+	}, LoggingDefaultBasePath),
+}
+
 var GeneratedLoggingResourcesMap = map[string]*schema.Resource{
 	"google_logging_metric": resourceLoggingMetric(),
 }

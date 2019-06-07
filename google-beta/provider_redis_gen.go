@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var RedisDefaultBasePath = "https://redis.googleapis.com/v1beta1/"
+
+var RedisCustomEndpointEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_REDIS_CUSTOM_ENDPOINT",
+	}, RedisDefaultBasePath),
+}
+
 var GeneratedRedisResourcesMap = map[string]*schema.Resource{
 	"google_redis_instance": resourceRedisInstance(),
 }

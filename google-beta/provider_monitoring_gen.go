@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var MonitoringDefaultBasePath = "https://monitoring.googleapis.com/v3/"
+
+var MonitoringCustomEndpointEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_MONITORING_CUSTOM_ENDPOINT",
+	}, MonitoringDefaultBasePath),
+}
+
 var GeneratedMonitoringResourcesMap = map[string]*schema.Resource{
 	"google_monitoring_alert_policy":         resourceMonitoringAlertPolicy(),
 	"google_monitoring_group":                resourceMonitoringGroup(),

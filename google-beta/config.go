@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/logging"
@@ -65,10 +66,13 @@ type Config struct {
 
 	tokenSource oauth2.TokenSource
 
-	clientBilling                *cloudbilling.APIService
-	clientBuild                  *cloudbuild.Service
-	clientComposer               *composer.Service
-	clientCompute                *compute.Service
+	clientBilling  *cloudbilling.APIService
+	clientBuild    *cloudbuild.Service
+	clientComposer *composer.Service
+
+	ComputeBasePath string
+	clientCompute   *compute.Service
+
 	clientComputeBeta            *computeBeta.Service
 	clientContainer              *container.Service
 	clientContainerBeta          *containerBeta.Service
@@ -93,11 +97,13 @@ type Config struct {
 	clientServiceMan             *servicemanagement.APIService
 	clientServiceUsage           *serviceusage.Service
 	clientBigQuery               *bigquery.Service
-	clientCloudFunctions         *cloudfunctions.Service
-	clientCloudIoT               *cloudiot.Service
-	clientAppEngine              *appengine.APIService
-	clientServiceNetworking      *servicenetworking.APIService
-	clientStorageTransfer        *storagetransfer.Service
+
+	CloudFunctionsBasePath  string
+	clientCloudFunctions    *cloudfunctions.Service
+	clientCloudIoT          *cloudiot.Service
+	clientAppEngine         *appengine.APIService
+	clientServiceNetworking *servicenetworking.APIService
+	clientStorageTransfer   *storagetransfer.Service
 
 	bigtableClientFactory *BigtableClientFactory
 }
@@ -137,12 +143,14 @@ func (c *Config) LoadAndValidate() error {
 
 	context := context.Background()
 
-	log.Printf("[INFO] Instantiating GCE client...")
+	computeClientBasePath := removeBasePathVersion(c.ComputeBasePath) + "v1/projects/"
+	log.Printf("[INFO] Instantiating GCE client for path %s", computeClientBasePath)
 	c.clientCompute, err = compute.NewService(context, option.WithHTTPClient(client))
 	if err != nil {
 		return err
 	}
 	c.clientCompute.UserAgent = userAgent
+	c.clientCompute.BasePath = computeClientBasePath
 
 	log.Printf("[INFO] Instantiating GCE Beta client...")
 	c.clientComputeBeta, err = computeBeta.NewService(context, option.WithHTTPClient(client))
@@ -298,12 +306,14 @@ func (c *Config) LoadAndValidate() error {
 	}
 	c.clientBigQuery.UserAgent = userAgent
 
-	log.Printf("[INFO] Instantiating Google Cloud CloudFunctions Client...")
+	cloudFunctionsClientBasePath := removeBasePathVersion(c.CloudFunctionsBasePath)
+	log.Printf("[INFO] Instantiating Google Cloud CloudFunctions Client for path %s", cloudFunctionsClientBasePath)
 	c.clientCloudFunctions, err = cloudfunctions.NewService(context, option.WithHTTPClient(client))
 	if err != nil {
 		return err
 	}
 	c.clientCloudFunctions.UserAgent = userAgent
+	c.clientCloudFunctions.BasePath = cloudFunctionsClientBasePath
 
 	c.bigtableClientFactory = &BigtableClientFactory{
 		UserAgent:   userAgent,
@@ -407,4 +417,9 @@ func (c *Config) getTokenSource(clientScopes []string) (oauth2.TokenSource, erro
 	log.Printf("[INFO] Authenticating using DefaultClient...")
 	log.Printf("[INFO]   -- Scopes: %s", clientScopes)
 	return googleoauth.DefaultTokenSource(context.Background(), clientScopes...)
+}
+
+// Remove the `/{{version}}/` from a base path, replacing it with `/`
+func removeBasePathVersion(url string) string {
+	return regexp.MustCompile(`/[^/]+/$`).ReplaceAllString(url, "/")
 }

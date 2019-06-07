@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var PubsubDefaultBasePath = "https://pubsub.googleapis.com/v1/"
+
+var PubsubCustomEndpointEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_PUBSUB_CUSTOM_ENDPOINT",
+	}, PubsubDefaultBasePath),
+}
+
 var GeneratedPubsubResourcesMap = map[string]*schema.Resource{
 	"google_pubsub_topic":        resourcePubsubTopic(),
 	"google_pubsub_subscription": resourcePubsubSubscription(),

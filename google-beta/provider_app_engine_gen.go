@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var AppEngineDefaultBasePath = "https://appengine.googleapis.com/v1/"
+
+var AppEngineCustomEndpointEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_APP_ENGINE_CUSTOM_ENDPOINT",
+	}, AppEngineDefaultBasePath),
+}
+
 var GeneratedAppEngineResourcesMap = map[string]*schema.Resource{
 	"google_app_engine_firewall_rule": resourceAppEngineFirewallRule(),
 }
