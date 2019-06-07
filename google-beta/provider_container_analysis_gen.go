@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var ContainerAnalysisDefaultBasePath = "https://containeranalysis.googleapis.com/v1beta1/"
+
+var ContainerAnalysisBasePathEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_CONTAINER_ANALYSIS_BASE_PATH",
+	}, ContainerAnalysisDefaultBasePath),
+}
+
 var GeneratedContainerAnalysisResourcesMap = map[string]*schema.Resource{
 	"google_container_analysis_note": resourceContainerAnalysisNote(),
 }

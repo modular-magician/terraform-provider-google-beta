@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var ResourceManagerDefaultBasePath = "https://cloudresourcemanager.googleapis.com/v1/"
+
+var ResourceManagerBasePathEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_RESOURCE_MANAGER_BASE_PATH",
+	}, ResourceManagerDefaultBasePath),
+}
+
 var GeneratedResourceManagerResourcesMap = map[string]*schema.Resource{
 	"google_resource_manager_lien": resourceResourceManagerLien(),
 }
