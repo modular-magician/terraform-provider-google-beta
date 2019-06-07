@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var CloudSchedulerDefaultBasePath = "https://cloudscheduler.googleapis.com/v1/"
+
+var CloudSchedulerBasePathEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_CLOUD_SCHEDULER_BASE_PATH",
+	}, CloudSchedulerDefaultBasePath),
+}
+
 var GeneratedCloudSchedulerResourcesMap = map[string]*schema.Resource{
 	"google_cloud_scheduler_job": resourceCloudSchedulerJob(),
 }

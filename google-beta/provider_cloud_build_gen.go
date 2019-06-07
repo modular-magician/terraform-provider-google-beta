@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var CloudBuildDefaultBasePath = "https://cloudbuild.googleapis.com/v1/"
+
+var CloudBuildBasePathEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_CLOUD_BUILD_BASE_PATH",
+	}, CloudBuildDefaultBasePath),
+}
+
 var GeneratedCloudBuildResourcesMap = map[string]*schema.Resource{
 	"google_cloudbuild_trigger": resourceCloudBuildTrigger(),
 }

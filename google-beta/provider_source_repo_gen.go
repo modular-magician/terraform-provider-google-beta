@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var SourceRepoDefaultBasePath = "https://sourcerepo.googleapis.com/v1/"
+
+var SourceRepoBasePathEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_SOURCE_REPO_BASE_PATH",
+	}, SourceRepoDefaultBasePath),
+}
+
 var GeneratedSourceRepoResourcesMap = map[string]*schema.Resource{
 	"google_sourcerepo_repository": resourceSourceRepoRepository(),
 }

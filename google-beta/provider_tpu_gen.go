@@ -16,6 +16,16 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var TpuDefaultBasePath = "https://tpu.googleapis.com/v1/"
+
+var TpuBasePathEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_TPU_BASE_PATH",
+	}, TpuDefaultBasePath),
+}
+
 var GeneratedTpuResourcesMap = map[string]*schema.Resource{
 	"google_tpu_node": resourceTpuNode(),
 }
