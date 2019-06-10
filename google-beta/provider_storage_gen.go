@@ -16,6 +16,17 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var StorageDefaultBasePath = "https://www.googleapis.com/storage/v1/"
+var StorageCustomEndpointEntryKey = "storage_custom_endpoint"
+var StorageCustomEndpointEntry = &schema.Schema{
+	Type:         schema.TypeString,
+	Optional:     true,
+	ValidateFunc: validateCustomEndpoint,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_STORAGE_CUSTOM_ENDPOINT",
+	}, StorageDefaultBasePath),
+}
+
 var GeneratedStorageResourcesMap = map[string]*schema.Resource{
 	"google_storage_object_access_control":         resourceStorageObjectAccessControl(),
 	"google_storage_default_object_access_control": resourceStorageDefaultObjectAccessControl(),

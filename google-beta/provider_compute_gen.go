@@ -16,6 +16,17 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var ComputeDefaultBasePath = "https://www.googleapis.com/compute/beta/"
+var ComputeCustomEndpointEntryKey = "compute_custom_endpoint"
+var ComputeCustomEndpointEntry = &schema.Schema{
+	Type:         schema.TypeString,
+	Optional:     true,
+	ValidateFunc: validateCustomEndpoint,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_COMPUTE_CUSTOM_ENDPOINT",
+	}, ComputeDefaultBasePath),
+}
+
 var GeneratedComputeResourcesMap = map[string]*schema.Resource{
 	"google_compute_address":                        resourceComputeAddress(),
 	"google_compute_autoscaler":                     resourceComputeAutoscaler(),

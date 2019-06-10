@@ -16,6 +16,17 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var CloudBuildDefaultBasePath = "https://cloudbuild.googleapis.com/v1/"
+var CloudBuildCustomEndpointEntryKey = "cloud_build_custom_endpoint"
+var CloudBuildCustomEndpointEntry = &schema.Schema{
+	Type:         schema.TypeString,
+	Optional:     true,
+	ValidateFunc: validateCustomEndpoint,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_CLOUD_BUILD_CUSTOM_ENDPOINT",
+	}, CloudBuildDefaultBasePath),
+}
+
 var GeneratedCloudBuildResourcesMap = map[string]*schema.Resource{
 	"google_cloudbuild_trigger": resourceCloudBuildTrigger(),
 }

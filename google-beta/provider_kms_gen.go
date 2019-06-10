@@ -16,6 +16,17 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var KmsDefaultBasePath = "https://cloudkms.googleapis.com/v1/"
+var KmsCustomEndpointEntryKey = "kms_custom_endpoint"
+var KmsCustomEndpointEntry = &schema.Schema{
+	Type:         schema.TypeString,
+	Optional:     true,
+	ValidateFunc: validateCustomEndpoint,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_KMS_CUSTOM_ENDPOINT",
+	}, KmsDefaultBasePath),
+}
+
 var GeneratedKmsResourcesMap = map[string]*schema.Resource{
 	"google_kms_key_ring": resourceKmsKeyRing(),
 }

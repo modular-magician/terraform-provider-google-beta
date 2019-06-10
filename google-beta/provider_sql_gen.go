@@ -16,6 +16,17 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var SqlDefaultBasePath = "https://www.googleapis.com/sql/v1beta4/"
+var SqlCustomEndpointEntryKey = "sql_custom_endpoint"
+var SqlCustomEndpointEntry = &schema.Schema{
+	Type:         schema.TypeString,
+	Optional:     true,
+	ValidateFunc: validateCustomEndpoint,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_SQL_CUSTOM_ENDPOINT",
+	}, SqlDefaultBasePath),
+}
+
 var GeneratedSqlResourcesMap = map[string]*schema.Resource{
 	"google_sql_database": resourceSqlDatabase(),
 }
