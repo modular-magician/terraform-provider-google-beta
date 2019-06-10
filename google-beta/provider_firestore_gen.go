@@ -16,6 +16,17 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var FirestoreDefaultBasePath = "https://firestore.googleapis.com/v1/"
+var FirestoreCustomEndpointEntryKey = "firestore_custom_endpoint"
+var FirestoreCustomEndpointEntry = &schema.Schema{
+	Type:         schema.TypeString,
+	Optional:     true,
+	ValidateFunc: validateCustomEndpoint,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_FIRESTORE_CUSTOM_ENDPOINT",
+	}, FirestoreDefaultBasePath),
+}
+
 var GeneratedFirestoreResourcesMap = map[string]*schema.Resource{
 	"google_firestore_index": resourceFirestoreIndex(),
 }

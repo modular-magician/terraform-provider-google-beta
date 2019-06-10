@@ -16,6 +16,17 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var SpannerDefaultBasePath = "https://spanner.googleapis.com/v1/"
+var SpannerCustomEndpointEntryKey = "spanner_custom_endpoint"
+var SpannerCustomEndpointEntry = &schema.Schema{
+	Type:         schema.TypeString,
+	Optional:     true,
+	ValidateFunc: validateCustomEndpoint,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_SPANNER_CUSTOM_ENDPOINT",
+	}, SpannerDefaultBasePath),
+}
+
 var GeneratedSpannerResourcesMap = map[string]*schema.Resource{
 	"google_spanner_instance": resourceSpannerInstance(),
 	"google_spanner_database": resourceSpannerDatabase(),

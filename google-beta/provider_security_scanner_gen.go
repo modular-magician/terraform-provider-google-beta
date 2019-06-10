@@ -16,6 +16,17 @@ package google
 
 import "github.com/hashicorp/terraform/helper/schema"
 
+var SecurityScannerDefaultBasePath = "https://websecurityscanner.googleapis.com/v1beta/"
+var SecurityScannerCustomEndpointEntryKey = "security_scanner_custom_endpoint"
+var SecurityScannerCustomEndpointEntry = &schema.Schema{
+	Type:         schema.TypeString,
+	Optional:     true,
+	ValidateFunc: validateCustomEndpoint,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_SECURITY_SCANNER_CUSTOM_ENDPOINT",
+	}, SecurityScannerDefaultBasePath),
+}
+
 var GeneratedSecurityScannerResourcesMap = map[string]*schema.Resource{
 	"google_security_scanner_scan_config": resourceSecurityScannerScanConfig(),
 }
