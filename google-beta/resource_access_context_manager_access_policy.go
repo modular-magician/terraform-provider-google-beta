@@ -176,11 +176,13 @@ func resourceAccessContextManagerAccessPolicyUpdate(d *schema.ResourceData, meta
 	}
 
 	log.Printf("[DEBUG] Updating AccessPolicy %q: %#v", d.Id(), obj)
+
 	updateMask := []string{}
 
 	if d.HasChange("title") {
 		updateMask = append(updateMask, "title")
 	}
+
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
 	url, err = addQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})

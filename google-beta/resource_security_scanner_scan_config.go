@@ -379,6 +379,7 @@ func resourceSecurityScannerScanConfigUpdate(d *schema.ResourceData, meta interf
 	}
 
 	log.Printf("[DEBUG] Updating ScanConfig %q: %#v", d.Id(), obj)
+
 	updateMask := []string{}
 
 	if d.HasChange("display_name") {
@@ -416,6 +417,7 @@ func resourceSecurityScannerScanConfigUpdate(d *schema.ResourceData, meta interf
 	if d.HasChange("export_to_security_command_center") {
 		updateMask = append(updateMask, "exportToSecurityCommandCenter")
 	}
+
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
 	url, err = addQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})

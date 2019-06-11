@@ -508,6 +508,7 @@ func resourceMonitoringAlertPolicyUpdate(d *schema.ResourceData, meta interface{
 	}
 
 	log.Printf("[DEBUG] Updating AlertPolicy %q: %#v", d.Id(), obj)
+
 	updateMask := []string{}
 
 	if d.HasChange("display_name") {
@@ -537,6 +538,7 @@ func resourceMonitoringAlertPolicyUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("documentation") {
 		updateMask = append(updateMask, "documentation")
 	}
+
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
 	url, err = addQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})

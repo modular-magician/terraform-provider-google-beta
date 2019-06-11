@@ -195,6 +195,7 @@ func resourceAppEngineFirewallRuleUpdate(d *schema.ResourceData, meta interface{
 	}
 
 	log.Printf("[DEBUG] Updating FirewallRule %q: %#v", d.Id(), obj)
+
 	updateMask := []string{}
 
 	if d.HasChange("description") {
@@ -212,6 +213,7 @@ func resourceAppEngineFirewallRuleUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("priority") {
 		updateMask = append(updateMask, "priority")
 	}
+
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
 	url, err = addQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})

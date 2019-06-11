@@ -286,6 +286,7 @@ func resourceFilestoreInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 	}
 
 	log.Printf("[DEBUG] Updating Instance %q: %#v", d.Id(), obj)
+
 	updateMask := []string{}
 
 	if d.HasChange("description") {
@@ -299,6 +300,7 @@ func resourceFilestoreInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 	if d.HasChange("file_shares") {
 		updateMask = append(updateMask, "fileShares")
 	}
+
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
 	url, err = addQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})

@@ -261,6 +261,7 @@ func resourceAccessContextManagerServicePerimeterUpdate(d *schema.ResourceData, 
 	}
 
 	log.Printf("[DEBUG] Updating ServicePerimeter %q: %#v", d.Id(), obj)
+
 	updateMask := []string{}
 
 	if d.HasChange("title") {
@@ -274,6 +275,7 @@ func resourceAccessContextManagerServicePerimeterUpdate(d *schema.ResourceData, 
 	if d.HasChange("status") {
 		updateMask = append(updateMask, "status")
 	}
+
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
 	url, err = addQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})

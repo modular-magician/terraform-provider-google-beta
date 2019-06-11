@@ -358,6 +358,7 @@ func resourceRedisInstanceUpdate(d *schema.ResourceData, meta interface{}) error
 	}
 
 	log.Printf("[DEBUG] Updating Instance %q: %#v", d.Id(), obj)
+
 	updateMask := []string{}
 
 	if d.HasChange("display_name") {
@@ -375,6 +376,7 @@ func resourceRedisInstanceUpdate(d *schema.ResourceData, meta interface{}) error
 	if d.HasChange("memory_size_gb") {
 		updateMask = append(updateMask, "memorySizeGb")
 	}
+
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
 	url, err = addQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})

@@ -294,6 +294,7 @@ func resourceAccessContextManagerAccessLevelUpdate(d *schema.ResourceData, meta 
 	}
 
 	log.Printf("[DEBUG] Updating AccessLevel %q: %#v", d.Id(), obj)
+
 	updateMask := []string{}
 
 	if d.HasChange("title") {
@@ -307,6 +308,7 @@ func resourceAccessContextManagerAccessLevelUpdate(d *schema.ResourceData, meta 
 	if d.HasChange("basic") {
 		updateMask = append(updateMask, "basic")
 	}
+
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
 	url, err = addQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})

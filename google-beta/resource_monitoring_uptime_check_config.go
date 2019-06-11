@@ -462,6 +462,7 @@ func resourceMonitoringUptimeCheckConfigUpdate(d *schema.ResourceData, meta inte
 	}
 
 	log.Printf("[DEBUG] Updating UptimeCheckConfig %q: %#v", d.Id(), obj)
+
 	updateMask := []string{}
 
 	if d.HasChange("display_name") {
@@ -495,6 +496,7 @@ func resourceMonitoringUptimeCheckConfigUpdate(d *schema.ResourceData, meta inte
 	if d.HasChange("tcp_check") {
 		updateMask = append(updateMask, "tcpCheck")
 	}
+
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
 	url, err = addQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
