@@ -70,6 +70,7 @@ type Config struct {
 	BinaryAuthorizationBasePath string
 	ContainerAnalysisBasePath   string
 	SecurityScannerBasePath     string
+	CloudrunBasePath            string
 
 	AccessContextManagerBasePath string
 	CloudSchedulerBasePath       string
