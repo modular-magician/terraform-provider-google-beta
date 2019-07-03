@@ -119,6 +119,20 @@ func resourceSpannerDatabaseCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	d.SetId(id)
 
+	project, err := getProject(d, config)
+	if err != nil {
+		return err
+	}
+	waitErr := spannerOperationWaitTime(
+		config, res, project, "Creating Database",
+		int(d.Timeout(schema.TimeoutCreate).Minutes()))
+
+	if waitErr != nil {
+		// The resource didn't actually create
+		d.SetId("")
+		return fmt.Errorf("Error waiting to create Database: %s", waitErr)
+	}
+
 	log.Printf("[DEBUG] Finished creating Database %q: %#v", d.Id(), res)
 
 	return resourceSpannerDatabaseRead(d, meta)
@@ -176,6 +190,19 @@ func resourceSpannerDatabaseDelete(d *schema.ResourceData, meta interface{}) err
 	res, err := sendRequestWithTimeout(config, "DELETE", url, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return handleNotFoundError(err, d, "Database")
+	}
+
+	project, err := getProject(d, config)
+	if err != nil {
+		return err
+	}
+
+	err = spannerOperationWaitTime(
+		config, res, project, "Deleting Database",
+		int(d.Timeout(schema.TimeoutDelete).Minutes()))
+
+	if err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Finished deleting Database %q: %#v", d.Id(), res)
