@@ -13,23 +13,23 @@
 #
 # ----------------------------------------------------------------------------
 layout: "google"
-page_title: "Google: google_pubsub_topic_iam"
-sidebar_current: "docs-google-pubsub-topic-iam"
+page_title: "Google: google_sourcerepo_repository_iam"
+sidebar_current: "docs-google-sourcerepo-repository-iam"
 description: |-
-  Collection of resources to manage IAM policy for Pubsub Topic
-Three different resources help you manage your IAM policy for Pubsub Topic. Each of these resources serves a different use case:
+  Collection of resources to manage IAM policy for SourceRepo Repository
+Three different resources help you manage your IAM policy for SourceRepo Repository. Each of these resources serves a different use case:
 
-* `google_pubsub_topic_iam_policy`: Authoritative. Sets the IAM policy for the topic and replaces any existing policy already attached.
-* `google_pubsub_topic_iam_binding`: Authoritative for a given role. Updates the IAM policy to grant a role to a list of members. Other roles within the IAM policy for the topic are preserved.
-* `google_pubsub_topic_iam_member`: Non-authoritative. Updates the IAM policy to grant a role to a new member. Other members for the role for the topic are preserved.
+* `google_sourcerepo_repository_iam_policy`: Authoritative. Sets the IAM policy for the repository and replaces any existing policy already attached.
+* `google_sourcerepo_repository_iam_binding`: Authoritative for a given role. Updates the IAM policy to grant a role to a list of members. Other roles within the IAM policy for the repository are preserved.
+* `google_sourcerepo_repository_iam_member`: Non-authoritative. Updates the IAM policy to grant a role to a new member. Other members for the role for the repository are preserved.
 
-~> **Note:** `google_pubsub_topic_iam_policy` **cannot** be used in conjunction with `google_pubsub_topic_iam_binding` and `google_pubsub_topic_iam_member` or they will fight over what your policy should be.
+~> **Note:** `google_sourcerepo_repository_iam_policy` **cannot** be used in conjunction with `google_sourcerepo_repository_iam_binding` and `google_sourcerepo_repository_iam_member` or they will fight over what your policy should be.
 
-~> **Note:** `google_pubsub_topic_iam_binding` resources **can be** used in conjunction with `google_pubsub_topic_iam_member` resources **only if** they do not grant privilege to the same role.
+~> **Note:** `google_sourcerepo_repository_iam_binding` resources **can be** used in conjunction with `google_sourcerepo_repository_iam_member` resources **only if** they do not grant privilege to the same role.
 
 
 
-## google\_pubsub\_topic\_iam\_policy
+## google\_sourcerepo\_repository\_iam\_policy
 
 ```hcl
 data "google_iam_policy" "admin" {
@@ -41,17 +41,17 @@ data "google_iam_policy" "admin" {
   }
 }
 
-resource "google_pubsub_topic_iam_policy" "editor" {
-  topic       = "projects/{{project}}/topics/{{topic}}"
+resource "google_sourcerepo_repository_iam_policy" "editor" {
+  repository       = "{{project}}/{{repository}}"
   policy_data = "${data.google_iam_policy.admin.policy_data}"
 }
 ```
 
-## google\_pubsub\_topic\_iam\_binding
+## google\_sourcerepo\_repository\_iam\_binding
 
 ```hcl
-resource "google_pubsub_topic_iam_binding" "editor" {
-  topic   = "projects/{{project}}/topics/{{topic}}"
+resource "google_sourcerepo_repository_iam_binding" "editor" {
+  repository   = "{{project}}/{{repository}}"
   role    = "roles/editor"
   members = [
     "user:jane@example.com",
@@ -59,11 +59,11 @@ resource "google_pubsub_topic_iam_binding" "editor" {
 }
 ```
 
-## google\_pubsub\_topic\_iam\_member
+## google\_sourcerepo\_repository\_iam\_member
 
 ```hcl
-resource "google_pubsub_topic_iam_member" "editor" {
-  topic  = "projects/{{project}}/topics/{{topic}}"
+resource "google_sourcerepo_repository_iam_member" "editor" {
+  repository  = "{{project}}/{{repository}}"
   role   = "roles/editor"
   member = "user:jane@example.com"
 }
@@ -73,7 +73,7 @@ resource "google_pubsub_topic_iam_member" "editor" {
 
 The following arguments are supported:
 
-* `topic` - (Required) The topic name or id to bind to attach IAM policy to.
+* `repository` - (Required) The repository name or id to bind to attach IAM policy to.
 
 * `project` - (Optional) The project in which the resource belongs. If it
     is not provided, the provider project is used.
@@ -88,10 +88,10 @@ The following arguments are supported:
   * **domain:{domain}**: A G Suite domain (primary, instead of alias) name that represents all the users of that domain. For example, google.com or example.com.
 
 * `role` - (Required) The role that should be applied. Only one
-    `google_pubsub_topic_iam_binding` can be used per role. Note that custom roles must be of the format
+    `google_sourcerepo_repository_iam_binding` can be used per role. Note that custom roles must be of the format
     `[projects|organizations]/{parent-name}/roles/{role-name}`.
 
-* `policy_data` - (Required only by `google_pubsub_topic_iam_policy`) The policy data generated by
+* `policy_data` - (Required only by `google_sourcerepo_repository_iam_policy`) The policy data generated by
   a `google_iam_policy` data source.
 
 ## Attributes Reference
@@ -99,17 +99,17 @@ The following arguments are supported:
 In addition to the arguments listed above, the following computed attributes are
 exported:
 
-* `etag` - (Computed) The etag of the topic's IAM policy.
+* `etag` - (Computed) The etag of the repository's IAM policy.
 
 ## Import
 
-Pubsub topic IAM resources can be imported using the project, topic name, role and member.
+SourceRepo repository IAM resources can be imported using the project, repository name, role and member.
 
 ```
-$ terraform import google_pubsub_topic_iam_policy.editor projects/{{project}}/topics/{{topic}}
-$ terraform import google_pubsub_topic_iam_binding.editor "projects/{{project}}/topics/{{topic}} roles/editor"
+$ terraform import google_sourcerepo_repository_iam_policy.editor {{project}}/{{repository}}
+$ terraform import google_sourcerepo_repository_iam_binding.editor "{{project}}/{{repository}} roles/editor"
 
-$ terraform import google_pubsub_topic_iam_member.editor "projects/{{project}}/topics/{{topic}} roles/editor jane@example.com"
+$ terraform import google_sourcerepo_repository_iam_member.editor "{{project}}/{{repository}} roles/editor jane@example.com"
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`
