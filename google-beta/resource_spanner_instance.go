@@ -261,19 +261,6 @@ func resourceSpannerInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error updating Instance %q: %s", d.Id(), err)
 	}
 
-	project, err := getProject(d, config)
-	if err != nil {
-		return err
-	}
-
-	err = spannerOperationWaitTime(
-		config, res, project, "Updating Instance",
-		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
-	if err != nil {
-		return err
-	}
-
 	return resourceSpannerInstanceRead(d, meta)
 }
 
@@ -290,19 +277,6 @@ func resourceSpannerInstanceDelete(d *schema.ResourceData, meta interface{}) err
 	res, err := sendRequestWithTimeout(config, "DELETE", url, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return handleNotFoundError(err, d, "Instance")
-	}
-
-	project, err := getProject(d, config)
-	if err != nil {
-		return err
-	}
-
-	err = spannerOperationWaitTime(
-		config, res, project, "Deleting Instance",
-		int(d.Timeout(schema.TimeoutDelete).Minutes()))
-
-	if err != nil {
-		return err
 	}
 
 	log.Printf("[DEBUG] Finished deleting Instance %q: %#v", d.Id(), res)
