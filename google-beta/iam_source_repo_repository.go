@@ -12,14 +12,14 @@ import (
 	"google.golang.org/api/cloudresourcemanager/v1"
 )
 
-var PubsubTopicIamSchema = map[string]*schema.Schema{
+var SourceRepoRepositoryIamSchema = map[string]*schema.Schema{
 	"project": {
 		Type:             schema.TypeString,
 		Computed: true,
 		Optional: true,
 		ForceNew:         true,
 	},
-	"topic": {
+	"repository": {
 		Type:             schema.TypeString,
 		Required: true,
 		ForceNew:         true,
@@ -27,14 +27,14 @@ var PubsubTopicIamSchema = map[string]*schema.Schema{
 	},
 }
 
-type PubsubTopicIamUpdater struct {
+type SourceRepoRepositoryIamUpdater struct {
 	project string
-	topic string
+	repository string
 	d       *schema.ResourceData
 	Config  *Config
 }
 
-func PubsubTopicIamUpdaterProducer(d *schema.ResourceData, config *Config) (ResourceIamUpdater, error) {
+func SourceRepoRepositoryIamUpdaterProducer(d *schema.ResourceData, config *Config) (ResourceIamUpdater, error) {
 	values := make(map[string]string)
 	
 	project, err := getProject(d, config)
@@ -47,7 +47,7 @@ func PubsubTopicIamUpdaterProducer(d *schema.ResourceData, config *Config) (Reso
 	// name or otherwise doesn't include the project.
 	values["project"] = project
 
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/topics/(?P<topic>[^/]+)","(?P<project>[^/]+)/(?P<topic>[^/]+)","(?P<topic>[^/]+)"}, d, config, d.Get("topic").(string))
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/repos/(?P<repository>[^/]+)","(?P<project>[^/]+)/(?P<repository>[^/]+)","(?P<repository>[^/]+)"}, d, config, d.Get("repository").(string))
 	if err != nil {
 		return nil, err
 	}
@@ -56,9 +56,9 @@ func PubsubTopicIamUpdaterProducer(d *schema.ResourceData, config *Config) (Reso
 		values[k] = v
 	}
 
-	u := &PubsubTopicIamUpdater{
+	u := &SourceRepoRepositoryIamUpdater{
 		project: values["project"],
-		topic: values["topic"],
+		repository: values["repository"],
 		d:       d,
 		Config:  config,
 	}
@@ -67,7 +67,7 @@ func PubsubTopicIamUpdaterProducer(d *schema.ResourceData, config *Config) (Reso
 	return u, nil
 }
 
-func PubsubTopicIdParseFunc(d *schema.ResourceData, config *Config) error {
+func SourceRepoRepositoryIdParseFunc(d *schema.ResourceData, config *Config) error {
 	values := make(map[string]string)
 	
 	project, err := getProject(d, config)
@@ -77,7 +77,7 @@ func PubsubTopicIdParseFunc(d *schema.ResourceData, config *Config) error {
 
 	values["project"] = project
 
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/topics/(?P<topic>[^/]+)","(?P<project>[^/]+)/(?P<topic>[^/]+)","(?P<topic>[^/]+)"}, d, config, d.Id())
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/repos/(?P<repository>[^/]+)","(?P<project>[^/]+)/(?P<repository>[^/]+)","(?P<repository>[^/]+)"}, d, config, d.Id())
 	if err != nil {
 		return err
 	}
@@ -86,19 +86,19 @@ func PubsubTopicIdParseFunc(d *schema.ResourceData, config *Config) error {
     values[k] = v
 	}
 
-	u := &PubsubTopicIamUpdater{
+	u := &SourceRepoRepositoryIamUpdater{
 		project: values["project"],
-		topic: values["topic"],
+		repository: values["repository"],
 		d:       d,
 		Config:  config,
 	}
-	d.Set("topic", u.GetResourceId())
+	d.Set("repository", u.GetResourceId())
 	d.SetId(u.GetResourceId())
 	return nil
 }
 
-func (u *PubsubTopicIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
-	url := u.qualifyTopicUrl("getIamPolicy")
+func (u *SourceRepoRepositoryIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
+	url := u.qualifyRepositoryUrl("getIamPolicy")
 
 	policy, err := sendRequest(u.Config, "GET", url, nil)
 	if err != nil {
@@ -114,7 +114,7 @@ func (u *PubsubTopicIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Po
 	return out, nil
 }
 
-func (u *PubsubTopicIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanager.Policy) error {
+func (u *SourceRepoRepositoryIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanager.Policy) error {
 	json, err := ConvertToMap(policy)
 	if err != nil {
 		return err
@@ -123,7 +123,7 @@ func (u *PubsubTopicIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanage
 	obj := make(map[string]interface{})
 	obj["policy"] = json
 
-	url := u.qualifyTopicUrl("setIamPolicy")
+	url := u.qualifyRepositoryUrl("setIamPolicy")
 	
 	_, err = sendRequestWithTimeout(u.Config, "POST", url, obj, u.d.Timeout(schema.TimeoutCreate))
 	if err != nil {
@@ -133,18 +133,18 @@ func (u *PubsubTopicIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanage
 	return nil
 }
 
-func (u *<= resource_name -%>IamUpdater) qualifyTopicUrl(methodIdentifier string) string {
-	return fmt.Sprintf("https://pubsub.googleapis.com/v1/%s:%s", fmt.Sprintf("projects/%s/topics/%s", u.project, u.topic), methodIdentifier)
+func (u *<= resource_name -%>IamUpdater) qualifyRepositoryUrl(methodIdentifier string) string {
+	return fmt.Sprintf("https://sourcerepo.googleapis.com/v1/%s:%s", fmt.Sprintf("projects/%s/repos/%s", u.project, u.repository), methodIdentifier)
 }
 
-func (u *PubsubTopicIamUpdater) GetResourceId() string {
-	return fmt.Sprintf("projects/%s/topics/%s", u.project, u.topic)
+func (u *SourceRepoRepositoryIamUpdater) GetResourceId() string {
+	return fmt.Sprintf("%s/%s", u.project, u.repository)
 }
 
-func (u *PubsubTopicIamUpdater) GetMutexKey() string {
-	return fmt.Sprintf("iam-pubsub-topic-%s", u.GetResourceId())
+func (u *SourceRepoRepositoryIamUpdater) GetMutexKey() string {
+	return fmt.Sprintf("iam-sourcerepo-repository-%s", u.GetResourceId())
 }
 
-func (u *PubsubTopicIamUpdater) DescribeResource() string {
-	return fmt.Sprintf("pubsub topic %q", u.GetResourceId())
+func (u *SourceRepoRepositoryIamUpdater) DescribeResource() string {
+	return fmt.Sprintf("sourcerepo repository %q", u.GetResourceId())
 }
