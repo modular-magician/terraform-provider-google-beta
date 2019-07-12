@@ -24,7 +24,7 @@ func resourceServiceNetworkingConnection() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"network": {
+			"network": &schema.Schema{
 				Type:             schema.TypeString,
 				Required:         true,
 				ForceNew:         true,
@@ -36,17 +36,17 @@ func resourceServiceNetworkingConnection() *schema.Resource {
 			// CLI's approach, calling the field "service" and accepting the same format as the CLI with the "."
 			// delimiter.
 			// See: https://cloud.google.com/vpc/docs/configure-private-services-access#creating-connection
-			"service": {
+			"service": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"reserved_peering_ranges": {
+			"reserved_peering_ranges": &schema.Schema{
 				Type:     schema.TypeList,
 				Required: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
-			"peering": {
+			"peering": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
