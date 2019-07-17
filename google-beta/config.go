@@ -70,11 +70,11 @@ type Config struct {
 
 	tokenSource oauth2.TokenSource
 
-	ContainerAnalysisBasePath string
-	SecurityScannerBasePath   string
+	BinaryAuthorizationBasePath string
+	ContainerAnalysisBasePath   string
+	SecurityScannerBasePath     string
 
 	AccessContextManagerBasePath string
-	BinaryAuthorizationBasePath  string
 	CloudSchedulerBasePath       string
 	FirestoreBasePath            string
 	MonitoringBasePath           string

@@ -123,11 +123,6 @@ func resourceBinaryAuthorizationAttestorCreate(d *schema.ResourceData, meta inte
 		obj["userOwnedDrydockNote"] = userOwnedDrydockNoteProp
 	}
 
-	obj, err = resourceBinaryAuthorizationAttestorEncoder(d, meta, obj)
-	if err != nil {
-		return err
-	}
-
 	url, err := replaceVars(d, config, "{{BinaryAuthorizationBasePath}}projects/{{project}}/attestors?attestorId={{name}}")
 	if err != nil {
 		return err
@@ -162,11 +157,6 @@ func resourceBinaryAuthorizationAttestorRead(d *schema.ResourceData, meta interf
 	res, err := sendRequest(config, "GET", url, nil)
 	if err != nil {
 		return handleNotFoundError(err, d, fmt.Sprintf("BinaryAuthorizationAttestor %q", d.Id()))
-	}
-
-	res, err = resourceBinaryAuthorizationAttestorDecoder(d, meta, res)
-	if err != nil {
-		return err
 	}
 
 	project, err := getProject(d, config)
@@ -211,11 +201,6 @@ func resourceBinaryAuthorizationAttestorUpdate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("attestation_authority_note"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, userOwnedDrydockNoteProp)) {
 		obj["userOwnedDrydockNote"] = userOwnedDrydockNoteProp
-	}
-
-	obj, err = resourceBinaryAuthorizationAttestorEncoder(d, meta, obj)
-	if err != nil {
-		return err
 	}
 
 	url, err := replaceVars(d, config, "{{BinaryAuthorizationBasePath}}projects/{{project}}/attestors/{{name}}")
@@ -445,16 +430,4 @@ func expandBinaryAuthorizationAttestorAttestationAuthorityNotePublicKeysAsciiArm
 
 func expandBinaryAuthorizationAttestorAttestationAuthorityNoteDelegationServiceAccountEmail(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceBinaryAuthorizationAttestorEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	// encoder logic only in GA provider
-
-	return obj, nil
-}
-
-func resourceBinaryAuthorizationAttestorDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	// decoder logic only in GA provider
-
-	return res, nil
 }
