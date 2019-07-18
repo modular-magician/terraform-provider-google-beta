@@ -77,6 +77,7 @@ type Config struct {
 	BinaryAuthorizationBasePath  string
 	CloudSchedulerBasePath       string
 	FirestoreBasePath            string
+	MLEngineBasePath             string
 	MonitoringBasePath           string
 	RedisBasePath                string
 	TpuBasePath                  string
