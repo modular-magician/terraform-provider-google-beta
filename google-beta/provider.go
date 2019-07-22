@@ -101,6 +101,7 @@ func Provider() terraform.ResourceProvider {
 			// start beta-only products
 			ContainerAnalysisCustomEndpointEntryKey: ContainerAnalysisCustomEndpointEntry,
 			SecurityScannerCustomEndpointEntryKey:   SecurityScannerCustomEndpointEntry,
+			CloudrunCustomEndpointEntryKey:          CloudrunCustomEndpointEntry,
 			// end beta-only products
 			AccessContextManagerCustomEndpointEntryKey: AccessContextManagerCustomEndpointEntry,
 			AppEngineCustomEndpointEntryKey:            AppEngineCustomEndpointEntry,
@@ -221,6 +222,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 		GeneratedContainerAnalysisResourcesMap,
 		GeneratedSecurityScannerResourcesMap,
 		GeneratedHealthcareResourcesMap,
+		GeneratedCloudrunResourcesMap,
 		// end beta-only products
 		GeneratedAccessContextManagerResourcesMap,
 		GeneratedAppEngineResourcesMap,
@@ -409,6 +411,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	config.ContainerAnalysisBasePath = d.Get(ContainerAnalysisCustomEndpointEntryKey).(string)
 	config.SecurityScannerBasePath = d.Get(SecurityScannerCustomEndpointEntryKey).(string)
+	config.CloudrunBasePath = d.Get(CloudrunCustomEndpointEntryKey).(string)
 
 	config.AccessContextManagerBasePath = d.Get(AccessContextManagerCustomEndpointEntryKey).(string)
 	config.CloudSchedulerBasePath = d.Get(CloudSchedulerCustomEndpointEntryKey).(string)
@@ -471,6 +474,7 @@ func ConfigureBasePaths(c *Config) {
 	// start beta-only products
 	c.ContainerAnalysisBasePath = ContainerAnalysisDefaultBasePath
 	c.SecurityScannerBasePath = SecurityScannerDefaultBasePath
+	c.CloudrunBasePath = CloudrunDefaultBasePath
 	// end beta-only products
 	c.AccessContextManagerBasePath = AccessContextManagerDefaultBasePath
 	c.AppEngineBasePath = AppEngineDefaultBasePath

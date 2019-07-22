@@ -72,6 +72,7 @@ type Config struct {
 
 	ContainerAnalysisBasePath string
 	SecurityScannerBasePath   string
+	CloudrunBasePath          string
 
 	AccessContextManagerBasePath string
 	BinaryAuthorizationBasePath  string
