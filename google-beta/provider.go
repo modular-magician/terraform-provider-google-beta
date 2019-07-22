@@ -98,24 +98,24 @@ func Provider() terraform.ResourceProvider {
 			},
 
 			// Generated Products
-			// start beta-only products
-			ContainerAnalysisCustomEndpointEntryKey: ContainerAnalysisCustomEndpointEntry,
-			SecurityScannerCustomEndpointEntryKey:   SecurityScannerCustomEndpointEntry,
-			// end beta-only products
 			AccessContextManagerCustomEndpointEntryKey: AccessContextManagerCustomEndpointEntry,
 			AppEngineCustomEndpointEntryKey:            AppEngineCustomEndpointEntry,
 			BinaryAuthorizationCustomEndpointEntryKey:  BinaryAuthorizationCustomEndpointEntry,
-			ComputeCustomEndpointEntryKey:              ComputeCustomEndpointEntry,
 			CloudBuildCustomEndpointEntryKey:           CloudBuildCustomEndpointEntry,
 			CloudSchedulerCustomEndpointEntryKey:       CloudSchedulerCustomEndpointEntry,
+			ComputeCustomEndpointEntryKey:              ComputeCustomEndpointEntry,
+			ContainerAnalysisCustomEndpointEntryKey:    ContainerAnalysisCustomEndpointEntry,
 			DnsCustomEndpointEntryKey:                  DnsCustomEndpointEntry,
 			FilestoreCustomEndpointEntryKey:            FilestoreCustomEndpointEntry,
 			FirestoreCustomEndpointEntryKey:            FirestoreCustomEndpointEntry,
+			HealthcareCustomEndpointEntryKey:           HealthcareCustomEndpointEntry,
 			KmsCustomEndpointEntryKey:                  KmsCustomEndpointEntry,
+			LoggingCustomEndpointEntryKey:              LoggingCustomEndpointEntry,
 			MonitoringCustomEndpointEntryKey:           MonitoringCustomEndpointEntry,
 			PubsubCustomEndpointEntryKey:               PubsubCustomEndpointEntry,
 			RedisCustomEndpointEntryKey:                RedisCustomEndpointEntry,
 			ResourceManagerCustomEndpointEntryKey:      ResourceManagerCustomEndpointEntry,
+			SecurityScannerCustomEndpointEntryKey:      SecurityScannerCustomEndpointEntry,
 			SourceRepoCustomEndpointEntryKey:           SourceRepoCustomEndpointEntry,
 			SpannerCustomEndpointEntryKey:              SpannerCustomEndpointEntry,
 			SqlCustomEndpointEntryKey:                  SqlCustomEndpointEntry,
@@ -137,7 +137,6 @@ func Provider() terraform.ResourceProvider {
 			DataflowCustomEndpointEntryKey:               DataflowCustomEndpointEntry,
 			DnsBetaCustomEndpointEntryKey:                DnsBetaCustomEndpointEntry,
 			IamCredentialsCustomEndpointEntryKey:         IamCredentialsCustomEndpointEntry,
-			LoggingCustomEndpointEntryKey:                LoggingCustomEndpointEntry,
 			ResourceManagerV2Beta1CustomEndpointEntryKey: ResourceManagerV2Beta1CustomEndpointEntry,
 			RuntimeconfigCustomEndpointEntryKey:          RuntimeconfigCustomEndpointEntry,
 			IAMCustomEndpointEntryKey:                    IAMCustomEndpointEntry,
@@ -217,30 +216,29 @@ func ResourceMap() map[string]*schema.Resource {
 
 func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 	return mergeResourceMaps(
-		// start beta-only products
-		GeneratedContainerAnalysisResourcesMap,
-		GeneratedSecurityScannerResourcesMap,
-		GeneratedHealthcareResourcesMap,
-		// end beta-only products
 		GeneratedAccessContextManagerResourcesMap,
 		GeneratedAppEngineResourcesMap,
 		GeneratedBinaryAuthorizationResourcesMap,
-		GeneratedComputeResourcesMap,
 		GeneratedCloudBuildResourcesMap,
 		GeneratedCloudSchedulerResourcesMap,
+		GeneratedComputeResourcesMap,
+		GeneratedContainerAnalysisResourcesMap,
 		GeneratedDnsResourcesMap,
 		GeneratedFilestoreResourcesMap,
 		GeneratedFirestoreResourcesMap,
+		GeneratedHealthcareResourcesMap,
 		GeneratedKmsResourcesMap,
+		GeneratedLoggingResourcesMap,
+		GeneratedMonitoringResourcesMap,
 		GeneratedPubsubResourcesMap,
 		GeneratedRedisResourcesMap,
 		GeneratedResourceManagerResourcesMap,
+		GeneratedSecurityScannerResourcesMap,
 		GeneratedSourceRepoResourcesMap,
 		GeneratedSpannerResourcesMap,
 		GeneratedSqlResourcesMap,
 		GeneratedStorageResourcesMap,
 		GeneratedTpuResourcesMap,
-		GeneratedMonitoringResourcesMap,
 		map[string]*schema.Resource{
 			"google_app_engine_application":                resourceAppEngineApplication(),
 			"google_bigquery_dataset":                      resourceBigQueryDataset(),
@@ -468,24 +466,24 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 // values to a default. After using this, you should call config.LoadAndValidate.
 func ConfigureBasePaths(c *Config) {
 	// Generated Products
-	// start beta-only products
-	c.ContainerAnalysisBasePath = ContainerAnalysisDefaultBasePath
-	c.SecurityScannerBasePath = SecurityScannerDefaultBasePath
-	// end beta-only products
 	c.AccessContextManagerBasePath = AccessContextManagerDefaultBasePath
 	c.AppEngineBasePath = AppEngineDefaultBasePath
 	c.BinaryAuthorizationBasePath = BinaryAuthorizationDefaultBasePath
-	c.ComputeBasePath = ComputeDefaultBasePath
 	c.CloudBuildBasePath = CloudBuildDefaultBasePath
 	c.CloudSchedulerBasePath = CloudSchedulerDefaultBasePath
+	c.ComputeBasePath = ComputeDefaultBasePath
+	c.ContainerAnalysisBasePath = ContainerAnalysisDefaultBasePath
 	c.DnsBasePath = DnsDefaultBasePath
 	c.FilestoreBasePath = FilestoreDefaultBasePath
 	c.FirestoreBasePath = FirestoreDefaultBasePath
+	c.HealthcareBasePath = HealthcareDefaultBasePath
 	c.KmsBasePath = KmsDefaultBasePath
+	c.LoggingBasePath = LoggingDefaultBasePath
 	c.MonitoringBasePath = MonitoringDefaultBasePath
 	c.PubsubBasePath = PubsubDefaultBasePath
 	c.RedisBasePath = RedisDefaultBasePath
 	c.ResourceManagerBasePath = ResourceManagerDefaultBasePath
+	c.SecurityScannerBasePath = SecurityScannerDefaultBasePath
 	c.SourceRepoBasePath = SourceRepoDefaultBasePath
 	c.SpannerBasePath = SpannerDefaultBasePath
 	c.SqlBasePath = SqlDefaultBasePath
@@ -505,7 +503,6 @@ func ConfigureBasePaths(c *Config) {
 	c.DataflowBasePath = DataflowDefaultBasePath
 	c.DnsBetaBasePath = DnsBetaDefaultBasePath
 	c.IamCredentialsBasePath = IamCredentialsDefaultBasePath
-	c.LoggingBasePath = LoggingDefaultBasePath
 	c.ResourceManagerV2Beta1BasePath = ResourceManagerV2Beta1DefaultBasePath
 	c.RuntimeconfigBasePath = RuntimeconfigDefaultBasePath
 	c.IAMBasePath = IAMDefaultBasePath
