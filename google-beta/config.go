@@ -83,6 +83,7 @@ type Config struct {
 	HealthcareBasePath           string
 	KmsBasePath                  string
 	LoggingBasePath              string
+	MLEngineBasePath             string
 	MonitoringBasePath           string
 	PubsubBasePath               string
 	RedisBasePath                string
