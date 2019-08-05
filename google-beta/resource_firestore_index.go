@@ -20,9 +20,6 @@ import (
 	"reflect"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
 )
 
 func resourceFirestoreIndex() *schema.Resource {
@@ -83,7 +80,7 @@ func resourceFirestoreIndex() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
-				ValidateFunc: validation.StringInSlice([]string{"COLLECTION", "COLLECTION_GROUP", ""}, false),
+				ValidateFunc: validation.StringInSlice([]string{"COLLECTION", ""}, false),
 				Default:      "COLLECTION",
 			},
 			"name": {
