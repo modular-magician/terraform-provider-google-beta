@@ -112,6 +112,7 @@ func Provider() terraform.ResourceProvider {
 			HealthcareCustomEndpointEntryKey:           HealthcareCustomEndpointEntry,
 			KmsCustomEndpointEntryKey:                  KmsCustomEndpointEntry,
 			LoggingCustomEndpointEntryKey:              LoggingCustomEndpointEntry,
+			MLEngineCustomEndpointEntryKey:             MLEngineCustomEndpointEntry,
 			MonitoringCustomEndpointEntryKey:           MonitoringCustomEndpointEntry,
 			PubsubCustomEndpointEntryKey:               PubsubCustomEndpointEntry,
 			RedisCustomEndpointEntryKey:                RedisCustomEndpointEntry,
@@ -232,6 +233,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 		GeneratedHealthcareResourcesMap,
 		GeneratedKmsResourcesMap,
 		GeneratedLoggingResourcesMap,
+		GeneratedMLEngineResourcesMap,
 		GeneratedMonitoringResourcesMap,
 		GeneratedPubsubResourcesMap,
 		GeneratedRedisResourcesMap,
@@ -422,6 +424,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	config.HealthcareBasePath = d.Get(HealthcareCustomEndpointEntryKey).(string)
 	config.KmsBasePath = d.Get(KmsCustomEndpointEntryKey).(string)
 	config.LoggingBasePath = d.Get(LoggingCustomEndpointEntryKey).(string)
+	config.MLEngineBasePath = d.Get(MLEngineCustomEndpointEntryKey).(string)
 	config.MonitoringBasePath = d.Get(MonitoringCustomEndpointEntryKey).(string)
 	config.PubsubBasePath = d.Get(PubsubCustomEndpointEntryKey).(string)
 	config.RedisBasePath = d.Get(RedisCustomEndpointEntryKey).(string)
@@ -484,6 +487,7 @@ func ConfigureBasePaths(c *Config) {
 	c.HealthcareBasePath = HealthcareDefaultBasePath
 	c.KmsBasePath = KmsDefaultBasePath
 	c.LoggingBasePath = LoggingDefaultBasePath
+	c.MLEngineBasePath = MLEngineDefaultBasePath
 	c.MonitoringBasePath = MonitoringDefaultBasePath
 	c.PubsubBasePath = PubsubDefaultBasePath
 	c.RedisBasePath = RedisDefaultBasePath
