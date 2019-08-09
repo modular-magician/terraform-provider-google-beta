@@ -30,5 +30,6 @@ var AppEngineCustomEndpointEntry = &schema.Schema{
 }
 
 var GeneratedAppEngineResourcesMap = map[string]*schema.Resource{
-	"google_app_engine_firewall_rule": resourceAppEngineFirewallRule(),
+	"google_app_engine_firewall_rule":        resourceAppEngineFirewallRule(),
+	"google_app_engine_standard_app_version": resourceAppEngineStandardAppVersion(),
 }
