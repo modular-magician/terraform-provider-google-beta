@@ -73,6 +73,7 @@ type Config struct {
 	AccessContextManagerBasePath string
 	AppEngineBasePath            string
 	BigqueryDataTransferBasePath string
+	BigtableBasePath             string
 	BinaryAuthorizationBasePath  string
 	CloudBuildBasePath           string
 	CloudRunBasePath             string
