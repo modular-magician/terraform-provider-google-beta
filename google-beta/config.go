@@ -167,9 +167,8 @@ type Config struct {
 	ServiceManagementBasePath string
 	clientServiceMan          *servicemanagement.APIService
 
-	ServiceUsageBasePath       string
-	clientServiceUsage         *serviceusage.Service
-	requestBatcherServiceUsage *RequestBatcher
+	ServiceUsageBasePath string
+	clientServiceUsage   *serviceusage.Service
 
 	BigQueryBasePath string
 	clientBigQuery   *bigquery.Service
@@ -196,6 +195,9 @@ type Config struct {
 	// we expose those directly instead of providing the `Service` object
 	// as a factory.
 	clientBigtableProjectsInstances *bigtableadmin.ProjectsInstancesService
+
+	requestBatcherServiceUsage *RequestBatcher
+	requestBatcherIam          *RequestBatcher
 }
 
 var defaultClientScopes = []string{
@@ -417,7 +419,6 @@ func (c *Config) LoadAndValidate() error {
 	}
 	c.clientServiceUsage.UserAgent = userAgent
 	c.clientServiceUsage.BasePath = serviceUsageClientBasePath
-	c.requestBatcherServiceUsage = NewRequestBatcher("Service Usage", context, c.BatchingConfig)
 
 	cloudBillingClientBasePath := removeBasePathVersion(c.CloudBillingBasePath)
 	log.Printf("[INFO] Instantiating Google Cloud Billing client for path %s", cloudBillingClientBasePath)
@@ -572,6 +573,10 @@ func (c *Config) LoadAndValidate() error {
 	c.clientHealthcare.BasePath = healthcareClientBasePath
 
 	c.Region = GetRegionFromRegionSelfLink(c.Region)
+
+	c.requestBatcherServiceUsage = NewRequestBatcher("Service Usage", context, c.BatchingConfig)
+	c.requestBatcherIam = NewRequestBatcher("IAM", context, c.BatchingConfig)
+
 	return nil
 }
 
