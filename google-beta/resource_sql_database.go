@@ -19,9 +19,6 @@ import (
 	"log"
 	"reflect"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
-	sqladmin "google.golang.org/api/sqladmin/v1beta4"
 )
 
 func resourceSqlDatabase() *schema.Resource {

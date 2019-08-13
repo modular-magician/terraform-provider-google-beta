@@ -19,8 +19,6 @@ import (
 	"log"
 	"reflect"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceKmsKeyRing() *schema.Resource {
@@ -153,15 +151,9 @@ func resourceKmsKeyRingRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceKmsKeyRingDelete(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
-
-	keyRingId, err := parseKmsKeyRingId(d.Id(), config)
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[WARNING] KMS KeyRing resources cannot be deleted from GCP. This KeyRing %s will be removed from Terraform state, but will still be present on the server.", keyRingId.keyRingId())
-
+	log.Printf("[WARNING] Kms KeyRing resources"+
+		" cannot be deleted from GCP. The resource %s will be removed from Terraform"+
+		" state, but will still be present on the server.", d.Id())
 	d.SetId("")
 
 	return nil

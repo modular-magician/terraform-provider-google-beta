@@ -22,11 +22,6 @@ import (
 	"sort"
 	"strconv"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/hashcode"
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
-	"google.golang.org/api/compute/v1"
 )
 
 func resourceComputeFirewallRuleHash(v interface{}) int {

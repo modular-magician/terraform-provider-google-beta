@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	composer "google.golang.org/api/composer/v1beta1"
 	"google.golang.org/api/storage/v1"
 )
 
