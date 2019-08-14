@@ -22,29 +22,28 @@ import (
 	"google.golang.org/api/cloudresourcemanager/v1"
 )
 
-var SourceRepoRepositoryIamSchema = map[string]*schema.Schema{
+var IapWebTypeIamSchema = map[string]*schema.Schema{
 	"project": {
 		Type:     schema.TypeString,
 		Computed: true,
 		Optional: true,
 		ForceNew: true,
 	},
-	"repository": {
-		Type:             schema.TypeString,
-		Required:         true,
-		ForceNew:         true,
-		DiffSuppressFunc: compareSelfLinkOrResourceName,
+	"app_engine_id": {
+		Type:     schema.TypeString,
+		Optional: true,
+		ForceNew: true,
 	},
 }
 
-type SourceRepoRepositoryIamUpdater struct {
-	project    string
-	repository string
-	d          *schema.ResourceData
-	Config     *Config
+type IapWebTypeIamUpdater struct {
+	project       string
+	app_engine_id string
+	d             *schema.ResourceData
+	Config        *Config
 }
 
-func SourceRepoRepositoryIamUpdaterProducer(d *schema.ResourceData, config *Config) (ResourceIamUpdater, error) {
+func IapWebTypeIamUpdaterProducer(d *schema.ResourceData, config *Config) (ResourceIamUpdater, error) {
 	values := make(map[string]string)
 
 	project, err := getProject(d, config)
@@ -57,7 +56,7 @@ func SourceRepoRepositoryIamUpdaterProducer(d *schema.ResourceData, config *Conf
 	// name or otherwise doesn't include the project.
 	values["project"] = project
 
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/repos/(?P<repository>[^/]+)", "(?P<project>[^/]+)/(?P<repository>[^/]+)", "(?P<repository>[^/]+)"}, d, config, d.Get("repository").(string))
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/iap_web/appengine-(?P<appEngineId>[^/]+)", "projects/(?P<project>[^/]+)/iap_web/compute", "(?P<project>[^/]+)"}, d, config, d.Get("project").(string))
 
 	if err != nil {
 		return nil, err
@@ -71,25 +70,20 @@ func SourceRepoRepositoryIamUpdaterProducer(d *schema.ResourceData, config *Conf
 			values["project"] = v.(string)
 		}
 	}
-	if _, found := values["repository"]; !found {
-		if v, ok := d.GetOkExists("repository"); ok {
-			values["repository"] = v.(string)
-		}
-	}
 
-	u := &SourceRepoRepositoryIamUpdater{
-		project:    values["project"],
-		repository: values["repository"],
-		d:          d,
-		Config:     config,
+	u := &IapWebTypeIamUpdater{
+		project:       values["project"],
+		app_engine_id: d.Get("app_engine_id").(string),
+		d:             d,
+		Config:        config,
 	}
-	d.Set("repository", u.GetResourceId())
+	d.Set("project", u.project)
 	d.SetId(u.GetResourceId())
 
 	return u, nil
 }
 
-func SourceRepoRepositoryIdParseFunc(d *schema.ResourceData, config *Config) error {
+func IapWebTypeIdParseFunc(d *schema.ResourceData, config *Config) error {
 	values := make(map[string]string)
 
 	project, err := getProject(d, config)
@@ -99,7 +93,7 @@ func SourceRepoRepositoryIdParseFunc(d *schema.ResourceData, config *Config) err
 
 	values["project"] = project
 
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/repos/(?P<repository>[^/]+)", "(?P<project>[^/]+)/(?P<repository>[^/]+)", "(?P<repository>[^/]+)"}, d, config, d.Id())
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/iap_web/appengine-(?P<appEngineId>[^/]+)", "projects/(?P<project>[^/]+)/iap_web/compute", "(?P<project>[^/]+)"}, d, config, d.Id())
 	if err != nil {
 		return err
 	}
@@ -108,26 +102,29 @@ func SourceRepoRepositoryIdParseFunc(d *schema.ResourceData, config *Config) err
 		values[k] = v
 	}
 
-	u := &SourceRepoRepositoryIamUpdater{
-		project:    values["project"],
-		repository: values["repository"],
-		d:          d,
-		Config:     config,
+	u := &IapWebTypeIamUpdater{
+		project:       values["project"],
+		app_engine_id: values["appEngineId"],
+		d:             d,
+		Config:        config,
 	}
-	d.Set("repository", u.GetResourceId())
+	d.Set("project", u.project)
+	if u.app_engine_id != "" {
+		d.Set("app_engine_id", u.app_engine_id)
+	}
 	d.SetId(u.GetResourceId())
 	return nil
 }
 
-func (u *SourceRepoRepositoryIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
-	url := u.qualifyRepositoryUrl("getIamPolicy")
+func (u *IapWebTypeIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
+	url := u.qualifyWebTypeUrl("getIamPolicy")
 
 	project, err := getProject(u.d, u.Config)
 	if err != nil {
 		return nil, err
 	}
 
-	policy, err := sendRequest(u.Config, "GET", project, url, nil)
+	policy, err := sendRequest(u.Config, "POST", project, url, nil)
 	if err != nil {
 		return nil, errwrap.Wrapf(fmt.Sprintf("Error retrieving IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
@@ -141,7 +138,7 @@ func (u *SourceRepoRepositoryIamUpdater) GetResourceIamPolicy() (*cloudresourcem
 	return out, nil
 }
 
-func (u *SourceRepoRepositoryIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanager.Policy) error {
+func (u *IapWebTypeIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanager.Policy) error {
 	json, err := ConvertToMap(policy)
 	if err != nil {
 		return err
@@ -150,7 +147,7 @@ func (u *SourceRepoRepositoryIamUpdater) SetResourceIamPolicy(policy *cloudresou
 	obj := make(map[string]interface{})
 	obj["policy"] = json
 
-	url := u.qualifyRepositoryUrl("setIamPolicy")
+	url := u.qualifyWebTypeUrl("setIamPolicy")
 
 	project, err := getProject(u.d, u.Config)
 	if err != nil {
@@ -165,18 +162,21 @@ func (u *SourceRepoRepositoryIamUpdater) SetResourceIamPolicy(policy *cloudresou
 	return nil
 }
 
-func (u *SourceRepoRepositoryIamUpdater) qualifyRepositoryUrl(methodIdentifier string) string {
-	return fmt.Sprintf("https://sourcerepo.googleapis.com/v1/%s:%s", fmt.Sprintf("projects/%s/repos/%s", u.project, u.repository), methodIdentifier)
+func (u *IapWebTypeIamUpdater) qualifyWebTypeUrl(methodIdentifier string) string {
+	return fmt.Sprintf("https://iap.googleapis.com/v1/%s:%s", u.GetResourceId(), methodIdentifier)
 }
 
-func (u *SourceRepoRepositoryIamUpdater) GetResourceId() string {
-	return fmt.Sprintf("%s/%s", u.project, u.repository)
+func (u *IapWebTypeIamUpdater) GetResourceId() string {
+	if u.app_engine_id != "" {
+		return fmt.Sprintf("projects/%s/iap_web/appengine-%s", u.project, u.app_engine_id)
+	}
+	return fmt.Sprintf("projects/%s/iap_web/compute", u.project)
 }
 
-func (u *SourceRepoRepositoryIamUpdater) GetMutexKey() string {
-	return fmt.Sprintf("iam-sourcerepo-repository-%s", u.GetResourceId())
+func (u *IapWebTypeIamUpdater) GetMutexKey() string {
+	return fmt.Sprintf("iam-iap-webtype-%s", u.GetResourceId())
 }
 
-func (u *SourceRepoRepositoryIamUpdater) DescribeResource() string {
-	return fmt.Sprintf("sourcerepo repository %q", u.GetResourceId())
+func (u *IapWebTypeIamUpdater) DescribeResource() string {
+	return fmt.Sprintf("iap webtype %q", u.GetResourceId())
 }
