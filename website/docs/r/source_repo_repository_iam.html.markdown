@@ -76,7 +76,8 @@ resource "google_sourcerepo_repository_iam_member" "editor" {
 
 The following arguments are supported:
 
-* `repository` - (Required) The repository name or id to bind to attach IAM policy to.
+* `repository` - (Required) The repository name to bind to attach 
+IAM policy to.
 
 * `project` - (Optional) The project in which the resource belongs. If it
     is not provided, the provider project is used.
