@@ -106,6 +106,7 @@ func Provider() terraform.ResourceProvider {
 			AccessContextManagerCustomEndpointEntryKey: AccessContextManagerCustomEndpointEntry,
 			AppEngineCustomEndpointEntryKey:            AppEngineCustomEndpointEntry,
 			BigqueryDataTransferCustomEndpointEntryKey: BigqueryDataTransferCustomEndpointEntry,
+			BigtableCustomEndpointEntryKey:             BigtableCustomEndpointEntry,
 			BinaryAuthorizationCustomEndpointEntryKey:  BinaryAuthorizationCustomEndpointEntry,
 			CloudBuildCustomEndpointEntryKey:           CloudBuildCustomEndpointEntry,
 			CloudRunCustomEndpointEntryKey:             CloudRunCustomEndpointEntry,
@@ -229,6 +230,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 		GeneratedAccessContextManagerResourcesMap,
 		GeneratedAppEngineResourcesMap,
 		GeneratedBigqueryDataTransferResourcesMap,
+		GeneratedBigtableResourcesMap,
 		GeneratedBinaryAuthorizationResourcesMap,
 		GeneratedCloudBuildResourcesMap,
 		GeneratedCloudRunResourcesMap,
@@ -423,6 +425,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	config.AccessContextManagerBasePath = d.Get(AccessContextManagerCustomEndpointEntryKey).(string)
 	config.AppEngineBasePath = d.Get(AppEngineCustomEndpointEntryKey).(string)
 	config.BigqueryDataTransferBasePath = d.Get(BigqueryDataTransferCustomEndpointEntryKey).(string)
+	config.BigtableBasePath = d.Get(BigtableCustomEndpointEntryKey).(string)
 	config.BinaryAuthorizationBasePath = d.Get(BinaryAuthorizationCustomEndpointEntryKey).(string)
 	config.CloudBuildBasePath = d.Get(CloudBuildCustomEndpointEntryKey).(string)
 	config.CloudRunBasePath = d.Get(CloudRunCustomEndpointEntryKey).(string)
@@ -488,6 +491,7 @@ func ConfigureBasePaths(c *Config) {
 	c.AccessContextManagerBasePath = AccessContextManagerDefaultBasePath
 	c.AppEngineBasePath = AppEngineDefaultBasePath
 	c.BigqueryDataTransferBasePath = BigqueryDataTransferDefaultBasePath
+	c.BigtableBasePath = BigtableDefaultBasePath
 	c.BinaryAuthorizationBasePath = BinaryAuthorizationDefaultBasePath
 	c.CloudBuildBasePath = CloudBuildDefaultBasePath
 	c.CloudRunBasePath = CloudRunDefaultBasePath
