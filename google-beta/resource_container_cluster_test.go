@@ -2226,6 +2226,7 @@ resource "google_container_cluster" "with_workload_metadata_config" {
   zone				 = "us-central1-a"
   initial_node_count = 1
   min_master_version = "${data.google_container_engine_versions.central1a.latest_master_version}"
+  node_version		 = "${data.google_container_engine_versions.central1a.latest_node_version}"
 
   node_config {
 		oauth_scopes = [
@@ -2276,6 +2277,7 @@ resource "google_container_cluster" "with_sandbox_config" {
   zone				 = "us-central1-a"
   initial_node_count = 1
   min_master_version = "${data.google_container_engine_versions.central1a.latest_master_version}"
+  node_version		 = "${data.google_container_engine_versions.central1a.latest_node_version}"
 
   node_config {
 		oauth_scopes = [
@@ -2458,7 +2460,8 @@ data "google_container_engine_versions" "central1a" {
 resource "google_container_cluster" "with_autoprovisioning" {
 	name = "%s"
 	zone = "us-central1-a"
-	min_master_version = "${data.google_container_engine_versions.central1a.latest_master_version}"
+  min_master_version = "${data.google_container_engine_versions.central1a.latest_master_version}"
+  node_version		 = "${data.google_container_engine_versions.central1a.latest_node_version}"
 	initial_node_count = 1
 `, cluster)
 	if autoprovisioning {

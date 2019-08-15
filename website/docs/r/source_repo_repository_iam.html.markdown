@@ -45,7 +45,7 @@ data "google_iam_policy" "admin" {
 }
 
 resource "google_sourcerepo_repository_iam_policy" "editor" {
-  repository       = "{{project}}/{{repository}}"
+  repository = "{{Repository}}"
   policy_data = "${data.google_iam_policy.admin.policy_data}"
 }
 ```
@@ -54,7 +54,7 @@ resource "google_sourcerepo_repository_iam_policy" "editor" {
 
 ```hcl
 resource "google_sourcerepo_repository_iam_binding" "editor" {
-  repository   = "{{project}}/{{repository}}"
+  repository = "{{Repository}}"
   role    = "roles/editor"
   members = [
     "user:jane@example.com",
@@ -66,7 +66,7 @@ resource "google_sourcerepo_repository_iam_binding" "editor" {
 
 ```hcl
 resource "google_sourcerepo_repository_iam_member" "editor" {
-  repository  = "{{project}}/{{repository}}"
+  repository = "{{Repository}}"
   role   = "roles/editor"
   member = "user:jane@example.com"
 }
@@ -76,10 +76,10 @@ resource "google_sourcerepo_repository_iam_member" "editor" {
 
 The following arguments are supported:
 
-* `repository` - (Required) The repository name or id to bind to attach IAM policy to.
+* `repository` - (Required) Used to find the parent resource to bind the IAM policy to
 
-* `project` - (Optional) The project in which the resource belongs. If it
-    is not provided, the provider project is used.
+* `project` - (Optional) The ID of the project in which the resource belongs.
+    If it is not provided, the provider project is used.
 
 * `member/members` - (Required) Identities that will be granted the privilege in `role`.
   Each entry can have one of the following values:
@@ -102,11 +102,11 @@ The following arguments are supported:
 In addition to the arguments listed above, the following computed attributes are
 exported:
 
-* `etag` - (Computed) The etag of the repository's IAM policy.
+* `etag` - (Computed) The etag of the IAM policy.
 
 ## Import
 
-SourceRepo repository IAM resources can be imported using the project, repository name, role and member.
+SourceRepo repository IAM resources can be imported using the project, resource identifiers, role and member.
 
 ```
 $ terraform import google_sourcerepo_repository_iam_policy.editor {{project}}/{{repository}}
