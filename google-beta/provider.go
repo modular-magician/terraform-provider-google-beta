@@ -119,6 +119,14 @@ func Provider() terraform.ResourceProvider {
 					"GOOGLE_APP_ENGINE_CUSTOM_ENDPOINT",
 				}, AppEngineDefaultBasePath),
 			},
+			"big_query_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateCustomEndpoint,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"GOOGLE_BIG_QUERY_CUSTOM_ENDPOINT",
+				}, BigQueryDefaultBasePath),
+			},
 			"bigquery_data_transfer_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -424,9 +432,9 @@ func Provider() terraform.ResourceProvider {
 	}
 }
 
-// Generated resources: 84
+// Generated resources: 86
 // Generated IAM resources: 6
-// Total generated resources: 90
+// Total generated resources: 92
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -439,6 +447,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_access_context_manager_access_level":      resourceAccessContextManagerAccessLevel(),
 			"google_access_context_manager_service_perimeter": resourceAccessContextManagerServicePerimeter(),
 			"google_app_engine_firewall_rule":                 resourceAppEngineFirewallRule(),
+			"google_bigquery_dataset":                         resourceBigQueryDataset(),
 			"google_bigquery_data_transfer_config":            resourceBigqueryDataTransferConfig(),
 			"google_bigtable_app_profile":                     resourceBigtableAppProfile(),
 			"google_binary_authorization_attestor":            resourceBinaryAuthorizationAttestor(),
@@ -529,7 +538,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 		},
 		map[string]*schema.Resource{
 			"google_app_engine_application":                resourceAppEngineApplication(),
-			"google_bigquery_dataset":                      resourceBigQueryDataset(),
 			"google_bigquery_table":                        resourceBigQueryTable(),
 			"google_bigtable_instance":                     resourceBigtableInstance(),
 			"google_bigtable_instance_iam_binding":         ResourceIamBinding(IamBigtableInstanceSchema, NewBigtableInstanceUpdater, BigtableInstanceIdParseFunc),
@@ -696,6 +704,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	// Generated products
 	config.AccessContextManagerBasePath = d.Get("access_context_manager_custom_endpoint").(string)
 	config.AppEngineBasePath = d.Get("app_engine_custom_endpoint").(string)
+	config.BigQueryBasePath = d.Get("big_query_custom_endpoint").(string)
 	config.BigqueryDataTransferBasePath = d.Get("bigquery_data_transfer_custom_endpoint").(string)
 	config.BigtableBasePath = d.Get("bigtable_custom_endpoint").(string)
 	config.BinaryAuthorizationBasePath = d.Get("binary_authorization_custom_endpoint").(string)
@@ -763,6 +772,7 @@ func ConfigureBasePaths(c *Config) {
 	// Generated Products
 	c.AccessContextManagerBasePath = AccessContextManagerDefaultBasePath
 	c.AppEngineBasePath = AppEngineDefaultBasePath
+	c.BigQueryBasePath = BigQueryDefaultBasePath
 	c.BigqueryDataTransferBasePath = BigqueryDataTransferDefaultBasePath
 	c.BigtableBasePath = BigtableDefaultBasePath
 	c.BinaryAuthorizationBasePath = BinaryAuthorizationDefaultBasePath
