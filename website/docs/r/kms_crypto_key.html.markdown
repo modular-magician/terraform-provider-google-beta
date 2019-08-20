@@ -93,7 +93,9 @@ The following arguments are supported:
 
 * `key_ring` -
   (Required)
-  The id of the `KeyRing` to which the key shall belong.
+  The id of the `KeyRing` to which the key shall belong.  Name must be
+  of the format
+  'projects/{{project}}/locations/{{location}}/keyRings/{{keyRing}}'
 
 
 - - -
