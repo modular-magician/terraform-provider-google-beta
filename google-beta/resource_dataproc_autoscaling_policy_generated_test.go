@@ -23,7 +23,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccVpcAccessConnector_vpcAccessConnectorExample(t *testing.T) {
+func TestAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -33,32 +33,55 @@ func TestAccVpcAccessConnector_vpcAccessConnectorExample(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProvidersOiCS,
-		CheckDestroy: testAccCheckVpcAccessConnectorDestroy,
+		CheckDestroy: testAccCheckDataprocAutoscalingPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccVpcAccessConnector_vpcAccessConnectorExample(context),
+				Config: testAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(context),
 			},
 		},
 	})
 }
 
-func testAccVpcAccessConnector_vpcAccessConnectorExample(context map[string]interface{}) string {
+func testAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(context map[string]interface{}) string {
 	return Nprintf(`
 provider "google-beta" {}
 
-resource "google_vpc_access_connector" "connector" {
-  name          = "my-connector%{random_suffix}"
-  provider      = "google-beta"
-  region        = "us-central1"
-  ip_cidr_range = "10.8.0.0/28"
-  network       = "default"
+resource "google_dataproc_cluster" "basic" {
+  provider = "google-beta"
+  name   = "tf-dataproc-test-%{random_suffix}"
+  region = "us-central1"
+
+  cluster_config {
+    autoscaling_config {
+      policy_uri = google_dataproc_autoscaling_policy.asp.name
+    }
+  }
+}
+
+resource "google_dataproc_autoscaling_policy" "asp" {
+  provider = "google-beta"
+  policy_id = "tf-dataproc-test-%{random_suffix}"
+  location = "us-central1"
+
+  worker_config {
+    max_instances = 3
+  }
+
+  basic_algorithm {
+    yarn_config {
+      graceful_decommission_timeout = "30s"
+
+      scale_up_factor   = 0.5
+      scale_down_factor = 0.5
+    }
+  }
 }
 `, context)
 }
 
-func testAccCheckVpcAccessConnectorDestroy(s *terraform.State) error {
+func testAccCheckDataprocAutoscalingPolicyDestroy(s *terraform.State) error {
 	for name, rs := range s.RootModule().Resources {
-		if rs.Type != "google_vpc_access_connector" {
+		if rs.Type != "google_dataproc_autoscaling_policy" {
 			continue
 		}
 		if strings.HasPrefix(name, "data.") {
@@ -67,14 +90,14 @@ func testAccCheckVpcAccessConnectorDestroy(s *terraform.State) error {
 
 		config := testAccProvider.Meta().(*Config)
 
-		url, err := replaceVarsForTest(config, rs, "{{VpcAccessBasePath}}projects/{{project}}/locations/{{region}}/connectors/{{name}}")
+		url, err := replaceVarsForTest(config, rs, "{{DataprocBasePath}}projects/{{project}}/locations/{{location}}/autoscalingPolicies/{{policy_id}}")
 		if err != nil {
 			return err
 		}
 
 		_, err = sendRequest(config, "GET", "", url, nil)
 		if err == nil {
-			return fmt.Errorf("VpcAccessConnector still exists at %s", url)
+			return fmt.Errorf("DataprocAutoscalingPolicy still exists at %s", url)
 		}
 	}
 
