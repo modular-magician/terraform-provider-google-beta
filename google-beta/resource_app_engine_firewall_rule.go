@@ -47,7 +47,7 @@ func resourceAppEngineFirewallRule() *schema.Resource {
 			"action": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validation.StringInSlice([]string{"UNSPECIFIED_ACTION", "ALLOW", "DENY"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"ALLOW", "DENY"}, false),
 			},
 			"source_range": {
 				Type:     schema.TypeString,
