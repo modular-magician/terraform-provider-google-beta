@@ -33,11 +33,16 @@ func TestAccComputeResourcePolicy_resourcePolicyBasicExample(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProvidersOiCS,
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckComputeResourcePolicyDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeResourcePolicy_resourcePolicyBasicExample(context),
+			},
+			{
+				ResourceName:      "google_compute_resource_policy.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -75,11 +80,16 @@ func TestAccComputeResourcePolicy_resourcePolicyFullExample(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProvidersOiCS,
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckComputeResourcePolicyDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeResourcePolicy_resourcePolicyFullExample(context),
+			},
+			{
+				ResourceName:      "google_compute_resource_policy.bar",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
