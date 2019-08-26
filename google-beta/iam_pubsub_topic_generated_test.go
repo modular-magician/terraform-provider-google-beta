@@ -31,9 +31,8 @@ func TestAccPubsubTopicIamBindingGenerated(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckPubsubTopicDestroy,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPubsubTopicIamBinding_basicGenerated(context),
@@ -67,9 +66,8 @@ func TestAccPubsubTopicIamMemberGenerated(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckPubsubTopicDestroy,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				// Test Iam Member creation (no update for member, no need to test)
@@ -94,9 +92,8 @@ func TestAccPubsubTopicIamPolicyGenerated(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckPubsubTopicDestroy,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPubsubTopicIamPolicy_basicGenerated(context),
@@ -123,8 +120,8 @@ resource "google_pubsub_topic" "example" {
 
 resource "google_pubsub_topic_iam_member" "foo" {
 	topic = "${google_pubsub_topic.example.id}"
-	role          = "%{role}"
-	member        = "user:admin@hashicorptest.com"
+	role = "%{role}"
+	member = "user:admin@hashicorptest.com"
 }
 `, context)
 }
@@ -141,14 +138,14 @@ resource "google_pubsub_topic" "example" {
 
 data "google_iam_policy" "foo" {
 	binding {
-		role    = "%{role}"
+		role = "%{role}"
 		members = ["user:admin@hashicorptest.com"]
 	}
 }
 
 resource "google_pubsub_topic_iam_policy" "foo" {
 	topic = "${google_pubsub_topic.example.id}"
-	policy_data   = "${data.google_iam_policy.foo.policy_data}"
+	policy_data = "${data.google_iam_policy.foo.policy_data}"
 }
 `, context)
 }
@@ -165,8 +162,8 @@ resource "google_pubsub_topic" "example" {
 
 resource "google_pubsub_topic_iam_binding" "foo" {
 	topic = "${google_pubsub_topic.example.id}"
-	role          = "%{role}"
-	members       = ["user:admin@hashicorptest.com"]
+	role = "%{role}"
+	members = ["user:admin@hashicorptest.com"]
 }
 `, context)
 }
@@ -183,8 +180,8 @@ resource "google_pubsub_topic" "example" {
 
 resource "google_pubsub_topic_iam_binding" "foo" {
 	topic = "${google_pubsub_topic.example.id}"
-	role          = "%{role}"
-	members       = ["user:admin@hashicorptest.com", "user:paddy@hashicorp.com"]
+	role = "%{role}"
+	members = ["user:admin@hashicorptest.com", "user:paddy@hashicorp.com"]
 }
 `, context)
 }
