@@ -231,6 +231,14 @@ func Provider() terraform.ResourceProvider {
 					"GOOGLE_HEALTHCARE_CUSTOM_ENDPOINT",
 				}, HealthcareDefaultBasePath),
 			},
+			"iap_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateCustomEndpoint,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"GOOGLE_IAP_CUSTOM_ENDPOINT",
+				}, IapDefaultBasePath),
+			},
 			"kms_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -439,9 +447,9 @@ func Provider() terraform.ResourceProvider {
 	}
 }
 
-// Generated resources: 88
-// Generated IAM resources: 6
-// Total generated resources: 94
+// Generated resources: 92
+// Generated IAM resources: 18
+// Total generated resources: 110
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -516,6 +524,18 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_healthcare_dicom_store":                   resourceHealthcareDicomStore(),
 			"google_healthcare_fhir_store":                    resourceHealthcareFhirStore(),
 			"google_healthcare_hl7_v2_store":                  resourceHealthcareHl7V2Store(),
+			"google_iap_web_iam_binding":                      ResourceIamBinding(IapWebIamSchema, IapWebIamUpdaterProducer, IapWebIdParseFunc),
+			"google_iap_web_iam_member":                       ResourceIamMember(IapWebIamSchema, IapWebIamUpdaterProducer, IapWebIdParseFunc),
+			"google_iap_web_iam_policy":                       ResourceIamPolicy(IapWebIamSchema, IapWebIamUpdaterProducer, IapWebIdParseFunc),
+			"google_iap_web_type_compute_iam_binding":         ResourceIamBinding(IapWebTypeComputeIamSchema, IapWebTypeComputeIamUpdaterProducer, IapWebTypeComputeIdParseFunc),
+			"google_iap_web_type_compute_iam_member":          ResourceIamMember(IapWebTypeComputeIamSchema, IapWebTypeComputeIamUpdaterProducer, IapWebTypeComputeIdParseFunc),
+			"google_iap_web_type_compute_iam_policy":          ResourceIamPolicy(IapWebTypeComputeIamSchema, IapWebTypeComputeIamUpdaterProducer, IapWebTypeComputeIdParseFunc),
+			"google_iap_web_type_app_engine_iam_binding":      ResourceIamBinding(IapWebTypeAppEngineIamSchema, IapWebTypeAppEngineIamUpdaterProducer, IapWebTypeAppEngineIdParseFunc),
+			"google_iap_web_type_app_engine_iam_member":       ResourceIamMember(IapWebTypeAppEngineIamSchema, IapWebTypeAppEngineIamUpdaterProducer, IapWebTypeAppEngineIdParseFunc),
+			"google_iap_web_type_app_engine_iam_policy":       ResourceIamPolicy(IapWebTypeAppEngineIamSchema, IapWebTypeAppEngineIamUpdaterProducer, IapWebTypeAppEngineIdParseFunc),
+			"google_iap_web_backend_service_iam_binding":      ResourceIamBinding(IapWebBackendServiceIamSchema, IapWebBackendServiceIamUpdaterProducer, IapWebBackendServiceIdParseFunc),
+			"google_iap_web_backend_service_iam_member":       ResourceIamMember(IapWebBackendServiceIamSchema, IapWebBackendServiceIamUpdaterProducer, IapWebBackendServiceIdParseFunc),
+			"google_iap_web_backend_service_iam_policy":       ResourceIamPolicy(IapWebBackendServiceIamSchema, IapWebBackendServiceIamUpdaterProducer, IapWebBackendServiceIdParseFunc),
 			"google_kms_key_ring":                             resourceKmsKeyRing(),
 			"google_kms_crypto_key":                           resourceKmsCryptoKey(),
 			"google_logging_metric":                           resourceLoggingMetric(),
@@ -727,6 +747,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	config.FilestoreBasePath = d.Get("filestore_custom_endpoint").(string)
 	config.FirestoreBasePath = d.Get("firestore_custom_endpoint").(string)
 	config.HealthcareBasePath = d.Get("healthcare_custom_endpoint").(string)
+	config.IapBasePath = d.Get("iap_custom_endpoint").(string)
 	config.KmsBasePath = d.Get("kms_custom_endpoint").(string)
 	config.LoggingBasePath = d.Get("logging_custom_endpoint").(string)
 	config.MLEngineBasePath = d.Get("ml_engine_custom_endpoint").(string)
