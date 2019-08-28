@@ -13,13 +13,13 @@
 #
 # ----------------------------------------------------------------------------
 layout: "google"
-page_title: "Google: google_compute_health_check"
-sidebar_current: "docs-google-compute-health-check"
+page_title: "Google: google_compute_region_health_check"
+sidebar_current: "docs-google-compute-region-health-check"
 description: |-
   Health Checks determine whether instances are responsive and able to do work.
 ---
 
-# google\_compute\_health\_check
+# google\_compute\_region\_health\_check
 
 Health Checks determine whether instances are responsive and able to do work.
 They are an important part of a comprehensive load balancing configuration,
@@ -33,24 +33,27 @@ continue to poll unhealthy instances. If an instance later responds
 successfully to some number of consecutive probes, it is marked
 healthy again and can receive new connections.
 
+~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
+See [Provider Versions](https://terraform.io/docs/providers/google/provider_versions.html) for more details on beta resources.
 
-To get more information about HealthCheck, see:
+To get more information about RegionHealthCheck, see:
 
-* [API documentation](https://cloud.google.com/compute/docs/reference/rest/v1/healthChecks)
+* [API documentation](https://cloud.google.com/compute/docs/reference/rest/beta/regionHealthChecks)
 * How-to Guides
     * [Official Documentation](https://cloud.google.com/load-balancing/docs/health-checks)
 
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=health_check_tcp&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=region_health_check_tcp&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
-## Example Usage - Health Check Tcp
+## Example Usage - Region Health Check Tcp
 
 
 ```hcl
-resource "google_compute_health_check" "tcp-health-check" {
- name = "tcp-health-check"
+resource "google_compute_region_health_check" "tcp-region-health-check" {
+ provider = "google-beta"
+ name = "tcp-region-health-check"
 
  timeout_sec        = 1
  check_interval_sec = 1
@@ -61,16 +64,17 @@ resource "google_compute_health_check" "tcp-health-check" {
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=health_check_ssl&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=region_health_check_ssl&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
-## Example Usage - Health Check Ssl
+## Example Usage - Region Health Check Ssl
 
 
 ```hcl
-resource "google_compute_health_check" "ssl-health-check" {
- name = "ssl-health-check"
+resource "google_compute_region_health_check" "ssl-region-health-check" {
+ provider = "google-beta"
+ name = "ssl-region-health-check"
 
  timeout_sec        = 1
  check_interval_sec = 1
@@ -81,16 +85,17 @@ resource "google_compute_health_check" "ssl-health-check" {
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=health_check_http&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=region_health_check_http&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
-## Example Usage - Health Check Http
+## Example Usage - Region Health Check Http
 
 
 ```hcl
-resource "google_compute_health_check" "http-health-check" {
- name = "http-health-check"
+resource "google_compute_region_health_check" "http-region-health-check" {
+ provider = "google-beta"
+ name = "http-region-health-check"
 
  timeout_sec        = 1
  check_interval_sec = 1
@@ -101,16 +106,17 @@ resource "google_compute_health_check" "http-health-check" {
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=health_check_https&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=region_health_check_https&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
-## Example Usage - Health Check Https
+## Example Usage - Region Health Check Https
 
 
 ```hcl
-resource "google_compute_health_check" "https-health-check" {
- name = "https-health-check"
+resource "google_compute_region_health_check" "https-region-health-check" {
+ provider = "google-beta"
+ name = "https-region-health-check"
 
  timeout_sec        = 1
  check_interval_sec = 1
@@ -121,16 +127,17 @@ resource "google_compute_health_check" "https-health-check" {
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=health_check_http2&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=region_health_check_http2&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
-## Example Usage - Health Check Http2
+## Example Usage - Region Health Check Http2
 
 
 ```hcl
-resource "google_compute_health_check" "http2-health-check" {
- name = "http2-health-check"
+resource "google_compute_region_health_check" "http2-region-health-check" {
+ provider = "google-beta"
+ name = "http2-region-health-check"
 
  timeout_sec        = 1
  check_interval_sec = 1
@@ -175,16 +182,16 @@ The following arguments are supported:
   A so-far unhealthy instance will be marked healthy after this many
   consecutive successes. The default value is 2.
 
+* `unhealthy_threshold` -
+  (Optional)
+  A so-far healthy instance will be marked unhealthy after this many
+  consecutive failures. The default value is 2.
+
 * `timeout_sec` -
   (Optional)
   How long (in seconds) to wait before claiming failure.
   The default value is 5 seconds.  It is invalid for timeoutSec to have
   greater value than checkIntervalSec.
-
-* `unhealthy_threshold` -
-  (Optional)
-  A so-far healthy instance will be marked unhealthy after this many
-  consecutive failures. The default value is 2.
 
 * `http_health_check` -
   (Optional)
@@ -205,6 +212,11 @@ The following arguments are supported:
 * `http2_health_check` -
   (Optional)
   A nested object resource  Structure is documented below.
+
+* `region` -
+  (Optional)
+  The Region in which the created health check should reside.
+  If it is not provided, the provider region is used.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -349,7 +361,7 @@ The `tcp_health_check` block supports:
 
 The `ssl_health_check` block supports:
 
-* `request_path` -
+* `request` -
   (Optional)
   The application data to send once the SSL connection has been
   established (default value is empty). If both request and response are
@@ -446,7 +458,7 @@ In addition to the arguments listed above, the following computed attributes are
   Creation timestamp in RFC3339 text format.
 
 * `type` -
-  The type of the health check. One of HTTP, HTTPS, TCP, or SSL.
+  The type of the health check. One of HTTP, HTTP2, HTTPS, TCP, or SSL.
 * `self_link` - The URI of the created resource.
 
 
@@ -461,12 +473,13 @@ This resource provides the following
 
 ## Import
 
-HealthCheck can be imported using any of these accepted formats:
+RegionHealthCheck can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_compute_health_check.default projects/{{project}}/global/healthChecks/{{name}}
-$ terraform import google_compute_health_check.default {{project}}/{{name}}
-$ terraform import google_compute_health_check.default {{name}}
+$ terraform import -provider=google-beta google_compute_region_health_check.default projects/{{project}}/regions/{{region}}/healthChecks/{{name}}
+$ terraform import -provider=google-beta google_compute_region_health_check.default {{project}}/{{region}}/{{name}}
+$ terraform import -provider=google-beta google_compute_region_health_check.default {{region}}/{{name}}
+$ terraform import -provider=google-beta google_compute_region_health_check.default {{name}}
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`
