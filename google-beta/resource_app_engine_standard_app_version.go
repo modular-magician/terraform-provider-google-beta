@@ -19,10 +19,6 @@ import (
 	"log"
 	"reflect"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
-	"google.golang.org/api/appengine/v1"
 )
 
 func resourceAppEngineStandardAppVersion() *schema.Resource {

@@ -20,8 +20,6 @@ import (
 	"reflect"
 	"strconv"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceCloudRunService() *schema.Resource {

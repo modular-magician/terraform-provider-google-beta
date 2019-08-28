@@ -20,9 +20,6 @@ import (
 	"reflect"
 	"strconv"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
-	"google.golang.org/api/compute/v1"
 )
 
 func resourceComputeHttpsHealthCheck() *schema.Resource {

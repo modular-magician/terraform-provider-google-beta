@@ -21,11 +21,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/customdiff"
-	"github.com/hashicorp/terraform/helper/schema"
-	"google.golang.org/api/compute/v1"
-	"google.golang.org/api/googleapi"
 )
 
 // Is the new disk size smaller than the old one?
@@ -298,6 +293,7 @@ func resourceComputeDisk() *schema.Resource {
 			},
 			"resource_policies": {
 				Type:     schema.TypeList,
+				Computed: true,
 				Optional: true,
 				ForceNew: true,
 				Elem: &schema.Schema{

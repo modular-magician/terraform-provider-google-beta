@@ -23,9 +23,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
-	"google.golang.org/api/compute/v1"
 )
 
 // validatePeerAddr returns false if a tunnel's peer_ip property

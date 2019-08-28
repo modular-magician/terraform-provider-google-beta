@@ -20,8 +20,6 @@ import (
 	"reflect"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceHealthcareHl7V2Store() *schema.Resource {
