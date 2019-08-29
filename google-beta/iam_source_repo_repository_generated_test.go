@@ -31,9 +31,8 @@ func TestAccSourceRepoRepositoryIamBindingGenerated(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSourceRepoRepositoryDestroy,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSourceRepoRepositoryIamBinding_basicGenerated(context),
@@ -67,9 +66,8 @@ func TestAccSourceRepoRepositoryIamMemberGenerated(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSourceRepoRepositoryDestroy,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				// Test Iam Member creation (no update for member, no need to test)
@@ -94,9 +92,8 @@ func TestAccSourceRepoRepositoryIamPolicyGenerated(t *testing.T) {
 	}
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSourceRepoRepositoryDestroy,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSourceRepoRepositoryIamPolicy_basicGenerated(context),
@@ -118,9 +115,10 @@ resource "google_sourcerepo_repository" "my-repo" {
 }
 
 resource "google_sourcerepo_repository_iam_member" "foo" {
+	project = "${google_sourcerepo_repository.my-repo.project}"
 	repository = "${google_sourcerepo_repository.my-repo.id}"
-	role          = "%{role}"
-	member        = "user:admin@hashicorptest.com"
+	role = "%{role}"
+	member = "user:admin@hashicorptest.com"
 }
 `, context)
 }
@@ -133,14 +131,15 @@ resource "google_sourcerepo_repository" "my-repo" {
 
 data "google_iam_policy" "foo" {
 	binding {
-		role    = "%{role}"
+		role = "%{role}"
 		members = ["user:admin@hashicorptest.com"]
 	}
 }
 
 resource "google_sourcerepo_repository_iam_policy" "foo" {
+	project = "${google_sourcerepo_repository.my-repo.project}"
 	repository = "${google_sourcerepo_repository.my-repo.id}"
-	policy_data   = "${data.google_iam_policy.foo.policy_data}"
+	policy_data = "${data.google_iam_policy.foo.policy_data}"
 }
 `, context)
 }
@@ -152,9 +151,10 @@ resource "google_sourcerepo_repository" "my-repo" {
 }
 
 resource "google_sourcerepo_repository_iam_binding" "foo" {
+	project = "${google_sourcerepo_repository.my-repo.project}"
 	repository = "${google_sourcerepo_repository.my-repo.id}"
-	role          = "%{role}"
-	members       = ["user:admin@hashicorptest.com"]
+	role = "%{role}"
+	members = ["user:admin@hashicorptest.com"]
 }
 `, context)
 }
@@ -166,9 +166,10 @@ resource "google_sourcerepo_repository" "my-repo" {
 }
 
 resource "google_sourcerepo_repository_iam_binding" "foo" {
+	project = "${google_sourcerepo_repository.my-repo.project}"
 	repository = "${google_sourcerepo_repository.my-repo.id}"
-	role          = "%{role}"
-	members       = ["user:admin@hashicorptest.com", "user:paddy@hashicorp.com"]
+	role = "%{role}"
+	members = ["user:admin@hashicorptest.com", "user:paddy@hashicorp.com"]
 }
 `, context)
 }
