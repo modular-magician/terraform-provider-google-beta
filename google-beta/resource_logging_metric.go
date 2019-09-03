@@ -288,6 +288,18 @@ func resourceLoggingMetricRead(d *schema.ResourceData, meta interface{}) error {
 		return handleNotFoundError(err, d, fmt.Sprintf("LoggingMetric %q", d.Id()))
 	}
 
+	res, err = resourceLoggingMetricDecoder(d, meta, res)
+	if err != nil {
+		return err
+	}
+
+	if res == nil {
+		// Decoding the object has resulted in it being gone. It may be marked deleted
+		log.Printf("[DEBUG] Removing LoggingMetric because it no longer exists.")
+		d.SetId("")
+		return nil
+	}
+
 	if err := d.Set("project", project); err != nil {
 		return fmt.Errorf("Error reading Metric: %s", err)
 	}
@@ -529,7 +541,7 @@ func flattenLoggingMetricBucketOptions(v interface{}, d *schema.ResourceData) in
 	transformed["exponential_buckets"] =
 		flattenLoggingMetricBucketOptionsExponentialBuckets(original["exponentialBuckets"], d)
 	transformed["explicit"] =
-		flattenLoggingMetricBucketOptionsExplicit(original["explicit"], d)
+		flattenLoggingMetricBucketOptionsExplicit(original["explicitBuckets"], d)
 	return []interface{}{transformed}
 }
 func flattenLoggingMetricBucketOptionsLinearBuckets(v interface{}, d *schema.ResourceData) interface{} {
@@ -774,7 +786,7 @@ func expandLoggingMetricBucketOptions(v interface{}, d TerraformResourceData, co
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedExplicit); val.IsValid() && !isEmptyValue(val) {
-		transformed["explicit"] = transformedExplicit
+		transformed["explicitBuckets"] = transformedExplicit
 	}
 
 	return transformed, nil
@@ -891,4 +903,49 @@ func expandLoggingMetricBucketOptionsExplicit(v interface{}, d TerraformResource
 
 func expandLoggingMetricBucketOptionsExplicitBounds(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceLoggingMetricDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+	// TODO: megan
+	// bound returned as a list of floats, but item_type `String` in configuration
+	// this should be removed when we change item_type to type `Double`
+	new := map[string]map[string]interface{}{}
+
+	if bucketOptions, ok := res["bucketOptions"].(map[string]interface{}); ok {
+		new["bucketOptions"] = make(map[string]interface{})
+
+		if len(bucketOptions) > 0 {
+			if explicitBuckets, ok := bucketOptions["explicitBuckets"].(map[string]interface{}); ok {
+				if len(explicitBuckets) > 0 {
+					new["bucketOptions"]["explicitBuckets"] = make(map[string]interface{})
+					options := map[string]map[string]interface{}{}
+
+					if bounds, ok := explicitBuckets["bounds"].([]interface{}); ok {
+						options["explicitBuckets"] = make(map[string]interface{})
+
+						if len(bounds) > 0 {
+							buckets := map[string][]string{}
+							for _, b := range bounds {
+								buckets["bounds"] = append(buckets["bounds"], fmt.Sprintf("%g", b))
+							}
+
+							for k, v := range buckets {
+								options["explicitBuckets"][k] = v
+							}
+						}
+					}
+
+					for k, v := range options {
+						new["bucketOptions"][k] = v
+					}
+				}
+			}
+		}
+	}
+
+	for k, v := range new {
+		res[k] = v
+	}
+
+	return res, nil
 }
