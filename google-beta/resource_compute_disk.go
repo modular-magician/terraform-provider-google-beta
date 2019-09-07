@@ -236,8 +236,8 @@ func resourceComputeDisk() *schema.Resource {
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(5 * time.Minute),
-			Update: schema.DefaultTimeout(4 * time.Minute),
-			Delete: schema.DefaultTimeout(4 * time.Minute),
+			Update: schema.DefaultTimeout(*time.Minute),
+			Delete: schema.DefaultTimeout(*time.Minute),
 		},
 
 		CustomizeDiff: customdiff.All(
