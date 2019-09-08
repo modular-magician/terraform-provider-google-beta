@@ -64,10 +64,6 @@ func IapWebTypeAppEngineIamUpdaterProducer(d *schema.ResourceData, config *Confi
 	if err != nil {
 		return nil, err
 	}
-
-	// While this may be overridden by the "project" value from getImportIdQualifiers below,
-	// setting project here ensures the value is set even if the value set in config is the short
-	// name or otherwise doesn't include the project.
 	values["project"] = project
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
