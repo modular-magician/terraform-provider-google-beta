@@ -45,8 +45,8 @@ data "google_iam_policy" "admin" {
 }
 
 resource "google_pubsub_topic_iam_policy" "editor" {
-	project = "${google_pubsub_topic_iam.example.project}"
-	name = "${google_pubsub_topic_iam.example.id}"
+	project = "${google_pubsub_topic.example.project}"
+	id = "${google_pubsub_topic.example.id}"
 	policy_data = "${data.google_iam_policy.admin.policy_data}"
 }
 ```
@@ -55,8 +55,8 @@ resource "google_pubsub_topic_iam_policy" "editor" {
 
 ```hcl
 resource "google_pubsub_topic_iam_binding" "editor" {
-	project = "${google_pubsub_topic_iam.example.project}"
-	name = "${google_pubsub_topic_iam.example.id}"
+	project = "${google_pubsub_topic.example.project}"
+	id = "${google_pubsub_topic.example.id}"
 	role = "roles/viewer"
 	members = [
 		"user:jane@example.com",
@@ -68,8 +68,8 @@ resource "google_pubsub_topic_iam_binding" "editor" {
 
 ```hcl
 resource "google_pubsub_topic_iam_member" "editor" {
-	project = "${google_pubsub_topic_iam.example.project}"
-	name = "${google_pubsub_topic_iam.example.id}"
+	project = "${google_pubsub_topic.example.project}"
+	id = "${google_pubsub_topic.example.id}"
 	role = "roles/viewer"
 	member = "user:jane@example.com"
 }

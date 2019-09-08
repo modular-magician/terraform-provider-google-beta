@@ -116,7 +116,7 @@ resource "google_sourcerepo_repository" "my-repo" {
 
 resource "google_sourcerepo_repository_iam_member" "foo" {
 	project = "${google_sourcerepo_repository.my-repo.project}"
-	repository = "${google_sourcerepo_repository.my-repo.id}"
+	id = "${google_sourcerepo_repository.my-repo.id}"
 	role = "%{role}"
 	member = "user:admin@hashicorptest.com"
 }
@@ -138,7 +138,7 @@ data "google_iam_policy" "foo" {
 
 resource "google_sourcerepo_repository_iam_policy" "foo" {
 	project = "${google_sourcerepo_repository.my-repo.project}"
-	repository = "${google_sourcerepo_repository.my-repo.id}"
+	id = "${google_sourcerepo_repository.my-repo.id}"
 	policy_data = "${data.google_iam_policy.foo.policy_data}"
 }
 `, context)
@@ -152,7 +152,7 @@ resource "google_sourcerepo_repository" "my-repo" {
 
 resource "google_sourcerepo_repository_iam_binding" "foo" {
 	project = "${google_sourcerepo_repository.my-repo.project}"
-	repository = "${google_sourcerepo_repository.my-repo.id}"
+	id = "${google_sourcerepo_repository.my-repo.id}"
 	role = "%{role}"
 	members = ["user:admin@hashicorptest.com"]
 }
@@ -167,7 +167,7 @@ resource "google_sourcerepo_repository" "my-repo" {
 
 resource "google_sourcerepo_repository_iam_binding" "foo" {
 	project = "${google_sourcerepo_repository.my-repo.project}"
-	repository = "${google_sourcerepo_repository.my-repo.id}"
+	id = "${google_sourcerepo_repository.my-repo.id}"
 	role = "%{role}"
 	members = ["user:admin@hashicorptest.com", "user:paddy@hashicorp.com"]
 }

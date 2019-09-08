@@ -46,7 +46,7 @@ data "google_iam_policy" "admin" {
 
 resource "google_iap_web_backend_service_iam_policy" "editor" {
 	project = "${google_compute_backend_service.default.project}"
-	backend_service_name = "${google_compute_backend_service.default.name}"
+	name = "${google_compute_backend_service.default.name}"
 	policy_data = "${data.google_iam_policy.admin.policy_data}"
 }
 ```
@@ -56,7 +56,7 @@ resource "google_iap_web_backend_service_iam_policy" "editor" {
 ```hcl
 resource "google_iap_web_backend_service_iam_binding" "editor" {
 	project = "${google_compute_backend_service.default.project}"
-	backend_service_name = "${google_compute_backend_service.default.name}"
+	name = "${google_compute_backend_service.default.name}"
 	role = "roles/iap.httpsResourceAccessor"
 	members = [
 		"user:jane@example.com",
@@ -69,7 +69,7 @@ resource "google_iap_web_backend_service_iam_binding" "editor" {
 ```hcl
 resource "google_iap_web_backend_service_iam_member" "editor" {
 	project = "${google_compute_backend_service.default.project}"
-	backend_service_name = "${google_compute_backend_service.default.name}"
+	name = "${google_compute_backend_service.default.name}"
 	role = "roles/iap.httpsResourceAccessor"
 	member = "user:jane@example.com"
 }
