@@ -62,6 +62,39 @@ resource "google_compute_health_check" "default" {
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=region_backend_service_log_config&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Region Backend Service Log Config
+
+
+```hcl
+resource "google_compute_region_backend_service" "default" {
+  provider                        = "google-beta"
+  name                            = "region-backend-service"
+  region                          = "us-central1"
+  health_checks                   = ["${google_compute_health_check.default.self_link}"]
+  connection_draining_timeout_sec = 10
+  session_affinity                = "CLIENT_IP"
+  log_config {
+    enable = true
+    sample_rate = ".5"
+  }
+}
+
+resource "google_compute_health_check" "default" {
+  provider           = "google-beta"
+  name               = "health-check"
+  check_interval_sec = 1
+  timeout_sec        = 1
+
+  tcp_health_check {
+    port = "80"
+  }
+}
+```
 
 ## Argument Reference
 
@@ -131,6 +164,11 @@ The following arguments are supported:
   This signifies what the ForwardingRule will be used for and can only
   be INTERNAL for RegionBackendServices
 
+* `log_config` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
+  This field denotes the logging options for the load balancer traffic served by this backend service.
+  If logging is enabled, logs will be exported to Stackdriver.  Structure is documented below.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -189,6 +227,19 @@ The `failover_policy` block supports:
   backend in the "force" mode, where traffic will be spread to the healthy
   VMs with the best effort, or to all VMs when no VM is healthy.
   This field is only used with l4 load balancing.
+
+The `log_config` block supports:
+
+* `enable` -
+  (Optional)
+  Whether to enable logging for the load balancer traffic served by this backend service.
+
+* `sample_rate` -
+  (Optional)
+  This field can only be specified if logging is enabled for this backend service. The value of
+  the field must be in [0, 1]. This configures the sampling rate of requests to the load balancer
+  where 1.0 means all logged requests are reported and 0.0 means no logged requests are reported.
+  The default value is 1.0.
 
 ## Attributes Reference
 

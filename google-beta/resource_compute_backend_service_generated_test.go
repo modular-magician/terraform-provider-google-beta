@@ -64,6 +64,47 @@ resource "google_compute_http_health_check" "default" {
 `, context)
 }
 
+func TestAccComputeBackendService_backendServiceLogConfigExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(10),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
+		CheckDestroy: testAccCheckComputeBackendServiceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeBackendService_backendServiceLogConfigExample(context),
+			},
+		},
+	})
+}
+
+func testAccComputeBackendService_backendServiceLogConfigExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_compute_backend_service" "default" {
+  provider      = "google-beta"
+  name          = "backend-service%{random_suffix}"
+  health_checks = ["${google_compute_http_health_check.default.self_link}"]
+  log_config {
+    enable = true
+    sample_rate = ".5"
+  }
+}
+
+resource "google_compute_http_health_check" "default" {
+  provider           = "google-beta"
+  name               = "health-check%{random_suffix}"
+  request_path       = "/"
+  check_interval_sec = 1
+  timeout_sec        = 1
+}
+`, context)
+}
+
 func testAccCheckComputeBackendServiceDestroy(s *terraform.State) error {
 	for name, rs := range s.RootModule().Resources {
 		if rs.Type != "google_compute_backend_service" {

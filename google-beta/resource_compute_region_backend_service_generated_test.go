@@ -70,6 +70,53 @@ resource "google_compute_health_check" "default" {
 `, context)
 }
 
+func TestAccComputeRegionBackendService_regionBackendServiceLogConfigExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(10),
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
+		CheckDestroy: testAccCheckComputeRegionBackendServiceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeRegionBackendService_regionBackendServiceLogConfigExample(context),
+			},
+		},
+	})
+}
+
+func testAccComputeRegionBackendService_regionBackendServiceLogConfigExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_compute_region_backend_service" "default" {
+  provider                        = "google-beta"
+  name                            = "region-backend-service%{random_suffix}"
+  region                          = "us-central1"
+  health_checks                   = ["${google_compute_health_check.default.self_link}"]
+  connection_draining_timeout_sec = 10
+  session_affinity                = "CLIENT_IP"
+  log_config {
+    enable = true
+    sample_rate = ".5"
+  }
+}
+
+resource "google_compute_health_check" "default" {
+  provider           = "google-beta"
+  name               = "health-check%{random_suffix}"
+  check_interval_sec = 1
+  timeout_sec        = 1
+
+  tcp_health_check {
+    port = "80"
+  }
+}
+`, context)
+}
+
 func testAccCheckComputeRegionBackendServiceDestroy(s *terraform.State) error {
 	for name, rs := range s.RootModule().Resources {
 		if rs.Type != "google_compute_region_backend_service" {
