@@ -95,6 +95,7 @@ func resourceComputeBackendBucket() *schema.Resource {
 }
 
 func resourceComputeBackendBucketCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

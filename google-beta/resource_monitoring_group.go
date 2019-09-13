@@ -73,6 +73,7 @@ func resourceMonitoringGroup() *schema.Resource {
 }
 
 func resourceMonitoringGroupCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

@@ -65,6 +65,7 @@ func resourceComputeBackendBucketSignedUrlKey() *schema.Resource {
 }
 
 func resourceComputeBackendBucketSignedUrlKeyCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

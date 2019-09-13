@@ -166,6 +166,7 @@ func resourceComputeInterconnectAttachment() *schema.Resource {
 }
 
 func resourceComputeInterconnectAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

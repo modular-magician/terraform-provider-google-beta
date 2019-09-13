@@ -105,6 +105,7 @@ func resourceComputeHttpsHealthCheck() *schema.Resource {
 }
 
 func resourceComputeHttpsHealthCheckCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

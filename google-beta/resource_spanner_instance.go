@@ -86,6 +86,7 @@ func resourceSpannerInstance() *schema.Resource {
 }
 
 func resourceSpannerInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

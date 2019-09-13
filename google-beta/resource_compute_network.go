@@ -96,6 +96,7 @@ func resourceComputeNetwork() *schema.Resource {
 }
 
 func resourceComputeNetworkCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

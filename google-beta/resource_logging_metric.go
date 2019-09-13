@@ -188,6 +188,7 @@ func resourceLoggingMetric() *schema.Resource {
 }
 
 func resourceLoggingMetricCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

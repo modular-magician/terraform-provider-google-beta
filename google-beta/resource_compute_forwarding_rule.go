@@ -180,6 +180,7 @@ func resourceComputeForwardingRule() *schema.Resource {
 }
 
 func resourceComputeForwardingRuleCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

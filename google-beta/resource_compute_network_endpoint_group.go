@@ -103,6 +103,7 @@ func resourceComputeNetworkEndpointGroup() *schema.Resource {
 }
 
 func resourceComputeNetworkEndpointGroupCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

@@ -77,6 +77,7 @@ func resourceResourceManagerLien() *schema.Resource {
 }
 
 func resourceResourceManagerLienCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

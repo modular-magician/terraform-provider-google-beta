@@ -100,6 +100,7 @@ func resourceStorageDefaultObjectAccessControl() *schema.Resource {
 }
 
 func resourceStorageDefaultObjectAccessControlCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

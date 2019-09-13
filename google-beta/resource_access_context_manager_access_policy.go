@@ -68,6 +68,7 @@ func resourceAccessContextManagerAccessPolicy() *schema.Resource {
 }
 
 func resourceAccessContextManagerAccessPolicyCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

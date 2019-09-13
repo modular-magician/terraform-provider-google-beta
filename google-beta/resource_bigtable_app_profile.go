@@ -102,6 +102,7 @@ func resourceBigtableAppProfile() *schema.Resource {
 }
 
 func resourceBigtableAppProfileCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

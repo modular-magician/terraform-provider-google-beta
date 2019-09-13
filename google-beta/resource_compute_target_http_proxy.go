@@ -81,6 +81,7 @@ func resourceComputeTargetHttpProxy() *schema.Resource {
 }
 
 func resourceComputeTargetHttpProxyCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
