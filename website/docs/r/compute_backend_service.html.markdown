@@ -57,6 +57,33 @@ resource "google_compute_http_health_check" "default" {
   timeout_sec        = 1
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=backend_service_log_config&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Backend Service Log Config
+
+
+```hcl
+resource "google_compute_backend_service" "default" {
+  provider      = "google-beta"
+  name          = "backend-service"
+  health_checks = ["${google_compute_http_health_check.default.self_link}"]
+  log_config {
+    enable = true
+    sample_rate = ".5"
+  }
+}
+
+resource "google_compute_http_health_check" "default" {
+  provider           = "google-beta"
+  name               = "health-check"
+  request_path       = "/"
+  check_interval_sec = 1
+  timeout_sec        = 1
+}
+```
 
 ## Argument Reference
 
@@ -157,6 +184,11 @@ The following arguments are supported:
   (Optional)
   How many seconds to wait for the backend before considering it a
   failed request. Default is 30 seconds. Valid range is [1, 86400].
+
+* `log_config` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
+  This field denotes the logging options for the load balancer traffic served by this backend service.
+  If logging is enabled, logs will be exported to Stackdriver.  Structure is documented below.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -322,6 +354,19 @@ The `iap` block supports:
 
 * `oauth2_client_secret_sha256` -
   OAuth2 Client Secret SHA-256 for IAP
+
+The `log_config` block supports:
+
+* `enable` -
+  (Optional)
+  Whether to enable logging for the load balancer traffic served by this backend service.
+
+* `sample_rate` -
+  (Optional)
+  This field can only be specified if logging is enabled for this backend service. The value of
+  the field must be in [0, 1]. This configures the sampling rate of requests to the load balancer
+  where 1.0 means all logged requests are reported and 0.0 means no logged requests are reported.
+  The default value is 1.0.
 
 ## Attributes Reference
 
