@@ -303,6 +303,14 @@ func Provider() terraform.ResourceProvider {
 					"GOOGLE_RESOURCE_MANAGER_CUSTOM_ENDPOINT",
 				}, ResourceManagerDefaultBasePath),
 			},
+			"runtimeconfig_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateCustomEndpoint,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"GOOGLE_RUNTIMECONFIG_CUSTOM_ENDPOINT",
+				}, RuntimeconfigDefaultBasePath),
+			},
 			"security_center_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -464,9 +472,9 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
-// Generated resources: 95
-// Generated IAM resources: 21
-// Total generated resources: 116
+// Generated resources: 90
+// Generated IAM resources: 24
+// Total generated resources: 114
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -573,6 +581,9 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_pubsub_subscription":                      resourcePubsubSubscription(),
 			"google_redis_instance":                           resourceRedisInstance(),
 			"google_resource_manager_lien":                    resourceResourceManagerLien(),
+			"google_runtimeconfig_config_iam_binding":         ResourceIamBinding(RuntimeconfigConfigIamSchema, RuntimeconfigConfigIamUpdaterProducer, RuntimeconfigConfigIdParseFunc),
+			"google_runtimeconfig_config_iam_member":          ResourceIamMember(RuntimeconfigConfigIamSchema, RuntimeconfigConfigIamUpdaterProducer, RuntimeconfigConfigIdParseFunc),
+			"google_runtimeconfig_config_iam_policy":          ResourceIamPolicy(RuntimeconfigConfigIamSchema, RuntimeconfigConfigIamUpdaterProducer, RuntimeconfigConfigIdParseFunc),
 			"google_scc_source":                               resourceSecurityCenterSource(),
 			"google_security_scanner_scan_config":             resourceSecurityScannerScanConfig(),
 			"google_sourcerepo_repository":                    resourceSourceRepoRepository(),
@@ -778,6 +789,7 @@ func providerConfigure(d *schema.ResourceData, terraformVersion string) (interfa
 	config.PubsubBasePath = d.Get("pubsub_custom_endpoint").(string)
 	config.RedisBasePath = d.Get("redis_custom_endpoint").(string)
 	config.ResourceManagerBasePath = d.Get("resource_manager_custom_endpoint").(string)
+	config.RuntimeconfigBasePath = d.Get("runtimeconfig_custom_endpoint").(string)
 	config.SecurityCenterBasePath = d.Get("security_center_custom_endpoint").(string)
 	config.SecurityScannerBasePath = d.Get("security_scanner_custom_endpoint").(string)
 	config.SourceRepoBasePath = d.Get("source_repo_custom_endpoint").(string)
