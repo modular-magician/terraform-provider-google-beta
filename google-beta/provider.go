@@ -215,6 +215,14 @@ func Provider() terraform.ResourceProvider {
 					"GOOGLE_DNS_CUSTOM_ENDPOINT",
 				}, DNSDefaultBasePath),
 			},
+			"endpoints_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateCustomEndpoint,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"GOOGLE_ENDPOINTS_CUSTOM_ENDPOINT",
+				}, EndpointsDefaultBasePath),
+			},
 			"filestore_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -464,9 +472,9 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
-// Generated resources: 95
-// Generated IAM resources: 21
-// Total generated resources: 116
+// Generated resources: 96
+// Generated IAM resources: 24
+// Total generated resources: 120
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -540,6 +548,9 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_dataproc_autoscaling_policy":              resourceDataprocAutoscalingPolicy(),
 			"google_dns_managed_zone":                         resourceDNSManagedZone(),
 			"google_dns_policy":                               resourceDNSPolicy(),
+			"google_endpoints_service_iam_binding":            ResourceIamBinding(EndpointsServiceIamSchema, EndpointsServiceIamUpdaterProducer, EndpointsServiceIdParseFunc),
+			"google_endpoints_service_iam_member":             ResourceIamMember(EndpointsServiceIamSchema, EndpointsServiceIamUpdaterProducer, EndpointsServiceIdParseFunc),
+			"google_endpoints_service_iam_policy":             ResourceIamPolicy(EndpointsServiceIamSchema, EndpointsServiceIamUpdaterProducer, EndpointsServiceIdParseFunc),
 			"google_filestore_instance":                       resourceFilestoreInstance(),
 			"google_firestore_index":                          resourceFirestoreIndex(),
 			"google_healthcare_dataset":                       resourceHealthcareDataset(),
@@ -767,6 +778,7 @@ func providerConfigure(d *schema.ResourceData, terraformVersion string) (interfa
 	config.ContainerAnalysisBasePath = d.Get("container_analysis_custom_endpoint").(string)
 	config.DataprocBasePath = d.Get("dataproc_custom_endpoint").(string)
 	config.DNSBasePath = d.Get("dns_custom_endpoint").(string)
+	config.EndpointsBasePath = d.Get("endpoints_custom_endpoint").(string)
 	config.FilestoreBasePath = d.Get("filestore_custom_endpoint").(string)
 	config.FirestoreBasePath = d.Get("firestore_custom_endpoint").(string)
 	config.HealthcareBasePath = d.Get("healthcare_custom_endpoint").(string)
