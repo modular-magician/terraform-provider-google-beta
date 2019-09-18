@@ -150,7 +150,6 @@ var ResourceManagerV2Beta1CustomEndpointEntry = &schema.Schema{
 	}, ResourceManagerV2Beta1DefaultBasePath),
 }
 
-var RuntimeconfigDefaultBasePath = "https://runtimeconfig.googleapis.com/v1beta1/"
 var RuntimeconfigCustomEndpointEntryKey = "runtimeconfig_custom_endpoint"
 var RuntimeconfigCustomEndpointEntry = &schema.Schema{
 	Type:         schema.TypeString,
@@ -158,7 +157,7 @@ var RuntimeconfigCustomEndpointEntry = &schema.Schema{
 	ValidateFunc: validateCustomEndpoint,
 	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
 		"GOOGLE_RUNTIMECONFIG_CUSTOM_ENDPOINT",
-	}, RuntimeconfigDefaultBasePath),
+	}, RuntimeConfigDefaultBasePath),
 }
 
 var ServiceManagementDefaultBasePath = "https://servicemanagement.googleapis.com/v1/"
