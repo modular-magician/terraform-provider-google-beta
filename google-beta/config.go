@@ -97,6 +97,7 @@ type Config struct {
 	PubsubBasePath               string
 	RedisBasePath                string
 	ResourceManagerBasePath      string
+	RuntimeConfigBasePath        string
 	SecurityCenterBasePath       string
 	SecurityScannerBasePath      string
 	SourceRepoBasePath           string
@@ -154,8 +155,7 @@ type Config struct {
 	ResourceManagerV2Beta1BasePath string
 	clientResourceManagerV2Beta1   *resourceManagerV2Beta1.Service
 
-	RuntimeconfigBasePath string
-	clientRuntimeconfig   *runtimeconfig.Service
+	clientRuntimeconfig *runtimeconfig.Service
 
 	clientSpanner *spanner.Service
 
@@ -233,6 +233,7 @@ var MonitoringDefaultBasePath = "https://monitoring.googleapis.com/v3/"
 var PubsubDefaultBasePath = "https://pubsub.googleapis.com/v1/"
 var RedisDefaultBasePath = "https://redis.googleapis.com/v1beta1/"
 var ResourceManagerDefaultBasePath = "https://cloudresourcemanager.googleapis.com/v1/"
+var RuntimeConfigDefaultBasePath = "https://runtimeconfig.googleapis.com/v1beta1/"
 var SecurityCenterDefaultBasePath = "https://securitycenter.googleapis.com/v1/"
 var SecurityScannerDefaultBasePath = "https://websecurityscanner.googleapis.com/v1beta/"
 var SourceRepoDefaultBasePath = "https://sourcerepo.googleapis.com/v1/"
@@ -720,6 +721,7 @@ func ConfigureBasePaths(c *Config) {
 	c.PubsubBasePath = PubsubDefaultBasePath
 	c.RedisBasePath = RedisDefaultBasePath
 	c.ResourceManagerBasePath = ResourceManagerDefaultBasePath
+	c.RuntimeConfigBasePath = RuntimeConfigDefaultBasePath
 	c.SecurityCenterBasePath = SecurityCenterDefaultBasePath
 	c.SecurityScannerBasePath = SecurityScannerDefaultBasePath
 	c.SourceRepoBasePath = SourceRepoDefaultBasePath
@@ -743,7 +745,6 @@ func ConfigureBasePaths(c *Config) {
 	c.DnsBetaBasePath = DnsBetaDefaultBasePath
 	c.IamCredentialsBasePath = IamCredentialsDefaultBasePath
 	c.ResourceManagerV2Beta1BasePath = ResourceManagerV2Beta1DefaultBasePath
-	c.RuntimeconfigBasePath = RuntimeconfigDefaultBasePath
 	c.IAMBasePath = IAMDefaultBasePath
 	c.ServiceManagementBasePath = ServiceManagementDefaultBasePath
 	c.ServiceNetworkingBasePath = ServiceNetworkingDefaultBasePath
