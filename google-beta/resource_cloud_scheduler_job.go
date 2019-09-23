@@ -634,33 +634,15 @@ func flattenCloudSchedulerJobAppEngineHttpTargetHttpMethod(v interface{}, d *sch
 	return v
 }
 
+// An `appEngineRouting` in API response is useless, so we set config values rather than api response to state.
 func flattenCloudSchedulerJobAppEngineHttpTargetAppEngineRouting(v interface{}, d *schema.ResourceData) interface{} {
 	if v == nil {
 		return nil
 	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
+	if v, ok := d.GetOK("app_engine_http_target"); ok && len(v.([]interface{})) > 0 {
+		return d.Get("app_engine_http_target.0.app_engine_routing")
 	}
-	transformed := make(map[string]interface{})
-	transformed["service"] =
-		flattenCloudSchedulerJobAppEngineHttpTargetAppEngineRoutingService(original["service"], d)
-	transformed["version"] =
-		flattenCloudSchedulerJobAppEngineHttpTargetAppEngineRoutingVersion(original["version"], d)
-	transformed["instance"] =
-		flattenCloudSchedulerJobAppEngineHttpTargetAppEngineRoutingInstance(original["instance"], d)
-	return []interface{}{transformed}
-}
-func flattenCloudSchedulerJobAppEngineHttpTargetAppEngineRoutingService(v interface{}, d *schema.ResourceData) interface{} {
-	return v
-}
-
-func flattenCloudSchedulerJobAppEngineHttpTargetAppEngineRoutingVersion(v interface{}, d *schema.ResourceData) interface{} {
-	return v
-}
-
-func flattenCloudSchedulerJobAppEngineHttpTargetAppEngineRoutingInstance(v interface{}, d *schema.ResourceData) interface{} {
-	return v
+	return nil
 }
 
 func flattenCloudSchedulerJobAppEngineHttpTargetRelativeUri(v interface{}, d *schema.ResourceData) interface{} {
