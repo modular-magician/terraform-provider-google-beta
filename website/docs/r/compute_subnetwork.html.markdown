@@ -122,13 +122,7 @@ provider "google-beta"{
 
 
 ```hcl
-provider "google-beta" {
-  region = "us-central1"
-  zone   = "us-central1-a"
-}
-
 resource "google_compute_subnetwork" "network-for-l7lb" {
-  provider      = "google-beta"
   name          = "l7lb-test-subnetwork"
   ip_cidr_range = "10.0.0.0/22"
   region        = "us-central1"
@@ -138,7 +132,6 @@ resource "google_compute_subnetwork" "network-for-l7lb" {
 }
 
 resource "google_compute_network" "custom-test" {
-  provider      = "google-beta"
   name                    = "l7lb-test-network"
   auto_create_subnetworks = false
 }
@@ -186,7 +179,7 @@ The following arguments are supported:
   Whether to enable flow logging for this subnetwork.
 
 * `purpose` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
+  (Optional)
   The purpose of the resource. This field can be either PRIVATE
   or INTERNAL_HTTPS_LOAD_BALANCER. A subnetwork with purpose set to
   INTERNAL_HTTPS_LOAD_BALANCER is a user-created subnetwork that is
@@ -195,7 +188,7 @@ The following arguments are supported:
   If set to INTERNAL_HTTPS_LOAD_BALANCER you must also set the role.
 
 * `role` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
+  (Optional)
   The role of subnetwork. Currenly, this field is only used
   when purpose = INTERNAL_HTTPS_LOAD_BALANCER. The value can be set
   to ACTIVE or BACKUP. An ACTIVE subnetwork is one that is currently

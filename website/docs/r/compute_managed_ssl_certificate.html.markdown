@@ -115,7 +115,7 @@ resource "google_compute_backend_service" "default" {
 resource "google_compute_http_health_check" "default" {
   provider = "google-beta"
 
-  name               = "http-health-check"
+  name               = ""
   request_path       = "/"
   check_interval_sec = 1
   timeout_sec        = 1
