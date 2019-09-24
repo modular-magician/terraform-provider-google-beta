@@ -48,7 +48,7 @@ func testAccComputeManagedSslCertificate_managedSslCertificateBasicExample(conte
 resource "google_compute_managed_ssl_certificate" "default" {
   provider = "google-beta"
 
-  name = "test-cert%{random_suffix}"
+  name = ""
 
   managed {
     domains = ["sslcert.tf-test.club."]
@@ -58,7 +58,7 @@ resource "google_compute_managed_ssl_certificate" "default" {
 resource "google_compute_target_https_proxy" "default" {
   provider = "google-beta"
 
-  name             = "test-proxy%{random_suffix}"
+  name             = ""
   url_map          = "${google_compute_url_map.default.self_link}"
   ssl_certificates = ["${google_compute_managed_ssl_certificate.default.self_link}"]
 }
@@ -66,7 +66,7 @@ resource "google_compute_target_https_proxy" "default" {
 resource "google_compute_url_map" "default" {
   provider = "google-beta"
 
-  name        = "url-map%{random_suffix}"
+  name        = ""
   description = "a description"
 
   default_service = "${google_compute_backend_service.default.self_link}"
@@ -90,7 +90,7 @@ resource "google_compute_url_map" "default" {
 resource "google_compute_backend_service" "default" {
   provider = "google-beta"
 
-  name        = "backend-service%{random_suffix}"
+  name        = ""
   port_name   = "http"
   protocol    = "HTTP"
   timeout_sec = 10
@@ -101,7 +101,7 @@ resource "google_compute_backend_service" "default" {
 resource "google_compute_http_health_check" "default" {
   provider = "google-beta"
 
-  name               = "http-health-check%{random_suffix}"
+  name               = ""
   request_path       = "/"
   check_interval_sec = 1
   timeout_sec        = 1
