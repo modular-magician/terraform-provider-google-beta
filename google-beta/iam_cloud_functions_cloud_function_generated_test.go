@@ -123,7 +123,7 @@ resource "google_storage_bucket_object" "archive" {
   source = "%{zip_path}"
 }
 
-resource "google_cloudfunctions_function" "function" {
+resource "google_cloudfunctions_function" "fake_change_to_check_the_diffs" {
   name                  = "my-function%{random_suffix}"
   description           = "My function"
   runtime               = "nodejs10"
@@ -137,9 +137,9 @@ resource "google_cloudfunctions_function" "function" {
 }
 
 resource "google_cloudfunctions_function_iam_member" "foo" {
-	project = "${google_cloudfunctions_function.function.project}"
-	region = "${google_cloudfunctions_function.function.region}"
-	cloud_function = "${google_cloudfunctions_function.function.name}"
+	project = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.project}"
+	region = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.region}"
+	cloud_function = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.name}"
 	role = "%{role}"
 	member = "user:admin@hashicorptest.com"
 }
@@ -158,7 +158,7 @@ resource "google_storage_bucket_object" "archive" {
   source = "%{zip_path}"
 }
 
-resource "google_cloudfunctions_function" "function" {
+resource "google_cloudfunctions_function" "fake_change_to_check_the_diffs" {
   name                  = "my-function%{random_suffix}"
   description           = "My function"
   runtime               = "nodejs10"
@@ -179,9 +179,9 @@ data "google_iam_policy" "foo" {
 }
 
 resource "google_cloudfunctions_function_iam_policy" "foo" {
-	project = "${google_cloudfunctions_function.function.project}"
-	region = "${google_cloudfunctions_function.function.region}"
-	cloud_function = "${google_cloudfunctions_function.function.name}"
+	project = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.project}"
+	region = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.region}"
+	cloud_function = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.name}"
 	policy_data = "${data.google_iam_policy.foo.policy_data}"
 }
 `, context)
@@ -199,7 +199,7 @@ resource "google_storage_bucket_object" "archive" {
   source = "%{zip_path}"
 }
 
-resource "google_cloudfunctions_function" "function" {
+resource "google_cloudfunctions_function" "fake_change_to_check_the_diffs" {
   name                  = "my-function%{random_suffix}"
   description           = "My function"
   runtime               = "nodejs10"
@@ -213,9 +213,9 @@ resource "google_cloudfunctions_function" "function" {
 }
 
 resource "google_cloudfunctions_function_iam_binding" "foo" {
-	project = "${google_cloudfunctions_function.function.project}"
-	region = "${google_cloudfunctions_function.function.region}"
-	cloud_function = "${google_cloudfunctions_function.function.name}"
+	project = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.project}"
+	region = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.region}"
+	cloud_function = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.name}"
 	role = "%{role}"
 	members = ["user:admin@hashicorptest.com"]
 }
@@ -234,7 +234,7 @@ resource "google_storage_bucket_object" "archive" {
   source = "%{zip_path}"
 }
 
-resource "google_cloudfunctions_function" "function" {
+resource "google_cloudfunctions_function" "fake_change_to_check_the_diffs" {
   name                  = "my-function%{random_suffix}"
   description           = "My function"
   runtime               = "nodejs10"
@@ -248,9 +248,9 @@ resource "google_cloudfunctions_function" "function" {
 }
 
 resource "google_cloudfunctions_function_iam_binding" "foo" {
-	project = "${google_cloudfunctions_function.function.project}"
-	region = "${google_cloudfunctions_function.function.region}"
-	cloud_function = "${google_cloudfunctions_function.function.name}"
+	project = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.project}"
+	region = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.region}"
+	cloud_function = "${google_cloudfunctions_function.fake_change_to_check_the_diffs.name}"
 	role = "%{role}"
 	members = ["user:admin@hashicorptest.com", "user:paddy@hashicorp.com"]
 }
