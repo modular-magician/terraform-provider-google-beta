@@ -19,6 +19,7 @@ import (
 	"log"
 	"reflect"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -162,7 +163,7 @@ func resourceBinaryAuthorizationAttestorCreate(d *schema.ResourceData, meta inte
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "{{project}}/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -303,7 +304,7 @@ func resourceBinaryAuthorizationAttestorImport(d *schema.ResourceData, meta inte
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "{{project}}/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -405,7 +406,30 @@ func flattenBinaryAuthorizationAttestorAttestationAuthorityNoteDelegationService
 }
 
 func expandBinaryAuthorizationAttestorName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
+	// This method returns a full self link from a partial self link.
+	if v == nil || v.(string) == "" {
+		// It does not try to construct anything from empty.
+		return "", nil
+	} else if strings.HasPrefix(v.(string), "https://") {
+		// Anything that starts with a URL scheme is assumed to be a self link worth using.
+		return v, nil
+	} else if strings.HasPrefix(v.(string), "projects/") {
+		// If the self link references a project, we'll just stick the binary_authorization v1 prefix on it.
+		return "https://binaryauthorization.googleapis.com/v1/" + v.(string), nil
+	} else if strings.HasPrefix(v.(string), "attestors/") {
+		// For regional or zonal resources which include their region or zone, just put the project in front.
+		url, err := replaceVars(d, config, "{{BinaryAuthorizationBasePath}}projects/{{project}}/")
+		if err != nil {
+			return nil, err
+		}
+		return url + v.(string), nil
+	}
+	// Anything else is assumed to begin with the resource name.
+	url, err := replaceVars(d, config, "{{BinaryAuthorizationBasePath}}projects/{{project}}/attestors/{{attestor}}")
+	if err != nil {
+		return nil, err
+	}
+	return url + v.(string), nil
 }
 
 func expandBinaryAuthorizationAttestorDescription(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
