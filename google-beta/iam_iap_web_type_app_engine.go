@@ -65,6 +65,9 @@ func IapWebTypeAppEngineIamUpdaterProducer(d *schema.ResourceData, config *Confi
 		return nil, err
 	}
 	values["project"] = project
+	if v, ok := d.GetOk("app_id"); ok {
+		values["appId"] = v.(string)
+	}
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
 	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/iap_web/appengine-(?P<appId>[^/]+)", "(?P<project>[^/]+)/(?P<appId>[^/]+)", "(?P<appId>[^/]+)"}, d, config, d.Get("app_id").(string))
