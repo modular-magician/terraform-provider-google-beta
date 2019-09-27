@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 
 	dataproc "google.golang.org/api/dataproc/v1beta2"
 )
@@ -89,14 +89,6 @@ func resourceDataprocCluster() *schema.Resource {
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-
-						"delete_autogen_bucket": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default:  false,
-							Removed: "If you need a bucket that can be deleted, please create" +
-								"a new one and set the `staging_bucket` field",
-						},
 
 						"staging_bucket": {
 							Type:     schema.TypeString,

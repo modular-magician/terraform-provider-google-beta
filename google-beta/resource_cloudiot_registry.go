@@ -2,11 +2,11 @@ package google
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform/helper/validation"
 	"regexp"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform/helper/schema"
 	"google.golang.org/api/cloudiot/v1"
 )
 

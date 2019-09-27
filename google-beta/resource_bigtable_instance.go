@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/customdiff"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform/helper/customdiff"
+	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 
 	"cloud.google.com/go/bigtable"
 )
@@ -82,34 +82,6 @@ func resourceBigtableInstance() *schema.Resource {
 				Optional: true,
 				Computed: true,
 				ForceNew: true,
-			},
-
-			"cluster_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				Removed:  "Use cluster instead.",
-			},
-
-			"zone": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				Removed:  "Use cluster instead.",
-			},
-
-			"num_nodes": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Computed: true,
-				Removed:  "Use cluster instead.",
-			},
-
-			"storage_type": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				Removed:  "Use cluster instead.",
 			},
 		},
 	}

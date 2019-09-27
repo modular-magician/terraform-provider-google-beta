@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform/helper/schema"
 	"google.golang.org/api/iam/v1"
 )
 
@@ -45,11 +45,6 @@ func resourceGoogleServiceAccount() *schema.Resource {
 				Computed: true,
 				Optional: true,
 				ForceNew: true,
-			},
-			"policy_data": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Removed:  "Use the 'google_service_account_iam_policy' resource to define policies for a service account",
 			},
 		},
 	}

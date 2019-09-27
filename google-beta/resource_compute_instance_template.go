@@ -5,9 +5,9 @@ import (
 	"reflect"
 
 	"github.com/hashicorp/errwrap"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 	computeBeta "google.golang.org/api/compute/v0.beta"
 )
 
@@ -167,13 +167,6 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 				ForceNew: true,
 			},
 
-			"automatic_restart": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				ForceNew: true,
-				Removed:  "Use 'scheduling.automatic_restart' instead.",
-			},
-
 			"can_ip_forward": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -263,11 +256,6 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 										Computed:     true,
 										ValidateFunc: validation.StringInSlice([]string{"PREMIUM", "STANDARD"}, false),
 									},
-									"assigned_nat_ip": {
-										Type:     schema.TypeString,
-										Computed: true,
-										Removed:  "Use network_interface.access_config.nat_ip instead.",
-									},
 								},
 							},
 						},
@@ -292,22 +280,8 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 								},
 							},
 						},
-
-						"address": {
-							Type:     schema.TypeString,
-							Computed: true,
-							Optional: true,
-							Removed:  "Please use network_ip",
-						},
 					},
 				},
-			},
-
-			"on_host_maintenance": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Removed:  "Use 'scheduling.on_host_maintenance' instead.",
 			},
 
 			"project": {
