@@ -39,8 +39,7 @@ See [Provider Versions](https://terraform.io/docs/providers/google/provider_vers
 
 ```hcl
 resource "google_compute_region_url_map" "regionurlmap" {
-  provider = "google-beta"
-
+  provider    = "google-beta"
   region      = "us-central1"
 
   name        = "regionurlmap"
@@ -76,8 +75,7 @@ resource "google_compute_region_url_map" "regionurlmap" {
 }
 
 resource "google_compute_region_backend_service" "login" {
-  provider = "google-beta"
-
+  provider    = "google-beta"
   region      = "us-central1"
 
   name        = "login"
@@ -88,8 +86,7 @@ resource "google_compute_region_backend_service" "login" {
 }
 
 resource "google_compute_region_backend_service" "home" {
-  provider = "google-beta"
-
+  provider    = "google-beta"
   region      = "us-central1"
 
   name        = "home"
@@ -100,8 +97,7 @@ resource "google_compute_region_backend_service" "home" {
 }
 
 resource "google_compute_region_health_check" "default" {
-  provider = "google-beta"
-
+  provider           = "google-beta"
   region	     = "us-central1"
 
   name               = "health-check"

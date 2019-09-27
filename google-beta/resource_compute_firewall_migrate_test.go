@@ -3,7 +3,7 @@ package google
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestComputeFirewallMigrateState(t *testing.T) {
