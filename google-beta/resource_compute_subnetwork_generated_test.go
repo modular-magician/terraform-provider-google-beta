@@ -19,9 +19,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform/helper/acctest"
+	"github.com/hashicorp/terraform/helper/resource"
 )
 
 func TestAccComputeSubnetwork_subnetworkBasicExample(t *testing.T) {
@@ -138,9 +138,13 @@ func TestAccComputeSubnetwork_subnetworkInternalL7lbExample(t *testing.T) {
 
 func testAccComputeSubnetwork_subnetworkInternalL7lbExample(context map[string]interface{}) string {
 	return Nprintf(`
-resource "google_compute_subnetwork" "network-for-l7lb" {
-  provider	= "google-beta"
+provider "google-beta" {
+  region = "us-central1"
+  zone   = "us-central1-a"
+}
 
+resource "google_compute_subnetwork" "network-for-l7lb" {
+  provider      = "google-beta"
   name          = "l7lb-test-subnetwork%{random_suffix}"
   ip_cidr_range = "10.0.0.0/22"
   region        = "us-central1"
@@ -150,8 +154,7 @@ resource "google_compute_subnetwork" "network-for-l7lb" {
 }
 
 resource "google_compute_network" "custom-test" {
-  provider		  = "google-beta"
-
+  provider      = "google-beta"
   name                    = "l7lb-test-network%{random_suffix}"
   auto_create_subnetworks = false
 }
