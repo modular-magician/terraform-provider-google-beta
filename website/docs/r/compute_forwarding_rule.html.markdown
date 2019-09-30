@@ -68,6 +68,7 @@ resource "google_compute_forwarding_rule" "default" {
   load_balancing_scheme = "INTERNAL"
   backend_service       = "${google_compute_region_backend_service.backend.self_link}"
   all_ports             = true
+  allow_global_access   = true
   network               = "${google_compute_network.default.name}"
   subnetwork            = "${google_compute_subnetwork.default.name}"
 }
@@ -238,6 +239,11 @@ The following arguments are supported:
   addressed to any ports to be forwarded to the backends configured
   with this forwarding rule. Used with backend service. Cannot be set
   if port or portRange are set.
+
+* `allow_global_access` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
+  If true, clients can access ILB from all regions.
+  Otherwise only allows from the local region the ILB is located at.
 
 * `network_tier` -
   (Optional)
