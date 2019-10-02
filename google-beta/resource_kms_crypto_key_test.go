@@ -371,13 +371,16 @@ resource "google_project" "acceptance" {
 	billing_account = "%s"
 }
 
-resource "google_project_service" "acceptance" {
+resource "google_project_services" "acceptance" {
 	project = "${google_project.acceptance.project_id}"
-	service = "cloudkms.googleapis.com"
+
+	services = [
+	  "cloudkms.googleapis.com",
+	]
 }
 
 resource "google_kms_key_ring" "key_ring" {
-	project  = "${google_project_service.acceptance.project}"
+	project  = "${google_project_services.acceptance.project}"
 	name     = "%s"
 	location = "us-central1"
 }
@@ -401,13 +404,16 @@ resource "google_project" "acceptance" {
 	billing_account = "%s"
 }
 
-resource "google_project_service" "acceptance" {
+resource "google_project_services" "acceptance" {
 	project = "${google_project.acceptance.project_id}"
-	service = "cloudkms.googleapis.com"
+
+	services = [
+	  "cloudkms.googleapis.com",
+	]
 }
 
 resource "google_kms_key_ring" "key_ring" {
-	project  = "${google_project_service.acceptance.project}"
+	project  = "${google_project_services.acceptance.project}"
 	name     = "%s"
 	location = "us-central1"
 }
@@ -429,13 +435,16 @@ resource "google_project" "acceptance" {
 	billing_account = "%s"
 }
 
-resource "google_project_service" "acceptance" {
+resource "google_project_services" "acceptance" {
 	project = "${google_project.acceptance.project_id}"
-	service = "cloudkms.googleapis.com"
+
+	services = [
+	  "cloudkms.googleapis.com",
+	]
 }
 
 resource "google_kms_key_ring" "key_ring" {
-	project  = "${google_project_service.acceptance.project}"
+	project  = "${google_project_services.acceptance.project}"
 	name     = "%s"
 	location = "us-central1"
 }
@@ -456,13 +465,16 @@ resource "google_project" "acceptance" {
 	billing_account = "%s"
 }
 
-resource "google_project_service" "acceptance" {
+resource "google_project_services" "acceptance" {
 	project = "${google_project.acceptance.project_id}"
-	service = "cloudkms.googleapis.com"
+
+	services = [
+	  "cloudkms.googleapis.com",
+	]
 }
 
 resource "google_kms_key_ring" "key_ring" {
-	project  = "${google_project_service.acceptance.project}"
+	project  = "${google_project_services.acceptance.project}"
 	name     = "%s"
 	location = "us-central1"
 }
@@ -488,13 +500,16 @@ resource "google_project" "acceptance" {
 	billing_account = "%s"
 }
 
-resource "google_project_service" "acceptance" {
+resource "google_project_services" "acceptance" {
 	project = "${google_project.acceptance.project_id}"
-	service = "cloudkms.googleapis.com"
+
+	services = [
+	  "cloudkms.googleapis.com",
+	]
 }
 
 resource "google_kms_key_ring" "key_ring" {
-	project  = "${google_project_service.acceptance.project}"
+	project  = "${google_project_services.acceptance.project}"
 	name     = "%s"
 	location = "us-central1"
 }
