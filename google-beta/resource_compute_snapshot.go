@@ -139,32 +139,6 @@ func resourceComputeSnapshot() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-
-			"snapshot_encryption_key_raw": {
-				Type:      schema.TypeString,
-				Optional:  true,
-				Sensitive: true,
-				Removed:   "Use snapshot_encryption_key.raw_key instead.",
-			},
-
-			"snapshot_encryption_key_sha256": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Removed:  "Use snapshot_encryption_key.sha256 instead.",
-			},
-
-			"source_disk_encryption_key_raw": {
-				Type:      schema.TypeString,
-				Optional:  true,
-				Sensitive: true,
-				Removed:   "Use source_disk_encryption_key.raw_key instead.",
-			},
-
-			"source_disk_encryption_key_sha256": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Removed:  "Use source_disk_encryption_key.sha256 instead.",
-			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
