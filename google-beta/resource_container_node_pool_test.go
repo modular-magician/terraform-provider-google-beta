@@ -674,17 +674,17 @@ func testAccCheckContainerNodePoolDestroy(s *terraform.State) error {
 		}
 
 		attributes := rs.Primary.Attributes
-		zone := attributes["zone"]
+		location := attributes["location"]
 
 		var err error
-		if zone != "" {
+		if location != "" {
 			_, err = config.clientContainer.Projects.Zones.Clusters.NodePools.Get(
-				config.Project, attributes["zone"], attributes["cluster"], attributes["name"]).Do()
+				config.Project, attributes["location"], attributes["cluster"], attributes["name"]).Do()
 		} else {
 			name := fmt.Sprintf(
 				"projects/%s/locations/%s/clusters/%s/nodePools/%s",
 				config.Project,
-				attributes["region"],
+				attributes["location"],
 				attributes["cluster"],
 				attributes["name"],
 			)
@@ -726,7 +726,7 @@ resource "google_compute_subnetwork" "container_subnetwork" {
 	name                     = "${google_compute_network.container_network.name}"
 	network                  = "${google_compute_network.container_network.name}"
 	ip_cidr_range            = "10.0.36.0/24"
-	region                   = "us-central1"
+	location                 = "us-central1"
 	private_ip_google_access = true
 
 	secondary_ip_range {
@@ -782,7 +782,7 @@ resource "google_compute_subnetwork" "container_subnetwork" {
 	name                     = "${google_compute_network.container_network.name}"
 	network                  = "${google_compute_network.container_network.name}"
 	ip_cidr_range            = "10.0.36.0/24"
-	region                   = "us-central1"
+	location                 = "us-central1"
 	private_ip_google_access = true
 
 	secondary_ip_range {
@@ -797,8 +797,8 @@ resource "google_compute_subnetwork" "container_subnetwork" {
 }
 
 resource "google_container_cluster" "cluster" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	initial_node_count = 3
 
 	network = "${google_compute_network.container_network.name}"
@@ -819,8 +819,8 @@ resource "google_container_cluster" "cluster" {
 }
 
 resource "google_container_node_pool" "np" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	max_pods_per_node = 30
 	initial_node_count = 2
@@ -846,13 +846,13 @@ resource "google_container_node_pool" "np" {
 func testAccContainerNodePool_namePrefix(cluster, np string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	initial_node_count = 3
 }
 resource "google_container_node_pool" "np" {
 	name_prefix = "%s"
-	zone = "us-central1-a"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	initial_node_count = 2
 }`, cluster, np)
@@ -861,13 +861,13 @@ resource "google_container_node_pool" "np" {
 func testAccContainerNodePool_noName(cluster string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	initial_node_count = 3
 }
 
 resource "google_container_node_pool" "np" {
-	zone = "us-central1-a"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	initial_node_count = 2
 }`, cluster)
@@ -876,14 +876,14 @@ resource "google_container_node_pool" "np" {
 func testAccContainerNodePool_regionalAutoscaling(cluster, np string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
-	name = "%s"
-	region = "us-central1"
+	name     = "%s"
+	location = "us-central1"
 	initial_node_count = 3
 }
 
 resource "google_container_node_pool" "np" {
-	name = "%s"
-	region = "us-central1"
+	name     = "%s"
+	location = "us-central1"
 	cluster = "${google_container_cluster.cluster.name}"
 	initial_node_count = 2
 	autoscaling {
@@ -896,14 +896,14 @@ resource "google_container_node_pool" "np" {
 func testAccContainerNodePool_autoscaling(cluster, np string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	initial_node_count = 3
 }
 
 resource "google_container_node_pool" "np" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	initial_node_count = 2
 	autoscaling {
@@ -916,14 +916,14 @@ resource "google_container_node_pool" "np" {
 func testAccContainerNodePool_updateAutoscaling(cluster, np string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	initial_node_count = 3
 }
 
 resource "google_container_node_pool" "np" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	initial_node_count = 2
 	autoscaling {
@@ -933,23 +933,22 @@ resource "google_container_node_pool" "np" {
 }`, cluster, np)
 }
 
-// This uses zone/additional_zones over location/node_locations to ensure we can update from old -> new
 func testAccContainerNodePool_additionalZones(cluster, nodePool string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	initial_node_count = 1
 
-	additional_zones = [
+	node_locations = [
 		"us-central1-b",
 		"us-central1-c"
 	]
 }
 
 resource "google_container_node_pool" "np" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	node_count = 2
 }`, cluster, nodePool)
@@ -980,13 +979,13 @@ func testAccContainerNodePool_withManagement(cluster, nodePool, management strin
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
 	name               = "%s"
-	zone               = "us-central1-a"
+	location           = "us-central1-a"
 	initial_node_count = 1
 }
 
 resource "google_container_node_pool" "np_with_management" {
 	name               = "%s"
-	zone               = "us-central1-a"
+	location           = "us-central1-a"
 	cluster            = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 
@@ -1003,13 +1002,13 @@ resource "google_container_node_pool" "np_with_management" {
 func testAccContainerNodePool_withNodeConfig(cluster, nodePool string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	initial_node_count = 1
 }
 resource "google_container_node_pool" "np_with_node_config" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 	node_config {
@@ -1033,13 +1032,13 @@ resource "google_container_node_pool" "np_with_node_config" {
 func testAccContainerNodePool_withNodeConfigUpdate(cluster, nodePool string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	initial_node_count = 1
 }
 resource "google_container_node_pool" "np_with_node_config" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 	node_config {
@@ -1063,13 +1062,13 @@ resource "google_container_node_pool" "np_with_node_config" {
 func testAccContainerNodePool_withNodeConfigTaints() string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
-	name = "tf-cluster-nodepool-test-%s"
-	zone = "us-central1-a"
+	name     = "tf-cluster-nodepool-test-%s"
+	location = "us-central1-a"
 	initial_node_count = 1
 }
 resource "google_container_node_pool" "np_with_node_config" {
-	name = "tf-nodepool-test-%s"
-	zone = "us-central1-a"
+	name     = "tf-nodepool-test-%s"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 	node_config {
@@ -1090,19 +1089,19 @@ resource "google_container_node_pool" "np_with_node_config" {
 func testAccContainerNodePool_withWorkloadMetadataConfig() string {
 	return fmt.Sprintf(`
 data "google_container_engine_versions" "central1a" {
-  zone = "us-central1-a"
+  location = "us-central1-a"
 }
 
 resource "google_container_cluster" "cluster" {
   name               = "tf-cluster-nodepool-test-%s"
-  zone               = "us-central1-a"
+  location           = "us-central1-a"
   initial_node_count = 1
   min_master_version = "${data.google_container_engine_versions.central1a.latest_master_version}"
 }
 
 resource "google_container_node_pool" "with_workload_metadata_config" {
-  name = "tf-nodepool-test-%s"
-  zone = "us-central1-a"
+  name     = "tf-nodepool-test-%s"
+  location = "us-central1-a"
   cluster = "${google_container_cluster.cluster.name}"
   initial_node_count = 1
   node_config {
@@ -1126,12 +1125,12 @@ data "google_project" "project" {
 }
 
 data "google_container_engine_versions" "central1a" {
-  zone = "us-central1-a"
+  location = "us-central1-a"
 }
 
 resource "google_container_cluster" "cluster" {
   name               = "tf-cluster-nodepool-test-%s"
-  zone               = "us-central1-a"
+  location           = "us-central1-a"
   initial_node_count = 1
   min_master_version = "${data.google_container_engine_versions.central1a.latest_master_version}"
 
@@ -1141,8 +1140,8 @@ resource "google_container_cluster" "cluster" {
 }
 
 resource "google_container_node_pool" "with_workload_metadata_config" {
-  name = "tf-nodepool-test-%s"
-  zone = "us-central1-a"
+  name     = "tf-nodepool-test-%s"
+  location = "us-central1-a"
   cluster = "${google_container_cluster.cluster.name}"
   initial_node_count = 1
   node_config {
@@ -1162,19 +1161,19 @@ resource "google_container_node_pool" "with_workload_metadata_config" {
 func testAccContainerNodePool_withSandboxConfig() string {
 	return fmt.Sprintf(`
 data "google_container_engine_versions" "central1a" {
-  zone = "us-central1-a"
+  location = "us-central1-a"
 }
 
 resource "google_container_cluster" "cluster" {
   name               = "tf-cluster-nodepool-test-%s"
-  zone               = "us-central1-a"
+  location           = "us-central1-a"
   initial_node_count = 1
   min_master_version = "${data.google_container_engine_versions.central1a.latest_master_version}"
 }
 
 resource "google_container_node_pool" "with_sandbox_config" {
   name = "tf-nodepool-test-%s"
-  zone = "us-central1-a"
+  location = "us-central1-a"
   cluster = "${google_container_cluster.cluster.name}"
   initial_node_count = 1
   node_config {
@@ -1194,20 +1193,20 @@ resource "google_container_node_pool" "with_sandbox_config" {
 func testAccContainerNodePool_withGPU() string {
 	return fmt.Sprintf(`
 data "google_container_engine_versions" "central1c" {
-	zone = "us-central1-c"
+	location = "us-central1-c"
 }
 
 resource "google_container_cluster" "cluster" {
-	name = "tf-cluster-nodepool-test-%s"
-	zone = "us-central1-c"
+	name     = "tf-cluster-nodepool-test-%s"
+	location = "us-central1-c"
 	initial_node_count = 1
 	node_version = "${data.google_container_engine_versions.central1c.latest_node_version}"
 	min_master_version = "${data.google_container_engine_versions.central1c.latest_master_version}"
 }
 
 resource "google_container_node_pool" "np_with_gpu" {
-	name = "tf-nodepool-test-%s"
-	zone = "us-central1-c"
+	name     = "tf-nodepool-test-%s"
+	location = "us-central1-c"
 	cluster = "${google_container_cluster.cluster.name}"
 
 	initial_node_count = 1
@@ -1240,13 +1239,13 @@ resource "google_container_node_pool" "np_with_gpu" {
 func testAccContainerNodePool_withNodeConfigScopeAlias() string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
-	name = "tf-cluster-nodepool-test-%s"
-	zone = "us-central1-a"
+	name     = "tf-cluster-nodepool-test-%s"
+	location = "us-central1-a"
 	initial_node_count = 1
 }
 resource "google_container_node_pool" "np_with_node_config_scope_alias" {
 	name = "tf-nodepool-test-%s"
-	zone = "us-central1-a"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 	node_config {
@@ -1260,19 +1259,19 @@ resource "google_container_node_pool" "np_with_node_config_scope_alias" {
 func testAccContainerNodePool_version(cluster, np string) string {
 	return fmt.Sprintf(`
 data "google_container_engine_versions" "central1a" {
-	zone = "us-central1-a"
+	location = "us-central1-a"
 }
 
 resource "google_container_cluster" "cluster" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	initial_node_count = 1
 	min_master_version = "${data.google_container_engine_versions.central1a.latest_master_version}"
 }
 
 resource "google_container_node_pool" "np" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 
@@ -1283,19 +1282,19 @@ resource "google_container_node_pool" "np" {
 func testAccContainerNodePool_updateVersion(cluster, np string) string {
 	return fmt.Sprintf(`
 data "google_container_engine_versions" "central1a" {
-	zone = "us-central1-a"
+	location = "us-central1-a"
 }
 
 resource "google_container_cluster" "cluster" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	initial_node_count = 1
 	min_master_version = "${data.google_container_engine_versions.central1a.latest_master_version}"
 }
 
 resource "google_container_node_pool" "np" {
-	name = "%s"
-	zone = "us-central1-a"
+	name     = "%s"
+	location = "us-central1-a"
 	cluster = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 
@@ -1307,13 +1306,13 @@ func testAccContainerNodePool_012_ConfigModeAttr1(cluster, np string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
 	name               = "%s"
-	zone = "us-central1-f"
+	location           = "us-central1-f"
 	initial_node_count = 3
 }
 
 resource "google_container_node_pool" "np" {
 	name               = "%s"
-	zone = "us-central1-f"
+	location           = "us-central1-f"
 	cluster            = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 
@@ -1330,13 +1329,13 @@ func testAccContainerNodePool_012_ConfigModeAttr2(cluster, np string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
 	name               = "%s"
-	zone               = "us-central1-f"
+	location           = "us-central1-f"
 	initial_node_count = 3
 }
 
 resource "google_container_node_pool" "np" {
 	name               = "%s"
-	zone               = "us-central1-f"
+	location           = "us-central1-f"
 	cluster            = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 
@@ -1350,13 +1349,13 @@ func testAccContainerNodePool_EmptyGuestAccelerator(cluster, np string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
 	name               = "%s"
-	zone               = "us-central1-f"
+	location           = "us-central1-f"
 	initial_node_count = 3
 }
 
 resource "google_container_node_pool" "np" {
 	name               = "%s"
-	zone               = "us-central1-f"
+	location           = "us-central1-f"
 	cluster            = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 
@@ -1373,13 +1372,13 @@ func testAccContainerNodePool_PartialEmptyGuestAccelerator(cluster, np string, c
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
 	name               = "%s"
-	zone               = "us-central1-f"
+	location           = "us-central1-f"
 	initial_node_count = 3
 }
 
 resource "google_container_node_pool" "np" {
 	name               = "%s"
-	zone               = "us-central1-f"
+	location           = "us-central1-f"
 	cluster            = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 
@@ -1401,13 +1400,13 @@ func testAccContainerNodePool_PartialEmptyGuestAccelerator2(cluster, np string) 
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
 	name               = "%s"
-	zone               = "us-central1-f"
+	location           = "us-central1-f"
 	initial_node_count = 3
 }
 
 resource "google_container_node_pool" "np" {
 	name               = "%s"
-	zone               = "us-central1-f"
+	location           = "us-central1-f"
 	cluster            = "${google_container_cluster.cluster.name}"
 	initial_node_count = 1
 
