@@ -168,6 +168,10 @@ The `http_check` block supports:
   (Optional)
   If true, use HTTPS instead of HTTP to run the check.
 
+* `validate_ssl` -
+  (Optional)
+  Boolean specifying whether to include SSL certificate validation as a part of the Uptime check. Only applies to checks where monitoredResource is set to uptime_url. If useSsl is false, setting validateSsl to true has no effect.
+
 * `mask_headers` -
   (Optional)
   Boolean specifying whether to encrypt the header information. Encryption should be specified for any headers related to authentication that you do not wish to be seen when retrieving the configuration. The server will be responsible for encrypting the headers. On Get/List calls, if mask_headers is set to True then the headers will be obscured with ******.
