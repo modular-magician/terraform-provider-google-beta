@@ -37,11 +37,10 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 			},
 
 			"name_prefix": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				Computed:      true,
-				ForceNew:      true,
-				ConflictsWith: []string{"name"},
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					// https://cloud.google.com/compute/docs/reference/latest/instanceTemplates#resource
 					// uuid is 26 characters, limit the prefix to 37.
@@ -168,13 +167,6 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 				ForceNew: true,
 			},
 
-			"automatic_restart": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				ForceNew: true,
-				Removed:  "Use 'scheduling.automatic_restart' instead.",
-			},
-
 			"can_ip_forward": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -264,11 +256,6 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 										Computed:     true,
 										ValidateFunc: validation.StringInSlice([]string{"PREMIUM", "STANDARD"}, false),
 									},
-									"assigned_nat_ip": {
-										Type:     schema.TypeString,
-										Computed: true,
-										Removed:  "Use network_interface.access_config.nat_ip instead.",
-									},
 								},
 							},
 						},
@@ -293,22 +280,8 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 								},
 							},
 						},
-
-						"address": {
-							Type:     schema.TypeString,
-							Computed: true,
-							Optional: true,
-							Removed:  "Please use network_ip",
-						},
 					},
 				},
-			},
-
-			"on_host_maintenance": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Removed:  "Use 'scheduling.on_host_maintenance' instead.",
 			},
 
 			"project": {
