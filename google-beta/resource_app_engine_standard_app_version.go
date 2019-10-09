@@ -329,7 +329,7 @@ func resourceAppEngineStandardAppVersionCreate(d *schema.ResourceData, meta inte
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "apps/{{project}}/services/{{service}}/versions/{{version_id}}")
+	id, err := replaceVars(d, config, "{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -557,15 +557,15 @@ func resourceAppEngineStandardAppVersionDelete(d *schema.ResourceData, meta inte
 func resourceAppEngineStandardAppVersionImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
-		"apps/(?P<project>[^/]+)/services/(?P<service>[^/]+)/versions/(?P<version_id>[^/]+)",
-		"(?P<project>[^/]+)/(?P<service>[^/]+)/(?P<version_id>[^/]+)",
-		"(?P<service>[^/]+)/(?P<version_id>[^/]+)",
+		"apps/(?P<project>[^/]+)/services/(?P<service>[^/]+)/versions/(?P<name>[^/]+)",
+		"(?P<project>[^/]+)/(?P<service>[^/]+)/(?P<name>[^/]+)",
+		"(?P<service>[^/]+)/(?P<name>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "apps/{{project}}/services/{{service}}/versions/{{version_id}}")
+	id, err := replaceVars(d, config, "{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

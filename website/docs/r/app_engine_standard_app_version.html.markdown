@@ -272,9 +272,9 @@ This resource provides the following
 StandardAppVersion can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_app_engine_standard_app_version.default apps/{{project}}/services/{{service}}/versions/{{version_id}}
-$ terraform import google_app_engine_standard_app_version.default {{project}}/{{service}}/{{version_id}}
-$ terraform import google_app_engine_standard_app_version.default {{service}}/{{version_id}}
+$ terraform import google_app_engine_standard_app_version.default apps/{{project}}/services/{{service}}/versions/{{name}}
+$ terraform import google_app_engine_standard_app_version.default {{project}}/{{service}}/{{name}}
+$ terraform import google_app_engine_standard_app_version.default {{service}}/{{name}}
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`
