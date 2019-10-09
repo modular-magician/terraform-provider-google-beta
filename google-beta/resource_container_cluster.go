@@ -10,7 +10,6 @@ import (
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -179,9 +178,10 @@ func resourceContainerCluster() *schema.Resource {
 							},
 						},
 						"kubernetes_dashboard": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Computed: true,
+							Type:       schema.TypeList,
+							Optional:   true,
+							Computed:   true,
+							Deprecated: "The Kubernetes Dashboard addon is deprecated for clusters on GKE."
 							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -207,7 +207,7 @@ func resourceContainerCluster() *schema.Resource {
 								},
 							},
 						},
-						"istio_config": {
+												"istio_config": {
 							Type:     schema.TypeList,
 							Optional: true,
 							Computed: true,
@@ -220,11 +220,11 @@ func resourceContainerCluster() *schema.Resource {
 										Optional: true,
 									},
 									"auth": {
-										Type:     schema.TypeString,
-										Optional: true,
+										Type:         schema.TypeString,
+										Optional:     true,
 										// We can't use a Terraform-level default because it won't be true when the block is disabled: true
 										DiffSuppressFunc: emptyOrDefaultStringSuppress("AUTH_NONE"),
-										ValidateFunc:     validation.StringInSlice([]string{"AUTH_NONE", "AUTH_MUTUAL_TLS"}, false),
+										ValidateFunc: validation.StringInSlice([]string{"AUTH_NONE", "AUTH_MUTUAL_TLS"}, false),
 									},
 								},
 							},
@@ -245,7 +245,7 @@ func resourceContainerCluster() *schema.Resource {
 								},
 							},
 						},
-					},
+										},
 				},
 			},
 
@@ -304,6 +304,7 @@ func resourceContainerCluster() *schema.Resource {
 				Default:  false,
 				Type:     schema.TypeBool,
 				Optional: true,
+
 			},
 
 			"enable_kubernetes_alpha": {
@@ -513,9 +514,9 @@ func resourceContainerCluster() *schema.Resource {
 
 			"pod_security_policy_config": {
 				DiffSuppressFunc: podSecurityPolicyCfgSuppress,
-				Type:             schema.TypeList,
-				Optional:         true,
-				MaxItems:         1,
+				Type:       schema.TypeList,
+				Optional:   true,
+				MaxItems:   1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
@@ -586,7 +587,7 @@ func resourceContainerCluster() *schema.Resource {
 							ConflictsWith: ipAllocationRangeFields,
 						},
 
-						"subnetwork_name": {
+   					"subnetwork_name": {
 							Type:          schema.TypeString,
 							Optional:      true,
 							ForceNew:      true,
@@ -611,11 +612,11 @@ func resourceContainerCluster() *schema.Resource {
 							DiffSuppressFunc: cidrOrSizeDiffSuppress,
 						},
 						"node_ipv4_cidr_block": {
-							Type:             schema.TypeString,
-							Optional:         true,
-							Computed:         true,
-							ForceNew:         true,
-							ConflictsWith:    ipAllocationRangeFields,
+							Type:          schema.TypeString,
+							Optional:      true,
+							Computed:      true,
+							ForceNew:      true,
+							ConflictsWith: ipAllocationRangeFields,
 							DiffSuppressFunc: cidrOrSizeDiffSuppress,
 						},
 
@@ -652,15 +653,15 @@ func resourceContainerCluster() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enable_private_endpoint": {
-							Type:             schema.TypeBool,
-							Optional:         true,
-							ForceNew:         true,
+							Type:     schema.TypeBool,
+							Optional: true,
+							ForceNew: true,
 							DiffSuppressFunc: containerClusterPrivateClusterConfigSuppress,
 						},
 						"enable_private_nodes": {
-							Type:             schema.TypeBool,
-							Optional:         true,
-							ForceNew:         true,
+							Type:     schema.TypeBool,
+							Optional: true,
+							ForceNew: true,
 							DiffSuppressFunc: containerClusterPrivateClusterConfigSuppress,
 						},
 						"master_ipv4_cidr_block": {
@@ -722,9 +723,9 @@ func resourceContainerCluster() *schema.Resource {
 				},
 			},
 
-			"tpu_ipv4_cidr_block": {
+			"tpu_ipv4_cidr_block":  {
 				Computed: true,
-				Type:     schema.TypeString,
+				Type: schema.TypeString,
 			},
 
 			"database_encryption": {
@@ -751,31 +752,31 @@ func resourceContainerCluster() *schema.Resource {
 			},
 
 			"resource_usage_export_config": {
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"enable_network_egress_metering": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default:  false,
-						},
-						"bigquery_destination": {
-							Type:     schema.TypeList,
-							MaxItems: 1,
-							Required: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"dataset_id": {
-										Type:     schema.TypeString,
-										Required: true,
+					Type:       schema.TypeList,
+					MaxItems:   1,
+					Optional:   true,
+					Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+									"enable_network_egress_metering": {
+											Type:     schema.TypeBool,
+											Optional: true,
+											Default:  false,
 									},
-								},
+									"bigquery_destination": {
+											Type:       schema.TypeList,
+											MaxItems:   1,
+											Required: true,
+											Elem: &schema.Resource{
+													Schema: map[string]*schema.Schema{
+															"dataset_id": {
+																	Type:     schema.TypeString,
+																	Required: true,
+															},
+													},
+											},
+									},
 							},
-						},
 					},
-				},
 			},
 
 			"enable_intranode_visibility": {
@@ -921,7 +922,7 @@ func resourceContainerClusterCreate(d *schema.ResourceData, meta interface{}) er
 			Enabled:         d.Get("enable_binary_authorization").(bool),
 			ForceSendFields: []string{"Enabled"},
 		},
-		Autoscaling: expandClusterAutoscaling(d.Get("cluster_autoscaling"), d),
+		Autoscaling:    expandClusterAutoscaling(d.Get("cluster_autoscaling"), d),
 		NetworkConfig: &containerBeta.NetworkConfig{
 			EnableIntraNodeVisibility: d.Get("enable_intranode_visibility").(bool),
 		},
@@ -1225,10 +1226,10 @@ func resourceContainerClusterRead(d *schema.ResourceData, meta interface{}) erro
 
 	d.Set("resource_labels", cluster.ResourceLabels)
 
-	if err := d.Set("resource_usage_export_config", flattenResourceUsageExportConfig(cluster.ResourceUsageExportConfig)); err != nil {
-		return err
+		if err := d.Set("resource_usage_export_config", flattenResourceUsageExportConfig(cluster.ResourceUsageExportConfig)); err != nil {
+			return err
 	}
-	return nil
+		return nil
 }
 
 func resourceContainerClusterUpdate(d *schema.ResourceData, meta interface{}) error {
@@ -1865,28 +1866,28 @@ func resourceContainerClusterUpdate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	if d.HasChange("resource_usage_export_config") {
-		c := d.Get("resource_usage_export_config")
-		req := &containerBeta.UpdateClusterRequest{
-			Update: &containerBeta.ClusterUpdate{
-				DesiredResourceUsageExportConfig: expandResourceUsageExportConfig(c),
-			},
-		}
-
-		updateF := func() error {
-			name := containerClusterFullName(project, location, clusterName)
-			op, err := config.clientContainerBeta.Projects.Locations.Clusters.Update(name, req).Do()
-			if err != nil {
-				return err
+			c := d.Get("resource_usage_export_config")
+			req := &containerBeta.UpdateClusterRequest{
+					Update: &containerBeta.ClusterUpdate{
+							DesiredResourceUsageExportConfig: expandResourceUsageExportConfig(c),
+					},
 			}
-			// Wait until it's updated
-			return containerOperationWait(config, op, project, location, "updating GKE cluster resource usage export config", timeoutInMinutes)
-		}
-		if err := lockedCall(lockKey, updateF); err != nil {
-			return err
-		}
-		log.Printf("[INFO] GKE cluster %s resource usage export config has been updated", d.Id())
 
-		d.SetPartial("resource_usage_export_config")
+			updateF := func() error {
+					name := containerClusterFullName(project, location, clusterName)
+					op, err := config.clientContainerBeta.Projects.Locations.Clusters.Update(name, req).Do()
+					if err != nil {
+							return err
+					}
+					// Wait until it's updated
+					return containerOperationWait(config, op, project, location, "updating GKE cluster resource usage export config", timeoutInMinutes)
+			}
+			if err := lockedCall(lockKey, updateF); err != nil {
+					return err
+			}
+			log.Printf("[INFO] GKE cluster %s resource usage export config has been updated", d.Id())
+
+			d.SetPartial("resource_usage_export_config")
 	}
 	d.Partial(false)
 
@@ -2110,11 +2111,11 @@ func expandIPAllocationPolicy(configured interface{}) *containerBeta.IPAllocatio
 
 		ClusterIpv4CidrBlock:  config["cluster_ipv4_cidr_block"].(string),
 		ServicesIpv4CidrBlock: config["services_ipv4_cidr_block"].(string),
-		NodeIpv4CidrBlock:     config["node_ipv4_cidr_block"].(string),
+		NodeIpv4CidrBlock: config["node_ipv4_cidr_block"].(string),
 
 		ClusterSecondaryRangeName:  config["cluster_secondary_range_name"].(string),
 		ServicesSecondaryRangeName: config["services_secondary_range_name"].(string),
-		ForceSendFields:            []string{"UseIpAliases"},
+		ForceSendFields: []string{"UseIpAliases"},
 	}
 }
 
@@ -2330,24 +2331,24 @@ func expandDefaultMaxPodsConstraint(v interface{}) *containerBeta.MaxPodsConstra
 func expandResourceUsageExportConfig(configured interface{}) *containerBeta.ResourceUsageExportConfig {
 	l := configured.([]interface{})
 	if len(l) == 0 || l[0] == nil {
-		return &containerBeta.ResourceUsageExportConfig{}
+			return &containerBeta.ResourceUsageExportConfig{}
 	}
 
 	resourceUsageConfig := l[0].(map[string]interface{})
 
 	result := &containerBeta.ResourceUsageExportConfig{
-		EnableNetworkEgressMetering: resourceUsageConfig["enable_network_egress_metering"].(bool),
-		ForceSendFields:             []string{"EnableNetworkEgressMetering"},
+			EnableNetworkEgressMetering: resourceUsageConfig["enable_network_egress_metering"].(bool),
+			ForceSendFields: []string{"EnableNetworkEgressMetering"},
 	}
 	if _, ok := resourceUsageConfig["bigquery_destination"]; ok {
-		if len(resourceUsageConfig["bigquery_destination"].([]interface{})) > 0 {
-			bigqueryDestination := resourceUsageConfig["bigquery_destination"].([]interface{})[0].(map[string]interface{})
-			if _, ok := bigqueryDestination["dataset_id"]; ok {
-				result.BigqueryDestination = &containerBeta.BigQueryDestination{
-					DatasetId: bigqueryDestination["dataset_id"].(string),
-				}
+			if len(resourceUsageConfig["bigquery_destination"].([]interface{})) > 0 {
+					bigqueryDestination := resourceUsageConfig["bigquery_destination"].([]interface{})[0].(map[string]interface{})
+					if _, ok := bigqueryDestination["dataset_id"]; ok {
+							result.BigqueryDestination = &containerBeta.BigQueryDestination{
+									DatasetId: bigqueryDestination["dataset_id"].(string),
+							}
+					}
 			}
-		}
 	}
 	return result
 }
@@ -2580,6 +2581,8 @@ func flattenClusterAutoscaling(a *containerBeta.ClusterAutoscaling) []map[string
 	return []map[string]interface{}{r}
 }
 
+
+
 func flattenMasterAuthorizedNetworksConfig(c *containerBeta.MasterAuthorizedNetworksConfig) []map[string]interface{} {
 	if c == nil || !c.Enabled {
 		return nil
@@ -2610,17 +2613,17 @@ func flattenPodSecurityPolicyConfig(c *containerBeta.PodSecurityPolicyConfig) []
 }
 
 func flattenResourceUsageExportConfig(c *containerBeta.ResourceUsageExportConfig) []map[string]interface{} {
-	if c == nil {
-		return nil
-	}
-	return []map[string]interface{}{
-		{
-			"enable_network_egress_metering": c.EnableNetworkEgressMetering,
-			"bigquery_destination": []map[string]interface{}{
-				{"dataset_id": c.BigqueryDestination.DatasetId},
-			},
-		},
-	}
+		if c == nil {
+				return nil
+		}
+		return []map[string]interface{}{
+				{
+						"enable_network_egress_metering": c.EnableNetworkEgressMetering,
+						"bigquery_destination": []map[string]interface{}{
+								{"dataset_id": c.BigqueryDestination.DatasetId},
+						},
+				},
+		}
 }
 
 func flattenDatabaseEncryption(c *containerBeta.DatabaseEncryption) []map[string]interface{} {
