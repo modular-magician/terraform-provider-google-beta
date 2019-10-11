@@ -251,9 +251,9 @@ This resource provides the following
 Attestor can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_binary_authorization_attestor.default projects/{{project}}/attestors/{{name}}
-$ terraform import google_binary_authorization_attestor.default {{project}}/{{name}}
-$ terraform import google_binary_authorization_attestor.default {{name}}
+$ terraform import google_binary_authorization_attestor.default projects/{{project}}/attestors?attestorId={{name}}/{{name}}
+$ terraform import google_binary_authorization_attestor.default {{project}}/{{name}}/{{name}}
+$ terraform import google_binary_authorization_attestor.default {{name}}/{{name}}
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`

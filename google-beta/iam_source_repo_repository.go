@@ -51,9 +51,6 @@ func SourceRepoRepositoryIamUpdaterProducer(d *schema.ResourceData, config *Conf
 		return nil, err
 	}
 	values["project"] = project
-	if v, ok := d.GetOk("repository"); ok {
-		values["repository"] = v.(string)
-	}
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
 	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/repos/(?P<repository>[^/]+)", "(?P<project>[^/]+)/(?P<repository>[^/]+)", "(?P<repository>[^/]+)"}, d, config, d.Get("repository").(string))
@@ -160,7 +157,7 @@ func (u *SourceRepoRepositoryIamUpdater) qualifyRepositoryUrl(methodIdentifier s
 }
 
 func (u *SourceRepoRepositoryIamUpdater) GetResourceId() string {
-	return fmt.Sprintf("%s/%s", u.project, u.repository)
+	return fmt.Sprintf("projects/%s/repos/%s", u.project, u.repository)
 }
 
 func (u *SourceRepoRepositoryIamUpdater) GetMutexKey() string {

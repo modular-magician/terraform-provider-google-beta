@@ -162,7 +162,7 @@ func resourceBinaryAuthorizationAttestorCreate(d *schema.ResourceData, meta inte
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{project}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/attestors/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -295,15 +295,15 @@ func resourceBinaryAuthorizationAttestorDelete(d *schema.ResourceData, meta inte
 func resourceBinaryAuthorizationAttestorImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
-		"projects/(?P<project>[^/]+)/attestors/(?P<name>[^/]+)",
-		"(?P<project>[^/]+)/(?P<name>[^/]+)",
-		"(?P<name>[^/]+)",
+		"projects/(?P<project>[^/]+)/attestors?attestorId=(?P<name>[^/]+)/(?P<name>[^/]+)",
+		"(?P<project>[^/]+)/(?P<name>[^/]+)/(?P<name>[^/]+)",
+		"(?P<name>[^/]+)/(?P<name>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{project}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/attestors/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

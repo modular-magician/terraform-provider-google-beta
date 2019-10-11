@@ -114,19 +114,7 @@ master will be created, as well as the default node location. If you specify a
 zone (such as `us-central1-a`), the cluster will be a zonal cluster with a
 single cluster master. If you specify a region (such as `us-west1`), the
 cluster will be a regional cluster with multiple masters spread across zones in
-the region, and with default node locations in those zones as well.
-
-* `zone` - (Optional, Deprecated) The zone that the cluster master and nodes
-should be created in. If specified, this cluster will be a zonal cluster. `zone`
-has been deprecated in favour of `location`.
-
-* `region` (Optional, Deprecated) The region that the cluster master and nodes
-should be created in. If specified, this cluster will be a [regional clusters](https://cloud.google.com/kubernetes-engine/docs/concepts/multi-zone-and-regional-clusters#regional)
-where the cluster master and nodes (by default) will be created in several zones
-throughout the region. `region` has been deprecated in favour of `location`.
-
-~> Only one of `location`, `zone`, and `region` may be set. If none are set,
-the provider zone is used to create a zonal cluster.
+the region, and with default node locations in those zones as well
 
 * `node_locations` - (Optional) The list of zones in which the cluster's nodes
 are located. Nodes must be in the region of their regional cluster or in the
@@ -139,14 +127,6 @@ single zone while nodes are present in each of the primary zone and the node
 locations. In contrast, in a regional cluster, cluster master nodes are present
 in multiple zones in the region. For that reason, regional clusters should be
 preferred.
-
-* `additional_zones` - (Optional) The list of zones in which the cluster's nodes
-should be located. These must be in the same region as the cluster zone for
-zonal clusters, or in the region of a regional cluster. In a multi-zonal cluster,
-the number of nodes specified in `initial_node_count` is created in
-all specified zones as well as the primary zone. If specified for a regional
-cluster, nodes will only be created in these zones. `additional_zones` has been
-deprecated in favour of `node_locations`.
 
 * `addons_config` - (Optional) The configuration for addons supported by GKE.
     Structure is documented below.
@@ -191,8 +171,6 @@ for more details. Structure is documented below.
     will have statically granted permissions beyond those provided by the RBAC configuration or IAM.
     Defaults to `false`
 
-* `enable_shielded_nodes` - (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html)) Enable Shielded Nodes features on all nodes in this cluster.  Defaults to `false`.
-
 * `initial_node_count` - (Optional) The number of nodes to create in this
 cluster's default node pool. In regional or multi-zonal clusters, this is the
 number of nodes per zone. Must be set if `node_pool` is not set. If you're using
@@ -234,9 +212,9 @@ Structure is documented below.
     [the docs](https://cloud.google.com/kubernetes-engine/versioning-and-upgrades#specifying_cluster_version)
     describe the various acceptable formats for this field.
 
--> If you are using the `google_container_engine_versions` datasource with a regional cluster, ensure that you have provided a `region`
-to the datasource. A `region` can have a different set of supported versions than its corresponding `zone`s, and not all `zone`s in a
-`region` are guaranteed to support the same version.
+-> If you are using the `google_container_engine_versions` datasource with a regional cluster, ensure that you have provided a `location`
+to the datasource. A region can have a different set of supported versions than its corresponding zones, and not all zones in a
+region are guaranteed to support the same version.
 
 * `monitoring_service` - (Optional) The monitoring service that the cluster
     should write metrics to.
@@ -559,8 +537,6 @@ The `node_config` block supports:
 
      -> Projects that enable the [Cloud Compute Engine API](https://cloud.google.com/compute/) with Terraform may need these roles added manually to the service account. Projects that enable the API in the Cloud Console should have them added automatically.
 
-* `shielded_instance_config` - (Optional) Shielded Instance options. Structure is documented below.
-
 * `tags` - (Optional) The list of instance tags applied to all nodes. Tags are used to identify
     valid sources or targets for network firewalls.
 
@@ -633,16 +609,6 @@ resource_usage_export_config {
 }
 ```
 
-The `shielded_instance_config` block supports:
-
-* `enable_secure_boot` (Optional) - Defines if the instance has Secure Boot enabled.
-
-Secure Boot helps ensure that the system only runs authentic software by verifying the digital signature of all boot components, and halting the boot process if signature verification fails.  Defaults to `false`.
-
-* `enable_integrity_monitoring` (Optional) - Defines if the instance has integrity monitoring enabled.
-
-Enables monitoring and attestation of the boot integrity of the instance. The attestation is performed against the integrity policy baseline. This baseline is initially derived from the implicitly trusted boot image when the instance is created.  Defaults to `true`.
-
 The `taint` block supports:
 
 * `key` (Required) Key for taint.
@@ -711,7 +677,7 @@ This resource provides the following
 
 ## Import
 
-GKE clusters can be imported using the `project` , `zone` or `region`, and `name`. If the project is omitted, the default
+GKE clusters can be imported using the `project` , `location`, and `name`. If the project is omitted, the default
 provider value will be used. Examples:
 
 ```
