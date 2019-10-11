@@ -82,19 +82,6 @@ func resourceBigQueryDataset() *schema.Resource {
 				Elem:     bigqueryDatasetAccessSchema(),
 				// Default schema.HashSchema is used.
 			},
-			"default_encryption_configuration": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"kms_key_name": {
-							Type:     schema.TypeString,
-							Required: true,
-						},
-					},
-				},
-			},
 			"default_partition_expiration_ms": {
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -254,12 +241,6 @@ func resourceBigQueryDatasetCreate(d *schema.ResourceData, meta interface{}) err
 	} else if v, ok := d.GetOkExists("location"); !isEmptyValue(reflect.ValueOf(locationProp)) && (ok || !reflect.DeepEqual(v, locationProp)) {
 		obj["location"] = locationProp
 	}
-	defaultEncryptionConfigurationProp, err := expandBigQueryDatasetDefaultEncryptionConfiguration(d.Get("default_encryption_configuration"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("default_encryption_configuration"); !isEmptyValue(reflect.ValueOf(defaultEncryptionConfigurationProp)) && (ok || !reflect.DeepEqual(v, defaultEncryptionConfigurationProp)) {
-		obj["defaultEncryptionConfiguration"] = defaultEncryptionConfigurationProp
-	}
 
 	url, err := replaceVars(d, config, "{{BigQueryBasePath}}projects/{{project}}/datasets")
 	if err != nil {
@@ -277,7 +258,7 @@ func resourceBigQueryDatasetCreate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{project}}:{{dataset_id}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/datasets/{{dataset_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -354,9 +335,6 @@ func resourceBigQueryDatasetRead(d *schema.ResourceData, meta interface{}) error
 	if err := d.Set("location", flattenBigQueryDatasetLocation(res["location"], d)); err != nil {
 		return fmt.Errorf("Error reading Dataset: %s", err)
 	}
-	if err := d.Set("default_encryption_configuration", flattenBigQueryDatasetDefaultEncryptionConfiguration(res["defaultEncryptionConfiguration"], d)); err != nil {
-		return fmt.Errorf("Error reading Dataset: %s", err)
-	}
 	if err := d.Set("self_link", ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
 		return fmt.Errorf("Error reading Dataset: %s", err)
 	}
@@ -421,12 +399,6 @@ func resourceBigQueryDatasetUpdate(d *schema.ResourceData, meta interface{}) err
 	} else if v, ok := d.GetOkExists("location"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, locationProp)) {
 		obj["location"] = locationProp
 	}
-	defaultEncryptionConfigurationProp, err := expandBigQueryDatasetDefaultEncryptionConfiguration(d.Get("default_encryption_configuration"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("default_encryption_configuration"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, defaultEncryptionConfigurationProp)) {
-		obj["defaultEncryptionConfiguration"] = defaultEncryptionConfigurationProp
-	}
 
 	url, err := replaceVars(d, config, "{{BigQueryBasePath}}projects/{{project}}/datasets/{{dataset_id}}")
 	if err != nil {
@@ -471,15 +443,15 @@ func resourceBigQueryDatasetDelete(d *schema.ResourceData, meta interface{}) err
 func resourceBigQueryDatasetImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
+		"projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)",
 		"(?P<project>[^/]+)/(?P<dataset_id>[^/]+)",
-		"(?P<project>[^/]+):(?P<dataset_id>[^/]+)",
 		"(?P<dataset_id>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{project}}:{{dataset_id}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/datasets/{{dataset_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -643,23 +615,6 @@ func flattenBigQueryDatasetLocation(v interface{}, d *schema.ResourceData) inter
 	if v == nil {
 		return "US"
 	}
-	return v
-}
-
-func flattenBigQueryDatasetDefaultEncryptionConfiguration(v interface{}, d *schema.ResourceData) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["kms_key_name"] =
-		flattenBigQueryDatasetDefaultEncryptionConfigurationKmsKeyName(original["kmsKeyName"], d)
-	return []interface{}{transformed}
-}
-func flattenBigQueryDatasetDefaultEncryptionConfigurationKmsKeyName(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
@@ -830,28 +785,5 @@ func expandBigQueryDatasetLabels(v interface{}, d TerraformResourceData, config 
 }
 
 func expandBigQueryDatasetLocation(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandBigQueryDatasetDefaultEncryptionConfiguration(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedKmsKeyName, err := expandBigQueryDatasetDefaultEncryptionConfigurationKmsKeyName(original["kms_key_name"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedKmsKeyName); val.IsValid() && !isEmptyValue(val) {
-		transformed["kmsKeyName"] = transformedKmsKeyName
-	}
-
-	return transformed, nil
-}
-
-func expandBigQueryDatasetDefaultEncryptionConfigurationKmsKeyName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
