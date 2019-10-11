@@ -410,7 +410,7 @@ func resourceComputeVpnTunnelCreate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/vpnTunnels/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -674,7 +674,7 @@ func resourceComputeVpnTunnelImport(d *schema.ResourceData, meta interface{}) ([
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/vpnTunnels/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -861,13 +861,7 @@ func expandComputeVpnTunnelRouter(v interface{}, d TerraformResourceData, config
 	if err != nil {
 		return nil, fmt.Errorf("Invalid value for router: %s", err)
 	}
-
-	url, err := replaceVars(d, config, "{{ComputeBasePath}}"+f.RelativeLink())
-	if err != nil {
-		return nil, err
-	}
-
-	return url, nil
+	return "https://www.googleapis.com/compute/v1/" + f.RelativeLink(), nil
 }
 
 func expandComputeVpnTunnelPeerIp(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
