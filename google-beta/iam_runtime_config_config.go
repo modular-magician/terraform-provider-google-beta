@@ -51,12 +51,9 @@ func RuntimeConfigConfigIamUpdaterProducer(d *schema.ResourceData, config *Confi
 		return nil, err
 	}
 	values["project"] = project
-	if v, ok := d.GetOk("config"); ok {
-		values["config"] = v.(string)
-	}
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/configs/(?P<config>[^/]+)", "(?P<project>[^/]+)/(?P<config>[^/]+)", "(?P<config>[^/]+)"}, d, config, d.Get("config").(string))
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/configs/(?P<config>[^/]+)/(?P<config>[^/]+)", "(?P<project>[^/]+)/(?P<config>[^/]+)/(?P<config>[^/]+)", "(?P<config>[^/]+)/(?P<config>[^/]+)"}, d, config, d.Get("config").(string))
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +86,7 @@ func RuntimeConfigConfigIdParseFunc(d *schema.ResourceData, config *Config) erro
 	}
 	values["project"] = project
 
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/configs/(?P<config>[^/]+)", "(?P<project>[^/]+)/(?P<config>[^/]+)", "(?P<config>[^/]+)"}, d, config, d.Id())
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/configs/(?P<config>[^/]+)/(?P<config>[^/]+)", "(?P<project>[^/]+)/(?P<config>[^/]+)/(?P<config>[^/]+)", "(?P<config>[^/]+)/(?P<config>[^/]+)"}, d, config, d.Id())
 	if err != nil {
 		return err
 	}

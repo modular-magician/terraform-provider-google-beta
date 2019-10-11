@@ -51,9 +51,6 @@ func BinaryAuthorizationAttestorIamUpdaterProducer(d *schema.ResourceData, confi
 		return nil, err
 	}
 	values["project"] = project
-	if v, ok := d.GetOk("attestor"); ok {
-		values["attestor"] = v.(string)
-	}
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
 	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/attestors/(?P<attestor>[^/]+)", "(?P<project>[^/]+)/(?P<attestor>[^/]+)", "(?P<attestor>[^/]+)"}, d, config, d.Get("attestor").(string))
@@ -160,7 +157,7 @@ func (u *BinaryAuthorizationAttestorIamUpdater) qualifyAttestorUrl(methodIdentif
 }
 
 func (u *BinaryAuthorizationAttestorIamUpdater) GetResourceId() string {
-	return fmt.Sprintf("%s/%s", u.project, u.attestor)
+	return fmt.Sprintf("projects/%s/attestors/%s", u.project, u.attestor)
 }
 
 func (u *BinaryAuthorizationAttestorIamUpdater) GetMutexKey() string {

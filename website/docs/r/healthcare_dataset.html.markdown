@@ -94,9 +94,9 @@ This resource provides the following
 Dataset can be imported using any of these accepted formats:
 
 ```
-$ terraform import -provider=google-beta google_healthcare_dataset.default projects/{{project}}/locations/{{location}}/datasets/{{name}}
-$ terraform import -provider=google-beta google_healthcare_dataset.default {{project}}/{{location}}/{{name}}
-$ terraform import -provider=google-beta google_healthcare_dataset.default {{location}}/{{name}}
+$ terraform import -provider=google-beta google_healthcare_dataset.default projects/{{project}}/locations/{{location}}/datasets?datasetId={{name}}/{{name}}
+$ terraform import -provider=google-beta google_healthcare_dataset.default {{project}}/{{location}}/{{name}}/{{name}}
+$ terraform import -provider=google-beta google_healthcare_dataset.default {{location}}/{{name}}/{{name}}
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`
