@@ -59,6 +59,43 @@ resource "google_cloudbuild_trigger" "filename-trigger" {
 The following arguments are supported:
 
 
+* `trigger_template` -
+  (Required)
+  Template describing the types of source changes to trigger a build.
+  Branch and tag names in trigger templates are interpreted as regular
+  expressions. Any branch or tag change that matches that regular
+  expression will trigger a build.  Structure is documented below.
+
+
+The `trigger_template` block supports:
+
+* `project_id` -
+  (Optional)
+  ID of the project that owns the Cloud Source Repository. If
+  omitted, the project ID requesting the build is assumed.
+
+* `repo_name` -
+  (Optional)
+  Name of the Cloud Source Repository. If omitted, the name "default" is assumed.
+
+* `dir` -
+  (Optional)
+  Directory, relative to the source root, in which to run the build.
+  This must be a relative path. If a step's dir is specified and
+  is an absolute path, this value is ignored for that step's
+  execution.
+
+* `branch_name` -
+  (Optional)
+  Name of the branch to build. Exactly one a of branch name, tag, or commit SHA must be provided.
+
+* `tag_name` -
+  (Optional)
+  Name of the tag to build. Exactly one of a branch name, tag, or commit SHA must be provided.
+
+* `commit_sha` -
+  (Optional)
+  Explicit commit SHA to build. Exactly one of a branch name, tag, or commit SHA must be provided.
 
 - - -
 
@@ -101,18 +138,6 @@ The following arguments are supported:
   those files matches a includedFiles glob. If not, then we do not trigger
   a build.
 
-* `trigger_template` -
-  (Optional)
-  Template describing the types of source changes to trigger a build.
-  Branch and tag names in trigger templates are interpreted as regular
-  expressions. Any branch or tag change that matches that regular
-  expression will trigger a build.
-  This field is required, and will be validated as such in 3.0.0.  Structure is documented below.
-
-* `github` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
-  Describes the configuration of a trigger that creates a build whenever a GitHub event is received.  Structure is documented below.
-
 * `build` -
   (Optional)
   Contents of the build template. Either a filename or build template must be provided.  Structure is documented below.
@@ -120,77 +145,6 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
-The `trigger_template` block supports:
-
-* `project_id` -
-  (Optional)
-  ID of the project that owns the Cloud Source Repository. If
-  omitted, the project ID requesting the build is assumed.
-
-* `repo_name` -
-  (Optional)
-  Name of the Cloud Source Repository. If omitted, the name "default" is assumed.
-
-* `dir` -
-  (Optional)
-  Directory, relative to the source root, in which to run the build.
-  This must be a relative path. If a step's dir is specified and
-  is an absolute path, this value is ignored for that step's
-  execution.
-
-* `branch_name` -
-  (Optional)
-  Name of the branch to build. Exactly one a of branch name, tag, or commit SHA must be provided.
-
-* `tag_name` -
-  (Optional)
-  Name of the tag to build. Exactly one of a branch name, tag, or commit SHA must be provided.
-
-* `commit_sha` -
-  (Optional)
-  Explicit commit SHA to build. Exactly one of a branch name, tag, or commit SHA must be provided.
-
-The `github` block supports:
-
-* `owner` -
-  (Optional)
-  Owner of the repository. For example: The owner for
-  https://github.com/googlecloudplatform/cloud-builders is "googlecloudplatform".
-
-* `name` -
-  (Optional)
-  Name of the repository. For example: The name for
-  https://github.com/googlecloudplatform/cloud-builders is "cloud-builders".
-
-* `pull_request` -
-  (Optional)
-  filter to match changes in pull requests.  Specify only one of pullRequest or push.  Structure is documented below.
-
-* `push` -
-  (Optional)
-  filter to match changes in refs, like branches or tags.  Specify only one of pullRequest or push.  Structure is documented below.
-
-
-The `pull_request` block supports:
-
-* `branch` -
-  (Optional)
-  Regex of branches to match.
-
-* `comment_control` -
-  (Optional)
-  Whether to block builds on a "/gcbrun" comment from a repository owner or collaborator.
-
-The `push` block supports:
-
-* `branch` -
-  (Optional)
-  Regex of branches to match.  Specify only one of branch or tag.
-
-* `tag` -
-  (Optional)
-  Regex of tags to match.  Specify only one of branch or tag.
 
 The `build` block supports:
 
