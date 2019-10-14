@@ -357,6 +357,66 @@ func TestAccContainerCluster_withNetworkPolicyEnabled(t *testing.T) {
 	})
 }
 
+func TestAccContainerCluster_withReleaseChannelEnabled(t *testing.T) {
+	t.Parallel()
+	clusterName := fmt.Sprintf("cluster-test-%s", acctest.RandString(10))
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckContainerClusterDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerCluster_withReleaseChannelEnabled(clusterName, "STABLE"),
+			},
+			{
+				ResourceName:        "google_container_cluster.with_release_channel",
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
+			},
+			{
+				Config: testAccContainerCluster_withReleaseChannelEnabled(clusterName, "REGULAR"),
+			},
+			{
+				ResourceName:        "google_container_cluster.with_release_channel",
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
+			},
+			{
+				Config: testAccContainerCluster_withReleaseChannelEnabled(clusterName, "RAPID"),
+			},
+			{
+				ResourceName:        "google_container_cluster.with_release_channel",
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
+			},
+		},
+	})
+}
+
+func TestAccContainerCluster_withReleaseChannelDisabled(t *testing.T) {
+	t.Parallel()
+	clusterName := fmt.Sprintf("cluster-test-%s", acctest.RandString(10))
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckContainerClusterDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerCluster_withReleaseChannelDisabled(clusterName),
+			},
+			{
+				ResourceName:        "google_container_cluster.with_release_channel",
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
+			},
+		},
+	})
+}
+
 func TestAccContainerCluster_withMasterAuthorizedNetworksConfig(t *testing.T) {
 	t.Parallel()
 
@@ -1941,6 +2001,30 @@ resource "google_container_cluster" "with_network_policy_enabled" {
 			disabled = false
 		}
 	}
+}`, clusterName)
+}
+
+func testAccContainerCluster_withReleaseChannelEnabled(clusterName string, channel string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "with_release_channel" {
+	name               = "%s"
+	location           = "us-central1-a"
+	initial_node_count = 1
+
+  release_channel {
+    channel = "%s"
+  }
+}`, clusterName, channel)
+}
+
+func testAccContainerCluster_withReleaseChannelDisabled(clusterName string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "with_release_channel" {
+	name               = "%s"
+	location           = "us-central1-a"
+	initial_node_count = 1
+
+  release_channel {}
 }`, clusterName)
 }
 
