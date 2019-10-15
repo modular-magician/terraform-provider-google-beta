@@ -693,6 +693,12 @@ func resourceContainerCluster() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 
+			"resource_labels": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+
 			"default_max_pods_per_node": {
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -947,7 +953,8 @@ func resourceContainerClusterCreate(d *schema.ResourceData, meta interface{}) er
 			Enabled:         d.Get("enable_shielded_nodes").(bool),
 			ForceSendFields: []string{"Enabled"},
 		},
-		EnableTpu: d.Get("enable_tpu").(bool),
+		ReleaseChannel: expandReleaseChannel(d.Get("release_channel")),
+		EnableTpu:      d.Get("enable_tpu").(bool),
 		BinaryAuthorization: &containerBeta.BinaryAuthorization{
 			Enabled:         d.Get("enable_binary_authorization").(bool),
 			ForceSendFields: []string{"Enabled"},
