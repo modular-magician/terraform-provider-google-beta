@@ -22,6 +22,31 @@ var IamMemberBaseSchema = map[string]*schema.Schema{
 		ForceNew:         true,
 		DiffSuppressFunc: caseDiffSuppress,
 	},
+	"condition": {
+		Type:     schema.TypeList,
+		Optional: true,
+		MaxItems: 1,
+		ForceNew: true,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"expression": {
+					Type:     schema.TypeString,
+					Required: true,
+					ForceNew: true,
+				},
+				"title": {
+					Type:     schema.TypeString,
+					Required: true,
+					ForceNew: true,
+				},
+				"description": {
+					Type:     schema.TypeString,
+					Optional: true,
+					ForceNew: true,
+				},
+			},
+		},
+	},
 	"etag": {
 		Type:     schema.TypeString,
 		Computed: true,
@@ -35,16 +60,24 @@ func iamMemberImport(resourceIdParser resourceIdParserFunc) schema.StateFunc {
 		}
 		config := m.(*Config)
 		s := strings.Fields(d.Id())
-		if len(s) != 3 {
+		if len(s) < 3 {
 			d.SetId("")
-			return nil, fmt.Errorf("Wrong number of parts to Member id %s; expected 'resource_name role member'.", s)
+			return nil, fmt.Errorf("Wrong number of parts to Member id %s; expected 'resource_name role member [condition_title]'.", s)
 		}
-		id, role, member := s[0], s[1], s[2]
+		var id, role, member string
+		var conditionTitle string
+		if len(s) == 3 {
+			id, role, member = s[0], s[1], s[2]
+		} else {
+			// condition titles can have any characters in them, so re-join the split string
+			id, role, member, conditionTitle = s[0], s[1], s[2], strings.Join(s[3:], " ")
+		}
 
 		// Set the ID only to the first part so all IAM types can share the same resourceIdParserFunc.
 		d.SetId(id)
 		d.Set("role", role)
 		d.Set("member", strings.ToLower(member))
+		d.Set("condition", flattenIamCondition(&cloudresourcemanager.Expr{Title: conditionTitle}))
 		err := resourceIdParser(d, config)
 		if err != nil {
 			return nil, err
@@ -75,8 +108,9 @@ func ResourceIamMemberWithBatching(parentSpecificSchema map[string]*schema.Schem
 
 func getResourceIamMember(d *schema.ResourceData) *cloudresourcemanager.Binding {
 	return &cloudresourcemanager.Binding{
-		Members: []string{d.Get("member").(string)},
-		Role:    d.Get("role").(string),
+		Members:   []string{d.Get("member").(string)},
+		Role:      d.Get("role").(string),
+		Condition: expandIamCondition(d.Get("condition")),
 	}
 }
 
@@ -92,6 +126,7 @@ func resourceIamMemberCreate(newUpdaterFunc newResourceIamUpdaterFunc, enableBat
 		modifyF := func(ep *cloudresourcemanager.Policy) error {
 			// Merge the bindings together
 			ep.Bindings = mergeBindings(append(ep.Bindings, memberBind))
+			ep.Version = 3
 			return nil
 		}
 		if enableBatching {
@@ -125,7 +160,7 @@ func resourceIamMemberRead(newUpdaterFunc newResourceIamUpdaterFunc) schema.Read
 
 		var binding *cloudresourcemanager.Binding
 		for _, b := range p.Bindings {
-			if b.Role != eMember.Role {
+			if b.Role != eMember.Role || (b.Condition != nil && eMember.Condition != nil && b.Condition.Title != eMember.Condition.Title) {
 				continue
 			}
 			binding = b
@@ -150,6 +185,7 @@ func resourceIamMemberRead(newUpdaterFunc newResourceIamUpdaterFunc) schema.Read
 		d.Set("etag", p.Etag)
 		d.Set("member", member)
 		d.Set("role", binding.Role)
+		d.Set("condition", flattenIamCondition(binding.Condition))
 		return nil
 	}
 }
