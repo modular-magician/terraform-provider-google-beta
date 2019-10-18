@@ -187,7 +187,7 @@ func resourceDNSPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/policies/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -253,7 +253,6 @@ func resourceDNSPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("alternative_name_server_config") || d.HasChange("description") || d.HasChange("enable_inbound_forwarding") || d.HasChange("enable_logging") || d.HasChange("networks") {
 		obj := make(map[string]interface{})
-
 		alternativeNameServerConfigProp, err := expandDNSPolicyAlternativeNameServerConfig(d.Get("alternative_name_server_config"), d, config)
 		if err != nil {
 			return err
@@ -357,7 +356,7 @@ func resourceDNSPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schem
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/policies/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
