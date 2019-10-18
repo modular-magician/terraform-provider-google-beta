@@ -374,8 +374,8 @@ The `http_health_check` block supports:
 
 * `port_name` -
   (Optional)
-  Port name as defined in InstanceGroup#NamedPort#name. If both port and
-  port_name are defined, port takes precedence.
+  Port name as defined in InstanceGroup#NamedPort#name. For port_name to be used
+  port_specification must be `USE_NAMED_PORT`.
 
 * `proxy_header` -
   (Optional)
@@ -392,8 +392,7 @@ The `http_health_check` block supports:
     network endpoint is used for health checking. For other backends, the
     port or named port specified in the Backend Service is used for health
     checking.
-  If not specified, HTTP health check follows behavior specified in `port` and
-  `portName` fields.
+  If not specified, HTTP health check uses default `port` behavior
 
 The `https_health_check` block supports:
 
@@ -421,8 +420,8 @@ The `https_health_check` block supports:
 
 * `port_name` -
   (Optional)
-  Port name as defined in InstanceGroup#NamedPort#name. If both port and
-  port_name are defined, port takes precedence.
+  Port name as defined in InstanceGroup#NamedPort#name. For port_name to be used
+  port_specification must be `USE_NAMED_PORT`.
 
 * `proxy_header` -
   (Optional)
@@ -439,8 +438,7 @@ The `https_health_check` block supports:
     network endpoint is used for health checking. For other backends, the
     port or named port specified in the Backend Service is used for health
     checking.
-  If not specified, HTTPS health check follows behavior specified in `port` and
-  `portName` fields.
+  If not specified, HTTPS health check uses default `port` behavior
 
 The `tcp_health_check` block supports:
 
@@ -464,8 +462,8 @@ The `tcp_health_check` block supports:
 
 * `port_name` -
   (Optional)
-  Port name as defined in InstanceGroup#NamedPort#name. If both port and
-  port_name are defined, port takes precedence.
+  Port name as defined in InstanceGroup#NamedPort#name. For port_name to be used
+  port_specification must be `USE_NAMED_PORT`.
 
 * `proxy_header` -
   (Optional)
@@ -482,8 +480,7 @@ The `tcp_health_check` block supports:
     network endpoint is used for health checking. For other backends, the
     port or named port specified in the Backend Service is used for health
     checking.
-  If not specified, TCP health check follows behavior specified in `port` and
-  `portName` fields.
+  If not specified, TCP health check uses default `port` behavior
 
 The `ssl_health_check` block supports:
 
@@ -507,8 +504,8 @@ The `ssl_health_check` block supports:
 
 * `port_name` -
   (Optional)
-  Port name as defined in InstanceGroup#NamedPort#name. If both port and
-  port_name are defined, port takes precedence.
+  Port name as defined in InstanceGroup#NamedPort#name. For port_name to be used
+  port_specification must be `USE_NAMED_PORT`.
 
 * `proxy_header` -
   (Optional)
@@ -525,8 +522,7 @@ The `ssl_health_check` block supports:
     network endpoint is used for health checking. For other backends, the
     port or named port specified in the Backend Service is used for health
     checking.
-  If not specified, SSL health check follows behavior specified in `port` and
-  `portName` fields.
+  If not specified, SSL health check uses default `port` behavior
 
 The `http2_health_check` block supports:
 
@@ -554,8 +550,8 @@ The `http2_health_check` block supports:
 
 * `port_name` -
   (Optional)
-  Port name as defined in InstanceGroup#NamedPort#name. If both port and
-  port_name are defined, port takes precedence.
+  Port name as defined in InstanceGroup#NamedPort#name. For port_name to be used
+  port_specification must be `USE_NAMED_PORT`.
 
 * `proxy_header` -
   (Optional)
@@ -572,8 +568,7 @@ The `http2_health_check` block supports:
     network endpoint is used for health checking. For other backends, the
     port or named port specified in the Backend Service is used for health
     checking.
-  If not specified, HTTP2 health check follows behavior specified in `port` and
-  `portName` fields.
+  If not specified, HTTP2 health check uses default `port` behavior
 
 ## Attributes Reference
 
