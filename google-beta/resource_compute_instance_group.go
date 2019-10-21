@@ -49,7 +49,7 @@ func resourceComputeInstanceGroup() *schema.Resource {
 				Optional: true,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-				Set:      selfLinkRelativePathHash,
+				Set:      schema.HashString,
 			},
 
 			"named_port": {
