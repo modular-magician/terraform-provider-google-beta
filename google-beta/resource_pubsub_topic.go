@@ -60,7 +60,6 @@ func resourcePubsubTopic() *schema.Resource {
 			},
 			"message_storage_policy": {
 				Type:     schema.TypeList,
-				Computed: true,
 				Optional: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
