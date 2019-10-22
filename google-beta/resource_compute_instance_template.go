@@ -5,9 +5,11 @@ import (
 	"reflect"
 
 	"github.com/hashicorp/errwrap"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+
 	computeBeta "google.golang.org/api/compute/v0.beta"
 )
 
@@ -20,8 +22,11 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		SchemaVersion: 1,
-		CustomizeDiff: resourceComputeInstanceTemplateSourceImageCustomizeDiff,
-		MigrateState:  resourceComputeInstanceTemplateMigrateState,
+		CustomizeDiff: customdiff.All(
+			resourceComputeInstanceTemplateSourceImageCustomizeDiff,
+			resourceComputeInstanceTemplateScratchDiskCustomizeDiff,
+		),
+		MigrateState: resourceComputeInstanceTemplateMigrateState,
 
 		// A compute instance template is more or less a subset of a compute
 		// instance. Please attempt to maintain consistency with the
@@ -168,13 +173,6 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 				ForceNew: true,
 			},
 
-			"automatic_restart": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				ForceNew: true,
-				Removed:  "Use 'scheduling.automatic_restart' instead.",
-			},
-
 			"can_ip_forward": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -264,11 +262,6 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 										Computed:     true,
 										ValidateFunc: validation.StringInSlice([]string{"PREMIUM", "STANDARD"}, false),
 									},
-									"assigned_nat_ip": {
-										Type:     schema.TypeString,
-										Computed: true,
-										Removed:  "Use network_interface.access_config.nat_ip instead.",
-									},
 								},
 							},
 						},
@@ -293,22 +286,8 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 								},
 							},
 						},
-
-						"address": {
-							Type:     schema.TypeString,
-							Computed: true,
-							Optional: true,
-							Removed:  "Please use network_ip",
-						},
 					},
 				},
-			},
-
-			"on_host_maintenance": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Removed:  "Use 'scheduling.on_host_maintenance' instead.",
 			},
 
 			"project": {
@@ -514,7 +493,7 @@ func resourceComputeInstanceTemplateSourceImageCustomizeDiff(diff *schema.Resour
 			if err != nil {
 				return err
 			}
-			oldResolved, err = resolveImageRefToRelativeURI(project, oldResolved)
+			oldResolved, err = resolvedImageSelfLink(project, oldResolved)
 			if err != nil {
 				return err
 			}
@@ -522,7 +501,7 @@ func resourceComputeInstanceTemplateSourceImageCustomizeDiff(diff *schema.Resour
 			if err != nil {
 				return err
 			}
-			newResolved, err = resolveImageRefToRelativeURI(project, newResolved)
+			newResolved, err = resolvedImageSelfLink(project, newResolved)
 			if err != nil {
 				return err
 			}
@@ -539,6 +518,34 @@ func resourceComputeInstanceTemplateSourceImageCustomizeDiff(diff *schema.Resour
 			}
 		}
 	}
+	return nil
+}
+
+func resourceComputeInstanceTemplateScratchDiskCustomizeDiff(diff *schema.ResourceDiff, meta interface{}) error {
+	// separate func to allow unit testing
+	return resourceComputeInstanceTemplateScratchDiskCustomizeDiffFunc(diff)
+}
+
+func resourceComputeInstanceTemplateScratchDiskCustomizeDiffFunc(diff TerraformResourceDiff) error {
+	numDisks := diff.Get("disk.#").(int)
+	for i := 0; i < numDisks; i++ {
+		// misspelled on purpose, type is a special symbol
+		typee := diff.Get(fmt.Sprintf("disk.%d.type", i)).(string)
+		diskType := diff.Get(fmt.Sprintf("disk.%d.disk_type", i)).(string)
+		if typee == "SCRATCH" && diskType != "local-ssd" {
+			return fmt.Errorf("SCRATCH disks must have a disk_type of local-ssd. disk %d has disk_type %s", i, diskType)
+		}
+
+		if diskType == "local-ssd" && typee != "SCRATCH" {
+			return fmt.Errorf("disks with a disk_type of local-ssd must be SCRATCH disks. disk %d is a %s disk", i, typee)
+		}
+
+		diskSize := diff.Get(fmt.Sprintf("disk.%d.disk_size_gb", i)).(int)
+		if typee == "SCRATCH" && diskSize != 375 {
+			return fmt.Errorf("SCRATCH disks must be exactly 375GB, disk %d is %d", i, diskSize)
+		}
+	}
+
 	return nil
 }
 
@@ -781,9 +788,13 @@ func flattenDisk(disk *computeBeta.AttachedDisk, defaultProject string) (map[str
 	diskMap := make(map[string]interface{})
 	if disk.InitializeParams != nil {
 		if disk.InitializeParams.SourceImage != "" {
-			path, err := resolveImageRefToRelativeURI(defaultProject, disk.InitializeParams.SourceImage)
+			selfLink, err := resolvedImageSelfLink(defaultProject, disk.InitializeParams.SourceImage)
 			if err != nil {
-				return nil, errwrap.Wrapf("Error expanding source image input to relative URI: {{err}}", err)
+				return nil, errwrap.Wrapf("Error expanding source image input to self_link: {{err}}", err)
+			}
+			path, err := getRelativePath(selfLink)
+			if err != nil {
+				return nil, errwrap.Wrapf("Error getting relative path for source image: {{err}}", err)
 			}
 			diskMap["source_image"] = path
 		} else {
