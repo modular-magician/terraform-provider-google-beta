@@ -118,10 +118,6 @@ func resourceSqlDatabaseInstance() *schema.Resource {
 										// start_time is randomly assigned if not set
 										Computed: true,
 									},
-									"location": {
-										Type:     schema.TypeString,
-										Optional: true,
-									},
 								},
 							},
 						},
@@ -694,7 +690,6 @@ func expandBackupConfiguration(configured []interface{}) *sqladmin.BackupConfigu
 		BinaryLogEnabled: _backupConfiguration["binary_log_enabled"].(bool),
 		Enabled:          _backupConfiguration["enabled"].(bool),
 		StartTime:        _backupConfiguration["start_time"].(string),
-		Location:         _backupConfiguration["location"].(string),
 	}
 }
 
@@ -903,7 +898,6 @@ func flattenBackupConfiguration(backupConfiguration *sqladmin.BackupConfiguratio
 		"binary_log_enabled": backupConfiguration.BinaryLogEnabled,
 		"enabled":            backupConfiguration.Enabled,
 		"start_time":         backupConfiguration.StartTime,
-		"location":           backupConfiguration.Location,
 	}
 
 	return []map[string]interface{}{data}
