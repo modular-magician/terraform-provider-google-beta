@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+
 	sqladmin "google.golang.org/api/sqladmin/v1beta4"
 )
 
@@ -903,8 +904,7 @@ resource "google_sql_database_instance" "instance" {
 		availability_type = "REGIONAL"
 
 		backup_configuration {
-			enabled   = true
-			location  = "us"
+			enabled = true
 		}
 	}
 }
