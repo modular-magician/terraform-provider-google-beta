@@ -446,7 +446,6 @@ func Provider() terraform.ResourceProvider {
 			"google_project":                                  dataSourceGoogleProject(),
 			"google_projects":                                 dataSourceGoogleProjects(),
 			"google_project_organization_policy":              dataSourceGoogleProjectOrganizationPolicy(),
-			"google_project_services":                         dataSourceGoogleProjectServices(),
 			"google_service_account":                          dataSourceGoogleServiceAccount(),
 			"google_service_account_access_token":             dataSourceGoogleServiceAccountAccessToken(),
 			"google_service_account_key":                      dataSourceGoogleServiceAccountKey(),
@@ -473,9 +472,9 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
-// Generated resources: 99
+// Generated resources: 98
 // Generated IAM resources: 33
-// Total generated resources: 132
+// Total generated resources: 131
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -490,7 +489,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_app_engine_domain_mapping":                 resourceAppEngineDomainMapping(),
 			"google_app_engine_firewall_rule":                  resourceAppEngineFirewallRule(),
 			"google_app_engine_standard_app_version":           resourceAppEngineStandardAppVersion(),
-			"google_app_engine_application_url_dispatch_rules": resourceAppEngineApplicationUrlDispatchRules(),
 			"google_bigquery_dataset":                          resourceBigQueryDataset(),
 			"google_bigquery_data_transfer_config":             resourceBigqueryDataTransferConfig(),
 			"google_bigtable_app_profile":                      resourceBigtableAppProfile(),
@@ -725,7 +723,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_project_iam_custom_role":               resourceGoogleProjectIamCustomRole(),
 			"google_project_organization_policy":           resourceGoogleProjectOrganizationPolicy(),
 			"google_project_usage_export_bucket":           resourceProjectUsageBucket(),
-			"google_project_services":                      resourceGoogleProjectServices(),
 			"google_pubsub_subscription_iam_binding":       ResourceIamBinding(IamPubsubSubscriptionSchema, NewPubsubSubscriptionIamUpdater, PubsubSubscriptionIdParseFunc),
 			"google_pubsub_subscription_iam_member":        ResourceIamMember(IamPubsubSubscriptionSchema, NewPubsubSubscriptionIamUpdater, PubsubSubscriptionIdParseFunc),
 			"google_pubsub_subscription_iam_policy":        ResourceIamPolicy(IamPubsubSubscriptionSchema, NewPubsubSubscriptionIamUpdater, PubsubSubscriptionIdParseFunc),
