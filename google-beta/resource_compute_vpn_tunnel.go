@@ -410,7 +410,7 @@ func resourceComputeVpnTunnelCreate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/vpnTunnels/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -578,7 +578,6 @@ func resourceComputeVpnTunnelUpdate(d *schema.ResourceData, meta interface{}) er
 
 	if d.HasChange("labels") || d.HasChange("label_fingerprint") {
 		obj := make(map[string]interface{})
-
 		labelsProp, err := expandComputeVpnTunnelLabels(d.Get("labels"), d, config)
 		if err != nil {
 			return err
@@ -675,7 +674,7 @@ func resourceComputeVpnTunnelImport(d *schema.ResourceData, meta interface{}) ([
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/vpnTunnels/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
