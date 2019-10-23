@@ -122,13 +122,6 @@ func resourceDataflowJob() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
-
-			"ip_configuration": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: validation.StringInSlice([]string{"WORKER_IP_PUBLIC", "WORKER_IP_PRIVATE", ""}, false),
-			},
 		},
 	}
 }
@@ -161,7 +154,6 @@ func resourceDataflowJobCreate(d *schema.ResourceData, meta interface{}) error {
 		Subnetwork:           d.Get("subnetwork").(string),
 		TempLocation:         d.Get("temp_gcs_location").(string),
 		MachineType:          d.Get("machine_type").(string),
-		IpConfiguration:      d.Get("ip_configuration").(string),
 		AdditionalUserLabels: labels,
 		Zone:                 zone,
 	}

@@ -148,7 +148,7 @@ func resourceDataprocJob() *schema.Resource {
 						"max_failures_per_hour": {
 							Type:         schema.TypeInt,
 							Description:  "Maximum number of times per hour a driver may be restarted as a result of driver terminating with non-zero code before job is reported failed.",
-							Optional:     true,
+							Required:     true,
 							ForceNew:     true,
 							ValidateFunc: validation.IntAtMost(10),
 						},
@@ -368,7 +368,7 @@ var loggingConfig = &schema.Schema{
 			"driver_log_levels": {
 				Type:        schema.TypeMap,
 				Description: "Optional. The per-package log levels for the driver. This may include 'root' package name to configure rootLogger. Examples: 'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'.",
-				Optional:    true,
+				Required:    true,
 				ForceNew:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},

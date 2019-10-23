@@ -30,7 +30,7 @@ var sqlDatabaseAuthorizedNetWorkSchemaElem *schema.Resource = &schema.Resource{
 		},
 		"value": {
 			Type:     schema.TypeString,
-			Optional: true,
+			Required: true,
 		},
 	},
 }
@@ -110,17 +110,13 @@ func resourceSqlDatabaseInstance() *schema.Resource {
 									},
 									"enabled": {
 										Type:     schema.TypeBool,
-										Optional: true,
+										Required: true,
 									},
 									"start_time": {
 										Type:     schema.TypeString,
 										Optional: true,
 										// start_time is randomly assigned if not set
 										Computed: true,
-									},
-									"location": {
-										Type:     schema.TypeString,
-										Optional: true,
 									},
 								},
 							},
@@ -137,11 +133,11 @@ func resourceSqlDatabaseInstance() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"value": {
 										Type:     schema.TypeString,
-										Optional: true,
+										Required: true,
 									},
 									"name": {
 										Type:     schema.TypeString,
-										Optional: true,
+										Required: true,
 									},
 								},
 							},
@@ -185,7 +181,7 @@ func resourceSqlDatabaseInstance() *schema.Resource {
 									},
 									"require_ssl": {
 										Type:     schema.TypeBool,
-										Optional: true,
+										Required: true,
 									},
 									"private_network": {
 										Type:             schema.TypeString,
@@ -209,7 +205,7 @@ func resourceSqlDatabaseInstance() *schema.Resource {
 									},
 									"zone": {
 										Type:     schema.TypeString,
-										Optional: true,
+										Required: true,
 									},
 								},
 							},
@@ -232,7 +228,7 @@ func resourceSqlDatabaseInstance() *schema.Resource {
 									},
 									"update_track": {
 										Type:     schema.TypeString,
-										Optional: true,
+										Required: true,
 									},
 								},
 							},
@@ -355,7 +351,7 @@ func resourceSqlDatabaseInstance() *schema.Resource {
 						},
 						"dump_file_path": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 							ForceNew: true,
 						},
 						"failover_target": {
@@ -370,7 +366,7 @@ func resourceSqlDatabaseInstance() *schema.Resource {
 						},
 						"password": {
 							Type:      schema.TypeString,
-							Optional:  true,
+							Required:  true,
 							ForceNew:  true,
 							Sensitive: true,
 						},
@@ -381,7 +377,7 @@ func resourceSqlDatabaseInstance() *schema.Resource {
 						},
 						"username": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 							ForceNew: true,
 						},
 						"verify_server_certificate": {
@@ -694,7 +690,6 @@ func expandBackupConfiguration(configured []interface{}) *sqladmin.BackupConfigu
 		BinaryLogEnabled: _backupConfiguration["binary_log_enabled"].(bool),
 		Enabled:          _backupConfiguration["enabled"].(bool),
 		StartTime:        _backupConfiguration["start_time"].(string),
-		Location:         _backupConfiguration["location"].(string),
 	}
 }
 
@@ -903,7 +898,6 @@ func flattenBackupConfiguration(backupConfiguration *sqladmin.BackupConfiguratio
 		"binary_log_enabled": backupConfiguration.BinaryLogEnabled,
 		"enabled":            backupConfiguration.Enabled,
 		"start_time":         backupConfiguration.StartTime,
-		"location":           backupConfiguration.Location,
 	}
 
 	return []map[string]interface{}{data}

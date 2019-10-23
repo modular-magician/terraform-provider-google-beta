@@ -143,7 +143,7 @@ The following arguments are supported:
 The `content_matchers` block supports:
 
 * `content` -
-  (Optional)
+  (Required)
   String or regex content to match (max 1024 bytes)
 
 The `http_check` block supports:

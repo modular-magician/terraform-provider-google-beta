@@ -126,7 +126,7 @@ The following arguments are supported:
 The `snapshot_encryption_key` block supports:
 
 * `raw_key` -
-  (Optional)
+  (Required)
   Specifies a 256-bit customer-supplied encryption key, encoded in
   RFC 4648 base64 to either encrypt or decrypt this resource.
 

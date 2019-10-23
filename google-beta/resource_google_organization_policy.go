@@ -87,7 +87,7 @@ var schemaOrganizationPolicy = map[string]*schema.Schema{
 				},
 				"inherit_from_parent": {
 					Type:     schema.TypeBool,
-					Optional: true,
+					Required: true,
 				},
 			},
 		},
