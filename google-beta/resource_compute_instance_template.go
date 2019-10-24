@@ -3,11 +3,14 @@ package google
 import (
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/hashicorp/errwrap"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+
 	computeBeta "google.golang.org/api/compute/v0.beta"
 )
 
@@ -17,11 +20,14 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 		Read:   resourceComputeInstanceTemplateRead,
 		Delete: resourceComputeInstanceTemplateDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: resourceComputeInstanceTemplateImportState,
 		},
 		SchemaVersion: 1,
-		CustomizeDiff: resourceComputeInstanceTemplateSourceImageCustomizeDiff,
-		MigrateState:  resourceComputeInstanceTemplateMigrateState,
+		CustomizeDiff: customdiff.All(
+			resourceComputeInstanceTemplateSourceImageCustomizeDiff,
+			resourceComputeInstanceTemplateScratchDiskCustomizeDiff,
+		),
+		MigrateState: resourceComputeInstanceTemplateMigrateState,
 
 		// A compute instance template is more or less a subset of a compute
 		// instance. Please attempt to maintain consistency with the
@@ -168,13 +174,6 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 				ForceNew: true,
 			},
 
-			"automatic_restart": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				ForceNew: true,
-				Removed:  "Use 'scheduling.automatic_restart' instead.",
-			},
-
 			"can_ip_forward": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -264,11 +263,6 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 										Computed:     true,
 										ValidateFunc: validation.StringInSlice([]string{"PREMIUM", "STANDARD"}, false),
 									},
-									"assigned_nat_ip": {
-										Type:     schema.TypeString,
-										Computed: true,
-										Removed:  "Use network_interface.access_config.nat_ip instead.",
-									},
 								},
 							},
 						},
@@ -293,22 +287,8 @@ func resourceComputeInstanceTemplate() *schema.Resource {
 								},
 							},
 						},
-
-						"address": {
-							Type:     schema.TypeString,
-							Computed: true,
-							Optional: true,
-							Removed:  "Please use network_ip",
-						},
 					},
 				},
-			},
-
-			"on_host_maintenance": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Removed:  "Use 'scheduling.on_host_maintenance' instead.",
 			},
 
 			"project": {
@@ -514,7 +494,7 @@ func resourceComputeInstanceTemplateSourceImageCustomizeDiff(diff *schema.Resour
 			if err != nil {
 				return err
 			}
-			oldResolved, err = resolveImageRefToRelativeURI(project, oldResolved)
+			oldResolved, err = resolvedImageSelfLink(project, oldResolved)
 			if err != nil {
 				return err
 			}
@@ -522,7 +502,7 @@ func resourceComputeInstanceTemplateSourceImageCustomizeDiff(diff *schema.Resour
 			if err != nil {
 				return err
 			}
-			newResolved, err = resolveImageRefToRelativeURI(project, newResolved)
+			newResolved, err = resolvedImageSelfLink(project, newResolved)
 			if err != nil {
 				return err
 			}
@@ -539,6 +519,34 @@ func resourceComputeInstanceTemplateSourceImageCustomizeDiff(diff *schema.Resour
 			}
 		}
 	}
+	return nil
+}
+
+func resourceComputeInstanceTemplateScratchDiskCustomizeDiff(diff *schema.ResourceDiff, meta interface{}) error {
+	// separate func to allow unit testing
+	return resourceComputeInstanceTemplateScratchDiskCustomizeDiffFunc(diff)
+}
+
+func resourceComputeInstanceTemplateScratchDiskCustomizeDiffFunc(diff TerraformResourceDiff) error {
+	numDisks := diff.Get("disk.#").(int)
+	for i := 0; i < numDisks; i++ {
+		// misspelled on purpose, type is a special symbol
+		typee := diff.Get(fmt.Sprintf("disk.%d.type", i)).(string)
+		diskType := diff.Get(fmt.Sprintf("disk.%d.disk_type", i)).(string)
+		if typee == "SCRATCH" && diskType != "local-ssd" {
+			return fmt.Errorf("SCRATCH disks must have a disk_type of local-ssd. disk %d has disk_type %s", i, diskType)
+		}
+
+		if diskType == "local-ssd" && typee != "SCRATCH" {
+			return fmt.Errorf("disks with a disk_type of local-ssd must be SCRATCH disks. disk %d is a %s disk", i, typee)
+		}
+
+		diskSize := diff.Get(fmt.Sprintf("disk.%d.disk_size_gb", i)).(int)
+		if typee == "SCRATCH" && diskSize != 375 {
+			return fmt.Errorf("SCRATCH disks must be exactly 375GB, disk %d is %d", i, diskSize)
+		}
+	}
+
 	return nil
 }
 
@@ -730,7 +738,7 @@ func resourceComputeInstanceTemplateCreate(d *schema.ResourceData, meta interfac
 	}
 
 	// Store the ID now
-	d.SetId(instanceTemplate.Name)
+	d.SetId(fmt.Sprintf("projects/%s/global/instanceTemplates/%s", project, instanceTemplate.Name))
 
 	err = computeSharedOperationWait(config.clientCompute, op, project, "Creating Instance Template")
 	if err != nil {
@@ -781,9 +789,13 @@ func flattenDisk(disk *computeBeta.AttachedDisk, defaultProject string) (map[str
 	diskMap := make(map[string]interface{})
 	if disk.InitializeParams != nil {
 		if disk.InitializeParams.SourceImage != "" {
-			path, err := resolveImageRefToRelativeURI(defaultProject, disk.InitializeParams.SourceImage)
+			selfLink, err := resolvedImageSelfLink(defaultProject, disk.InitializeParams.SourceImage)
 			if err != nil {
-				return nil, errwrap.Wrapf("Error expanding source image input to relative URI: {{err}}", err)
+				return nil, errwrap.Wrapf("Error expanding source image input to self_link: {{err}}", err)
+			}
+			path, err := getRelativePath(selfLink)
+			if err != nil {
+				return nil, errwrap.Wrapf("Error getting relative path for source image: {{err}}", err)
 			}
 			diskMap["source_image"] = path
 		} else {
@@ -952,7 +964,8 @@ func resourceComputeInstanceTemplateRead(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	instanceTemplate, err := config.clientComputeBeta.InstanceTemplates.Get(project, d.Id()).Do()
+	splits := strings.Split(d.Id(), "/")
+	instanceTemplate, err := config.clientComputeBeta.InstanceTemplates.Get(project, splits[len(splits)-1]).Do()
 	if err != nil {
 		return handleNotFoundError(err, d, fmt.Sprintf("Instance Template %q", d.Get("name").(string)))
 	}
@@ -1080,8 +1093,9 @@ func resourceComputeInstanceTemplateDelete(d *schema.ResourceData, meta interfac
 		return err
 	}
 
+	splits := strings.Split(d.Id(), "/")
 	op, err := config.clientCompute.InstanceTemplates.Delete(
-		project, d.Id()).Do()
+		project, splits[len(splits)-1]).Do()
 	if err != nil {
 		return fmt.Errorf("Error deleting instance template: %s", err)
 	}
@@ -1117,4 +1131,20 @@ func expandResourceComputeInstanceTemplateScheduling(d *schema.ResourceData, met
 		expanded.OnHostMaintenance = "TERMINATE"
 	}
 	return expanded, nil
+}
+
+func resourceComputeInstanceTemplateImportState(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	config := meta.(*Config)
+	if err := parseImportId([]string{"projects/(?P<project>[^/]+)/global/instanceTemplates/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
+		return nil, err
+	}
+
+	// Replace import id for the resource id
+	id, err := replaceVars(d, config, "projects/{{project}}/global/instanceTemplates/{{name}}")
+	if err != nil {
+		return nil, fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
+
+	return []*schema.ResourceData{d}, nil
 }
