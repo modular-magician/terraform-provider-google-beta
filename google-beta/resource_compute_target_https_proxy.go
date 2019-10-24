@@ -157,7 +157,7 @@ func resourceComputeTargetHttpsProxyCreate(d *schema.ResourceData, meta interfac
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/targetHttpsProxies/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -248,7 +248,6 @@ func resourceComputeTargetHttpsProxyUpdate(d *schema.ResourceData, meta interfac
 
 	if d.HasChange("quic_override") {
 		obj := make(map[string]interface{})
-
 		quicOverrideProp, err := expandComputeTargetHttpsProxyQuicOverride(d.Get("quic_override"), d, config)
 		if err != nil {
 			return err
@@ -283,7 +282,6 @@ func resourceComputeTargetHttpsProxyUpdate(d *schema.ResourceData, meta interfac
 	}
 	if d.HasChange("ssl_certificates") {
 		obj := make(map[string]interface{})
-
 		sslCertificatesProp, err := expandComputeTargetHttpsProxySslCertificates(d.Get("ssl_certificates"), d, config)
 		if err != nil {
 			return err
@@ -318,7 +316,6 @@ func resourceComputeTargetHttpsProxyUpdate(d *schema.ResourceData, meta interfac
 	}
 	if d.HasChange("ssl_policy") {
 		obj := make(map[string]interface{})
-
 		sslPolicyProp, err := expandComputeTargetHttpsProxySslPolicy(d.Get("ssl_policy"), d, config)
 		if err != nil {
 			return err
@@ -353,7 +350,6 @@ func resourceComputeTargetHttpsProxyUpdate(d *schema.ResourceData, meta interfac
 	}
 	if d.HasChange("url_map") {
 		obj := make(map[string]interface{})
-
 		urlMapProp, err := expandComputeTargetHttpsProxyUrlMap(d.Get("url_map"), d, config)
 		if err != nil {
 			return err
@@ -442,7 +438,7 @@ func resourceComputeTargetHttpsProxyImport(d *schema.ResourceData, meta interfac
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/targetHttpsProxies/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -514,9 +510,6 @@ func expandComputeTargetHttpsProxySslCertificates(v interface{}, d TerraformReso
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
-		if raw == nil {
-			return nil, fmt.Errorf("Invalid value for ssl_certificates: nil")
-		}
 		f, err := parseGlobalFieldValue("sslCertificates", raw.(string), "project", d, config, true)
 		if err != nil {
 			return nil, fmt.Errorf("Invalid value for ssl_certificates: %s", err)

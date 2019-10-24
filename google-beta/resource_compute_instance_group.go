@@ -49,7 +49,7 @@ func resourceComputeInstanceGroup() *schema.Resource {
 				Optional: true,
 				Computed: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-				Set:      selfLinkRelativePathHash,
+				Set:      schema.HashString,
 			},
 
 			"named_port": {
@@ -71,11 +71,10 @@ func resourceComputeInstanceGroup() *schema.Resource {
 			},
 
 			"network": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				Computed:         true,
-				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				ForceNew:         true,
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
 			},
 
 			"project": {
@@ -156,7 +155,7 @@ func resourceComputeInstanceGroupCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// It probably maybe worked, so store the ID now
-	d.SetId(fmt.Sprintf("%s/%s", zone, name))
+	d.SetId(fmt.Sprintf("projects/%s/zones/%s/instanceGroups/%s", project, zone, name))
 
 	// Wait for the operation to complete
 	err = computeOperationWait(config.clientCompute, op, project, "Creating InstanceGroup")
@@ -379,18 +378,19 @@ func resourceComputeInstanceGroupDelete(d *schema.ResourceData, meta interface{}
 }
 
 func resourceComputeInstanceGroupImportState(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	parts := strings.Split(d.Id(), "/")
-	if len(parts) == 2 {
-		d.Set("zone", parts[0])
-		d.Set("name", parts[1])
-	} else if len(parts) == 3 {
-		d.Set("project", parts[0])
-		d.Set("zone", parts[1])
-		d.Set("name", parts[2])
-		d.SetId(parts[1] + "/" + parts[2])
-	} else {
-		return nil, fmt.Errorf("Invalid compute instance group specifier. Expecting {zone}/{name} or {project}/{zone}/{name}")
+	config := meta.(*Config)
+	if err := parseImportId([]string{
+		"projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/instanceGroups/(?P<name>[^/]+)",
+		"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<name>[^/]+)",
+		"(?P<zone>[^/]+)/(?P<name>[^/]+)",
+	}, d, config); err != nil {
+		return nil, err
 	}
+	id, err := replaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instanceGroups/{{name}}")
+	if err != nil {
+		return nil, err
+	}
+	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
 }

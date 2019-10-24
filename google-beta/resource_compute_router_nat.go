@@ -805,9 +805,6 @@ func expandComputeRouterNatNatIps(v interface{}, d TerraformResourceData, config
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
-		if raw == nil {
-			return nil, fmt.Errorf("Invalid value for nat_ips: nil")
-		}
 		f, err := parseRegionalFieldValue("addresses", raw.(string), "project", "region", "zone", d, config, true)
 		if err != nil {
 			return nil, fmt.Errorf("Invalid value for nat_ips: %s", err)
@@ -822,9 +819,6 @@ func expandComputeRouterNatDrainNatIps(v interface{}, d TerraformResourceData, c
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
-		if raw == nil {
-			return nil, fmt.Errorf("Invalid value for drain_nat_ips: nil")
-		}
 		f, err := parseRegionalFieldValue("addresses", raw.(string), "project", "region", "zone", d, config, true)
 		if err != nil {
 			return nil, fmt.Errorf("Invalid value for drain_nat_ips: %s", err)
