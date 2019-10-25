@@ -108,7 +108,6 @@ $ terraform import google_sql_database.default projects/{{project}}/instances/{{
 $ terraform import google_sql_database.default instances/{{instance}}/databases/{{name}}
 $ terraform import google_sql_database.default {{project}}/{{instance}}/{{name}}
 $ terraform import google_sql_database.default {{instance}}/{{name}}
-$ terraform import google_sql_database.default {{instance}}:{{name}}
 $ terraform import google_sql_database.default {{name}}
 ```
 
