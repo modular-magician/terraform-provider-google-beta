@@ -53,18 +53,14 @@ func resourceContainerNodePool() *schema.Resource {
 					ForceNew: true,
 				},
 				"zone": {
-					Type:       schema.TypeString,
-					Optional:   true,
-					Computed:   true,
-					Deprecated: "use location instead",
-					ForceNew:   true,
+					Type:     schema.TypeString,
+					Optional: true,
+					Removed:  "use location instead",
 				},
 				"region": {
-					Type:       schema.TypeString,
-					Optional:   true,
-					Computed:   true,
-					Deprecated: "use location instead",
-					ForceNew:   true,
+					Type:     schema.TypeString,
+					Optional: true,
+					Removed:  "use location instead",
 				},
 				"location": {
 					Type:     schema.TypeString,
@@ -321,12 +317,6 @@ func resourceContainerNodePoolRead(d *schema.ResourceData, meta interface{}) err
 		d.Set(k, v)
 	}
 
-	if isZone(nodePoolInfo.location) {
-		d.Set("zone", nodePoolInfo.location)
-	} else {
-		d.Set("region", nodePoolInfo.location)
-	}
-
 	d.Set("location", nodePoolInfo.location)
 	d.Set("project", nodePoolInfo.project)
 
@@ -427,11 +417,6 @@ func resourceContainerNodePoolStateImporter(d *schema.ResourceData, meta interfa
 	switch len(parts) {
 	case 3:
 		location := parts[0]
-		if isZone(location) {
-			d.Set("zone", location)
-		} else {
-			d.Set("region", location)
-		}
 
 		d.Set("location", location)
 		d.Set("cluster", parts[1])
@@ -440,11 +425,6 @@ func resourceContainerNodePoolStateImporter(d *schema.ResourceData, meta interfa
 		d.Set("project", parts[0])
 
 		location := parts[1]
-		if isZone(location) {
-			d.Set("zone", location)
-		} else {
-			d.Set("region", location)
-		}
 
 		d.Set("location", location)
 		d.Set("cluster", parts[2])
