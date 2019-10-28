@@ -108,6 +108,7 @@ This resource provides the following
 FirewallRule can be imported using any of these accepted formats:
 
 ```
+$ terraform import google_app_engine_firewall_rule.default apps/{{project}}/firewall/ingressRules/{{priority}}
 $ terraform import google_app_engine_firewall_rule.default {{project}}/{{priority}}
 $ terraform import google_app_engine_firewall_rule.default {{priority}}
 ```

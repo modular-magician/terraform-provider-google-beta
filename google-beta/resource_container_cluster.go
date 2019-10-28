@@ -48,14 +48,6 @@ var (
 	ipAllocationRangeFields     = []string{"ip_allocation_policy.0.cluster_secondary_range_name", "ip_allocation_policy.0.services_secondary_range_name"}
 )
 
-func validateRFC3339Date(v interface{}, k string) (warnings []string, errors []error) {
-	_, err := time.Parse(time.RFC3339, v.(string))
-	if err != nil {
-		errors = append(errors, err)
-	}
-	return
-}
-
 func resourceContainerCluster() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceContainerClusterCreate,
@@ -111,29 +103,22 @@ func resourceContainerCluster() *schema.Resource {
 			},
 
 			"location": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				Computed:      true,
-				ForceNew:      true,
-				ConflictsWith: []string{"zone", "region"},
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
 			},
 
 			"region": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				Computed:      true,
-				ForceNew:      true,
-				Deprecated:    "Use location instead",
-				ConflictsWith: []string{"zone", "location"},
+				Type:     schema.TypeString,
+				Optional: true,
+				Removed:  "Use location instead",
 			},
 
 			"zone": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				Computed:      true,
-				ForceNew:      true,
-				Deprecated:    "Use location instead",
-				ConflictsWith: []string{"region", "location"},
+				Type:     schema.TypeString,
+				Optional: true,
+				Removed:  "Use location instead",
 			},
 
 			"node_locations": {
@@ -144,11 +129,10 @@ func resourceContainerCluster() *schema.Resource {
 			},
 
 			"additional_zones": {
-				Type:       schema.TypeSet,
-				Optional:   true,
-				Computed:   true,
-				Deprecated: "Use node_locations instead",
-				Elem:       &schema.Schema{Type: schema.TypeString},
+				Type:     schema.TypeSet,
+				Optional: true,
+				Removed:  "Use node_locations instead",
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 
 			"addons_config": {
@@ -367,7 +351,7 @@ func resourceContainerCluster() *schema.Resource {
 			"logging_service": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Computed:     true,
+				Default:      "logging.googleapis.com/kubernetes",
 				ValidateFunc: validation.StringInSlice([]string{"logging.googleapis.com", "logging.googleapis.com/kubernetes", "none"}, false),
 			},
 
@@ -378,10 +362,8 @@ func resourceContainerCluster() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"daily_maintenance_window": {
-							Type: schema.TypeList,
-
-							Optional: true,
-
+							Type:     schema.TypeList,
+							Required: true,
 							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -394,30 +376,6 @@ func resourceContainerCluster() *schema.Resource {
 									"duration": {
 										Type:     schema.TypeString,
 										Computed: true,
-									},
-								},
-							},
-						},
-						"recurring_window": {
-							Type:          schema.TypeList,
-							Optional:      true,
-							MaxItems:      1,
-							ConflictsWith: []string{"maintenance_policy.0.daily_maintenance_window"},
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"start_time": {
-										Type:         schema.TypeString,
-										Required:     true,
-										ValidateFunc: validateRFC3339Date,
-									},
-									"end_time": {
-										Type:         schema.TypeString,
-										Required:     true,
-										ValidateFunc: validateRFC3339Date,
-									},
-									"recurrence": {
-										Type:     schema.TypeString,
-										Required: true,
 									},
 								},
 							},
@@ -499,7 +457,7 @@ func resourceContainerCluster() *schema.Resource {
 			"monitoring_service": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Computed:     true,
+				Default:      "monitoring.googleapis.com/kubernetes",
 				ValidateFunc: validation.StringInSlice([]string{"monitoring.googleapis.com", "monitoring.googleapis.com/kubernetes", "none"}, false),
 			},
 
@@ -948,20 +906,12 @@ func resourceContainerClusterCreate(d *schema.ResourceData, meta interface{}) er
 		return err
 	}
 
-	// When parsing a subnetwork by name, we expect region or zone to be set.
-	// Users may have set location to either value, so set that value.
-	if isZone(location) {
-		d.Set("zone", location)
-	} else {
-		d.Set("region", location)
-	}
-
 	clusterName := d.Get("name").(string)
 
 	cluster := &containerBeta.Cluster{
 		Name:                           clusterName,
 		InitialNodeCount:               int64(d.Get("initial_node_count").(int)),
-		MaintenancePolicy:              expandMaintenancePolicy(d, meta),
+		MaintenancePolicy:              expandMaintenancePolicy(d.Get("maintenance_policy")),
 		MasterAuthorizedNetworksConfig: expandMasterAuthorizedNetworksConfig(d.Get("master_authorized_networks_config")),
 		InitialClusterVersion:          d.Get("min_master_version").(string),
 		ClusterIpv4Cidr:                d.Get("cluster_ipv4_cidr").(string),
@@ -1013,20 +963,7 @@ func resourceContainerClusterCreate(d *schema.ResourceData, meta interface{}) er
 	if v, ok := d.GetOk("node_locations"); ok {
 		locationsSet := v.(*schema.Set)
 		if locationsSet.Contains(location) {
-			return fmt.Errorf("when using a multi-zonal cluster, additional_zones should not contain the original 'zone'")
-		}
-
-		// GKE requires a full list of node locations
-		// but when using a multi-zonal cluster our schema only asks for the
-		// additional zones, so append the cluster location if it's a zone
-		if isZone(location) {
-			locationsSet.Add(location)
-		}
-		cluster.Locations = convertStringSet(locationsSet)
-	} else if v, ok := d.GetOk("additional_zones"); ok {
-		locationsSet := v.(*schema.Set)
-		if locationsSet.Contains(location) {
-			return fmt.Errorf("when using a multi-zonal cluster, additional_zones should not contain the original 'zone'")
+			return fmt.Errorf("when using a multi-zonal cluster, node_locations should not contain the original 'zone'")
 		}
 
 		// GKE requires a full list of node locations
@@ -1116,7 +1053,7 @@ func resourceContainerClusterCreate(d *schema.ResourceData, meta interface{}) er
 		return err
 	}
 
-	d.SetId(clusterName)
+	d.SetId(containerClusterFullName(project, location, clusterName))
 
 	// Wait until it's created
 	timeoutInMinutes := int(d.Timeout(schema.TimeoutCreate).Minutes())
@@ -1196,16 +1133,10 @@ func resourceContainerClusterRead(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	d.Set("location", cluster.Location)
-	if isZone(cluster.Location) {
-		d.Set("zone", cluster.Location)
-	} else {
-		d.Set("region", cluster.Location)
-	}
 
 	locations := schema.NewSet(schema.HashString, convertStringArrToInterface(cluster.Locations))
 	locations.Remove(cluster.Zone) // Remove the original zone since we only store additional zones
 	d.Set("node_locations", locations)
-	d.Set("additional_zones", locations)
 
 	d.Set("endpoint", cluster.Endpoint)
 	if err := d.Set("maintenance_policy", flattenMaintenancePolicy(cluster.MaintenancePolicy)); err != nil {
@@ -1472,8 +1403,15 @@ func resourceContainerClusterUpdate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	if d.HasChange("maintenance_policy") {
-		req := &containerBeta.SetMaintenancePolicyRequest{
-			MaintenancePolicy: expandMaintenancePolicy(d, meta),
+		var req *containerBeta.SetMaintenancePolicyRequest
+		if mp, ok := d.GetOk("maintenance_policy"); ok {
+			req = &containerBeta.SetMaintenancePolicyRequest{
+				MaintenancePolicy: expandMaintenancePolicy(mp),
+			}
+		} else {
+			req = &containerBeta.SetMaintenancePolicyRequest{
+				NullFields: []string{"MaintenancePolicy"},
+			}
 		}
 
 		updateF := func() error {
@@ -1498,57 +1436,7 @@ func resourceContainerClusterUpdate(d *schema.ResourceData, meta interface{}) er
 		d.SetPartial("maintenance_policy")
 	}
 
-	// we can only ever see a change to one of additional_zones and node_locations; because
-	// thy conflict with each other and are each computed, Terraform will suppress the diff
-	// on one of them even when migrating from one to the other.
-	if d.HasChange("additional_zones") {
-		azSetOldI, azSetNewI := d.GetChange("additional_zones")
-		azSetNew := azSetNewI.(*schema.Set)
-		azSetOld := azSetOldI.(*schema.Set)
-		if azSetNew.Contains(location) {
-			return fmt.Errorf("additional_zones should not contain the original 'zone'")
-		}
-		// Since we can't add & remove zones in the same request, first add all the
-		// zones, then remove the ones we aren't using anymore.
-		azSet := azSetOld.Union(azSetNew)
-
-		if isZone(location) {
-			azSet.Add(location)
-		}
-
-		req := &containerBeta.UpdateClusterRequest{
-			Update: &containerBeta.ClusterUpdate{
-				DesiredLocations: convertStringSet(azSet),
-			},
-		}
-
-		updateF := updateFunc(req, "updating GKE cluster node locations")
-		// Call update serially.
-		if err := lockedCall(lockKey, updateF); err != nil {
-			return err
-		}
-
-		if isZone(location) {
-			azSetNew.Add(location)
-		}
-		if !azSet.Equal(azSetNew) {
-			req = &containerBeta.UpdateClusterRequest{
-				Update: &containerBeta.ClusterUpdate{
-					DesiredLocations: convertStringSet(azSetNew),
-				},
-			}
-
-			updateF := updateFunc(req, "updating GKE cluster node locations")
-			// Call update serially.
-			if err := lockedCall(lockKey, updateF); err != nil {
-				return err
-			}
-		}
-
-		log.Printf("[INFO] GKE cluster %s node locations have been updated to %v", d.Id(), azSet.List())
-
-		d.SetPartial("additional_zones")
-	} else if d.HasChange("node_locations") {
+	if d.HasChange("node_locations") {
 		azSetOldI, azSetNewI := d.GetChange("node_locations")
 		azSetNew := azSetNewI.(*schema.Set)
 		azSetOld := azSetOldI.(*schema.Set)
@@ -2199,63 +2087,22 @@ func expandIPAllocationPolicy(configured interface{}) *containerBeta.IPAllocatio
 	}
 }
 
-func expandMaintenancePolicy(d *schema.ResourceData, meta interface{}) *containerBeta.MaintenancePolicy {
-	config := meta.(*Config)
-	// We have to perform a full Get() as part of this, to get the fingerprint.  We can't do this
-	// at any other time, because the fingerprint update might happen between plan and apply.
-	// We can omit error checks, since to have gotten this far, a project is definitely configured.
-	project, _ := getProject(d, config)
-	location, _ := getLocation(d, config)
-	clusterName := d.Get("name").(string)
-	name := containerClusterFullName(project, location, clusterName)
-	cluster, _ := config.clientContainerBeta.Projects.Locations.Clusters.Get(name).Do()
-	resourceVersion := ""
-	// If the cluster doesn't exist or if there is a read error of any kind, we will pass in an empty
-	// resourceVersion.  If there happens to be a change to maintenance policy, we will fail at that
-	// point.  This is a compromise between code cleanliness and a slightly worse user experience in
-	// an unlikely error case - we choose code cleanliness.
-	if cluster != nil && cluster.MaintenancePolicy != nil {
-		resourceVersion = cluster.MaintenancePolicy.ResourceVersion
-	}
-
-	configured := d.Get("maintenance_policy")
+func expandMaintenancePolicy(configured interface{}) *containerBeta.MaintenancePolicy {
 	l := configured.([]interface{})
 	if len(l) == 0 || l[0] == nil {
-		return &containerBeta.MaintenancePolicy{
-			ResourceVersion: resourceVersion,
-		}
+		return nil
 	}
+
 	maintenancePolicy := l[0].(map[string]interface{})
-
-	if dailyMaintenanceWindow, ok := maintenancePolicy["daily_maintenance_window"]; ok && len(dailyMaintenanceWindow.([]interface{})) > 0 {
-		dmw := dailyMaintenanceWindow.([]interface{})[0].(map[string]interface{})
-		startTime := dmw["start_time"].(string)
-		return &containerBeta.MaintenancePolicy{
-			Window: &containerBeta.MaintenanceWindow{
-				DailyMaintenanceWindow: &containerBeta.DailyMaintenanceWindow{
-					StartTime: startTime,
-				},
+	dailyMaintenanceWindow := maintenancePolicy["daily_maintenance_window"].([]interface{})[0].(map[string]interface{})
+	startTime := dailyMaintenanceWindow["start_time"].(string)
+	return &containerBeta.MaintenancePolicy{
+		Window: &containerBeta.MaintenanceWindow{
+			DailyMaintenanceWindow: &containerBeta.DailyMaintenanceWindow{
+				StartTime: startTime,
 			},
-			ResourceVersion: resourceVersion,
-		}
+		},
 	}
-	if recurringWindow, ok := maintenancePolicy["recurring_window"]; ok && len(recurringWindow.([]interface{})) > 0 {
-		rw := recurringWindow.([]interface{})[0].(map[string]interface{})
-		return &containerBeta.MaintenancePolicy{
-			Window: &containerBeta.MaintenanceWindow{
-				RecurringWindow: &containerBeta.RecurringTimeWindow{
-					Window: &containerBeta.TimeWindow{
-						StartTime: rw["start_time"].(string),
-						EndTime:   rw["end_time"].(string),
-					},
-					Recurrence: rw["recurrence"].(string),
-				},
-			},
-			ResourceVersion: resourceVersion,
-		}
-	}
-
-	return nil
 }
 
 func expandClusterAutoscaling(configured interface{}, d *schema.ResourceData) *containerBeta.ClusterAutoscaling {
@@ -2666,36 +2513,19 @@ func flattenIPAllocationPolicy(c *containerBeta.Cluster, d *schema.ResourceData,
 }
 
 func flattenMaintenancePolicy(mp *containerBeta.MaintenancePolicy) []map[string]interface{} {
-	if mp == nil || mp.Window == nil {
+	if mp == nil || mp.Window == nil || mp.Window.DailyMaintenanceWindow == nil {
 		return nil
 	}
-	if mp.Window.DailyMaintenanceWindow != nil {
-		return []map[string]interface{}{
-			{
-				"daily_maintenance_window": []map[string]interface{}{
-					{
-						"start_time": mp.Window.DailyMaintenanceWindow.StartTime,
-						"duration":   mp.Window.DailyMaintenanceWindow.Duration,
-					},
+	return []map[string]interface{}{
+		{
+			"daily_maintenance_window": []map[string]interface{}{
+				{
+					"start_time": mp.Window.DailyMaintenanceWindow.StartTime,
+					"duration":   mp.Window.DailyMaintenanceWindow.Duration,
 				},
 			},
-		}
+		},
 	}
-	if mp.Window.RecurringWindow != nil {
-		return []map[string]interface{}{
-			{
-				"recurring_window": []map[string]interface{}{
-					{
-						"start_time": mp.Window.RecurringWindow.Window.StartTime,
-						"end_time":   mp.Window.RecurringWindow.Window.EndTime,
-						"recurrence": mp.Window.RecurringWindow.Recurrence,
-					},
-				},
-			},
-		}
-	}
-
-	return nil
 }
 
 func flattenMasterAuth(ma *containerBeta.MasterAuth) []map[string]interface{} {
@@ -2803,41 +2633,27 @@ func flattenDatabaseEncryption(c *containerBeta.DatabaseEncryption) []map[string
 func resourceContainerClusterStateImporter(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 
-	parts := strings.Split(d.Id(), "/")
-	var project, location, clusterName string
-	switch len(parts) {
-	case 2:
-		location = parts[0]
-		clusterName = parts[1]
-	case 3:
-		project = parts[0]
-		location = parts[1]
-		clusterName = parts[2]
-	default:
-		return nil, fmt.Errorf("Invalid container cluster specifier. Expecting {location}/{name} or {project}/{location}/{name}")
+	if err := parseImportId([]string{"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/clusters/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)", "(?P<location>[^/]+)/(?P<name>[^/]+)"}, d, config); err != nil {
+		return nil, err
+	}
+	project, err := getProject(d, config)
+	if err != nil {
+		return nil, err
 	}
 
-	if len(project) == 0 {
-		var err error
-		project, err = getProject(d, config)
-		if err != nil {
-			return nil, err
-		}
+	location, err := getLocation(d, config)
+	if err != nil {
+		return nil, err
 	}
-	d.Set("project", project)
+
+	clusterName := d.Get("name").(string)
 
 	d.Set("location", location)
-	if isZone(location) {
-		d.Set("zone", location)
-	} else {
-		d.Set("region", location)
-	}
-
-	d.Set("name", clusterName)
-	d.SetId(clusterName)
 	if err := waitForContainerClusterReady(config, project, location, clusterName, d.Timeout(schema.TimeoutCreate)); err != nil {
 		return nil, err
 	}
+
+	d.SetId(containerClusterFullName(project, location, clusterName))
 
 	return []*schema.ResourceData{d}, nil
 }
