@@ -138,6 +138,8 @@ This resource provides the following
 DomainMapping can be imported using any of these accepted formats:
 
 ```
+$ terraform import google_app_engine_domain_mapping.default apps/{{project}}/domainMappings/{{domain_name}}
+$ terraform import google_app_engine_domain_mapping.default {{project}}/{{domain_name}}
 $ terraform import google_app_engine_domain_mapping.default {{domain_name}}
 ```
 
