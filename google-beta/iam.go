@@ -15,7 +15,6 @@ import (
 )
 
 const maxBackoffSeconds = 30
-const iamPolicyVersion = 3
 
 // These types are implemented per GCP resource type and specify how to do per-resource IAM operations.
 // They are used in the generic Terraform IAM resource definitions
@@ -153,53 +152,26 @@ func iamPolicyReadModifyWrite(updater ResourceIamUpdater, modify iamPolicyModify
 	return nil
 }
 
-// Flattens a list of Bindings so each role+condition has a single Binding with combined members
+// Flattens AuditConfigs so each role has a single Binding with combined members
 func mergeBindings(bindings []*cloudresourcemanager.Binding) []*cloudresourcemanager.Binding {
 	bm := createIamBindingsMap(bindings)
 	return listFromIamBindingMap(bm)
 }
 
-type conditionKey struct {
-	Description string
-	Expression  string
-	Title       string
-}
-
-func conditionKeyFromCondition(condition *cloudresourcemanager.Expr) conditionKey {
-	if condition == nil {
-		return conditionKey{}
-	}
-	return conditionKey{condition.Description, condition.Expression, condition.Title}
-}
-
-func (k conditionKey) Empty() bool {
-	return k == conditionKey{}
-}
-
-func (k conditionKey) String() string {
-	return fmt.Sprintf("%s/%s/%s", k.Title, k.Description, k.Expression)
-}
-
-type iamBindingKey struct {
-	Role      string
-	Condition conditionKey
-}
-
-// Removes a single role+condition binding from a list of Bindings
-func filterBindingsWithRoleAndCondition(b []*cloudresourcemanager.Binding, role string, condition *cloudresourcemanager.Expr) []*cloudresourcemanager.Binding {
+// Flattens Bindings so each role has a single Binding with combined members
+func removeAllBindingsWithRole(b []*cloudresourcemanager.Binding, role string) []*cloudresourcemanager.Binding {
 	bMap := createIamBindingsMap(b)
-	key := iamBindingKey{role, conditionKeyFromCondition(condition)}
-	delete(bMap, key)
+	delete(bMap, role)
 	return listFromIamBindingMap(bMap)
 }
 
-// Removes given role+condition/bound-member pairs from the given Bindings (i.e subtraction).
+// Removes given role/bound-member pairs from the given Bindings (i.e subtraction).
 func subtractFromBindings(bindings []*cloudresourcemanager.Binding, toRemove ...*cloudresourcemanager.Binding) []*cloudresourcemanager.Binding {
 	currMap := createIamBindingsMap(bindings)
 	toRemoveMap := createIamBindingsMap(toRemove)
 
-	for key, removeSet := range toRemoveMap {
-		members, ok := currMap[key]
+	for role, removeSet := range toRemoveMap {
+		members, ok := currMap[role]
 		if !ok {
 			continue
 		}
@@ -207,9 +179,9 @@ func subtractFromBindings(bindings []*cloudresourcemanager.Binding, toRemove ...
 		for m := range removeSet {
 			delete(members, m)
 		}
-		// Remove role+condition from bindings
+		// Remove role from bindings
 		if len(members) == 0 {
-			delete(currMap, key)
+			delete(currMap, role)
 		}
 	}
 
@@ -217,15 +189,14 @@ func subtractFromBindings(bindings []*cloudresourcemanager.Binding, toRemove ...
 }
 
 // Construct map of role to set of members from list of bindings.
-func createIamBindingsMap(bindings []*cloudresourcemanager.Binding) map[iamBindingKey]map[string]struct{} {
-	bm := make(map[iamBindingKey]map[string]struct{})
+func createIamBindingsMap(bindings []*cloudresourcemanager.Binding) map[string]map[string]struct{} {
+	bm := make(map[string]map[string]struct{})
 	// Get each binding
 	for _, b := range bindings {
 		members := make(map[string]struct{})
-		key := iamBindingKey{b.Role, conditionKeyFromCondition(b.Condition)}
 		// Initialize members map
-		if _, ok := bm[key]; ok {
-			members = bm[key]
+		if _, ok := bm[b.Role]; ok {
+			members = bm[b.Role]
 		}
 		// Get each member (user/principal) for the binding
 		for _, m := range b.Members {
@@ -243,41 +214,27 @@ func createIamBindingsMap(bindings []*cloudresourcemanager.Binding) map[iamBindi
 			members[m] = struct{}{}
 		}
 		if len(members) > 0 {
-			bm[key] = members
+			bm[b.Role] = members
 		} else {
-			delete(bm, key)
+			delete(bm, b.Role)
 		}
 	}
 	return bm
 }
 
 // Return list of Bindings for a map of role to member sets
-func listFromIamBindingMap(bm map[iamBindingKey]map[string]struct{}) []*cloudresourcemanager.Binding {
+func listFromIamBindingMap(bm map[string]map[string]struct{}) []*cloudresourcemanager.Binding {
 	rb := make([]*cloudresourcemanager.Binding, 0, len(bm))
-	for key, members := range bm {
+	for role, members := range bm {
 		if len(members) == 0 {
 			continue
 		}
-		b := &cloudresourcemanager.Binding{
-			Role:    key.Role,
+		rb = append(rb, &cloudresourcemanager.Binding{
+			Role:    role,
 			Members: stringSliceFromGolangSet(members),
-		}
-		if !key.Condition.Empty() {
-			b.Condition = &cloudresourcemanager.Expr{
-				Description: key.Condition.Description,
-				Expression:  key.Condition.Expression,
-				Title:       key.Condition.Title,
-			}
-		}
-		rb = append(rb, b)
+		})
 	}
 	return rb
-}
-
-// Flatten AuditConfigs so each service has a single exemption list of log type to members
-func mergeAuditConfigs(auditConfigs []*cloudresourcemanager.AuditConfig) []*cloudresourcemanager.AuditConfig {
-	am := createIamAuditConfigsMap(auditConfigs)
-	return listFromIamAuditConfigMap(am)
 }
 
 // Flattens AuditConfigs so each role has a single Binding with combined members\
