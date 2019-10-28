@@ -282,8 +282,8 @@ This resource provides the following
 Dataset can be imported using any of these accepted formats:
 
 ```
+$ terraform import google_bigquery_dataset.default projects/{{project}}/datasets/{{dataset_id}}
 $ terraform import google_bigquery_dataset.default {{project}}/{{dataset_id}}
-$ terraform import google_bigquery_dataset.default {{project}}:{{dataset_id}}
 $ terraform import google_bigquery_dataset.default {{dataset_id}}
 ```
 
