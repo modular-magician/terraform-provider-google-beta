@@ -129,6 +129,7 @@ func TestAccRegionInstanceGroupManager_updateLifecycle(t *testing.T) {
 	})
 }
 
+
 func TestAccRegionInstanceGroupManager_rollingUpdatePolicy(t *testing.T) {
 	t.Parallel()
 
@@ -148,8 +149,8 @@ func TestAccRegionInstanceGroupManager_rollingUpdatePolicy(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config:             testAccRegionInstanceGroupManager_rollingUpdatePolicySetToDefault(igm),
-				PlanOnly:           true,
+				Config: testAccRegionInstanceGroupManager_rollingUpdatePolicySetToDefault(igm),
+				PlanOnly: true,
 				ExpectNonEmptyPlan: false,
 			},
 			{
@@ -273,6 +274,7 @@ func TestAccRegionInstanceGroupManager_distributionPolicy(t *testing.T) {
 	})
 }
 
+
 func testAccCheckRegionInstanceGroupManagerDestroy(s *terraform.State) error {
 	config := testAccProvider.Meta().(*Config)
 
@@ -337,10 +339,12 @@ func testAccRegionInstanceGroupManager_basic(template, target, igm1, igm2 string
 	resource "google_compute_region_instance_group_manager" "igm-basic" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			name = "primary"
 			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		}
+
 		target_pools = ["${google_compute_target_pool.igm-basic.self_link}"]
 		base_instance_name = "igm-basic"
 		region = "us-central1"
@@ -350,10 +354,12 @@ func testAccRegionInstanceGroupManager_basic(template, target, igm1, igm2 string
 	resource "google_compute_region_instance_group_manager" "igm-no-tp" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			name = "primary"
 			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		}
+
 		base_instance_name = "igm-no-tp"
 		region = "us-central1"
 		target_size = 2
@@ -392,10 +398,12 @@ func testAccRegionInstanceGroupManager_targetSizeZero(template, igm string) stri
 	resource "google_compute_region_instance_group_manager" "igm-basic" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			name = "primary"
 			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		}
+
 		base_instance_name = "igm-basic"
 		region = "us-central1"
 	}
@@ -439,10 +447,12 @@ func testAccRegionInstanceGroupManager_update(template, target, igm string) stri
 	resource "google_compute_region_instance_group_manager" "igm-update" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			name = "primary"
 			instance_template = "${google_compute_instance_template.igm-update.self_link}"
 		}
+
 		target_pools = ["${google_compute_target_pool.igm-update.self_link}"]
 		base_instance_name = "igm-update"
 		region = "us-central1"
@@ -519,10 +529,12 @@ func testAccRegionInstanceGroupManager_update2(template1, target1, target2, temp
 	resource "google_compute_region_instance_group_manager" "igm-update" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			instance_template = "${google_compute_instance_template.igm-update2.self_link}"
 			name = "primary"
 		}
+
 		target_pools = [
 			"${google_compute_target_pool.igm-update.self_link}",
 			"${google_compute_target_pool.igm-update2.self_link}",
@@ -575,10 +587,12 @@ func testAccRegionInstanceGroupManager_updateLifecycle(tag, igm string) string {
 	resource "google_compute_region_instance_group_manager" "igm-update" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			instance_template = "${google_compute_instance_template.igm-update.self_link}"
 			name = "primary"
 		}
+
 		base_instance_name = "igm-update"
 		region = "us-central1"
 		target_size = 2
@@ -619,10 +633,12 @@ func testAccRegionInstanceGroupManager_separateRegions(igm1, igm2 string) string
 	resource "google_compute_region_instance_group_manager" "igm-basic" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 			name = "primary"
 		}
+
 		base_instance_name = "igm-basic"
 		region = "us-central1"
 		target_size = 2
@@ -631,16 +647,19 @@ func testAccRegionInstanceGroupManager_separateRegions(igm1, igm2 string) string
 	resource "google_compute_region_instance_group_manager" "igm-basic-2" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 			name = "primary"
 		}
+
 		base_instance_name = "igm-basic-2"
 		region = "us-west1"
 		target_size = 2
 	}
 	`, igm1, igm2)
 }
+
 
 func testAccRegionInstanceGroupManager_autoHealingPolicies(template, target, igm, hck string) string {
 	return fmt.Sprintf(`
@@ -843,16 +862,31 @@ resource "google_compute_instance_template" "igm-basic" {
 resource "google_compute_region_instance_group_manager" "igm-basic" {
 	description = "Terraform test instance group manager"
 	name = "%s"
+
 	version {
 		instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		name = "primary"
 	}
+
 	base_instance_name = "igm-basic"
 	region = "us-central1"
 	target_size = 2
 	distribution_policy_zones = ["%s"]
 }
 	`, template, igm, strings.Join(zones, "\",\""))
+}
+resource "google_compute_region_instance_group_manager" "igm-update-strategy" {
+	description                = "Terraform test instance group manager"
+	name                       = "%s"
+	instance_template          = "${google_compute_instance_template.igm-update-strategy.self_link}"
+	base_instance_name         = "rigm-update-strategy"
+	region                     = "us-central1"
+	target_size                = 2
+	named_port {
+		name = "customhttp"
+		port = 8080
+	}
+}`, igm)
 }
 
 func testAccRegionInstanceGroupManager_rollingUpdatePolicy(igm string) string {
