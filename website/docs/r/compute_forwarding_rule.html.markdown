@@ -163,10 +163,6 @@ The following arguments are supported:
   A BackendService to receive the matched traffic. This is used only
   for INTERNAL load balancing.
 
-* `ip_version` -
-  (Optional, Deprecated)
-  ipVersion is not a valid field for regional forwarding rules.
-
 * `load_balancing_scheme` -
   (Optional)
   This signifies what the ForwardingRule will be used for and can only
