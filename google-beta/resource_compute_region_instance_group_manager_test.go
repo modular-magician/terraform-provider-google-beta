@@ -337,10 +337,12 @@ func testAccRegionInstanceGroupManager_basic(template, target, igm1, igm2 string
 	resource "google_compute_region_instance_group_manager" "igm-basic" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			name = "primary"
 			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		}
+
 		target_pools = ["${google_compute_target_pool.igm-basic.self_link}"]
 		base_instance_name = "igm-basic"
 		region = "us-central1"
@@ -350,10 +352,12 @@ func testAccRegionInstanceGroupManager_basic(template, target, igm1, igm2 string
 	resource "google_compute_region_instance_group_manager" "igm-no-tp" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			name = "primary"
 			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		}
+
 		base_instance_name = "igm-no-tp"
 		region = "us-central1"
 		target_size = 2
@@ -392,10 +396,12 @@ func testAccRegionInstanceGroupManager_targetSizeZero(template, igm string) stri
 	resource "google_compute_region_instance_group_manager" "igm-basic" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			name = "primary"
 			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		}
+
 		base_instance_name = "igm-basic"
 		region = "us-central1"
 	}
@@ -439,10 +445,12 @@ func testAccRegionInstanceGroupManager_update(template, target, igm string) stri
 	resource "google_compute_region_instance_group_manager" "igm-update" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			name = "primary"
 			instance_template = "${google_compute_instance_template.igm-update.self_link}"
 		}
+
 		target_pools = ["${google_compute_target_pool.igm-update.self_link}"]
 		base_instance_name = "igm-update"
 		region = "us-central1"
@@ -519,10 +527,12 @@ func testAccRegionInstanceGroupManager_update2(template1, target1, target2, temp
 	resource "google_compute_region_instance_group_manager" "igm-update" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			instance_template = "${google_compute_instance_template.igm-update2.self_link}"
 			name = "primary"
 		}
+
 		target_pools = [
 			"${google_compute_target_pool.igm-update.self_link}",
 			"${google_compute_target_pool.igm-update2.self_link}",
@@ -575,10 +585,12 @@ func testAccRegionInstanceGroupManager_updateLifecycle(tag, igm string) string {
 	resource "google_compute_region_instance_group_manager" "igm-update" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			instance_template = "${google_compute_instance_template.igm-update.self_link}"
 			name = "primary"
 		}
+
 		base_instance_name = "igm-update"
 		region = "us-central1"
 		target_size = 2
@@ -619,10 +631,12 @@ func testAccRegionInstanceGroupManager_separateRegions(igm1, igm2 string) string
 	resource "google_compute_region_instance_group_manager" "igm-basic" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 			name = "primary"
 		}
+
 		base_instance_name = "igm-basic"
 		region = "us-central1"
 		target_size = 2
@@ -631,10 +645,12 @@ func testAccRegionInstanceGroupManager_separateRegions(igm1, igm2 string) string
 	resource "google_compute_region_instance_group_manager" "igm-basic-2" {
 		description = "Terraform test instance group manager"
 		name = "%s"
+
 		version {
 			instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 			name = "primary"
 		}
+
 		base_instance_name = "igm-basic-2"
 		region = "us-west1"
 		target_size = 2
@@ -843,16 +859,63 @@ resource "google_compute_instance_template" "igm-basic" {
 resource "google_compute_region_instance_group_manager" "igm-basic" {
 	description = "Terraform test instance group manager"
 	name = "%s"
+
 	version {
 		instance_template = "${google_compute_instance_template.igm-basic.self_link}"
 		name = "primary"
 	}
+
 	base_instance_name = "igm-basic"
 	region = "us-central1"
 	target_size = 2
 	distribution_policy_zones = ["%s"]
 }
 	`, template, igm, strings.Join(zones, "\",\""))
+}
+
+func testAccRegionInstanceGroupManager_updateStrategy(igm string) string {
+	return fmt.Sprintf(`
+data "google_compute_image" "my_image" {
+	family  = "debian-9"
+	project = "debian-cloud"
+}
+
+resource "google_compute_instance_template" "igm-update-strategy" {
+	machine_type   = "n1-standard-1"
+	can_ip_forward = false
+	tags           = ["terraform-testing"]
+
+	disk {
+		source_image = "${data.google_compute_image.my_image.self_link}"
+		auto_delete  = true
+		boot         = true
+	}
+
+	network_interface {
+		network = "default"
+	}
+
+	service_account {
+		scopes = ["userinfo-email", "compute-ro", "storage-ro"]
+	}
+
+	lifecycle {
+		create_before_destroy = true
+	}
+}
+
+resource "google_compute_region_instance_group_manager" "igm-update-strategy" {
+	description                = "Terraform test instance group manager"
+	name                       = "%s"
+	instance_template          = "${google_compute_instance_template.igm-update-strategy.self_link}"
+	base_instance_name         = "rigm-update-strategy"
+	region                     = "us-central1"
+	target_size                = 2
+	named_port {
+		name = "customhttp"
+		port = 8080
+	}
+}`, igm)
 }
 
 func testAccRegionInstanceGroupManager_rollingUpdatePolicy(igm string) string {
@@ -1018,6 +1081,98 @@ resource "google_compute_region_instance_group_manager" "igm-rolling-update-poli
 		max_unavailable_fixed        = 0
 		min_ready_sec                = 10
 	}
+	named_port {
+		name = "customhttp"
+		port = 8080
+	}
+}`, igm)
+}
+
+func testAccRegionInstanceGroupManager_upgradeInstanceTemplate1(igm string) string {
+	return fmt.Sprintf(`
+data "google_compute_image" "my_image" {
+	family  = "debian-9"
+	project = "debian-cloud"
+}
+
+resource "google_compute_instance_template" "igm-instance-template-upgrade" {
+	machine_type   = "n1-standard-1"
+	can_ip_forward = false
+	tags           = ["terraform-testing"]
+
+	disk {
+		source_image = "${data.google_compute_image.my_image.self_link}"
+		auto_delete  = true
+		boot         = true
+	}
+
+	network_interface {
+		network = "default"
+	}
+
+	lifecycle {
+		create_before_destroy = true
+	}
+}
+
+resource "google_compute_region_instance_group_manager" "igm-instance-template-upgrade" {
+	description                = "Terraform test instance group manager"
+	name                       = "%s"
+
+	instance_template = "${google_compute_instance_template.igm-instance-template-upgrade.self_link}"
+
+	region                     = "us-central1"
+	distribution_policy_zones  = ["us-central1-a", "us-central1-f"]
+	target_size                = 3
+	base_instance_name         = "igm-instance-template-upgrade"
+
+	named_port {
+		name = "customhttp"
+		port = 8080
+	}
+}`, igm)
+}
+
+func testAccRegionInstanceGroupManager_upgradeInstanceTemplate2(igm string) string {
+	return fmt.Sprintf(`
+data "google_compute_image" "my_image" {
+	family  = "debian-9"
+	project = "debian-cloud"
+}
+
+resource "google_compute_instance_template" "igm-instance-template-upgrade" {
+	machine_type   = "n1-standard-1"
+	can_ip_forward = false
+	tags           = ["terraform-testing"]
+
+	disk {
+		source_image = "${data.google_compute_image.my_image.self_link}"
+		auto_delete  = true
+		boot         = true
+	}
+
+	network_interface {
+		network = "default"
+	}
+
+	lifecycle {
+		create_before_destroy = true
+	}
+}
+
+resource "google_compute_region_instance_group_manager" "igm-instance-template-upgrade" {
+	description                = "Terraform test instance group manager"
+	name                       = "%s"
+
+	version {
+		instance_template = "${google_compute_instance_template.igm-instance-template-upgrade.self_link}"
+	}
+
+	region                     = "us-central1"
+	distribution_policy_zones  = ["us-central1-a", "us-central1-f"]
+	target_size                = 3
+	base_instance_name         = "igm-instance-template-upgrade"
+
 	named_port {
 		name = "customhttp"
 		port = 8080

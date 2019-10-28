@@ -38,12 +38,13 @@ func resourceComputeInstanceGroupManager() *schema.Resource {
 
 			"version": {
 				Type:     schema.TypeList,
-				Required: true,
+				Optional: true,
+				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:     schema.TypeString,
-							Required: true,
+							Optional: true,
 						},
 
 						"instance_template": {
@@ -440,8 +441,48 @@ func resourceComputeInstanceGroupManagerRead(d *schema.ResourceData, meta interf
 	return nil
 }
 
+// Updates an instance group manager by applying the update strategy (REPLACE, RESTART)
+// and rolling update policy (PROACTIVE, OPPORTUNISTIC). Updates performed by API
+// are OPPORTUNISTIC by default.
+func performZoneUpdate(d *schema.ResourceData, config *Config, id string, updateStrategy string, project string, zone string) error {
+	if updateStrategy == "RESTART" || updateStrategy == "REPLACE" {
+		managedInstances, err := config.clientComputeBeta.InstanceGroupManagers.ListManagedInstances(project, zone, id).Do()
+		if err != nil {
+			return fmt.Errorf("Error getting instance group managers instances: %s", err)
+		}
+
+		managedInstanceCount := len(managedInstances.ManagedInstances)
+		instances := make([]string, managedInstanceCount)
+		for i, v := range managedInstances.ManagedInstances {
+			instances[i] = v.Instance
+		}
+
+		recreateInstances := &computeBeta.InstanceGroupManagersRecreateInstancesRequest{
+			Instances: instances,
+		}
+
+		op, err := config.clientComputeBeta.InstanceGroupManagers.RecreateInstances(project, zone, id, recreateInstances).Do()
+		if err != nil {
+			return fmt.Errorf("Error restarting instance group managers instances: %s", err)
+		}
+
+		// Wait for the operation to complete
+		timeoutInMinutes := int(d.Timeout(schema.TimeoutUpdate).Minutes())
+		err = computeSharedOperationWaitTime(config.clientCompute, op, project, timeoutInMinutes, "Restarting InstanceGroupManagers instances")
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func resourceComputeInstanceGroupManagerUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
+
+	if err := parseImportId([]string{"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
+		return err
+	}
 
 	project, err := getProject(d, config)
 	if err != nil {
@@ -495,6 +536,7 @@ func resourceComputeInstanceGroupManagerUpdate(d *schema.ResourceData, meta inte
 	// named ports can't be updated through PATCH
 	// so we call the update method on the instance group, instead of the igm
 	if d.HasChange("named_port") {
+		d.Partial(true)
 
 		// Build the parameters for a "SetNamedPorts" request:
 		namedPorts := getNamedPortsBeta(d.Get("named_port").(*schema.Set).List())
@@ -516,10 +558,13 @@ func resourceComputeInstanceGroupManagerUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
+		d.SetPartial("named_port")
 	}
 
 	// target_size should be updated through resize
 	if d.HasChange("target_size") {
+		d.Partial(true)
+
 		targetSize := int64(d.Get("target_size").(int))
 		op, err := config.clientComputeBeta.InstanceGroupManagers.Resize(
 			project, zone, d.Get("name").(string), targetSize).Do()
@@ -534,7 +579,10 @@ func resourceComputeInstanceGroupManagerUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
+		d.SetPartial("target_size")
 	}
+
+	d.Partial(false)
 
 	return resourceComputeInstanceGroupManagerRead(d, meta)
 }
