@@ -2,7 +2,6 @@ package google
 
 import (
 	"fmt"
-
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"google.golang.org/api/cloudresourcemanager/v1"
@@ -36,7 +35,7 @@ func ServiceAccountIdParseFunc(d *schema.ResourceData, _ *Config) error {
 }
 
 func (u *ServiceAccountIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
-	p, err := u.Config.clientIAM.Projects.ServiceAccounts.GetIamPolicy(u.serviceAccountId).OptionsRequestedPolicyVersion(iamPolicyVersion).Do()
+	p, err := u.Config.clientIAM.Projects.ServiceAccounts.GetIamPolicy(u.serviceAccountId).Do()
 
 	if err != nil {
 		return nil, errwrap.Wrapf(fmt.Sprintf("Error retrieving IAM policy for %s: {{err}}", u.DescribeResource()), err)

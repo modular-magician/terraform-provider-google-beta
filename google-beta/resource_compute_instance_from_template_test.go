@@ -32,7 +32,6 @@ func TestAccComputeInstanceFromTemplate_basic(t *testing.T) {
 					// Check that fields were set based on the template
 					resource.TestCheckResourceAttr(resourceName, "machine_type", "n1-standard-1"),
 					resource.TestCheckResourceAttr(resourceName, "attached_disk.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "scheduling.0.automatic_restart", "false"),
 				),
 			},
 		},
@@ -256,10 +255,6 @@ resource "google_compute_instance_template" "foobar" {
 		foo = "bar"
 	}
 
-	scheduling {
-		automatic_restart = true
-	}
-
 	can_ip_forward = true
 }
 
@@ -273,9 +268,6 @@ resource "google_compute_instance_from_template" "foobar" {
 	can_ip_forward = false
 	labels = {
 		my_key       = "my_value"
-	}
-	scheduling {
-		automatic_restart = false
 	}
 }
 `, template, template, instance)
