@@ -44,12 +44,13 @@ func resourceComputeRegionInstanceGroupManager() *schema.Resource {
 
 			"version": {
 				Type:     schema.TypeList,
-				Required: true,
+				Optional: true,
+				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:     schema.TypeString,
-							Required: true,
+							Optional: true,
 						},
 
 						"instance_template": {
@@ -196,8 +197,8 @@ func resourceComputeRegionInstanceGroupManager() *schema.Resource {
 			},
 
 			"update_policy": {
-				Computed: true,
 				Type:     schema.TypeList,
+				Computed: true,
 				Optional: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
@@ -376,7 +377,6 @@ func resourceComputeRegionInstanceGroupManagerRead(d *schema.ResourceData, meta 
 	}
 
 	d.Set("base_instance_name", manager.BaseInstanceName)
-
 	d.Set("name", manager.Name)
 	d.Set("region", GetResourceNameFromSelfLink(manager.Region))
 	d.Set("description", manager.Description)
@@ -394,6 +394,7 @@ func resourceComputeRegionInstanceGroupManagerRead(d *schema.ResourceData, meta 
 		return err
 	}
 	d.Set("self_link", ConvertSelfLinkToV1(manager.SelfLink))
+
 	if err := d.Set("auto_healing_policies", flattenAutoHealingPolicies(manager.AutoHealingPolicies)); err != nil {
 		return fmt.Errorf("Error setting auto_healing_policies in state: %s", err.Error())
 	}
@@ -475,6 +476,7 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 	// named ports can't be updated through PATCH
 	// so we call the update method on the region instance group, instead of the rigm
 	if d.HasChange("named_port") {
+		d.Partial(true)
 		namedPorts := getNamedPortsBeta(d.Get("named_port").(*schema.Set).List())
 		setNamedPorts := &computeBeta.RegionInstanceGroupsSetNamedPortsRequest{
 			NamedPorts: namedPorts,
@@ -492,10 +494,12 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
+		d.SetPartial("named_port")
 	}
 
 	// target size should use resize
 	if d.HasChange("target_size") {
+		d.Partial(true)
 		targetSize := int64(d.Get("target_size").(int))
 		op, err := config.clientComputeBeta.RegionInstanceGroupManagers.Resize(
 			project, region, d.Get("name").(string), targetSize).Do()
@@ -509,7 +513,10 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
+		d.SetPartial("target_size")
 	}
+
+	d.Partial(false)
 
 	return resourceComputeRegionInstanceGroupManagerRead(d, meta)
 }
