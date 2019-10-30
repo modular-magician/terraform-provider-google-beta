@@ -78,6 +78,7 @@ func resourceContainerCluster() *schema.Resource {
 
 		CustomizeDiff: customdiff.All(
 			resourceContainerClusterIpAllocationCustomizeDiff,
+			resourceContainerClusterIpAllocationSubnetworkCustomizeDiff,
 			resourceNodeConfigEmptyGuestAccelerator,
 			containerClusterPrivateClusterConfigCustomDiff,
 		),
@@ -627,24 +628,30 @@ func resourceContainerCluster() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"use_ip_aliases": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default:  true,
-							ForceNew: true,
+							Type:       schema.TypeBool,
+							Deprecated: "This field is being removed in 3.0.0. If set to true, remove it from your config. If false, remove i.",
+							Optional:   true,
+							Default:    true,
+							ForceNew:   true,
 						},
 
 						// GKE creates subnetwork automatically
 						"create_subnetwork": {
-							Type:          schema.TypeBool,
-							Optional:      true,
-							ForceNew:      true,
+							Type:       schema.TypeBool,
+							Deprecated: "This field is being removed in 3.0.0. Define an explicit google_compute_subnetwork and use subnetwork instead.",
+							Computed:   true,
+							Optional:   true,
+							// Simulated with CustomizeDiff resourceContainerClusterIpAllocationSubnetworkCustomizeDiff
+							// ForceNew:      true,
 							ConflictsWith: ipAllocationRangeFields,
 						},
 
 						"subnetwork_name": {
-							Type:          schema.TypeString,
-							Optional:      true,
-							ForceNew:      true,
+							Type:       schema.TypeString,
+							Deprecated: "This field is being removed in 3.0.0. Define an explicit google_compute_subnetwork and use subnetwork instead.",
+							Optional:   true,
+							// Simulated with CustomizeDiff resourceContainerClusterIpAllocationSubnetworkCustomizeDiff
+							// ForceNew:      true,
 							ConflictsWith: ipAllocationRangeFields,
 						},
 
@@ -666,10 +673,12 @@ func resourceContainerCluster() *schema.Resource {
 							DiffSuppressFunc: cidrOrSizeDiffSuppress,
 						},
 						"node_ipv4_cidr_block": {
-							Type:             schema.TypeString,
-							Optional:         true,
-							Computed:         true,
-							ForceNew:         true,
+							Type:       schema.TypeString,
+							Deprecated: "This field is being removed in 3.0.0. Define an explicit google_compute_subnetwork and use subnetwork instead.",
+							Optional:   true,
+							Computed:   true,
+							// Simulated with CustomizeDiff resourceContainerClusterIpAllocationSubnetworkCustomizeDiff
+							// ForceNew:      true,
 							ConflictsWith:    ipAllocationRangeFields,
 							DiffSuppressFunc: cidrOrSizeDiffSuppress,
 						},
@@ -947,6 +956,47 @@ func resourceContainerClusterIpAllocationCustomizeDiffFunc(diff TerraformResourc
 		}
 	}
 	return diff.Clear("ip_allocation_policy")
+}
+
+func resourceContainerClusterIpAllocationSubnetworkCustomizeDiff(diff *schema.ResourceDiff, meta interface{}) error {
+	o, n := diff.GetChange("ip_allocation_policy")
+
+	oList := o.([]interface{})
+	nList := n.([]interface{})
+	if len(oList) != 1 || len(nList) != 1 {
+		// we only care about the case where the field is set in both, so return
+		// early if that's not the case. If a user is moving from VPC-native to
+		// routes-based, they'll change a different incompatible field.
+		return nil
+	}
+
+	nMap := nList[0].(map[string]interface{})
+	oMap := oList[0].(map[string]interface{})
+
+	// If the values aren't identical and the new value is not empty, forcenew.
+	if oMap["create_subnetwork"] != nMap["create_subnetwork"] {
+		log.Printf("[DEBUG] Reading subnet values")
+		if nMap["create_subnetwork"] != false {
+			diff.ForceNew("ip_allocation_policy.0.create_subnetwork")
+		} else if oMap["create_subnetwork"] == true && nMap["create_subnetwork"] == false {
+			diff.Clear("ip_allocation_policy.0.create_subnetwork")
+		}
+	}
+
+	if oMap["subnetwork_name"] != nMap["subnetwork_name"] {
+		if nMap["subnetwork_name"] != "" {
+			diff.ForceNew("ip_allocation_policy.0.subnetwork_name")
+		}
+	}
+
+	// This value is Computed and will be unknown when compared.
+	if oMap["node_ipv4_cidr_block"] != nMap["node_ipv4_cidr_block"] {
+		if nMap["node_ipv4_cidr_block"] != "" {
+			diff.ForceNew("ip_allocation_policy.0.node_ipv4_cidr_block")
+		}
+	}
+
+	return nil
 }
 
 func resourceContainerClusterCreate(d *schema.ResourceData, meta interface{}) error {
