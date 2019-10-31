@@ -279,7 +279,7 @@ func resourceLoggingMetricCreate(d *schema.ResourceData, meta interface{}) error
 func resourceLoggingMetricRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	url, err := replaceVars(d, config, "{{LoggingBasePath}}projects/{{project}}/metrics/{{%name}}")
+	url, err := replaceVars(d, config, "{{LoggingBasePath}}projects/{{project}}/metrics/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -381,7 +381,7 @@ func resourceLoggingMetricUpdate(d *schema.ResourceData, meta interface{}) error
 	mutexKV.Lock(lockName)
 	defer mutexKV.Unlock(lockName)
 
-	url, err := replaceVars(d, config, "{{LoggingBasePath}}projects/{{project}}/metrics/{{%name}}")
+	url, err := replaceVars(d, config, "{{LoggingBasePath}}projects/{{project}}/metrics/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -411,7 +411,7 @@ func resourceLoggingMetricDelete(d *schema.ResourceData, meta interface{}) error
 	mutexKV.Lock(lockName)
 	defer mutexKV.Unlock(lockName)
 
-	url, err := replaceVars(d, config, "{{LoggingBasePath}}projects/{{project}}/metrics/{{%name}}")
+	url, err := replaceVars(d, config, "{{LoggingBasePath}}projects/{{project}}/metrics/{{name}}")
 	if err != nil {
 		return err
 	}
