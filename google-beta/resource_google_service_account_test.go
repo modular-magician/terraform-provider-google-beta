@@ -95,7 +95,6 @@ func testAccServiceAccountBasic(account, name string) string {
 resource "google_service_account" "acceptance" {
     account_id = "%v"
     display_name = "%v"
-    description = "foo"
 }
 `, account, name)
 }
@@ -106,7 +105,6 @@ resource "google_service_account" "acceptance" {
     project = "%v"
     account_id = "%v"
     display_name = "%v"
-    description = "foo"
 }
 `, project, account, name)
 }
