@@ -306,7 +306,7 @@ The `backend` block supports:
   Provide this property when you create the resource.
 
 * `group` -
-  (Optional)
+  (Required)
   The fully-qualified URL of an Instance Group or Network Endpoint
   Group resource. In case of instance group this defines the list
   of instances that serve traffic. Member virtual machine

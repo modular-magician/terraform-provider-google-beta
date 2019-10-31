@@ -1201,28 +1201,6 @@ func TestAccComputeInstance_shieldedVmConfig2(t *testing.T) {
 	})
 }
 
-func TestAccComputeInstance_enableDisplay(t *testing.T) {
-	t.Parallel()
-
-	instanceName := fmt.Sprintf("terraform-test-%s", acctest.RandString(10))
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckComputeInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccComputeInstance_enableDisplay(instanceName),
-			},
-			computeInstanceImportStep("us-central1-a", instanceName, []string{"allow_stopping_for_update"}),
-			{
-				Config: testAccComputeInstance_enableDisplayUpdated(instanceName),
-			},
-			computeInstanceImportStep("us-central1-a", instanceName, []string{"allow_stopping_for_update"}),
-		},
-	})
-}
-
 func testAccCheckComputeInstanceUpdateMachineType(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -1236,7 +1214,7 @@ func testAccCheckComputeInstanceUpdateMachineType(n string) resource.TestCheckFu
 
 		config := testAccProvider.Meta().(*Config)
 
-		op, err := config.clientCompute.Instances.Stop(config.Project, rs.Primary.Attributes["zone"], rs.Primary.ID).Do()
+		op, err := config.clientCompute.Instances.Stop(config.Project, rs.Primary.Attributes["zone"], rs.Primary.Attributes["name"]).Do()
 		if err != nil {
 			return fmt.Errorf("Could not stop instance: %s", err)
 		}
@@ -1250,7 +1228,7 @@ func testAccCheckComputeInstanceUpdateMachineType(n string) resource.TestCheckFu
 		}
 
 		op, err = config.clientCompute.Instances.SetMachineType(
-			config.Project, rs.Primary.Attributes["zone"], rs.Primary.ID, &machineType).Do()
+			config.Project, rs.Primary.Attributes["zone"], rs.Primary.Attributes["name"], &machineType).Do()
 		if err != nil {
 			return fmt.Errorf("Could not change machine type: %s", err)
 		}
@@ -1271,7 +1249,7 @@ func testAccCheckComputeInstanceDestroy(s *terraform.State) error {
 		}
 
 		_, err := config.clientCompute.Instances.Get(
-			config.Project, rs.Primary.Attributes["zone"], rs.Primary.ID).Do()
+			config.Project, rs.Primary.Attributes["zone"], rs.Primary.Attributes["name"]).Do()
 		if err == nil {
 			return fmt.Errorf("Instance still exists")
 		}
@@ -1309,12 +1287,12 @@ func testAccCheckComputeInstanceExistsInProject(n, p string, instance *compute.I
 		config := testAccProvider.Meta().(*Config)
 
 		found, err := config.clientCompute.Instances.Get(
-			p, rs.Primary.Attributes["zone"], rs.Primary.ID).Do()
+			p, rs.Primary.Attributes["zone"], rs.Primary.Attributes["name"]).Do()
 		if err != nil {
 			return err
 		}
 
-		if found.Name != rs.Primary.ID {
+		if found.Name != rs.Primary.Attributes["name"] {
 			return fmt.Errorf("Instance not found")
 		}
 
@@ -1338,12 +1316,12 @@ func testAccCheckComputeBetaInstanceExistsInProject(n, p string, instance *compu
 		config := testAccProvider.Meta().(*Config)
 
 		found, err := config.clientComputeBeta.Instances.Get(
-			p, rs.Primary.Attributes["zone"], rs.Primary.ID).Do()
+			p, rs.Primary.Attributes["zone"], rs.Primary.Attributes["name"]).Do()
 		if err != nil {
 			return err
 		}
 
-		if found.Name != rs.Primary.ID {
+		if found.Name != rs.Primary.Attributes["name"] {
 			return fmt.Errorf("Instance not found")
 		}
 
@@ -3659,62 +3637,4 @@ resource "google_compute_instance" "foobar" {
 	}
 }
 `, instance, enableSecureBoot, enableVtpm, enableIntegrityMonitoring)
-}
-
-func testAccComputeInstance_enableDisplay(instance string) string {
-	return fmt.Sprintf(`
-data "google_compute_image" "my_image" {
-	family  = "centos-7"
-	project = "gce-uefi-images"
-}
-
-resource "google_compute_instance" "foobar" {
-	name           = "%s"
-	machine_type   = "n1-standard-1"
-	zone           = "us-central1-a"
-
-	boot_disk {
-		initialize_params{
-			image = "${data.google_compute_image.my_image.self_link}"
-		}
-	}
-
-	network_interface {
-		network = "default"
-	}
-
-	enable_display = true
-
-	allow_stopping_for_update = true
-}
-`, instance)
-}
-
-func testAccComputeInstance_enableDisplayUpdated(instance string) string {
-	return fmt.Sprintf(`
-data "google_compute_image" "my_image" {
-	family  = "centos-7"
-	project = "gce-uefi-images"
-}
-
-resource "google_compute_instance" "foobar" {
-	name           = "%s"
-	machine_type   = "n1-standard-1"
-	zone           = "us-central1-a"
-
-	boot_disk {
-		initialize_params{
-			image = "${data.google_compute_image.my_image.self_link}"
-		}
-	}
-
-	network_interface {
-		network = "default"
-	}
-
-	enable_display = false
-
-	allow_stopping_for_update = true
-}
-`, instance)
 }
