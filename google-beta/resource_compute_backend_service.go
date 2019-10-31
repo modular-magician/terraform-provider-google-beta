@@ -401,7 +401,6 @@ func resourceComputeBackendService() *schema.Resource {
 			},
 			"log_config": {
 				Type:     schema.TypeList,
-				Computed: true,
 				Optional: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
