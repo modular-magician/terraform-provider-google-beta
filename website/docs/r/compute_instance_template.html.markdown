@@ -243,9 +243,6 @@ The following arguments are supported:
 * `shielded_instance_config` - (Optional) Enable [Shielded VM](https://cloud.google.com/security/shielded-cloud/shielded-vm) on this instance. Shielded VM provides verifiable integrity to prevent against malware and rootkits. Defaults to disabled. Structure is documented below.
 	**Note**: [`shielded_instance_config`](#shielded_instance_config) can only be used with boot images with shielded vm support. See the complete list [here](https://cloud.google.com/compute/docs/images#shielded-images).
 
-* `enable_display` - (Optional) Enable [Virtual Displays](https://cloud.google.com/compute/docs/instances/enable-instance-virtual-display#verify_display_driver) on this instance.
-**Note**: [`allow_stopping_for_update`](#allow_stopping_for_update) must be set to true in order to update this field.
-
 The `disk` block supports:
 
 * `auto_delete` - (Optional) Whether or not the disk should be auto-deleted.
@@ -421,10 +418,12 @@ exported:
 
 ## Import
 
-Instance templates can be imported using the `name`, e.g.
+Instance templates can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_compute_instance_template.default appserver-template
+$ terraform import google_compute_instance_template.default projects/{{project}}/global/instanceTemplates/{{name}}
+$ terraform import google_compute_instance_template.default {{project}}/{{name}}
+$ terraform import google_compute_instance_template.default {{name}}
 ```
 
 [custom-vm-types]: https://cloud.google.com/dataproc/docs/concepts/compute/custom-machine-types

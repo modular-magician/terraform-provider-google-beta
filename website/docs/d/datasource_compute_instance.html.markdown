@@ -18,8 +18,8 @@ and
 
 ```hcl
 data "google_compute_instance" "appserver" {
-	name = "primary-application-server"
-	zone = "us-central1-a"
+  name = "primary-application-server"
+  zone = "us-central1-a"
 }
 ```
 
@@ -86,8 +86,6 @@ The following arguments are supported:
 * `cpu_platform` - The CPU platform used by this instance.
 
 * `shielded_instance_config` - The shielded vm config being used by the instance. Structure is documented below.
-
-* `enable_display` -- Whether the instance has virtual displays enabled.
 
 * `network_interface.0.network_ip` - The internal ip address of the instance, either manually or dynamically assigned.
 
