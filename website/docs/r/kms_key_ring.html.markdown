@@ -40,7 +40,7 @@ To get more information about KeyRing, see:
 
 ```hcl
 resource "google_kms_key_ring" "example-keyring" {
-  name = "keyring-example"
+  name     = "keyring-example"
   location = "global"
 }
 ```

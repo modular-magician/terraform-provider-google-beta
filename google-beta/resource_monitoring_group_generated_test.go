@@ -86,13 +86,13 @@ func testAccMonitoringGroup_monitoringGroupSubgroupExample(context map[string]in
 	return Nprintf(`
 resource "google_monitoring_group" "parent" {
   display_name = "New Test SubGroup%{random_suffix}"
-  filter = "resource.metadata.region=\"europe-west2\""
+  filter       = "resource.metadata.region=\"europe-west2\""
 }
 
 resource "google_monitoring_group" "subgroup" {
   display_name = "New Test SubGroup%{random_suffix}"
-  filter = "resource.metadata.region=\"europe-west2\""
-  parent_name =  "${google_monitoring_group.parent.name}"
+  filter       = "resource.metadata.region=\"europe-west2\""
+  parent_name  = google_monitoring_group.parent.name
 }
 `, context)
 }

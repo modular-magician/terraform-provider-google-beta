@@ -44,6 +44,41 @@ func resourceCloudBuildTrigger() *schema.Resource {
 		SchemaVersion: 1,
 
 		Schema: map[string]*schema.Schema{
+			"trigger_template": {
+				Type:     schema.TypeList,
+				Required: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"branch_name": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"commit_sha": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"dir": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"project_id": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Optional: true,
+						},
+						"repo_name": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "default",
+						},
+						"tag_name": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+					},
+				},
+			},
 			"build": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -223,50 +258,10 @@ func resourceCloudBuildTrigger() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
-			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-			},
 			"substitutions": {
 				Type:     schema.TypeMap,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-			},
-			"trigger_template": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"branch_name": {
-							Type:     schema.TypeString,
-							Optional: true,
-						},
-						"commit_sha": {
-							Type:     schema.TypeString,
-							Optional: true,
-						},
-						"dir": {
-							Type:     schema.TypeString,
-							Optional: true,
-						},
-						"project_id": {
-							Type:     schema.TypeString,
-							Computed: true,
-							Optional: true,
-						},
-						"repo_name": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Default:  "default",
-						},
-						"tag_name": {
-							Type:     schema.TypeString,
-							Optional: true,
-						},
-					},
-				},
 			},
 			"create_time": {
 				Type:     schema.TypeString,
@@ -290,12 +285,6 @@ func resourceCloudBuildTriggerCreate(d *schema.ResourceData, meta interface{}) e
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
-	nameProp, err := expandCloudBuildTriggerName(d.Get("name"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
-		obj["name"] = nameProp
-	}
 	descriptionProp, err := expandCloudBuildTriggerDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
@@ -367,7 +356,7 @@ func resourceCloudBuildTriggerCreate(d *schema.ResourceData, meta interface{}) e
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{project}}/{{trigger_id}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/triggers/{{trigger_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -417,9 +406,6 @@ func resourceCloudBuildTriggerRead(d *schema.ResourceData, meta interface{}) err
 	if err := d.Set("trigger_id", flattenCloudBuildTriggerTriggerId(res["id"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
-	if err := d.Set("name", flattenCloudBuildTriggerName(res["name"], d)); err != nil {
-		return fmt.Errorf("Error reading Trigger: %s", err)
-	}
 	if err := d.Set("description", flattenCloudBuildTriggerDescription(res["description"], d)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
@@ -463,12 +449,6 @@ func resourceCloudBuildTriggerUpdate(d *schema.ResourceData, meta interface{}) e
 	}
 
 	obj := make(map[string]interface{})
-	nameProp, err := expandCloudBuildTriggerName(d.Get("name"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
-		obj["name"] = nameProp
-	}
 	descriptionProp, err := expandCloudBuildTriggerDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
@@ -576,7 +556,7 @@ func resourceCloudBuildTriggerImport(d *schema.ResourceData, meta interface{}) (
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{project}}/{{trigger_id}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/triggers/{{trigger_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -586,10 +566,6 @@ func resourceCloudBuildTriggerImport(d *schema.ResourceData, meta interface{}) (
 }
 
 func flattenCloudBuildTriggerTriggerId(v interface{}, d *schema.ResourceData) interface{} {
-	return v
-}
-
-func flattenCloudBuildTriggerName(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
@@ -859,10 +835,6 @@ func flattenCloudBuildTriggerBuildStepVolumesPath(v interface{}, d *schema.Resou
 
 func flattenCloudBuildTriggerBuildStepWaitFor(v interface{}, d *schema.ResourceData) interface{} {
 	return v
-}
-
-func expandCloudBuildTriggerName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandCloudBuildTriggerDescription(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
