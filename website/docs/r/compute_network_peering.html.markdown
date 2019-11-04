@@ -21,15 +21,15 @@ and
 
 ```hcl
 resource "google_compute_network_peering" "peering1" {
-  name = "peering1"
-  network = "${google_compute_network.default.self_link}"
-  peer_network = "${google_compute_network.other.self_link}"
+  name         = "peering1"
+  network      = google_compute_network.default.self_link
+  peer_network = google_compute_network.other.self_link
 }
 
 resource "google_compute_network_peering" "peering2" {
-  name = "peering2"
-  network = "${google_compute_network.other.self_link}"
-  peer_network = "${google_compute_network.default.self_link}"
+  name         = "peering2"
+  network      = google_compute_network.other.self_link
+  peer_network = google_compute_network.default.self_link
 }
 
 resource "google_compute_network" "default" {
@@ -52,9 +52,6 @@ The following arguments are supported:
 * `network` - (Required) Resource link of the network to add a peering to.
 
 * `peer_network` - (Required) Resource link of the peer network.
-
-* `auto_create_routes` - (Optional) If set to `true`, the routes between the two networks will
-  be created and managed automatically. Defaults to `true`.
 
 ## Attributes Reference
 
