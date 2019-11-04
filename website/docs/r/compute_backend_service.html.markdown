@@ -47,7 +47,7 @@ To get more information about BackendService, see:
 ```hcl
 resource "google_compute_backend_service" "default" {
   name          = "backend-service"
-  health_checks = ["${google_compute_http_health_check.default.self_link}"]
+  health_checks = [google_compute_http_health_check.default.self_link]
 }
 
 resource "google_compute_http_health_check" "default" {
@@ -67,20 +67,19 @@ resource "google_compute_http_health_check" "default" {
 
 ```hcl
 resource "google_compute_backend_service" "default" {
-  provider = "google-beta"
+  provider = google-beta
 
-  name          = "backend-service"
-  health_checks = ["${google_compute_health_check.health_check.self_link}"]
+  name                  = "backend-service"
+  health_checks         = [google_compute_health_check.health_check.self_link]
   load_balancing_scheme = "INTERNAL_SELF_MANAGED"
-  locality_lb_policy = "ROUND_ROBIN"
+  locality_lb_policy    = "ROUND_ROBIN"
 }
 
 resource "google_compute_health_check" "health_check" {
-  provider = "google-beta"
+  provider = google-beta
 
-  name               = "health-check"
+  name = "health-check"
   http_health_check {
-
   }
 }
 ```
@@ -94,13 +93,13 @@ resource "google_compute_health_check" "health_check" {
 
 ```hcl
 resource "google_compute_backend_service" "default" {
-  provider = "google-beta"
+  provider = google-beta
 
-  name          = "backend-service"
-  health_checks = ["${google_compute_health_check.health_check.self_link}"]
+  name                  = "backend-service"
+  health_checks         = [google_compute_health_check.health_check.self_link]
   load_balancing_scheme = "INTERNAL_SELF_MANAGED"
-  locality_lb_policy = "RING_HASH"
-  session_affinity = "HTTP_COOKIE"
+  locality_lb_policy    = "RING_HASH"
+  session_affinity      = "HTTP_COOKIE"
   circuit_breakers {
     max_connections = 10
   }
@@ -108,7 +107,7 @@ resource "google_compute_backend_service" "default" {
     http_cookie {
       ttl {
         seconds = 11
-        nanos = 1111
+        nanos   = 1111
       }
       name = "mycookie"
     }
@@ -119,11 +118,10 @@ resource "google_compute_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "health_check" {
-  provider = "google-beta"
+  provider = google-beta
 
-  name               = "health-check"
+  name = "health-check"
   http_health_check {
-
   }
 }
 ```
@@ -306,7 +304,7 @@ The `backend` block supports:
   Provide this property when you create the resource.
 
 * `group` -
-  (Optional)
+  (Required)
   The fully-qualified URL of an Instance Group or Network Endpoint
   Group resource. In case of instance group this defines the list
   of instances that serve traffic. Member virtual machine

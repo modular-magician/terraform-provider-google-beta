@@ -43,7 +43,7 @@ To get more information about Group, see:
 
 ```hcl
 resource "google_monitoring_group" "basic" {
-  display_name = "tf-test MonitoringGroup"
+  display_name = "New Test Group"
 
   filter = "resource.metadata.region=\"europe-west2\""
 }
@@ -58,14 +58,14 @@ resource "google_monitoring_group" "basic" {
 
 ```hcl
 resource "google_monitoring_group" "parent" {
-  display_name = "tf-test MonitoringSubGroup"
-  filter = "resource.metadata.region=\"europe-west2\""
+  display_name = "New Test SubGroup"
+  filter       = "resource.metadata.region=\"europe-west2\""
 }
 
 resource "google_monitoring_group" "subgroup" {
-  display_name = "tf-test MonitoringSubGroup"
-  filter = "resource.metadata.region=\"europe-west2\""
-  parent_name =  "${google_monitoring_group.parent.name}"
+  display_name = "New Test SubGroup"
+  filter       = "resource.metadata.region=\"europe-west2\""
+  parent_name  = google_monitoring_group.parent.name
 }
 ```
 
