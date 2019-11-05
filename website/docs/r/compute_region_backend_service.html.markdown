@@ -97,7 +97,7 @@ The following arguments are supported:
   An optional description of this resource.
 
 * `failover_policy` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Policy for failovers.  Structure is documented below.
 
 * `protocol` -
@@ -155,7 +155,7 @@ The `backend` block supports:
   The instance group must be within the same region as the BackendService.
 
 * `failover` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   This field designates whether this is a failover backend. More
   than one failover backend can be configured for a given BackendService.
 
@@ -226,4 +226,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
