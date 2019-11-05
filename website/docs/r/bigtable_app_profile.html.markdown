@@ -12,6 +12,7 @@
 #     .github/CONTRIBUTING.md.
 #
 # ----------------------------------------------------------------------------
+subcategory: "BigTable"
 layout: "google"
 page_title: "Google: google_bigtable_app_profile"
 sidebar_current: "docs-google-bigtable-app-profile"
