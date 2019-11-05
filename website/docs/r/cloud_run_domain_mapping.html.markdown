@@ -12,6 +12,7 @@
 #     .github/CONTRIBUTING.md.
 #
 # ----------------------------------------------------------------------------
+subcategory: "Google Cloud Run"
 layout: "google"
 page_title: "Google: google_cloud_run_domain_mapping"
 sidebar_current: "docs-google-cloud-run-domain-mapping"
