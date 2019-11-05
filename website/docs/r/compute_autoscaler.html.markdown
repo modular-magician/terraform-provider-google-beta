@@ -12,6 +12,7 @@
 #     .github/CONTRIBUTING.md.
 #
 # ----------------------------------------------------------------------------
+subcategory: "Compute Engine"
 layout: "google"
 page_title: "Google: google_compute_autoscaler"
 sidebar_current: "docs-google-compute-autoscaler"
@@ -290,7 +291,7 @@ The `metric` block supports:
   The metric must have a value type of INT64 or DOUBLE.
 
 * `single_instance_assignment` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
   If scaling is based on a per-group metric value that represents the
   total amount of work to be done or resource usage, set this value to
   an amount assigned for a single instance of the scaled group.
@@ -324,7 +325,7 @@ The `metric` block supports:
   or DELTA_PER_MINUTE.
 
 * `filter` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
   A filter string to be used as the filter string for
   a Stackdriver Monitoring TimeSeries.list API call.
   This filter is used to select a specific TimeSeries for
@@ -411,4 +412,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

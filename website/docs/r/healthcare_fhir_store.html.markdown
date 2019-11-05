@@ -12,6 +12,7 @@
 #     .github/CONTRIBUTING.md.
 #
 # ----------------------------------------------------------------------------
+subcategory: "Cloud Healthcare"
 layout: "google"
 page_title: "Google: google_healthcare_fhir_store"
 sidebar_current: "docs-google-healthcare-fhir-store"
@@ -25,7 +26,7 @@ A FhirStore is a datastore inside a Healthcare dataset that conforms to the FHIR
 standard for Healthcare information exchange
 
 ~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
+See [Provider Versions](https://terraform.io/docs/providers/google/provider_versions.html) for more details on beta resources.
 
 To get more information about FhirStore, see:
 

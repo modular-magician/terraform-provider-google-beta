@@ -12,6 +12,7 @@
 #     .github/CONTRIBUTING.md.
 #
 # ----------------------------------------------------------------------------
+subcategory: "Cloud DNS"
 layout: "google"
 page_title: "Google: google_dns_managed_zone"
 sidebar_current: "docs-google-dns-managed-zone"
@@ -232,13 +233,13 @@ The following arguments are supported:
   resources that the zone is visible from.  Structure is documented below.
 
 * `forwarding_config` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
   The presence for this field indicates that outbound forwarding is enabled
   for this zone. The value of this field contains the set of destinations
   to forward to.  Structure is documented below.
 
 * `peering_config` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
   The presence of this field indicates that DNS Peering is enabled for this
   zone. The value of this field contains the network to peer with.  Structure is documented below.
 
@@ -373,4 +374,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).
