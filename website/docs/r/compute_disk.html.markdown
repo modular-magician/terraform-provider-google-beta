@@ -12,6 +12,7 @@
 #     .github/CONTRIBUTING.md.
 #
 # ----------------------------------------------------------------------------
+subcategory: "Compute Engine"
 layout: "google"
 page_title: "Google: google_compute_disk"
 sidebar_current: "docs-google-compute-disk"
@@ -134,7 +135,7 @@ The following arguments are supported:
   These images can be referred by family name here.
 
 * `resource_policies` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
   Resource policies applied to this disk for automatic snapshot creations.
 
 * `zone` -
@@ -297,4 +298,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).
