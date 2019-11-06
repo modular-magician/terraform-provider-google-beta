@@ -37,16 +37,16 @@ Google's cloud.
 
 ```hcl
 resource "google_sql_database" "database" {
-	name = "my-database"
-	instance = "${google_sql_database_instance.instance.name}"
+  name     = "my-database"
+  instance = google_sql_database_instance.instance.name
 }
 
 resource "google_sql_database_instance" "instance" {
-	name = "my-database-instance"
-	region = "us-central"
-	settings {
-		tier = "D0"
-	}
+  name   = "my-database-instance"
+  region = "us-central"
+  settings {
+    tier = "D0"
+  }
 }
 ```
 
@@ -108,7 +108,6 @@ $ terraform import google_sql_database.default projects/{{project}}/instances/{{
 $ terraform import google_sql_database.default instances/{{instance}}/databases/{{name}}
 $ terraform import google_sql_database.default {{project}}/{{instance}}/{{name}}
 $ terraform import google_sql_database.default {{instance}}/{{name}}
-$ terraform import google_sql_database.default {{instance}}:{{name}}
 $ terraform import google_sql_database.default {{name}}
 ```
 
@@ -117,4 +116,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

@@ -58,7 +58,7 @@ To get more information about NotificationChannel, see:
 ```hcl
 resource "google_monitoring_notification_channel" "basic" {
   display_name = "Test Notification Channel"
-  type = "email"
+  type         = "email"
   labels = {
     email_address = "fake_email@blahblah.com"
   }
@@ -149,4 +149,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

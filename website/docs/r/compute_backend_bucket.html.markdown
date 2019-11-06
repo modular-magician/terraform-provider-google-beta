@@ -49,7 +49,7 @@ To get more information about BackendBucket, see:
 resource "google_compute_backend_bucket" "image_backend" {
   name        = "image-backend-bucket"
   description = "Contains beautiful images"
-  bucket_name = "${google_storage_bucket.image_bucket.name}"
+  bucket_name = google_storage_bucket.image_bucket.name
   enable_cdn  = true
 }
 
@@ -146,4 +146,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

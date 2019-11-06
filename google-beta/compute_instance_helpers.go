@@ -329,21 +329,3 @@ func flattenShieldedVmConfig(shieldedVmConfig *computeBeta.ShieldedVmConfig) []m
 		"enable_integrity_monitoring": shieldedVmConfig.EnableIntegrityMonitoring,
 	}}
 }
-
-func expandDisplayDevice(d *schema.ResourceData) *computeBeta.DisplayDevice {
-	if _, ok := d.GetOk("enable_display"); !ok {
-		return nil
-	}
-	return &computeBeta.DisplayDevice{
-		EnableDisplay:   d.Get("enable_display").(bool),
-		ForceSendFields: []string{"EnableDisplay"},
-	}
-}
-
-func flattenEnableDisplay(displayDevice *computeBeta.DisplayDevice) interface{} {
-	if displayDevice == nil {
-		return nil
-	}
-
-	return displayDevice.EnableDisplay
-}

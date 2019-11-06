@@ -49,7 +49,7 @@ func resourceComputeRegionInstanceGroupManager() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 						},
 
 						"instance_template": {
@@ -196,8 +196,8 @@ func resourceComputeRegionInstanceGroupManager() *schema.Resource {
 			},
 
 			"update_policy": {
-				Type:     schema.TypeList,
 				Computed: true,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
@@ -294,7 +294,11 @@ func resourceComputeRegionInstanceGroupManagerCreate(d *schema.ResourceData, met
 		return fmt.Errorf("Error creating RegionInstanceGroupManager: %s", err)
 	}
 
-	d.SetId(regionInstanceGroupManagerId{Project: project, Region: region, Name: manager.Name}.terraformId())
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{name}}")
+	if err != nil {
+		return fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
 
 	// Wait for the operation to complete
 	timeoutInMinutes := int(d.Timeout(schema.TimeoutCreate).Minutes())
@@ -310,28 +314,20 @@ type getInstanceManagerFunc func(*schema.ResourceData, interface{}) (*computeBet
 func getRegionalManager(d *schema.ResourceData, meta interface{}) (*computeBeta.InstanceGroupManager, error) {
 	config := meta.(*Config)
 
-	regionalID, err := parseRegionInstanceGroupManagerId(d.Id())
+	project, err := getProject(d, config)
 	if err != nil {
 		return nil, err
 	}
 
-	if regionalID.Project == "" {
-		regionalID.Project, err = getProject(d, config)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	if regionalID.Region == "" {
-		regionalID.Region, err = getRegion(d, config)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	manager, err := config.clientComputeBeta.RegionInstanceGroupManagers.Get(regionalID.Project, regionalID.Region, regionalID.Name).Do()
+	region, err := getRegion(d, config)
 	if err != nil {
-		return nil, handleNotFoundError(err, d, fmt.Sprintf("Region Instance Manager %q", regionalID.Name))
+		return nil, err
+	}
+
+	name := d.Get("name").(string)
+	manager, err := config.clientComputeBeta.RegionInstanceGroupManagers.Get(project, region, name).Do()
+	if err != nil {
+		return nil, handleNotFoundError(err, d, fmt.Sprintf("Region Instance Manager %q", name))
 	}
 
 	return manager, nil
@@ -364,22 +360,17 @@ func resourceComputeRegionInstanceGroupManagerRead(d *schema.ResourceData, meta 
 		return nil
 	}
 
-	regionalID, err := parseRegionInstanceGroupManagerId(d.Id())
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
-	if regionalID.Project == "" {
-		regionalID.Project, err = getProject(d, config)
-		if err != nil {
-			return err
-		}
-	}
 
 	d.Set("base_instance_name", manager.BaseInstanceName)
+
 	d.Set("name", manager.Name)
 	d.Set("region", GetResourceNameFromSelfLink(manager.Region))
 	d.Set("description", manager.Description)
-	d.Set("project", regionalID.Project)
+	d.Set("project", project)
 	d.Set("target_size", manager.TargetSize)
 	if err := d.Set("target_pools", mapStringArr(manager.TargetPools, ConvertSelfLinkToV1)); err != nil {
 		return fmt.Errorf("Error setting target_pools in state: %s", err.Error())
@@ -393,7 +384,6 @@ func resourceComputeRegionInstanceGroupManagerRead(d *schema.ResourceData, meta 
 		return err
 	}
 	d.Set("self_link", ConvertSelfLinkToV1(manager.SelfLink))
-
 	if err := d.Set("auto_healing_policies", flattenAutoHealingPolicies(manager.AutoHealingPolicies)); err != nil {
 		return fmt.Errorf("Error setting auto_healing_policies in state: %s", err.Error())
 	}
@@ -475,7 +465,6 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 	// named ports can't be updated through PATCH
 	// so we call the update method on the region instance group, instead of the rigm
 	if d.HasChange("named_port") {
-		d.Partial(true)
 		namedPorts := getNamedPortsBeta(d.Get("named_port").(*schema.Set).List())
 		setNamedPorts := &computeBeta.RegionInstanceGroupsSetNamedPortsRequest{
 			NamedPorts: namedPorts,
@@ -493,12 +482,10 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("named_port")
 	}
 
 	// target size should use resize
 	if d.HasChange("target_size") {
-		d.Partial(true)
 		targetSize := int64(d.Get("target_size").(int))
 		op, err := config.clientComputeBeta.RegionInstanceGroupManagers.Resize(
 			project, region, d.Get("name").(string), targetSize).Do()
@@ -512,10 +499,7 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("target_size")
 	}
-
-	d.Partial(false)
 
 	return resourceComputeRegionInstanceGroupManagerRead(d, meta)
 }
@@ -523,26 +507,19 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 func resourceComputeRegionInstanceGroupManagerDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	regionalID, err := parseRegionInstanceGroupManagerId(d.Id())
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	if regionalID.Project == "" {
-		regionalID.Project, err = getProject(d, config)
-		if err != nil {
-			return err
-		}
+	region, err := getRegion(d, config)
+	if err != nil {
+		return err
 	}
 
-	if regionalID.Region == "" {
-		regionalID.Region, err = getRegion(d, config)
-		if err != nil {
-			return err
-		}
-	}
+	name := d.Get("name").(string)
 
-	op, err := config.clientComputeBeta.RegionInstanceGroupManagers.Delete(regionalID.Project, regionalID.Region, regionalID.Name).Do()
+	op, err := config.clientComputeBeta.RegionInstanceGroupManagers.Delete(project, region, name).Do()
 
 	if err != nil {
 		return fmt.Errorf("Error deleting region instance group manager: %s", err)
@@ -550,7 +527,7 @@ func resourceComputeRegionInstanceGroupManagerDelete(d *schema.ResourceData, met
 
 	// Wait for the operation to complete
 	timeoutInMinutes := int(d.Timeout(schema.TimeoutDelete).Minutes())
-	err = computeSharedOperationWaitTime(config.clientCompute, op, regionalID.Project, timeoutInMinutes, "Deleting RegionInstanceGroupManager")
+	err = computeSharedOperationWaitTime(config.clientCompute, op, project, timeoutInMinutes, "Deleting RegionInstanceGroupManager")
 	if err != nil {
 		return fmt.Errorf("Error waiting for delete to complete: %s", err)
 	}
@@ -672,40 +649,17 @@ func hashZoneFromSelfLinkOrResourceName(value interface{}) int {
 
 func resourceRegionInstanceGroupManagerStateImporter(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	d.Set("wait_for_instances", false)
-	regionalID, err := parseRegionInstanceGroupManagerId(d.Id())
-	if err != nil {
+	config := meta.(*Config)
+	if err := parseImportId([]string{"projects/(?P<project>[^/]+)/regions/(?P<region>[^/]+)/instanceGroupManagers/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<name>[^/]+)", "(?P<region>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
 		return nil, err
 	}
-	d.Set("project", regionalID.Project)
-	d.Set("region", regionalID.Region)
-	d.Set("name", regionalID.Name)
-	return []*schema.ResourceData{d}, nil
-}
 
-type regionInstanceGroupManagerId struct {
-	Project string
-	Region  string
-	Name    string
-}
-
-func (r regionInstanceGroupManagerId) terraformId() string {
-	return fmt.Sprintf("%s/%s/%s", r.Project, r.Region, r.Name)
-}
-
-func parseRegionInstanceGroupManagerId(id string) (*regionInstanceGroupManagerId, error) {
-	switch {
-	case regionInstanceGroupManagerIdRegex.MatchString(id):
-		parts := strings.Split(id, "/")
-		return &regionInstanceGroupManagerId{
-			Project: parts[0],
-			Region:  parts[1],
-			Name:    parts[2],
-		}, nil
-	case regionInstanceGroupManagerIdNameRegex.MatchString(id):
-		return &regionInstanceGroupManagerId{
-			Name: id,
-		}, nil
-	default:
-		return nil, fmt.Errorf("Invalid region instance group manager specifier. Expecting either {projectId}/{region}/{name} or {name}, where {projectId} and {region} will be derived from the provider.")
+	// Replace import id for the resource id
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{name}}")
+	if err != nil {
+		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
+	d.SetId(id)
+
+	return []*schema.ResourceData{d}, nil
 }

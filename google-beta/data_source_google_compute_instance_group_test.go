@@ -89,6 +89,7 @@ func testAccCheckDataSourceGoogleComputeInstanceGroup(dataSourceName string) res
 			"project",
 			"description",
 			"network",
+			"self_link",
 			"size",
 		}
 
@@ -96,10 +97,6 @@ func testAccCheckDataSourceGoogleComputeInstanceGroup(dataSourceName string) res
 			if dsAttrs[attrToTest] != rsAttrs[attrToTest] {
 				return fmt.Errorf("%s is %s; want %s", attrToTest, dsAttrs[attrToTest], rsAttrs[attrToTest])
 			}
-		}
-
-		if !compareSelfLinkOrResourceName("", dsAttrs["self_link"], rsAttrs["self_link"], nil) && dsAttrs["self_link"] != rsAttrs["self_link"] {
-			return fmt.Errorf("self link does not match: %s vs %s", dsAttrs["self_link"], rsAttrs["self_link"])
 		}
 
 		dsNamedPortsCount, ok := dsAttrs["named_port.#"]

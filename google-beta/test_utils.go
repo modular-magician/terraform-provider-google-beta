@@ -3,6 +3,7 @@ package google
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
@@ -71,12 +72,24 @@ func (d *ResourceDiffMock) GetChange(key string) (interface{}, interface{}) {
 	return d.Before[key], d.After[key]
 }
 
+func (d *ResourceDiffMock) Get(key string) interface{} {
+	return d.After[key]
+}
+
 func (d *ResourceDiffMock) Clear(key string) error {
 	if d.Cleared == nil {
 		d.Cleared = map[string]struct{}{}
 	}
 	d.Cleared[key] = struct{}{}
 	return nil
+}
+
+func toBool(attribute string) (bool, error) {
+	// Handle the case where an unset value defaults to false
+	if attribute == "" {
+		return false, nil
+	}
+	return strconv.ParseBool(attribute)
 }
 
 func checkDataSourceStateMatchesResourceState(dataSourceName, resourceName string) func(*terraform.State) error {

@@ -40,9 +40,9 @@ we cannot confirm or reverse changes to a key outside of Terraform.
 
 ```hcl
 resource "google_compute_backend_service_signed_url_key" "backend_key" {
-  name           = "test-key"
-  key_value      = "pPsVemX8GM46QVeezid6Rw=="
-  backend_service = "${google_compute_backend_service.example_backend.name}"
+  name            = "test-key"
+  key_value       = "pPsVemX8GM46QVeezid6Rw=="
+  backend_service = google_compute_backend_service.example_backend.name
 }
 
 resource "google_compute_backend_service" "example_backend" {
@@ -54,20 +54,15 @@ resource "google_compute_backend_service" "example_backend" {
   enable_cdn  = true
 
   backend {
-    group = "${google_compute_instance_group_manager.webservers.instance_group}"
+    group = google_compute_instance_group_manager.webservers.instance_group
   }
 
-  health_checks = ["${google_compute_http_health_check.default.self_link}"]
+  health_checks = [google_compute_http_health_check.default.self_link]
 }
 
 resource "google_compute_instance_group_manager" "webservers" {
   name               = "my-webservers"
-
-  version {
-    instance_template  = "${google_compute_instance_template.webserver.self_link}"
-    name               = "primary"
-  }
-
+  instance_template  = google_compute_instance_template.webserver.self_link
   base_instance_name = "webserver"
   zone               = "us-central1-f"
   target_size        = 1
@@ -146,4 +141,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

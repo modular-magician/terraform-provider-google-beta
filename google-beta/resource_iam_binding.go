@@ -27,31 +27,6 @@ var iamBindingSchema = map[string]*schema.Schema{
 			return schema.HashString(strings.ToLower(v.(string)))
 		},
 	},
-	"condition": {
-		Type:     schema.TypeList,
-		Optional: true,
-		MaxItems: 1,
-		ForceNew: true,
-		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"expression": {
-					Type:     schema.TypeString,
-					Required: true,
-					ForceNew: true,
-				},
-				"title": {
-					Type:     schema.TypeString,
-					Required: true,
-					ForceNew: true,
-				},
-				"description": {
-					Type:     schema.TypeString,
-					Optional: true,
-					ForceNew: true,
-				},
-			},
-		},
-	},
 	"etag": {
 		Type:     schema.TypeString,
 		Computed: true,
@@ -71,7 +46,7 @@ func ResourceIamBindingWithBatching(parentSpecificSchema map[string]*schema.Sche
 		Delete: resourceIamBindingDelete(newUpdaterFunc, enableBatching),
 		Schema: mergeSchemas(iamBindingSchema, parentSpecificSchema),
 		Importer: &schema.ResourceImporter{
-			State: iamBindingImport(newUpdaterFunc, resourceIdParser),
+			State: iamBindingImport(resourceIdParser),
 		},
 	}
 }
@@ -86,9 +61,8 @@ func resourceIamBindingCreateUpdate(newUpdaterFunc newResourceIamUpdaterFunc, en
 
 		binding := getResourceIamBinding(d)
 		modifyF := func(ep *cloudresourcemanager.Policy) error {
-			cleaned := filterBindingsWithRoleAndCondition(ep.Bindings, binding.Role, binding.Condition)
+			cleaned := removeAllBindingsWithRole(ep.Bindings, binding.Role)
 			ep.Bindings = append(cleaned, binding)
-			ep.Version = iamPolicyVersion
 			return nil
 		}
 
@@ -101,11 +75,7 @@ func resourceIamBindingCreateUpdate(newUpdaterFunc newResourceIamUpdaterFunc, en
 		if err != nil {
 			return err
 		}
-
 		d.SetId(updater.GetResourceId() + "/" + binding.Role)
-		if k := conditionKeyFromCondition(binding.Condition); !k.Empty() {
-			d.SetId(d.Id() + "/" + k.String())
-		}
 		return resourceIamBindingRead(newUpdaterFunc)(d, meta)
 	}
 }
@@ -119,57 +89,46 @@ func resourceIamBindingRead(newUpdaterFunc newResourceIamUpdaterFunc) schema.Rea
 		}
 
 		eBinding := getResourceIamBinding(d)
-		eCondition := conditionKeyFromCondition(eBinding.Condition)
 		p, err := iamPolicyReadWithRetry(updater)
 		if err != nil {
 			return handleNotFoundError(err, d, fmt.Sprintf("Resource %q with IAM Binding (Role %q)", updater.DescribeResource(), eBinding.Role))
 		}
-		log.Printf("[DEBUG] Retrieved policy for %s: %+v", updater.DescribeResource(), p)
-		log.Printf("[DEBUG] Looking for binding with role %q and condition %+v", eBinding.Role, eCondition)
+		log.Printf("[DEBUG]: Retrieved policy for %s: %+v", updater.DescribeResource(), p)
 
 		var binding *cloudresourcemanager.Binding
 		for _, b := range p.Bindings {
-			if b.Role == eBinding.Role && conditionKeyFromCondition(b.Condition) == eCondition {
-				binding = b
-				break
+			if b.Role != eBinding.Role {
+				continue
 			}
+			binding = b
+			break
 		}
-
 		if binding == nil {
-			log.Printf("[DEBUG] Binding for role %q and condition %+v not found in policy for %s, assuming it has no members.", eBinding.Role, eCondition, updater.DescribeResource())
+			log.Printf("[DEBUG]: Binding for role %q not found in policy for %s, assuming it has no members.", eBinding.Role, updater.DescribeResource())
 			d.Set("role", eBinding.Role)
 			d.Set("members", nil)
 			return nil
 		} else {
 			d.Set("role", binding.Role)
 			d.Set("members", binding.Members)
-			d.Set("condition", flattenIamCondition(binding.Condition))
 		}
 		d.Set("etag", p.Etag)
 		return nil
 	}
 }
 
-func iamBindingImport(newUpdaterFunc newResourceIamUpdaterFunc, resourceIdParser resourceIdParserFunc) schema.StateFunc {
+func iamBindingImport(resourceIdParser resourceIdParserFunc) schema.StateFunc {
 	return func(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
 		if resourceIdParser == nil {
 			return nil, errors.New("Import not supported for this IAM resource.")
 		}
 		config := m.(*Config)
 		s := strings.Fields(d.Id())
-		var id, role string
-		if len(s) < 2 {
+		if len(s) != 2 {
 			d.SetId("")
-			return nil, fmt.Errorf("Wrong number of parts to Binding id %s; expected 'resource_name role [condition_title]'.", s)
+			return nil, fmt.Errorf("Wrong number of parts to Binding id %s; expected 'resource_name role'.", s)
 		}
-
-		var conditionTitle string
-		if len(s) == 2 {
-			id, role = s[0], s[1]
-		} else {
-			// condition titles can have any characters in them, so re-join the split string
-			id, role, conditionTitle = s[0], s[1], strings.Join(s[2:], " ")
-		}
+		id, role := s[0], s[1]
 
 		// Set the ID only to the first part so all IAM types can share the same resourceIdParserFunc.
 		d.SetId(id)
@@ -182,36 +141,6 @@ func iamBindingImport(newUpdaterFunc newResourceIamUpdaterFunc, resourceIdParser
 		// Set the ID again so that the ID matches the ID it would have if it had been created via TF.
 		// Use the current ID in case it changed in the resourceIdParserFunc.
 		d.SetId(d.Id() + "/" + role)
-
-		// Since condition titles can have any character in them, we can't separate them from any other
-		// field the user might set in import (like the condition description and expression). So, we
-		// have the user just specify the title and then read the upstream policy to set the full
-		// condition. We can't rely on the read fn to do this for us because it looks for a match of the
-		// full condition.
-		updater, err := newUpdaterFunc(d, config)
-		if err != nil {
-			return nil, err
-		}
-		p, err := iamPolicyReadWithRetry(updater)
-		if err != nil {
-			return nil, err
-		}
-		var binding *cloudresourcemanager.Binding
-		for _, b := range p.Bindings {
-			if b.Role == role && conditionKeyFromCondition(b.Condition).Title == conditionTitle {
-				if binding != nil {
-					return nil, fmt.Errorf("Cannot import IAM member with condition title %q, it matches multiple conditions", conditionTitle)
-				}
-				binding = b
-			}
-		}
-		if binding != nil {
-			d.Set("condition", flattenIamCondition(binding.Condition))
-			if k := conditionKeyFromCondition(binding.Condition); !k.Empty() {
-				d.SetId(d.Id() + "/" + k.String())
-			}
-		}
-
 		// It is possible to return multiple bindings, since we can learn about all the bindings
 		// for this resource here.  Unfortunately, `terraform import` has some messy behavior here -
 		// there's no way to know at this point which resource is being imported, so it's not possible
@@ -236,7 +165,7 @@ func resourceIamBindingDelete(newUpdaterFunc newResourceIamUpdaterFunc, enableBa
 
 		binding := getResourceIamBinding(d)
 		modifyF := func(p *cloudresourcemanager.Policy) error {
-			p.Bindings = filterBindingsWithRoleAndCondition(p.Bindings, binding.Role, binding.Condition)
+			p.Bindings = removeAllBindingsWithRole(p.Bindings, binding.Role)
 			return nil
 		}
 
@@ -256,39 +185,8 @@ func resourceIamBindingDelete(newUpdaterFunc newResourceIamUpdaterFunc, enableBa
 
 func getResourceIamBinding(d *schema.ResourceData) *cloudresourcemanager.Binding {
 	members := d.Get("members").(*schema.Set).List()
-	b := &cloudresourcemanager.Binding{
+	return &cloudresourcemanager.Binding{
 		Members: convertStringArr(members),
 		Role:    d.Get("role").(string),
-	}
-	if c := expandIamCondition(d.Get("condition")); c != nil {
-		b.Condition = c
-	}
-	return b
-}
-
-func expandIamCondition(v interface{}) *cloudresourcemanager.Expr {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil
-	}
-	original := l[0].(map[string]interface{})
-	return &cloudresourcemanager.Expr{
-		Description:     original["description"].(string),
-		Expression:      original["expression"].(string),
-		Title:           original["title"].(string),
-		ForceSendFields: []string{"Description", "Expression", "Title"},
-	}
-}
-
-func flattenIamCondition(condition *cloudresourcemanager.Expr) []map[string]interface{} {
-	if conditionKeyFromCondition(condition).Empty() {
-		return nil
-	}
-	return []map[string]interface{}{
-		{
-			"expression":  condition.Expression,
-			"title":       condition.Title,
-			"description": condition.Description,
-		},
 	}
 }

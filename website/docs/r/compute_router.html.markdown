@@ -41,7 +41,7 @@ To get more information about Router, see:
 ```hcl
 resource "google_compute_router" "foobar" {
   name    = "my-router"
-  network = "${google_compute_network.foobar.name}"
+  network = google_compute_network.foobar.name
   bgp {
     asn               = 64514
     advertise_mode    = "CUSTOM"
@@ -56,7 +56,7 @@ resource "google_compute_router" "foobar" {
 }
 
 resource "google_compute_network" "foobar" {
-  name = "my-network"
+  name                    = "my-network"
   auto_create_subnetworks = false
 }
 ```
@@ -177,4 +177,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

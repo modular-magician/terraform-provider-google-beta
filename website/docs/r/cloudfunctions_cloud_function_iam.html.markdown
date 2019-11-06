@@ -116,11 +116,11 @@ exported:
 CloudFunctions cloudfunction IAM resources can be imported using the project, resource identifiers, role and member.
 
 ```
-$ terraform import google_cloudfunctions_function_iam_policy.editor {{project}}/{{region}}/{{cloud_function}}
+$ terraform import google_cloudfunctions_function_iam_policy.editor projects/{{project}}/locations/{{region}}/functions/{{cloud_function}}
 
-$ terraform import google_cloudfunctions_function_iam_binding.editor "{{project}}/{{region}}/{{cloud_function}} roles/viewer"
+$ terraform import google_cloudfunctions_function_iam_binding.editor "projects/{{project}}/locations/{{region}}/functions/{{cloud_function}} roles/viewer"
 
-$ terraform import google_cloudfunctions_function_iam_member.editor "{{project}}/{{region}}/{{cloud_function}} roles/viewer jane@example.com"
+$ terraform import google_cloudfunctions_function_iam_member.editor "projects/{{project}}/locations/{{region}}/functions/{{cloud_function}} roles/viewer jane@example.com"
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`
@@ -128,4 +128,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).
