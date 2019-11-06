@@ -24,7 +24,7 @@ description: |-
 A ScanConfig resource contains the configurations to launch a scan.
 
 ~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
+See [Provider Versions](https://terraform.io/docs/providers/google/provider_versions.html) for more details on beta resources.
 
 To get more information about ScanConfig, see:
 
@@ -42,12 +42,12 @@ To get more information about ScanConfig, see:
 
 ```hcl
 resource "google_compute_address" "scanner_static_ip" {
-  provider = "google-beta"
+  provider = google-beta
   name     = "scan-basic-static-ip"
 }
 
 resource "google_security_scanner_scan_config" "scan-config" {
-  provider         = "google-beta"
+  provider         = google-beta
   display_name     = "terraform-scan-config"
   starting_urls    = ["http://${google_compute_address.scanner_static_ip.address}"]
   target_platforms = ["COMPUTE"]
@@ -184,6 +184,8 @@ This resource provides the following
 ScanConfig can be imported using any of these accepted formats:
 
 ```
+$ terraform import -provider=google-beta google_security_scanner_scan_config.default projects/{{project}}/scanConfigs/{{name}}
+$ terraform import -provider=google-beta google_security_scanner_scan_config.default {{project}}/{{name}}
 $ terraform import -provider=google-beta google_security_scanner_scan_config.default {{name}}
 ```
 
@@ -192,4 +194,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

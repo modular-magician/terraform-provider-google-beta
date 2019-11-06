@@ -43,7 +43,7 @@ To get more information about ForwardingRule, see:
 ```hcl
 resource "google_compute_forwarding_rule" "default" {
   name       = "website-forwarding-rule"
-  target     = "${google_compute_target_pool.default.self_link}"
+  target     = google_compute_target_pool.default.self_link
   port_range = "80"
 }
 
@@ -62,20 +62,20 @@ resource "google_compute_target_pool" "default" {
 ```hcl
 // Forwarding rule for Internal Load Balancing
 resource "google_compute_forwarding_rule" "default" {
-  name                  = "website-forwarding-rule"
-  region                = "us-central1"
+  name   = "website-forwarding-rule"
+  region = "us-central1"
 
   load_balancing_scheme = "INTERNAL"
-  backend_service       = "${google_compute_region_backend_service.backend.self_link}"
+  backend_service       = google_compute_region_backend_service.backend.self_link
   all_ports             = true
-  network               = "${google_compute_network.default.name}"
-  subnetwork            = "${google_compute_subnetwork.default.name}"
+  network               = google_compute_network.default.name
+  subnetwork            = google_compute_subnetwork.default.name
 }
 
 resource "google_compute_region_backend_service" "backend" {
-  name                  = "website-backend"
-  region                = "us-central1"
-  health_checks         = ["${google_compute_health_check.hc.self_link}"]
+  name          = "website-backend"
+  region        = "us-central1"
+  health_checks = [google_compute_health_check.hc.self_link]
 }
 
 resource "google_compute_health_check" "hc" {
@@ -89,7 +89,7 @@ resource "google_compute_health_check" "hc" {
 }
 
 resource "google_compute_network" "default" {
-  name = "website-net"
+  name                    = "website-net"
   auto_create_subnetworks = false
 }
 
@@ -97,7 +97,7 @@ resource "google_compute_subnetwork" "default" {
   name          = "website-net"
   ip_cidr_range = "10.0.0.0/16"
   region        = "us-central1"
-  network       = "${google_compute_network.default.self_link}"
+  network       = google_compute_network.default.self_link
 }
 ```
 
@@ -163,19 +163,13 @@ The following arguments are supported:
   A BackendService to receive the matched traffic. This is used only
   for INTERNAL load balancing.
 
-* `ip_version` -
-  (Optional, Deprecated)
-  ipVersion is not a valid field for regional forwarding rules.
-
 * `load_balancing_scheme` -
   (Optional)
-  This signifies what the ForwardingRule will be used for and can be
-  EXTERNAL, INTERNAL, or INTERNAL_MANAGED. EXTERNAL is used for Classic
-  Cloud VPN gateways, protocol forwarding to VMs from an external IP address,
-  and HTTP(S), SSL Proxy, TCP Proxy, and Network TCP/UDP load balancers.
-  INTERNAL is used for protocol forwarding to VMs from an internal IP address,
-  and internal TCP/UDP load balancers.
-  INTERNAL_MANAGED is used for internal HTTP(S) load balancers.
+  This signifies what the ForwardingRule will be used for and can only
+  take the following values: INTERNAL, EXTERNAL The value of INTERNAL
+  means that this will be used for Internal Network Load Balancing (TCP,
+  UDP). The value of EXTERNAL means that this will be used for External
+  Load Balancing (HTTP(S) LB, External TCP/UDP LB, SSL Proxy)
 
 * `network` -
   (Optional)
@@ -230,7 +224,7 @@ The following arguments are supported:
   object.
 
 * `labels` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional, [Beta](https://terraform.io/docs/providers/google/provider_versions.html))
   Labels to apply to this forwarding rule.  A list of key->value pairs.
 
 * `all_ports` -
@@ -312,4 +306,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

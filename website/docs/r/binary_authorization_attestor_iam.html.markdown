@@ -112,11 +112,11 @@ exported:
 BinaryAuthorization attestor IAM resources can be imported using the project, resource identifiers, role and member.
 
 ```
-$ terraform import google_binary_authorization_attestor_iam_policy.editor {{project}}/{{attestor}}
+$ terraform import google_binary_authorization_attestor_iam_policy.editor projects/{{project}}/attestors/{{attestor}}
 
-$ terraform import google_binary_authorization_attestor_iam_binding.editor "{{project}}/{{attestor}} roles/viewer"
+$ terraform import google_binary_authorization_attestor_iam_binding.editor "projects/{{project}}/attestors/{{attestor}} roles/viewer"
 
-$ terraform import google_binary_authorization_attestor_iam_member.editor "{{project}}/{{attestor}} roles/viewer jane@example.com"
+$ terraform import google_binary_authorization_attestor_iam_member.editor "projects/{{project}}/attestors/{{attestor}} roles/viewer jane@example.com"
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`
@@ -124,4 +124,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

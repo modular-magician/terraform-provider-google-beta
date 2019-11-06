@@ -50,6 +50,7 @@ func testAccDataSourceComputeResourcePolicyCheck(dataSourceName string, resource
 		rsAttr := rs.Primary.Attributes
 
 		policyAttrsToTest := []string{
+			"self_link",
 			"name",
 		}
 
@@ -62,10 +63,6 @@ func testAccDataSourceComputeResourcePolicyCheck(dataSourceName string, resource
 					rsAttr[attrToCheck],
 				)
 			}
-		}
-
-		if !compareSelfLinkOrResourceName("", dsAttr["self_link"], rsAttr["self_link"], nil) && dsAttr["self_link"] != rsAttr["self_link"] {
-			return fmt.Errorf("self link does not match: %s vs %s", dsAttr["self_link"], rsAttr["self_link"])
 		}
 
 		return nil

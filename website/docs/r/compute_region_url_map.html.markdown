@@ -26,7 +26,7 @@ UrlMaps are used to route requests to a backend service based on rules
 that you define for the host and path of an incoming URL.
 
 ~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
+See [Provider Versions](https://terraform.io/docs/providers/google/provider_versions.html) for more details on beta resources.
 
 
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
@@ -39,14 +39,14 @@ See [Provider Versions](https://terraform.io/docs/providers/google/guides/provid
 
 ```hcl
 resource "google_compute_region_url_map" "regionurlmap" {
-  provider = "google-beta"
+  provider = google-beta
 
-  region      = "us-central1"
+  region = "us-central1"
 
   name        = "regionurlmap"
   description = "a description"
 
-  default_service = "${google_compute_region_backend_service.home.self_link}"
+  default_service = google_compute_region_backend_service.home.self_link
 
   host_rule {
     hosts        = ["mysite.com"]
@@ -55,59 +55,59 @@ resource "google_compute_region_url_map" "regionurlmap" {
 
   path_matcher {
     name            = "allpaths"
-    default_service = "${google_compute_region_backend_service.home.self_link}"
+    default_service = google_compute_region_backend_service.home.self_link
 
     path_rule {
       paths   = ["/home"]
-      service = "${google_compute_region_backend_service.home.self_link}"
+      service = google_compute_region_backend_service.home.self_link
     }
 
     path_rule {
       paths   = ["/login"]
-      service = "${google_compute_region_backend_service.login.self_link}"
+      service = google_compute_region_backend_service.login.self_link
     }
   }
 
   test {
-    service = "${google_compute_region_backend_service.home.self_link}"
+    service = google_compute_region_backend_service.home.self_link
     host    = "hi.com"
     path    = "/home"
   }
 }
 
 resource "google_compute_region_backend_service" "login" {
-  provider = "google-beta"
+  provider = google-beta
 
-  region      = "us-central1"
+  region = "us-central1"
 
   name        = "login"
   protocol    = "HTTP"
   timeout_sec = 10
 
-  health_checks = ["${google_compute_region_health_check.default.self_link}"]
+  health_checks = [google_compute_region_health_check.default.self_link]
 }
 
 resource "google_compute_region_backend_service" "home" {
-  provider = "google-beta"
+  provider = google-beta
 
-  region      = "us-central1"
+  region = "us-central1"
 
   name        = "home"
   protocol    = "HTTP"
   timeout_sec = 10
 
-  health_checks = ["${google_compute_region_health_check.default.self_link}"]
+  health_checks = [google_compute_region_health_check.default.self_link]
 }
 
 resource "google_compute_region_health_check" "default" {
-  provider = "google-beta"
+  provider = google-beta
 
-  region	     = "us-central1"
+  region = "us-central1"
 
   name               = "health-check"
   check_interval_sec = 1
   timeout_sec        = 1
-  http_health_check  {
+  http_health_check {
     port         = 80
     request_path = "/"
   }
@@ -279,4 +279,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

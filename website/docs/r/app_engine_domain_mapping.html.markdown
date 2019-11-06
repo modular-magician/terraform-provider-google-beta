@@ -41,7 +41,7 @@ To get more information about DomainMapping, see:
 ```hcl
 resource "google_app_engine_domain_mapping" "domain_mapping" {
   domain_name = "dm-test-.gcp.tfacc.hashicorptest.com"
-  
+
   ssl_settings {
     ssl_management_type = "AUTOMATIC"
   }
@@ -138,6 +138,8 @@ This resource provides the following
 DomainMapping can be imported using any of these accepted formats:
 
 ```
+$ terraform import google_app_engine_domain_mapping.default apps/{{project}}/domainMappings/{{domain_name}}
+$ terraform import google_app_engine_domain_mapping.default {{project}}/{{domain_name}}
 $ terraform import google_app_engine_domain_mapping.default {{domain_name}}
 ```
 
@@ -146,4 +148,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

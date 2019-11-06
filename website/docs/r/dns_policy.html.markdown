@@ -26,7 +26,7 @@ A policy is a collection of DNS rules applied to one or more Virtual
 Private Cloud resources.
 
 ~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
+See [Provider Versions](https://terraform.io/docs/providers/google/provider_versions.html) for more details on beta resources.
 
 To get more information about Policy, see:
 
@@ -44,9 +44,9 @@ To get more information about Policy, see:
 
 ```hcl
 resource "google_dns_policy" "example-policy" {
-  provider = "google-beta"
+  provider = google-beta
 
-  name = "example-policy"
+  name                      = "example-policy"
   enable_inbound_forwarding = true
 
   enable_logging = true
@@ -61,28 +61,28 @@ resource "google_dns_policy" "example-policy" {
   }
 
   networks {
-    network_url =  "${google_compute_network.network-1.self_link}"
+    network_url = google_compute_network.network-1.self_link
   }
   networks {
-    network_url =  "${google_compute_network.network-2.self_link}"
+    network_url = google_compute_network.network-2.self_link
   }
 }
 
 resource "google_compute_network" "network-1" {
-  provider = "google-beta"
+  provider = google-beta
 
-  name = "network-1"
+  name                    = "network-1"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_network" "network-2" {
-  provider = "google-beta"
+  provider = google-beta
 
-  name = "network-2"
+  name                    = "network-2"
   auto_create_subnetworks = false
 }
 
-provider "google-beta"{
+provider "google-beta" {
   region = "us-central1"
   zone   = "us-central1-a"
 }
@@ -179,4 +179,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

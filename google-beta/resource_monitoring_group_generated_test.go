@@ -51,7 +51,7 @@ func TestAccMonitoringGroup_monitoringGroupBasicExample(t *testing.T) {
 func testAccMonitoringGroup_monitoringGroupBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_monitoring_group" "basic" {
-  display_name = "tf-test MonitoringGroup%{random_suffix}"
+  display_name = "New Test Group%{random_suffix}"
 
   filter = "resource.metadata.region=\"europe-west2\""
 }
@@ -85,14 +85,14 @@ func TestAccMonitoringGroup_monitoringGroupSubgroupExample(t *testing.T) {
 func testAccMonitoringGroup_monitoringGroupSubgroupExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_monitoring_group" "parent" {
-  display_name = "tf-test MonitoringSubGroup%{random_suffix}"
-  filter = "resource.metadata.region=\"europe-west2\""
+  display_name = "New Test SubGroup%{random_suffix}"
+  filter       = "resource.metadata.region=\"europe-west2\""
 }
 
 resource "google_monitoring_group" "subgroup" {
-  display_name = "tf-test MonitoringSubGroup%{random_suffix}"
-  filter = "resource.metadata.region=\"europe-west2\""
-  parent_name =  "${google_monitoring_group.parent.name}"
+  display_name = "New Test SubGroup%{random_suffix}"
+  filter       = "resource.metadata.region=\"europe-west2\""
+  parent_name  = google_monitoring_group.parent.name
 }
 `, context)
 }

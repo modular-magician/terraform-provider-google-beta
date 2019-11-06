@@ -24,7 +24,7 @@ description: |-
 Serverless VPC Access connector resource.
 
 ~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
+See [Provider Versions](https://terraform.io/docs/providers/google/provider_versions.html) for more details on beta resources.
 
 To get more information about Connector, see:
 
@@ -41,11 +41,12 @@ To get more information about Connector, see:
 
 
 ```hcl
-provider "google-beta" {}
+provider "google-beta" {
+}
 
 resource "google_vpc_access_connector" "connector" {
   name          = "my-connector"
-  provider      = "google-beta"
+  provider      = google-beta
   region        = "us-central1"
   ip_cidr_range = "10.8.0.0/28"
   network       = "default"
@@ -125,4 +126,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).

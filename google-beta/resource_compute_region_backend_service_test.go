@@ -6,6 +6,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"google.golang.org/api/compute/v1"
 )
 
 func TestAccComputeRegionBackendService_basic(t *testing.T) {
@@ -14,6 +16,7 @@ func TestAccComputeRegionBackendService_basic(t *testing.T) {
 	serviceName := fmt.Sprintf("tf-test-%s", acctest.RandString(10))
 	checkName := fmt.Sprintf("tf-test-%s", acctest.RandString(10))
 	extraCheckName := fmt.Sprintf("tf-test-%s", acctest.RandString(10))
+	var svc compute.BackendService
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -22,20 +25,18 @@ func TestAccComputeRegionBackendService_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeRegionBackendService_basic(serviceName, checkName),
-			},
-			{
-				ResourceName:      "google_compute_region_backend_service.foobar",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeRegionBackendServiceExists(
+						"google_compute_region_backend_service.foobar", &svc),
+				),
 			},
 			{
 				Config: testAccComputeRegionBackendService_basicModified(
 					serviceName, checkName, extraCheckName),
-			},
-			{
-				ResourceName:      "google_compute_region_backend_service.foobar",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeRegionBackendServiceExists(
+						"google_compute_region_backend_service.foobar", &svc),
+				),
 			},
 		},
 	})
@@ -48,6 +49,7 @@ func TestAccComputeRegionBackendService_withBackend(t *testing.T) {
 	igName := fmt.Sprintf("tf-test-%s", acctest.RandString(10))
 	itName := fmt.Sprintf("tf-test-%s", acctest.RandString(10))
 	checkName := fmt.Sprintf("tf-test-%s", acctest.RandString(10))
+	var svc compute.BackendService
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -56,14 +58,23 @@ func TestAccComputeRegionBackendService_withBackend(t *testing.T) {
 			{
 				Config: testAccComputeRegionBackendService_withBackend(
 					serviceName, igName, itName, checkName, 10),
-			},
-			{
-				ResourceName:      "google_compute_region_backend_service.lipsum",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeRegionBackendServiceExists(
+						"google_compute_region_backend_service.lipsum", &svc),
+				),
 			},
 		},
 	})
+
+	if svc.TimeoutSec != 10 {
+		t.Errorf("Expected TimeoutSec == 10, got %d", svc.TimeoutSec)
+	}
+	if svc.Protocol != "TCP" {
+		t.Errorf("Expected Protocol to be TCP, got %q", svc.Protocol)
+	}
+	if len(svc.Backends) != 1 {
+		t.Errorf("Expected 1 backend, got %d", len(svc.Backends))
+	}
 }
 
 func TestAccComputeRegionBackendService_withBackendAndUpdate(t *testing.T) {
@@ -73,6 +84,7 @@ func TestAccComputeRegionBackendService_withBackendAndUpdate(t *testing.T) {
 	igName := fmt.Sprintf("tf-test-%s", acctest.RandString(10))
 	itName := fmt.Sprintf("tf-test-%s", acctest.RandString(10))
 	checkName := fmt.Sprintf("tf-test-%s", acctest.RandString(10))
+	var svc compute.BackendService
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -81,23 +93,31 @@ func TestAccComputeRegionBackendService_withBackendAndUpdate(t *testing.T) {
 			{
 				Config: testAccComputeRegionBackendService_withBackend(
 					serviceName, igName, itName, checkName, 10),
-			},
-			{
-				ResourceName:      "google_compute_region_backend_service.lipsum",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeRegionBackendServiceExists(
+						"google_compute_region_backend_service.lipsum", &svc),
+				),
 			},
 			{
 				Config: testAccComputeRegionBackendService_withBackend(
 					serviceName, igName, itName, checkName, 20),
-			},
-			{
-				ResourceName:      "google_compute_region_backend_service.lipsum",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeRegionBackendServiceExists(
+						"google_compute_region_backend_service.lipsum", &svc),
+				),
 			},
 		},
 	})
+
+	if svc.TimeoutSec != 20 {
+		t.Errorf("Expected TimeoutSec == 20, got %d", svc.TimeoutSec)
+	}
+	if svc.Protocol != "TCP" {
+		t.Errorf("Expected Protocol to be TCP, got %q", svc.Protocol)
+	}
+	if len(svc.Backends) != 1 {
+		t.Errorf("Expected 1 backend, got %d", len(svc.Backends))
+	}
 }
 
 func TestAccComputeRegionBackendService_withConnectionDrainingAndUpdate(t *testing.T) {
@@ -105,6 +125,7 @@ func TestAccComputeRegionBackendService_withConnectionDrainingAndUpdate(t *testi
 
 	serviceName := fmt.Sprintf("tf-test-%s", acctest.RandString(10))
 	checkName := fmt.Sprintf("tf-test-%s", acctest.RandString(10))
+	var svc compute.BackendService
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -113,284 +134,53 @@ func TestAccComputeRegionBackendService_withConnectionDrainingAndUpdate(t *testi
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeRegionBackendService_withConnectionDraining(serviceName, checkName, 10),
-			},
-			{
-				ResourceName:      "google_compute_region_backend_service.foobar",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeRegionBackendServiceExists(
+						"google_compute_region_backend_service.foobar", &svc),
+				),
 			},
 			{
 				Config: testAccComputeRegionBackendService_basic(serviceName, checkName),
-			},
-			{
-				ResourceName:      "google_compute_region_backend_service.foobar",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-		},
-	})
-}
-
-func TestAccComputeRegionBackendService_ilbUpdateBasic(t *testing.T) {
-	t.Parallel()
-
-	backendName := fmt.Sprintf("foo-%s", acctest.RandString(10))
-	checkName := fmt.Sprintf("bar-%s", acctest.RandString(10))
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckComputeRegionBackendServiceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccComputeRegionBackendService_ilbBasic(backendName, checkName),
-			},
-			{
-				ResourceName:      "google_compute_region_backend_service.foobar",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-			{
-				Config: testAccComputeRegionBackendService_ilbUpdateBasic(backendName, checkName),
-			},
-			{
-				ResourceName:      "google_compute_region_backend_service.foobar",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeRegionBackendServiceExists(
+						"google_compute_region_backend_service.foobar", &svc),
+				),
 			},
 		},
 	})
+
+	if svc.ConnectionDraining.DrainingTimeoutSec != 0 {
+		t.Errorf("Expected ConnectionDraining.DrainingTimeoutSec == 0, got %d", svc.ConnectionDraining.DrainingTimeoutSec)
+	}
 }
 
-func TestAccComputeRegionBackendService_ilbUpdateFull(t *testing.T) {
-	t.Parallel()
+func testAccCheckComputeRegionBackendServiceExists(n string, svc *compute.BackendService) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("Not found: %s", n)
+		}
 
-	randString := acctest.RandString(10)
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("No ID is set")
+		}
 
-	backendName := fmt.Sprintf("foo-%s", randString)
-	checkName := fmt.Sprintf("bar-%s", randString)
-	igName := fmt.Sprintf("baz-%s", randString)
-	instanceName := fmt.Sprintf("boz-%s", randString)
+		config := testAccProvider.Meta().(*Config)
 
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckComputeRegionBackendServiceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccComputeRegionBackendService_ilbFull(backendName, checkName),
-			},
-			{
-				ResourceName:      "google_compute_region_backend_service.foobar",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-			{
-				Config: testAccComputeRegionBackendService_ilbUpdateFull(backendName, igName, instanceName, checkName),
-			},
-			{
-				ResourceName:      "google_compute_region_backend_service.foobar",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-		},
-	})
-}
+		found, err := config.clientCompute.RegionBackendServices.Get(
+			config.Project, config.Region, rs.Primary.ID).Do()
+		if err != nil {
+			return err
+		}
 
-func testAccComputeRegionBackendService_ilbBasic(serviceName, checkName string) string {
-	return fmt.Sprintf(`
-resource "google_compute_region_backend_service" "foobar" {
+		if found.Name != rs.Primary.ID {
+			return fmt.Errorf("Backend service not found")
+		}
 
-  name = "%s"
-  health_checks = ["${google_compute_health_check.health_check.self_link}"]
-  protocol = "HTTP"
-  load_balancing_scheme = "INTERNAL_MANAGED"
-  locality_lb_policy = "RING_HASH"
-  circuit_breakers {
-    max_connections = 10
-  }
-  consistent_hash {
-    http_cookie {
-      ttl {
-        seconds = 11
-        nanos = 1234
-      }
-      name = "mycookie"
-    }
-  }
-  outlier_detection {
-    consecutive_errors = 2
-  }
-}
+		*svc = *found
 
-resource "google_compute_health_check" "health_check" {
-
-  name = "%s"
-  http_health_check {
-
-  }
-}
-`, serviceName, checkName)
-}
-
-func testAccComputeRegionBackendService_ilbUpdateBasic(serviceName, checkName string) string {
-	return fmt.Sprintf(`
-resource "google_compute_region_backend_service" "foobar" {
-
-  name = "%s"
-  health_checks = ["${google_compute_health_check.health_check.self_link}"]
-  protocol = "HTTP"
-  load_balancing_scheme = "INTERNAL_MANAGED"
-  locality_lb_policy = "RANDOM"
-  circuit_breakers {
-    max_connections = 10
-  }
-  outlier_detection {
-    consecutive_errors = 2
-  }
-}
-
-resource "google_compute_health_check" "health_check" {
-
-  name = "%s"
-  http_health_check {
-
-  }
-}
-`, serviceName, checkName)
-}
-
-func testAccComputeRegionBackendService_ilbFull(serviceName, checkName string) string {
-	return fmt.Sprintf(`
-resource "google_compute_region_backend_service" "foobar" {
-
-  name = "%s"
-  health_checks = ["${google_compute_health_check.health_check.self_link}"]
-  protocol = "HTTP"
-  load_balancing_scheme = "INTERNAL_MANAGED"
-  locality_lb_policy = "MAGLEV"
-  circuit_breakers {
-    max_connections = 10
-  }
-  consistent_hash {
-    http_cookie {
-      ttl {
-        seconds = 11
-        nanos = 1234
-      }
-      name = "mycookie"
-    }
-  }
-  outlier_detection {
-    consecutive_errors = 2
-  }
-}
-
-resource "google_compute_health_check" "health_check" {
-
-  name = "%s"
-  http_health_check {
-
-  }
-}
-`, serviceName, checkName)
-}
-
-func testAccComputeRegionBackendService_ilbUpdateFull(serviceName, igName, instanceName, checkName string) string {
-	return fmt.Sprintf(`
-resource "google_compute_region_backend_service" "foobar" {
-
-  name = "%s"
-  health_checks = ["${google_compute_health_check.health_check.self_link}"]
-  protocol = "HTTP"
-  load_balancing_scheme = "INTERNAL_MANAGED"
-  locality_lb_policy = "MAGLEV"
-  backend {
-    balancing_mode = "UTILIZATION"
-    capacity_scaler = 0.5
-    description = "The backend"
-    group = google_compute_instance_group.group.self_link
-    max_rate = 6
-    max_utilization = 0.5
-  }
-  circuit_breakers {
-    connect_timeout {
-      seconds = 3
-      nanos = 4
-    }
-    max_connections = 11
-    max_requests_per_connection = 12
-    max_pending_requests = 13
-    max_requests = 14
-    max_retries = 15
-  }
-  consistent_hash {
-    http_cookie {
-      ttl {
-        seconds = 12
-      }
-      name = "mycookie2"
-      path = "mycookie2/path"
-    }
-    minimum_ring_size = 16
-  }
-  log_config {
-    enable = true
-    sample_rate = 0.5
-  }
-  outlier_detection {
-    base_ejection_time {
-      seconds = 0
-      nanos = 5
-    }
-    consecutive_errors = 1
-    consecutive_gateway_failure = 3
-    enforcing_consecutive_errors = 4
-    enforcing_consecutive_gateway_failure = 5
-    enforcing_success_rate = 6
-    interval {
-      seconds = 7
-    }
-    max_ejection_percent = 99
-    success_rate_minimum_hosts = 98
-    success_rate_request_volume = 97
-    success_rate_stdev_factor = 1800
-  }
-}
-
-resource "google_compute_instance_group" "group" {
-  name = "%s"
-  instances = [ "${google_compute_instance.ig_instance.self_link}" ]
-}
-
-data "google_compute_image" "my_image" {
-  family  = "debian-9"
-  project = "debian-cloud"
-}
-
-resource "google_compute_instance" "ig_instance" {
-  name = "%s"
-  machine_type = "n1-standard-1"
-
-  boot_disk {
-    initialize_params {
-      image = "${data.google_compute_image.my_image.self_link}"
-    }
-  }
-
-  network_interface {
-    network = "default"
-  }
-}
-
-resource "google_compute_health_check" "health_check" {
-
-  name = "%s"
-  http_health_check {
-
-  }
-}
-`, serviceName, igName, instanceName, checkName)
+		return nil
+	}
 }
 
 func testAccComputeRegionBackendService_basic(serviceName, checkName string) string {

@@ -42,7 +42,7 @@ resource "google_pubsub_topic" "example" {
 
 resource "google_pubsub_subscription" "example" {
   name  = "example-subscription"
-  topic = "${google_pubsub_topic.example.name}"
+  topic = google_pubsub_topic.example.name
 
   ack_deadline_seconds = 20
 
@@ -53,7 +53,7 @@ resource "google_pubsub_subscription" "example" {
   push_config {
     push_endpoint = "https://example.com/push"
 
-    attributes {
+    attributes = {
       x-goog-version = "v1"
     }
   }
@@ -74,7 +74,7 @@ resource "google_pubsub_topic" "example" {
 
 resource "google_pubsub_subscription" "example" {
   name  = "example-subscription"
-  topic = "${google_pubsub_topic.example.name}"
+  topic = google_pubsub_topic.example.name
 
   labels = {
     foo = "bar"
@@ -82,7 +82,7 @@ resource "google_pubsub_subscription" "example" {
 
   # 20 minutes
   message_retention_duration = "1200s"
-  retain_acked_messages = true
+  retain_acked_messages      = true
 
   ack_deadline_seconds = 20
 
@@ -103,7 +103,7 @@ resource "google_pubsub_topic" "example" {
 resource "google_pubsub_subscription" "example" {
   project = "subscription-project"
   name    = "example-subscription"
-  topic   = "${google_pubsub_topic.example.name}"
+  topic   = google_pubsub_topic.example.name
 }
 ```
 
@@ -176,9 +176,8 @@ The following arguments are supported:
   A subscription is considered active as long as any connected subscriber
   is successfully consuming messages from the subscription or is issuing
   operations on the subscription. If expirationPolicy is not set, a default
-  policy with ttl of 31 days will be used.  If it is set but left empty, the
-  resource never expires.  The minimum allowed value for expirationPolicy.ttl
-  is 1 day.  Structure is documented below.
+  policy with ttl of 31 days will be used. The minimum allowed value for
+  expirationPolicy.ttl is 1 day.  Structure is documented below.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -242,8 +241,10 @@ The `expiration_policy` block supports:
 * `ttl` -
   (Optional)
   Specifies the "time-to-live" duration for an associated resource. The
-  resource expires if it is not active for a period of ttl.
-  If ttl is not set, the associated resource never expires.
+  resource expires if it is not active for a period of ttl. The definition
+  of "activity" depends on the type of the associated resource. The minimum
+  and maximum allowed values for ttl depend on the type of the associated
+  resource, as well. If ttl is not set, the associated resource never expires.
   A duration in seconds with up to nine fractional digits, terminated by 's'.
   Example - "3.5s".
 
@@ -279,4 +280,4 @@ as an argument so that Terraform uses the correct provider to import your resour
 
 ## User Project Overrides
 
-This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/guides/provider_reference.html#user_project_override).
+This resource supports [User Project Overrides](https://www.terraform.io/docs/providers/google/provider_reference.html#user_project_override).
