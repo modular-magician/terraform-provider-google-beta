@@ -148,8 +148,8 @@ func TestAccRegionInstanceGroupManager_rollingUpdatePolicy(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config:             testAccRegionInstanceGroupManager_rollingUpdatePolicySetToDefault(igm),
-				PlanOnly:           true,
+				Config: testAccRegionInstanceGroupManager_rollingUpdatePolicySetToDefault(igm),
+				PlanOnly: true,
 				ExpectNonEmptyPlan: false,
 			},
 			{
@@ -280,18 +280,8 @@ func testAccCheckRegionInstanceGroupManagerDestroy(s *terraform.State) error {
 		if rs.Type != "google_compute_region_instance_group_manager" {
 			continue
 		}
-		id, err := parseRegionInstanceGroupManagerId(rs.Primary.ID)
-		if err != nil {
-			return err
-		}
-		if id.Project == "" {
-			id.Project = config.Project
-		}
-		if id.Region == "" {
-			id.Region = rs.Primary.Attributes["region"]
-		}
-		_, err = config.clientCompute.RegionInstanceGroupManagers.Get(
-			id.Project, id.Region, id.Name).Do()
+		_, err := config.clientCompute.RegionInstanceGroupManagers.Get(
+			rs.Primary.Attributes["project"], rs.Primary.Attributes["region"], rs.Primary.Attributes["name"]).Do()
 		if err == nil {
 			return fmt.Errorf("RegionInstanceGroupManager still exists")
 		}
@@ -657,6 +647,7 @@ func testAccRegionInstanceGroupManager_separateRegions(igm1, igm2 string) string
 	}
 	`, igm1, igm2)
 }
+
 
 func testAccRegionInstanceGroupManager_autoHealingPolicies(template, target, igm, hck string) string {
 	return fmt.Sprintf(`
