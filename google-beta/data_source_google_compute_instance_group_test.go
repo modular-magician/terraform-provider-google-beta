@@ -3,6 +3,7 @@ package google
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -185,11 +186,8 @@ func testAccCheckDataSourceGoogleComputeInstanceGroup(dataSourceName string) res
 		sort.Strings(dsInstancesValues)
 		sort.Strings(rsInstancesValues)
 
-		for k, dsAttr := range dsInstancesValues {
-			rsAttr := rsInstancesValues[k]
-			if !compareSelfLinkOrResourceName("", dsAttr, rsAttr, nil) && dsAttr != rsAttr {
-				return fmt.Errorf("instance expected value %s did not match real value %s. expected list of instances %v, received %v", rsAttr, dsAttr, rsInstancesValues, dsInstancesValues)
-			}
+		if !reflect.DeepEqual(dsInstancesValues, rsInstancesValues) {
+			return fmt.Errorf("expected %v list of instances, received %v", rsInstancesValues, dsInstancesValues)
 		}
 
 		return nil
