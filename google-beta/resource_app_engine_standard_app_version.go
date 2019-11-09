@@ -350,14 +350,8 @@ func resourceAppEngineStandardAppVersionCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(id)
 
-	op := &appengine.Operation{}
-	err = Convert(res, op)
-	if err != nil {
-		return err
-	}
-
 	waitErr := appEngineOperationWaitTime(
-		config.clientAppEngine, op, project, "Creating StandardAppVersion",
+		config, res, project, "Creating StandardAppVersion",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if waitErr != nil {
@@ -511,14 +505,8 @@ func resourceAppEngineStandardAppVersionUpdate(d *schema.ResourceData, meta inte
 		return fmt.Errorf("Error updating StandardAppVersion %q: %s", d.Id(), err)
 	}
 
-	op := &appengine.Operation{}
-	err = Convert(res, op)
-	if err != nil {
-		return err
-	}
-
 	err = appEngineOperationWaitTime(
-		config.clientAppEngine, op, project, "Updating StandardAppVersion",
+		config, res, project, "Updating StandardAppVersion",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
 
 	if err != nil {

@@ -22,7 +22,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-	"google.golang.org/api/compute/v1"
 )
 
 func resourceComputeNetwork() *schema.Resource {
@@ -157,14 +156,8 @@ func resourceComputeNetworkCreate(d *schema.ResourceData, meta interface{}) erro
 	}
 	d.SetId(id)
 
-	op := &compute.Operation{}
-	err = Convert(res, op)
-	if err != nil {
-		return err
-	}
-
 	waitErr := computeOperationWaitTime(
-		config.clientCompute, op, project, "Creating Network",
+		config, res, project, "Creating Network",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if waitErr != nil {
@@ -294,16 +287,9 @@ func resourceComputeNetworkUpdate(d *schema.ResourceData, meta interface{}) erro
 			return fmt.Errorf("Error updating Network %q: %s", d.Id(), err)
 		}
 
-		op := &compute.Operation{}
-		err = Convert(res, op)
-		if err != nil {
-			return err
-		}
-
 		err = computeOperationWaitTime(
-			config.clientCompute, op, project, "Updating Network",
+			config, res, project, "Updating Network",
 			int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 		if err != nil {
 			return err
 		}
@@ -337,14 +323,8 @@ func resourceComputeNetworkDelete(d *schema.ResourceData, meta interface{}) erro
 		return handleNotFoundError(err, d, "Network")
 	}
 
-	op := &compute.Operation{}
-	err = Convert(res, op)
-	if err != nil {
-		return err
-	}
-
 	err = computeOperationWaitTime(
-		config.clientCompute, op, project, "Deleting Network",
+		config, res, project, "Deleting Network",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {

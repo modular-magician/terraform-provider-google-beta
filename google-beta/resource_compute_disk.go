@@ -24,7 +24,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"google.golang.org/api/compute/v1"
 	"google.golang.org/api/googleapi"
 )
 
@@ -556,14 +555,8 @@ func resourceComputeDiskCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.SetId(id)
 
-	op := &compute.Operation{}
-	err = Convert(res, op)
-	if err != nil {
-		return err
-	}
-
 	waitErr := computeOperationWaitTime(
-		config.clientCompute, op, project, "Creating Disk",
+		config, res, project, "Creating Disk",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if waitErr != nil {
@@ -712,16 +705,9 @@ func resourceComputeDiskUpdate(d *schema.ResourceData, meta interface{}) error {
 			return fmt.Errorf("Error updating Disk %q: %s", d.Id(), err)
 		}
 
-		op := &compute.Operation{}
-		err = Convert(res, op)
-		if err != nil {
-			return err
-		}
-
 		err = computeOperationWaitTime(
-			config.clientCompute, op, project, "Updating Disk",
+			config, res, project, "Updating Disk",
 			int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 		if err != nil {
 			return err
 		}
@@ -748,16 +734,9 @@ func resourceComputeDiskUpdate(d *schema.ResourceData, meta interface{}) error {
 			return fmt.Errorf("Error updating Disk %q: %s", d.Id(), err)
 		}
 
-		op := &compute.Operation{}
-		err = Convert(res, op)
-		if err != nil {
-			return err
-		}
-
 		err = computeOperationWaitTime(
-			config.clientCompute, op, project, "Updating Disk",
+			config, res, project, "Updating Disk",
 			int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 		if err != nil {
 			return err
 		}
@@ -845,14 +824,8 @@ func resourceComputeDiskDelete(d *schema.ResourceData, meta interface{}) error {
 		return handleNotFoundError(err, d, "Disk")
 	}
 
-	op := &compute.Operation{}
-	err = Convert(res, op)
-	if err != nil {
-		return err
-	}
-
 	err = computeOperationWaitTime(
-		config.clientCompute, op, project, "Deleting Disk",
+		config, res, project, "Deleting Disk",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {
