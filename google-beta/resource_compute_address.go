@@ -22,7 +22,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-	"google.golang.org/api/compute/v1"
 )
 
 func resourceComputeAddress() *schema.Resource {
@@ -216,14 +215,8 @@ func resourceComputeAddressCreate(d *schema.ResourceData, meta interface{}) erro
 	}
 	d.SetId(id)
 
-	op := &compute.Operation{}
-	err = Convert(res, op)
-	if err != nil {
-		return err
-	}
-
 	waitErr := computeOperationWaitTime(
-		config.clientCompute, op, project, "Creating Address",
+		config, res, project, "Creating Address",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if waitErr != nil {
@@ -260,13 +253,8 @@ func resourceComputeAddressCreate(d *schema.ResourceData, meta interface{}) erro
 			return fmt.Errorf("Error adding labels to ComputeAddress %q: %s", d.Id(), err)
 		}
 
-		err = Convert(res, op)
-		if err != nil {
-			return err
-		}
-
 		err = computeOperationWaitTime(
-			config.clientCompute, op, project, "Updating ComputeAddress Labels",
+			config, res, project, "Updating ComputeAddress Labels",
 			int(d.Timeout(schema.TimeoutUpdate).Minutes()))
 
 		if err != nil {
@@ -377,16 +365,9 @@ func resourceComputeAddressUpdate(d *schema.ResourceData, meta interface{}) erro
 			return fmt.Errorf("Error updating Address %q: %s", d.Id(), err)
 		}
 
-		op := &compute.Operation{}
-		err = Convert(res, op)
-		if err != nil {
-			return err
-		}
-
 		err = computeOperationWaitTime(
-			config.clientCompute, op, project, "Updating Address",
+			config, res, project, "Updating Address",
 			int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 		if err != nil {
 			return err
 		}
@@ -421,14 +402,8 @@ func resourceComputeAddressDelete(d *schema.ResourceData, meta interface{}) erro
 		return handleNotFoundError(err, d, "Address")
 	}
 
-	op := &compute.Operation{}
-	err = Convert(res, op)
-	if err != nil {
-		return err
-	}
-
 	err = computeOperationWaitTime(
-		config.clientCompute, op, project, "Deleting Address",
+		config, res, project, "Deleting Address",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {

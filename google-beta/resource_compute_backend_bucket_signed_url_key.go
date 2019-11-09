@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"google.golang.org/api/compute/v1"
 )
 
 func resourceComputeBackendBucketSignedUrlKey() *schema.Resource {
@@ -116,14 +115,8 @@ func resourceComputeBackendBucketSignedUrlKeyCreate(d *schema.ResourceData, meta
 	}
 	d.SetId(id)
 
-	op := &compute.Operation{}
-	err = Convert(res, op)
-	if err != nil {
-		return err
-	}
-
 	waitErr := computeOperationWaitTime(
-		config.clientCompute, op, project, "Creating BackendBucketSignedUrlKey",
+		config, res, project, "Creating BackendBucketSignedUrlKey",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if waitErr != nil {
@@ -205,14 +198,8 @@ func resourceComputeBackendBucketSignedUrlKeyDelete(d *schema.ResourceData, meta
 		return handleNotFoundError(err, d, "BackendBucketSignedUrlKey")
 	}
 
-	op := &compute.Operation{}
-	err = Convert(res, op)
-	if err != nil {
-		return err
-	}
-
 	err = computeOperationWaitTime(
-		config.clientCompute, op, project, "Deleting BackendBucketSignedUrlKey",
+		config, res, project, "Deleting BackendBucketSignedUrlKey",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {
