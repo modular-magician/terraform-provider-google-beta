@@ -180,12 +180,9 @@ func resourceDNSManagedZone() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"networks": {
 							Type:     schema.TypeSet,
-							Optional: true,
+							Required: true,
 							Elem:     dnsManagedZonePrivateVisibilityConfigNetworksSchema(),
 							Set: func(v interface{}) int {
-								if v == nil {
-									return 0
-								}
 								raw := v.(map[string]interface{})
 								if url, ok := raw["network_url"]; ok {
 									return selfLinkNameHash(url)
@@ -228,7 +225,7 @@ func dnsManagedZonePrivateVisibilityConfigNetworksSchema() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"network_url": {
 				Type:             schema.TypeString,
-				Optional:         true,
+				Required:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
 			},
 		},
@@ -321,7 +318,7 @@ func resourceDNSManagedZoneCreate(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/managedZones/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -488,7 +485,7 @@ func resourceDNSManagedZoneImport(d *schema.ResourceData, meta interface{}) ([]*
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/managedZones/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -617,9 +614,6 @@ func flattenDNSManagedZonePrivateVisibilityConfigNetworks(v interface{}, d *sche
 	}
 	l := v.([]interface{})
 	transformed := schema.NewSet(func(v interface{}) int {
-		if v == nil {
-			return 0
-		}
 		raw := v.(map[string]interface{})
 		if url, ok := raw["network_url"]; ok {
 			return selfLinkNameHash(url)
