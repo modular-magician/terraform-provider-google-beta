@@ -183,9 +183,6 @@ func resourceDNSManagedZone() *schema.Resource {
 							Optional: true,
 							Elem:     dnsManagedZonePrivateVisibilityConfigNetworksSchema(),
 							Set: func(v interface{}) int {
-								if v == nil {
-									return 0
-								}
 								raw := v.(map[string]interface{})
 								if url, ok := raw["network_url"]; ok {
 									return selfLinkNameHash(url)
@@ -617,9 +614,6 @@ func flattenDNSManagedZonePrivateVisibilityConfigNetworks(v interface{}, d *sche
 	}
 	l := v.([]interface{})
 	transformed := schema.NewSet(func(v interface{}) int {
-		if v == nil {
-			return 0
-		}
 		raw := v.(map[string]interface{})
 		if url, ok := raw["network_url"]; ok {
 			return selfLinkNameHash(url)
