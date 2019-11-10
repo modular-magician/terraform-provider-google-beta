@@ -73,36 +73,43 @@ func resourceComputeRegionHealthCheck() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"host": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"http2_health_check.0.host", "http2_health_check.0.request_path", "http2_health_check.0.response", "http2_health_check.0.port", "http2_health_check.0.port_name", "http2_health_check.0.proxy_header", "http2_health_check.0.port_specification"},
 						},
 						"port": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							AtLeastOneOf: []string{"http2_health_check.0.host", "http2_health_check.0.request_path", "http2_health_check.0.response", "http2_health_check.0.port", "http2_health_check.0.port_name", "http2_health_check.0.proxy_header", "http2_health_check.0.port_specification"},
 						},
 						"port_name": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"http2_health_check.0.host", "http2_health_check.0.request_path", "http2_health_check.0.response", "http2_health_check.0.port", "http2_health_check.0.port_name", "http2_health_check.0.proxy_header", "http2_health_check.0.port_specification"},
 						},
 						"port_specification": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"USE_FIXED_PORT", "USE_NAMED_PORT", "USE_SERVING_PORT", ""}, false),
+							AtLeastOneOf: []string{"http2_health_check.0.host", "http2_health_check.0.request_path", "http2_health_check.0.response", "http2_health_check.0.port", "http2_health_check.0.port_name", "http2_health_check.0.proxy_header", "http2_health_check.0.port_specification"},
 						},
 						"proxy_header": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"NONE", "PROXY_V1", ""}, false),
 							Default:      "NONE",
+							AtLeastOneOf: []string{"http2_health_check.0.host", "http2_health_check.0.request_path", "http2_health_check.0.response", "http2_health_check.0.port", "http2_health_check.0.port_name", "http2_health_check.0.proxy_header", "http2_health_check.0.port_specification"},
 						},
 						"request_path": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Default:  "/",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "/",
+							AtLeastOneOf: []string{"http2_health_check.0.host", "http2_health_check.0.request_path", "http2_health_check.0.response", "http2_health_check.0.port", "http2_health_check.0.port_name", "http2_health_check.0.proxy_header", "http2_health_check.0.port_specification"},
 						},
 						"response": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"http2_health_check.0.host", "http2_health_check.0.request_path", "http2_health_check.0.response", "http2_health_check.0.port", "http2_health_check.0.port_name", "http2_health_check.0.proxy_header", "http2_health_check.0.port_specification"},
 						},
 					},
 				},
@@ -116,36 +123,43 @@ func resourceComputeRegionHealthCheck() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"host": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"http_health_check.0.host", "http_health_check.0.request_path", "http_health_check.0.response", "http_health_check.0.port", "http_health_check.0.port_name", "http_health_check.0.proxy_header", "http_health_check.0.port_specification"},
 						},
 						"port": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							AtLeastOneOf: []string{"http_health_check.0.host", "http_health_check.0.request_path", "http_health_check.0.response", "http_health_check.0.port", "http_health_check.0.port_name", "http_health_check.0.proxy_header", "http_health_check.0.port_specification"},
 						},
 						"port_name": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"http_health_check.0.host", "http_health_check.0.request_path", "http_health_check.0.response", "http_health_check.0.port", "http_health_check.0.port_name", "http_health_check.0.proxy_header", "http_health_check.0.port_specification"},
 						},
 						"port_specification": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"USE_FIXED_PORT", "USE_NAMED_PORT", "USE_SERVING_PORT", ""}, false),
+							AtLeastOneOf: []string{"http_health_check.0.host", "http_health_check.0.request_path", "http_health_check.0.response", "http_health_check.0.port", "http_health_check.0.port_name", "http_health_check.0.proxy_header", "http_health_check.0.port_specification"},
 						},
 						"proxy_header": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"NONE", "PROXY_V1", ""}, false),
 							Default:      "NONE",
+							AtLeastOneOf: []string{"http_health_check.0.host", "http_health_check.0.request_path", "http_health_check.0.response", "http_health_check.0.port", "http_health_check.0.port_name", "http_health_check.0.proxy_header", "http_health_check.0.port_specification"},
 						},
 						"request_path": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Default:  "/",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "/",
+							AtLeastOneOf: []string{"http_health_check.0.host", "http_health_check.0.request_path", "http_health_check.0.response", "http_health_check.0.port", "http_health_check.0.port_name", "http_health_check.0.proxy_header", "http_health_check.0.port_specification"},
 						},
 						"response": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"http_health_check.0.host", "http_health_check.0.request_path", "http_health_check.0.response", "http_health_check.0.port", "http_health_check.0.port_name", "http_health_check.0.proxy_header", "http_health_check.0.port_specification"},
 						},
 					},
 				},
@@ -159,36 +173,43 @@ func resourceComputeRegionHealthCheck() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"host": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"https_health_check.0.host", "https_health_check.0.request_path", "https_health_check.0.response", "https_health_check.0.port", "https_health_check.0.port_name", "https_health_check.0.proxy_header", "https_health_check.0.port_specification"},
 						},
 						"port": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							AtLeastOneOf: []string{"https_health_check.0.host", "https_health_check.0.request_path", "https_health_check.0.response", "https_health_check.0.port", "https_health_check.0.port_name", "https_health_check.0.proxy_header", "https_health_check.0.port_specification"},
 						},
 						"port_name": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"https_health_check.0.host", "https_health_check.0.request_path", "https_health_check.0.response", "https_health_check.0.port", "https_health_check.0.port_name", "https_health_check.0.proxy_header", "https_health_check.0.port_specification"},
 						},
 						"port_specification": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"USE_FIXED_PORT", "USE_NAMED_PORT", "USE_SERVING_PORT", ""}, false),
+							AtLeastOneOf: []string{"https_health_check.0.host", "https_health_check.0.request_path", "https_health_check.0.response", "https_health_check.0.port", "https_health_check.0.port_name", "https_health_check.0.proxy_header", "https_health_check.0.port_specification"},
 						},
 						"proxy_header": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"NONE", "PROXY_V1", ""}, false),
 							Default:      "NONE",
+							AtLeastOneOf: []string{"https_health_check.0.host", "https_health_check.0.request_path", "https_health_check.0.response", "https_health_check.0.port", "https_health_check.0.port_name", "https_health_check.0.proxy_header", "https_health_check.0.port_specification"},
 						},
 						"request_path": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Default:  "/",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "/",
+							AtLeastOneOf: []string{"https_health_check.0.host", "https_health_check.0.request_path", "https_health_check.0.response", "https_health_check.0.port", "https_health_check.0.port_name", "https_health_check.0.proxy_header", "https_health_check.0.port_specification"},
 						},
 						"response": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"https_health_check.0.host", "https_health_check.0.request_path", "https_health_check.0.response", "https_health_check.0.port", "https_health_check.0.port_name", "https_health_check.0.proxy_header", "https_health_check.0.port_specification"},
 						},
 					},
 				},
@@ -209,31 +230,37 @@ func resourceComputeRegionHealthCheck() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"port": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							AtLeastOneOf: []string{"ssl_health_check.0.request", "ssl_health_check.0.response", "ssl_health_check.0.port", "ssl_health_check.0.port_name", "ssl_health_check.0.proxy_header", "ssl_health_check.0.port_specification"},
 						},
 						"port_name": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"ssl_health_check.0.request", "ssl_health_check.0.response", "ssl_health_check.0.port", "ssl_health_check.0.port_name", "ssl_health_check.0.proxy_header", "ssl_health_check.0.port_specification"},
 						},
 						"port_specification": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"USE_FIXED_PORT", "USE_NAMED_PORT", "USE_SERVING_PORT", ""}, false),
+							AtLeastOneOf: []string{"ssl_health_check.0.request", "ssl_health_check.0.response", "ssl_health_check.0.port", "ssl_health_check.0.port_name", "ssl_health_check.0.proxy_header", "ssl_health_check.0.port_specification"},
 						},
 						"proxy_header": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"NONE", "PROXY_V1", ""}, false),
 							Default:      "NONE",
+							AtLeastOneOf: []string{"ssl_health_check.0.request", "ssl_health_check.0.response", "ssl_health_check.0.port", "ssl_health_check.0.port_name", "ssl_health_check.0.proxy_header", "ssl_health_check.0.port_specification"},
 						},
 						"request": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"ssl_health_check.0.request", "ssl_health_check.0.response", "ssl_health_check.0.port", "ssl_health_check.0.port_name", "ssl_health_check.0.proxy_header", "ssl_health_check.0.port_specification"},
 						},
 						"response": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"ssl_health_check.0.request", "ssl_health_check.0.response", "ssl_health_check.0.port", "ssl_health_check.0.port_name", "ssl_health_check.0.proxy_header", "ssl_health_check.0.port_specification"},
 						},
 					},
 				},
@@ -247,31 +274,37 @@ func resourceComputeRegionHealthCheck() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"port": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							AtLeastOneOf: []string{"tcp_health_check.0.request", "tcp_health_check.0.response", "tcp_health_check.0.port", "tcp_health_check.0.port_name", "tcp_health_check.0.proxy_header", "tcp_health_check.0.port_specification"},
 						},
 						"port_name": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"tcp_health_check.0.request", "tcp_health_check.0.response", "tcp_health_check.0.port", "tcp_health_check.0.port_name", "tcp_health_check.0.proxy_header", "tcp_health_check.0.port_specification"},
 						},
 						"port_specification": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"USE_FIXED_PORT", "USE_NAMED_PORT", "USE_SERVING_PORT", ""}, false),
+							AtLeastOneOf: []string{"tcp_health_check.0.request", "tcp_health_check.0.response", "tcp_health_check.0.port", "tcp_health_check.0.port_name", "tcp_health_check.0.proxy_header", "tcp_health_check.0.port_specification"},
 						},
 						"proxy_header": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"NONE", "PROXY_V1", ""}, false),
 							Default:      "NONE",
+							AtLeastOneOf: []string{"tcp_health_check.0.request", "tcp_health_check.0.response", "tcp_health_check.0.port", "tcp_health_check.0.port_name", "tcp_health_check.0.proxy_header", "tcp_health_check.0.port_specification"},
 						},
 						"request": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"tcp_health_check.0.request", "tcp_health_check.0.response", "tcp_health_check.0.port", "tcp_health_check.0.port_name", "tcp_health_check.0.proxy_header", "tcp_health_check.0.port_specification"},
 						},
 						"response": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"tcp_health_check.0.request", "tcp_health_check.0.response", "tcp_health_check.0.port", "tcp_health_check.0.port_name", "tcp_health_check.0.proxy_header", "tcp_health_check.0.port_specification"},
 						},
 					},
 				},
@@ -407,7 +440,7 @@ func resourceComputeRegionHealthCheckCreate(d *schema.ResourceData, meta interfa
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/healthChecks/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -671,7 +704,7 @@ func resourceComputeRegionHealthCheckImport(d *schema.ResourceData, meta interfa
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/healthChecks/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

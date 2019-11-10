@@ -78,12 +78,14 @@ func resourceHealthcareHl7V2Store() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"allow_null_header": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:         schema.TypeBool,
+							Optional:     true,
+							AtLeastOneOf: []string{"parser_config.0.allow_null_header", "parser_config.0.segment_terminator"},
 						},
 						"segment_terminator": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"parser_config.0.allow_null_header", "parser_config.0.segment_terminator"},
 						},
 					},
 				},
