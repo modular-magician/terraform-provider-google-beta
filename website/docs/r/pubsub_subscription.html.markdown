@@ -43,7 +43,7 @@ resource "google_pubsub_topic" "example" {
 
 resource "google_pubsub_subscription" "example" {
   name  = "example-subscription"
-  topic = "${google_pubsub_topic.example.name}"
+  topic = google_pubsub_topic.example.name
 
   ack_deadline_seconds = 20
 
@@ -54,7 +54,7 @@ resource "google_pubsub_subscription" "example" {
   push_config {
     push_endpoint = "https://example.com/push"
 
-    attributes {
+    attributes = {
       x-goog-version = "v1"
     }
   }
@@ -75,7 +75,7 @@ resource "google_pubsub_topic" "example" {
 
 resource "google_pubsub_subscription" "example" {
   name  = "example-subscription"
-  topic = "${google_pubsub_topic.example.name}"
+  topic = google_pubsub_topic.example.name
 
   labels = {
     foo = "bar"
@@ -83,7 +83,7 @@ resource "google_pubsub_subscription" "example" {
 
   # 20 minutes
   message_retention_duration = "1200s"
-  retain_acked_messages = true
+  retain_acked_messages      = true
 
   ack_deadline_seconds = 20
 
@@ -104,7 +104,7 @@ resource "google_pubsub_topic" "example" {
 resource "google_pubsub_subscription" "example" {
   project = "subscription-project"
   name    = "example-subscription"
-  topic   = "${google_pubsub_topic.example.name}"
+  topic   = google_pubsub_topic.example.name
 }
 ```
 
@@ -241,7 +241,7 @@ The `oidc_token` block supports:
 The `expiration_policy` block supports:
 
 * `ttl` -
-  (Optional)
+  (Required)
   Specifies the "time-to-live" duration for an associated resource. The
   resource expires if it is not active for a period of ttl.
   If ttl is not set, the associated resource never expires.

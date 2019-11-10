@@ -244,13 +244,15 @@ func resourceMonitoringAlertPolicy() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"content": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"documentation.0.content", "documentation.0.mime_type"},
 						},
 						"mime_type": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Default:  "text/markdown",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "text/markdown",
+							AtLeastOneOf: []string{"documentation.0.content", "documentation.0.mime_type"},
 						},
 					},
 				},
@@ -299,7 +301,7 @@ func resourceMonitoringAlertPolicy() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Deprecated: "labels is removed as it was never used. See user_labels for the correct field",
+				Removed: "labels is removed as it was never used. See user_labels for the correct field",
 			},
 			"project": {
 				Type:     schema.TypeString,
