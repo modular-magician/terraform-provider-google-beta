@@ -23,13 +23,10 @@ func TestAccBigtableTable_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigtableTable(instanceName, tableName),
-			},
-			{
-				ResourceName:      "google_bigtable_table.table",
-				ImportState:       true,
-				ImportStateVerify: true,
-				//TODO(rileykarson): Remove ImportStateId when id format is fixed in 3.0.0
-				ImportStateId: fmt.Sprintf("%s/%s", instanceName, tableName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccBigtableTableExists(
+						"google_bigtable_table.table"),
+				),
 			},
 		},
 	})
@@ -48,13 +45,10 @@ func TestAccBigtableTable_splitKeys(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigtableTable_splitKeys(instanceName, tableName),
-			},
-			{
-				ResourceName:            "google_bigtable_table.table",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"split_keys"},
-				ImportStateId:           fmt.Sprintf("%s/%s", instanceName, tableName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccBigtableTableExists(
+						"google_bigtable_table.table"),
+				),
 			},
 		},
 	})
@@ -74,12 +68,10 @@ func TestAccBigtableTable_family(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigtableTable_family(instanceName, tableName, family),
-			},
-			{
-				ResourceName:      "google_bigtable_table.table",
-				ImportState:       true,
-				ImportStateVerify: true,
-				ImportStateId:     fmt.Sprintf("%s/%s", instanceName, tableName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccBigtableTableExists(
+						"google_bigtable_table.table"),
+				),
 			},
 		},
 	})
@@ -99,12 +91,10 @@ func TestAccBigtableTable_familyMany(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigtableTable_familyMany(instanceName, tableName, family),
-			},
-			{
-				ResourceName:      "google_bigtable_table.table",
-				ImportState:       true,
-				ImportStateVerify: true,
-				ImportStateId:     fmt.Sprintf("%s/%s", instanceName, tableName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccBigtableTableExists(
+						"google_bigtable_table.table"),
+				),
 			},
 		},
 	})
@@ -133,6 +123,34 @@ func testAccCheckBigtableTableDestroy(s *terraform.State) error {
 	}
 
 	return nil
+}
+
+func testAccBigtableTableExists(n string) resource.TestCheckFunc {
+	var ctx = context.Background()
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("Not found: %s", n)
+		}
+
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("No ID is set")
+		}
+		config := testAccProvider.Meta().(*Config)
+		c, err := config.bigtableClientFactory.NewAdminClient(config.Project, rs.Primary.Attributes["instance_name"])
+		if err != nil {
+			return fmt.Errorf("Error starting admin client. %s", err)
+		}
+
+		_, err = c.TableInfo(ctx, rs.Primary.Attributes["name"])
+		if err != nil {
+			return fmt.Errorf("Error retrieving table. Could not find %s in %s.", rs.Primary.Attributes["name"], rs.Primary.Attributes["instance_name"])
+		}
+
+		c.Close()
+
+		return nil
+	}
 }
 
 func testAccBigtableTable(instanceName, tableName string) string {
