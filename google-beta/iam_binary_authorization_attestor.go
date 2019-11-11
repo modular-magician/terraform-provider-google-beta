@@ -75,6 +75,8 @@ func BinaryAuthorizationAttestorIamUpdaterProducer(d *schema.ResourceData, confi
 	d.Set("project", u.project)
 	d.Set("attestor", u.GetResourceId())
 
+	d.SetId(u.GetResourceId())
+
 	return u, nil
 }
 
@@ -103,7 +105,7 @@ func BinaryAuthorizationAttestorIdParseFunc(d *schema.ResourceData, config *Conf
 		Config:   config,
 	}
 	d.Set("attestor", u.GetResourceId())
-
+	d.SetId(u.GetResourceId())
 	return nil
 }
 
@@ -114,9 +116,8 @@ func (u *BinaryAuthorizationAttestorIamUpdater) GetResourceIamPolicy() (*cloudre
 	if err != nil {
 		return nil, err
 	}
-	var obj map[string]interface{}
 
-	policy, err := sendRequest(u.Config, "GET", project, url, obj)
+	policy, err := sendRequest(u.Config, "GET", project, url, nil)
 	if err != nil {
 		return nil, errwrap.Wrapf(fmt.Sprintf("Error retrieving IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
@@ -159,7 +160,7 @@ func (u *BinaryAuthorizationAttestorIamUpdater) qualifyAttestorUrl(methodIdentif
 }
 
 func (u *BinaryAuthorizationAttestorIamUpdater) GetResourceId() string {
-	return fmt.Sprintf("%s/%s", u.project, u.attestor)
+	return fmt.Sprintf("projects/%s/attestors/%s", u.project, u.attestor)
 }
 
 func (u *BinaryAuthorizationAttestorIamUpdater) GetMutexKey() string {
