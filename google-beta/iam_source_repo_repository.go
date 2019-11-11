@@ -75,6 +75,8 @@ func SourceRepoRepositoryIamUpdaterProducer(d *schema.ResourceData, config *Conf
 	d.Set("project", u.project)
 	d.Set("repository", u.GetResourceId())
 
+	d.SetId(u.GetResourceId())
+
 	return u, nil
 }
 
@@ -103,7 +105,7 @@ func SourceRepoRepositoryIdParseFunc(d *schema.ResourceData, config *Config) err
 		Config:     config,
 	}
 	d.Set("repository", u.GetResourceId())
-
+	d.SetId(u.GetResourceId())
 	return nil
 }
 
@@ -114,9 +116,8 @@ func (u *SourceRepoRepositoryIamUpdater) GetResourceIamPolicy() (*cloudresourcem
 	if err != nil {
 		return nil, err
 	}
-	var obj map[string]interface{}
 
-	policy, err := sendRequest(u.Config, "GET", project, url, obj)
+	policy, err := sendRequest(u.Config, "GET", project, url, nil)
 	if err != nil {
 		return nil, errwrap.Wrapf(fmt.Sprintf("Error retrieving IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
@@ -159,7 +160,7 @@ func (u *SourceRepoRepositoryIamUpdater) qualifyRepositoryUrl(methodIdentifier s
 }
 
 func (u *SourceRepoRepositoryIamUpdater) GetResourceId() string {
-	return fmt.Sprintf("%s/%s", u.project, u.repository)
+	return fmt.Sprintf("projects/%s/repos/%s", u.project, u.repository)
 }
 
 func (u *SourceRepoRepositoryIamUpdater) GetMutexKey() string {

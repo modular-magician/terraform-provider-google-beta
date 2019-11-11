@@ -75,6 +75,8 @@ func RuntimeConfigConfigIamUpdaterProducer(d *schema.ResourceData, config *Confi
 	d.Set("project", u.project)
 	d.Set("config", u.GetResourceId())
 
+	d.SetId(u.GetResourceId())
+
 	return u, nil
 }
 
@@ -103,7 +105,7 @@ func RuntimeConfigConfigIdParseFunc(d *schema.ResourceData, config *Config) erro
 		Config:  config,
 	}
 	d.Set("config", u.GetResourceId())
-
+	d.SetId(u.GetResourceId())
 	return nil
 }
 
@@ -114,9 +116,8 @@ func (u *RuntimeConfigConfigIamUpdater) GetResourceIamPolicy() (*cloudresourcema
 	if err != nil {
 		return nil, err
 	}
-	var obj map[string]interface{}
 
-	policy, err := sendRequest(u.Config, "GET", project, url, obj)
+	policy, err := sendRequest(u.Config, "GET", project, url, nil)
 	if err != nil {
 		return nil, errwrap.Wrapf(fmt.Sprintf("Error retrieving IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
