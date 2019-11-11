@@ -104,19 +104,22 @@ func resourceDataprocAutoscalingPolicy() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"max_instances": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  0,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      0,
+							AtLeastOneOf: []string{"secondary_worker_config.0.min_instances", "secondary_worker_config.0.max_instances", "secondary_worker_config.0.weight"},
 						},
 						"min_instances": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  2,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      2,
+							AtLeastOneOf: []string{"secondary_worker_config.0.min_instances", "secondary_worker_config.0.max_instances", "secondary_worker_config.0.weight"},
 						},
 						"weight": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  1,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      1,
+							AtLeastOneOf: []string{"secondary_worker_config.0.min_instances", "secondary_worker_config.0.max_instances", "secondary_worker_config.0.weight"},
 						},
 					},
 				},
