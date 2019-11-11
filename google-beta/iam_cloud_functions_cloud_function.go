@@ -89,6 +89,8 @@ func CloudFunctionsCloudFunctionIamUpdaterProducer(d *schema.ResourceData, confi
 	d.Set("region", u.region)
 	d.Set("cloud_function", u.GetResourceId())
 
+	d.SetId(u.GetResourceId())
+
 	return u, nil
 }
 
@@ -123,7 +125,7 @@ func CloudFunctionsCloudFunctionIdParseFunc(d *schema.ResourceData, config *Conf
 		Config:        config,
 	}
 	d.Set("cloud_function", u.GetResourceId())
-
+	d.SetId(u.GetResourceId())
 	return nil
 }
 
@@ -134,9 +136,8 @@ func (u *CloudFunctionsCloudFunctionIamUpdater) GetResourceIamPolicy() (*cloudre
 	if err != nil {
 		return nil, err
 	}
-	var obj map[string]interface{}
 
-	policy, err := sendRequest(u.Config, "GET", project, url, obj)
+	policy, err := sendRequest(u.Config, "GET", project, url, nil)
 	if err != nil {
 		return nil, errwrap.Wrapf(fmt.Sprintf("Error retrieving IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
@@ -179,7 +180,7 @@ func (u *CloudFunctionsCloudFunctionIamUpdater) qualifyCloudFunctionUrl(methodId
 }
 
 func (u *CloudFunctionsCloudFunctionIamUpdater) GetResourceId() string {
-	return fmt.Sprintf("%s/%s/%s", u.project, u.region, u.cloudFunction)
+	return fmt.Sprintf("projects/%s/locations/%s/functions/%s", u.project, u.region, u.cloudFunction)
 }
 
 func (u *CloudFunctionsCloudFunctionIamUpdater) GetMutexKey() string {

@@ -50,6 +50,7 @@ func testAccDataSourceGoogleForwardingRuleCheck(data_source_name string, resourc
 			"region",
 			"port_range",
 			"ports",
+			"target",
 			"ip_address",
 			"ip_protocol",
 			"load_balancing_scheme",
@@ -69,10 +70,6 @@ func testAccDataSourceGoogleForwardingRuleCheck(data_source_name string, resourc
 			}
 		}
 
-		if !compareSelfLinkOrResourceName("", ds_attr["target"], rs_attr["target"], nil) && ds_attr["target"] != rs_attr["target"] {
-			return fmt.Errorf("target does not match: %s vs %s", ds_attr["target"], rs_attr["target"])
-		}
-
 		if !compareSelfLinkOrResourceName("", ds_attr["self_link"], rs_attr["self_link"], nil) && ds_attr["self_link"] != rs_attr["self_link"] {
 			return fmt.Errorf("self link does not match: %s vs %s", ds_attr["self_link"], rs_attr["self_link"])
 		}
@@ -83,20 +80,22 @@ func testAccDataSourceGoogleForwardingRuleCheck(data_source_name string, resourc
 
 func testAccDataSourceGoogleForwardingRuleConfig(poolName, ruleName string) string {
 	return fmt.Sprintf(`
-		resource "google_compute_target_pool" "foobar-tp" {
-			description = "Resource created for Terraform acceptance testing"
-			instances   = ["us-central1-a/foo", "us-central1-b/bar"]
-			name        = "%s"
-		}
-		resource "google_compute_forwarding_rule" "foobar-fr" {
-			description = "Resource created for Terraform acceptance testing"
-			ip_protocol = "UDP"
-			name        = "%s"
-			port_range  = "80-81"
-			target      = "${google_compute_target_pool.foobar-tp.self_link}"
-		}
-		data "google_compute_forwarding_rule" "my_forwarding_rule" {
-			name = "${google_compute_forwarding_rule.foobar-fr.name}"
-		}
+resource "google_compute_target_pool" "foobar-tp" {
+  description = "Resource created for Terraform acceptance testing"
+  instances   = ["us-central1-a/foo", "us-central1-b/bar"]
+  name        = "%s"
+}
+
+resource "google_compute_forwarding_rule" "foobar-fr" {
+  description = "Resource created for Terraform acceptance testing"
+  ip_protocol = "UDP"
+  name        = "%s"
+  port_range  = "80-81"
+  target      = google_compute_target_pool.foobar-tp.self_link
+}
+
+data "google_compute_forwarding_rule" "my_forwarding_rule" {
+  name = google_compute_forwarding_rule.foobar-fr.name
+}
 `, poolName, ruleName)
 }
