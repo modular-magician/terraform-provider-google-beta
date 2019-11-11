@@ -62,16 +62,17 @@ func resourceAppEngineStandardAppVersion() *schema.Resource {
 										Type:     schema.TypeString,
 										Required: true,
 									},
-									"sha1_sum": {
-										Type:     schema.TypeString,
-										Optional: true,
-									},
 									"source_url": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"sha1_sum": {
 										Type:     schema.TypeString,
 										Optional: true,
 									},
 								},
 							},
+							AtLeastOneOf: []string{"deployment.0.zip", "deployment.0.files"},
 						},
 						"zip": {
 							Type:     schema.TypeList,
@@ -79,16 +80,17 @@ func resourceAppEngineStandardAppVersion() *schema.Resource {
 							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"source_url": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
 									"files_count": {
 										Type:     schema.TypeInt,
 										Optional: true,
 									},
-									"source_url": {
-										Type:     schema.TypeString,
-										Optional: true,
-									},
 								},
 							},
+							AtLeastOneOf: []string{"deployment.0.zip", "deployment.0.files"},
 						},
 					},
 				},
@@ -101,7 +103,7 @@ func resourceAppEngineStandardAppVersion() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"shell": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 						},
 					},
 				},
