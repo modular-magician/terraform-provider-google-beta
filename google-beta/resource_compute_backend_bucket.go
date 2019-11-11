@@ -62,8 +62,7 @@ func resourceComputeBackendBucket() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"signed_url_cache_max_age_sec": {
 							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  3600,
+							Required: true,
 						},
 					},
 				},
@@ -145,7 +144,7 @@ func resourceComputeBackendBucketCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/backendBuckets/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -337,7 +336,7 @@ func resourceComputeBackendBucketImport(d *schema.ResourceData, meta interface{}
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/backendBuckets/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
