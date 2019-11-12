@@ -201,16 +201,19 @@ func resourceComputeBackendService() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"include_host": {
-										Type:     schema.TypeBool,
-										Optional: true,
+										Type:         schema.TypeBool,
+										Optional:     true,
+										AtLeastOneOf: []string{"cdn_policy.0.cache_key_policy.0.include_host", "cdn_policy.0.cache_key_policy.0.include_protocol", "cdn_policy.0.cache_key_policy.0.include_query_string", "cdn_policy.0.cache_key_policy.0.query_string_blacklist", "cdn_policy.0.cache_key_policy.0.query_string_whitelist"},
 									},
 									"include_protocol": {
-										Type:     schema.TypeBool,
-										Optional: true,
+										Type:         schema.TypeBool,
+										Optional:     true,
+										AtLeastOneOf: []string{"cdn_policy.0.cache_key_policy.0.include_host", "cdn_policy.0.cache_key_policy.0.include_protocol", "cdn_policy.0.cache_key_policy.0.include_query_string", "cdn_policy.0.cache_key_policy.0.query_string_blacklist", "cdn_policy.0.cache_key_policy.0.query_string_whitelist"},
 									},
 									"include_query_string": {
-										Type:     schema.TypeBool,
-										Optional: true,
+										Type:         schema.TypeBool,
+										Optional:     true,
+										AtLeastOneOf: []string{"cdn_policy.0.cache_key_policy.0.include_host", "cdn_policy.0.cache_key_policy.0.include_protocol", "cdn_policy.0.cache_key_policy.0.include_query_string", "cdn_policy.0.cache_key_policy.0.query_string_blacklist", "cdn_policy.0.cache_key_policy.0.query_string_whitelist"},
 									},
 									"query_string_blacklist": {
 										Type:     schema.TypeSet,
@@ -218,7 +221,8 @@ func resourceComputeBackendService() *schema.Resource {
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
-										Set: schema.HashString,
+										Set:          schema.HashString,
+										AtLeastOneOf: []string{"cdn_policy.0.cache_key_policy.0.include_host", "cdn_policy.0.cache_key_policy.0.include_protocol", "cdn_policy.0.cache_key_policy.0.include_query_string", "cdn_policy.0.cache_key_policy.0.query_string_blacklist", "cdn_policy.0.cache_key_policy.0.query_string_whitelist"},
 									},
 									"query_string_whitelist": {
 										Type:     schema.TypeSet,
@@ -226,15 +230,18 @@ func resourceComputeBackendService() *schema.Resource {
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
-										Set: schema.HashString,
+										Set:          schema.HashString,
+										AtLeastOneOf: []string{"cdn_policy.0.cache_key_policy.0.include_host", "cdn_policy.0.cache_key_policy.0.include_protocol", "cdn_policy.0.cache_key_policy.0.include_query_string", "cdn_policy.0.cache_key_policy.0.query_string_blacklist", "cdn_policy.0.cache_key_policy.0.query_string_whitelist"},
 									},
 								},
 							},
+							AtLeastOneOf: []string{"cdn_policy.0.cache_key_policy", "cdn_policy.0.signed_url_cache_max_age_sec"},
 						},
 						"signed_url_cache_max_age_sec": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  3600,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      3600,
+							AtLeastOneOf: []string{"cdn_policy.0.cache_key_policy", "cdn_policy.0.signed_url_cache_max_age_sec"},
 						},
 					},
 				},
@@ -261,30 +268,36 @@ func resourceComputeBackendService() *schema.Resource {
 									},
 								},
 							},
+							AtLeastOneOf: []string{"circuit_breakers.0.connect_timeout", "circuit_breakers.0.max_requests_per_connection", "circuit_breakers.0.max_connections", "circuit_breakers.0.max_pending_requests", "circuit_breakers.0.max_requests", "circuit_breakers.0.max_retries"},
 						},
 						"max_connections": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  1024,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      1024,
+							AtLeastOneOf: []string{"circuit_breakers.0.connect_timeout", "circuit_breakers.0.max_requests_per_connection", "circuit_breakers.0.max_connections", "circuit_breakers.0.max_pending_requests", "circuit_breakers.0.max_requests", "circuit_breakers.0.max_retries"},
 						},
 						"max_pending_requests": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  1024,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      1024,
+							AtLeastOneOf: []string{"circuit_breakers.0.connect_timeout", "circuit_breakers.0.max_requests_per_connection", "circuit_breakers.0.max_connections", "circuit_breakers.0.max_pending_requests", "circuit_breakers.0.max_requests", "circuit_breakers.0.max_retries"},
 						},
 						"max_requests": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  1024,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      1024,
+							AtLeastOneOf: []string{"circuit_breakers.0.connect_timeout", "circuit_breakers.0.max_requests_per_connection", "circuit_breakers.0.max_connections", "circuit_breakers.0.max_pending_requests", "circuit_breakers.0.max_requests", "circuit_breakers.0.max_retries"},
 						},
 						"max_requests_per_connection": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							AtLeastOneOf: []string{"circuit_breakers.0.connect_timeout", "circuit_breakers.0.max_requests_per_connection", "circuit_breakers.0.max_connections", "circuit_breakers.0.max_pending_requests", "circuit_breakers.0.max_requests", "circuit_breakers.0.max_retries"},
 						},
 						"max_retries": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  3,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      3,
+							AtLeastOneOf: []string{"circuit_breakers.0.connect_timeout", "circuit_breakers.0.max_requests_per_connection", "circuit_breakers.0.max_connections", "circuit_breakers.0.max_pending_requests", "circuit_breakers.0.max_requests", "circuit_breakers.0.max_retries"},
 						},
 					},
 				},
@@ -308,12 +321,14 @@ func resourceComputeBackendService() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
-										Type:     schema.TypeString,
-										Optional: true,
+										Type:         schema.TypeString,
+										Optional:     true,
+										AtLeastOneOf: []string{"consistent_hash.0.http_cookie.0.ttl", "consistent_hash.0.http_cookie.0.name", "consistent_hash.0.http_cookie.0.path"},
 									},
 									"path": {
-										Type:     schema.TypeString,
-										Optional: true,
+										Type:         schema.TypeString,
+										Optional:     true,
+										AtLeastOneOf: []string{"consistent_hash.0.http_cookie.0.ttl", "consistent_hash.0.http_cookie.0.name", "consistent_hash.0.http_cookie.0.path"},
 									},
 									"ttl": {
 										Type:     schema.TypeList,
@@ -331,18 +346,22 @@ func resourceComputeBackendService() *schema.Resource {
 												},
 											},
 										},
+										AtLeastOneOf: []string{"consistent_hash.0.http_cookie.0.ttl", "consistent_hash.0.http_cookie.0.name", "consistent_hash.0.http_cookie.0.path"},
 									},
 								},
 							},
+							AtLeastOneOf: []string{"consistent_hash.0.http_cookie", "consistent_hash.0.http_header_name", "consistent_hash.0.minimum_ring_size"},
 						},
 						"http_header_name": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							AtLeastOneOf: []string{"consistent_hash.0.http_cookie", "consistent_hash.0.http_header_name", "consistent_hash.0.minimum_ring_size"},
 						},
 						"minimum_ring_size": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  1024,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      1024,
+							AtLeastOneOf: []string{"consistent_hash.0.http_cookie", "consistent_hash.0.http_header_name", "consistent_hash.0.minimum_ring_size"},
 						},
 					},
 				},
@@ -407,12 +426,14 @@ func resourceComputeBackendService() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enable": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:         schema.TypeBool,
+							Optional:     true,
+							AtLeastOneOf: []string{"log_config.0.enable", "log_config.0.sample_rate"},
 						},
 						"sample_rate": {
-							Type:     schema.TypeFloat,
-							Optional: true,
+							Type:         schema.TypeFloat,
+							Optional:     true,
+							AtLeastOneOf: []string{"log_config.0.enable", "log_config.0.sample_rate"},
 						},
 					},
 				},
@@ -439,31 +460,37 @@ func resourceComputeBackendService() *schema.Resource {
 									},
 								},
 							},
+							AtLeastOneOf: []string{"outlier_detection.0.base_ejection_time", "outlier_detection.0.consecutive_errors", "outlier_detection.0.consecutive_gateway_failure", "outlier_detection.0.enforcing_consecutive_errors", "outlier_detection.0.enforcing_consecutive_gateway_failure", "outlier_detection.0.enforcing_success_rate", "outlier_detection.0.interval", "outlier_detection.0.max_ejection_percent", "outlier_detection.0.success_rate_minimum_hosts", "outlier_detection.0.success_rate_request_volume", "outlier_detection.0.success_rate_stdev_factor"},
 						},
 						"consecutive_errors": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  5,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      5,
+							AtLeastOneOf: []string{"outlier_detection.0.base_ejection_time", "outlier_detection.0.consecutive_errors", "outlier_detection.0.consecutive_gateway_failure", "outlier_detection.0.enforcing_consecutive_errors", "outlier_detection.0.enforcing_consecutive_gateway_failure", "outlier_detection.0.enforcing_success_rate", "outlier_detection.0.interval", "outlier_detection.0.max_ejection_percent", "outlier_detection.0.success_rate_minimum_hosts", "outlier_detection.0.success_rate_request_volume", "outlier_detection.0.success_rate_stdev_factor"},
 						},
 						"consecutive_gateway_failure": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  5,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      5,
+							AtLeastOneOf: []string{"outlier_detection.0.base_ejection_time", "outlier_detection.0.consecutive_errors", "outlier_detection.0.consecutive_gateway_failure", "outlier_detection.0.enforcing_consecutive_errors", "outlier_detection.0.enforcing_consecutive_gateway_failure", "outlier_detection.0.enforcing_success_rate", "outlier_detection.0.interval", "outlier_detection.0.max_ejection_percent", "outlier_detection.0.success_rate_minimum_hosts", "outlier_detection.0.success_rate_request_volume", "outlier_detection.0.success_rate_stdev_factor"},
 						},
 						"enforcing_consecutive_errors": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  100,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      100,
+							AtLeastOneOf: []string{"outlier_detection.0.base_ejection_time", "outlier_detection.0.consecutive_errors", "outlier_detection.0.consecutive_gateway_failure", "outlier_detection.0.enforcing_consecutive_errors", "outlier_detection.0.enforcing_consecutive_gateway_failure", "outlier_detection.0.enforcing_success_rate", "outlier_detection.0.interval", "outlier_detection.0.max_ejection_percent", "outlier_detection.0.success_rate_minimum_hosts", "outlier_detection.0.success_rate_request_volume", "outlier_detection.0.success_rate_stdev_factor"},
 						},
 						"enforcing_consecutive_gateway_failure": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  0,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      0,
+							AtLeastOneOf: []string{"outlier_detection.0.base_ejection_time", "outlier_detection.0.consecutive_errors", "outlier_detection.0.consecutive_gateway_failure", "outlier_detection.0.enforcing_consecutive_errors", "outlier_detection.0.enforcing_consecutive_gateway_failure", "outlier_detection.0.enforcing_success_rate", "outlier_detection.0.interval", "outlier_detection.0.max_ejection_percent", "outlier_detection.0.success_rate_minimum_hosts", "outlier_detection.0.success_rate_request_volume", "outlier_detection.0.success_rate_stdev_factor"},
 						},
 						"enforcing_success_rate": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  100,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      100,
+							AtLeastOneOf: []string{"outlier_detection.0.base_ejection_time", "outlier_detection.0.consecutive_errors", "outlier_detection.0.consecutive_gateway_failure", "outlier_detection.0.enforcing_consecutive_errors", "outlier_detection.0.enforcing_consecutive_gateway_failure", "outlier_detection.0.enforcing_success_rate", "outlier_detection.0.interval", "outlier_detection.0.max_ejection_percent", "outlier_detection.0.success_rate_minimum_hosts", "outlier_detection.0.success_rate_request_volume", "outlier_detection.0.success_rate_stdev_factor"},
 						},
 						"interval": {
 							Type:     schema.TypeList,
@@ -481,26 +508,31 @@ func resourceComputeBackendService() *schema.Resource {
 									},
 								},
 							},
+							AtLeastOneOf: []string{"outlier_detection.0.base_ejection_time", "outlier_detection.0.consecutive_errors", "outlier_detection.0.consecutive_gateway_failure", "outlier_detection.0.enforcing_consecutive_errors", "outlier_detection.0.enforcing_consecutive_gateway_failure", "outlier_detection.0.enforcing_success_rate", "outlier_detection.0.interval", "outlier_detection.0.max_ejection_percent", "outlier_detection.0.success_rate_minimum_hosts", "outlier_detection.0.success_rate_request_volume", "outlier_detection.0.success_rate_stdev_factor"},
 						},
 						"max_ejection_percent": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  10,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      10,
+							AtLeastOneOf: []string{"outlier_detection.0.base_ejection_time", "outlier_detection.0.consecutive_errors", "outlier_detection.0.consecutive_gateway_failure", "outlier_detection.0.enforcing_consecutive_errors", "outlier_detection.0.enforcing_consecutive_gateway_failure", "outlier_detection.0.enforcing_success_rate", "outlier_detection.0.interval", "outlier_detection.0.max_ejection_percent", "outlier_detection.0.success_rate_minimum_hosts", "outlier_detection.0.success_rate_request_volume", "outlier_detection.0.success_rate_stdev_factor"},
 						},
 						"success_rate_minimum_hosts": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  5,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      5,
+							AtLeastOneOf: []string{"outlier_detection.0.base_ejection_time", "outlier_detection.0.consecutive_errors", "outlier_detection.0.consecutive_gateway_failure", "outlier_detection.0.enforcing_consecutive_errors", "outlier_detection.0.enforcing_consecutive_gateway_failure", "outlier_detection.0.enforcing_success_rate", "outlier_detection.0.interval", "outlier_detection.0.max_ejection_percent", "outlier_detection.0.success_rate_minimum_hosts", "outlier_detection.0.success_rate_request_volume", "outlier_detection.0.success_rate_stdev_factor"},
 						},
 						"success_rate_request_volume": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  100,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      100,
+							AtLeastOneOf: []string{"outlier_detection.0.base_ejection_time", "outlier_detection.0.consecutive_errors", "outlier_detection.0.consecutive_gateway_failure", "outlier_detection.0.enforcing_consecutive_errors", "outlier_detection.0.enforcing_consecutive_gateway_failure", "outlier_detection.0.enforcing_success_rate", "outlier_detection.0.interval", "outlier_detection.0.max_ejection_percent", "outlier_detection.0.success_rate_minimum_hosts", "outlier_detection.0.success_rate_request_volume", "outlier_detection.0.success_rate_stdev_factor"},
 						},
 						"success_rate_stdev_factor": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  1900,
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      1900,
+							AtLeastOneOf: []string{"outlier_detection.0.base_ejection_time", "outlier_detection.0.consecutive_errors", "outlier_detection.0.consecutive_gateway_failure", "outlier_detection.0.enforcing_consecutive_errors", "outlier_detection.0.enforcing_consecutive_gateway_failure", "outlier_detection.0.enforcing_success_rate", "outlier_detection.0.interval", "outlier_detection.0.max_ejection_percent", "outlier_detection.0.success_rate_minimum_hosts", "outlier_detection.0.success_rate_request_volume", "outlier_detection.0.success_rate_stdev_factor"},
 						},
 					},
 				},
@@ -557,6 +589,11 @@ func resourceComputeBackendService() *schema.Resource {
 func computeBackendServiceBackendSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
+			"group": {
+				Type:             schema.TypeString,
+				Required:         true,
+				DiffSuppressFunc: compareSelfLinkRelativePaths,
+			},
 			"balancing_mode": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -571,11 +608,6 @@ func computeBackendServiceBackendSchema() *schema.Resource {
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
-			},
-			"group": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				DiffSuppressFunc: compareSelfLinkRelativePaths,
 			},
 			"max_connections": {
 				Type:     schema.TypeInt,
@@ -768,7 +800,7 @@ func resourceComputeBackendServiceCreate(d *schema.ResourceData, meta interface{
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/backendServices/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -1174,7 +1206,7 @@ func resourceComputeBackendServiceImport(d *schema.ResourceData, meta interface{
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/backendServices/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
