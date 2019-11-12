@@ -83,6 +83,7 @@ func resourceSecurityScannerScanConfig() *schema.Resource {
 									},
 								},
 							},
+							AtLeastOneOf: []string{"authentication.0.google_account", "authentication.0.custom_account"},
 						},
 						"google_account": {
 							Type:     schema.TypeList,
@@ -102,6 +103,7 @@ func resourceSecurityScannerScanConfig() *schema.Resource {
 									},
 								},
 							},
+							AtLeastOneOf: []string{"authentication.0.google_account", "authentication.0.custom_account"},
 						},
 					},
 				},
