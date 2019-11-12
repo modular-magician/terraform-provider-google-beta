@@ -103,7 +103,7 @@ func SourceRepoRepositoryIdParseFunc(d *schema.ResourceData, config *Config) err
 		Config:     config,
 	}
 	d.Set("repository", u.GetResourceId())
-
+	d.SetId(u.GetResourceId())
 	return nil
 }
 
@@ -159,7 +159,7 @@ func (u *SourceRepoRepositoryIamUpdater) qualifyRepositoryUrl(methodIdentifier s
 }
 
 func (u *SourceRepoRepositoryIamUpdater) GetResourceId() string {
-	return fmt.Sprintf("%s/%s", u.project, u.repository)
+	return fmt.Sprintf("projects/%s/repos/%s", u.project, u.repository)
 }
 
 func (u *SourceRepoRepositoryIamUpdater) GetMutexKey() string {

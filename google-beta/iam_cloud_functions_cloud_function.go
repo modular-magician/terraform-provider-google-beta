@@ -123,7 +123,7 @@ func CloudFunctionsCloudFunctionIdParseFunc(d *schema.ResourceData, config *Conf
 		Config:        config,
 	}
 	d.Set("cloud_function", u.GetResourceId())
-
+	d.SetId(u.GetResourceId())
 	return nil
 }
 
@@ -179,7 +179,7 @@ func (u *CloudFunctionsCloudFunctionIamUpdater) qualifyCloudFunctionUrl(methodId
 }
 
 func (u *CloudFunctionsCloudFunctionIamUpdater) GetResourceId() string {
-	return fmt.Sprintf("%s/%s/%s", u.project, u.region, u.cloudFunction)
+	return fmt.Sprintf("projects/%s/locations/%s/functions/%s", u.project, u.region, u.cloudFunction)
 }
 
 func (u *CloudFunctionsCloudFunctionIamUpdater) GetMutexKey() string {
