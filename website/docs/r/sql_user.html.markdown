@@ -34,7 +34,7 @@ resource "google_sql_database_instance" "master" {
 
 resource "google_sql_user" "users" {
   name     = "me"
-  instance = "${google_sql_database_instance.master.name}"
+  instance = google_sql_database_instance.master.name
   host     = "me.com"
   password = "changeme"
 }
@@ -50,7 +50,7 @@ The following arguments are supported:
 * `name` - (Required) The name of the user. Changing this forces a new resource
     to be created.
 
-* `password` - (Optional) The password for the user. Can be updated.
+* `password` - (Required) The password for the user. Can be updated.
 
 - - -
 
