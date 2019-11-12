@@ -115,13 +115,14 @@ func resourceLoggingMetric() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"bounds": {
 										Type:     schema.TypeList,
-										Optional: true,
+										Required: true,
 										Elem: &schema.Schema{
 											Type: schema.TypeFloat,
 										},
 									},
 								},
 							},
+							AtLeastOneOf: []string{"bucket_options.0.linear_buckets", "bucket_options.0.exponential_buckets", "bucket_options.0.explicit_buckets"},
 						},
 						"exponential_buckets": {
 							Type:     schema.TypeList,
@@ -130,19 +131,23 @@ func resourceLoggingMetric() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"growth_factor": {
-										Type:     schema.TypeInt,
-										Optional: true,
+										Type:         schema.TypeInt,
+										Optional:     true,
+										AtLeastOneOf: []string{"bucket_options.0.exponential_buckets.0.num_finite_buckets", "bucket_options.0.exponential_buckets.0.growth_factor", "bucket_options.0.exponential_buckets.0.scale"},
 									},
 									"num_finite_buckets": {
-										Type:     schema.TypeInt,
-										Optional: true,
+										Type:         schema.TypeInt,
+										Optional:     true,
+										AtLeastOneOf: []string{"bucket_options.0.exponential_buckets.0.num_finite_buckets", "bucket_options.0.exponential_buckets.0.growth_factor", "bucket_options.0.exponential_buckets.0.scale"},
 									},
 									"scale": {
-										Type:     schema.TypeFloat,
-										Optional: true,
+										Type:         schema.TypeFloat,
+										Optional:     true,
+										AtLeastOneOf: []string{"bucket_options.0.exponential_buckets.0.num_finite_buckets", "bucket_options.0.exponential_buckets.0.growth_factor", "bucket_options.0.exponential_buckets.0.scale"},
 									},
 								},
 							},
+							AtLeastOneOf: []string{"bucket_options.0.linear_buckets", "bucket_options.0.exponential_buckets", "bucket_options.0.explicit_buckets"},
 						},
 						"linear_buckets": {
 							Type:     schema.TypeList,
@@ -151,19 +156,23 @@ func resourceLoggingMetric() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"num_finite_buckets": {
-										Type:     schema.TypeInt,
-										Optional: true,
+										Type:         schema.TypeInt,
+										Optional:     true,
+										AtLeastOneOf: []string{"bucket_options.0.linear_buckets.0.num_finite_buckets", "bucket_options.0.linear_buckets.0.width", "bucket_options.0.linear_buckets.0.offset"},
 									},
 									"offset": {
-										Type:     schema.TypeFloat,
-										Optional: true,
+										Type:         schema.TypeFloat,
+										Optional:     true,
+										AtLeastOneOf: []string{"bucket_options.0.linear_buckets.0.num_finite_buckets", "bucket_options.0.linear_buckets.0.width", "bucket_options.0.linear_buckets.0.offset"},
 									},
 									"width": {
-										Type:     schema.TypeInt,
-										Optional: true,
+										Type:         schema.TypeInt,
+										Optional:     true,
+										AtLeastOneOf: []string{"bucket_options.0.linear_buckets.0.num_finite_buckets", "bucket_options.0.linear_buckets.0.width", "bucket_options.0.linear_buckets.0.offset"},
 									},
 								},
 							},
+							AtLeastOneOf: []string{"bucket_options.0.linear_buckets", "bucket_options.0.exponential_buckets", "bucket_options.0.explicit_buckets"},
 						},
 					},
 				},
