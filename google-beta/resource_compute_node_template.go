@@ -42,60 +42,49 @@ func resourceComputeNodeTemplate() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `An optional textual description of the resource.`,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `Name of the resource.`,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"node_affinity_labels": {
 				Type:     schema.TypeMap,
 				Optional: true,
 				ForceNew: true,
-				Description: `Labels to use for node affinity, which will be used in
-instance scheduling.`,
-				Elem: &schema.Schema{Type: schema.TypeString},
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"node_type": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Description: `Node type to use for nodes group that are created from this template.
-Only one of nodeTypeFlexibility and nodeType can be specified.`,
+				Type:          schema.TypeString,
+				Optional:      true,
+				ForceNew:      true,
 				ConflictsWith: []string{"node_type_flexibility"},
 			},
 			"node_type_flexibility": {
 				Type:     schema.TypeList,
 				Optional: true,
 				ForceNew: true,
-				Description: `Flexible properties for the desired node type. Node groups that
-use this node template will create nodes of a type that matches
-these properties. Only one of nodeTypeFlexibility and nodeType can
-be specified.`,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cpus": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							ForceNew:    true,
-							Description: `Number of virtual CPUs to use.`,
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							AtLeastOneOf: []string{"node_type_flexibility.0.cpus", "node_type_flexibility.0.memory"},
 						},
 						"memory": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							ForceNew:    true,
-							Description: `Physical memory available to the node, defined in MB.`,
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							AtLeastOneOf: []string{"node_type_flexibility.0.cpus", "node_type_flexibility.0.memory"},
 						},
 						"local_ssd": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: `Use local SSD`,
+							Type:     schema.TypeString,
+							Computed: true,
 						},
 					},
 				},
@@ -107,16 +96,12 @@ be specified.`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description: `Region where nodes using the node template will be created.
-If it is not provided, the provider region is used.`,
 			},
 			"server_binding": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Optional: true,
 				ForceNew: true,
-				Description: `The server binding policy for nodes using this template. Determines
-where the nodes should restart following a maintenance event.`,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -125,26 +110,13 @@ where the nodes should restart following a maintenance event.`,
 							Required:     true,
 							ForceNew:     true,
 							ValidateFunc: validation.StringInSlice([]string{"RESTART_NODE_ON_ANY_SERVER", "RESTART_NODE_ON_MINIMAL_SERVERS"}, false),
-							Description: `Type of server binding policy. If 'RESTART_NODE_ON_ANY_SERVER',
-nodes using this template will restart on any physical server
-following a maintenance event.
-
-If 'RESTART_NODE_ON_MINIMAL_SERVER', nodes using this template
-will restart on the same physical server following a maintenance
-event, instead of being live migrated to or restarted on a new
-physical server. This option may be useful if you are using
-software licenses tied to the underlying server characteristics
-such as physical sockets or cores, to avoid the need for
-additional licenses when maintenance occurs. However, VMs on such
-nodes will experience outages while maintenance is applied.`,
 						},
 					},
 				},
 			},
 			"creation_timestamp": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Creation timestamp in RFC3339 text format.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -223,7 +195,7 @@ func resourceComputeNodeTemplateCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/nodeTemplates/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -353,7 +325,7 @@ func resourceComputeNodeTemplateImport(d *schema.ResourceData, meta interface{})
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/nodeTemplates/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

@@ -47,69 +47,48 @@ func resourceComputeUrlMap() *schema.Resource {
 				Type:             schema.TypeString,
 				Required:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `The backend service or backend bucket to use when none of the given rules match.`,
 			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				Description: `Name of the resource. Provided by the client when the resource is
-created. The name must be 1-63 characters long, and comply with
-RFC1035. Specifically, the name must be 1-63 characters long and match
-the regular expression '[a-z]([-a-z0-9]*[a-z0-9])?' which means the
-first character must be a lowercase letter, and all following
-characters must be a dash, lowercase letter, or digit, except the last
-character, which cannot be a dash.`,
 			},
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Description: `An optional description of this resource. Provide this property when
-you create the resource.`,
 			},
 			"host_rule": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: `The list of HostRules to use against the URL.`,
-				Elem:        computeUrlMapHostRuleSchema(),
+				Type:     schema.TypeSet,
+				Optional: true,
+				Elem:     computeUrlMapHostRuleSchema(),
 				// Default schema.HashSchema is used.
 			},
 			"path_matcher": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: `The list of named PathMatchers to use against the URL.`,
+				Type:     schema.TypeList,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"default_service": {
 							Type:             schema.TypeString,
 							Required:         true,
 							DiffSuppressFunc: compareSelfLinkOrResourceName,
-							Description:      `The backend service or backend bucket to use when none of the given paths match.`,
 						},
 						"name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: `The name to which this PathMatcher is referred by the HostRule.`,
+							Type:     schema.TypeString,
+							Required: true,
 						},
 						"description": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: `An optional description of this resource.`,
+							Type:     schema.TypeString,
+							Optional: true,
 						},
 						"path_rule": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Description: `The list of path rules.`,
+							Type:     schema.TypeList,
+							Optional: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"paths": {
 										Type:     schema.TypeSet,
 										Required: true,
-										Description: `The list of path patterns to match. Each must start with /
-and the only place a * is allowed is at the end following
-a /. The string fed to the path matcher does not include
-any text after the first ? or #, and those chars are not
-allowed here.`,
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
@@ -119,7 +98,6 @@ allowed here.`,
 										Type:             schema.TypeString,
 										Required:         true,
 										DiffSuppressFunc: compareSelfLinkOrResourceName,
-										Description:      `The backend service or backend bucket to use if any of the given paths match.`,
 									},
 								},
 							},
@@ -130,49 +108,39 @@ allowed here.`,
 			"test": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Description: `The list of expected URL mappings. Requests to update this UrlMap will
-succeed only if all of the test cases pass.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"host": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: `Host portion of the URL.`,
+							Type:     schema.TypeString,
+							Required: true,
 						},
 						"path": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: `Path portion of the URL.`,
+							Type:     schema.TypeString,
+							Required: true,
 						},
 						"service": {
 							Type:             schema.TypeString,
 							Required:         true,
 							DiffSuppressFunc: compareSelfLinkOrResourceName,
-							Description:      `The backend service or backend bucket link that should be matched by this test.`,
 						},
 						"description": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: `Description of this test case.`,
+							Type:     schema.TypeString,
+							Optional: true,
 						},
 					},
 				},
 			},
 			"creation_timestamp": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Creation timestamp in RFC3339 text format.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"fingerprint": {
 				Type:     schema.TypeString,
 				Computed: true,
-				Description: `Fingerprint of this resource. This field is used internally during
-updates of this resource.`,
 			},
 			"map_id": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: `The unique identifier for the resource.`,
+				Type:     schema.TypeInt,
+				Computed: true,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -194,10 +162,6 @@ func computeUrlMapHostRuleSchema() *schema.Resource {
 			"hosts": {
 				Type:     schema.TypeSet,
 				Required: true,
-				Description: `The list of host patterns to match. They must be valid
-hostnames, except * will match any string of ([a-z0-9-.]*). In
-that case, * must be the first character and must be followed in
-the pattern by either - or ..`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -206,14 +170,10 @@ the pattern by either - or ..`,
 			"path_matcher": {
 				Type:     schema.TypeString,
 				Required: true,
-				Description: `The name of the PathMatcher to use to match the path portion of
-the URL if the hostRule matches the URL's host portion.`,
 			},
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Description: `An optional description of this HostRule. Provide this property
-when you create the resource.`,
 			},
 		},
 	}
@@ -282,7 +242,7 @@ func resourceComputeUrlMapCreate(d *schema.ResourceData, meta interface{}) error
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/urlMaps/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -495,7 +455,7 @@ func resourceComputeUrlMapImport(d *schema.ResourceData, meta interface{}) ([]*s
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/urlMaps/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -681,8 +641,6 @@ func flattenComputeUrlMapTestService(v interface{}, d *schema.ResourceData) inte
 	return ConvertSelfLinkToV1(v.(string))
 }
 
-// ResourceRef only supports 1 type and UrlMap has references to a BackendBucket or BackendService. Just read the self_link string
-// instead of extracting the name and making a self_link out of it.
 func expandComputeUrlMapDefaultService(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
@@ -792,8 +750,6 @@ func expandComputeUrlMapPathMatcher(v interface{}, d TerraformResourceData, conf
 	return req, nil
 }
 
-// ResourceRef only supports 1 type and UrlMap has references to a BackendBucket or BackendService. Just read the self_link string
-// instead of extracting the name and making a self_link out of it.
 func expandComputeUrlMapPathMatcherDefaultService(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
@@ -840,8 +796,6 @@ func expandComputeUrlMapPathMatcherPathRulePaths(v interface{}, d TerraformResou
 	return v, nil
 }
 
-// ResourceRef only supports 1 type and UrlMap has references to a BackendBucket or BackendService. Just read the self_link string
-// instead of extracting the name and making a self_link out of it.
 func expandComputeUrlMapPathMatcherPathRuleService(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
@@ -901,8 +855,6 @@ func expandComputeUrlMapTestPath(v interface{}, d TerraformResourceData, config 
 	return v, nil
 }
 
-// ResourceRef only supports 1 type and UrlMap has references to a BackendBucket or BackendService. Just read the self_link string
-// instead of extracting the name and making a self_link out of it.
 func expandComputeUrlMapTestService(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
