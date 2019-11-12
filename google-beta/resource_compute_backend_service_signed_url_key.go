@@ -41,14 +41,11 @@ func resourceComputeBackendServiceSignedUrlKey() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `The backend service this signed URL key belongs.`,
 			},
 			"key_value": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				Description: `128-bit key value used for signing the URL. The key value must be a
-valid RFC 4648 Section 5 base64url encoded string.`,
+				Type:      schema.TypeString,
+				Required:  true,
+				ForceNew:  true,
 				Sensitive: true,
 			},
 			"name": {
@@ -56,7 +53,6 @@ valid RFC 4648 Section 5 base64url encoded string.`,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateRegexp(`^(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)$`),
-				Description:  `Name of the signed URL key.`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -114,7 +110,7 @@ func resourceComputeBackendServiceSignedUrlKeyCreate(d *schema.ResourceData, met
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/backendServices/{{backend_service}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
