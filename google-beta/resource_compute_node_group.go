@@ -47,25 +47,21 @@ func resourceComputeNodeGroup() *schema.Resource {
 				Type:             schema.TypeString,
 				Required:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `The URL of the node template to which this node group belongs.`,
 			},
 			"size": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				ForceNew:    true,
-				Description: `The total number of nodes in the node group.`,
+				Type:     schema.TypeInt,
+				Required: true,
+				ForceNew: true,
 			},
 			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `An optional textual description of the resource.`,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `Name of the resource.`,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"zone": {
 				Type:             schema.TypeString,
@@ -73,12 +69,10 @@ func resourceComputeNodeGroup() *schema.Resource {
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `Zone where this node group is located`,
 			},
 			"creation_timestamp": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Creation timestamp in RFC3339 text format.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -145,7 +139,7 @@ func resourceComputeNodeGroupCreate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/zones/{{zone}}/nodeGroups/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -320,7 +314,7 @@ func resourceComputeNodeGroupImport(d *schema.ResourceData, meta interface{}) ([
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/zones/{{zone}}/nodeGroups/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

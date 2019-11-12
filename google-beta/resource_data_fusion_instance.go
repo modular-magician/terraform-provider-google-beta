@@ -43,96 +43,69 @@ func resourceDataFusionInstance() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `The ID of the instance or a fully qualified identifier for the instance.`,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 			"type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"BASIC", "ENTERPRISE"}, false),
-				Description: `Represents the type of Data Fusion instance. Each type is configured with 
-the default settings for processing and memory.
-- BASIC: Basic Data Fusion instance. In Basic type, the user will be able to create data pipelines 
-using point and click UI. However, there are certain limitations, such as fewer number 
-of concurrent pipelines, no support for streaming pipelines, etc.
-- ENTERPRISE: Enterprise Data Fusion instance. In Enterprise type, the user will have more features 
-available, such as support for streaming pipelines, higher number of concurrent pipelines, etc.`,
 			},
 			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `An optional description of the instance.`,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"enable_stackdriver_logging": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: `Option to enable Stackdriver Logging.`,
+				Type:     schema.TypeBool,
+				Optional: true,
 			},
 			"enable_stackdriver_monitoring": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: `Option to enable Stackdriver Monitoring.`,
+				Type:     schema.TypeBool,
+				Optional: true,
 			},
 			"labels": {
 				Type:     schema.TypeMap,
 				Optional: true,
-				Description: `The resource labels for instance to use to annotate any related underlying resources,
-such as Compute Engine VMs.`,
-				Elem: &schema.Schema{Type: schema.TypeString},
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"options": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `Map of additional options used to configure the behavior of Data Fusion instance.`,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"region": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `The region of the Data Fusion instance.`,
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional: true,
+				ForceNew: true,
 			},
 			"create_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `The time the instance was created in RFC3339 UTC "Zulu" format, accurate to nanoseconds.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"service_endpoint": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Endpoint on which the Data Fusion UI and REST APIs are accessible.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"state": {
 				Type:     schema.TypeString,
 				Computed: true,
-				Description: `The current state of this Data Fusion instance.
-- CREATING: Instance is being created
-- RUNNING: Instance is running and ready for requests
-- FAILED: Instance creation failed
-- DELETING: Instance is being deleted
-- UPGRADING: Instance is being upgraded
-- RESTARTING: Instance is being restarted`,
 			},
 			"state_message": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Additional information about the current state of this Data Fusion instance if available.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"update_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `The time the instance was last updated in RFC3339 UTC "Zulu" format, accurate to nanoseconds.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"version": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Current version of the Data Fusion.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -207,7 +180,7 @@ func resourceDataFusionInstanceCreate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{project}}/{{region}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{region}}/instances/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -396,7 +369,7 @@ func resourceDataFusionInstanceImport(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{project}}/{{region}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{region}}/instances/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -461,17 +434,7 @@ func flattenDataFusionInstanceVersion(v interface{}, d *schema.ResourceData) int
 }
 
 func expandDataFusionInstanceName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	project, err := getProject(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	region, err := getRegion(d, config)
-	if err != nil {
-		return nil, err
-	}
-
-	return fmt.Sprintf("projects/%s/locations/%s/instances/%s", project, region, v.(string)), nil
+	return replaceVars(d, config, "projects/{{project}}/locations/{{region}}/instances/{{name}}")
 }
 
 func expandDataFusionInstanceDescription(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {

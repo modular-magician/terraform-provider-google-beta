@@ -43,12 +43,9 @@ func resourceComputeRegionSslCertificate() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"certificate": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				Description: `The certificate in PEM format.
-The certificate chain must be no greater than 5 certs long.
-The chain must include at least one intermediate cert.`,
+				Type:      schema.TypeString,
+				Required:  true,
+				ForceNew:  true,
 				Sensitive: true,
 			},
 			"private_key": {
@@ -56,14 +53,12 @@ The chain must include at least one intermediate cert.`,
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: sha256DiffSuppress,
-				Description:      `The write-only private key in PEM format.`,
 				Sensitive:        true,
 			},
 			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `An optional description of this resource.`,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"name": {
 				Type:         schema.TypeString,
@@ -71,16 +66,6 @@ The chain must include at least one intermediate cert.`,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateGCPName,
-				Description: `Name of the resource. Provided by the client when the resource is
-created. The name must be 1-63 characters long, and comply with
-RFC1035. Specifically, the name must be 1-63 characters long and match
-the regular expression '[a-z]([-a-z0-9]*[a-z0-9])?' which means the
-first character must be a lowercase letter, and all following
-characters must be a dash, lowercase letter, or digit, except the last
-character, which cannot be a dash.
-
-
-These are in the same namespace as the managed SSL certificates.`,
 			},
 			"region": {
 				Type:             schema.TypeString,
@@ -88,18 +73,14 @@ These are in the same namespace as the managed SSL certificates.`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description: `The Region in which the created regional ssl certificate should reside.
-If it is not provided, the provider region is used.`,
 			},
 			"certificate_id": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: `The unique identifier for the resource.`,
+				Type:     schema.TypeInt,
+				Computed: true,
 			},
 			"creation_timestamp": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Creation timestamp in RFC3339 text format.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"name_prefix": {
 				Type:          schema.TypeString,
@@ -183,7 +164,7 @@ func resourceComputeRegionSslCertificateCreate(d *schema.ResourceData, meta inte
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/sslCertificates/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -307,7 +288,7 @@ func resourceComputeRegionSslCertificateImport(d *schema.ResourceData, meta inte
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/sslCertificates/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
