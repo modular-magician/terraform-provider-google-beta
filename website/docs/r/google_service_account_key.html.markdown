@@ -16,13 +16,13 @@ Creates and manages service account key-pairs, which allow the user to establish
 
 ```hcl
 resource "google_service_account" "myaccount" {
-  account_id = "myaccount"
+  account_id   = "myaccount"
   display_name = "My Service Account"
 }
 
 resource "google_service_account_key" "mykey" {
-  service_account_id = "${google_service_account.myaccount.name}"
-  public_key_type = "TYPE_X509_PEM_FILE"
+  service_account_id = google_service_account.myaccount.name
+  public_key_type    = "TYPE_X509_PEM_FILE"
 }
 ```
 
@@ -35,7 +35,7 @@ resource "google_service_account" "myaccount" {
 }
 
 resource "google_service_account_key" "mykey" {
-  service_account_id = "${google_service_account.myaccount.name}"
+  service_account_id = google_service_account.myaccount.name
 }
 
 resource "kubernetes_secret" "google-application-credentials" {
@@ -43,7 +43,7 @@ resource "kubernetes_secret" "google-application-credentials" {
     name = "google-application-credentials"
   }
   data = {
-    credentials.json = "${base64decode(google_service_account_key.mykey.private_key)}"
+    credentials.json = base64decode(google_service_account_key.mykey.private_key)
   }
 }
 ```
@@ -52,13 +52,13 @@ resource "kubernetes_secret" "google-application-credentials" {
 
 ```hcl
 resource "google_service_account" "myaccount" {
-  account_id = "myaccount"
+  account_id   = "myaccount"
   display_name = "My Service Account"
 }
 
 resource "google_service_account_key" "mykey" {
-  service_account_id = "${google_service_account.myaccount.name}"
-  public_key_type = "TYPE_X509_PEM_FILE"
+  service_account_id = google_service_account.myaccount.name
+  public_key_type    = "TYPE_X509_PEM_FILE"
 }
 ```
 
@@ -78,15 +78,6 @@ Valid values are listed at
 * `public_key_type` (Optional) The output format of the public key requested. X509_PEM is the default output format.
 
 * `private_key_type` (Optional) The output format of the private key. TYPE_GOOGLE_CREDENTIALS_FILE is the default output format.
-
-* `pgp_key` – (Optional, Deprecated) An optional PGP key to encrypt the resulting private
-key material. Only used when creating or importing a new key pair. May either be
-a base64-encoded public key or a `keybase:keybaseusername` string for looking up
-in Vault.
-
-~> **NOTE:** The pgp_key field has been deprecated and support for encrypting values in state will be removed in version 3.0.0.
-See https://www.terraform.io/docs/extend/best-practices/sensitive-state.html for more information.
-
 
 ## Attributes Reference
 
