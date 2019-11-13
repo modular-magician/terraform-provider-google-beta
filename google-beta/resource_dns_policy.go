@@ -44,27 +44,20 @@ func resourceDNSPolicy() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `User assigned name for this policy.`,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 			"alternative_name_server_config": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Description: `Sets an alternative name server for the associated networks.
-When specified, all DNS queries are forwarded to a name server that you choose.
-Names such as .internal are not available when an alternative name server is specified.`,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"target_name_servers": {
 							Type:     schema.TypeSet,
-							Optional: true,
-							Description: `Sets an alternative name server for the associated networks. When specified,
-all DNS queries are forwarded to a name server that you choose. Names such as .internal
-are not available when an alternative name server is specified.`,
-							Elem: dnsPolicyAlternativeNameServerConfigTargetNameServersSchema(),
+							Required: true,
+							Elem:     dnsPolicyAlternativeNameServerConfigTargetNameServersSchema(),
 							Set: func(v interface{}) int {
 								raw := v.(map[string]interface{})
 								if address, ok := raw["ipv4_address"]; ok {
@@ -79,30 +72,22 @@ are not available when an alternative name server is specified.`,
 				},
 			},
 			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `A textual description field. Defaults to 'Managed by Terraform'.`,
-				Default:     "Managed by Terraform",
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "Managed by Terraform",
 			},
 			"enable_inbound_forwarding": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Description: `Allows networks bound to this policy to receive DNS queries sent
-by VMs or applications over VPN connections. When enabled, a
-virtual IP address will be allocated from each of the sub-networks
-that are bound to this policy.`,
 			},
 			"enable_logging": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Description: `Controls whether logging is enabled for the networks bound to this policy.
-Defaults to no logging if not set.`,
 			},
 			"networks": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: `List of network names specifying networks to which this policy is applied.`,
-				Elem:        dnsPolicyNetworksSchema(),
+				Type:     schema.TypeSet,
+				Optional: true,
+				Elem:     dnsPolicyNetworksSchema(),
 				Set: func(v interface{}) int {
 					raw := v.(map[string]interface{})
 					if url, ok := raw["network_url"]; ok {
@@ -127,9 +112,8 @@ func dnsPolicyAlternativeNameServerConfigTargetNameServersSchema() *schema.Resou
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"ipv4_address": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `IPv4 address to forward to.`,
+				Type:     schema.TypeString,
+				Required: true,
 			},
 		},
 	}
@@ -140,10 +124,7 @@ func dnsPolicyNetworksSchema() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"network_url": {
 				Type:     schema.TypeString,
-				Optional: true,
-				Description: `The fully qualified URL of the VPC network to bind to.
-This should be formatted like
-'https://www.googleapis.com/compute/v1/projects/{project}/global/networks/{network}'`,
+				Required: true,
 			},
 		},
 	}
@@ -206,7 +187,7 @@ func resourceDNSPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/policies/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -376,7 +357,7 @@ func resourceDNSPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schem
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/policies/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
