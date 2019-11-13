@@ -51,11 +51,6 @@ func resourceGoogleServiceAccount() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
-			"policy_data": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Removed:  "Use the 'google_service_account_iam_policy' resource to define policies for a service account",
-			},
 		},
 	}
 }
@@ -126,31 +121,23 @@ func resourceGoogleServiceAccountDelete(d *schema.ResourceData, meta interface{}
 
 func resourceGoogleServiceAccountUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-	sa, err := config.clientIAM.Projects.ServiceAccounts.Get(d.Id()).Do()
-	if err != nil {
-		return fmt.Errorf("Error retrieving service account %q: %s", d.Id(), err)
-	}
-	updateMask := make([]string, 0)
-	if d.HasChange("description") {
-		updateMask = append(updateMask, "description")
-	}
-	if d.HasChange("display_name") {
-		updateMask = append(updateMask, "display_name")
-	}
-	_, err = config.clientIAM.Projects.ServiceAccounts.Patch(d.Id(),
-		&iam.PatchServiceAccountRequest{
-			UpdateMask: strings.Join(updateMask, ","),
-			ServiceAccount: &iam.ServiceAccount{
+	if d.HasChange("display_name") || d.HasChange("description") {
+		sa, err := config.clientIAM.Projects.ServiceAccounts.Get(d.Id()).Do()
+		if err != nil {
+			return fmt.Errorf("Error retrieving service account %q: %s", d.Id(), err)
+		}
+		_, err = config.clientIAM.Projects.ServiceAccounts.Update(d.Id(),
+			&iam.ServiceAccount{
 				DisplayName: d.Get("display_name").(string),
 				Description: d.Get("description").(string),
 				Etag:        sa.Etag,
-			},
-		}).Do()
-	if err != nil {
-		return err
+			}).Do()
+		if err != nil {
+			return fmt.Errorf("Error updating service account %q: %s", d.Id(), err)
+		}
+		// See comment in Create.
+		time.Sleep(time.Second)
 	}
-	// See comment in Create.
-	time.Sleep(time.Second)
 
 	return nil
 }

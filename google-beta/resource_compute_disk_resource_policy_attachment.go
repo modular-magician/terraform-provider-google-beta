@@ -45,14 +45,11 @@ func resourceComputeDiskResourcePolicyAttachment() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `The name of the disk in which the resource policies are attached to.`,
 			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				Description: `The resource policy to be attached to the disk for scheduling snapshot
-creation. Do not specify the self link.`,
 			},
 			"zone": {
 				Type:             schema.TypeString,
@@ -60,7 +57,6 @@ creation. Do not specify the self link.`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `A reference to the zone where the disk resides.`,
 			},
 			"project": {
 				Type:     schema.TypeString,
