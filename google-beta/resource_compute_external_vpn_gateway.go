@@ -46,45 +46,27 @@ func resourceComputeExternalVpnGateway() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				Description: `Name of the resource. Provided by the client when the resource is
-created. The name must be 1-63 characters long, and comply with
-RFC1035.  Specifically, the name must be 1-63 characters long and
-match the regular expression '[a-z]([-a-z0-9]*[a-z0-9])?' which means
-the first character must be a lowercase letter, and all following
-characters must be a dash, lowercase letter, or digit, except the last
-character, which cannot be a dash.`,
 			},
 			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `An optional description of this resource.`,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"interface": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `A list of interfaces on this external VPN gateway.`,
+				Type:     schema.TypeList,
+				Optional: true,
+				ForceNew: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:     schema.TypeInt,
 							Optional: true,
 							ForceNew: true,
-							Description: `The numberic ID for this interface. Allowed values are based on the redundancy type
-of this external VPN gateway
-* '0 - SINGLE_IP_INTERNALLY_REDUNDANT'
-* '0, 1 - TWO_IPS_REDUNDANCY'
-* '0, 1, 2, 3 - FOUR_IPS_REDUNDANCY'`,
 						},
 						"ip_address": {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
-							Description: `IP address of the interface in the external VPN gateway.
-Only IPv4 is supported. This IP address can be either from
-your on-premise gateway or another Cloud provider’s VPN gateway,
-it cannot be an IP address from Google Compute Engine.`,
 						},
 					},
 				},
@@ -94,7 +76,6 @@ it cannot be an IP address from Google Compute Engine.`,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"FOUR_IPS_REDUNDANCY", "SINGLE_IP_INTERNALLY_REDUNDANT", "TWO_IPS_REDUNDANCY", ""}, false),
-				Description:  `Indicates the redundancy type of this external VPN gateway`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -155,7 +136,7 @@ func resourceComputeExternalVpnGatewayCreate(d *schema.ResourceData, meta interf
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/externalVpnGateways/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -272,7 +253,7 @@ func resourceComputeExternalVpnGatewayImport(d *schema.ResourceData, meta interf
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/externalVpnGateways/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
