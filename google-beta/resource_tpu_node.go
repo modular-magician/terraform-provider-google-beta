@@ -77,54 +77,39 @@ func resourceTPUNode() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"accelerator_type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `The type of hardware accelerators associated with this node.`,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 			"cidr_block": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				Description: `The CIDR block that the TPU node will use when selecting an IP
-address. This CIDR block must be a /29 block; the Compute Engine
-networks API forbids a smaller block, and using a larger block would
-be wasteful (a node can only consume one IP address).
-
-Errors will occur if the CIDR block has already been used for a
-currently existing TPU node, the CIDR block conflicts with any
-subnetworks in the user's provided network, or the provided network
-is peered with another network that is using that CIDR block.`,
 			},
 			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `The immutable name of the TPU.`,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 			"tensorflow_version": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: `The version of Tensorflow running in the Node.`,
+				Type:     schema.TypeString,
+				Required: true,
 			},
 			"zone": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `The GCP location for the TPU.`,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `The user-supplied description of the TPU. Maximum of 512 characters.`,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"labels": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `Resource labels to represent user provided metadata.`,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"network": {
 				Type:             schema.TypeString,
@@ -132,27 +117,20 @@ is peered with another network that is using that CIDR block.`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description: `The name of a network to peer the TPU node to. It must be a
-preexisting Compute Engine network inside of the project on which
-this API has been activated. If none is provided, "default" will be
-used.`,
 			},
 			"scheduling_config": {
 				Type:             schema.TypeList,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareTpuNodeSchedulingConfig,
-				Description:      `Sets the scheduling options for this TPU instance.`,
 				MaxItems:         1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"preemptible": {
 							Type:             schema.TypeBool,
-							Optional:         true,
+							Required:         true,
 							ForceNew:         true,
 							DiffSuppressFunc: compareTpuNodeSchedulingConfig,
-							Description:      `Defines whether the TPU instance is preemptible.`,
-							Default:          false,
 						},
 					},
 				},
@@ -160,20 +138,15 @@ used.`,
 			"network_endpoints": {
 				Type:     schema.TypeList,
 				Computed: true,
-				Description: `The network endpoints where TPU workers can be accessed and sent work.
-It is recommended that Tensorflow clients of the node first reach out
-to the first (index 0) entry.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"ip_address": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: `The IP address of this network endpoint.`,
+							Type:     schema.TypeString,
+							Computed: true,
 						},
 						"port": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: `The port of this network endpoint.`,
+							Type:     schema.TypeInt,
+							Computed: true,
 						},
 					},
 				},
@@ -181,10 +154,6 @@ to the first (index 0) entry.`,
 			"service_account": {
 				Type:     schema.TypeString,
 				Computed: true,
-				Description: `The service account used to run the tensor flow services within the
-node. To share resources, including Google Cloud Storage data, with
-the Tensorflow job running in the Node, this account must have
-permissions to that data.`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -265,7 +234,7 @@ func resourceTPUNodeCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{project}}/{{zone}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{zone}}/nodes/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -431,7 +400,7 @@ func resourceTPUNodeImport(d *schema.ResourceData, meta interface{}) ([]*schema.
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{project}}/{{zone}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{zone}}/nodes/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
