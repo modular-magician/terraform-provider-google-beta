@@ -42,29 +42,25 @@ func resourceVPCAccessConnector() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"ip_cidr_range": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `The range of internal addresses that follows RFC 4632 notation. Example: '10.132.0.0/28'.`,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `The name of the resource (Max 25 characters).`,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 			"region": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `Region where the VPC Access connector resides`,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 			"max_throughput": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.IntBetween(200, 1000),
-				Description:  `Maximum throughput of the connector in Mbps, must be greater than 'min_throughput'. Default is 1000.`,
 				Default:      1000,
 			},
 			"min_throughput": {
@@ -72,24 +68,20 @@ func resourceVPCAccessConnector() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.IntBetween(200, 1000),
-				Description:  `Minimum throughput of the connector in Mbps. Default and min is 200.`,
 				Default:      200,
 			},
 			"network": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `Name of a VPC network.`,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"self_link": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `The fully qualified name of this VPC connector`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"state": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `State of the VPC access connector.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -157,7 +149,7 @@ func resourceVPCAccessConnectorCreate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{region}}/connectors/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -283,7 +275,7 @@ func resourceVPCAccessConnectorImport(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{region}}/connectors/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
