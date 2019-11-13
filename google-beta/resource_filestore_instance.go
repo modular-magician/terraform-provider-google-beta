@@ -47,37 +47,29 @@ func resourceFilestoreInstance() *schema.Resource {
 			"file_shares": {
 				Type:     schema.TypeList,
 				Required: true,
-				Description: `File system shares on the instance. For this version, only a
-single file share is supported.`,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"capacity_gb": {
 							Type:     schema.TypeInt,
 							Required: true,
-							Description: `File share capacity in GiB. This must be at least 1024 GiB
-for the standard tier, or 2560 GiB for the premium tier.`,
 						},
 						"name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							ForceNew:    true,
-							Description: `The name of the fileshare (16 characters or less)`,
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
 						},
 					},
 				},
 			},
 			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: `The resource name of the instance.`,
+				Type:     schema.TypeString,
+				Required: true,
 			},
 			"networks": {
 				Type:     schema.TypeList,
 				Required: true,
 				ForceNew: true,
-				Description: `VPC networks to which the instance is connected. For this version,
-only a single network is supported.`,
 				MinItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -85,8 +77,6 @@ only a single network is supported.`,
 							Type:     schema.TypeList,
 							Required: true,
 							ForceNew: true,
-							Description: `IP versions for which the instance has
-IP addresses assigned.`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -95,20 +85,15 @@ IP addresses assigned.`,
 							Type:     schema.TypeString,
 							Required: true,
 							ForceNew: true,
-							Description: `The name of the GCE VPC network to which the
-instance is connected.`,
 						},
 						"reserved_ip_range": {
 							Type:     schema.TypeString,
 							Computed: true,
 							Optional: true,
-							Description: `A /29 CIDR block that identifies the range of IP
-addresses reserved for this instance.`,
 						},
 						"ip_addresses": {
-							Type:        schema.TypeList,
-							Computed:    true,
-							Description: `A list of IPv4 or IPv6 addresses.`,
+							Type:     schema.TypeList,
+							Computed: true,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -121,35 +106,28 @@ addresses reserved for this instance.`,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"TIER_UNSPECIFIED", "STANDARD", "PREMIUM"}, false),
-				Description:  `The service tier of the instance.`,
 			},
 			"zone": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `The name of the Filestore zone of the instance.`,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `A description of the instance.`,
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 			"labels": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: `Resource labels to represent user-provided metadata.`,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Type:     schema.TypeMap,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"create_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Creation timestamp in RFC3339 text format.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"etag": {
 				Type:     schema.TypeString,
 				Computed: true,
-				Description: `Server-specified ETag for the instance resource to prevent
-simultaneous updates from overwriting each other.`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -212,7 +190,7 @@ func resourceFilestoreInstanceCreate(d *schema.ResourceData, meta interface{}) e
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{project}}/{{zone}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{zone}}/instances/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -394,7 +372,7 @@ func resourceFilestoreInstanceImport(d *schema.ResourceData, meta interface{}) (
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{project}}/{{zone}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{zone}}/instances/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
