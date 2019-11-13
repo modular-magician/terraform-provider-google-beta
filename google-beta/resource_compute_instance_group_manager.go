@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -34,6 +35,14 @@ func resourceComputeInstanceGroupManager() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
+			},
+
+			"instance_template": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				Computed:         true,
+				Removed:          "This field has been replaced by `version.instance_template`",
+				DiffSuppressFunc: compareSelfLinkRelativePaths,
 			},
 
 			"version": {
@@ -132,6 +141,13 @@ func resourceComputeInstanceGroupManager() *schema.Resource {
 			"self_link": {
 				Type:     schema.TypeString,
 				Computed: true,
+			},
+
+			"update_strategy": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "REPLACE",
+				Removed:  "This field has been replaced by `update_policy`",
 			},
 
 			"target_pools": {
@@ -298,7 +314,7 @@ func resourceComputeInstanceGroupManagerCreate(d *schema.ResourceData, meta inte
 	}
 
 	// It probably maybe worked, so store the ID now
-	id, err := replaceVars(d, config, "{{project}}/{{zone}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -353,9 +369,6 @@ func flattenFixedOrPercent(fixedOrPercent *computeBeta.FixedOrPercent) []map[str
 
 func getManager(d *schema.ResourceData, meta interface{}) (*computeBeta.InstanceGroupManager, error) {
 	config := meta.(*Config)
-	if err := parseImportId([]string{"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
-		return nil, err
-	}
 
 	project, err := getProject(d, config)
 	if err != nil {
@@ -442,10 +455,6 @@ func resourceComputeInstanceGroupManagerRead(d *schema.ResourceData, meta interf
 
 func resourceComputeInstanceGroupManagerUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
-
-	if err := parseImportId([]string{"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
-		return err
-	}
 
 	project, err := getProject(d, config)
 	if err != nil {
@@ -553,9 +562,6 @@ func resourceComputeInstanceGroupManagerUpdate(d *schema.ResourceData, meta inte
 func resourceComputeInstanceGroupManagerDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	if err := parseImportId([]string{"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
-		return err
-	}
 	project, err := getProject(d, config)
 	if err != nil {
 		return err
@@ -742,12 +748,12 @@ func flattenUpdatePolicy(updatePolicy *computeBeta.InstanceGroupManagerUpdatePol
 func resourceInstanceGroupManagerStateImporter(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	d.Set("wait_for_instances", false)
 	config := meta.(*Config)
-	if err := parseImportId([]string{"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
+	if err := parseImportId([]string{"projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/instanceGroupManagers/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{project}}/{{zone}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
