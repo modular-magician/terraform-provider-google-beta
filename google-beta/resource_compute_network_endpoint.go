@@ -45,30 +45,22 @@ func resourceComputeNetworkEndpoint() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description: `The name for a specific VM instance that the IP address belongs to.
-This is required for network endpoints of type GCE_VM_IP_PORT.
-The instance must be in the same zone of network endpoint group.`,
 			},
 			"ip_address": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				Description: `IPv4 address of network endpoint. The IP address must belong
-to a VM in GCE (either the primary IP or as part of an aliased IP
-range).`,
 			},
 			"network_endpoint_group": {
 				Type:             schema.TypeString,
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `The network endpoint group this endpoint is part of.`,
 			},
 			"port": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				ForceNew:    true,
-				Description: `Port number of network endpoint.`,
+				Type:     schema.TypeInt,
+				Required: true,
+				ForceNew: true,
 			},
 			"zone": {
 				Type:             schema.TypeString,
@@ -76,7 +68,6 @@ range).`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `Zone where the containing network endpoint group is located.`,
 			},
 			"project": {
 				Type:     schema.TypeString,

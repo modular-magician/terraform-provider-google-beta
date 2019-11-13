@@ -49,54 +49,32 @@ func resourceComputeRouter() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateGCPName,
-				Description: `Name of the resource. The name must be 1-63 characters long, and
-comply with RFC1035. Specifically, the name must be 1-63 characters
-long and match the regular expression '[a-z]([-a-z0-9]*[a-z0-9])?'
-which means the first character must be a lowercase letter, and all
-following characters must be a dash, lowercase letter, or digit,
-except the last character, which cannot be a dash.`,
 			},
 			"network": {
 				Type:             schema.TypeString,
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `A reference to the network to which this router belongs.`,
 			},
 			"bgp": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: `BGP information specific to this router.`,
-				MaxItems:    1,
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"asn": {
 							Type:     schema.TypeInt,
 							Required: true,
-							Description: `Local BGP Autonomous System Number (ASN). Must be an RFC6996
-private ASN, either 16-bit or 32-bit. The value will be fixed for
-this router resource. All VPN tunnels that link to this router
-will have the same local ASN.`,
 						},
 						"advertise_mode": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"DEFAULT", "CUSTOM", ""}, false),
-							Description: `User-specified flag to indicate which mode to use for advertisement.
-
-Valid values of this enum field are: DEFAULT, CUSTOM`,
-							Default: "DEFAULT",
+							Default:      "DEFAULT",
 						},
 						"advertised_groups": {
 							Type:     schema.TypeList,
 							Optional: true,
-							Description: `User-specified list of prefix groups to advertise in custom mode.
-This field can only be populated if advertiseMode is CUSTOM and
-is advertised to all peers of the router. These groups will be
-advertised in addition to any specified prefixes. Leave this field
-blank to advertise no custom groups.
-
-This enum field has the one valid value: ALL_SUBNETS`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -104,23 +82,15 @@ This enum field has the one valid value: ALL_SUBNETS`,
 						"advertised_ip_ranges": {
 							Type:     schema.TypeList,
 							Optional: true,
-							Description: `User-specified list of individual IP ranges to advertise in
-custom mode. This field can only be populated if advertiseMode
-is CUSTOM and is advertised to all peers of the router. These IP
-ranges will be advertised in addition to any specified groups.
-Leave this field blank to advertise no custom IP ranges.`,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"description": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: `User-specified description for the IP range.`,
-									},
 									"range": {
 										Type:     schema.TypeString,
+										Required: true,
+									},
+									"description": {
+										Type:     schema.TypeString,
 										Optional: true,
-										Description: `The IP range to advertise. The value must be a
-CIDR-formatted string.`,
 									},
 								},
 							},
@@ -129,9 +99,8 @@ CIDR-formatted string.`,
 				},
 			},
 			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `An optional description of this resource.`,
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 			"region": {
 				Type:             schema.TypeString,
@@ -139,12 +108,10 @@ CIDR-formatted string.`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `Region where the router resides.`,
 			},
 			"creation_timestamp": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Creation timestamp in RFC3339 text format.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -218,7 +185,7 @@ func resourceComputeRouterCreate(d *schema.ResourceData, meta interface{}) error
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{region}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/routers/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -407,7 +374,7 @@ func resourceComputeRouterImport(d *schema.ResourceData, meta interface{}) ([]*s
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{region}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/routers/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
