@@ -48,43 +48,29 @@ func resourceComputeAddress() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateRegexp(`^(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)$`),
-				Description: `Name of the resource. The name must be 1-63 characters long, and
-comply with RFC1035. Specifically, the name must be 1-63 characters
-long and match the regular expression '[a-z]([-a-z0-9]*[a-z0-9])?'
-which means the first character must be a lowercase letter, and all
-following characters must be a dash, lowercase letter, or digit,
-except the last character, which cannot be a dash.`,
 			},
 			"address": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Optional: true,
 				ForceNew: true,
-				Description: `The static external IP address represented by this resource. Only
-IPv4 is supported. An address may only be specified for INTERNAL
-address types. The IP address must be inside the specified subnetwork,
-if any.`,
 			},
 			"address_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"INTERNAL", "EXTERNAL", ""}, false),
-				Description: `The type of address to reserve, either INTERNAL or EXTERNAL.
-If unspecified, defaults to EXTERNAL.`,
-				Default: "EXTERNAL",
+				Default:      "EXTERNAL",
 			},
 			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `An optional description of this resource.`,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 			},
 			"labels": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: `Labels to apply to this address.  A list of key->value pairs.`,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Type:     schema.TypeMap,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"network_tier": {
 				Type:         schema.TypeString,
@@ -92,9 +78,6 @@ If unspecified, defaults to EXTERNAL.`,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"PREMIUM", "STANDARD", ""}, false),
-				Description: `The networking tier used for configuring this address. This field can
-take the following values: PREMIUM or STANDARD. If this field is not
-specified, it is assumed to be PREMIUM.`,
 			},
 			"purpose": {
 				Type:         schema.TypeString,
@@ -102,11 +85,6 @@ specified, it is assumed to be PREMIUM.`,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"GCE_ENDPOINT", ""}, false),
-				Description: `The purpose of this resource, which can be one of the following values:
-
-- GCE_ENDPOINT for addresses that are used by VM instances, alias IP ranges, internal load balancers, and similar resources.
-
-This should only be set when using an Internal address.`,
 			},
 			"region": {
 				Type:             schema.TypeString,
@@ -114,8 +92,6 @@ This should only be set when using an Internal address.`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description: `The Region in which the created address should reside.
-If it is not provided, the provider region is used.`,
 			},
 			"subnetwork": {
 				Type:             schema.TypeString,
@@ -123,26 +99,18 @@ If it is not provided, the provider region is used.`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description: `The URL of the subnetwork in which to reserve the address. If an IP
-address is specified, it must be within the subnetwork's IP range.
-This field can only be used with INTERNAL type with
-GCE_ENDPOINT/DNS_RESOLVER purposes.`,
 			},
 			"creation_timestamp": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Creation timestamp in RFC3339 text format.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"label_fingerprint": {
 				Type:     schema.TypeString,
 				Computed: true,
-				Description: `The fingerprint used for optimistic locking of this resource.  Used
-internally during updates.`,
 			},
 			"users": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: `The URLs of the resources that are using this address.`,
+				Type:     schema.TypeList,
+				Computed: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -242,7 +210,7 @@ func resourceComputeAddressCreate(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{project}}/{{region}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/addresses/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -483,7 +451,7 @@ func resourceComputeAddressImport(d *schema.ResourceData, meta interface{}) ([]*
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{project}}/{{region}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/addresses/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
