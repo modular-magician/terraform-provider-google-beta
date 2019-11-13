@@ -45,18 +45,14 @@ func resourceSourceRepoRepository() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				Description: `Resource name of the repository, of the form '{{repo}}'.
-The repo name may contain slashes. eg, 'name/with/slash'`,
 			},
 			"size": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: `The disk usage of the repo, in bytes.`,
+				Type:     schema.TypeInt,
+				Computed: true,
 			},
 			"url": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `URL to clone the repository from Google Cloud Source Repositories.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -95,7 +91,7 @@ func resourceSourceRepoRepositoryCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{project}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/repos/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -176,7 +172,7 @@ func resourceSourceRepoRepositoryImport(d *schema.ResourceData, meta interface{}
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{project}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/repos/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
