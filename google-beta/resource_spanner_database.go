@@ -44,32 +44,24 @@ func resourceSpannerDatabase() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `The instance to create the database on.`,
 			},
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateRegexp(`^[a-z][a-z0-9_\-]*[a-z0-9]$`),
-				Description: `A unique identifier for the database, which cannot be changed after
-the instance is created. Values are of the form [a-z][-a-z0-9]*[a-z0-9].`,
 			},
 			"ddl": {
 				Type:     schema.TypeList,
 				Optional: true,
 				ForceNew: true,
-				Description: `An optional list of DDL statements to run inside the newly created
-database. Statements can create tables, indexes, etc. These statements
-execute atomically with the creation of the database: if there is an
-error in any statement, the database is not created.`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"state": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `An explanation of the status of the database.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -125,7 +117,7 @@ func resourceSpannerDatabaseCreate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{project}}/{{instance}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/instances/{{instance}}/databases/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -229,7 +221,7 @@ func resourceSpannerDatabaseImport(d *schema.ResourceData, meta interface{}) ([]
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{project}}/{{instance}}/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/instances/{{instance}}/databases/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
