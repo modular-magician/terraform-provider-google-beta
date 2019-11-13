@@ -47,43 +47,24 @@ func resourceStorageBucketAccessControl() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      `The name of the bucket.`,
 			},
 			"entity": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				Description: `The entity holding the permission, in one of the following forms:
-  user-userId
-  user-email
-  group-groupId
-  group-email
-  domain-domain
-  project-team-projectId
-  allUsers
-  allAuthenticatedUsers
-Examples:
-  The user liz@example.com would be user-liz@example.com.
-  The group example@googlegroups.com would be
-  group-example@googlegroups.com.
-  To refer to all members of the Google Apps for Business domain
-  example.com, the entity would be domain-example.com.`,
 			},
 			"role": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validation.StringInSlice([]string{"OWNER", "READER", "WRITER", ""}, false),
-				Description:  `The access permission for the entity.`,
 			},
 			"domain": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `The domain associated with the entity.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"email": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `The email address associated with the entity.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}
