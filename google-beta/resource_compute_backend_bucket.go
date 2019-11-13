@@ -44,43 +44,25 @@ func resourceComputeBackendBucket() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"bucket_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: `Cloud Storage bucket name.`,
+				Type:     schema.TypeString,
+				Required: true,
 			},
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateRegexp(`^(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)$`),
-				Description: `Name of the resource. Provided by the client when the resource is
-created. The name must be 1-63 characters long, and comply with
-RFC1035.  Specifically, the name must be 1-63 characters long and
-match the regular expression '[a-z]([-a-z0-9]*[a-z0-9])?' which means
-the first character must be a lowercase letter, and all following
-characters must be a dash, lowercase letter, or digit, except the
-last character, which cannot be a dash.`,
 			},
 			"cdn_policy": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Optional:    true,
-				Description: `Cloud CDN configuration for this Backend Bucket.`,
-				MaxItems:    1,
+				Type:     schema.TypeList,
+				Computed: true,
+				Optional: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"signed_url_cache_max_age_sec": {
 							Type:     schema.TypeInt,
-							Optional: true,
-							Description: `Maximum number of seconds the response to a signed URL request will
-be considered fresh. Defaults to 1hr (3600s). After this time period,
-the response will be revalidated before being served.
-When serving responses to signed URL requests,
-Cloud CDN will internally behave as though
-all responses from this backend had a "Cache-Control: public,
-max-age=[TTL]" header, regardless of any existing Cache-Control
-header. The actual headers served in responses will not be altered.`,
-							Default: 3600,
+							Required: true,
 						},
 					},
 				},
@@ -88,18 +70,14 @@ header. The actual headers served in responses will not be altered.`,
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Description: `An optional textual description of the resource; provided by the
-client when the resource is created.`,
 			},
 			"enable_cdn": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: `If true, enable Cloud CDN for this BackendBucket.`,
+				Type:     schema.TypeBool,
+				Optional: true,
 			},
 			"creation_timestamp": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Creation timestamp in RFC3339 text format.`,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -166,7 +144,7 @@ func resourceComputeBackendBucketCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/backendBuckets/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -358,7 +336,7 @@ func resourceComputeBackendBucketImport(d *schema.ResourceData, meta interface{}
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/global/backendBuckets/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
