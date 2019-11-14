@@ -397,10 +397,6 @@ func resourceContainerCluster() *schema.Resource {
 							Type: schema.TypeList,
 
 							Optional: true,
-							ExactlyOneOf: []string{
-								"maintenance_policy.0.daily_maintenance_window",
-								"maintenance_policy.0.recurring_window",
-							},
 
 							MaxItems: 1,
 							Elem: &schema.Resource{
@@ -419,13 +415,10 @@ func resourceContainerCluster() *schema.Resource {
 							},
 						},
 						"recurring_window": {
-							Type:     schema.TypeList,
-							Optional: true,
-							MaxItems: 1,
-							ExactlyOneOf: []string{
-								"maintenance_policy.0.daily_maintenance_window",
-								"maintenance_policy.0.recurring_window",
-							},
+							Type:          schema.TypeList,
+							Optional:      true,
+							MaxItems:      1,
+							ConflictsWith: []string{"maintenance_policy.0.daily_maintenance_window"},
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"start_time": {

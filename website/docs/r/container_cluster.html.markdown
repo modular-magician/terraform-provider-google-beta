@@ -470,7 +470,7 @@ The `network_policy` block supports:
 
 * `provider` - (Optional) The selected network policy provider. Defaults to PROVIDER_UNSPECIFIED.
 
-* `enabled` - (Required) Whether network policy is enabled on the cluster.
+* `enabled` - (Optional) Whether network policy is enabled on the cluster. Defaults to false.
 
 The `node_config` block supports:
 
@@ -614,7 +614,7 @@ The `sandbox_type` block supports:
 
 The `release_channel` block supports:
 
-* `channel` - (Required) The selected release channel.
+* `channel` - (Optional) The selected release channel. Defaults to `UNSPECIFIED`.
     Accepted values are:
     * UNSPECIFIED: Not set.
     * RAPID: Weekly upgrade cadence; Early testers and developers who requires new features.
