@@ -239,6 +239,37 @@ func TestAccContainerNodePool_withSandboxConfig(t *testing.T) {
 	})
 }
 
+func TestAccContainerNodePool_withUpgradeSettings(t *testing.T) {
+	t.Parallel()
+
+	clusterName := acctest.RandString(10)
+	nodePoolName := acctest.RandString(10)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckContainerClusterDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerNodePool_withUpgradeSettings(clusterName, nodePoolName, 2, 3),
+			},
+			{
+				ResourceName:      "google_container_node_pool.with_upgrade_settings",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccContainerNodePool_withUpgradeSettings(clusterName, nodePoolName, 1, 1),
+			},
+			{
+				ResourceName:      "google_container_node_pool.with_upgrade_settings",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func TestAccContainerNodePool_withGPU(t *testing.T) {
 	t.Parallel()
 
@@ -1159,6 +1190,32 @@ resource "google_container_node_pool" "with_sandbox_config" {
   }
 }
 `, acctest.RandString(10), acctest.RandString(10))
+}
+
+func testAccContainerNodePool_withUpgradeSettings(clusterName string, nodePoolName string, maxSurge int, maxUnavailable int) string {
+	return fmt.Sprintf(`
+data "google_container_engine_versions" "central1" {
+  location = "us-central1"
+}
+
+resource "google_container_cluster" "cluster" {
+  name               = "tf-cluster-nodepool-test-%s"
+  location           = "us-central1"
+  initial_node_count = 1
+  min_master_version = "${data.google_container_engine_versions.central1.latest_master_version}"
+}
+
+resource "google_container_node_pool" "with_upgrade_settings" {
+  name = "tf-nodepool-test-%s"
+  location = "us-central1"
+  cluster = "${google_container_cluster.cluster.name}"
+  initial_node_count = 1
+  upgrade_settings {
+    max_surge = %d
+    max_unavailable = %d
+  }
+}
+`, clusterName, nodePoolName, maxSurge, maxUnavailable)
 }
 
 func testAccContainerNodePool_withGPU() string {
