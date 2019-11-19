@@ -476,6 +476,20 @@ func resourceCloudRunServiceCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	d.SetId(id)
 
+	waitURL, err := replaceVars(d, config, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/services/{{name}}")
+	if err != nil {
+		return err
+	}
+
+	waitErr := k8sOperationWaitTime(
+		config, res, project, waitURL, "Creating Service",
+		int(d.Timeout(schema.TimeoutCreate).Minutes()))
+
+	if waitErr != nil {
+		// The resource didn't actually create
+		return fmt.Errorf("Error waiting to create Service: %s", waitErr)
+	}
+
 	log.Printf("[DEBUG] Finished creating Service %q: %#v", d.Id(), res)
 
 	return resourceCloudRunServiceRead(d, meta)
@@ -567,11 +581,20 @@ func resourceCloudRunServiceUpdate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	log.Printf("[DEBUG] Updating Service %q: %#v", d.Id(), obj)
-	_, err = sendRequestWithTimeout(config, "PUT", project, url, obj, d.Timeout(schema.TimeoutUpdate))
+	res, err := sendRequestWithTimeout(config, "PUT", project, url, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating Service %q: %s", d.Id(), err)
 	}
+
+	waitURL, err := replaceVars(d, config, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/services/{{name}}")
+	if err != nil {
+		return err
+	}
+
+	err = k8sOperationWaitTime(
+		config, res, project, waitURL, "Updating Service",
+		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
 
 	return resourceCloudRunServiceRead(d, meta)
 }
