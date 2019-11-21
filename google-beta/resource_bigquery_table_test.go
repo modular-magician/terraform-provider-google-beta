@@ -172,15 +172,15 @@ resource "google_bigquery_dataset" "test" {
 
 resource "google_bigquery_table" "test" {
   table_id   = "%s"
-  dataset_id = google_bigquery_dataset.test.dataset_id
+  dataset_id = "${google_bigquery_dataset.test.dataset_id}"
 
   time_partitioning {
-    type                     = "DAY"
-    field                    = "ts"
+    type = "DAY"
+    field = "ts"
     require_partition_filter = true
   }
-  clustering = ["some_int", "some_string"]
-  schema     = <<EOH
+	clustering = ["some_int", "some_string"]
+  schema = <<EOH
 [
   {
     "name": "ts",
@@ -216,9 +216,7 @@ resource "google_bigquery_table" "test" {
   }
 ]
 EOH
-
-}
-`, datasetID, tableID)
+}`, datasetID, tableID)
 }
 
 func testAccBigQueryTableWithView(datasetID, tableID string) string {
@@ -229,18 +227,17 @@ resource "google_bigquery_dataset" "test" {
 
 resource "google_bigquery_table" "test" {
   table_id   = "%s"
-  dataset_id = google_bigquery_dataset.test.dataset_id
+  dataset_id = "${google_bigquery_dataset.test.dataset_id}"
 
   time_partitioning {
     type = "DAY"
   }
 
   view {
-    query          = "SELECT state FROM [lookerdata:cdc.project_tycho_reports]"
-    use_legacy_sql = true
+  	query = "SELECT state FROM [lookerdata:cdc.project_tycho_reports]"
+  	use_legacy_sql = true
   }
-}
-`, datasetID, tableID)
+}`, datasetID, tableID)
 }
 
 func testAccBigQueryTableWithNewSqlView(datasetID, tableID string) string {
@@ -251,18 +248,17 @@ resource "google_bigquery_dataset" "test" {
 
 resource "google_bigquery_table" "test" {
   table_id   = "%s"
-  dataset_id = google_bigquery_dataset.test.dataset_id
+  dataset_id = "${google_bigquery_dataset.test.dataset_id}"
 
   time_partitioning {
     type = "DAY"
   }
 
   view {
-    query          = "%s"
-    use_legacy_sql = false
+  	query = "%s"
+  	use_legacy_sql = false
   }
-}
-`, datasetID, tableID, "SELECT state FROM `lookerdata.cdc.project_tycho_reports`")
+}`, datasetID, tableID, "SELECT state FROM `lookerdata.cdc.project_tycho_reports`")
 }
 
 func testAccBigQueryTableUpdated(datasetID, tableID string) string {
@@ -273,7 +269,7 @@ resource "google_bigquery_dataset" "test" {
 
 resource "google_bigquery_table" "test" {
   table_id   = "%s"
-  dataset_id = google_bigquery_dataset.test.dataset_id
+  dataset_id = "${google_bigquery_dataset.test.dataset_id}"
 
   time_partitioning {
     type = "DAY"
@@ -321,9 +317,7 @@ resource "google_bigquery_table" "test" {
   }
 ]
 EOH
-
-}
-`, datasetID, tableID)
+}`, datasetID, tableID)
 }
 
 func testAccBigQueryTableFromGCS(datasetID, tableID, bucketName, objectName, content, format, quoteChar string) string {
@@ -333,7 +327,7 @@ resource "google_bigquery_dataset" "test" {
 }
 
 resource "google_storage_bucket" "test" {
-  name          = "%s"
+  name     = "%s"
   force_destroy = true
 }
 
@@ -342,13 +336,12 @@ resource "google_storage_bucket_object" "test" {
   content = <<EOF
 %s
 EOF
-
-  bucket = google_storage_bucket.test.name
+  bucket  = "${google_storage_bucket.test.name}"
 }
 
 resource "google_bigquery_table" "test" {
   table_id   = "%s"
-  dataset_id = google_bigquery_dataset.test.dataset_id
+  dataset_id = "${google_bigquery_dataset.test.dataset_id}"
   external_data_configuration {
     autodetect    = true
     source_format = "%s"
@@ -358,11 +351,10 @@ resource "google_bigquery_table" "test" {
     }
 
     source_uris = [
-      "gs://${google_storage_bucket.test.name}/${google_storage_bucket_object.test.name}",
+      "gs://${google_storage_bucket.test.name}/${google_storage_bucket_object.test.name}"
     ]
   }
-}
-`, datasetID, bucketName, objectName, content, tableID, format, quoteChar)
+}`, datasetID, bucketName, objectName, content, tableID, format, quoteChar)
 }
 
 var TEST_CSV = `lifelock,LifeLock,,web,Tempe,AZ,1-May-07,6850000,USD,b

@@ -120,6 +120,7 @@ func TestAccBigtableInstanceIamPolicy(t *testing.T) {
 
 func testAccBigtableInstanceIamBinding_basic(instance, cluster, account, role string) string {
 	return fmt.Sprintf(testBigtableInstanceIam+`
+
 resource "google_service_account" "test-account1" {
   account_id   = "%s-1"
   display_name = "Bigtable Instance IAM Testing Account"
@@ -131,9 +132,9 @@ resource "google_service_account" "test-account2" {
 }
 
 resource "google_bigtable_instance_iam_binding" "binding" {
-  instance = google_bigtable_instance.instance.name
-  role     = "%s"
-  members = [
+  instance      = "${google_bigtable_instance.instance.name}"
+  role         = "%s"
+  members      = [
     "serviceAccount:${google_service_account.test-account1.email}",
   ]
 }
@@ -153,9 +154,9 @@ resource "google_service_account" "test-account2" {
 }
 
 resource "google_bigtable_instance_iam_binding" "binding" {
-  instance = google_bigtable_instance.instance.name
-  role     = "%s"
-  members = [
+  instance      = "${google_bigtable_instance.instance.name}"
+  role         = "%s"
+  members      = [
     "serviceAccount:${google_service_account.test-account1.email}",
     "serviceAccount:${google_service_account.test-account2.email}",
   ]
@@ -171,9 +172,9 @@ resource "google_service_account" "test-account" {
 }
 
 resource "google_bigtable_instance_iam_member" "member" {
-  instance = google_bigtable_instance.instance.name
-  role     = "%s"
-  member   = "serviceAccount:${google_service_account.test-account.email}"
+  instance      = "${google_bigtable_instance.instance.name}"
+  role         = "%s"
+  member       = "serviceAccount:${google_service_account.test-account.email}"
 }
 `, instance, cluster, account, role)
 }
@@ -186,15 +187,15 @@ resource "google_service_account" "test-account" {
 }
 
 data "google_iam_policy" "policy" {
-  binding {
-    role    = "%s"
-    members = ["serviceAccount:${google_service_account.test-account.email}"]
-  }
+	binding {
+		role    = "%s"
+		members = ["serviceAccount:${google_service_account.test-account.email}"]
+	}
 }
 
 resource "google_bigtable_instance_iam_policy" "policy" {
-  instance    = google_bigtable_instance.instance.name
-  policy_data = data.google_iam_policy.policy.policy_data
+  instance      = "${google_bigtable_instance.instance.name}"
+  policy_data  = "${data.google_iam_policy.policy.policy_data}"
 }
 `, instance, cluster, account, role)
 }
@@ -210,5 +211,4 @@ resource "google_bigtable_instance" "instance" {
       zone         = "us-central1-b"
       storage_type = "HDD"
     }
-}
-`
+}`

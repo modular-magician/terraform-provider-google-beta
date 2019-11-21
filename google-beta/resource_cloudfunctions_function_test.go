@@ -517,7 +517,7 @@ resource "google_storage_bucket" "bucket" {
 
 resource "google_storage_bucket_object" "archive" {
   name   = "index.zip"
-  bucket = google_storage_bucket.bucket.name
+  bucket = "${google_storage_bucket.bucket.name}"
   source = "%s"
 }
 
@@ -526,16 +526,16 @@ resource "google_cloudfunctions_function" "function" {
   runtime               = "nodejs8"
   description           = "test function"
   available_memory_mb   = 128
-  source_archive_bucket = google_storage_bucket.bucket.name
-  source_archive_object = google_storage_bucket_object.archive.name
+  source_archive_bucket = "${google_storage_bucket.bucket.name}"
+  source_archive_object = "${google_storage_bucket_object.archive.name}"
   trigger_http          = true
   timeout               = 61
   entry_point           = "helloGET"
   labels = {
-    my-label = "my-label-value"
+	my-label = "my-label-value"
   }
   environment_variables = {
-    TEST_ENV_VARIABLE = "test-env-variable-value"
+	TEST_ENV_VARIABLE = "test-env-variable-value"
   }
   max_instances = 10
 }
@@ -550,7 +550,7 @@ resource "google_storage_bucket" "bucket" {
 
 resource "google_storage_bucket_object" "archive" {
   name   = "index_update.zip"
-  bucket = google_storage_bucket.bucket.name
+  bucket = "${google_storage_bucket.bucket.name}"
   source = "%s"
 }
 
@@ -558,23 +558,22 @@ resource "google_cloudfunctions_function" "function" {
   name                  = "%s"
   description           = "test function updated"
   available_memory_mb   = 256
-  source_archive_bucket = google_storage_bucket.bucket.name
-  source_archive_object = google_storage_bucket_object.archive.name
+  source_archive_bucket = "${google_storage_bucket.bucket.name}"
+  source_archive_object = "${google_storage_bucket_object.archive.name}"
   trigger_http          = true
   runtime               = "nodejs8"
   timeout               = 91
   entry_point           = "helloGET"
   labels = {
-    my-label    = "my-updated-label-value"
-    a-new-label = "a-new-label-value"
+	my-label = "my-updated-label-value"
+	a-new-label = "a-new-label-value"
   }
   environment_variables = {
-    TEST_ENV_VARIABLE = "test-env-variable-value"
-    NEW_ENV_VARIABLE  = "new-env-variable-value"
+	TEST_ENV_VARIABLE = "test-env-variable-value"
+	NEW_ENV_VARIABLE = "new-env-variable-value"
   }
   max_instances = 15
-}
-`, bucketName, zipFilePath, functionName)
+}`, bucketName, zipFilePath, functionName)
 }
 
 func testAccCloudFunctionsFunction_pubsub(functionName string, bucketName string,
@@ -586,7 +585,7 @@ resource "google_storage_bucket" "bucket" {
 
 resource "google_storage_bucket_object" "archive" {
   name   = "index.zip"
-  bucket = google_storage_bucket.bucket.name
+  bucket = "${google_storage_bucket.bucket.name}"
   source = "%s"
 }
 
@@ -598,26 +597,24 @@ resource "google_cloudfunctions_function" "function" {
   name                  = "%s"
   runtime               = "nodejs8"
   available_memory_mb   = 128
-  source_archive_bucket = google_storage_bucket.bucket.name
-  source_archive_object = google_storage_bucket_object.archive.name
+  source_archive_bucket = "${google_storage_bucket.bucket.name}"
+  source_archive_object = "${google_storage_bucket_object.archive.name}"
   timeout               = 61
   entry_point           = "helloPubSub"
   event_trigger {
     event_type = "providers/cloud.pubsub/eventTypes/topic.publish"
-    resource   = google_pubsub_topic.sub.name
+    resource   = "${google_pubsub_topic.sub.name}"
     failure_policy {
       retry = false
     }
   }
-}
-`, bucketName, zipFilePath, topic, functionName)
+}`, bucketName, zipFilePath, topic, functionName)
 }
 
 func testAccCloudFunctionsFunction_bucket(functionName string, bucketName string,
 	zipFilePath string) string {
 	return fmt.Sprintf(`
-data "google_client_config" "current" {
-}
+data "google_client_config" "current" {}
 
 resource "google_storage_bucket" "bucket" {
   name = "%s"
@@ -625,7 +622,7 @@ resource "google_storage_bucket" "bucket" {
 
 resource "google_storage_bucket_object" "archive" {
   name   = "index.zip"
-  bucket = google_storage_bucket.bucket.name
+  bucket = "${google_storage_bucket.bucket.name}"
   source = "%s"
 }
 
@@ -633,8 +630,8 @@ resource "google_cloudfunctions_function" "function" {
   name                  = "%s"
   runtime               = "nodejs8"
   available_memory_mb   = 128
-  source_archive_bucket = google_storage_bucket.bucket.name
-  source_archive_object = google_storage_bucket_object.archive.name
+  source_archive_bucket = "${google_storage_bucket.bucket.name}"
+  source_archive_object = "${google_storage_bucket_object.archive.name}"
   timeout               = 61
   entry_point           = "helloGCS"
   event_trigger {
@@ -644,8 +641,7 @@ resource "google_cloudfunctions_function" "function" {
       retry = true
     }
   }
-}
-`, bucketName, zipFilePath, functionName)
+}`, bucketName, zipFilePath, functionName)
 }
 
 func testAccCloudFunctionsFunction_bucketNoRetry(functionName string, bucketName string,
@@ -657,7 +653,7 @@ resource "google_storage_bucket" "bucket" {
 
 resource "google_storage_bucket_object" "archive" {
   name   = "index.zip"
-  bucket = google_storage_bucket.bucket.name
+  bucket = "${google_storage_bucket.bucket.name}"
   source = "%s"
 }
 
@@ -665,16 +661,15 @@ resource "google_cloudfunctions_function" "function" {
   name                  = "%s"
   runtime               = "nodejs8"
   available_memory_mb   = 128
-  source_archive_bucket = google_storage_bucket.bucket.name
-  source_archive_object = google_storage_bucket_object.archive.name
+  source_archive_bucket = "${google_storage_bucket.bucket.name}"
+  source_archive_object = "${google_storage_bucket_object.archive.name}"
   timeout               = 61
   entry_point           = "helloGCS"
   event_trigger {
     event_type = "google.storage.object.finalize"
-    resource   = google_storage_bucket.bucket.name
+    resource   = "${google_storage_bucket.bucket.name}"
   }
-}
-`, bucketName, zipFilePath, functionName)
+}`, bucketName, zipFilePath, functionName)
 }
 
 func testAccCloudFunctionsFunction_firestore(functionName string, bucketName string,
@@ -686,7 +681,7 @@ resource "google_storage_bucket" "bucket" {
 
 resource "google_storage_bucket_object" "archive" {
   name   = "index.zip"
-  bucket = google_storage_bucket.bucket.name
+  bucket = "${google_storage_bucket.bucket.name}"
   source = "%s"
 }
 
@@ -694,22 +689,21 @@ resource "google_cloudfunctions_function" "function" {
   name                  = "%s"
   runtime               = "nodejs8"
   available_memory_mb   = 128
-  source_archive_bucket = google_storage_bucket.bucket.name
-  source_archive_object = google_storage_bucket_object.archive.name
+  source_archive_bucket = "${google_storage_bucket.bucket.name}"
+  source_archive_object = "${google_storage_bucket_object.archive.name}"
   timeout               = 61
   entry_point           = "helloFirestore"
   event_trigger {
     event_type = "providers/cloud.firestore/eventTypes/document.write"
     resource   = "messages/{messageId}"
   }
-}
-`, bucketName, zipFilePath, functionName)
+}`, bucketName, zipFilePath, functionName)
 }
 
 func testAccCloudFunctionsFunction_sourceRepo(functionName, project string) string {
 	return fmt.Sprintf(`
 resource "google_cloudfunctions_function" "function" {
-  name    = "%s"
+  name = "%s"
   runtime = "nodejs8"
 
   source_repository {
@@ -734,26 +728,24 @@ resource "google_storage_bucket" "bucket" {
 
 resource "google_storage_bucket_object" "archive" {
   name   = "index.zip"
-  bucket = google_storage_bucket.bucket.name
+  bucket = "${google_storage_bucket.bucket.name}"
   source = "%s"
 }
 
-data "google_compute_default_service_account" "default" {
-}
+data "google_compute_default_service_account" "default" { }
 
 resource "google_cloudfunctions_function" "function" {
-  name    = "%s"
+  name = "%s"
   runtime = "nodejs8"
 
-  source_archive_bucket = google_storage_bucket.bucket.name
-  source_archive_object = google_storage_bucket_object.archive.name
+  source_archive_bucket = "${google_storage_bucket.bucket.name}"
+  source_archive_object = "${google_storage_bucket_object.archive.name}"
 
-  service_account_email = data.google_compute_default_service_account.default.email
+  service_account_email = "${data.google_compute_default_service_account.default.email}"
 
   trigger_http = true
   entry_point  = "helloGET"
-}
-`, bucketName, zipFilePath, functionName)
+}`, bucketName, zipFilePath, functionName)
 }
 
 func testAccCloudFunctionsFunction_vpcConnector(projectNumber, functionName, bucketName, zipFilePath, vpcConnectorName string) string {
@@ -807,6 +799,5 @@ resource "google_cloudfunctions_function" "function" {
   }
   max_instances = 10
   vpc_connector = google_vpc_access_connector.connector.self_link
-}
-`, projectNumber, vpcConnectorName, bucketName, zipFilePath, functionName)
+}`, projectNumber, vpcConnectorName, bucketName, zipFilePath, functionName)
 }

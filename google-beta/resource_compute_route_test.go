@@ -52,13 +52,12 @@ func TestAccComputeRoute_hopInstance(t *testing.T) {
 func testAccComputeRoute_defaultInternetGateway() string {
 	return fmt.Sprintf(`
 resource "google_compute_route" "foobar" {
-  name             = "route-test-%s"
-  dest_range       = "0.0.0.0/0"
-  network          = "default"
-  next_hop_gateway = "default-internet-gateway"
-  priority         = 100
-}
-`, acctest.RandString(10))
+	name = "route-test-%s"
+	dest_range = "0.0.0.0/0"
+	network = "default"
+	next_hop_gateway = "default-internet-gateway"
+	priority = 100
+}`, acctest.RandString(10))
 }
 
 func testAccComputeRoute_hopInstance(instanceName, zone string) string {
@@ -74,8 +73,8 @@ resource "google_compute_instance" "foo" {
   zone         = "%s"
 
   boot_disk {
-    initialize_params {
-      image = data.google_compute_image.my_image.self_link
+    initialize_params{
+      image = "${data.google_compute_image.my_image.self_link}"
     }
   }
 
@@ -85,12 +84,11 @@ resource "google_compute_instance" "foo" {
 }
 
 resource "google_compute_route" "foobar" {
-  name                   = "route-test-%s"
-  dest_range             = "0.0.0.0/0"
-  network                = "default"
-  next_hop_instance      = google_compute_instance.foo.name
-  next_hop_instance_zone = google_compute_instance.foo.zone
-  priority               = 100
-}
-`, instanceName, zone, acctest.RandString(10))
+	name = "route-test-%s"
+	dest_range = "0.0.0.0/0"
+	network = "default"
+  	next_hop_instance = "${google_compute_instance.foo.name}"
+  	next_hop_instance_zone = "${google_compute_instance.foo.zone}"
+	priority = 100
+}`, instanceName, zone, acctest.RandString(10))
 }

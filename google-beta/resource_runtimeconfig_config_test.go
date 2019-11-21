@@ -157,16 +157,14 @@ func testAccCheckRuntimeconfigConfigDestroy(s *terraform.State) error {
 func testAccRuntimeconfigConfig_basicDescription(name, description string) string {
 	return fmt.Sprintf(`
 resource "google_runtimeconfig_config" "foobar" {
-  name        = "%s"
-  description = "%s"
-}
-`, name, description)
+ 	name = "%s"
+ 	description = "%s"
+}`, name, description)
 }
 
 func testAccRuntimeconfigConfig_emptyDescription(name string) string {
 	return fmt.Sprintf(`
 resource "google_runtimeconfig_config" "foobar" {
-  name = "%s"
-}
-`, name)
+ 	name = "%s"
+}`, name)
 }

@@ -60,11 +60,10 @@ func testAccMonitoringNotificationChannel_update(channel, labels, enabled string
 	return fmt.Sprintf(`
 resource "google_monitoring_notification_channel" "update" {
   display_name = "IntTest Notification Channel"
-  type         = "%s"
+  type = "%s"
   labels = {
     %s
   }
-
   enabled = "%s"
 }
 `, channel, labels, enabled,

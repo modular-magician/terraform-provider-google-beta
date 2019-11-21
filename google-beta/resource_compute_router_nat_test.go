@@ -239,204 +239,194 @@ func testAccCheckComputeRouterNatDelete(n string) resource.TestCheckFunc {
 func testAccComputeRouterNatBasic(testId string) string {
 	return fmt.Sprintf(`
 resource "google_compute_network" "foobar" {
-  name = "router-nat-test-%s"
+	name = "router-nat-test-%s"
 }
 
 resource "google_compute_subnetwork" "foobar" {
-  name          = "router-nat-test-subnetwork-%s"
-  network       = google_compute_network.foobar.self_link
-  ip_cidr_range = "10.0.0.0/16"
-  region        = "us-central1"
+	name          = "router-nat-test-subnetwork-%s"
+	network       = "${google_compute_network.foobar.self_link}"
+	ip_cidr_range = "10.0.0.0/16"
+	region        = "us-central1"
 }
-
-resource "google_compute_router" "foobar" {
-  name    = "router-nat-test-%s"
-  region  = google_compute_subnetwork.foobar.region
-  network = google_compute_network.foobar.self_link
+resource "google_compute_router" "foobar"{
+	name    = "router-nat-test-%s"
+	region  = "${google_compute_subnetwork.foobar.region}"
+	network = "${google_compute_network.foobar.self_link}"
 }
-
 resource "google_compute_router_nat" "foobar" {
-  name                               = "router-nat-test-%s"
-  router                             = google_compute_router.foobar.name
-  region                             = google_compute_router.foobar.region
-  nat_ip_allocate_option             = "AUTO_ONLY"
-  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
-  log_config {
-    enable = true
-    filter = "ERRORS_ONLY"
-  }
-}
-`, testId, testId, testId, testId)
+	name                               = "router-nat-test-%s"
+	router                             = "${google_compute_router.foobar.name}"
+	region                             = "${google_compute_router.foobar.region}"
+	nat_ip_allocate_option             = "AUTO_ONLY"
+	source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+	log_config {
+	  enable = true
+	  filter = "ERRORS_ONLY"
+	}
+}`, testId, testId, testId, testId)
 }
 
 // Like basic but with extra resources
 func testAccComputeRouterNatBasicBeforeUpdate(randPrefix string) string {
 	return fmt.Sprintf(`
-resource "google_compute_router" "foobar" {
-  name    = "router-nat-test-%s"
-  region  = google_compute_subnetwork.foobar.region
-  network = google_compute_network.foobar.self_link
+resource "google_compute_router" "foobar"{
+	name    = "router-nat-test-%s"
+	region  = "${google_compute_subnetwork.foobar.region}"
+	network = "${google_compute_network.foobar.self_link}"
 }
 
 resource "google_compute_network" "foobar" {
-  name = "router-nat-test-%s"
+	name = "router-nat-test-%s"
 }
 
 resource "google_compute_subnetwork" "foobar" {
-  name          = "router-nat-test-subnetwork-%s"
-  network       = google_compute_network.foobar.self_link
-  ip_cidr_range = "10.0.0.0/16"
-  region        = "us-central1"
+	name          = "router-nat-test-subnetwork-%s"
+	network       = "${google_compute_network.foobar.self_link}"
+	ip_cidr_range = "10.0.0.0/16"
+	region        = "us-central1"
 }
 
 resource "google_compute_address" "foobar" {
-  name   = "router-nat-test-%s"
-  region = google_compute_subnetwork.foobar.region
+	name   = "router-nat-test-%s"
+	region = "${google_compute_subnetwork.foobar.region}"
 }
 
 resource "google_compute_router_nat" "foobar" {
-  name                               = "router-nat-test-%s"
-  router                             = google_compute_router.foobar.name
-  region                             = google_compute_router.foobar.region
-  nat_ip_allocate_option             = "AUTO_ONLY"
-  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
-
-  log_config {
-    enable = true
-    filter = "ERRORS_ONLY"
-  }
-}
-`, randPrefix, randPrefix, randPrefix, randPrefix, randPrefix)
+	name                               = "router-nat-test-%s"
+	router                             = "${google_compute_router.foobar.name}"
+	region                             = "${google_compute_router.foobar.region}"
+	nat_ip_allocate_option             = "AUTO_ONLY"
+	source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+	
+	log_config {
+	  enable = true
+	  filter = "ERRORS_ONLY"
+	}
+}`, randPrefix, randPrefix, randPrefix, randPrefix, randPrefix)
 }
 
 func testAccComputeRouterNatUpdated(randPrefix string) string {
 	return fmt.Sprintf(`
-resource "google_compute_router" "foobar" {
-  name    = "router-nat-test-%s"
-  region  = google_compute_subnetwork.foobar.region
-  network = google_compute_network.foobar.self_link
+resource "google_compute_router" "foobar"{
+	name    = "router-nat-test-%s"
+	region  = "${google_compute_subnetwork.foobar.region}"
+	network = "${google_compute_network.foobar.self_link}"
 }
 
 resource "google_compute_network" "foobar" {
-  name = "router-nat-test-%s"
+	name = "router-nat-test-%s"
 }
 
 resource "google_compute_subnetwork" "foobar" {
-  name          = "router-nat-test-subnetwork-%s"
-  network       = google_compute_network.foobar.self_link
-  ip_cidr_range = "10.0.0.0/16"
-  region        = "us-central1"
+	name          = "router-nat-test-subnetwork-%s"
+	network       = "${google_compute_network.foobar.self_link}"
+	ip_cidr_range = "10.0.0.0/16"
+	region        = "us-central1"
 }
 
 resource "google_compute_address" "foobar" {
-  name   = "router-nat-test-%s"
-  region = google_compute_subnetwork.foobar.region
+	name   = "router-nat-test-%s"
+	region = "${google_compute_subnetwork.foobar.region}"
 }
 
 resource "google_compute_router_nat" "foobar" {
-  name   = "router-nat-test-%s"
-  router = google_compute_router.foobar.name
-  region = google_compute_router.foobar.region
+	name                               = "router-nat-test-%s"
+	router                             = "${google_compute_router.foobar.name}"
+	region                             = "${google_compute_router.foobar.region}"
+	
+	nat_ip_allocate_option             = "MANUAL_ONLY"
+	nat_ips                            = ["${google_compute_address.foobar.self_link}"]
 
-  nat_ip_allocate_option = "MANUAL_ONLY"
-  nat_ips                = [google_compute_address.foobar.self_link]
+	source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
 
-  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+	subnetwork {
+	  name                    = "${google_compute_subnetwork.foobar.self_link}"
+	  source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+	}
 
-  subnetwork {
-    name                    = google_compute_subnetwork.foobar.self_link
-    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
-  }
+	udp_idle_timeout_sec = 60
+	icmp_idle_timeout_sec = 60
+	tcp_established_idle_timeout_sec  = 1600
+	tcp_transitory_idle_timeout_sec  = 60
 
-  udp_idle_timeout_sec             = 60
-  icmp_idle_timeout_sec            = 60
-  tcp_established_idle_timeout_sec = 1600
-  tcp_transitory_idle_timeout_sec  = 60
-
-  log_config {
-    enable = true
-    filter = "TRANSLATIONS_ONLY"
-  }
-}
-`, randPrefix, randPrefix, randPrefix, randPrefix, randPrefix)
+	log_config {
+	  enable = true
+	  filter = "TRANSLATIONS_ONLY"
+	}
+}`, randPrefix, randPrefix, randPrefix, randPrefix, randPrefix)
 }
 
 func testAccComputeRouterNatWithManualIpAndSubnetConfiguration(testId string) string {
 	return fmt.Sprintf(`
 resource "google_compute_network" "foobar" {
-  name                    = "router-nat-test-%s"
-  auto_create_subnetworks = "false"
+	name                    = "router-nat-test-%s"
+	auto_create_subnetworks = "false"
 }
-
 resource "google_compute_subnetwork" "foobar" {
-  name          = "router-nat-test-subnetwork-%s"
-  network       = google_compute_network.foobar.self_link
-  ip_cidr_range = "10.0.0.0/16"
-  region        = "us-central1"
+	name          = "router-nat-test-subnetwork-%s"
+	network       = "${google_compute_network.foobar.self_link}"
+	ip_cidr_range = "10.0.0.0/16"
+	region        = "us-central1"
 }
-
 resource "google_compute_address" "foobar" {
-  name   = "router-nat-test-%s"
-  region = google_compute_subnetwork.foobar.region
+	name   = "router-nat-test-%s"
+	region = "${google_compute_subnetwork.foobar.region}"
 }
-
-resource "google_compute_router" "foobar" {
-  name    = "router-nat-test-%s"
-  region  = google_compute_subnetwork.foobar.region
-  network = google_compute_network.foobar.self_link
-  bgp {
-    asn = 64514
-  }
+resource "google_compute_router" "foobar"{
+	name    = "router-nat-test-%s"
+	region  = "${google_compute_subnetwork.foobar.region}"
+	network = "${google_compute_network.foobar.self_link}"
+	bgp {
+		asn = 64514
+	}
 }
-
 resource "google_compute_router_nat" "foobar" {
-  name                               = "router-nat-test-%s"
-  router                             = google_compute_router.foobar.name
-  region                             = google_compute_router.foobar.region
-  nat_ip_allocate_option             = "MANUAL_ONLY"
-  nat_ips                            = [google_compute_address.foobar.self_link]
-  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
-  subnetwork {
-    name                    = google_compute_subnetwork.foobar.name
-    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
-  }
-}
-`, testId, testId, testId, testId, testId)
+	name                               = "router-nat-test-%s"
+	router                             = "${google_compute_router.foobar.name}"
+	region                             = "${google_compute_router.foobar.region}"
+	nat_ip_allocate_option             = "MANUAL_ONLY"
+	nat_ips                            = ["${google_compute_address.foobar.self_link}"]
+	source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+	subnetwork {
+	  name                    = "${google_compute_subnetwork.foobar.name}"
+	  source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+	}
+}`, testId, testId, testId, testId, testId)
 }
 
 func testAccComputeRouterNatBaseResourcesWithNatIps(testId string) string {
 	return fmt.Sprintf(`
 resource "google_compute_network" "foobar" {
-  name                    = "router-nat-test-%s"
-  auto_create_subnetworks = "false"
+	name                    = "router-nat-test-%s"
+	auto_create_subnetworks = "false"
 }
 
 resource "google_compute_subnetwork" "foobar" {
-  name          = "router-nat-test-subnetwork-%s"
-  network       = google_compute_network.foobar.self_link
-  ip_cidr_range = "10.0.0.0/16"
-  region        = "us-central1"
+	name          = "router-nat-test-subnetwork-%s"
+	network       = "${google_compute_network.foobar.self_link}"
+	ip_cidr_range = "10.0.0.0/16"
+	region        = "us-central1"
 }
 
 resource "google_compute_address" "addr1" {
-  name   = "router-nat-test-%s-1"
-  region = google_compute_subnetwork.foobar.region
+	name   = "router-nat-test-%s-1"
+	region = "${google_compute_subnetwork.foobar.region}"
 }
 
 resource "google_compute_address" "addr2" {
-  name   = "router-nat-test-%s-2"
-  region = google_compute_subnetwork.foobar.region
+	name   = "router-nat-test-%s-2"
+	region = "${google_compute_subnetwork.foobar.region}"
 }
 
 resource "google_compute_address" "addr3" {
-  name   = "router-nat-test-%s-3"
-  region = google_compute_subnetwork.foobar.region
+	name   = "router-nat-test-%s-3"
+	region = "${google_compute_subnetwork.foobar.region}"
 }
 
-resource "google_compute_router" "foobar" {
-  name     = "router-nat-test-%s"
-  region   = google_compute_subnetwork.foobar.region
-  network  = google_compute_network.foobar.self_link
+resource "google_compute_router" "foobar"{
+	name    = "router-nat-test-%s"
+	region  = "${google_compute_subnetwork.foobar.region}"
+	network = "${google_compute_network.foobar.self_link}"
 }
 `, testId, testId, testId, testId, testId, testId)
 }
@@ -446,22 +436,22 @@ func testAccComputeRouterNatWithNatIps(testId string) string {
 %s
 
 resource "google_compute_router_nat" "foobar" {
-  name     = "router-nat-test-%s"
-  router   = google_compute_router.foobar.name
-  region   = google_compute_router.foobar.region
+	name                               = "router-nat-test-%s"
+	router                             = "${google_compute_router.foobar.name}"
+	region                             = "${google_compute_router.foobar.region}"
 
-  nat_ip_allocate_option = "MANUAL_ONLY"
-  nat_ips = [
-    google_compute_address.addr1.self_link,
-    google_compute_address.addr2.self_link,
-    google_compute_address.addr3.self_link,
-  ]
+	nat_ip_allocate_option             = "MANUAL_ONLY"
+	nat_ips                            = [
+		"${google_compute_address.addr1.self_link}",
+		"${google_compute_address.addr2.self_link}",
+		"${google_compute_address.addr3.self_link}"
+	]
 
-  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
-  subnetwork {
-    name                    = google_compute_subnetwork.foobar.self_link
-    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
-  }
+	source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+	subnetwork {
+	  name                    = "${google_compute_subnetwork.foobar.self_link}"
+	  source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+	}
 }
 `, testAccComputeRouterNatBaseResourcesWithNatIps(testId), testId)
 }
@@ -471,24 +461,24 @@ func testAccComputeRouterNatWithOneDrainOneRemovedNatIps(testId string) string {
 %s
 
 resource "google_compute_router_nat" "foobar" {
-  name     = "router-nat-test-%s"
-  router   = google_compute_router.foobar.name
-  region   = google_compute_router.foobar.region
+	name                               = "router-nat-test-%s"
+	router                             = "${google_compute_router.foobar.name}"
+	region                             = "${google_compute_router.foobar.region}"
 
-  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
-  subnetwork {
-    name                    = google_compute_subnetwork.foobar.self_link
-    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
-  }
+	source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+	subnetwork {
+	  name                    = "${google_compute_subnetwork.foobar.self_link}"
+	  source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+	}
 
-  nat_ip_allocate_option = "MANUAL_ONLY"
-  nat_ips = [
-    google_compute_address.addr2.self_link,
-  ]
+	nat_ip_allocate_option             = "MANUAL_ONLY"
+	nat_ips                            = [
+		"${google_compute_address.addr2.self_link}"
+	]
 
-  drain_nat_ips = [
-    google_compute_address.addr3.self_link,
-  ]
+	drain_nat_ips = [
+		"${google_compute_address.addr3.self_link}"
+	]
 }
 `, testAccComputeRouterNatBaseResourcesWithNatIps(testId), testId)
 }
@@ -498,25 +488,25 @@ func testAccComputeRouterNatWithInvalidDrainMissingNatIp(testId string) string {
 %s
 
 resource "google_compute_router_nat" "foobar" {
-  name     = "router-nat-test-%s"
-  router   = google_compute_router.foobar.name
-  region   = google_compute_router.foobar.region
+	name                               = "router-nat-test-%s"
+	router                             = "${google_compute_router.foobar.name}"
+	region                             = "${google_compute_router.foobar.region}"
 
-  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
-  subnetwork {
-    name                    = google_compute_subnetwork.foobar.self_link
-    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
-  }
+	source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+	subnetwork {
+	  name                    = "${google_compute_subnetwork.foobar.self_link}"
+	  source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+	}
 
-  nat_ip_allocate_option = "MANUAL_ONLY"
-  nat_ips = [
-    google_compute_address.addr2.self_link,
-  ]
+	nat_ip_allocate_option             = "MANUAL_ONLY"
+	nat_ips                            = [
+		"${google_compute_address.addr2.self_link}"
+	]
 
-  drain_nat_ips = [
-    google_compute_address.addr1.self_link,
-    google_compute_address.addr3.self_link,
-  ]
+	drain_nat_ips = [
+		"${google_compute_address.addr1.self_link}",
+		"${google_compute_address.addr3.self_link}"
+	]
 }
 `, testAccComputeRouterNatBaseResourcesWithNatIps(testId), testId)
 }
@@ -526,26 +516,26 @@ func testAccComputeRouterNatWithInvalidDrainNatIpsStillInNatIps(testId string) s
 %s
 
 resource "google_compute_router_nat" "foobar" {
-  name     = "router-nat-test-%s"
-  router   = google_compute_router.foobar.name
-  region   = google_compute_router.foobar.region
+	name                               = "router-nat-test-%s"
+	router                             = "${google_compute_router.foobar.name}"
+	region                             = "${google_compute_router.foobar.region}"
 
-  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
-  subnetwork {
-    name                    = google_compute_subnetwork.foobar.self_link
-    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
-  }
+	source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+	subnetwork {
+	  name                    = "${google_compute_subnetwork.foobar.self_link}"
+	  source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+	}
 
-  nat_ip_allocate_option = "MANUAL_ONLY"
-  nat_ips = [
-    google_compute_address.addr1.self_link,
-    google_compute_address.addr2.self_link,
-    google_compute_address.addr3.self_link,
-  ]
+	nat_ip_allocate_option             = "MANUAL_ONLY"
+	nat_ips                            = [
+		"${google_compute_address.addr1.self_link}",
+		"${google_compute_address.addr2.self_link}",
+		"${google_compute_address.addr3.self_link}"
+	]
 
-  drain_nat_ips = [
-    google_compute_address.addr3.self_link,
-  ]
+	drain_nat_ips = [
+		"${google_compute_address.addr3.self_link}"
+	]
 }
 `, testAccComputeRouterNatBaseResourcesWithNatIps(testId), testId)
 }
@@ -553,21 +543,19 @@ resource "google_compute_router_nat" "foobar" {
 func testAccComputeRouterNatKeepRouter(testId string) string {
 	return fmt.Sprintf(`
 resource "google_compute_network" "foobar" {
-  name                    = "router-nat-test-%s"
-  auto_create_subnetworks = "false"
+	name                    = "router-nat-test-%s"
+	auto_create_subnetworks = "false"
 }
-
 resource "google_compute_subnetwork" "foobar" {
-  name          = "router-nat-test-subnetwork-%s"
-  network       = google_compute_network.foobar.self_link
-  ip_cidr_range = "10.0.0.0/16"
-  region        = "us-central1"
+	name          = "router-nat-test-subnetwork-%s"
+	network       = "${google_compute_network.foobar.self_link}"
+	ip_cidr_range = "10.0.0.0/16"
+	region        = "us-central1"
 }
 
-resource "google_compute_router" "foobar" {
-  name    = "router-nat-test-%s"
-  region  = google_compute_subnetwork.foobar.region
-  network = google_compute_network.foobar.self_link
-}
-`, testId, testId, testId)
+resource "google_compute_router" "foobar"{
+	name    = "router-nat-test-%s"
+	region  = "${google_compute_subnetwork.foobar.region}"
+	network = "${google_compute_network.foobar.self_link}"
+}`, testId, testId, testId)
 }
