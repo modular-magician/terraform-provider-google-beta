@@ -261,7 +261,7 @@ func resourceCloudRunDomainMappingCreate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/domainmappings")
+	url, err := replaceVars(d, config, "{{CloudRunBasePath}}namespaces/{{project}}/services")
 	if err != nil {
 		return err
 	}
@@ -277,7 +277,7 @@ func resourceCloudRunDomainMappingCreate(d *schema.ResourceData, meta interface{
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{location}}/domainmappings/{{name}}")
+	id, err := replaceVars(d, config, "namespaces/{{project}}/services/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -291,7 +291,7 @@ func resourceCloudRunDomainMappingCreate(d *schema.ResourceData, meta interface{
 func resourceCloudRunDomainMappingRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	url, err := replaceVars(d, config, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/domainmappings/{{name}}")
+	url, err := replaceVars(d, config, "{{CloudRunBasePath}}namespaces/{{project}}/services/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -361,7 +361,7 @@ func resourceCloudRunDomainMappingUpdate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/domainmappings/{{name}}")
+	url, err := replaceVars(d, config, "{{CloudRunBasePath}}namespaces/{{project}}/services/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -384,7 +384,7 @@ func resourceCloudRunDomainMappingDelete(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/domainmappings/{{name}}")
+	url, err := replaceVars(d, config, "{{CloudRunBasePath}}namespaces/{{project}}/services/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -404,15 +404,15 @@ func resourceCloudRunDomainMappingDelete(d *schema.ResourceData, meta interface{
 func resourceCloudRunDomainMappingImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
-		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/domainmappings/(?P<name>[^/]+)",
-		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)",
-		"(?P<location>[^/]+)/(?P<name>[^/]+)",
+		"namespaces/(?P<project>[^/]+)/services/(?P<name>[^/]+)",
+		"(?P<project>[^/]+)/(?P<name>[^/]+)",
+		"(?P<name>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{location}}/domainmappings/{{name}}")
+	id, err := replaceVars(d, config, "namespaces/{{project}}/services/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -765,7 +765,7 @@ func resourceCloudRunDomainMappingEncoder(d *schema.ResourceData, meta interface
 	metadata["name"] = name
 
 	// The only acceptable version/kind right now
-	obj["apiVersion"] = "domains.cloudrun.com/v1alpha1"
+	obj["apiVersion"] = "domains.cloudrun.com/v1"
 	obj["kind"] = "DomainMapping"
 	return obj, nil
 }

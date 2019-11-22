@@ -17,12 +17,12 @@ layout: "google"
 page_title: "Google: google_cloud_run_service"
 sidebar_current: "docs-google-cloud-run-service"
 description: |-
-  **Note:** Cloud Run as a product is in beta, however the REST API is currently still an alpha.
+  TODO chrisst **Note:** Cloud Run as a product is in beta, however the REST API is currently still an alpha.
 ---
 
 # google\_cloud\_run\_service
 
-**Note:** Cloud Run as a product is in beta, however the REST API is currently still an alpha.
+TODO chrisst **Note:** Cloud Run as a product is in beta, however the REST API is currently still an alpha.
 Please use this with caution as it may change when the API moves to beta.
 
 Service acts as a top-level container that manages a set of Routes and
@@ -39,12 +39,10 @@ and Route, reflecting their statuses and conditions as its own.
 See also:
 https://github.com/knative/serving/blob/master/docs/spec/overview.md#service
 
-~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
 
 To get more information about Service, see:
 
-* [API documentation](https://cloud.google.com/run/docs/reference/rest/v1alpha1/projects.locations.services)
+* [API documentation](https://cloud.google.com/run/docs/reference/rest/v1/projects.locations.services)
 * How-to Guides
     * [Official Documentation](https://cloud.google.com/run/docs/)
 
@@ -114,6 +112,22 @@ The following arguments are supported:
 
 
 
+The `traffic` block supports:
+
+* `configuration_name` -
+  (Required)
+  ConfigurationName of a configuration to whose latest revision we will send this portion of traffic. When the "status.latestReadyRevisionName" of the referenced configuration changes, we will automatically migrate traffic from the prior "latest ready" revision to the new one. This field is never set in Route's status, only its spec.
+  Cloud Run currently supports a single ConfigurationName.
+
+* `percent` -
+  (Required)
+  Percent specifies percent of the traffic to this Revision or Configuration. This defaults to zero if unspecified.
+  Cloud Run currently requires 100 percent for a single ConfigurationName TrafficTarget entry.
+
+* `latest_revision` -
+  (Optional)
+  LatestRevision may be optionally provided to indicate that the latest ready Revision of the Configuration should be used for this traffic target. When provided LatestRevision must be true if RevisionName is empty; it must be false when RevisionName is non-empty.
+
 
 The `spec` block supports:
 
@@ -134,6 +148,10 @@ The `spec` block supports:
   - `1` not-thread-safe. Single concurrency
   - `2-N` thread-safe, max concurrency of N
 
+* `service_account_name` -
+  (Optional)
+  Email address of the IAM service account associated with the revision of the service. The service account represents the identity of the running revision, and determines what permissions the revision has. If not provided, the revision will use the project's default service account.
+
 * `serving_state` -
   ServingState holds a value describing the state the resources
   are in for this Revision.
@@ -144,7 +162,7 @@ The `spec` block supports:
 The `containers` block supports:
 
 * `working_dir` -
-  (Optional)
+  (Optional, Deprecated)
   Container's working directory.
   If not specified, the container runtime's default will be used, which
   might be configured in the container image.
@@ -162,7 +180,7 @@ The `containers` block supports:
   https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
 
 * `env_from` -
-  (Optional)
+  (Optional, Deprecated)
   List of sources to populate environment variables in the container.
   All invalid keys will be reported as an event when the container is starting.
   When a key exists in multiple sources, the value associated with the last source will
@@ -314,7 +332,7 @@ The `metadata` block supports:
   More info: http://kubernetes.io/docs/user-guide/identifiers#uids
 
 * `namespace` -
-  (Required)
+  (Optional)
   In Cloud Run the namespace must be equal to either the
   project ID or project number.
 
@@ -326,6 +344,10 @@ The `metadata` block supports:
 
 - - -
 
+
+* `traffic` -
+  (Optional)
+  Traffic specifies how to distribute traffic over a collection of Knative Revisions and Configurations  Structure is documented below.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -395,9 +417,9 @@ This resource provides the following
 Service can be imported using any of these accepted formats:
 
 ```
-$ terraform import -provider=google-beta google_cloud_run_service.default projects/{{project}}/locations/{{location}}/services/{{name}}
-$ terraform import -provider=google-beta google_cloud_run_service.default {{project}}/{{location}}/{{name}}
-$ terraform import -provider=google-beta google_cloud_run_service.default {{location}}/{{name}}
+$ terraform import google_cloud_run_service.default namespaces/{{project}}/services/{{name}}
+$ terraform import google_cloud_run_service.default {{project}}/{{name}}
+$ terraform import google_cloud_run_service.default {{name}}
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`

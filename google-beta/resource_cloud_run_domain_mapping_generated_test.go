@@ -73,7 +73,7 @@ func testAccCheckCloudRunDomainMappingDestroy(s *terraform.State) error {
 
 		config := testAccProvider.Meta().(*Config)
 
-		url, err := replaceVarsForTest(config, rs, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/domainmappings/{{name}}")
+		url, err := replaceVarsForTest(config, rs, "{{CloudRunBasePath}}namespaces/{{project}}/services/{{name}}")
 		if err != nil {
 			return err
 		}

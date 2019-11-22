@@ -41,6 +41,8 @@ func resourceCloudRunService() *schema.Resource {
 			Delete: schema.DefaultTimeout(4 * time.Minute),
 		},
 
+		CustomizeDiff: projectNumberToIDCustomDiff,
+
 		Schema: map[string]*schema.Schema{
 			"location": {
 				Type:        schema.TypeString,
@@ -55,12 +57,6 @@ and annotations.`,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"namespace": {
-							Type:     schema.TypeString,
-							Required: true,
-							Description: `In Cloud Run the namespace must be equal to either the
-project ID or project number.`,
-						},
 						"annotations": {
 							Type:     schema.TypeMap,
 							Computed: true,
@@ -79,6 +75,13 @@ info: http://kubernetes.io/docs/user-guide/annotations`,
 and routes.
 More info: http://kubernetes.io/docs/user-guide/labels`,
 							Elem: &schema.Schema{Type: schema.TypeString},
+						},
+						"namespace": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Optional: true,
+							Description: `In Cloud Run the namespace must be equal to either the
+project ID or project number.`,
 						},
 						"generation": {
 							Type:        schema.TypeInt,
@@ -208,9 +211,10 @@ Defaults to "".`,
 										},
 									},
 									"env_from": {
-										Type:     schema.TypeList,
-										Optional: true,
-										ForceNew: true,
+										Type:       schema.TypeList,
+										Optional:   true,
+										Deprecated: "Not supported by Cloud Run fully managed",
+										ForceNew:   true,
 										Description: `List of sources to populate environment variables in the container.
 All invalid keys will be reported as an event when the container is starting.
 When a key exists in multiple sources, the value associated with the last source will
@@ -321,9 +325,10 @@ https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/apimachi
 										},
 									},
 									"working_dir": {
-										Type:     schema.TypeString,
-										Optional: true,
-										ForceNew: true,
+										Type:       schema.TypeString,
+										Optional:   true,
+										Deprecated: "Not supported by Cloud Run fully managed",
+										ForceNew:   true,
 										Description: `Container's working directory.
 If not specified, the container runtime's default will be used, which
 might be configured in the container image.`,
@@ -341,13 +346,49 @@ requests per container of the Revision. Values are:
 - '1' not-thread-safe. Single concurrency
 - '2-N' thread-safe, max concurrency of N`,
 						},
+						"service_account_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Email address of the IAM service account associated with the revision of the service. The service account represents the identity of the running revision, and determines what permissions the revision has. If not provided, the revision will use the project's default service account.`,
+						},
 						"serving_state": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:       schema.TypeString,
+							Computed:   true,
+							Deprecated: "Not supported by Cloud Run fully managed",
 							Description: `ServingState holds a value describing the state the resources
 are in for this Revision.
 It is expected
 that the system will manipulate this based on routability and load.`,
+						},
+					},
+				},
+			},
+
+			"traffic": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				Description: `Traffic specifies how to distribute traffic over a collection of Knative Revisions and Configurations`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"configuration_name": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: `ConfigurationName of a configuration to whose latest revision we will send this portion of traffic. When the "status.latestReadyRevisionName" of the referenced configuration changes, we will automatically migrate traffic from the prior "latest ready" revision to the new one. This field is never set in Route's status, only its spec.
+
+Cloud Run currently supports a single ConfigurationName.`,
+						},
+						"percent": {
+							Type:     schema.TypeInt,
+							Required: true,
+							Description: `Percent specifies percent of the traffic to this Revision or Configuration. This defaults to zero if unspecified.
+
+Cloud Run currently requires 100 percent for a single ConfigurationName TrafficTarget entry.`,
+						},
+						"latest_revision": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: `LatestRevision may be optionally provided to indicate that the latest ready Revision of the Configuration should be used for this traffic target. When provided LatestRevision must be true if RevisionName is empty; it must be false when RevisionName is non-empty.`,
 						},
 					},
 				},
@@ -454,7 +495,7 @@ func resourceCloudRunServiceCreate(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/services")
+	url, err := replaceVars(d, config, "{{CloudRunBasePath}}namespaces/{{project}}/services")
 	if err != nil {
 		return err
 	}
@@ -470,7 +511,7 @@ func resourceCloudRunServiceCreate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{location}}/services/{{name}}")
+	id, err := replaceVars(d, config, "namespaces/{{project}}/services/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -484,7 +525,7 @@ func resourceCloudRunServiceCreate(d *schema.ResourceData, meta interface{}) err
 func resourceCloudRunServiceRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 
-	url, err := replaceVars(d, config, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/services/{{name}}")
+	url, err := replaceVars(d, config, "{{CloudRunBasePath}}namespaces/{{project}}/services/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -561,7 +602,7 @@ func resourceCloudRunServiceUpdate(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/services/{{name}}")
+	url, err := replaceVars(d, config, "{{CloudRunBasePath}}namespaces/{{project}}/services/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -584,7 +625,7 @@ func resourceCloudRunServiceDelete(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/services/{{name}}")
+	url, err := replaceVars(d, config, "{{CloudRunBasePath}}namespaces/{{project}}/services/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -604,15 +645,14 @@ func resourceCloudRunServiceDelete(d *schema.ResourceData, meta interface{}) err
 func resourceCloudRunServiceImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
-		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/services/(?P<name>[^/]+)",
-		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)",
-		"(?P<location>[^/]+)/(?P<name>[^/]+)",
+		"location/(?P<location>[^/]+)/namespaces/(?P<project>[^/]+)/services/(?P<name>[^/]+)",
+		"(?P<location>[^/]+)/(?P<project>[^/]+)/(?P<name>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{location}}/services/{{name}}")
+	id, err := replaceVars(d, config, "namespaces/{{project}}/services/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -630,6 +670,8 @@ func flattenCloudRunServiceSpec(v interface{}, d *schema.ResourceData) interface
 		return nil
 	}
 	transformed := make(map[string]interface{})
+	transformed["traffic"] =
+		flattenCloudRunServiceSpecTraffic(original["traffic"], d)
 	if template := flattenCloudRunServiceSpecTemplate(original["template"], d); template != nil {
 		obj := template.([]interface{})[0]
 		for k, v := range obj.(map[string]interface{}) {
@@ -638,6 +680,44 @@ func flattenCloudRunServiceSpec(v interface{}, d *schema.ResourceData) interface
 	}
 	return []interface{}{transformed}
 }
+func flattenCloudRunServiceSpecTraffic(v interface{}, d *schema.ResourceData) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"configuration_name": flattenCloudRunServiceSpecTrafficConfigurationName(original["configurationName"], d),
+			"percent":            flattenCloudRunServiceSpecTrafficPercent(original["percent"], d),
+			"latest_revision":    flattenCloudRunServiceSpecTrafficLatestRevision(original["latestRevision"], d),
+		})
+	}
+	return transformed
+}
+func flattenCloudRunServiceSpecTrafficConfigurationName(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenCloudRunServiceSpecTrafficPercent(v interface{}, d *schema.ResourceData) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenCloudRunServiceSpecTrafficLatestRevision(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
 func flattenCloudRunServiceSpecTemplate(v interface{}, d *schema.ResourceData) interface{} {
 	if v == nil {
 		return nil
@@ -664,6 +744,8 @@ func flattenCloudRunServiceSpecTemplateSpec(v interface{}, d *schema.ResourceDat
 		flattenCloudRunServiceSpecTemplateSpecContainers(original["containers"], d)
 	transformed["container_concurrency"] =
 		flattenCloudRunServiceSpecTemplateSpecContainerConcurrency(original["containerConcurrency"], d)
+	transformed["service_account_name"] =
+		flattenCloudRunServiceSpecTemplateSpecServiceAccountName(original["serviceAccountName"], d)
 	transformed["serving_state"] =
 		flattenCloudRunServiceSpecTemplateSpecServingState(original["servingState"], d)
 	return []interface{}{transformed}
@@ -864,6 +946,10 @@ func flattenCloudRunServiceSpecTemplateSpecContainerConcurrency(v interface{}, d
 	return v
 }
 
+func flattenCloudRunServiceSpecTemplateSpecServiceAccountName(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
 func flattenCloudRunServiceSpecTemplateSpecServingState(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
@@ -1009,6 +1095,13 @@ func flattenCloudRunServiceMetadataAnnotations(v interface{}, d *schema.Resource
 
 func expandCloudRunServiceSpec(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	transformed := make(map[string]interface{})
+	transformedTraffic, err := expandCloudRunServiceSpecTraffic(d.Get("traffic"), d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTraffic); val.IsValid() && !isEmptyValue(val) {
+		transformed["traffic"] = transformedTraffic
+	}
+
 	transformedTemplate, err := expandCloudRunServiceSpecTemplate(nil, d, config)
 	if err != nil {
 		return nil, err
@@ -1017,6 +1110,54 @@ func expandCloudRunServiceSpec(v interface{}, d TerraformResourceData, config *C
 	}
 
 	return transformed, nil
+}
+
+func expandCloudRunServiceSpecTraffic(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedConfigurationName, err := expandCloudRunServiceSpecTrafficConfigurationName(original["configuration_name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedConfigurationName); val.IsValid() && !isEmptyValue(val) {
+			transformed["configurationName"] = transformedConfigurationName
+		}
+
+		transformedPercent, err := expandCloudRunServiceSpecTrafficPercent(original["percent"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPercent); val.IsValid() && !isEmptyValue(val) {
+			transformed["percent"] = transformedPercent
+		}
+
+		transformedLatestRevision, err := expandCloudRunServiceSpecTrafficLatestRevision(original["latest_revision"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedLatestRevision); val.IsValid() && !isEmptyValue(val) {
+			transformed["latestRevision"] = transformedLatestRevision
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandCloudRunServiceSpecTrafficConfigurationName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudRunServiceSpecTrafficPercent(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudRunServiceSpecTrafficLatestRevision(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandCloudRunServiceSpecTemplate(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
@@ -1052,6 +1193,13 @@ func expandCloudRunServiceSpecTemplateSpec(v interface{}, d TerraformResourceDat
 		return nil, err
 	} else if val := reflect.ValueOf(transformedContainerConcurrency); val.IsValid() && !isEmptyValue(val) {
 		transformed["containerConcurrency"] = transformedContainerConcurrency
+	}
+
+	transformedServiceAccountName, err := expandCloudRunServiceSpecTemplateSpecServiceAccountName(original["service_account_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedServiceAccountName); val.IsValid() && !isEmptyValue(val) {
+		transformed["serviceAccountName"] = transformedServiceAccountName
 	}
 
 	transformedServingState, err := expandCloudRunServiceSpecTemplateSpecServingState(original["serving_state"], d, config)
@@ -1379,6 +1527,10 @@ func expandCloudRunServiceSpecTemplateSpecContainerConcurrency(v interface{}, d 
 	return v, nil
 }
 
+func expandCloudRunServiceSpecTemplateSpecServiceAccountName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandCloudRunServiceSpecTemplateSpecServingState(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
@@ -1471,7 +1623,14 @@ func expandCloudRunServiceMetadataUid(v interface{}, d TerraformResourceData, co
 	return v, nil
 }
 
+// If the property hasn't been explicitly set in config use the project defined by the provider or env.
 func expandCloudRunServiceMetadataNamespace(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	if v == nil {
+		project, err := getProject(d, config)
+		if err != nil {
+			return project, nil
+		}
+	}
 	return v, nil
 }
 
@@ -1492,7 +1651,7 @@ func resourceCloudRunServiceEncoder(d *schema.ResourceData, meta interface{}, ob
 	metadata["name"] = name
 
 	// The only acceptable version/kind right now
-	obj["apiVersion"] = "serving.knative.dev/v1alpha1"
+	obj["apiVersion"] = "serving.knative.dev/v1"
 	obj["kind"] = "Service"
 	return obj, nil
 }
