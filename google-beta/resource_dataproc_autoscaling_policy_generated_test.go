@@ -33,16 +33,11 @@ func TestAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(t *testin
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		Providers:    testAccProvidersOiCS,
 		CheckDestroy: testAccCheckDataprocAutoscalingPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(context),
-			},
-			{
-				ResourceName:      "google_dataproc_autoscaling_policy.asp",
-				ImportState:       true,
-				ImportStateVerify: true,
 			},
 		},
 	})
@@ -50,7 +45,11 @@ func TestAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(t *testin
 
 func testAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(context map[string]interface{}) string {
 	return Nprintf(`
+provider "google-beta" {
+}
+
 resource "google_dataproc_cluster" "basic" {
+  provider = google-beta
   name     = "tf-dataproc-test-%{random_suffix}"
   region   = "us-central1"
 
@@ -62,6 +61,7 @@ resource "google_dataproc_cluster" "basic" {
 }
 
 resource "google_dataproc_autoscaling_policy" "asp" {
+  provider  = google-beta
   policy_id = "tf-dataproc-test-%{random_suffix}"
   location  = "us-central1"
 

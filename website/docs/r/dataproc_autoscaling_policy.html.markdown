@@ -24,6 +24,8 @@ description: |-
 
 Describes an autoscaling policy for Dataproc cluster autoscaler.
 
+~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
+See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
 
 
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
@@ -35,7 +37,11 @@ Describes an autoscaling policy for Dataproc cluster autoscaler.
 
 
 ```hcl
+provider "google-beta" {
+}
+
 resource "google_dataproc_cluster" "basic" {
+  provider = google-beta
   name     = "tf-dataproc-test-"
   region   = "us-central1"
 
@@ -47,6 +53,7 @@ resource "google_dataproc_cluster" "basic" {
 }
 
 resource "google_dataproc_autoscaling_policy" "asp" {
+  provider  = google-beta
   policy_id = "tf-dataproc-test-"
   location  = "us-central1"
 
@@ -232,9 +239,9 @@ This resource provides the following
 AutoscalingPolicy can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_dataproc_autoscaling_policy.default projects/{{project}}/locations/{{location}}/autoscalingPolicies/{{policy_id}}
-$ terraform import google_dataproc_autoscaling_policy.default {{project}}/{{location}}/{{policy_id}}
-$ terraform import google_dataproc_autoscaling_policy.default {{location}}/{{policy_id}}
+$ terraform import -provider=google-beta google_dataproc_autoscaling_policy.default projects/{{project}}/locations/{{location}}/autoscalingPolicies/{{policy_id}}
+$ terraform import -provider=google-beta google_dataproc_autoscaling_policy.default {{project}}/{{location}}/{{policy_id}}
+$ terraform import -provider=google-beta google_dataproc_autoscaling_policy.default {{location}}/{{policy_id}}
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`

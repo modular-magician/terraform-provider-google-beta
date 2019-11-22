@@ -59,7 +59,7 @@ resource "google_monitoring_group" "basic" {
 
 ```hcl
 resource "google_monitoring_group" "parent" {
-  display_name = "tf-test MonitoringParentGroup"
+  display_name = "tf-test MonitoringSubGroup"
   filter       = "resource.metadata.region=\"europe-west2\""
 }
 
