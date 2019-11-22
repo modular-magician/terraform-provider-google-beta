@@ -34,11 +34,16 @@ func TestAccCloudRunDomainMapping_cloudRunDomainMappingBasicExample(t *testing.T
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProvidersOiCS,
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCloudRunDomainMappingDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCloudRunDomainMapping_cloudRunDomainMappingBasicExample(context),
+			},
+			{
+				ResourceName:      "google_cloud_run_domain_mapping.default",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -48,7 +53,6 @@ func testAccCloudRunDomainMapping_cloudRunDomainMappingBasicExample(context map[
 	return Nprintf(`
 resource "google_cloud_run_domain_mapping" "default" {
   location = "us-central1"
-  provider = google-beta
   name     = "tftest-domainmapping.com%{random_suffix}"
 
   metadata {
@@ -73,7 +77,7 @@ func testAccCheckCloudRunDomainMappingDestroy(s *terraform.State) error {
 
 		config := testAccProvider.Meta().(*Config)
 
-		url, err := replaceVarsForTest(config, rs, "{{CloudRunBasePath}}projects/{{project}}/locations/{{location}}/domainmappings/{{name}}")
+		url, err := replaceVarsForTest(config, rs, "{{CloudRunBasePath}}namespaces/{{project}}/services/{{name}}")
 		if err != nil {
 			return err
 		}
