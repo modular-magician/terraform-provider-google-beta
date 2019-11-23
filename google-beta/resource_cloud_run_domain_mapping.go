@@ -765,7 +765,7 @@ func resourceCloudRunDomainMappingEncoder(d *schema.ResourceData, meta interface
 	metadata["name"] = name
 
 	// The only acceptable version/kind right now
-	obj["apiVersion"] = "domains.cloudrun.com/v1alpha1"
+	obj["apiVersion"] = "domains.cloudrun.com/v1"
 	obj["kind"] = "DomainMapping"
 	return obj, nil
 }

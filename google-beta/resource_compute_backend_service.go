@@ -1926,18 +1926,12 @@ func flattenComputeBackendServiceIap(v interface{}, d *schema.ResourceData) inte
 	transformed := make(map[string]interface{})
 	transformed["oauth2_client_id"] =
 		flattenComputeBackendServiceIapOauth2ClientId(original["oauth2ClientId"], d)
-	transformed["oauth2_client_secret"] =
-		flattenComputeBackendServiceIapOauth2ClientSecret(original["oauth2ClientSecret"], d)
 	transformed["oauth2_client_secret_sha256"] =
 		flattenComputeBackendServiceIapOauth2ClientSecretSha256(original["oauth2ClientSecretSha256"], d)
 	return []interface{}{transformed}
 }
 func flattenComputeBackendServiceIapOauth2ClientId(v interface{}, d *schema.ResourceData) interface{} {
 	return v
-}
-
-func flattenComputeBackendServiceIapOauth2ClientSecret(v interface{}, d *schema.ResourceData) interface{} {
-	return d.Get("iap.0.oauth2_client_secret")
 }
 
 func flattenComputeBackendServiceIapOauth2ClientSecretSha256(v interface{}, d *schema.ResourceData) interface{} {
