@@ -2606,6 +2606,12 @@ resource "google_container_cluster" "with_autoprovisioning" {
       resource_type = "memory"
       maximum       = 2048
     }
+    auto_provisioning_defaults {
+      oauth_scopes = [
+        "https://www.googleapis.com/auth/pubsub",
+        "https://www.googleapis.com/auth/devstorage.read_only"
+      ]
+    }
   }`
 	} else {
 		config += `
