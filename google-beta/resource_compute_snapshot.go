@@ -526,16 +526,10 @@ func flattenComputeSnapshotSnapshotEncryptionKey(v interface{}, d *schema.Resour
 		return nil
 	}
 	transformed := make(map[string]interface{})
-	transformed["raw_key"] =
-		flattenComputeSnapshotSnapshotEncryptionKeyRawKey(original["rawKey"], d)
 	transformed["sha256"] =
 		flattenComputeSnapshotSnapshotEncryptionKeySha256(original["sha256"], d)
 	return []interface{}{transformed}
 }
-func flattenComputeSnapshotSnapshotEncryptionKeyRawKey(v interface{}, d *schema.ResourceData) interface{} {
-	return d.Get("snapshot_encryption_key.0.raw_key")
-}
-
 func flattenComputeSnapshotSnapshotEncryptionKeySha256(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
