@@ -202,7 +202,6 @@ func resourceAccessContextManagerAccessPolicyUpdate(d *schema.ResourceData, meta
 	err = accessContextManagerOperationWaitTime(
 		config, res, "Updating AccessPolicy",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

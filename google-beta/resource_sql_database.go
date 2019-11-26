@@ -258,7 +258,6 @@ func resourceSQLDatabaseUpdate(d *schema.ResourceData, meta interface{}) error {
 	err = sqlAdminOperationWaitTime(
 		config, res, project, "Updating Database",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

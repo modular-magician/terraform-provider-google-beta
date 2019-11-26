@@ -1119,7 +1119,6 @@ func resourceComputeRegionBackendServiceUpdate(d *schema.ResourceData, meta inte
 	err = computeOperationWaitTime(
 		config, res, project, "Updating RegionBackendService",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

@@ -294,7 +294,6 @@ func resourceSpannerInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 	err = spannerOperationWaitTime(
 		config, res, project, "Updating Instance",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

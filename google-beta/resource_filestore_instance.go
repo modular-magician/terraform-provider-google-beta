@@ -341,7 +341,6 @@ func resourceFilestoreInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 	err = filestoreOperationWaitTime(
 		config, res, project, "Updating Instance",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

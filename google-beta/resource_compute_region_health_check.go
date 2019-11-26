@@ -797,7 +797,6 @@ func resourceComputeRegionHealthCheckUpdate(d *schema.ResourceData, meta interfa
 	err = computeOperationWaitTime(
 		config, res, project, "Updating RegionHealthCheck",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

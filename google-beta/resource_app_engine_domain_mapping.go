@@ -283,7 +283,6 @@ func resourceAppEngineDomainMappingUpdate(d *schema.ResourceData, meta interface
 	err = appEngineOperationWaitTime(
 		config, res, project, "Updating DomainMapping",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

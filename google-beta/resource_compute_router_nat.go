@@ -602,7 +602,6 @@ func resourceComputeRouterNatUpdate(d *schema.ResourceData, meta interface{}) er
 	err = computeOperationWaitTime(
 		config, res, project, "Updating RouterNat",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

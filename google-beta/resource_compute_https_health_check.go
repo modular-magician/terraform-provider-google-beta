@@ -362,7 +362,6 @@ func resourceComputeHttpsHealthCheckUpdate(d *schema.ResourceData, meta interfac
 	err = computeOperationWaitTime(
 		config, res, project, "Updating HttpsHealthCheck",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

@@ -328,7 +328,6 @@ func resourceComputeRouterUpdate(d *schema.ResourceData, meta interface{}) error
 	err = computeOperationWaitTime(
 		config, res, project, "Updating Router",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

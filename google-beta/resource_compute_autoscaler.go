@@ -454,7 +454,6 @@ func resourceComputeAutoscalerUpdate(d *schema.ResourceData, meta interface{}) e
 	err = computeOperationWaitTime(
 		config, res, project, "Updating Autoscaler",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

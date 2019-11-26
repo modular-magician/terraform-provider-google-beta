@@ -555,7 +555,6 @@ func resourceAppEngineStandardAppVersionUpdate(d *schema.ResourceData, meta inte
 	err = appEngineOperationWaitTime(
 		config, res, project, "Updating StandardAppVersion",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

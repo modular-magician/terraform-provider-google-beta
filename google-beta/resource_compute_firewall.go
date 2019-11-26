@@ -647,7 +647,6 @@ func resourceComputeFirewallUpdate(d *schema.ResourceData, meta interface{}) err
 	err = computeOperationWaitTime(
 		config, res, project, "Updating Firewall",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

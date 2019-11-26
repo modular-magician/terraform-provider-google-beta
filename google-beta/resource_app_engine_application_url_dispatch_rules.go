@@ -200,7 +200,6 @@ func resourceAppEngineApplicationUrlDispatchRulesUpdate(d *schema.ResourceData, 
 	err = appEngineOperationWaitTime(
 		config, res, project, "Updating ApplicationUrlDispatchRules",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

@@ -424,7 +424,6 @@ func resourceComputeUrlMapUpdate(d *schema.ResourceData, meta interface{}) error
 	err = computeOperationWaitTime(
 		config, res, project, "Updating UrlMap",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

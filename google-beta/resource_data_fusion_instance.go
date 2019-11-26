@@ -53,12 +53,12 @@ func resourceDataFusionInstance() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"BASIC", "ENTERPRISE"}, false),
-				Description: `Represents the type of Data Fusion instance. Each type is configured with 
+				Description: `Represents the type of Data Fusion instance. Each type is configured with
 the default settings for processing and memory.
-- BASIC: Basic Data Fusion instance. In Basic type, the user will be able to create data pipelines 
-using point and click UI. However, there are certain limitations, such as fewer number 
+- BASIC: Basic Data Fusion instance. In Basic type, the user will be able to create data pipelines
+using point and click UI. However, there are certain limitations, such as fewer number
 of concurrent pipelines, no support for streaming pipelines, etc.
-- ENTERPRISE: Enterprise Data Fusion instance. In Enterprise type, the user will have more features 
+- ENTERPRISE: Enterprise Data Fusion instance. In Enterprise type, the user will have more features
 available, such as support for streaming pipelines, higher number of concurrent pipelines, etc.`,
 			},
 			"description": {
@@ -104,7 +104,7 @@ nodes. This range must not overlap with any other ranges used in the Data Fusion
 							Required: true,
 							ForceNew: true,
 							Description: `Name of the network in the project with which the tenant project
-will be peered for executing pipelines. In case of shared VPC where the network resides in another host 
+will be peered for executing pipelines. In case of shared VPC where the network resides in another host
 project the network should specified in the form of projects/{host-project-id}/global/networks/{network}`,
 						},
 					},
@@ -395,7 +395,6 @@ func resourceDataFusionInstanceUpdate(d *schema.ResourceData, meta interface{}) 
 	err = dataFusionOperationWaitTime(
 		config, res, project, "Updating Instance",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}

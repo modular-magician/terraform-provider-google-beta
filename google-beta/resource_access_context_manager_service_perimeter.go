@@ -339,7 +339,6 @@ func resourceAccessContextManagerServicePerimeterUpdate(d *schema.ResourceData, 
 	err = accessContextManagerOperationWaitTime(
 		config, res, "Updating ServicePerimeter",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
-
 	if err != nil {
 		return err
 	}
