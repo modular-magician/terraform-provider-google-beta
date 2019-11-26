@@ -2593,6 +2593,10 @@ resource "google_container_cluster" "with_autoprovisioning" {
   location           = "us-central1-a"
   min_master_version = data.google_container_engine_versions.central1a.latest_master_version
   initial_node_count = 1
+
+  logging_service    = "none"
+  monitoring_service = "none"
+
 `, cluster)
 	if autoprovisioning {
 		config += `
@@ -2605,6 +2609,12 @@ resource "google_container_cluster" "with_autoprovisioning" {
     resource_limits {
       resource_type = "memory"
       maximum       = 2048
+    }
+    auto_provisioning_defaults {
+      oauth_scopes = [
+        "https://www.googleapis.com/auth/pubsub",
+        "https://www.googleapis.com/auth/devstorage.read_only"
+      ]
     }
   }`
 	} else {
