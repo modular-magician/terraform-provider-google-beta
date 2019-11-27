@@ -47,7 +47,7 @@ func TestAccComputeSubnetworkIamPolicy(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_compute_subnetwork_iam_policy.foo",
-				ImportStateId:     subnetwork,
+				ImportStateId:     fmt.Sprintf("%s", subnetwork),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},

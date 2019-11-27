@@ -49,7 +49,10 @@ func resourceComputeFirewallRuleHash(v interface{}) int {
 }
 
 func compareCaseInsensitive(k, old, new string, d *schema.ResourceData) bool {
-	return strings.ToLower(old) == strings.ToLower(new)
+	if strings.ToLower(old) == strings.ToLower(new) {
+		return true
+	}
+	return false
 }
 
 func resourceComputeFirewall() *schema.Resource {

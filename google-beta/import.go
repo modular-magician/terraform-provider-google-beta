@@ -117,7 +117,8 @@ func getImportIdQualifiers(idRegexes []string, d TerraformResourceData, config *
 		}
 
 		if fieldValues := re.FindStringSubmatch(id); fieldValues != nil {
-			result := make(map[string]string)
+			var result map[string]string
+			result = make(map[string]string)
 			log.Printf("[DEBUG] matching ID %s to regex %s.", id, idFormat)
 			// Starting at index 1, the first match is the full string.
 			for i := 1; i < len(fieldValues); i++ {
@@ -147,7 +148,8 @@ func getImportIdQualifiers(idRegexes []string, d TerraformResourceData, config *
 // Returns a set of default values that are contained in a regular expression
 // This does not mutate any parameters, instead returning a map of defaults
 func getDefaultValues(idRegex string, d TerraformResourceData, config *Config) (map[string]string, error) {
-	result := make(map[string]string)
+	var result map[string]string
+	result = make(map[string]string)
 	if _, ok := d.GetOk("project"); !ok && strings.Contains(idRegex, "?P<project>") {
 		project, err := getProject(d, config)
 		if err != nil {

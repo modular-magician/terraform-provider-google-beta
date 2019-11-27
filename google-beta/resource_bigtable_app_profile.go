@@ -296,7 +296,11 @@ func flattenBigtableAppProfileDescription(v interface{}, d *schema.ResourceData)
 }
 
 func flattenBigtableAppProfileMultiClusterRoutingUseAny(v interface{}, d *schema.ResourceData) interface{} {
-	return v != nil
+	if v == nil {
+		return false
+	}
+
+	return true
 }
 
 func flattenBigtableAppProfileSingleClusterRouting(v interface{}, d *schema.ResourceData) interface{} {

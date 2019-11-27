@@ -46,7 +46,7 @@ func TestAccComputeInstanceIamPolicy(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_compute_instance_iam_policy.foo",
-				ImportStateId:     instanceName,
+				ImportStateId:     fmt.Sprintf("%s", instanceName),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},

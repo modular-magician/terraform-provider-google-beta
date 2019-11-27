@@ -211,7 +211,10 @@ func caseDiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
 // `old` is read from the server and always has the full range format (e.g. '80-80', '1024-2048').
 // `new` can be either a single port or a port range.
 func portRangeDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
-	return old == new+"-"+new
+	if old == new+"-"+new {
+		return true
+	}
+	return false
 }
 
 // Single-digit hour is equivalent to hour with leading zero e.g. suppress diff 1:00 => 01:00.
