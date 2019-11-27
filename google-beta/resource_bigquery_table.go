@@ -647,7 +647,7 @@ func flattenExternalDataConfiguration(edc *bigquery.ExternalDataConfiguration) (
 		result["google_sheets_options"] = flattenGoogleSheetsOptions(edc.GoogleSheetsOptions)
 	}
 
-	if edc.IgnoreUnknownValues {
+	if edc.IgnoreUnknownValues == true {
 		result["ignore_unknown_values"] = edc.IgnoreUnknownValues
 	}
 	if edc.MaxBadRecords != 0 {
@@ -702,11 +702,11 @@ func expandCsvOptions(configured interface{}) *bigquery.CsvOptions {
 func flattenCsvOptions(opts *bigquery.CsvOptions) []map[string]interface{} {
 	result := map[string]interface{}{}
 
-	if opts.AllowJaggedRows {
+	if opts.AllowJaggedRows == true {
 		result["allow_jagged_rows"] = opts.AllowJaggedRows
 	}
 
-	if opts.AllowQuotedNewlines {
+	if opts.AllowQuotedNewlines == true {
 		result["allow_quoted_newlines"] = opts.AllowQuotedNewlines
 	}
 
@@ -814,7 +814,7 @@ func flattenTimePartitioning(tp *bigquery.TimePartitioning) []map[string]interfa
 		result["expiration_ms"] = tp.ExpirationMs
 	}
 
-	if tp.RequirePartitionFilter {
+	if tp.RequirePartitionFilter == true {
 		result["require_partition_filter"] = tp.RequirePartitionFilter
 	}
 

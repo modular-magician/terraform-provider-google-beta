@@ -46,9 +46,9 @@ func validateHttpHeaders() schema.SchemaValidateFunc {
 			es = append(es, fmt.Errorf("Cannot set the Content-Length header on %s", k))
 			return
 		}
-		r := regexp.MustCompile(`(X-Google-|X-AppEngine-).*`)
 		for key := range headers {
-			if r.MatchString(key) {
+			match, _ := regexp.MatchString("(X-Google-|X-AppEngine-).*", key)
+			if match {
 				es = append(es, fmt.Errorf("Cannot set the %s header on %s", key, k))
 				return
 			}
