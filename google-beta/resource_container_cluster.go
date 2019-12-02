@@ -790,6 +790,20 @@ func resourceContainerCluster() *schema.Resource {
 				Computed: true,
 			},
 
+			"vertical_pod_autoscaling": {
+				Type:     schema.TypeList,
+				MaxItems: 1,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:     schema.TypeBool,
+							Required: true,
+						},
+					},
+				},
+			},
+
 			"release_channel": {
 				Type:     schema.TypeList,
 				ForceNew: true,
@@ -804,20 +818,6 @@ func resourceContainerCluster() *schema.Resource {
 							ForceNew:         true,
 							ValidateFunc:     validation.StringInSlice([]string{"UNSPECIFIED", "RAPID", "REGULAR", "STABLE"}, false),
 							DiffSuppressFunc: emptyOrDefaultStringSuppress("UNSPECIFIED"),
-						},
-					},
-				},
-			},
-
-			"vertical_pod_autoscaling": {
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"enabled": {
-							Type:     schema.TypeBool,
-							Required: true,
 						},
 					},
 				},
@@ -1087,12 +1087,12 @@ func resourceContainerClusterCreate(d *schema.ResourceData, meta interface{}) er
 		cluster.PrivateClusterConfig = expandPrivateClusterConfig(v)
 	}
 
-	if v, ok := d.GetOk("database_encryption"); ok {
-		cluster.DatabaseEncryption = expandDatabaseEncryption(v)
-	}
-
 	if v, ok := d.GetOk("vertical_pod_autoscaling"); ok {
 		cluster.VerticalPodAutoscaling = expandVerticalPodAutoscaling(v)
+	}
+
+	if v, ok := d.GetOk("database_encryption"); ok {
+		cluster.DatabaseEncryption = expandDatabaseEncryption(v)
 	}
 
 	if v, ok := d.GetOk("workload_identity_config"); ok {
@@ -1786,6 +1786,26 @@ func resourceContainerClusterUpdate(d *schema.ResourceData, meta interface{}) er
 		d.SetPartial("master_auth")
 	}
 
+	if d.HasChange("vertical_pod_autoscaling") {
+		if ac, ok := d.GetOk("vertical_pod_autoscaling"); ok {
+			req := &containerBeta.UpdateClusterRequest{
+				Update: &containerBeta.ClusterUpdate{
+					DesiredVerticalPodAutoscaling: expandVerticalPodAutoscaling(ac),
+				},
+			}
+
+			updateF := updateFunc(req, "updating GKE cluster vertical pod autoscaling")
+			// Call update serially.
+			if err := lockedCall(lockKey, updateF); err != nil {
+				return err
+			}
+
+			log.Printf("[INFO] GKE cluster %s vertical pod autoscaling has been updated", d.Id())
+
+			d.SetPartial("vertical_pod_autoscaling")
+		}
+	}
+
 	if d.HasChange("pod_security_policy_config") {
 		c := d.Get("pod_security_policy_config")
 		req := &containerBeta.UpdateClusterRequest{
@@ -1809,26 +1829,6 @@ func resourceContainerClusterUpdate(d *schema.ResourceData, meta interface{}) er
 		log.Printf("[INFO] GKE cluster %s pod security policy config has been updated", d.Id())
 
 		d.SetPartial("pod_security_policy_config")
-	}
-
-	if d.HasChange("vertical_pod_autoscaling") {
-		if ac, ok := d.GetOk("vertical_pod_autoscaling"); ok {
-			req := &containerBeta.UpdateClusterRequest{
-				Update: &containerBeta.ClusterUpdate{
-					DesiredVerticalPodAutoscaling: expandVerticalPodAutoscaling(ac),
-				},
-			}
-
-			updateF := updateFunc(req, "updating GKE cluster vertical pod autoscaling")
-			// Call update serially.
-			if err := lockedCall(lockKey, updateF); err != nil {
-				return err
-			}
-
-			log.Printf("[INFO] GKE cluster %s vertical pod autoscaling has been updated", d.Id())
-
-			d.SetPartial("vertical_pod_autoscaling")
-		}
 	}
 
 	if d.HasChange("workload_identity_config") {
@@ -2355,6 +2355,17 @@ func expandPrivateClusterConfig(configured interface{}) *containerBeta.PrivateCl
 	}
 }
 
+func expandVerticalPodAutoscaling(configured interface{}) *containerBeta.VerticalPodAutoscaling {
+	l := configured.([]interface{})
+	if len(l) == 0 {
+		return nil
+	}
+	config := l[0].(map[string]interface{})
+	return &containerBeta.VerticalPodAutoscaling{
+		Enabled: config["enabled"].(bool),
+	}
+}
+
 func expandReleaseChannel(configured interface{}) *containerBeta.ReleaseChannel {
 	l := configured.([]interface{})
 	if len(l) == 0 || l[0] == nil {
@@ -2375,17 +2386,6 @@ func expandDatabaseEncryption(configured interface{}) *containerBeta.DatabaseEnc
 	return &containerBeta.DatabaseEncryption{
 		State:   config["state"].(string),
 		KeyName: config["key_name"].(string),
-	}
-}
-
-func expandVerticalPodAutoscaling(configured interface{}) *containerBeta.VerticalPodAutoscaling {
-	l := configured.([]interface{})
-	if len(l) == 0 {
-		return nil
-	}
-	config := l[0].(map[string]interface{})
-	return &containerBeta.VerticalPodAutoscaling{
-		Enabled: config["enabled"].(bool),
 	}
 }
 
@@ -2551,6 +2551,17 @@ func flattenPrivateClusterConfig(c *containerBeta.PrivateClusterConfig) []map[st
 	}
 }
 
+func flattenVerticalPodAutoscaling(c *containerBeta.VerticalPodAutoscaling) []map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return []map[string]interface{}{
+		{
+			"enabled": c.Enabled,
+		},
+	}
+}
+
 func flattenReleaseChannel(c *containerBeta.ReleaseChannel) []map[string]interface{} {
 	result := []map[string]interface{}{}
 	if c != nil {
@@ -2566,16 +2577,6 @@ func flattenReleaseChannel(c *containerBeta.ReleaseChannel) []map[string]interfa
 	return result
 }
 
-func flattenVerticalPodAutoscaling(c *containerBeta.VerticalPodAutoscaling) []map[string]interface{} {
-	if c == nil {
-		return nil
-	}
-	return []map[string]interface{}{
-		{
-			"enabled": c.Enabled,
-		},
-	}
-}
 func flattenWorkloadIdentityConfig(c *containerBeta.WorkloadIdentityConfig) []map[string]interface{} {
 	if c == nil {
 		return nil
