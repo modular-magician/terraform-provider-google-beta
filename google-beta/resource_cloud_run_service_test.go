@@ -23,6 +23,7 @@ func TestAccCloudRunService_cloudRunServiceUpdate(t *testing.T) {
 			},
 			{
 				ResourceName:            "google_cloud_run_service.default",
+				ImportStateId:           fmt.Sprintf("locations/us-central1/namespaces/%s/services/%s", project, name),
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"metadata.0.resource_version", "status.0.conditions"},
@@ -32,6 +33,7 @@ func TestAccCloudRunService_cloudRunServiceUpdate(t *testing.T) {
 			},
 			{
 				ResourceName:            "google_cloud_run_service.default",
+				ImportStateId:           fmt.Sprintf("locations/us-central1/namespaces/%s/services/%s", project, name),
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"metadata.0.resource_version", "status.0.conditions"},
@@ -55,6 +57,7 @@ func TestAccCloudRunService_cloudRunServiceSql(t *testing.T) {
 			},
 			{
 				ResourceName:            "google_cloud_run_service.default",
+				ImportStateId:           fmt.Sprintf("locations/us-central1/namespaces/%s/services/%s", project, name),
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"metadata.0.resource_version", "status.0.conditions"},
