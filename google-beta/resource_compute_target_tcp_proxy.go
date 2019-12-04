@@ -85,6 +85,11 @@ the backend, either NONE or PROXY_V1. The default is NONE.`,
 				Computed:    true,
 				Description: `The unique identifier for the resource.`,
 			},
+			"proxy_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: `The unique identifier for the resource.`,
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -186,6 +191,9 @@ func resourceComputeTargetTcpProxyRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
 
+	if err := d.Set("proxy_id", flattenComputeTargetTcpProxyProxyId(res["id"], d)); err != nil {
+		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
+	}
 	if err := d.Set("creation_timestamp", flattenComputeTargetTcpProxyCreationTimestamp(res["creationTimestamp"], d)); err != nil {
 		return fmt.Errorf("Error reading TargetTcpProxy: %s", err)
 	}
@@ -334,6 +342,16 @@ func resourceComputeTargetTcpProxyImport(d *schema.ResourceData, meta interface{
 	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
+}
+
+func flattenComputeTargetTcpProxyProxyId(v interface{}, d *schema.ResourceData) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
 }
 
 func flattenComputeTargetTcpProxyCreationTimestamp(v interface{}, d *schema.ResourceData) interface{} {

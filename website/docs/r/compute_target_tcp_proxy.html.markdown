@@ -109,6 +109,9 @@ The following arguments are supported:
 In addition to the arguments listed above, the following computed attributes are exported:
 
 
+* `proxy_id` -
+  The unique identifier for the resource.
+
 * `creation_timestamp` -
   Creation timestamp in RFC3339 text format.
 
