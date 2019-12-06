@@ -29,6 +29,7 @@ func TestAccCloudRunService_cloudRunServiceBasicExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"project":       getTestProjectFromEnv(),
+		"namespace":     getTestProjectFromEnv(),
 		"random_suffix": acctest.RandString(10),
 	}
 
@@ -56,7 +57,7 @@ resource "google_cloud_run_service" "default" {
   location = "us-central1"
 
   metadata {
-    namespace = ""
+    namespace = "%{namespace}"
   }
 
   template {

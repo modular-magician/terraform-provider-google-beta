@@ -58,7 +58,7 @@ resource "google_cloud_run_service" "default" {
   location = "us-central1"
 
   metadata {
-    namespace = ""
+    namespace = "my-project-name"
   }
 
   template {
