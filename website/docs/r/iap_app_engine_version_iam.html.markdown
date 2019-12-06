@@ -37,12 +37,12 @@ Three different resources help you manage your IAM policy for Iap AppEngineVersi
 
 ```hcl
 data "google_iam_policy" "admin" {
-	binding {
-		role = "roles/iap.httpsResourceAccessor"
-		members = [
-			"user:jane@example.com",
-		]
-	}
+  binding {
+    role = "roles/iap.httpsResourceAccessor"
+    members = [
+      "user:jane@example.com",
+    ]
+  }
 }
 
 resource "google_iap_app_engine_version_iam_policy" "editor" {
@@ -50,7 +50,7 @@ resource "google_iap_app_engine_version_iam_policy" "editor" {
 	app_id = "${google_app_engine_standard_app_version.version.project}"
 	service = "${google_app_engine_standard_app_version.version.service}"
 	version_id = "${google_app_engine_standard_app_version.version.version_id}"
-	policy_data = "${data.google_iam_policy.admin.policy_data}"
+  policy_data = "${data.google_iam_policy.admin.policy_data}"
 }
 ```
 
@@ -88,10 +88,10 @@ resource "google_iap_app_engine_version_iam_binding" "editor" {
 	app_id = "${google_app_engine_standard_app_version.version.project}"
 	service = "${google_app_engine_standard_app_version.version.service}"
 	version_id = "${google_app_engine_standard_app_version.version.version_id}"
-	role = "roles/iap.httpsResourceAccessor"
-	members = [
-		"user:jane@example.com",
-	]
+  role = "roles/iap.httpsResourceAccessor"
+  members = [
+    "user:jane@example.com",
+  ]
 }
 ```
 
@@ -123,8 +123,8 @@ resource "google_iap_app_engine_version_iam_member" "editor" {
 	app_id = "${google_app_engine_standard_app_version.version.project}"
 	service = "${google_app_engine_standard_app_version.version.service}"
 	version_id = "${google_app_engine_standard_app_version.version.version_id}"
-	role = "roles/iap.httpsResourceAccessor"
-	member = "user:jane@example.com"
+  role = "roles/iap.httpsResourceAccessor"
+  member = "user:jane@example.com"
 }
 ```
 
