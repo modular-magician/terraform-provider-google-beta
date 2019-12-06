@@ -232,12 +232,6 @@ must be unique within the subnetwork.`,
 				Computed:    true,
 				Description: `Creation timestamp in RFC3339 text format.`,
 			},
-			"fingerprint": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Description: `Fingerprint of this resource. This field is used internally during
-updates of this resource.`,
-			},
 			"gateway_address": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -333,12 +327,6 @@ func resourceComputeSubnetworkCreate(d *schema.ResourceData, meta interface{}) e
 		return err
 	} else if v, ok := d.GetOkExists("network"); !isEmptyValue(reflect.ValueOf(networkProp)) && (ok || !reflect.DeepEqual(v, networkProp)) {
 		obj["network"] = networkProp
-	}
-	fingerprintProp, err := expandComputeSubnetworkFingerprint(d.Get("fingerprint"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("fingerprint"); !isEmptyValue(reflect.ValueOf(fingerprintProp)) && (ok || !reflect.DeepEqual(v, fingerprintProp)) {
-		obj["fingerprint"] = fingerprintProp
 	}
 	purposeProp, err := expandComputeSubnetworkPurpose(d.Get("purpose"), d, config)
 	if err != nil {
@@ -451,9 +439,6 @@ func resourceComputeSubnetworkRead(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
 	if err := d.Set("network", flattenComputeSubnetworkNetwork(res["network"], d)); err != nil {
-		return fmt.Errorf("Error reading Subnetwork: %s", err)
-	}
-	if err := d.Set("fingerprint", flattenComputeSubnetworkFingerprint(res["fingerprint"], d)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
 	if err := d.Set("purpose", flattenComputeSubnetworkPurpose(res["purpose"], d)); err != nil {
@@ -766,10 +751,6 @@ func flattenComputeSubnetworkNetwork(v interface{}, d *schema.ResourceData) inte
 	return ConvertSelfLinkToV1(v.(string))
 }
 
-func flattenComputeSubnetworkFingerprint(v interface{}, d *schema.ResourceData) interface{} {
-	return v
-}
-
 func flattenComputeSubnetworkPurpose(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
@@ -855,10 +836,6 @@ func expandComputeSubnetworkNetwork(v interface{}, d TerraformResourceData, conf
 		return nil, fmt.Errorf("Invalid value for network: %s", err)
 	}
 	return f.RelativeLink(), nil
-}
-
-func expandComputeSubnetworkFingerprint(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandComputeSubnetworkPurpose(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
