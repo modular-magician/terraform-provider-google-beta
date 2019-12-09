@@ -953,7 +953,7 @@ The `weighted_backend_services` block supports:
   headerAction in the enclosing HttpRouteRule, PathMatcher and UrlMap.  Structure is documented below.
 
 * `weight` -
-  (Optional)
+  (Required)
   Specifies the fraction of traffic sent to backendService, computed as weight /
   (sum of all weightedBackendService weights in routeAction) . The selection of a
   backend service is determined only for new traffic. Once a user's request has
