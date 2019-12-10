@@ -289,7 +289,7 @@ func resourceComputeImageCreate(d *schema.ResourceData, meta interface{}) error 
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if err != nil {
-		// The resource didn't actually create
+		// Remove ID to show resource wasn't created.
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create Image: %s", err)
 	}

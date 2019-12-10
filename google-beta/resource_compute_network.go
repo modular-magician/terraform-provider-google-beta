@@ -171,7 +171,7 @@ func resourceComputeNetworkCreate(d *schema.ResourceData, meta interface{}) erro
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if err != nil {
-		// The resource didn't actually create
+		// Remove ID to show resource wasn't created.
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create Network: %s", err)
 	}
