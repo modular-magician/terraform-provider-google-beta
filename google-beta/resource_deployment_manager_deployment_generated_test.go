@@ -24,7 +24,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(t *testing.T) {
+func TestAccDeploymentManagerDeployment_deploymentManagerDeploymentBasicExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -34,57 +34,50 @@ func TestAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(t *testin
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckDataprocAutoscalingPolicyDestroy,
+		CheckDestroy: testAccCheckDeploymentManagerDeploymentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(context),
+				Config: testAccDeploymentManagerDeployment_deploymentManagerDeploymentBasicExample(context),
 			},
 			{
-				ResourceName:            "google_dataproc_autoscaling_policy.asp",
+				ResourceName:            "google_deployment_manager_deployment.deployment",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ImportStateVerifyIgnore: []string{"target", "create_policy", "delete_policy", "preview"},
 			},
 		},
 	})
 }
 
-func testAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(context map[string]interface{}) string {
+func testAccDeploymentManagerDeployment_deploymentManagerDeploymentBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
-resource "google_dataproc_cluster" "basic" {
-  name     = "tf-dataproc-test-%{random_suffix}"
-  region   = "us-central1"
+resource "google_deployment_manager_deployment" "deployment" {
+  name = "my-deployment%{random_suffix}"
 
-  cluster_config {
-    autoscaling_config {
-      policy_uri = google_dataproc_autoscaling_policy.asp.name
+  target {
+    config {
+      content = <<EOF
+resources:
+- name: my-account
+  type: iam.v1.serviceAccount
+  properties:
+    accountId: tf-dm-account%{random_suffix}
+    displayName: Test service account created by a DM Deployment, created in Terraform
+EOF
     }
   }
-}
 
-resource "google_dataproc_autoscaling_policy" "asp" {
-  policy_id = "tf-dataproc-test-%{random_suffix}"
-  location  = "us-central1"
-
-  worker_config {
-    max_instances = 3
-  }
-
-  basic_algorithm {
-    yarn_config {
-      graceful_decommission_timeout = "30s"
-
-      scale_up_factor   = 0.5
-      scale_down_factor = 0.5
-    }
+  labels {
+    key = "foo"
+    value = "foovalue"
   }
 }
 `, context)
 }
 
-func testAccCheckDataprocAutoscalingPolicyDestroy(s *terraform.State) error {
+func testAccCheckDeploymentManagerDeploymentDestroy(s *terraform.State) error {
 	for name, rs := range s.RootModule().Resources {
-		if rs.Type != "google_dataproc_autoscaling_policy" {
+		if rs.Type != "google_deployment_manager_deployment" {
 			continue
 		}
 		if strings.HasPrefix(name, "data.") {
@@ -93,14 +86,14 @@ func testAccCheckDataprocAutoscalingPolicyDestroy(s *terraform.State) error {
 
 		config := testAccProvider.Meta().(*Config)
 
-		url, err := replaceVarsForTest(config, rs, "{{DataprocBasePath}}projects/{{project}}/locations/{{location}}/autoscalingPolicies/{{policy_id}}")
+		url, err := replaceVarsForTest(config, rs, "{{DeploymentManagerBasePath}}projects/{{project}}/global/deployments/{{name}}")
 		if err != nil {
 			return err
 		}
 
 		_, err = sendRequest(config, "GET", "", url, nil)
 		if err == nil {
-			return fmt.Errorf("DataprocAutoscalingPolicy still exists at %s", url)
+			return fmt.Errorf("DeploymentManagerDeployment still exists at %s", url)
 		}
 	}
 
