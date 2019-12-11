@@ -19,8 +19,6 @@ import (
 	"log"
 	"reflect"
 	"time"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceComputeBackendServiceSignedUrlKey() *schema.Resource {

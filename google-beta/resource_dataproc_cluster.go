@@ -11,8 +11,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-
-	dataproc "google.golang.org/api/dataproc/v1beta2"
 )
 
 var (

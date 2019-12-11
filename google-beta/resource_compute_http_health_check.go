@@ -20,8 +20,6 @@ import (
 	"reflect"
 	"strconv"
 	"time"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceComputeHttpHealthCheck() *schema.Resource {

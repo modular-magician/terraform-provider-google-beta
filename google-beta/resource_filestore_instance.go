@@ -21,9 +21,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
 
 func resourceFilestoreInstance() *schema.Resource {

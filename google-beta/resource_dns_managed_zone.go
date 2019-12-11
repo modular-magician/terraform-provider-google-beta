@@ -21,10 +21,6 @@ import (
 	"reflect"
 	"strconv"
 	"time"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
 
 func resourceDNSManagedZone() *schema.Resource {

@@ -23,8 +23,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 // validatePeerAddr returns false if a tunnel's peer_ip property
