@@ -21,8 +21,6 @@ import (
 	"regexp"
 	"strconv"
 	"time"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 // compareTpuNodeSchedulingConfig diff suppresses for the default
