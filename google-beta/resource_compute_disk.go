@@ -21,10 +21,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/customdiff"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"google.golang.org/api/googleapi"
 )
 
 // Is the new disk size smaller than the old one?
