@@ -41,10 +41,9 @@ func TestAccCloudRunService_cloudRunServiceBasicExample(t *testing.T) {
 				Config: testAccCloudRunService_cloudRunServiceBasicExample(context),
 			},
 			{
-				ResourceName:            "google_cloud_run_service.default",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "location"},
+				ResourceName:      "google_cloud_run_service.default",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -89,10 +88,9 @@ func TestAccCloudRunService_cloudRunServiceSqlExample(t *testing.T) {
 				Config: testAccCloudRunService_cloudRunServiceSqlExample(context),
 			},
 			{
-				ResourceName:            "google_cloud_run_service.default",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "location"},
+				ResourceName:      "google_cloud_run_service.default",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -148,10 +146,9 @@ func TestAccCloudRunService_cloudRunServiceNoauthExample(t *testing.T) {
 				Config: testAccCloudRunService_cloudRunServiceNoauthExample(context),
 			},
 			{
-				ResourceName:            "google_cloud_run_service.default",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "location"},
+				ResourceName:      "google_cloud_run_service.default",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

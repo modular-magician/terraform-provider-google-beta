@@ -40,10 +40,9 @@ func TestAccCloudTasksQueue_queueBasicExample(t *testing.T) {
 				Config: testAccCloudTasksQueue_queueBasicExample(context),
 			},
 			{
-				ResourceName:            "google_cloud_tasks_queue.default",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ResourceName:      "google_cloud_tasks_queue.default",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

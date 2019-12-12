@@ -43,7 +43,7 @@ func TestAccFilestoreInstance_filestoreInstanceBasicExample(t *testing.T) {
 				ResourceName:            "google_filestore_instance.instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "zone"},
+				ImportStateVerifyIgnore: []string{"zone"},
 			},
 		},
 	})

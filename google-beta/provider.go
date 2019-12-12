@@ -237,14 +237,6 @@ func Provider() terraform.ResourceProvider {
 					"GOOGLE_DATAPROC_CUSTOM_ENDPOINT",
 				}, DataprocDefaultBasePath),
 			},
-			"deployment_manager_custom_endpoint": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateCustomEndpoint,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
-					"GOOGLE_DEPLOYMENT_MANAGER_CUSTOM_ENDPOINT",
-				}, DeploymentManagerDefaultBasePath),
-			},
 			"dns_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -512,9 +504,9 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
-// Generated resources: 104
+// Generated resources: 103
 // Generated IAM resources: 42
-// Total generated resources: 146
+// Total generated resources: 145
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -610,7 +602,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_container_analysis_note":                   resourceContainerAnalysisNote(),
 			"google_data_fusion_instance":                      resourceDataFusionInstance(),
 			"google_dataproc_autoscaling_policy":               resourceDataprocAutoscalingPolicy(),
-			"google_deployment_manager_deployment":             resourceDeploymentManagerDeployment(),
 			"google_dns_managed_zone":                          resourceDNSManagedZone(),
 			"google_dns_policy":                                resourceDNSPolicy(),
 			"google_filestore_instance":                        resourceFilestoreInstance(),
@@ -853,7 +844,6 @@ func providerConfigure(d *schema.ResourceData, terraformVersion string) (interfa
 	config.ContainerAnalysisBasePath = d.Get("container_analysis_custom_endpoint").(string)
 	config.DataFusionBasePath = d.Get("data_fusion_custom_endpoint").(string)
 	config.DataprocBasePath = d.Get("dataproc_custom_endpoint").(string)
-	config.DeploymentManagerBasePath = d.Get("deployment_manager_custom_endpoint").(string)
 	config.DNSBasePath = d.Get("dns_custom_endpoint").(string)
 	config.FilestoreBasePath = d.Get("filestore_custom_endpoint").(string)
 	config.FirestoreBasePath = d.Get("firestore_custom_endpoint").(string)

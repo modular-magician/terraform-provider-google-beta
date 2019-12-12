@@ -40,10 +40,9 @@ func TestAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(t *testin
 				Config: testAccDataprocAutoscalingPolicy_dataprocAutoscalingPolicyExample(context),
 			},
 			{
-				ResourceName:            "google_dataproc_autoscaling_policy.asp",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ResourceName:      "google_dataproc_autoscaling_policy.asp",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
