@@ -452,7 +452,7 @@ func resourceSpannerInstanceUpdateEncoder(d *schema.ResourceData, meta interface
 	return newObj, nil
 }
 
-func resourceSpannerInstanceDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourceSpannerInstanceDecoder(d *schema.ResourceData, meta interface{}) {
 	config := meta.(*Config)
 	d.SetId(res["name"].(string))
 	if err := parseImportId([]string{"projects/(?P<project>[^/]+)/instances/(?P<name>[^/]+)"}, d, config); err != nil {

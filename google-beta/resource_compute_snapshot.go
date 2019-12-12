@@ -636,7 +636,7 @@ func expandComputeSnapshotSourceDiskEncryptionKeyRawKey(v interface{}, d Terrafo
 	return v, nil
 }
 
-func resourceComputeSnapshotDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourceComputeSnapshotDecoder(d *schema.ResourceData, meta interface{}) {
 	d.Set("source_disk_link", ConvertSelfLinkToV1(res["sourceDisk"].(string)))
 	return res, nil
 }

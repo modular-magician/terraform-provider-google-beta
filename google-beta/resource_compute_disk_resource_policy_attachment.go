@@ -321,7 +321,7 @@ func resourceComputeDiskResourcePolicyAttachmentFindNestedObjectInList(d *schema
 	}
 	return -1, nil, nil
 }
-func resourceComputeDiskResourcePolicyAttachmentDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourceComputeDiskResourcePolicyAttachmentDecoder(d *schema.ResourceData, meta interface{}) {
 	res["name"] = GetResourceNameFromSelfLink(res["name"].(string))
 	return res, nil
 }

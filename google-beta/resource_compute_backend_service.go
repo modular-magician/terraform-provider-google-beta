@@ -3028,7 +3028,7 @@ func resourceComputeBackendServiceEncoder(d *schema.ResourceData, meta interface
 	return obj, nil
 }
 
-func resourceComputeBackendServiceDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourceComputeBackendServiceDecoder(d *schema.ResourceData, meta interface{}) {
 	// We need to pretend IAP isn't there if it's disabled for Terraform to maintain
 	// BC behaviour with the handwritten resource.
 	v, ok := res["iap"]
