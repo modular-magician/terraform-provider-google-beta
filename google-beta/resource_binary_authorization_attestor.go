@@ -614,7 +614,7 @@ func resourceBinaryAuthorizationAttestorEncoder(d *schema.ResourceData, meta int
 	return obj, nil
 }
 
-func resourceBinaryAuthorizationAttestorDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourceBinaryAuthorizationAttestorDecoder(d *schema.ResourceData, meta interface{}) {
 	// decoder logic only in GA provider
 
 	return res, nil

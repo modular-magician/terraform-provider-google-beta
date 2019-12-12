@@ -1375,7 +1375,7 @@ func resourceComputeDiskEncoder(d *schema.ResourceData, meta interface{}, obj ma
 	return obj, nil
 }
 
-func resourceComputeDiskDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourceComputeDiskDecoder(d *schema.ResourceData, meta interface{}) {
 	if v, ok := res["diskEncryptionKey"]; ok {
 		original := v.(map[string]interface{})
 		transformed := make(map[string]interface{})

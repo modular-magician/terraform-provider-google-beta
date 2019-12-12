@@ -200,7 +200,7 @@ func resourceKMSKeyRingEncoder(d *schema.ResourceData, meta interface{}, obj map
 	return nil, nil
 }
 
-func resourceKMSKeyRingDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourceKMSKeyRingDecoder(d *schema.ResourceData, meta interface{}) {
 	// Take the returned long form of the name and use it as `self_link`.
 	// Then modify the name to be the user specified form.
 	// We can't just ignore_read on `name` as the linter will

@@ -360,7 +360,7 @@ func resourceResourceManagerLienFindNestedObjectInList(d *schema.ResourceData, m
 	}
 	return -1, nil, nil
 }
-func resourceResourceManagerLienDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourceResourceManagerLienDecoder(d *schema.ResourceData, meta interface{}) {
 	// The problem we're trying to solve here is that this property is a Project,
 	// and there are a lot of ways to specify a Project, including the ID vs
 	// Number, which is something that we can't address in a diffsuppress.

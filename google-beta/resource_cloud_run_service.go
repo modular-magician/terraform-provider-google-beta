@@ -1982,7 +1982,7 @@ func resourceCloudRunServiceEncoder(d *schema.ResourceData, meta interface{}, ob
 	return obj, nil
 }
 
-func resourceCloudRunServiceDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourceCloudRunServiceDecoder(d *schema.ResourceData, meta interface{}) {
 	// metadata is not present if the API returns an error
 	if obj, ok := res["metadata"]; ok {
 		if meta, ok := obj.(map[string]interface{}); ok {

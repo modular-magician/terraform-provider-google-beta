@@ -411,7 +411,7 @@ func resourceComputeNetworkEndpointFindNestedObjectInList(d *schema.ResourceData
 	}
 	return -1, nil, nil
 }
-func resourceComputeNetworkEndpointDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourceComputeNetworkEndpointDecoder(d *schema.ResourceData, meta interface{}) {
 	v, ok := res["networkEndpoint"]
 	if !ok || v == nil {
 		return res, nil

@@ -371,7 +371,7 @@ func resourceContainerAnalysisNoteEncoder(d *schema.ResourceData, meta interface
 	return obj, nil
 }
 
-func resourceContainerAnalysisNoteDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourceContainerAnalysisNoteDecoder(d *schema.ResourceData, meta interface{}) {
 	// decoder logic only in GA provider
 
 	return res, nil

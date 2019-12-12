@@ -791,7 +791,7 @@ func resourcePubsubSubscriptionUpdateEncoder(d *schema.ResourceData, meta interf
 	return newObj, nil
 }
 
-func resourcePubsubSubscriptionDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+func resourcePubsubSubscriptionDecoder(d *schema.ResourceData, meta interface{}) {
 
 	// path is a derived field from the API-side `name`
 	path := fmt.Sprintf("projects/%s/subscriptions/%s", d.Get("project"), d.Get("name"))
