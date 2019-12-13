@@ -50,7 +50,7 @@ resource "google_compute_region_url_map" "regionurlmap" {
 
   region = "us-central1"
 
-  name        = "regionurlmap%{random_suffix}"
+  name        = "regionurlmap%<random_suffix>s"
   description = "a description"
 
   default_service = google_compute_region_backend_service.home.self_link
@@ -87,7 +87,7 @@ resource "google_compute_region_backend_service" "login" {
 
   region = "us-central1"
 
-  name        = "login%{random_suffix}"
+  name        = "login%<random_suffix>s"
   protocol    = "HTTP"
   timeout_sec = 10
 
@@ -99,7 +99,7 @@ resource "google_compute_region_backend_service" "home" {
 
   region = "us-central1"
 
-  name        = "home%{random_suffix}"
+  name        = "home%<random_suffix>s"
   protocol    = "HTTP"
   timeout_sec = 10
 
@@ -111,7 +111,7 @@ resource "google_compute_region_health_check" "default" {
 
   region = "us-central1"
 
-  name               = "health-check%{random_suffix}"
+  name               = "health-check%<random_suffix>s"
   check_interval_sec = 1
   timeout_sec        = 1
   http_health_check {
@@ -145,7 +145,7 @@ func testAccComputeRegionUrlMap_regionUrlMapL7IlbPathExample(context map[string]
 	return Nprintf(`
 resource "google_compute_region_url_map" "regionurlmap" {
   provider = "google-beta"
-  name        = "regionurlmap%{random_suffix}"
+  name        = "regionurlmap%<random_suffix>s"
   description = "a description"
   default_service = google_compute_region_backend_service.home.self_link
 
@@ -232,7 +232,7 @@ resource "google_compute_region_url_map" "regionurlmap" {
 
 resource "google_compute_region_backend_service" "home" {
   provider = "google-beta"
-  name        = "home%{random_suffix}"
+  name        = "home%<random_suffix>s"
   protocol    = "HTTP"
   timeout_sec = 10
 
@@ -242,7 +242,7 @@ resource "google_compute_region_backend_service" "home" {
 
 resource "google_compute_region_health_check" "default" {
   provider = "google-beta"
-  name               = "health-check%{random_suffix}"
+  name               = "health-check%<random_suffix>s"
   http_health_check {
     port = 80
   }
@@ -273,7 +273,7 @@ func testAccComputeRegionUrlMap_regionUrlMapL7IlbPathPartialExample(context map[
 	return Nprintf(`
 resource "google_compute_region_url_map" "regionurlmap" {
   provider = "google-beta"
-  name        = "regionurlmap%{random_suffix}"
+  name        = "regionurlmap%<random_suffix>s"
   description = "a description"
   default_service = google_compute_region_backend_service.home.self_link
 
@@ -328,7 +328,7 @@ resource "google_compute_region_url_map" "regionurlmap" {
 
 resource "google_compute_region_backend_service" "home" {
   provider = "google-beta"
-  name        = "home%{random_suffix}"
+  name        = "home%<random_suffix>s"
   protocol    = "HTTP"
   timeout_sec = 10
 
@@ -338,7 +338,7 @@ resource "google_compute_region_backend_service" "home" {
 
 resource "google_compute_region_health_check" "default" {
   provider = "google-beta"
-  name               = "health-check%{random_suffix}"
+  name               = "health-check%<random_suffix>s"
   http_health_check {
     port = 80
   }
@@ -369,7 +369,7 @@ func testAccComputeRegionUrlMap_regionUrlMapL7IlbRouteExample(context map[string
 	return Nprintf(`
 resource "google_compute_region_url_map" "regionurlmap" {
   provider        = "google-beta"
-  name            = "regionurlmap%{random_suffix}"
+  name            = "regionurlmap%<random_suffix>s"
   description     = "a description"
   default_service = google_compute_region_backend_service.home.self_link
 
@@ -437,7 +437,7 @@ resource "google_compute_region_url_map" "regionurlmap" {
 
 resource "google_compute_region_backend_service" "home" {
   provider    = "google-beta"
-  name        = "home%{random_suffix}"
+  name        = "home%<random_suffix>s"
   protocol    = "HTTP"
   timeout_sec = 10
 
@@ -447,7 +447,7 @@ resource "google_compute_region_backend_service" "home" {
 
 resource "google_compute_region_health_check" "default" {
   provider = "google-beta"
-  name     = "health-check%{random_suffix}"
+  name     = "health-check%<random_suffix>s"
   http_health_check {
     port = 80
   }
@@ -478,7 +478,7 @@ func testAccComputeRegionUrlMap_regionUrlMapL7IlbRoutePartialExample(context map
 	return Nprintf(`
 resource "google_compute_region_url_map" "regionurlmap" {
   provider = "google-beta"
-  name        = "regionurlmap%{random_suffix}"
+  name        = "regionurlmap%<random_suffix>s"
   description = "a description"
   default_service = google_compute_region_backend_service.home.self_link
 
@@ -521,7 +521,7 @@ resource "google_compute_region_url_map" "regionurlmap" {
 
 resource "google_compute_region_backend_service" "home" {
   provider = "google-beta"
-  name        = "home%{random_suffix}"
+  name        = "home%<random_suffix>s"
   protocol    = "HTTP"
   timeout_sec = 10
 
@@ -531,7 +531,7 @@ resource "google_compute_region_backend_service" "home" {
 
 resource "google_compute_region_health_check" "default" {
   provider = "google-beta"
-  name               = "health-check%{random_suffix}"
+  name               = "health-check%<random_suffix>s"
   http_health_check {
     port = 80
   }

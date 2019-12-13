@@ -111,7 +111,7 @@ func TestAccPubsubTopicIamPolicyGenerated(t *testing.T) {
 func testAccPubsubTopicIamMember_basicGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_pubsub_topic" "example" {
-  name = "example-topic%{random_suffix}"
+  name = "example-topic%<random_suffix>s"
 
   labels = {
     foo = "bar"
@@ -130,7 +130,7 @@ resource "google_pubsub_topic_iam_member" "foo" {
 func testAccPubsubTopicIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_pubsub_topic" "example" {
-  name = "example-topic%{random_suffix}"
+  name = "example-topic%<random_suffix>s"
 
   labels = {
     foo = "bar"
@@ -155,7 +155,7 @@ resource "google_pubsub_topic_iam_policy" "foo" {
 func testAccPubsubTopicIamBinding_basicGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_pubsub_topic" "example" {
-  name = "example-topic%{random_suffix}"
+  name = "example-topic%<random_suffix>s"
 
   labels = {
     foo = "bar"
@@ -174,7 +174,7 @@ resource "google_pubsub_topic_iam_binding" "foo" {
 func testAccPubsubTopicIamBinding_updateGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_pubsub_topic" "example" {
-  name = "example-topic%{random_suffix}"
+  name = "example-topic%<random_suffix>s"
 
   labels = {
     foo = "bar"

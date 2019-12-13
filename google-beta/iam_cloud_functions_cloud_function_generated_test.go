@@ -114,7 +114,7 @@ func TestAccCloudFunctionsCloudFunctionIamPolicyGenerated(t *testing.T) {
 func testAccCloudFunctionsCloudFunctionIamMember_basicGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name = "tf-cloudfunctions-function-example-bucket%{random_suffix}"
+  name = "tf-cloudfunctions-function-example-bucket%<random_suffix>s"
 }
 
 resource "google_storage_bucket_object" "archive" {
@@ -124,7 +124,7 @@ resource "google_storage_bucket_object" "archive" {
 }
 
 resource "google_cloudfunctions_function" "function" {
-  name        = "my-function%{random_suffix}"
+  name        = "my-function%<random_suffix>s"
   description = "My function"
   runtime     = "nodejs10"
 
@@ -149,7 +149,7 @@ resource "google_cloudfunctions_function_iam_member" "foo" {
 func testAccCloudFunctionsCloudFunctionIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name = "tf-cloudfunctions-function-example-bucket%{random_suffix}"
+  name = "tf-cloudfunctions-function-example-bucket%<random_suffix>s"
 }
 
 resource "google_storage_bucket_object" "archive" {
@@ -159,7 +159,7 @@ resource "google_storage_bucket_object" "archive" {
 }
 
 resource "google_cloudfunctions_function" "function" {
-  name        = "my-function%{random_suffix}"
+  name        = "my-function%<random_suffix>s"
   description = "My function"
   runtime     = "nodejs10"
 
@@ -190,7 +190,7 @@ resource "google_cloudfunctions_function_iam_policy" "foo" {
 func testAccCloudFunctionsCloudFunctionIamBinding_basicGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name = "tf-cloudfunctions-function-example-bucket%{random_suffix}"
+  name = "tf-cloudfunctions-function-example-bucket%<random_suffix>s"
 }
 
 resource "google_storage_bucket_object" "archive" {
@@ -200,7 +200,7 @@ resource "google_storage_bucket_object" "archive" {
 }
 
 resource "google_cloudfunctions_function" "function" {
-  name        = "my-function%{random_suffix}"
+  name        = "my-function%<random_suffix>s"
   description = "My function"
   runtime     = "nodejs10"
 
@@ -225,7 +225,7 @@ resource "google_cloudfunctions_function_iam_binding" "foo" {
 func testAccCloudFunctionsCloudFunctionIamBinding_updateGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name = "tf-cloudfunctions-function-example-bucket%{random_suffix}"
+  name = "tf-cloudfunctions-function-example-bucket%<random_suffix>s"
 }
 
 resource "google_storage_bucket_object" "archive" {
@@ -235,7 +235,7 @@ resource "google_storage_bucket_object" "archive" {
 }
 
 resource "google_cloudfunctions_function" "function" {
-  name        = "my-function%{random_suffix}"
+  name        = "my-function%<random_suffix>s"
   description = "My function"
   runtime     = "nodejs10"
 

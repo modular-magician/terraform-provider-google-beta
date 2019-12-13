@@ -48,7 +48,7 @@ func testAccComputeRegionAutoscaler_regionAutoscalerBetaExample(context map[stri
 resource "google_compute_region_autoscaler" "foobar" {
   provider = google-beta
 
-  name   = "my-region-autoscaler%{random_suffix}"
+  name   = "my-region-autoscaler%<random_suffix>s"
   region = "us-central1"
   target = google_compute_region_instance_group_manager.foobar.self_link
 
@@ -66,7 +66,7 @@ resource "google_compute_region_autoscaler" "foobar" {
 resource "google_compute_instance_template" "foobar" {
   provider = google-beta
 
-  name           = "my-instance-template%{random_suffix}"
+  name           = "my-instance-template%<random_suffix>s"
   machine_type   = "n1-standard-1"
   can_ip_forward = false
 
@@ -92,13 +92,13 @@ resource "google_compute_instance_template" "foobar" {
 resource "google_compute_target_pool" "foobar" {
   provider = google-beta
 
-  name = "my-target-pool%{random_suffix}"
+  name = "my-target-pool%<random_suffix>s"
 }
 
 resource "google_compute_region_instance_group_manager" "foobar" {
   provider = google-beta
 
-  name   = "my-region-igm%{random_suffix}"
+  name   = "my-region-igm%<random_suffix>s"
   region = "us-central1"
 
   version {
@@ -151,7 +151,7 @@ func TestAccComputeRegionAutoscaler_regionAutoscalerBasicExample(t *testing.T) {
 func testAccComputeRegionAutoscaler_regionAutoscalerBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_compute_region_autoscaler" "foobar" {
-  name   = "my-region-autoscaler%{random_suffix}"
+  name   = "my-region-autoscaler%<random_suffix>s"
   region = "us-central1"
   target = google_compute_region_instance_group_manager.foobar.self_link
 
@@ -167,7 +167,7 @@ resource "google_compute_region_autoscaler" "foobar" {
 }
 
 resource "google_compute_instance_template" "foobar" {
-  name           = "my-instance-template%{random_suffix}"
+  name           = "my-instance-template%<random_suffix>s"
   machine_type   = "n1-standard-1"
   can_ip_forward = false
 
@@ -191,11 +191,11 @@ resource "google_compute_instance_template" "foobar" {
 }
 
 resource "google_compute_target_pool" "foobar" {
-  name = "my-target-pool%{random_suffix}"
+  name = "my-target-pool%<random_suffix>s"
 }
 
 resource "google_compute_region_instance_group_manager" "foobar" {
-  name   = "my-region-igm%{random_suffix}"
+  name   = "my-region-igm%<random_suffix>s"
   region = "us-central1"
 
   version {

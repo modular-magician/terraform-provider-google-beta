@@ -51,7 +51,7 @@ func TestAccComputeResourcePolicy_resourcePolicyBasicExample(t *testing.T) {
 func testAccComputeResourcePolicy_resourcePolicyBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_compute_resource_policy" "foo" {
-  name   = "policy%{random_suffix}"
+  name   = "policy%<random_suffix>s"
   region = "us-central1"
   snapshot_schedule_policy {
     schedule {
@@ -92,7 +92,7 @@ func TestAccComputeResourcePolicy_resourcePolicyFullExample(t *testing.T) {
 func testAccComputeResourcePolicy_resourcePolicyFullExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_compute_resource_policy" "bar" {
-  name   = "policy%{random_suffix}"
+  name   = "policy%<random_suffix>s"
   region = "us-central1"
   snapshot_schedule_policy {
     schedule {

@@ -51,7 +51,7 @@ func TestAccPubsubTopic_pubsubTopicBasicExample(t *testing.T) {
 func testAccPubsubTopic_pubsubTopicBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_pubsub_topic" "example" {
-  name = "example-topic%{random_suffix}"
+  name = "example-topic%<random_suffix>s"
 
   labels = {
     foo = "bar"
@@ -87,7 +87,7 @@ func TestAccPubsubTopic_pubsubTopicGeoRestrictedExample(t *testing.T) {
 func testAccPubsubTopic_pubsubTopicGeoRestrictedExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_pubsub_topic" "example" {
-  name = "example-topic%{random_suffix}"
+  name = "example-topic%<random_suffix>s"
 
   message_storage_policy {
     allowed_persistence_regions = [

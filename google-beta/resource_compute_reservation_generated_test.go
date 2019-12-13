@@ -51,7 +51,7 @@ func TestAccComputeReservation_reservationBasicExample(t *testing.T) {
 func testAccComputeReservation_reservationBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_compute_reservation" "gce_reservation" {
-  name = "gce-reservation%{random_suffix}"
+  name = "gce-reservation%<random_suffix>s"
   zone = "us-central1-a"
 
   specific_reservation {

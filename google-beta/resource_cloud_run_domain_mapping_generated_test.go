@@ -55,7 +55,7 @@ func testAccCloudRunDomainMapping_cloudRunDomainMappingBasicExample(context map[
 	return Nprintf(`
 
 resource "google_cloud_run_service" "default" {
-  name     = "tftest-cloudrun%{random_suffix}"
+  name     = "tftest-cloudrun%<random_suffix>s"
   location = "us-central1"
 
   metadata {

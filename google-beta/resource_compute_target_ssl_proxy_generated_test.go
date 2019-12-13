@@ -51,25 +51,25 @@ func TestAccComputeTargetSslProxy_targetSslProxyBasicExample(t *testing.T) {
 func testAccComputeTargetSslProxy_targetSslProxyBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_compute_target_ssl_proxy" "default" {
-  name             = "test-proxy%{random_suffix}"
+  name             = "test-proxy%<random_suffix>s"
   backend_service  = google_compute_backend_service.default.self_link
   ssl_certificates = [google_compute_ssl_certificate.default.self_link]
 }
 
 resource "google_compute_ssl_certificate" "default" {
-  name        = "default-cert%{random_suffix}"
+  name        = "default-cert%<random_suffix>s"
   private_key = file("test-fixtures/ssl_cert/test.key")
   certificate = file("test-fixtures/ssl_cert/test.crt")
 }
 
 resource "google_compute_backend_service" "default" {
-  name          = "backend-service%{random_suffix}"
+  name          = "backend-service%<random_suffix>s"
   protocol      = "SSL"
   health_checks = [google_compute_health_check.default.self_link]
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "health-check%{random_suffix}"
+  name               = "health-check%<random_suffix>s"
   check_interval_sec = 1
   timeout_sec        = 1
   tcp_health_check {
