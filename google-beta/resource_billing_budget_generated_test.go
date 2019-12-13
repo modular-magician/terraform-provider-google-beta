@@ -54,7 +54,7 @@ data "google_billing_account" "account" {
 resource "google_billing_budget" "budget" {
   provider = google-beta
   billing_account = data.google_billing_account.account.id
-  display_name = "Example Billing Budget%{random_suffix}"
+  display_name = "Example Billing Budget%<random_suffix>s"
   amount {
     specified_amount {
       currency_code = "USD"
@@ -98,7 +98,7 @@ data "google_billing_account" "account" {
 resource "google_billing_budget" "budget" {
   provider = google-beta
   billing_account = data.google_billing_account.account.id
-  display_name = "Example Billing Budget%{random_suffix}"
+  display_name = "Example Billing Budget%<random_suffix>s"
 
   budget_filter {
     projects = ["projects/example-project"]

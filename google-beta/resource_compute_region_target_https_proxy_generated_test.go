@@ -49,7 +49,7 @@ resource "google_compute_region_target_https_proxy" "default" {
   provider = google-beta
 
   region           = "us-central1"
-  name             = "test-proxy%{random_suffix}"
+  name             = "test-proxy%<random_suffix>s"
   url_map          = google_compute_region_url_map.default.self_link
   ssl_certificates = [google_compute_region_ssl_certificate.default.self_link]
 }
@@ -58,7 +58,7 @@ resource "google_compute_region_ssl_certificate" "default" {
   provider = google-beta
 
   region      = "us-central1"
-  name        = "my-certificate%{random_suffix}"
+  name        = "my-certificate%<random_suffix>s"
   private_key = file("test-fixtures/ssl_cert/test.key")
   certificate = file("test-fixtures/ssl_cert/test.crt")
 }
@@ -67,7 +67,7 @@ resource "google_compute_region_url_map" "default" {
   provider = google-beta
 
   region      = "us-central1"
-  name        = "url-map%{random_suffix}"
+  name        = "url-map%<random_suffix>s"
   description = "a description"
 
   default_service = google_compute_region_backend_service.default.self_link
@@ -92,7 +92,7 @@ resource "google_compute_region_backend_service" "default" {
   provider = google-beta
 
   region      = "us-central1"
-  name        = "backend-service%{random_suffix}"
+  name        = "backend-service%<random_suffix>s"
   protocol    = "HTTP"
   timeout_sec = 10
 
@@ -103,7 +103,7 @@ resource "google_compute_region_health_check" "default" {
   provider = google-beta
 
   region = "us-central1"
-  name   = "http-health-check%{random_suffix}"
+  name   = "http-health-check%<random_suffix>s"
   http_health_check {
     port = 80
   }

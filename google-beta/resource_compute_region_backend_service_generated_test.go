@@ -51,7 +51,7 @@ func TestAccComputeRegionBackendService_regionBackendServiceBasicExample(t *test
 func testAccComputeRegionBackendService_regionBackendServiceBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  name                            = "region-backend-service%{random_suffix}"
+  name                            = "region-backend-service%<random_suffix>s"
   region                          = "us-central1"
   health_checks                   = [google_compute_health_check.default.self_link]
   connection_draining_timeout_sec = 10
@@ -59,7 +59,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "health-check%{random_suffix}"
+  name               = "health-check%<random_suffix>s"
   check_interval_sec = 1
   timeout_sec        = 1
 
@@ -95,7 +95,7 @@ resource "google_compute_region_backend_service" "default" {
   provider = "google-beta"
 
   region = "us-central1"
-  name = "region-backend-service%{random_suffix}"
+  name = "region-backend-service%<random_suffix>s"
   health_checks = ["${google_compute_health_check.health_check.self_link}"]
   protocol = "HTTP"
   load_balancing_scheme = "INTERNAL_MANAGED"
@@ -105,7 +105,7 @@ resource "google_compute_region_backend_service" "default" {
 resource "google_compute_health_check" "health_check" {
   provider = "google-beta"
 
-  name               = "health-check%{random_suffix}"
+  name               = "health-check%<random_suffix>s"
   http_health_check {
     port = 80
   }
@@ -138,7 +138,7 @@ resource "google_compute_region_backend_service" "default" {
   provider = "google-beta"
 
   region = "us-central1"
-  name = "region-backend-service%{random_suffix}"
+  name = "region-backend-service%<random_suffix>s"
   health_checks = ["${google_compute_health_check.health_check.self_link}"]
   load_balancing_scheme = "INTERNAL_MANAGED"
   locality_lb_policy = "RING_HASH"
@@ -164,7 +164,7 @@ resource "google_compute_region_backend_service" "default" {
 resource "google_compute_health_check" "health_check" {
   provider = "google-beta"
 
-  name               = "health-check%{random_suffix}"
+  name               = "health-check%<random_suffix>s"
   http_health_check {
     port = 80
   }

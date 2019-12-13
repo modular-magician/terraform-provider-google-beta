@@ -53,7 +53,7 @@ func TestAccCloudRunService_cloudRunServiceBasicExample(t *testing.T) {
 func testAccCloudRunService_cloudRunServiceBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloud_run_service" "default" {
-  name     = "tftest-cloudrun%{random_suffix}"
+  name     = "tftest-cloudrun%<random_suffix>s"
   location = "us-central1"
 
   template {
@@ -101,7 +101,7 @@ func TestAccCloudRunService_cloudRunServiceSqlExample(t *testing.T) {
 func testAccCloudRunService_cloudRunServiceSqlExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloud_run_service" "default" {
-  name     = "tftest-cloudrun%{random_suffix}"
+  name     = "tftest-cloudrun%<random_suffix>s"
   location = "us-central1"
 
   template {
@@ -122,7 +122,7 @@ resource "google_cloud_run_service" "default" {
 }
 
 resource "google_sql_database_instance" "instance" {
-  name   = "cloudrun-sql%{random_suffix}"
+  name   = "cloudrun-sql%<random_suffix>s"
   region = "us-east1"
   settings {
     tier = "D0"
@@ -160,7 +160,7 @@ func TestAccCloudRunService_cloudRunServiceNoauthExample(t *testing.T) {
 func testAccCloudRunService_cloudRunServiceNoauthExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloud_run_service" "default" {
-  name     = "tftest-cloudrun%{random_suffix}"
+  name     = "tftest-cloudrun%<random_suffix>s"
   location = "us-central1"
 
   template {

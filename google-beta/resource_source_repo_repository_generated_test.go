@@ -51,7 +51,7 @@ func TestAccSourceRepoRepository_sourcerepoRepositoryBasicExample(t *testing.T) 
 func testAccSourceRepoRepository_sourcerepoRepositoryBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_sourcerepo_repository" "my-repo" {
-  name = "my-repository%{random_suffix}"
+  name = "my-repository%<random_suffix>s"
 }
 `, context)
 }
@@ -83,16 +83,16 @@ func TestAccSourceRepoRepository_sourcerepoRepositoryFullExample(t *testing.T) {
 func testAccSourceRepoRepository_sourcerepoRepositoryFullExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_service_account" "test-account" {
-  account_id   = "my-account%{random_suffix}"
+  account_id   = "my-account%<random_suffix>s"
   display_name = "Test Service Account"
 }
 
 resource "google_pubsub_topic" "topic" {
-  name     = "my-topic%{random_suffix}"
+  name     = "my-topic%<random_suffix>s"
 }
 
 resource "google_sourcerepo_repository" "my-repo" {
-  name = "my-repository%{random_suffix}"
+  name = "my-repository%<random_suffix>s"
   pubsub_configs {
       topic = google_pubsub_topic.topic.id
       message_format = "JSON"

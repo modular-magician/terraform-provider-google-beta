@@ -47,7 +47,7 @@ func testAccDataFusionInstance_dataFusionInstanceBasicExample(context map[string
 	return Nprintf(`
 resource "google_data_fusion_instance" "basic_instance" {
   provider = "google-beta"
-  name = "my-instance%{random_suffix}"
+  name = "my-instance%<random_suffix>s"
   region = "us-central1"
   type = "BASIC"
 }
@@ -77,7 +77,7 @@ func testAccDataFusionInstance_dataFusionInstanceFullExample(context map[string]
 	return Nprintf(`
 resource "google_data_fusion_instance" "extended_instance" {
   provider = "google-beta"
-  name = "my-instance%{random_suffix}"
+  name = "my-instance%<random_suffix>s"
   description = "My Data Fusion instance"
   region = "us-central1"
   type = "BASIC"

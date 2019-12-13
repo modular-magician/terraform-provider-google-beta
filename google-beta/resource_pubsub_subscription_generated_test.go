@@ -51,11 +51,11 @@ func TestAccPubsubSubscription_pubsubSubscriptionPullExample(t *testing.T) {
 func testAccPubsubSubscription_pubsubSubscriptionPullExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_pubsub_topic" "example" {
-  name = "example-topic%{random_suffix}"
+  name = "example-topic%<random_suffix>s"
 }
 
 resource "google_pubsub_subscription" "example" {
-  name  = "example-subscription%{random_suffix}"
+  name  = "example-subscription%<random_suffix>s"
   topic = google_pubsub_topic.example.name
 
   labels = {
