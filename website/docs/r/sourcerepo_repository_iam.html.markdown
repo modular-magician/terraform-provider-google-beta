@@ -112,9 +112,8 @@ exported:
 
 For all import syntaxes, the "resource in question" can take any of the following forms:
 
-* projects/{{project}}/repos/{{name}}
-* {{project}}/{{name}}
-* {{name}}
+* projects/{{project}}/repos/{{%name}}
+* {{%name}}
 
 Any variables not passed in the import command will be taken from the provider configuration.
 
@@ -127,12 +126,12 @@ $ terraform import google_sourcerepo_repository_iam_member.editor "projects/{{pr
 
 IAM binding imports use space-delimited identifiers: the resource in question and the role, e.g.
 ```
-$ terraform import google_sourcerepo_repository_iam_binding.editor "projects/{{project}}/repos/{{repository}} roles/viewer"
+$ terraform import google_sourcerepo_repository_iam_binding.editor "projects/{{project}}/repos/{{%name}} roles/viewer"
 ```
 
 IAM policy imports use the identifier of the resource in question, e.g.
 ```
-$ terraform import google_sourcerepo_repository_iam_policy.editor projects/{{project}}/repos/{{repository}}
+$ terraform import google_sourcerepo_repository_iam_policy.editor projects/{{project}}/repos/{{%name}}
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`
