@@ -113,6 +113,7 @@ exported:
 For all import syntaxes, the "resource in question" can take any of the following forms:
 
 * projects/{{project}}/repos/{{name}}
+* {{project}}/{{name}}
 * {{name}}
 
 Any variables not passed in the import command will be taken from the provider configuration.
