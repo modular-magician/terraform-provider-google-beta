@@ -119,7 +119,6 @@ func ResourceIamPolicyDelete(newUpdaterFunc newResourceIamUpdaterFunc) schema.De
 		if v, ok := d.GetOk("etag"); ok {
 			pol.Etag = v.(string)
 		}
-		pol.Version = iamPolicyVersion
 		err = updater.SetResourceIamPolicy(pol)
 		if err != nil {
 			return err
