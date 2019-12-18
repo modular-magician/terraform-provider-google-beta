@@ -821,7 +821,7 @@ func resourceMonitoringAlertPolicyRead(d *schema.ResourceData, meta interface{})
 	if err != nil {
 		return err
 	}
-	res, err := sendRequest(config, "GET", project, url, nil, isMonitoringRetryableError)
+	res, err := sendRequest(config, "GET", project, url, nil)
 	if err != nil {
 		return handleNotFoundError(err, d, fmt.Sprintf("MonitoringAlertPolicy %q", d.Id()))
 	}
@@ -961,7 +961,7 @@ func resourceMonitoringAlertPolicyUpdate(d *schema.ResourceData, meta interface{
 	if err != nil {
 		return err
 	}
-	_, err = sendRequestWithTimeout(config, "PATCH", project, url, obj, d.Timeout(schema.TimeoutUpdate), isMonitoringRetryableError)
+	_, err = sendRequestWithTimeout(config, "PATCH", project, url, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating AlertPolicy %q: %s", d.Id(), err)
@@ -993,7 +993,7 @@ func resourceMonitoringAlertPolicyDelete(d *schema.ResourceData, meta interface{
 	var obj map[string]interface{}
 	log.Printf("[DEBUG] Deleting AlertPolicy %q", d.Id())
 
-	res, err := sendRequestWithTimeout(config, "DELETE", project, url, obj, d.Timeout(schema.TimeoutDelete), isMonitoringRetryableError)
+	res, err := sendRequestWithTimeout(config, "DELETE", project, url, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return handleNotFoundError(err, d, "AlertPolicy")
 	}

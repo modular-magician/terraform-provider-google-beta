@@ -212,7 +212,7 @@ func resourceBigqueryDataTransferConfigRead(d *schema.ResourceData, meta interfa
 	if err != nil {
 		return err
 	}
-	res, err := sendRequest(config, "GET", project, url, nil, iamMemberMissing)
+	res, err := sendRequest(config, "GET", project, url, nil)
 	if err != nil {
 		return handleNotFoundError(err, d, fmt.Sprintf("BigqueryDataTransferConfig %q", d.Id()))
 	}
@@ -322,7 +322,7 @@ func resourceBigqueryDataTransferConfigUpdate(d *schema.ResourceData, meta inter
 	if err != nil {
 		return err
 	}
-	_, err = sendRequestWithTimeout(config, "PATCH", project, url, obj, d.Timeout(schema.TimeoutUpdate), iamMemberMissing)
+	_, err = sendRequestWithTimeout(config, "PATCH", project, url, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating Config %q: %s", d.Id(), err)
@@ -347,7 +347,7 @@ func resourceBigqueryDataTransferConfigDelete(d *schema.ResourceData, meta inter
 	var obj map[string]interface{}
 	log.Printf("[DEBUG] Deleting Config %q", d.Id())
 
-	res, err := sendRequestWithTimeout(config, "DELETE", project, url, obj, d.Timeout(schema.TimeoutDelete), iamMemberMissing)
+	res, err := sendRequestWithTimeout(config, "DELETE", project, url, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return handleNotFoundError(err, d, "Config")
 	}
