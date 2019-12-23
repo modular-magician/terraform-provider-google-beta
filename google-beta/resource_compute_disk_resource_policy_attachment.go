@@ -192,8 +192,17 @@ func resourceComputeDiskResourcePolicyAttachmentDelete(d *schema.ResourceData, m
 	var obj map[string]interface{}
 	obj = make(map[string]interface{})
 
+	zone, err := getZone(d, config)
+	if err != nil {
+		return err
+	}
+
+	// resourceProjects are added by zone, read by region, i.e.
 	// projects/{project}/regions/{region}/resourcePolicies/{resourceId}
-	region := getRegionFromZone(d.Get("zone").(string))
+	region := getRegionFromZone(zone)
+	if region == "" {
+		return fmt.Errorf("unable to infer region from empty zone")
+	}
 
 	name, err := expandComputeDiskResourcePolicyAttachmentName(d.Get("name"), d, config)
 	if err != nil {
@@ -256,7 +265,17 @@ func resourceComputeDiskResourcePolicyAttachmentEncoder(d *schema.ResourceData, 
 		return nil, err
 	}
 
-	region := getRegionFromZone(d.Get("zone").(string))
+	zone, err := getZone(d, config)
+	if err != nil {
+		return nil, err
+	}
+
+	// resourceProjects are added by zone, read by region, i.e.
+	// projects/{project}/regions/{region}/resourcePolicies/{resourceId}
+	region := getRegionFromZone(zone)
+	if region == "" {
+		return nil, fmt.Errorf("unable to infer region from empty zone")
+	}
 
 	obj["resourcePolicies"] = []interface{}{fmt.Sprintf("projects/%s/regions/%s/resourcePolicies/%s", project, region, obj["name"])}
 	delete(obj, "name")
