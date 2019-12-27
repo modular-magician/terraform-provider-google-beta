@@ -512,7 +512,10 @@ func flattenCloudRunDomainMappingSpecForceOverride(v interface{}, d *schema.Reso
 }
 
 func flattenCloudRunDomainMappingSpecRouteName(v interface{}, d *schema.ResourceData) interface{} {
-	return v
+	if v == nil {
+		return v
+	}
+	return ConvertSelfLinkToV1(v.(string))
 }
 
 func flattenCloudRunDomainMappingSpecCertificateMode(v interface{}, d *schema.ResourceData) interface{} {
@@ -616,7 +619,11 @@ func expandCloudRunDomainMappingSpecForceOverride(v interface{}, d TerraformReso
 }
 
 func expandCloudRunDomainMappingSpecRouteName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return GetResourceNameFromSelfLink(v.(string)), nil
+	f, err := parseGlobalFieldValue("services", v.(string), "project", d, config, true)
+	if err != nil {
+		return nil, fmt.Errorf("Invalid value for route_name: %s", err)
+	}
+	return f.RelativeLink(), nil
 }
 
 func expandCloudRunDomainMappingSpecCertificateMode(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
