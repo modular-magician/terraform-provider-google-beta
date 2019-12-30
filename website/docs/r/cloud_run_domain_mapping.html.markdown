@@ -60,7 +60,7 @@ resource "google_cloud_run_service" "default" {
 
 resource "google_cloud_run_domain_mapping" "default" {
   location = "us-central1"
-  name     = "verified-domain.com"
+  name     = "tf-test-cloudrun.gcp.tfacc.hashicorptest.com"
 
   metadata {
     namespace = "my-project-name"
