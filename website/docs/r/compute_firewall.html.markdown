@@ -132,12 +132,6 @@ The following arguments are supported:
   not enforced and the network behaves as if it did not exist. If this
   is unspecified, the firewall rule will be enabled.
 
-* `enable_logging` -
-  (Optional)
-  This field denotes whether to enable logging for a particular
-  firewall rule. If logging is enabled, logs will be exported to
-  Stackdriver.
-
 * `priority` -
   (Optional)
   Priority for this rule. This is an integer between 0 and 65535, both
@@ -199,6 +193,10 @@ The following arguments are supported:
   network that may make network connections as specified in allowed[].
   If no targetTags are specified, the firewall rule applies to all
   instances on the specified network.
+
+* `enable` -
+  (Optional)
+  Whether logging is enabled for this firewall rule
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
