@@ -22,7 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"google.golang.org/api/bigtableadmin/v2"
 )
 
 func resourceBigtableAppProfile() *schema.Resource {
@@ -331,7 +330,7 @@ func expandBigtableAppProfileMultiClusterRoutingUseAny(v interface{}, d Terrafor
 		return nil, nil
 	}
 
-	return bigtableadmin.MultiClusterRoutingUseAny{}, nil
+	return map[string]interface{}{}, nil
 }
 
 func expandBigtableAppProfileSingleClusterRouting(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
