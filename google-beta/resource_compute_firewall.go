@@ -376,12 +376,6 @@ func resourceComputeFirewallCreate(d *schema.ResourceData, meta interface{}) err
 	} else if v, ok := d.GetOkExists("disabled"); ok || !reflect.DeepEqual(v, disabledProp) {
 		obj["disabled"] = disabledProp
 	}
-	logConfigProp, err := expandComputeFirewallLogConfig(nil, d, config)
-	if err != nil {
-		return err
-	} else if !isEmptyValue(reflect.ValueOf(logConfigProp)) {
-		obj["logConfig"] = logConfigProp
-	}
 	nameProp, err := expandComputeFirewallName(d.Get("name"), d, config)
 	if err != nil {
 		return err
@@ -429,6 +423,12 @@ func resourceComputeFirewallCreate(d *schema.ResourceData, meta interface{}) err
 		return err
 	} else if v, ok := d.GetOkExists("target_tags"); !isEmptyValue(reflect.ValueOf(targetTagsProp)) && (ok || !reflect.DeepEqual(v, targetTagsProp)) {
 		obj["targetTags"] = targetTagsProp
+	}
+	logConfigProp, err := expandComputeFirewallLogConfig(nil, d, config)
+	if err != nil {
+		return err
+	} else if !isEmptyValue(reflect.ValueOf(logConfigProp)) {
+		obj["logConfig"] = logConfigProp
 	}
 
 	url, err := replaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/firewalls")
@@ -510,16 +510,6 @@ func resourceComputeFirewallRead(d *schema.ResourceData, meta interface{}) error
 	if err := d.Set("disabled", flattenComputeFirewallDisabled(res["disabled"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
-	// Terraform must set the top level schema field, but since this object contains collapsed properties
-	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
-	if flattenedProp := flattenComputeFirewallLogConfig(res["logConfig"], d); flattenedProp != nil {
-		casted := flattenedProp.([]interface{})[0]
-		if casted != nil {
-			for k, v := range casted.(map[string]interface{}) {
-				d.Set(k, v)
-			}
-		}
-	}
 	if err := d.Set("name", flattenComputeFirewallName(res["name"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
@@ -543,6 +533,16 @@ func resourceComputeFirewallRead(d *schema.ResourceData, meta interface{}) error
 	}
 	if err := d.Set("target_tags", flattenComputeFirewallTargetTags(res["targetTags"], d)); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
+	}
+	// Terraform must set the top level schema field, but since this object contains collapsed properties
+	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
+	if flattenedProp := flattenComputeFirewallLogConfig(res["logConfig"], d); flattenedProp != nil {
+		casted := flattenedProp.([]interface{})[0]
+		if casted != nil {
+			for k, v := range casted.(map[string]interface{}) {
+				d.Set(k, v)
+			}
+		}
 	}
 	if err := d.Set("self_link", ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
@@ -590,12 +590,6 @@ func resourceComputeFirewallUpdate(d *schema.ResourceData, meta interface{}) err
 	} else if v, ok := d.GetOkExists("disabled"); ok || !reflect.DeepEqual(v, disabledProp) {
 		obj["disabled"] = disabledProp
 	}
-	logConfigProp, err := expandComputeFirewallLogConfig(nil, d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("log_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, logConfigProp)) {
-		obj["logConfig"] = logConfigProp
-	}
 	networkProp, err := expandComputeFirewallNetwork(d.Get("network"), d, config)
 	if err != nil {
 		return err
@@ -637,6 +631,12 @@ func resourceComputeFirewallUpdate(d *schema.ResourceData, meta interface{}) err
 		return err
 	} else if v, ok := d.GetOkExists("target_tags"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, targetTagsProp)) {
 		obj["targetTags"] = targetTagsProp
+	}
+	logConfigProp, err := expandComputeFirewallLogConfig(nil, d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("log_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, logConfigProp)) {
+		obj["logConfig"] = logConfigProp
 	}
 
 	url, err := replaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/firewalls/{{name}}")
@@ -792,23 +792,6 @@ func flattenComputeFirewallDisabled(v interface{}, d *schema.ResourceData) inter
 	return v
 }
 
-func flattenComputeFirewallLogConfig(v interface{}, d *schema.ResourceData) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["enable_logging"] =
-		flattenComputeFirewallLogConfigEnableLogging(original["enable"], d)
-	return []interface{}{transformed}
-}
-func flattenComputeFirewallLogConfigEnableLogging(v interface{}, d *schema.ResourceData) interface{} {
-	return v
-}
-
 func flattenComputeFirewallName(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
@@ -863,6 +846,23 @@ func flattenComputeFirewallTargetTags(v interface{}, d *schema.ResourceData) int
 		return v
 	}
 	return schema.NewSet(schema.HashString, v.([]interface{}))
+}
+
+func flattenComputeFirewallLogConfig(v interface{}, d *schema.ResourceData) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enable_logging"] =
+		flattenComputeFirewallLogConfigEnableLogging(original["enable"], d)
+	return []interface{}{transformed}
+}
+func flattenComputeFirewallLogConfigEnableLogging(v interface{}, d *schema.ResourceData) interface{} {
+	return v
 }
 
 func expandComputeFirewallAllow(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
@@ -958,22 +958,6 @@ func expandComputeFirewallDisabled(v interface{}, d TerraformResourceData, confi
 	return v, nil
 }
 
-func expandComputeFirewallLogConfig(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	transformed := make(map[string]interface{})
-	transformedEnableLogging, err := expandComputeFirewallLogConfigEnableLogging(d.Get("enable_logging"), d, config)
-	if err != nil {
-		return nil, err
-	} else {
-		transformed["enable"] = transformedEnableLogging
-	}
-
-	return transformed, nil
-}
-
-func expandComputeFirewallLogConfigEnableLogging(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandComputeFirewallName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
@@ -1012,5 +996,21 @@ func expandComputeFirewallTargetServiceAccounts(v interface{}, d TerraformResour
 
 func expandComputeFirewallTargetTags(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
+	return v, nil
+}
+
+func expandComputeFirewallLogConfig(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	transformed := make(map[string]interface{})
+	transformedEnableLogging, err := expandComputeFirewallLogConfigEnableLogging(d.Get("enable_logging"), d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["enable"] = transformedEnableLogging
+	}
+
+	return transformed, nil
+}
+
+func expandComputeFirewallLogConfigEnableLogging(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
