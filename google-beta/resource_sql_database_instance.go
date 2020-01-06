@@ -841,7 +841,7 @@ func resourceSqlDatabaseInstanceRead(d *schema.ResourceData, meta interface{}) e
 	d.Set("public_ip_address", publicIpAddress)
 	d.Set("private_ip_address", privateIpAddress)
 
-	if err := d.Set("server_ca_cert", flattenServerCaCerts([]*sqladmin.SslCert{instance.ServerCaCert})); err != nil {
+	if err := d.Set("server_ca_cert", flattenServerCaCert(instance.ServerCaCert)); err != nil {
 		log.Printf("[WARN] Failed to set SQL Database CA Certificate")
 	}
 
@@ -1106,24 +1106,22 @@ func flattenIpAddresses(ipAddresses []*sqladmin.IpMapping) []map[string]interfac
 	return ips
 }
 
-func flattenServerCaCerts(caCerts []*sqladmin.SslCert) []map[string]interface{} {
-	var certs []map[string]interface{}
+func flattenServerCaCert(caCert *sqladmin.SslCert) []map[string]interface{} {
+	var cert []map[string]interface{}
 
-	for _, caCert := range caCerts {
-		if caCert != nil {
-			data := map[string]interface{}{
-				"cert":             caCert.Cert,
-				"common_name":      caCert.CommonName,
-				"create_time":      caCert.CreateTime,
-				"expiration_time":  caCert.ExpirationTime,
-				"sha1_fingerprint": caCert.Sha1Fingerprint,
-			}
-
-			certs = append(certs, data)
+	if caCert != nil {
+		data := map[string]interface{}{
+			"cert":             caCert.Cert,
+			"common_name":      caCert.CommonName,
+			"create_time":      caCert.CreateTime,
+			"expiration_time":  caCert.ExpirationTime,
+			"sha1_fingerprint": caCert.Sha1Fingerprint,
 		}
+
+		cert = append(cert, data)
 	}
 
-	return certs
+	return cert
 }
 
 func instanceMutexKey(project, instance_name string) string {
