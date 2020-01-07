@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+
 	sqladmin "google.golang.org/api/sqladmin/v1beta4"
 )
 
@@ -623,8 +624,8 @@ func TestAccSqlDatabaseInstance_withPrivateNetwork(t *testing.T) {
 	t.Parallel()
 
 	databaseName := "tf-test-" + acctest.RandString(10)
+	networkName := "tf-test-" + acctest.RandString(10)
 	addressName := "tf-test-" + acctest.RandString(10)
-	networkName := BootstrapSharedServiceNetworkingConsumerNetwork(t, "sql-instance-private")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -779,8 +780,9 @@ resource "google_sql_database_instance" "instance-failover" {
 
 func testAccSqlDatabaseInstance_withPrivateNetwork(databaseName, networkName, addressRangeName string) string {
 	return fmt.Sprintf(`
-data "google_compute_network" "servicenet" {
+resource "google_compute_network" "foobar" {
   name                    = "%s"
+  auto_create_subnetworks = false
 }
 
 resource "google_compute_global_address" "foobar" {
@@ -788,11 +790,11 @@ resource "google_compute_global_address" "foobar" {
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16
-  network       = data.google_compute_network.servicenet.self_link
+  network       = google_compute_network.foobar.self_link
 }
 
 resource "google_service_networking_connection" "foobar" {
-  network                 = data.google_compute_network.servicenet.self_link
+  network                 = google_compute_network.foobar.self_link
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.foobar.name]
 }
@@ -805,7 +807,7 @@ resource "google_sql_database_instance" "instance" {
     tier = "db-f1-micro"
     ip_configuration {
       ipv4_enabled    = "false"
-      private_network = data.google_compute_network.servicenet.self_link
+      private_network = google_compute_network.foobar.self_link
     }
   }
 }
