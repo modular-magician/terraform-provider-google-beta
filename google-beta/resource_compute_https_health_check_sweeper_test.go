@@ -70,7 +70,7 @@ func testSweepComputeHttpsHealthCheck(region string) error {
 
 	res, err := sendRequest(config, "GET", config.Project, listUrl, nil)
 	if err != nil {
-		log.Printf("[INFO] Unable to list %s: %s", resourceName, err)
+		log.Printf("[INFO] Unable to list resource %s (url %s ): %s", resourceName, listUrl, err)
 		return nil
 	}
 
@@ -80,13 +80,12 @@ func testSweepComputeHttpsHealthCheck(region string) error {
 		return nil
 	}
 
-	rl := resourceList.([]interface{})
+	rl := resourceList.([]map[string]interface{})
 
 	log.Printf("[INFO] Found %d items in %s list response.", len(rl), resourceName)
 	// items who don't match the tf-test prefix
 	nonPrefixCount := 0
-	for _, ri := range rl {
-		obj := ri.(map[string]interface{})
+	for _, obj := range rl {
 		if obj["name"] == nil {
 			log.Printf("[INFO] %s resource name was nil", resourceName)
 			return nil
