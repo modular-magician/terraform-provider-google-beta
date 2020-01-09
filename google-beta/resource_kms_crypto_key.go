@@ -117,6 +117,11 @@ See the [algorithm reference](https://cloud.google.com/kms/docs/reference/rest/v
 					},
 				},
 			},
+			"next_rotation_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The time when KMS will create a new version of this Crypto Key.`,
+			},
 			"self_link": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -225,6 +230,9 @@ func resourceKMSCryptoKeyRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading CryptoKey: %s", err)
 	}
 	if err := d.Set("version_template", flattenKMSCryptoKeyVersionTemplate(res["versionTemplate"], d)); err != nil {
+		return fmt.Errorf("Error reading CryptoKey: %s", err)
+	}
+	if err := d.Set("next_rotation_time", flattenKMSCryptoKeyNextRotationTime(res["nextRotationTime"], d)); err != nil {
 		return fmt.Errorf("Error reading CryptoKey: %s", err)
 	}
 
@@ -374,6 +382,10 @@ func flattenKMSCryptoKeyVersionTemplateAlgorithm(v interface{}, d *schema.Resour
 }
 
 func flattenKMSCryptoKeyVersionTemplateProtectionLevel(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenKMSCryptoKeyNextRotationTime(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
