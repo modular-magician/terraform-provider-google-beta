@@ -139,6 +139,9 @@ The `version_template` block supports:
 In addition to the arguments listed above, the following computed attributes are exported:
 
 
+* `next_rotation_time` -
+  The time when KMS will create a new version of this Crypto Key.
+
 
 * `self_link`: The self link of the created CryptoKey. Its format is `{{key_ring}}/cryptoKeys/{{name}}`.
 
