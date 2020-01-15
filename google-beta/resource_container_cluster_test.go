@@ -130,6 +130,27 @@ func TestAccContainerCluster_misc(t *testing.T) {
 	})
 }
 
+func TestAccContainerCluster_k8sAlpha(t *testing.T) {
+	t.Parallel()
+
+	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(10))
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckContainerClusterDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerCluster_k8sAlpha(clusterName),
+			},
+			{
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func TestAccContainerCluster_withAddons(t *testing.T) {
 	t.Parallel()
 
@@ -1785,7 +1806,6 @@ resource "google_container_cluster" "primary" {
     "us-central1-c",
   ]
 
-  enable_kubernetes_alpha = true
   enable_legacy_abac      = true
 
   logging_service    = "logging.googleapis.com"
@@ -1819,7 +1839,6 @@ resource "google_container_cluster" "primary" {
     "us-central1-c",
   ]
 
-  enable_kubernetes_alpha = true # Not updatable
   enable_legacy_abac      = false
 
   logging_service    = "none"
@@ -1836,6 +1855,17 @@ resource "google_container_cluster" "primary" {
 
   enable_intranode_visibility = true
   enable_binary_authorization = true
+}
+`, name)
+}
+
+func testAccContainerCluster_k8sAlpha(name string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "primary" {
+  name               = "%s"
+  location           = "us-central1-a"
+  initial_node_count = 1
+  enable_kubernetes_alpha = true
 }
 `, name)
 }
