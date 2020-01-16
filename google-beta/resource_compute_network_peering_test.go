@@ -8,12 +8,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"google.golang.org/api/compute/v1"
+	computeBeta "google.golang.org/api/compute/v0.beta"
 )
 
 func TestAccComputeNetworkPeering_basic(t *testing.T) {
 	t.Parallel()
-	var peering_beta compute.NetworkPeering
+	var peering_beta computeBeta.NetworkPeering
 
 	primaryNetworkName := acctest.RandomWithPrefix("network-test-1")
 	peeringName := acctest.RandomWithPrefix("peering-test-1")
@@ -27,13 +27,10 @@ func TestAccComputeNetworkPeering_basic(t *testing.T) {
 			{
 				Config: testAccComputeNetworkPeering_basic(primaryNetworkName, peeringName),
 				Check: resource.ComposeTestCheckFunc(
-					// network foo
 					testAccCheckComputeNetworkPeeringExist("google_compute_network_peering.foo", &peering_beta),
 					testAccCheckComputeNetworkPeeringAutoCreateRoutes(true, &peering_beta),
 					testAccCheckComputeNetworkPeeringImportCustomRoutes(false, &peering_beta),
 					testAccCheckComputeNetworkPeeringExportCustomRoutes(false, &peering_beta),
-
-					// network bar
 					testAccCheckComputeNetworkPeeringExist("google_compute_network_peering.bar", &peering_beta),
 					testAccCheckComputeNetworkPeeringAutoCreateRoutes(true, &peering_beta),
 					testAccCheckComputeNetworkPeeringImportCustomRoutes(true, &peering_beta),
@@ -59,7 +56,7 @@ func testAccComputeNetworkPeeringDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := config.clientCompute.Networks.Get(
+		_, err := config.clientComputeBeta.Networks.Get(
 			config.Project, rs.Primary.ID).Do()
 		if err == nil {
 			return fmt.Errorf("Network peering still exists")
@@ -69,7 +66,7 @@ func testAccComputeNetworkPeeringDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckComputeNetworkPeeringExist(n string, peering *compute.NetworkPeering) resource.TestCheckFunc {
+func testAccCheckComputeNetworkPeeringExist(n string, peering *computeBeta.NetworkPeering) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -89,7 +86,7 @@ func testAccCheckComputeNetworkPeeringExist(n string, peering *compute.NetworkPe
 
 		networkName, peeringName := parts[0], parts[1]
 
-		network, err := config.clientCompute.Networks.Get(config.Project, networkName).Do()
+		network, err := config.clientComputeBeta.Networks.Get(config.Project, networkName).Do()
 		if err != nil {
 			return err
 		}
@@ -104,7 +101,7 @@ func testAccCheckComputeNetworkPeeringExist(n string, peering *compute.NetworkPe
 	}
 }
 
-func testAccCheckComputeNetworkPeeringAutoCreateRoutes(v bool, peering *compute.NetworkPeering) resource.TestCheckFunc {
+func testAccCheckComputeNetworkPeeringAutoCreateRoutes(v bool, peering *computeBeta.NetworkPeering) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
 		if peering.ExchangeSubnetRoutes != v {
@@ -114,7 +111,7 @@ func testAccCheckComputeNetworkPeeringAutoCreateRoutes(v bool, peering *compute.
 	}
 }
 
-func testAccCheckComputeNetworkPeeringImportCustomRoutes(v bool, peering *compute.NetworkPeering) resource.TestCheckFunc {
+func testAccCheckComputeNetworkPeeringImportCustomRoutes(v bool, peering *computeBeta.NetworkPeering) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		if peering.ImportCustomRoutes != v {
 			return fmt.Errorf("should ImportCustomRoutes set to %t", v)
@@ -124,7 +121,7 @@ func testAccCheckComputeNetworkPeeringImportCustomRoutes(v bool, peering *comput
 	}
 }
 
-func testAccCheckComputeNetworkPeeringExportCustomRoutes(v bool, peering *compute.NetworkPeering) resource.TestCheckFunc {
+func testAccCheckComputeNetworkPeeringExportCustomRoutes(v bool, peering *computeBeta.NetworkPeering) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		if peering.ExportCustomRoutes != v {
 			return fmt.Errorf("should ExportCustomRoutes set to %t", v)
