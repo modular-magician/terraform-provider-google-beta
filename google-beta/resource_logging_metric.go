@@ -97,6 +97,12 @@ or just for responses that failed.`,
 [The Unified Code for Units of Measure](http://unitsofmeasure.org/ucum.html) standard`,
 							Default: "1",
 						},
+						"type": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `The metric type, including its DNS name prefix. The type is not URL-encoded.
+All user-defined metric types have the DNS name 'custom.googleapis.com' or 'external.googleapis.com'.`,
+						},
 					},
 				},
 			},
@@ -543,6 +549,8 @@ func flattenLoggingMetricMetricDescriptor(v interface{}, d *schema.ResourceData)
 		flattenLoggingMetricMetricDescriptorLabels(original["labels"], d)
 	transformed["display_name"] =
 		flattenLoggingMetricMetricDescriptorDisplayName(original["displayName"], d)
+	transformed["type"] =
+		flattenLoggingMetricMetricDescriptorType(original["type"], d)
 	return []interface{}{transformed}
 }
 func flattenLoggingMetricMetricDescriptorUnit(v interface{}, d *schema.ResourceData) interface{} {
@@ -594,6 +602,10 @@ func flattenLoggingMetricMetricDescriptorLabelsValueType(v interface{}, d *schem
 }
 
 func flattenLoggingMetricMetricDescriptorDisplayName(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenLoggingMetricMetricDescriptorType(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 
@@ -771,6 +783,13 @@ func expandLoggingMetricMetricDescriptor(v interface{}, d TerraformResourceData,
 		transformed["displayName"] = transformedDisplayName
 	}
 
+	transformedType, err := expandLoggingMetricMetricDescriptorType(original["type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedType); val.IsValid() && !isEmptyValue(val) {
+		transformed["type"] = transformedType
+	}
+
 	return transformed, nil
 }
 
@@ -836,6 +855,10 @@ func expandLoggingMetricMetricDescriptorLabelsValueType(v interface{}, d Terrafo
 }
 
 func expandLoggingMetricMetricDescriptorDisplayName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandLoggingMetricMetricDescriptorType(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

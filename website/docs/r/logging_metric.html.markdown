@@ -177,6 +177,10 @@ The `metric_descriptor` block supports:
   without an ending period, for example "Request count". This field is optional but it is 
   recommended to be set for any metrics associated with user-visible concepts, such as Quota.
 
+* `type` -
+  The metric type, including its DNS name prefix. The type is not URL-encoded.
+  All user-defined metric types have the DNS name `custom.googleapis.com` or `external.googleapis.com`.
+
 
 The `labels` block supports:
 
