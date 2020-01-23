@@ -325,6 +325,7 @@ func resourceContainerCluster() *schema.Resource {
 									"oauth_scopes": {
 										Type:             schema.TypeList,
 										Optional:         true,
+										Computed:         true,
 										Elem:             &schema.Schema{Type: schema.TypeString},
 										DiffSuppressFunc: containerClusterAddedScopesSuppress,
 										ExactlyOneOf: []string{
@@ -335,6 +336,7 @@ func resourceContainerCluster() *schema.Resource {
 									"service_account": {
 										Type:     schema.TypeString,
 										Optional: true,
+										Computed: true,
 										Default:  "default",
 										ExactlyOneOf: []string{
 											"cluster_autoscaling.0.auto_provisioning_defaults.0.oauth_scopes",
