@@ -181,9 +181,6 @@ In addition to the arguments listed above, the following computed attributes are
 * `version` -
   Current version of the Data Fusion.
 
-* `service_account` -
-  Service account which will be used to access resources in the customer project.
-
 
 ## Timeouts
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 	"testing"
 	"time"
 
@@ -700,28 +701,6 @@ func TestAccStorageBucket_cors(t *testing.T) {
 	})
 }
 
-func TestAccStorageBucket_defaultEventBasedHold(t *testing.T) {
-	t.Parallel()
-
-	bucketName := fmt.Sprintf("tf-test-acl-bucket-%d", acctest.RandInt())
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccStorageBucketDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccStorageBucket_defaultEventBasedHold(bucketName),
-			},
-			{
-				ResourceName:      "google_storage_bucket.bucket",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-		},
-	})
-}
-
 func TestAccStorageBucket_encryption(t *testing.T) {
 	t.Parallel()
 
@@ -850,7 +829,10 @@ func TestAccStorageBucket_website(t *testing.T) {
 	t.Parallel()
 
 	bucketSuffix := acctest.RandomWithPrefix("tf-website-test")
-	errRe := regexp.MustCompile("one of `((website.0.main_page_suffix,website.0.not_found_page)|(website.0.not_found_page,website.0.main_page_suffix))` must be specified")
+
+	websiteKeys := []string{"website.0.main_page_suffix", "website.0.not_found_page"}
+	errMsg := fmt.Sprintf("one of `%s` must be specified", strings.Join(websiteKeys, ","))
+	fullErr := fmt.Sprintf("config is invalid: 2 problems:\n\n- \"%s\": %s\n- \"%s\": %s", websiteKeys[0], errMsg, websiteKeys[1], errMsg)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -859,7 +841,7 @@ func TestAccStorageBucket_website(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccStorageBucket_websiteNoAttributes(bucketSuffix),
-				ExpectError: errRe,
+				ExpectError: regexp.MustCompile(fullErr),
 			},
 			{
 				Config: testAccStorageBucket_websiteOneAttribute(bucketSuffix),
@@ -1185,15 +1167,6 @@ resource "google_storage_bucket" "bucket" {
     response_header = ["000"]
     max_age_seconds = 5
   }
-}
-`, bucketName)
-}
-
-func testAccStorageBucket_defaultEventBasedHold(bucketName string) string {
-	return fmt.Sprintf(`
-resource "google_storage_bucket" "bucket" {
-  name = "%s"
-  default_event_based_hold = true
 }
 `, bucketName)
 }

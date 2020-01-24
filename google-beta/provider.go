@@ -522,9 +522,9 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
-// Generated resources: 113
-// Generated IAM resources: 48
-// Total generated resources: 161
+// Generated resources: 112
+// Generated IAM resources: 45
+// Total generated resources: 157
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -585,7 +585,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_compute_network_endpoint":                              resourceComputeNetworkEndpoint(),
 			"google_compute_network_endpoint_group":                        resourceComputeNetworkEndpointGroup(),
 			"google_compute_node_group":                                    resourceComputeNodeGroup(),
-			"google_compute_network_peering_routes_config":                 resourceComputeNetworkPeeringRoutesConfig(),
 			"google_compute_node_template":                                 resourceComputeNodeTemplate(),
 			"google_compute_region_autoscaler":                             resourceComputeRegionAutoscaler(),
 			"google_compute_region_disk":                                   resourceComputeRegionDisk(),
@@ -648,9 +647,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_iap_web_backend_service_iam_binding":                   ResourceIamBinding(IapWebBackendServiceIamSchema, IapWebBackendServiceIamUpdaterProducer, IapWebBackendServiceIdParseFunc),
 			"google_iap_web_backend_service_iam_member":                    ResourceIamMember(IapWebBackendServiceIamSchema, IapWebBackendServiceIamUpdaterProducer, IapWebBackendServiceIdParseFunc),
 			"google_iap_web_backend_service_iam_policy":                    ResourceIamPolicy(IapWebBackendServiceIamSchema, IapWebBackendServiceIamUpdaterProducer, IapWebBackendServiceIdParseFunc),
-			"google_iap_tunnel_instance_iam_binding":                       ResourceIamBinding(IapTunnelInstanceIamSchema, IapTunnelInstanceIamUpdaterProducer, IapTunnelInstanceIdParseFunc),
-			"google_iap_tunnel_instance_iam_member":                        ResourceIamMember(IapTunnelInstanceIamSchema, IapTunnelInstanceIamUpdaterProducer, IapTunnelInstanceIdParseFunc),
-			"google_iap_tunnel_instance_iam_policy":                        ResourceIamPolicy(IapTunnelInstanceIamSchema, IapTunnelInstanceIamUpdaterProducer, IapTunnelInstanceIdParseFunc),
 			"google_identity_platform_default_supported_idp_config":        resourceIdentityPlatformDefaultSupportedIdpConfig(),
 			"google_identity_platform_tenant_default_supported_idp_config": resourceIdentityPlatformTenantDefaultSupportedIdpConfig(),
 			"google_identity_platform_inbound_saml_config":                 resourceIdentityPlatformInboundSamlConfig(),
@@ -756,6 +752,9 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_healthcare_hl7_v2_store_iam_binding":   ResourceIamBindingWithBatching(IamHealthcareHl7V2StoreSchema, NewHealthcareHl7V2StoreIamUpdater, Hl7V2StoreIdParseFunc, IamBatchingEnabled),
 			"google_healthcare_hl7_v2_store_iam_member":    ResourceIamMemberWithBatching(IamHealthcareHl7V2StoreSchema, NewHealthcareHl7V2StoreIamUpdater, Hl7V2StoreIdParseFunc, IamBatchingEnabled),
 			"google_healthcare_hl7_v2_store_iam_policy":    ResourceIamPolicy(IamHealthcareHl7V2StoreSchema, NewHealthcareHl7V2StoreIamUpdater, Hl7V2StoreIdParseFunc),
+			"google_iap_tunnel_instance_iam_binding":       ResourceIamBinding(IamIapTunnelInstanceSchema, NewIapTunnelInstanceIamUpdater, IapTunnelInstanceIdParseFunc),
+			"google_iap_tunnel_instance_iam_member":        ResourceIamMember(IamIapTunnelInstanceSchema, NewIapTunnelInstanceIamUpdater, IapTunnelInstanceIdParseFunc),
+			"google_iap_tunnel_instance_iam_policy":        ResourceIamPolicy(IamIapTunnelInstanceSchema, NewIapTunnelInstanceIamUpdater, IapTunnelInstanceIdParseFunc),
 			"google_logging_billing_account_sink":          resourceLoggingBillingAccountSink(),
 			"google_logging_billing_account_exclusion":     ResourceLoggingExclusion(BillingAccountLoggingExclusionSchema, NewBillingAccountLoggingExclusionUpdater, billingAccountLoggingExclusionIdParseFunc),
 			"google_logging_organization_sink":             resourceLoggingOrganizationSink(),
@@ -764,11 +763,11 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_logging_folder_exclusion":              ResourceLoggingExclusion(FolderLoggingExclusionSchema, NewFolderLoggingExclusionUpdater, folderLoggingExclusionIdParseFunc),
 			"google_logging_project_sink":                  resourceLoggingProjectSink(),
 			"google_logging_project_exclusion":             ResourceLoggingExclusion(ProjectLoggingExclusionSchema, NewProjectLoggingExclusionUpdater, projectLoggingExclusionIdParseFunc),
-			"google_kms_key_ring_iam_binding":              ResourceIamBinding(IamKmsKeyRingSchema, NewKmsKeyRingIamUpdater, KeyRingIdParseFunc),
-			"google_kms_key_ring_iam_member":               ResourceIamMember(IamKmsKeyRingSchema, NewKmsKeyRingIamUpdater, KeyRingIdParseFunc),
+			"google_kms_key_ring_iam_binding":              ResourceIamBindingWithBatching(IamKmsKeyRingSchema, NewKmsKeyRingIamUpdater, KeyRingIdParseFunc, IamBatchingEnabled),
+			"google_kms_key_ring_iam_member":               ResourceIamMemberWithBatching(IamKmsKeyRingSchema, NewKmsKeyRingIamUpdater, KeyRingIdParseFunc, IamBatchingEnabled),
 			"google_kms_key_ring_iam_policy":               ResourceIamPolicy(IamKmsKeyRingSchema, NewKmsKeyRingIamUpdater, KeyRingIdParseFunc),
-			"google_kms_crypto_key_iam_binding":            ResourceIamBinding(IamKmsCryptoKeySchema, NewKmsCryptoKeyIamUpdater, CryptoIdParseFunc),
-			"google_kms_crypto_key_iam_member":             ResourceIamMember(IamKmsCryptoKeySchema, NewKmsCryptoKeyIamUpdater, CryptoIdParseFunc),
+			"google_kms_crypto_key_iam_binding":            ResourceIamBindingWithBatching(IamKmsCryptoKeySchema, NewKmsCryptoKeyIamUpdater, CryptoIdParseFunc, IamBatchingEnabled),
+			"google_kms_crypto_key_iam_member":             ResourceIamMemberWithBatching(IamKmsCryptoKeySchema, NewKmsCryptoKeyIamUpdater, CryptoIdParseFunc, IamBatchingEnabled),
 			"google_kms_crypto_key_iam_policy":             ResourceIamPolicy(IamKmsCryptoKeySchema, NewKmsCryptoKeyIamUpdater, CryptoIdParseFunc),
 			"google_service_networking_connection":         resourceServiceNetworkingConnection(),
 			"google_spanner_instance_iam_binding":          ResourceIamBinding(IamSpannerInstanceSchema, NewSpannerInstanceIamUpdater, SpannerInstanceIdParseFunc),

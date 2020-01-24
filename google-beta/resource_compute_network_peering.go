@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	computeBeta "google.golang.org/api/compute/v0.beta"
 	"google.golang.org/api/compute/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -91,7 +92,7 @@ func resourceComputeNetworkPeeringCreate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	request := &compute.NetworksAddPeeringRequest{}
+	request := &computeBeta.NetworksAddPeeringRequest{}
 	request.NetworkPeering = expandNetworkPeering(d)
 
 	// Only one peering operation at a time can be performed for a given network.
@@ -102,7 +103,7 @@ func resourceComputeNetworkPeeringCreate(d *schema.ResourceData, meta interface{
 		defer mutexKV.Unlock(kn)
 	}
 
-	addOp, err := config.clientCompute.Networks.AddPeering(networkFieldValue.Project, networkFieldValue.Name, request).Do()
+	addOp, err := config.clientComputeBeta.Networks.AddPeering(networkFieldValue.Project, networkFieldValue.Name, request).Do()
 	if err != nil {
 		return fmt.Errorf("Error adding network peering: %s", err)
 	}
@@ -126,7 +127,7 @@ func resourceComputeNetworkPeeringRead(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	network, err := config.clientCompute.Networks.Get(networkFieldValue.Project, networkFieldValue.Name).Do()
+	network, err := config.clientComputeBeta.Networks.Get(networkFieldValue.Project, networkFieldValue.Name).Do()
 	if err != nil {
 		return handleNotFoundError(err, d, fmt.Sprintf("Network %q", networkFieldValue.Name))
 	}
@@ -191,7 +192,7 @@ func resourceComputeNetworkPeeringDelete(d *schema.ResourceData, meta interface{
 	return nil
 }
 
-func findPeeringFromNetwork(network *compute.Network, peeringName string) *compute.NetworkPeering {
+func findPeeringFromNetwork(network *computeBeta.Network, peeringName string) *computeBeta.NetworkPeering {
 	for _, p := range network.Peerings {
 		if p.Name == peeringName {
 			return p
@@ -199,8 +200,8 @@ func findPeeringFromNetwork(network *compute.Network, peeringName string) *compu
 	}
 	return nil
 }
-func expandNetworkPeering(d *schema.ResourceData) *compute.NetworkPeering {
-	return &compute.NetworkPeering{
+func expandNetworkPeering(d *schema.ResourceData) *computeBeta.NetworkPeering {
+	return &computeBeta.NetworkPeering{
 		ExchangeSubnetRoutes: true,
 		Name:                 d.Get("name").(string),
 		Network:              d.Get("peer_network").(string),

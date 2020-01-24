@@ -97,11 +97,10 @@ func TestAccCloudSchedulerJob_schedulerJobHttpExample(t *testing.T) {
 func testAccCloudSchedulerJob_schedulerJobHttpExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloud_scheduler_job" "job" {
-  name             = "test-job%{random_suffix}"
-  description      = "test http job"
-  schedule         = "*/8 * * * *"
-  time_zone        = "America/New_York"
-  attempt_deadline = "320s"
+  name        = "test-job%{random_suffix}"
+  description = "test http job"
+  schedule    = "*/8 * * * *"
+  time_zone   = "America/New_York"
 
   http_target {
     http_method = "POST"
@@ -139,11 +138,10 @@ func TestAccCloudSchedulerJob_schedulerJobAppEngineExample(t *testing.T) {
 func testAccCloudSchedulerJob_schedulerJobAppEngineExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloud_scheduler_job" "job" {
-  name             = "test-job%{random_suffix}"
-  schedule         = "*/4 * * * *"
-  description      = "test app engine job"
-  time_zone        = "Europe/London"
-  attempt_deadline = "320s"
+  name        = "test-job%{random_suffix}"
+  schedule    = "*/4 * * * *"
+  description = "test app engine job"
+  time_zone   = "Europe/London"
 
   app_engine_http_target {
     http_method = "POST"
@@ -193,11 +191,10 @@ data "google_compute_default_service_account" "default" {
 }
 
 resource "google_cloud_scheduler_job" "job" {
-  name             = "test-job%{random_suffix}"
-  description      = "test http job"
-  schedule         = "*/8 * * * *"
-  time_zone        = "America/New_York"
-  attempt_deadline = "320s"
+  name        = "test-job%{random_suffix}"
+  description = "test http job"
+  schedule    = "*/8 * * * *"
+  time_zone   = "America/New_York"
 
   http_target {
     http_method = "GET"
@@ -242,11 +239,10 @@ data "google_compute_default_service_account" "default" {
 }
 
 resource "google_cloud_scheduler_job" "job" {
-  name             = "test-job%{random_suffix}"
-  description      = "test http job"
-  schedule         = "*/8 * * * *"
-  time_zone        = "America/New_York"
-  attempt_deadline = "320s"
+  name        = "test-job%{random_suffix}"
+  description = "test http job"
+  schedule    = "*/8 * * * *"
+  time_zone   = "America/New_York"
 
   http_target {
     http_method = "GET"
