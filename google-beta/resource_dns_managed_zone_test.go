@@ -142,6 +142,28 @@ func TestAccDNSManagedZone_privateForwardingUpdate(t *testing.T) {
 	})
 }
 
+func TestAccDNSManagedZone_reverseLookup(t *testing.T) {
+	t.Parallel()
+
+	zoneSuffix := acctest.RandString(10)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckDNSManagedZoneDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDnsManagedZone_reverseLookup(zoneSuffix),
+			},
+			{
+				ResourceName:      "google_dns_managed_zone.reverse",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func testAccDnsManagedZone_basic(suffix, description string) string {
 	return fmt.Sprintf(`
 resource "google_dns_managed_zone" "foobar" {
@@ -243,9 +265,11 @@ resource "google_dns_managed_zone" "private" {
   forwarding_config {
     target_name_servers {
       ipv4_address = "%s"
+      forwarding_path = "default"
     }
     target_name_servers {
       ipv4_address = "%s"
+      forwarding_path = "private"
     }
   }
 }
@@ -255,6 +279,24 @@ resource "google_compute_network" "network-1" {
   auto_create_subnetworks = false
 }
 `, suffix, first_nameserver, second_nameserver, suffix)
+}
+
+func testAccDnsManagedZone_reverseLookup(suffix string) string {
+	return fmt.Sprintf(`
+resource "google_dns_managed_zone" "reverse" {
+  name        = "reverse-zone-%s"
+  dns_name    = "1.0.168.192.in-addr.arpa."
+  visibility  = "private"
+  description = "Example private DNS zone"
+
+  reverse_lookup = true
+}
+
+resource "google_compute_network" "network-1" {
+  name                    = "network-1-%s"
+  auto_create_subnetworks = false
+}
+`, suffix, suffix)
 }
 
 func TestDnsManagedZoneImport_parseImportId(t *testing.T) {
