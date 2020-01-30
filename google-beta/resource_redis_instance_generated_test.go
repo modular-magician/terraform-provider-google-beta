@@ -15,42 +15,40 @@
 package google
 
 import (
-	"fmt"
-	"strings"
-	"testing"
+  "fmt"
+  "testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+  "github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
+  "github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccRedisInstance_redisInstanceBasicExample(t *testing.T) {
-	t.Parallel()
+  t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(10),
+	context := map[string]interface{} {
+				"random_suffix": acctest.RandString(10),
 	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckRedisInstanceDestroy,
+				Providers:    testAccProviders,
+				CheckDestroy: testAccCheckRedisInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRedisInstance_redisInstanceBasicExample(context),
 			},
-			{
-				ResourceName:            "google_redis_instance.cache",
-				ImportState:             true,
-				ImportStateVerify:       true,
+							{
+				ResourceName:      "google_redis_instance.cache",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"region"},
 			},
-		},
+				},
 	})
 }
 
 func testAccRedisInstance_redisInstanceBasicExample(context map[string]interface{}) string {
-	return Nprintf(`
+  return Nprintf(`
 resource "google_redis_instance" "cache" {
   name           = "memory-cache%{random_suffix}"
   memory_size_gb = 1
@@ -59,32 +57,33 @@ resource "google_redis_instance" "cache" {
 }
 
 func TestAccRedisInstance_redisInstanceFullExample(t *testing.T) {
-	t.Parallel()
+  t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(10),
+	context := map[string]interface{} {
+					"network_name": BootstrapSharedTestNetwork(t, "redis-full"),
+					"random_suffix": acctest.RandString(10),
 	}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckRedisInstanceDestroy,
+				Providers:    testAccProviders,
+				CheckDestroy: testAccCheckRedisInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRedisInstance_redisInstanceFullExample(context),
 			},
-			{
-				ResourceName:            "google_redis_instance.cache",
-				ImportState:             true,
-				ImportStateVerify:       true,
+							{
+				ResourceName:      "google_redis_instance.cache",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"region"},
 			},
-		},
+				},
 	})
 }
 
 func testAccRedisInstance_redisInstanceFullExample(context map[string]interface{}) string {
-	return Nprintf(`
+  return Nprintf(`
 resource "google_redis_instance" "cache" {
   name           = "ha-memory-cache%{random_suffix}"
   tier           = "STANDARD_HA"
@@ -93,7 +92,7 @@ resource "google_redis_instance" "cache" {
   location_id             = "us-central1-a"
   alternative_location_id = "us-central1-f"
 
-  authorized_network = google_compute_network.auto-network.self_link
+  authorized_network = data.google_compute_network.redis-network.self_link
 
   redis_version     = "REDIS_3_2"
   display_name      = "Terraform Test Instance"
@@ -105,11 +104,20 @@ resource "google_redis_instance" "cache" {
   }
 }
 
-resource "google_compute_network" "auto-network" {
-  name = "authorized-network%{random_suffix}"
+// This example assumes this network already exists.
+// The API creates a tenant network per network authorized for a
+// Redis instance and that network is not deleted when the user-created
+// network (authorized_network) is deleted, so this prevents issues
+// with tenant network quota.
+// If this network hasn't been created and you are using this example in your
+// config, add an additional `google_compute_network` resource or change
+// this from a data source to a network.
+data "google_compute_network" "redis-network" {
+  name = "%{network_name}"
 }
 `, context)
 }
+
 
 func testAccCheckRedisInstanceDestroy(s *terraform.State) error {
 	for name, rs := range s.RootModule().Resources {
@@ -122,16 +130,16 @@ func testAccCheckRedisInstanceDestroy(s *terraform.State) error {
 
 		config := testAccProvider.Meta().(*Config)
 
-		url, err := replaceVarsForTest(config, rs, "{{RedisBasePath}}projects/{{project}}/locations/{{region}}/instances/{{name}}")
-		if err != nil {
-			return err
-		}
+	url, err := replaceVarsForTest(config, rs, "{{RedisBasePath}}projects/{{project}}/locations/{{region}}/instances/{{name}}")
+	if err != nil {
+		return err
+	}
 
-		_, err = sendRequest(config, "GET", "", url, nil)
-		if err == nil {
+	_, err = sendRequest(config, "GET", "", url, nil)
+	if err == nil {
 			return fmt.Errorf("RedisInstance still exists at %s", url)
 		}
-	}
+		}
 
 	return nil
 }
