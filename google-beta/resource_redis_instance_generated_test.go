@@ -62,6 +62,7 @@ func TestAccRedisInstance_redisInstanceFullExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
+		"network_name":  BootstrapSharedTestNetwork(t, "redis-full"),
 		"random_suffix": acctest.RandString(10),
 	}
 
@@ -106,7 +107,7 @@ resource "google_redis_instance" "cache" {
 }
 
 resource "google_compute_network" "auto-network" {
-  name = "authorized-network%{random_suffix}"
+  name = "%{network_name}"
 }
 `, context)
 }

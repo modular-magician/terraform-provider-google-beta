@@ -75,7 +75,7 @@ resource "google_redis_instance" "cache" {
 }
 
 resource "google_compute_network" "auto-network" {
-  name = "authorized-network"
+  name = "redis-test-network"
 }
 ```
 
