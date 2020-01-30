@@ -62,6 +62,7 @@ func TestAccRedisInstance_redisInstanceFullExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
+		"network_name":  BootstrapSharedTestNetwork(t, "redis-full"),
 		"random_suffix": acctest.RandString(10),
 	}
 
@@ -93,7 +94,7 @@ resource "google_redis_instance" "cache" {
   location_id             = "us-central1-a"
   alternative_location_id = "us-central1-f"
 
-  authorized_network = google_compute_network.auto-network.self_link
+  authorized_network = data.google_compute_network.redis-network.self_link
 
   redis_version     = "REDIS_3_2"
   display_name      = "Terraform Test Instance"
@@ -105,8 +106,8 @@ resource "google_redis_instance" "cache" {
   }
 }
 
-resource "google_compute_network" "auto-network" {
-  name = "authorized-network%{random_suffix}"
+data "google_compute_network" "redis-network" {
+  name = "%{network_name}"
 }
 `, context)
 }
