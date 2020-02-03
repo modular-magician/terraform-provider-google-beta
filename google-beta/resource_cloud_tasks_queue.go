@@ -213,6 +213,7 @@ specifies that the task should be retried.`,
 }
 
 func resourceCloudTasksQueueCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

@@ -104,6 +104,7 @@ Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.`,
 }
 
 func resourceSpannerInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

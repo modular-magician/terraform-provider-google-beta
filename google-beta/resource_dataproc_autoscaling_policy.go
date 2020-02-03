@@ -241,6 +241,7 @@ only on primary workers, the cluster will use primary workers only and no second
 }
 
 func resourceDataprocAutoscalingPolicyCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

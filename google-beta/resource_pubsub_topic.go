@@ -103,6 +103,7 @@ and is not a valid configuration.`,
 }
 
 func resourcePubsubTopicCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

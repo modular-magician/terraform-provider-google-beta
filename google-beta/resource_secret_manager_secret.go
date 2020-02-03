@@ -131,6 +131,7 @@ An object containing a list of "key": value pairs. Example:
 }
 
 func resourceSecretManagerSecretCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

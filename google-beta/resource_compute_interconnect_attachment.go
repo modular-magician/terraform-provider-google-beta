@@ -242,6 +242,7 @@ Google and the customer, going to and from this network and region.`,
 }
 
 func resourceComputeInterconnectAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

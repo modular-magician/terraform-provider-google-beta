@@ -85,6 +85,7 @@ groups with no parent, parentName is the empty string, "".`,
 }
 
 func resourceMonitoringGroupCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

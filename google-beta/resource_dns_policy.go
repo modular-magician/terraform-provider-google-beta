@@ -150,6 +150,7 @@ This should be formatted like
 }
 
 func resourceDNSPolicyCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

@@ -182,6 +182,7 @@ to connect to the service.`,
 }
 
 func resourceRedisInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

@@ -162,6 +162,7 @@ object. This field is used in optimistic locking.`,
 }
 
 func resourceComputeSslPolicyCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

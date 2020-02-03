@@ -126,6 +126,7 @@ See the [algorithm reference](https://cloud.google.com/kms/docs/reference/rest/v
 }
 
 func resourceKMSCryptoKeyCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

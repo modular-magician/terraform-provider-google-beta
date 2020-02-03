@@ -427,6 +427,7 @@ The value of this field must be a time zone name from the tz database.`,
 }
 
 func resourceCloudSchedulerJobCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

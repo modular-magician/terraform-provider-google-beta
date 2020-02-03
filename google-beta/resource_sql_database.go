@@ -90,6 +90,7 @@ a value of 'en_US.UTF8' at creation time.`,
 }
 
 func resourceSQLDatabaseCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

@@ -93,6 +93,7 @@ e.g. ['resourcemanager.projects.delete']`,
 }
 
 func resourceResourceManagerLienCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

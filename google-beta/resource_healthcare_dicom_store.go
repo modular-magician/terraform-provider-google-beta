@@ -105,6 +105,7 @@ Cloud Pub/Sub topic. Not having adequate permissions will cause the calls that s
 }
 
 func resourceHealthcareDicomStoreCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

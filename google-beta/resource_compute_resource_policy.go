@@ -261,6 +261,7 @@ It must be in format "HH:MM", where HH : [00-23] and MM : [00-00] GMT.`,
 }
 
 func resourceComputeResourcePolicyCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

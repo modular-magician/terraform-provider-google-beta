@@ -151,6 +151,7 @@ configuration in order to serve the application via this domain mapping.`,
 }
 
 func resourceAppEngineDomainMappingCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

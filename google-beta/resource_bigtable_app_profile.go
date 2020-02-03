@@ -114,6 +114,7 @@ It is unsafe to send these requests to the same table/row/column in multiple clu
 }
 
 func resourceBigtableAppProfileCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

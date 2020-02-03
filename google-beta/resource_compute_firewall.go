@@ -337,6 +337,7 @@ Example inputs include: ["22"], ["80","443"], and
 }
 
 func resourceComputeFirewallCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

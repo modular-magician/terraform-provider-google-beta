@@ -220,6 +220,7 @@ policy will be subject to the project admission policy.`,
 }
 
 func resourceBinaryAuthorizationPolicyCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

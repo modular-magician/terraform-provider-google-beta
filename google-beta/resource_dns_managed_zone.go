@@ -316,6 +316,7 @@ to the Internet. When set to 'private', Cloud DNS will always send queries throu
 }
 
 func resourceDNSManagedZoneCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

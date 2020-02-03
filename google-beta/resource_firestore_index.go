@@ -118,6 +118,7 @@ Only one of 'order' and 'arrayConfig' can be specified.`,
 }
 
 func resourceFirestoreIndexCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

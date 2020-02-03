@@ -269,6 +269,7 @@ project/zones/zone/instances/instance`,
 }
 
 func resourceComputeRegionDiskCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

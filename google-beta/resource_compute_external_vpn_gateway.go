@@ -110,6 +110,7 @@ it cannot be an IP address from Google Compute Engine.`,
 }
 
 func resourceComputeExternalVpnGatewayCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

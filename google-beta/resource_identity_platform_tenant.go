@@ -80,6 +80,7 @@ are not able to manage its users.`,
 }
 
 func resourceIdentityPlatformTenantCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

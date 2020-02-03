@@ -123,6 +123,7 @@ These are in the same namespace as the managed SSL certificates.`,
 }
 
 func resourceComputeSslCertificateCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

@@ -211,6 +211,7 @@ func deploymentmanagerDeploymentLabelsSchema() *schema.Resource {
 }
 
 func resourceDeploymentManagerDeploymentCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

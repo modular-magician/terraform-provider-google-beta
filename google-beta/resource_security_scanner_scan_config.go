@@ -199,6 +199,7 @@ which means the scan will be scheduled to start immediately.`,
 }
 
 func resourceSecurityScannerScanConfigCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

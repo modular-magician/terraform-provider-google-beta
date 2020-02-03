@@ -120,6 +120,7 @@ resource will not have any SSL policy configured.`,
 }
 
 func resourceComputeTargetSslProxyCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

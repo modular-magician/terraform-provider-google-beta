@@ -100,6 +100,7 @@ the backend, either NONE or PROXY_V1. The default is NONE.`,
 }
 
 func resourceComputeTargetTcpProxyCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

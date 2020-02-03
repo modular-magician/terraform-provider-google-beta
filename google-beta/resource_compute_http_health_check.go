@@ -130,6 +130,7 @@ consecutive failures. The default value is 2.`,
 }
 
 func resourceComputeHttpHealthCheckCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

@@ -109,6 +109,7 @@ The [CHANNEL_ID] is automatically assigned by the server on creation.`,
 }
 
 func resourceMonitoringNotificationChannelCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

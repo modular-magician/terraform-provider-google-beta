@@ -119,6 +119,7 @@ The name is ignored when creating a transfer config.`,
 }
 
 func resourceBigqueryDataTransferConfigCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

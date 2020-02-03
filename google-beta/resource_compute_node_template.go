@@ -162,6 +162,7 @@ nodes will experience outages while maintenance is applied.`,
 }
 
 func resourceComputeNodeTemplateCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

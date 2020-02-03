@@ -132,6 +132,7 @@ If it is not provided, the provider region is used.`,
 }
 
 func resourceComputeRegionSslCertificateCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

@@ -110,6 +110,7 @@ Currently only one region per model is supported`,
 }
 
 func resourceMLEngineModelCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

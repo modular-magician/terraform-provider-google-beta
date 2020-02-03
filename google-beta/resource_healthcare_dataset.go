@@ -78,6 +78,7 @@ func resourceHealthcareDataset() *schema.Resource {
 }
 
 func resourceHealthcareDatasetCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})

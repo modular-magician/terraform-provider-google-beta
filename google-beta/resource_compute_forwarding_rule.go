@@ -302,6 +302,7 @@ This field is only used for INTERNAL load balancing.`,
 }
 
 func resourceComputeForwardingRuleCreate(d *schema.ResourceData, meta interface{}) error {
+
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
