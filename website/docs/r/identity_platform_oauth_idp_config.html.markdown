@@ -40,7 +40,7 @@ the marketplace prior to using this resource.
 
 ```hcl
 resource "google_identity_platform_oauth_idp_config" "oauth_idp_config" {
-  name          = "oidc.oauth-idp-config"
+  name          = ""
   display_name  = "Display Name"
   client_id     = "client-id"
   issuer        = "issuer"
