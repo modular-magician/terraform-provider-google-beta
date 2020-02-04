@@ -51,10 +51,10 @@ func TestAccIdentityPlatformInboundSamlConfig_identityPlatformInboundSamlConfigB
 func testAccIdentityPlatformInboundSamlConfig_identityPlatformInboundSamlConfigBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_identity_platform_inbound_saml_config" "saml_config" {
-  name         = "saml.tf-config%{random_suffix}"
+  name         = "tf-test-saml.tf-config%{random_suffix}"
   display_name = "Display Name"
   idp_config {
-    idp_entity_id = "tf-idp%{random_suffix}"
+    idp_entity_id = "tf-test-tf-idp%{random_suffix}"
     sign_request  = true
     sso_url       = "example.com"
     idp_certificates {
@@ -63,7 +63,7 @@ resource "google_identity_platform_inbound_saml_config" "saml_config" {
   }
 
   sp_config {
-    sp_entity_id = "tf-sp%{random_suffix}"
+    sp_entity_id = "tf-test-tf-sp%{random_suffix}"
     callback_uri = "https://example.com"
   }
 }
