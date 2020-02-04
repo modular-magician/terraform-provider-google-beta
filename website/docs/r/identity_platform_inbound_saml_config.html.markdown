@@ -40,10 +40,10 @@ the marketplace prior to using this resource.
 
 ```hcl
 resource "google_identity_platform_inbound_saml_config" "saml_config" {
-  name         = "saml.tf-config"
+  name         = ""
   display_name = "Display Name"
   idp_config {
-    idp_entity_id = "tf-idp"
+    idp_entity_id = "idp-entity"
     sign_request  = true
     sso_url       = "example.com"
     idp_certificates {
@@ -52,7 +52,7 @@ resource "google_identity_platform_inbound_saml_config" "saml_config" {
   }
 
   sp_config {
-    sp_entity_id = "tf-sp"
+    sp_entity_id = "sp-entity"
     callback_uri = "https://example.com"
   }
 }
