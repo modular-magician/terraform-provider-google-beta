@@ -51,7 +51,7 @@ func TestAccIdentityPlatformOauthIdpConfig_identityPlatformOauthIdpConfigBasicEx
 func testAccIdentityPlatformOauthIdpConfig_identityPlatformOauthIdpConfigBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_identity_platform_oauth_idp_config" "oauth_idp_config" {
-  name          = "oidc.oauth-idp-config%{random_suffix}"
+  name          = "tf-test-oidc.oauth-idp-config%{random_suffix}"
   display_name  = "Display Name"
   client_id     = "client-id"
   issuer        = "issuer"
