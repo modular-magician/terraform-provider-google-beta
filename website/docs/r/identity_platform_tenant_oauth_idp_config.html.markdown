@@ -44,7 +44,7 @@ resource "google_identity_platform_tenant" "tenant" {
 }
 
 resource "google_identity_platform_tenant_oauth_idp_config" "tenant_oauth_idp_config" {
-  name          = "oidc.oauth-idp-config"
+  name          = ""
   tenant        = google_identity_platform_tenant.tenant.name
   display_name  = "Display Name"
   client_id     = "client-id"

@@ -44,11 +44,11 @@ resource "google_identity_platform_tenant" "tenant" {
 }
 
 resource "google_identity_platform_tenant_inbound_saml_config" "tenant_saml_config" {
-  name         = "saml.tf-config"
+  name         = ""
   display_name = "Display Name"
   tenant       = google_identity_platform_tenant.tenant.name
   idp_config {
-    idp_entity_id = "tf-idp"
+    idp_entity_id = "idp-entity"
     sign_request  = true
     sso_url       = "example.com"
     idp_certificates {
@@ -57,7 +57,7 @@ resource "google_identity_platform_tenant_inbound_saml_config" "tenant_saml_conf
   }
 
   sp_config {
-    sp_entity_id = "tf-sp"
+    sp_entity_id = "sp-entity"
     callback_uri = "https://example.com"
   }
 }
