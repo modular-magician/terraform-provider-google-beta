@@ -39,7 +39,7 @@ func TestAccSourceRepoRepositoryIamBindingGenerated(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_sourcerepo_repository_iam_binding.foo",
-				ImportStateId:     fmt.Sprintf("projects/%s/repos/%s roles/viewer", getTestProjectFromEnv(), fmt.Sprintf("my/repository%s", context["random_suffix"])),
+				ImportStateId:     fmt.Sprintf("projects/%s/repos/%s roles/viewer", getTestProjectFromEnv(), fmt.Sprintf("tf-test-my/repository%s", context["random_suffix"])),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -49,7 +49,7 @@ func TestAccSourceRepoRepositoryIamBindingGenerated(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_sourcerepo_repository_iam_binding.foo",
-				ImportStateId:     fmt.Sprintf("projects/%s/repos/%s roles/viewer", getTestProjectFromEnv(), fmt.Sprintf("my/repository%s", context["random_suffix"])),
+				ImportStateId:     fmt.Sprintf("projects/%s/repos/%s roles/viewer", getTestProjectFromEnv(), fmt.Sprintf("tf-test-my/repository%s", context["random_suffix"])),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -75,7 +75,7 @@ func TestAccSourceRepoRepositoryIamMemberGenerated(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_sourcerepo_repository_iam_member.foo",
-				ImportStateId:     fmt.Sprintf("projects/%s/repos/%s roles/viewer user:admin@hashicorptest.com", getTestProjectFromEnv(), fmt.Sprintf("my/repository%s", context["random_suffix"])),
+				ImportStateId:     fmt.Sprintf("projects/%s/repos/%s roles/viewer user:admin@hashicorptest.com", getTestProjectFromEnv(), fmt.Sprintf("tf-test-my/repository%s", context["random_suffix"])),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -100,7 +100,7 @@ func TestAccSourceRepoRepositoryIamPolicyGenerated(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_sourcerepo_repository_iam_policy.foo",
-				ImportStateId:     fmt.Sprintf("projects/%s/repos/%s", getTestProjectFromEnv(), fmt.Sprintf("my/repository%s", context["random_suffix"])),
+				ImportStateId:     fmt.Sprintf("projects/%s/repos/%s", getTestProjectFromEnv(), fmt.Sprintf("tf-test-my/repository%s", context["random_suffix"])),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -109,7 +109,7 @@ func TestAccSourceRepoRepositoryIamPolicyGenerated(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_sourcerepo_repository_iam_policy.foo",
-				ImportStateId:     fmt.Sprintf("projects/%s/repos/%s", getTestProjectFromEnv(), fmt.Sprintf("my/repository%s", context["random_suffix"])),
+				ImportStateId:     fmt.Sprintf("projects/%s/repos/%s", getTestProjectFromEnv(), fmt.Sprintf("tf-test-my/repository%s", context["random_suffix"])),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
