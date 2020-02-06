@@ -200,6 +200,9 @@ is ready to be promoted to ACTIVE or is currently draining.`,
 contained in this subnetwork. The primary IP of such VM must belong
 to the primary ipCidrRange of the subnetwork. The alias IPs may belong
 to either primary or secondary ranges.
+**Note**: This field will default to the API if empty. In order to explicitly
+remove any secondary IP ranges, set this to an empty array. 
+For example: 'secondary_ip_range=[]'
 This field uses attr-as-block mode to avoid breaking
 users during the 0.12 upgrade. See [the Attr-as-Block page](https://www.terraform.io/docs/configuration/attr-as-blocks.html)
 for more details.`,
