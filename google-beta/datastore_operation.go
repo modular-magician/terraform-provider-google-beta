@@ -18,27 +18,27 @@ import (
 	"fmt"
 )
 
-type TPUOperationWaiter struct {
+type DatastoreOperationWaiter struct {
 	Config  *Config
 	Project string
 	CommonOperationWaiter
 }
 
-func (w *TPUOperationWaiter) QueryOp() (interface{}, error) {
+func (w *DatastoreOperationWaiter) QueryOp() (interface{}, error) {
 	if w == nil {
 		return nil, fmt.Errorf("Cannot query operation, it's unset or nil.")
 	}
 	// Returns the proper get.
-	url := fmt.Sprintf("https://tpu.googleapis.com/v1/%s", w.CommonOperationWaiter.Op.Name)
+	url := fmt.Sprintf("https://datastore.googleapis.com/v1/%s", w.CommonOperationWaiter.Op.Name)
 	return sendRequest(w.Config, "GET", w.Project, url, nil)
 }
 
-func tpuOperationWaitTime(config *Config, op map[string]interface{}, response *map[string]interface{}, project, activity string, timeoutMinutes int) error {
+func datastoreOperationWaitTime(config *Config, op map[string]interface{}, response *map[string]interface{}, project, activity string, timeoutMinutes int) error {
 	if val, ok := op["name"]; !ok || val == "" {
 		// This was a synchronous call - there is no operation to wait for.
 		return nil
 	}
-	w := &TPUOperationWaiter{
+	w := &DatastoreOperationWaiter{
 		Config:  config,
 		Project: project,
 	}

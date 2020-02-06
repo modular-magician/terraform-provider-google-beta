@@ -281,14 +281,18 @@ func resourceAccessContextManagerAccessLevelCreate(d *schema.ResourceData, meta 
 	}
 	d.SetId(id)
 
+	var response map[string]interface{}
 	err = accessContextManagerOperationWaitTime(
-		config, res, "Creating AccessLevel",
+		config, res, &response, "Creating AccessLevel",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create AccessLevel: %s", err)
+	}
+	if err := d.Set("name", flattenAccessContextManagerAccessLevelName(response["name"], d, config)); err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Finished creating AccessLevel %q: %#v", d.Id(), res)
@@ -384,8 +388,9 @@ func resourceAccessContextManagerAccessLevelUpdate(d *schema.ResourceData, meta 
 		return fmt.Errorf("Error updating AccessLevel %q: %s", d.Id(), err)
 	}
 
+	var response map[string]interface{}
 	err = accessContextManagerOperationWaitTime(
-		config, res, "Updating AccessLevel",
+		config, res, &response, "Updating AccessLevel",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
 
 	if err != nil {
@@ -411,8 +416,9 @@ func resourceAccessContextManagerAccessLevelDelete(d *schema.ResourceData, meta 
 		return handleNotFoundError(err, d, "AccessLevel")
 	}
 
+	var response map[string]interface{}
 	err = accessContextManagerOperationWaitTime(
-		config, res, "Deleting AccessLevel",
+		config, res, &response, "Deleting AccessLevel",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {

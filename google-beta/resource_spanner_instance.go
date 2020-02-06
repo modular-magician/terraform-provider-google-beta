@@ -165,14 +165,18 @@ func resourceSpannerInstanceCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	d.SetId(id)
 
+	var response map[string]interface{}
 	err = spannerOperationWaitTime(
-		config, res, project, "Creating Instance",
+		config, res, &response, project, "Creating Instance",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create Instance: %s", err)
+	}
+	if err := d.Set("name", flattenSpannerInstanceName(response["name"], d, config)); err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Finished creating Instance %q: %#v", d.Id(), res)
@@ -291,8 +295,9 @@ func resourceSpannerInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error updating Instance %q: %s", d.Id(), err)
 	}
 
+	var response map[string]interface{}
 	err = spannerOperationWaitTime(
-		config, res, project, "Updating Instance",
+		config, res, &response, project, "Updating Instance",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
 
 	if err != nil {

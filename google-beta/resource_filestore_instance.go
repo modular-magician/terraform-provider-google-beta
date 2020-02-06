@@ -218,8 +218,9 @@ func resourceFilestoreInstanceCreate(d *schema.ResourceData, meta interface{}) e
 	}
 	d.SetId(id)
 
+	var response map[string]interface{}
 	err = filestoreOperationWaitTime(
-		config, res, project, "Creating Instance",
+		config, res, &response, project, "Creating Instance",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if err != nil {
@@ -338,8 +339,9 @@ func resourceFilestoreInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 		return fmt.Errorf("Error updating Instance %q: %s", d.Id(), err)
 	}
 
+	var response map[string]interface{}
 	err = filestoreOperationWaitTime(
-		config, res, project, "Updating Instance",
+		config, res, &response, project, "Updating Instance",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
 
 	if err != nil {
@@ -370,8 +372,9 @@ func resourceFilestoreInstanceDelete(d *schema.ResourceData, meta interface{}) e
 		return handleNotFoundError(err, d, "Instance")
 	}
 
+	var response map[string]interface{}
 	err = filestoreOperationWaitTime(
-		config, res, project, "Deleting Instance",
+		config, res, &response, project, "Deleting Instance",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {
