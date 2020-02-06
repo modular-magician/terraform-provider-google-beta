@@ -14,6 +14,7 @@
 package google
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -31,7 +32,7 @@ func (w *ResourceManagerOperationWaiter) QueryOp() (interface{}, error) {
 	return sendRequest(w.Config, "GET", "", url, nil)
 }
 
-func resourceManagerOperationWaitTime(config *Config, op map[string]interface{}, activity string, timeoutMinutes int) error {
+func resourceManagerOperationWaitTime(config *Config, op map[string]interface{}, response *map[string]interface{}, activity string, timeoutMinutes int) error {
 	if val, ok := op["name"]; !ok || val == "" {
 		// This was a synchronous call - there is no operation to wait for.
 		return nil
@@ -42,5 +43,9 @@ func resourceManagerOperationWaitTime(config *Config, op map[string]interface{},
 	if err := w.CommonOperationWaiter.SetOp(op); err != nil {
 		return err
 	}
-	return OperationWait(w, activity, timeoutMinutes)
+
+	if err := OperationWait(w, activity, timeoutMinutes); err != nil {
+		return err
+	}
+	return json.Unmarshal([]byte(w.CommonOperationWaiter.Op.Response), response)
 }

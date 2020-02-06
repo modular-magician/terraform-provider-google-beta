@@ -173,14 +173,18 @@ func resourceFirestoreIndexCreate(d *schema.ResourceData, meta interface{}) erro
 	}
 	d.SetId(id)
 
+	var response map[string]interface{}
 	err = firestoreOperationWaitTime(
-		config, res, project, "Creating Index",
+		config, res, &response, project, "Creating Index",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create Index: %s", err)
+	}
+	if err := d.Set("name", flattenFirestoreIndexName(response["name"], d, config)); err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Finished creating Index %q: %#v", d.Id(), res)
@@ -251,8 +255,9 @@ func resourceFirestoreIndexDelete(d *schema.ResourceData, meta interface{}) erro
 		return handleNotFoundError(err, d, "Index")
 	}
 
+	var response map[string]interface{}
 	err = firestoreOperationWaitTime(
-		config, res, project, "Deleting Index",
+		config, res, &response, project, "Deleting Index",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {

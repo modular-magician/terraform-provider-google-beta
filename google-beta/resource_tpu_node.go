@@ -270,14 +270,18 @@ func resourceTPUNodeCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.SetId(id)
 
+	var response map[string]interface{}
 	err = tpuOperationWaitTime(
-		config, res, project, "Creating Node",
+		config, res, &response, project, "Creating Node",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create Node: %s", err)
+	}
+	if err := d.Set("name", flattenTPUNodeName(response["name"], d, config)); err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Finished creating Node %q: %#v", d.Id(), res)
@@ -369,8 +373,9 @@ func resourceTPUNodeUpdate(d *schema.ResourceData, meta interface{}) error {
 			return fmt.Errorf("Error updating Node %q: %s", d.Id(), err)
 		}
 
+		var response map[string]interface{}
 		err = tpuOperationWaitTime(
-			config, res, project, "Updating Node",
+			config, res, &response, project, "Updating Node",
 			int(d.Timeout(schema.TimeoutUpdate).Minutes()))
 		if err != nil {
 			return err
@@ -405,8 +410,9 @@ func resourceTPUNodeDelete(d *schema.ResourceData, meta interface{}) error {
 		return handleNotFoundError(err, d, "Node")
 	}
 
+	var response map[string]interface{}
 	err = tpuOperationWaitTime(
-		config, res, project, "Deleting Node",
+		config, res, &response, project, "Deleting Node",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {

@@ -250,8 +250,9 @@ func resourceMLEngineModelDelete(d *schema.ResourceData, meta interface{}) error
 		return handleNotFoundError(err, d, "Model")
 	}
 
+	var response map[string]interface{}
 	err = mLEngineOperationWaitTime(
-		config, res, project, "Deleting Model",
+		config, res, &response, project, "Deleting Model",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {

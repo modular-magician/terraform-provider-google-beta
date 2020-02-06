@@ -189,14 +189,18 @@ func resourceAppEngineDomainMappingCreate(d *schema.ResourceData, meta interface
 	}
 	d.SetId(id)
 
+	var response map[string]interface{}
 	err = appEngineOperationWaitTime(
-		config, res, project, "Creating DomainMapping",
+		config, res, &response, project, "Creating DomainMapping",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create DomainMapping: %s", err)
+	}
+	if err := d.Set("name", flattenAppEngineDomainMappingName(response["name"], d, config)); err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Finished creating DomainMapping %q: %#v", d.Id(), res)
@@ -280,8 +284,9 @@ func resourceAppEngineDomainMappingUpdate(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error updating DomainMapping %q: %s", d.Id(), err)
 	}
 
+	var response map[string]interface{}
 	err = appEngineOperationWaitTime(
-		config, res, project, "Updating DomainMapping",
+		config, res, &response, project, "Updating DomainMapping",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
 
 	if err != nil {
@@ -312,8 +317,9 @@ func resourceAppEngineDomainMappingDelete(d *schema.ResourceData, meta interface
 		return handleNotFoundError(err, d, "DomainMapping")
 	}
 
+	var response map[string]interface{}
 	err = appEngineOperationWaitTime(
-		config, res, project, "Deleting DomainMapping",
+		config, res, &response, project, "Deleting DomainMapping",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {

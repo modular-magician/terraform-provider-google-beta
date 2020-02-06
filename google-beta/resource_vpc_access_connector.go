@@ -163,14 +163,18 @@ func resourceVPCAccessConnectorCreate(d *schema.ResourceData, meta interface{}) 
 	}
 	d.SetId(id)
 
+	var response map[string]interface{}
 	err = vpcAccessOperationWaitTime(
-		config, res, project, "Creating Connector",
+		config, res, &response, project, "Creating Connector",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create Connector: %s", err)
+	}
+	if err := d.Set("name", flattenVPCAccessConnectorName(response["name"], d, config)); err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Finished creating Connector %q: %#v", d.Id(), res)
@@ -259,8 +263,9 @@ func resourceVPCAccessConnectorDelete(d *schema.ResourceData, meta interface{}) 
 		return handleNotFoundError(err, d, "Connector")
 	}
 
+	var response map[string]interface{}
 	err = vpcAccessOperationWaitTime(
-		config, res, project, "Deleting Connector",
+		config, res, &response, project, "Deleting Connector",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {

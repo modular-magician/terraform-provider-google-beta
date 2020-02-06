@@ -108,14 +108,18 @@ func resourceAccessContextManagerAccessPolicyCreate(d *schema.ResourceData, meta
 	}
 	d.SetId(id)
 
+	var response map[string]interface{}
 	err = accessContextManagerOperationWaitTime(
-		config, res, "Creating AccessPolicy",
+		config, res, &response, "Creating AccessPolicy",
 		int(d.Timeout(schema.TimeoutCreate).Minutes()))
 
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create AccessPolicy: %s", err)
+	}
+	if err := d.Set("name", flattenAccessContextManagerAccessPolicyName(response["name"], d, config)); err != nil {
+		return err
 	}
 
 	log.Printf("[DEBUG] Finished creating AccessPolicy %q: %#v", d.Id(), res)
@@ -199,8 +203,9 @@ func resourceAccessContextManagerAccessPolicyUpdate(d *schema.ResourceData, meta
 		return fmt.Errorf("Error updating AccessPolicy %q: %s", d.Id(), err)
 	}
 
+	var response map[string]interface{}
 	err = accessContextManagerOperationWaitTime(
-		config, res, "Updating AccessPolicy",
+		config, res, &response, "Updating AccessPolicy",
 		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
 
 	if err != nil {
@@ -226,8 +231,9 @@ func resourceAccessContextManagerAccessPolicyDelete(d *schema.ResourceData, meta
 		return handleNotFoundError(err, d, "AccessPolicy")
 	}
 
+	var response map[string]interface{}
 	err = accessContextManagerOperationWaitTime(
-		config, res, "Deleting AccessPolicy",
+		config, res, &response, "Deleting AccessPolicy",
 		int(d.Timeout(schema.TimeoutDelete).Minutes()))
 
 	if err != nil {
