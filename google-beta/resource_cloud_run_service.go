@@ -249,6 +249,7 @@ https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources`,
 														Schema: map[string]*schema.Schema{
 															"limits": {
 																Type:     schema.TypeMap,
+																Computed: true,
 																Optional: true,
 																Description: `Limits describes the maximum amount of compute resources allowed.
 The values of the map is string form of the 'quantity' k8s type:
@@ -282,6 +283,7 @@ might be configured in the container image.`,
 									},
 									"container_concurrency": {
 										Type:     schema.TypeInt,
+										Computed: true,
 										Optional: true,
 										Description: `ContainerConcurrency specifies the maximum allowed in-flight (concurrent)
 requests per container of the Revision. Values are:
@@ -325,6 +327,7 @@ annotation key.`,
 								Schema: map[string]*schema.Schema{
 									"annotations": {
 										Type:     schema.TypeMap,
+										Computed: true,
 										Optional: true,
 										Description: `Annotations is a key value map stored with a resource that
 may be set by external tools to store and retrieve arbitrary metadata. More
