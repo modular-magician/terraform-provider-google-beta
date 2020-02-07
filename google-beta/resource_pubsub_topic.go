@@ -160,7 +160,37 @@ func resourcePubsubTopicCreate(d *schema.ResourceData, meta interface{}) error {
 
 	log.Printf("[DEBUG] Finished creating Topic %q: %#v", d.Id(), res)
 
+	log.Printf("[DEBUG] Making sure eventually consistent Topic %q is ready", d.Id())
+	tryPollForResourceExistence(d, meta, resourcePubsubTopicExistenceCheck)
+
 	return resourcePubsubTopicRead(d, meta)
+}
+
+// Checks if a resource exists. If the response is successful (200s),
+// this function returns true with no error. If response is 404, returns false
+// with no error. All other error responses are returned as is.
+func resourcePubsubTopicExistenceCheck(d *schema.ResourceData, meta interface{}) (bool, error) {
+	log.Printf("[DEBUG] Check for existence of Topic %q", d.Id())
+
+	config := meta.(*Config)
+
+	url, err := replaceVars(d, config, "{{PubsubBasePath}}projects/{{project}}/topics/{{name}}")
+	if err != nil {
+		return false, err
+	}
+
+	project, err := getProject(d, config)
+	if err != nil {
+		return false, err
+	}
+	_, err = sendRequest(config, "GET", project, url, nil, pubsubTopicProjectNotReady)
+	if err != nil {
+		if isGoogleApiErrorWithCode(err, 404) {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }
 
 func resourcePubsubTopicRead(d *schema.ResourceData, meta interface{}) error {
@@ -281,7 +311,6 @@ func resourcePubsubTopicDelete(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Finished deleting Topic %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourcePubsubTopicImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

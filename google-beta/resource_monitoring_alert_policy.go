@@ -1014,7 +1014,6 @@ func resourceMonitoringAlertPolicyDelete(d *schema.ResourceData, meta interface{
 	log.Printf("[DEBUG] Finished deleting AlertPolicy %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceMonitoringAlertPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

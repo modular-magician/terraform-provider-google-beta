@@ -557,7 +557,6 @@ func resourceMonitoringUptimeCheckConfigDelete(d *schema.ResourceData, meta inte
 	log.Printf("[DEBUG] Finished deleting UptimeCheckConfig %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceMonitoringUptimeCheckConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

@@ -395,7 +395,6 @@ func resourceAccessContextManagerServicePerimeterDelete(d *schema.ResourceData, 
 	log.Printf("[DEBUG] Finished deleting ServicePerimeter %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceAccessContextManagerServicePerimeterImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 

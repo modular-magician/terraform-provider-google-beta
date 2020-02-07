@@ -254,7 +254,6 @@ func resourceHealthcareDicomStoreDelete(d *schema.ResourceData, meta interface{}
 	log.Printf("[DEBUG] Finished deleting DicomStore %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceHealthcareDicomStoreImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

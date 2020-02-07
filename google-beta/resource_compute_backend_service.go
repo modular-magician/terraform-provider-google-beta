@@ -1461,7 +1461,6 @@ func resourceComputeBackendServiceDelete(d *schema.ResourceData, meta interface{
 	log.Printf("[DEBUG] Finished deleting BackendService %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeBackendServiceImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

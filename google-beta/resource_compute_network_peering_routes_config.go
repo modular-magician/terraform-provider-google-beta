@@ -261,7 +261,6 @@ func resourceComputeNetworkPeeringRoutesConfigDelete(d *schema.ResourceData, met
 
 	return nil
 }
-
 func resourceComputeNetworkPeeringRoutesConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

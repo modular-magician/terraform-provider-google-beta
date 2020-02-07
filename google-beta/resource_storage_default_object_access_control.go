@@ -274,7 +274,6 @@ func resourceStorageDefaultObjectAccessControlDelete(d *schema.ResourceData, met
 	log.Printf("[DEBUG] Finished deleting DefaultObjectAccessControl %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceStorageDefaultObjectAccessControlImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

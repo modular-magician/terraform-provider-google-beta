@@ -336,7 +336,6 @@ func resourceComputeRegionTargetHttpsProxyDelete(d *schema.ResourceData, meta in
 	log.Printf("[DEBUG] Finished deleting RegionTargetHttpsProxy %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeRegionTargetHttpsProxyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

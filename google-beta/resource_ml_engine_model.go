@@ -261,7 +261,6 @@ func resourceMLEngineModelDelete(d *schema.ResourceData, meta interface{}) error
 	log.Printf("[DEBUG] Finished deleting Model %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceMLEngineModelImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

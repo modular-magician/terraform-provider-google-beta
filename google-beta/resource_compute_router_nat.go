@@ -654,7 +654,6 @@ func resourceComputeRouterNatDelete(d *schema.ResourceData, meta interface{}) er
 	log.Printf("[DEBUG] Finished deleting RouterNat %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeRouterNatImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

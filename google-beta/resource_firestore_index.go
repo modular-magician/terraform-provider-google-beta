@@ -262,7 +262,6 @@ func resourceFirestoreIndexDelete(d *schema.ResourceData, meta interface{}) erro
 	log.Printf("[DEBUG] Finished deleting Index %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceFirestoreIndexImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

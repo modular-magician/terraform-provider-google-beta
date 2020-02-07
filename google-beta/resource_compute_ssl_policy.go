@@ -373,7 +373,6 @@ func resourceComputeSslPolicyDelete(d *schema.ResourceData, meta interface{}) er
 	log.Printf("[DEBUG] Finished deleting SslPolicy %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeSslPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

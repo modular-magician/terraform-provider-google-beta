@@ -347,7 +347,6 @@ func resourceHealthcareFhirStoreDelete(d *schema.ResourceData, meta interface{})
 	log.Printf("[DEBUG] Finished deleting FhirStore %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceHealthcareFhirStoreImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

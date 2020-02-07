@@ -499,7 +499,6 @@ func resourceLoggingMetricDelete(d *schema.ResourceData, meta interface{}) error
 	log.Printf("[DEBUG] Finished deleting Metric %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceLoggingMetricImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

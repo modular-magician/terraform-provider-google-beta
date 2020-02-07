@@ -489,7 +489,6 @@ func resourceRedisInstanceDelete(d *schema.ResourceData, meta interface{}) error
 	log.Printf("[DEBUG] Finished deleting Instance %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceRedisInstanceImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

@@ -842,7 +842,6 @@ func resourceComputeRegionHealthCheckDelete(d *schema.ResourceData, meta interfa
 	log.Printf("[DEBUG] Finished deleting RegionHealthCheck %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeRegionHealthCheckImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

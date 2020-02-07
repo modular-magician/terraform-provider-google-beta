@@ -306,7 +306,6 @@ func resourceIdentityPlatformTenantOauthIdpConfigDelete(d *schema.ResourceData, 
 	log.Printf("[DEBUG] Finished deleting TenantOauthIdpConfig %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceIdentityPlatformTenantOauthIdpConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

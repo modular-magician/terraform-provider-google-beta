@@ -445,7 +445,6 @@ func resourceComputeAddressDelete(d *schema.ResourceData, meta interface{}) erro
 	log.Printf("[DEBUG] Finished deleting Address %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeAddressImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

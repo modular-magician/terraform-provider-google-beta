@@ -409,7 +409,6 @@ func resourceComputeTargetSslProxyDelete(d *schema.ResourceData, meta interface{
 	log.Printf("[DEBUG] Finished deleting TargetSslProxy %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeTargetSslProxyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

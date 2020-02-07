@@ -493,7 +493,6 @@ func resourceSecurityScannerScanConfigDelete(d *schema.ResourceData, meta interf
 	log.Printf("[DEBUG] Finished deleting ScanConfig %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceSecurityScannerScanConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

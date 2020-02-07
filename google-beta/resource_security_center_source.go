@@ -205,7 +205,6 @@ func resourceSecurityCenterSourceDelete(d *schema.ResourceData, meta interface{}
 
 	return nil
 }
-
 func resourceSecurityCenterSourceImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 

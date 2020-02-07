@@ -282,7 +282,6 @@ func resourceMonitoringGroupDelete(d *schema.ResourceData, meta interface{}) err
 	log.Printf("[DEBUG] Finished deleting Group %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceMonitoringGroupImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

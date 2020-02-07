@@ -591,7 +591,6 @@ func resourceComputeGlobalForwardingRuleDelete(d *schema.ResourceData, meta inte
 	log.Printf("[DEBUG] Finished deleting GlobalForwardingRule %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeGlobalForwardingRuleImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

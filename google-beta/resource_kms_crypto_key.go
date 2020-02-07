@@ -326,7 +326,6 @@ and all its CryptoKeyVersions will be destroyed, but it will still be present on
 	d.SetId("")
 	return nil
 }
-
 func resourceKMSCryptoKeyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

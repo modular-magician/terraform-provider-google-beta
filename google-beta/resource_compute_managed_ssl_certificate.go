@@ -283,7 +283,6 @@ func resourceComputeManagedSslCertificateDelete(d *schema.ResourceData, meta int
 	log.Printf("[DEBUG] Finished deleting ManagedSslCertificate %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeManagedSslCertificateImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
