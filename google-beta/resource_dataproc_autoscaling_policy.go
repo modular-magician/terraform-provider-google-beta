@@ -409,7 +409,6 @@ func resourceDataprocAutoscalingPolicyDelete(d *schema.ResourceData, meta interf
 	log.Printf("[DEBUG] Finished deleting AutoscalingPolicy %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceDataprocAutoscalingPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

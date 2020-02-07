@@ -432,7 +432,6 @@ func resourceComputeSnapshotDelete(d *schema.ResourceData, meta interface{}) err
 	log.Printf("[DEBUG] Finished deleting Snapshot %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeSnapshotImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

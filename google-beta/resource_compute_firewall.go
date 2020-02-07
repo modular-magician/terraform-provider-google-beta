@@ -694,7 +694,6 @@ func resourceComputeFirewallDelete(d *schema.ResourceData, meta interface{}) err
 	log.Printf("[DEBUG] Finished deleting Firewall %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeFirewallImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

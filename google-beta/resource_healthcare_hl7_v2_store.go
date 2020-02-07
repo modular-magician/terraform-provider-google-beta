@@ -297,7 +297,6 @@ func resourceHealthcareHl7V2StoreDelete(d *schema.ResourceData, meta interface{}
 	log.Printf("[DEBUG] Finished deleting Hl7V2Store %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceHealthcareHl7V2StoreImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

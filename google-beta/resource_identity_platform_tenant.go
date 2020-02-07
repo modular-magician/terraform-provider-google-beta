@@ -284,7 +284,6 @@ func resourceIdentityPlatformTenantDelete(d *schema.ResourceData, meta interface
 	log.Printf("[DEBUG] Finished deleting Tenant %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceIdentityPlatformTenantImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

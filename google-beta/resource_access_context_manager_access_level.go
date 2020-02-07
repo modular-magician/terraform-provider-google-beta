@@ -422,7 +422,6 @@ func resourceAccessContextManagerAccessLevelDelete(d *schema.ResourceData, meta 
 	log.Printf("[DEBUG] Finished deleting AccessLevel %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceAccessContextManagerAccessLevelImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 

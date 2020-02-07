@@ -494,7 +494,6 @@ func resourceComputeAutoscalerDelete(d *schema.ResourceData, meta interface{}) e
 	log.Printf("[DEBUG] Finished deleting Autoscaler %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeAutoscalerImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

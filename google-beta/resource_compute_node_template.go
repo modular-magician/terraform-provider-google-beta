@@ -329,7 +329,6 @@ func resourceComputeNodeTemplateDelete(d *schema.ResourceData, meta interface{})
 	log.Printf("[DEBUG] Finished deleting NodeTemplate %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeNodeTemplateImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

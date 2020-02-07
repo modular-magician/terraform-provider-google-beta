@@ -305,7 +305,6 @@ func resourceSQLDatabaseDelete(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("[DEBUG] Finished deleting Database %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceSQLDatabaseImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

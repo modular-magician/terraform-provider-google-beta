@@ -277,7 +277,6 @@ func resourceStorageObjectAccessControlDelete(d *schema.ResourceData, meta inter
 	log.Printf("[DEBUG] Finished deleting ObjectAccessControl %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceStorageObjectAccessControlImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

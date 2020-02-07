@@ -355,7 +355,6 @@ func resourceBigqueryDataTransferConfigDelete(d *schema.ResourceData, meta inter
 	log.Printf("[DEBUG] Finished deleting Config %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceBigqueryDataTransferConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

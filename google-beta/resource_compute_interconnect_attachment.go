@@ -473,7 +473,6 @@ func resourceComputeInterconnectAttachmentDelete(d *schema.ResourceData, meta in
 	log.Printf("[DEBUG] Finished deleting InterconnectAttachment %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeInterconnectAttachmentImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

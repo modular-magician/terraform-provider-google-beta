@@ -216,7 +216,6 @@ func resourceSpannerDatabaseDelete(d *schema.ResourceData, meta interface{}) err
 	log.Printf("[DEBUG] Finished deleting Database %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceSpannerDatabaseImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

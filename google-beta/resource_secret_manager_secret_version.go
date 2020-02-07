@@ -207,7 +207,6 @@ func resourceSecretManagerSecretVersionDelete(d *schema.ResourceData, meta inter
 	log.Printf("[DEBUG] Finished deleting SecretVersion %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceSecretManagerSecretVersionImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 

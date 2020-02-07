@@ -163,7 +163,6 @@ func resourceKMSKeyRingDelete(d *schema.ResourceData, meta interface{}) error {
 
 	return nil
 }
-
 func resourceKMSKeyRingImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

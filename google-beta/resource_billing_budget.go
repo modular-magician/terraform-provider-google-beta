@@ -326,7 +326,6 @@ func resourceBillingBudgetDelete(d *schema.ResourceData, meta interface{}) error
 	log.Printf("[DEBUG] Finished deleting Budget %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceBillingBudgetImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
 	config := meta.(*Config)

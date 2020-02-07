@@ -402,7 +402,6 @@ func resourceComputeHttpsHealthCheckDelete(d *schema.ResourceData, meta interfac
 	log.Printf("[DEBUG] Finished deleting HttpsHealthCheck %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeHttpsHealthCheckImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

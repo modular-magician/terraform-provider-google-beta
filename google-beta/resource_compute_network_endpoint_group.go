@@ -287,7 +287,6 @@ func resourceComputeNetworkEndpointGroupDelete(d *schema.ResourceData, meta inte
 	log.Printf("[DEBUG] Finished deleting NetworkEndpointGroup %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeNetworkEndpointGroupImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

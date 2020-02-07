@@ -247,7 +247,6 @@ func resourceAppEngineApplicationUrlDispatchRulesDelete(d *schema.ResourceData, 
 	log.Printf("[DEBUG] Finished deleting ApplicationUrlDispatchRules %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceAppEngineApplicationUrlDispatchRulesImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

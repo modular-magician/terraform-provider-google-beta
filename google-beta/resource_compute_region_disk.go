@@ -643,7 +643,6 @@ func resourceComputeRegionDiskDelete(d *schema.ResourceData, meta interface{}) e
 	log.Printf("[DEBUG] Finished deleting RegionDisk %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceComputeRegionDiskImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

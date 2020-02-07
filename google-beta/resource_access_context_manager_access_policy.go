@@ -237,7 +237,6 @@ func resourceAccessContextManagerAccessPolicyDelete(d *schema.ResourceData, meta
 	log.Printf("[DEBUG] Finished deleting AccessPolicy %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceAccessContextManagerAccessPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

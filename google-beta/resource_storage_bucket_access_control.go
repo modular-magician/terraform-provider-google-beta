@@ -224,7 +224,6 @@ func resourceStorageBucketAccessControlDelete(d *schema.ResourceData, meta inter
 	log.Printf("[DEBUG] Finished deleting BucketAccessControl %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceStorageBucketAccessControlImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{

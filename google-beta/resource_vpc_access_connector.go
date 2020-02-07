@@ -270,7 +270,6 @@ func resourceVPCAccessConnectorDelete(d *schema.ResourceData, meta interface{}) 
 	log.Printf("[DEBUG] Finished deleting Connector %q: %#v", d.Id(), res)
 	return nil
 }
-
 func resourceVPCAccessConnectorImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
