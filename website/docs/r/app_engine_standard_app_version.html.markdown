@@ -150,6 +150,10 @@ The following arguments are supported:
   AutomaticScaling F1, F2, F4, F4_1G
   (Only AutomaticScaling is supported at the moment)
 
+* `automatic_scaling` -
+  (Optional)
+  Automatic scaling is based on request rate, response latencies, and other application metrics.  Structure is documented below.
+
 * `service` -
   (Optional)
   AppEngine service resource
@@ -281,6 +285,139 @@ The `entrypoint` block supports:
 * `shell` -
   (Required)
   The format should be a shell command that can be fed to bash -c.
+
+The `automatic_scaling` block supports:
+
+* `min_pending_latency` -
+  (Optional)
+  Minimum amount of time a request should wait in the pending queue before starting a new instance to handle it.
+  A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".
+
+* `standard_scheduler_settings` -
+  (Optional)
+  Scheduler settings for standard environment.  Structure is documented below.
+
+* `max_idle_instances` -
+  (Optional)
+  Maximum number of idle instances that should be maintained for this version.
+
+* `request_utilization` -
+  (Optional)
+  Target scaling by request utilization.  Structure is documented below.
+
+* `min_idle_instances` -
+  (Optional)
+  Minimum number of idle instances that should be maintained for this version. Only applicable for the default version of a service.
+
+* `max_total_instances` -
+  (Optional)
+  Maximum number of instances that should be started to handle requests for this version.
+
+* `min_total_instances` -
+  (Optional)
+  Minimum number of running instances that should be maintained for this version.
+
+* `network_utilization` -
+  (Optional)
+  Target scaling by network usage.  Structure is documented below.
+
+* `cool_down_period` -
+  (Optional)
+  The time period that the Autoscaler (https://cloud.google.com/compute/docs/autoscaler/) should wait before it starts collecting information from a new instance. This prevents the autoscaler from collecting information when the instance is initializing, during which the collected usage would not be reliable. Only applicable in the App Engine flexible environment.
+  A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".
+
+* `max_concurrent_requests` -
+  (Optional)
+  Number of concurrent requests an automatic scaling instance can accept before the scheduler spawns a new instance.Defaults to a runtime-specific value.
+
+* `max_pending_latency` -
+  (Optional)
+  Maximum amount of time that a request should wait in the pending queue before starting a new instance to handle it.
+  A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".
+
+* `cpu_utilization` -
+  (Optional)
+  Target scaling by CPU usage.  Structure is documented below.
+
+* `disk_utilization` -
+  (Optional)
+  Target scaling by disk usage.  Structure is documented below.
+
+
+The `standard_scheduler_settings` block supports:
+
+* `max_instances` -
+  (Optional)
+  Maximum number of instances to run for this version. Set to zero to disable max_instances configuration.
+
+* `min_instances` -
+  (Optional)
+  Minimum number of instances to run for this version. Set to zero to disable min_instances configuration.
+
+* `target_cpu_utilization` -
+  (Optional)
+  Target CPU utilization ratio to maintain when scaling.
+
+* `target_throughput_utilization` -
+  (Optional)
+  Target throughput utilization ratio to maintain when scaling.
+
+The `request_utilization` block supports:
+
+* `target_request_count_per_second` -
+  (Optional)
+  Target requests per second.
+
+* `target_concurrent_requests` -
+  (Optional)
+  Target number of concurrent requests.
+
+The `network_utilization` block supports:
+
+* `target_sent_bytes_per_second` -
+  (Optional)
+  Target bytes sent per second.
+
+* `target_sent_packets_per_second` -
+  (Optional)
+  Target packets sent per second.
+
+* `target_received_bytes_per_second` -
+  (Optional)
+  Target bytes received per second.
+
+* `target_received_packets_per_second` -
+  (Optional)
+  Target packets received per second.
+
+The `cpu_utilization` block supports:
+
+* `target_utilization` -
+  (Optional)
+  Target CPU utilization ratio to maintain when scaling. Must be between 0 and 1.
+
+* `aggregation_window_length` -
+  (Optional)
+  Period of time over which CPU utilization is calculated.
+  A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".
+
+The `disk_utilization` block supports:
+
+* `target_write_bytes_per_second` -
+  (Optional)
+  Target bytes written per second.
+
+* `target_read_bytes_per_second` -
+  (Optional)
+  Target bytes read per second.
+
+* `target_read_ops_per_second` -
+  (Optional)
+  Target ops read per seconds.
+
+* `target_write_ops_per_second` -
+  (Optional)
+  Target ops written per second.
 
 ## Attributes Reference
 

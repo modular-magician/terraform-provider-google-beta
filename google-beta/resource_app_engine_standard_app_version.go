@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -46,6 +47,190 @@ func resourceAppEngineStandardAppVersion() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: `Desired runtime. Example python27.`,
+			},
+			"automatic_scaling": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Automatic scaling is based on request rate, response latencies, and other application metrics.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cool_down_period": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The time period that the Autoscaler (https://cloud.google.com/compute/docs/autoscaler/) should wait before it starts collecting information from a new instance. This prevents the autoscaler from collecting information when the instance is initializing, during which the collected usage would not be reliable. Only applicable in the App Engine flexible environment.
+A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
+						},
+						"cpu_utilization": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Target scaling by CPU usage.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"aggregation_window_length": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `Period of time over which CPU utilization is calculated.
+A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
+									},
+									"target_utilization": {
+										Type:        schema.TypeFloat,
+										Optional:    true,
+										Description: `Target CPU utilization ratio to maintain when scaling. Must be between 0 and 1.`,
+									},
+								},
+							},
+						},
+						"disk_utilization": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Target scaling by disk usage.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"target_read_bytes_per_second": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Target bytes read per second.`,
+									},
+									"target_read_ops_per_second": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Target ops read per seconds.`,
+									},
+									"target_write_bytes_per_second": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Target bytes written per second.`,
+									},
+									"target_write_ops_per_second": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Target ops written per second.`,
+									},
+								},
+							},
+						},
+						"max_concurrent_requests": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Number of concurrent requests an automatic scaling instance can accept before the scheduler spawns a new instance.Defaults to a runtime-specific value.`,
+						},
+						"max_idle_instances": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Maximum number of idle instances that should be maintained for this version.`,
+						},
+						"max_pending_latency": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `Maximum amount of time that a request should wait in the pending queue before starting a new instance to handle it.
+A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
+						},
+						"max_total_instances": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Maximum number of instances that should be started to handle requests for this version.`,
+						},
+						"min_idle_instances": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Minimum number of idle instances that should be maintained for this version. Only applicable for the default version of a service.`,
+						},
+						"min_pending_latency": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `Minimum amount of time a request should wait in the pending queue before starting a new instance to handle it.
+A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
+						},
+						"min_total_instances": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Minimum number of running instances that should be maintained for this version.`,
+						},
+						"network_utilization": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Target scaling by network usage.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"target_received_bytes_per_second": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Target bytes received per second.`,
+									},
+									"target_received_packets_per_second": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Target packets received per second.`,
+									},
+									"target_sent_bytes_per_second": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Target bytes sent per second.`,
+									},
+									"target_sent_packets_per_second": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Target packets sent per second.`,
+									},
+								},
+							},
+						},
+						"request_utilization": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Target scaling by request utilization.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"target_concurrent_requests": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Target number of concurrent requests.`,
+									},
+									"target_request_count_per_second": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Target requests per second.`,
+									},
+								},
+							},
+						},
+						"standard_scheduler_settings": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Scheduler settings for standard environment.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"max_instances": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Maximum number of instances to run for this version. Set to zero to disable max_instances configuration.`,
+									},
+									"min_instances": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Minimum number of instances to run for this version. Set to zero to disable min_instances configuration.`,
+									},
+									"target_cpu_utilization": {
+										Type:        schema.TypeFloat,
+										Optional:    true,
+										Description: `Target CPU utilization ratio to maintain when scaling.`,
+									},
+									"target_throughput_utilization": {
+										Type:        schema.TypeFloat,
+										Optional:    true,
+										Description: `Target throughput utilization ratio to maintain when scaling.`,
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 			"deployment": {
 				Type:        schema.TypeList,
@@ -367,6 +552,12 @@ func resourceAppEngineStandardAppVersionCreate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("instance_class"); !isEmptyValue(reflect.ValueOf(instanceClassProp)) && (ok || !reflect.DeepEqual(v, instanceClassProp)) {
 		obj["instanceClass"] = instanceClassProp
 	}
+	automaticScalingProp, err := expandAppEngineStandardAppVersionAutomaticScaling(d.Get("automatic_scaling"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("automatic_scaling"); !isEmptyValue(reflect.ValueOf(automaticScalingProp)) && (ok || !reflect.DeepEqual(v, automaticScalingProp)) {
+		obj["automaticScaling"] = automaticScalingProp
+	}
 
 	lockName, err := replaceVars(d, config, "apps/{{project}}")
 	if err != nil {
@@ -459,6 +650,9 @@ func resourceAppEngineStandardAppVersionRead(d *schema.ResourceData, meta interf
 	if err := d.Set("libraries", flattenAppEngineStandardAppVersionLibraries(res["libraries"], d, config)); err != nil {
 		return fmt.Errorf("Error reading StandardAppVersion: %s", err)
 	}
+	if err := d.Set("automatic_scaling", flattenAppEngineStandardAppVersionAutomaticScaling(res["automaticScaling"], d, config)); err != nil {
+		return fmt.Errorf("Error reading StandardAppVersion: %s", err)
+	}
 
 	return nil
 }
@@ -531,6 +725,12 @@ func resourceAppEngineStandardAppVersionUpdate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("instance_class"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, instanceClassProp)) {
 		obj["instanceClass"] = instanceClassProp
+	}
+	automaticScalingProp, err := expandAppEngineStandardAppVersionAutomaticScaling(d.Get("automatic_scaling"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("automatic_scaling"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, automaticScalingProp)) {
+		obj["automaticScaling"] = automaticScalingProp
 	}
 
 	lockName, err := replaceVars(d, config, "apps/{{project}}")
@@ -805,6 +1005,328 @@ func flattenAppEngineStandardAppVersionLibrariesName(v interface{}, d *schema.Re
 }
 
 func flattenAppEngineStandardAppVersionLibrariesVersion(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScaling(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["min_pending_latency"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingMinPendingLatency(original["minPendingLatency"], d, config)
+	transformed["standard_scheduler_settings"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettings(original["standardSchedulerSettings"], d, config)
+	transformed["max_idle_instances"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingMaxIdleInstances(original["maxIdleInstances"], d, config)
+	transformed["request_utilization"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingRequestUtilization(original["requestUtilization"], d, config)
+	transformed["min_idle_instances"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingMinIdleInstances(original["minIdleInstances"], d, config)
+	transformed["max_total_instances"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingMaxTotalInstances(original["maxTotalInstances"], d, config)
+	transformed["min_total_instances"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingMinTotalInstances(original["minTotalInstances"], d, config)
+	transformed["network_utilization"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingNetworkUtilization(original["networkUtilization"], d, config)
+	transformed["cool_down_period"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingCoolDownPeriod(original["coolDownPeriod"], d, config)
+	transformed["max_concurrent_requests"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingMaxConcurrentRequests(original["maxConcurrentRequests"], d, config)
+	transformed["max_pending_latency"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingMaxPendingLatency(original["maxPendingLatency"], d, config)
+	transformed["cpu_utilization"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingCpuUtilization(original["cpuUtilization"], d, config)
+	transformed["disk_utilization"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingDiskUtilization(original["diskUtilization"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAppEngineStandardAppVersionAutomaticScalingMinPendingLatency(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettings(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["max_instances"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsMaxInstances(original["maxInstances"], d, config)
+	transformed["min_instances"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsMinInstances(original["minInstances"], d, config)
+	transformed["target_cpu_utilization"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsTargetCpuUtilization(original["targetCpuUtilization"], d, config)
+	transformed["target_throughput_utilization"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsTargetThroughputUtilization(original["targetThroughputUtilization"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsMaxInstances(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsMinInstances(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsTargetCpuUtilization(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsTargetThroughputUtilization(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingMaxIdleInstances(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingRequestUtilization(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["target_request_count_per_second"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingRequestUtilizationTargetRequestCountPerSecond(original["targetRequestCountPerSecond"], d, config)
+	transformed["target_concurrent_requests"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingRequestUtilizationTargetConcurrentRequests(original["targetConcurrentRequests"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAppEngineStandardAppVersionAutomaticScalingRequestUtilizationTargetRequestCountPerSecond(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingRequestUtilizationTargetConcurrentRequests(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingMinIdleInstances(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingMaxTotalInstances(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingMinTotalInstances(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingNetworkUtilization(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["target_sent_bytes_per_second"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetSentBytesPerSecond(original["targetSentBytesPerSecond"], d, config)
+	transformed["target_sent_packets_per_second"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetSentPacketsPerSecond(original["targetSentPacketsPerSecond"], d, config)
+	transformed["target_received_bytes_per_second"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetReceivedBytesPerSecond(original["targetReceivedBytesPerSecond"], d, config)
+	transformed["target_received_packets_per_second"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetReceivedPacketsPerSecond(original["targetReceivedPacketsPerSecond"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetSentBytesPerSecond(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetSentPacketsPerSecond(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetReceivedBytesPerSecond(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetReceivedPacketsPerSecond(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingCoolDownPeriod(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingMaxConcurrentRequests(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingMaxPendingLatency(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingCpuUtilization(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["target_utilization"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingCpuUtilizationTargetUtilization(original["targetUtilization"], d, config)
+	transformed["aggregation_window_length"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingCpuUtilizationAggregationWindowLength(original["aggregationWindowLength"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAppEngineStandardAppVersionAutomaticScalingCpuUtilizationTargetUtilization(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingCpuUtilizationAggregationWindowLength(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingDiskUtilization(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["target_write_bytes_per_second"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetWriteBytesPerSecond(original["targetWriteBytesPerSecond"], d, config)
+	transformed["target_read_bytes_per_second"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetReadBytesPerSecond(original["targetReadBytesPerSecond"], d, config)
+	transformed["target_read_ops_per_second"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetReadOpsPerSecond(original["targetReadOpsPerSecond"], d, config)
+	transformed["target_write_ops_per_second"] =
+		flattenAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetWriteOpsPerSecond(original["targetWriteOpsPerSecond"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetWriteBytesPerSecond(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetReadBytesPerSecond(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetReadOpsPerSecond(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
+	return v
+}
+
+func flattenAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetWriteOpsPerSecond(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
+			return intVal
+		} // let terraform core handle it if we can't convert the string to an int.
+	}
 	return v
 }
 
@@ -1192,5 +1714,376 @@ func expandAppEngineStandardAppVersionEntrypointShell(v interface{}, d Terraform
 }
 
 func expandAppEngineStandardAppVersionInstanceClass(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScaling(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMinPendingLatency, err := expandAppEngineStandardAppVersionAutomaticScalingMinPendingLatency(original["min_pending_latency"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMinPendingLatency); val.IsValid() && !isEmptyValue(val) {
+		transformed["minPendingLatency"] = transformedMinPendingLatency
+	}
+
+	transformedStandardSchedulerSettings, err := expandAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettings(original["standard_scheduler_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedStandardSchedulerSettings); val.IsValid() && !isEmptyValue(val) {
+		transformed["standardSchedulerSettings"] = transformedStandardSchedulerSettings
+	}
+
+	transformedMaxIdleInstances, err := expandAppEngineStandardAppVersionAutomaticScalingMaxIdleInstances(original["max_idle_instances"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxIdleInstances); val.IsValid() && !isEmptyValue(val) {
+		transformed["maxIdleInstances"] = transformedMaxIdleInstances
+	}
+
+	transformedRequestUtilization, err := expandAppEngineStandardAppVersionAutomaticScalingRequestUtilization(original["request_utilization"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRequestUtilization); val.IsValid() && !isEmptyValue(val) {
+		transformed["requestUtilization"] = transformedRequestUtilization
+	}
+
+	transformedMinIdleInstances, err := expandAppEngineStandardAppVersionAutomaticScalingMinIdleInstances(original["min_idle_instances"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMinIdleInstances); val.IsValid() && !isEmptyValue(val) {
+		transformed["minIdleInstances"] = transformedMinIdleInstances
+	}
+
+	transformedMaxTotalInstances, err := expandAppEngineStandardAppVersionAutomaticScalingMaxTotalInstances(original["max_total_instances"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxTotalInstances); val.IsValid() && !isEmptyValue(val) {
+		transformed["maxTotalInstances"] = transformedMaxTotalInstances
+	}
+
+	transformedMinTotalInstances, err := expandAppEngineStandardAppVersionAutomaticScalingMinTotalInstances(original["min_total_instances"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMinTotalInstances); val.IsValid() && !isEmptyValue(val) {
+		transformed["minTotalInstances"] = transformedMinTotalInstances
+	}
+
+	transformedNetworkUtilization, err := expandAppEngineStandardAppVersionAutomaticScalingNetworkUtilization(original["network_utilization"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedNetworkUtilization); val.IsValid() && !isEmptyValue(val) {
+		transformed["networkUtilization"] = transformedNetworkUtilization
+	}
+
+	transformedCoolDownPeriod, err := expandAppEngineStandardAppVersionAutomaticScalingCoolDownPeriod(original["cool_down_period"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCoolDownPeriod); val.IsValid() && !isEmptyValue(val) {
+		transformed["coolDownPeriod"] = transformedCoolDownPeriod
+	}
+
+	transformedMaxConcurrentRequests, err := expandAppEngineStandardAppVersionAutomaticScalingMaxConcurrentRequests(original["max_concurrent_requests"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxConcurrentRequests); val.IsValid() && !isEmptyValue(val) {
+		transformed["maxConcurrentRequests"] = transformedMaxConcurrentRequests
+	}
+
+	transformedMaxPendingLatency, err := expandAppEngineStandardAppVersionAutomaticScalingMaxPendingLatency(original["max_pending_latency"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxPendingLatency); val.IsValid() && !isEmptyValue(val) {
+		transformed["maxPendingLatency"] = transformedMaxPendingLatency
+	}
+
+	transformedCpuUtilization, err := expandAppEngineStandardAppVersionAutomaticScalingCpuUtilization(original["cpu_utilization"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCpuUtilization); val.IsValid() && !isEmptyValue(val) {
+		transformed["cpuUtilization"] = transformedCpuUtilization
+	}
+
+	transformedDiskUtilization, err := expandAppEngineStandardAppVersionAutomaticScalingDiskUtilization(original["disk_utilization"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDiskUtilization); val.IsValid() && !isEmptyValue(val) {
+		transformed["diskUtilization"] = transformedDiskUtilization
+	}
+
+	return transformed, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingMinPendingLatency(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettings(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMaxInstances, err := expandAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsMaxInstances(original["max_instances"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxInstances); val.IsValid() && !isEmptyValue(val) {
+		transformed["maxInstances"] = transformedMaxInstances
+	}
+
+	transformedMinInstances, err := expandAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsMinInstances(original["min_instances"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMinInstances); val.IsValid() && !isEmptyValue(val) {
+		transformed["minInstances"] = transformedMinInstances
+	}
+
+	transformedTargetCpuUtilization, err := expandAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsTargetCpuUtilization(original["target_cpu_utilization"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetCpuUtilization); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetCpuUtilization"] = transformedTargetCpuUtilization
+	}
+
+	transformedTargetThroughputUtilization, err := expandAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsTargetThroughputUtilization(original["target_throughput_utilization"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetThroughputUtilization); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetThroughputUtilization"] = transformedTargetThroughputUtilization
+	}
+
+	return transformed, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsMaxInstances(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsMinInstances(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsTargetCpuUtilization(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingStandardSchedulerSettingsTargetThroughputUtilization(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingMaxIdleInstances(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingRequestUtilization(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedTargetRequestCountPerSecond, err := expandAppEngineStandardAppVersionAutomaticScalingRequestUtilizationTargetRequestCountPerSecond(original["target_request_count_per_second"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetRequestCountPerSecond); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetRequestCountPerSecond"] = transformedTargetRequestCountPerSecond
+	}
+
+	transformedTargetConcurrentRequests, err := expandAppEngineStandardAppVersionAutomaticScalingRequestUtilizationTargetConcurrentRequests(original["target_concurrent_requests"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetConcurrentRequests); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetConcurrentRequests"] = transformedTargetConcurrentRequests
+	}
+
+	return transformed, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingRequestUtilizationTargetRequestCountPerSecond(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingRequestUtilizationTargetConcurrentRequests(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingMinIdleInstances(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingMaxTotalInstances(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingMinTotalInstances(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingNetworkUtilization(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedTargetSentBytesPerSecond, err := expandAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetSentBytesPerSecond(original["target_sent_bytes_per_second"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetSentBytesPerSecond); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetSentBytesPerSecond"] = transformedTargetSentBytesPerSecond
+	}
+
+	transformedTargetSentPacketsPerSecond, err := expandAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetSentPacketsPerSecond(original["target_sent_packets_per_second"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetSentPacketsPerSecond); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetSentPacketsPerSecond"] = transformedTargetSentPacketsPerSecond
+	}
+
+	transformedTargetReceivedBytesPerSecond, err := expandAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetReceivedBytesPerSecond(original["target_received_bytes_per_second"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetReceivedBytesPerSecond); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetReceivedBytesPerSecond"] = transformedTargetReceivedBytesPerSecond
+	}
+
+	transformedTargetReceivedPacketsPerSecond, err := expandAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetReceivedPacketsPerSecond(original["target_received_packets_per_second"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetReceivedPacketsPerSecond); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetReceivedPacketsPerSecond"] = transformedTargetReceivedPacketsPerSecond
+	}
+
+	return transformed, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetSentBytesPerSecond(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetSentPacketsPerSecond(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetReceivedBytesPerSecond(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingNetworkUtilizationTargetReceivedPacketsPerSecond(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingCoolDownPeriod(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingMaxConcurrentRequests(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingMaxPendingLatency(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingCpuUtilization(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedTargetUtilization, err := expandAppEngineStandardAppVersionAutomaticScalingCpuUtilizationTargetUtilization(original["target_utilization"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetUtilization); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetUtilization"] = transformedTargetUtilization
+	}
+
+	transformedAggregationWindowLength, err := expandAppEngineStandardAppVersionAutomaticScalingCpuUtilizationAggregationWindowLength(original["aggregation_window_length"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAggregationWindowLength); val.IsValid() && !isEmptyValue(val) {
+		transformed["aggregationWindowLength"] = transformedAggregationWindowLength
+	}
+
+	return transformed, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingCpuUtilizationTargetUtilization(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingCpuUtilizationAggregationWindowLength(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingDiskUtilization(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedTargetWriteBytesPerSecond, err := expandAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetWriteBytesPerSecond(original["target_write_bytes_per_second"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetWriteBytesPerSecond); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetWriteBytesPerSecond"] = transformedTargetWriteBytesPerSecond
+	}
+
+	transformedTargetReadBytesPerSecond, err := expandAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetReadBytesPerSecond(original["target_read_bytes_per_second"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetReadBytesPerSecond); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetReadBytesPerSecond"] = transformedTargetReadBytesPerSecond
+	}
+
+	transformedTargetReadOpsPerSecond, err := expandAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetReadOpsPerSecond(original["target_read_ops_per_second"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetReadOpsPerSecond); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetReadOpsPerSecond"] = transformedTargetReadOpsPerSecond
+	}
+
+	transformedTargetWriteOpsPerSecond, err := expandAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetWriteOpsPerSecond(original["target_write_ops_per_second"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTargetWriteOpsPerSecond); val.IsValid() && !isEmptyValue(val) {
+		transformed["targetWriteOpsPerSecond"] = transformedTargetWriteOpsPerSecond
+	}
+
+	return transformed, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetWriteBytesPerSecond(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetReadBytesPerSecond(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetReadOpsPerSecond(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineStandardAppVersionAutomaticScalingDiskUtilizationTargetWriteOpsPerSecond(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
