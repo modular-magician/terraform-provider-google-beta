@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"time"
 
+	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/pathorcontents"
 	"github.com/hashicorp/terraform-plugin-sdk/httpclient"
@@ -281,7 +282,10 @@ func (c *Config) LoadAndValidate(ctx context.Context) error {
 	}
 	c.tokenSource = tokenSource
 
-	client := oauth2.NewClient(context.Background(), tokenSource)
+	ctx = context.WithValue(ctx, oauth2.HTTPClient, &http.Client{
+		Transport: cleanhttp.DefaultPooledTransport(),
+	})
+	client := oauth2.NewClient(ctx, tokenSource)
 	client.Transport = logging.NewTransport("Google", client.Transport)
 	// This timeout is a timeout per HTTP request, not per logical operation.
 	client.Timeout = c.synchronousTimeout()
