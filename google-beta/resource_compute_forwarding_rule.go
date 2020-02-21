@@ -130,6 +130,13 @@ for INTERNAL load balancing.`,
 				Description: `An optional description of this resource. Provide this property when
 you create the resource.`,
 			},
+			"is_mirroring_collector": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				ForceNew: true,
+				Description: `Indicates whether or not this load balancer can be used as a collector for packet mirroring.
+This can only be set to true for load balancers that have their loadBalancingScheme set to INTERNAL.`,
+			},
 			"labels": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -377,6 +384,12 @@ func resourceComputeForwardingRuleCreate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("allow_global_access"); ok || !reflect.DeepEqual(v, allowGlobalAccessProp) {
 		obj["allowGlobalAccess"] = allowGlobalAccessProp
 	}
+	isMirroringCollectorProp, err := expandComputeForwardingRuleIsMirroringCollector(d.Get("is_mirroring_collector"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("is_mirroring_collector"); ok || !reflect.DeepEqual(v, isMirroringCollectorProp) {
+		obj["isMirroringCollector"] = isMirroringCollectorProp
+	}
 	labelsProp, err := expandComputeForwardingRuleLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
@@ -545,6 +558,9 @@ func resourceComputeForwardingRuleRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
 	if err := d.Set("allow_global_access", flattenComputeForwardingRuleAllowGlobalAccess(res["allowGlobalAccess"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ForwardingRule: %s", err)
+	}
+	if err := d.Set("is_mirroring_collector", flattenComputeForwardingRuleIsMirroringCollector(res["isMirroringCollector"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
 	if err := d.Set("labels", flattenComputeForwardingRuleLabels(res["labels"], d, config)); err != nil {
@@ -800,6 +816,10 @@ func flattenComputeForwardingRuleAllowGlobalAccess(v interface{}, d *schema.Reso
 	return v
 }
 
+func flattenComputeForwardingRuleIsMirroringCollector(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func flattenComputeForwardingRuleLabels(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
@@ -942,6 +962,10 @@ func expandComputeForwardingRuleTarget(v interface{}, d TerraformResourceData, c
 }
 
 func expandComputeForwardingRuleAllowGlobalAccess(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeForwardingRuleIsMirroringCollector(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

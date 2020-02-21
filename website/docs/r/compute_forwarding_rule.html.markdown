@@ -475,6 +475,11 @@ The following arguments are supported:
   If true, clients can access ILB from all regions.
   Otherwise only allows from the local region the ILB is located at.
 
+* `is_mirroring_collector` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Indicates whether or not this load balancer can be used as a collector for packet mirroring.
+  This can only be set to true for load balancers that have their loadBalancingScheme set to INTERNAL.
+
 * `labels` -
   (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Labels to apply to this forwarding rule.  A list of key->value pairs.
