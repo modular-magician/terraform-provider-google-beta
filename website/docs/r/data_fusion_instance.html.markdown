@@ -148,9 +148,7 @@ The `network_config` block supports:
 
 * `network` -
   (Required)
-  Name of the network in the project with which the tenant project
-  will be peered for executing pipelines. In case of shared VPC where the network resides in another host
-  project the network should specified in the form of projects/{host-project-id}/global/networks/{network}
+  Self link of the network. The tenant project will be peered into this network for executing pipelines.
 
 ## Attributes Reference
 
