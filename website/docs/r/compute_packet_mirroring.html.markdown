@@ -45,8 +45,9 @@ To get more information about PacketMirroring, see:
 
 ```hcl
 resource "google_compute_instance" "mirror" {
-  name = "my-instance"
   provider = google-beta
+
+  name = "my-instance"
   machine_type = "n1-standard-1"
 
   boot_disk {
@@ -64,8 +65,11 @@ resource "google_compute_instance" "mirror" {
 }
 
 resource "google_compute_packet_mirroring" "foobar" {
-  name = "my-mirroring"
   provider = google-beta
+
+  name = "my-mirroring"
+  region     = "us-east1"
+
   description = "bar"
   network {
     url = google_compute_network.default.self_link
@@ -84,29 +88,35 @@ resource "google_compute_packet_mirroring" "foobar" {
     cidr_ranges = ["0.0.0.0/0"]
   }
 }
+
 resource "google_compute_network" "default" {
-  name = "my-network"
   provider = google-beta
+
+  name = "my-network"
 }
 
 resource "google_compute_subnetwork" "default" {
-  name = "my-subnetwork"
   provider = google-beta
+
+  name = "my-subnetwork"
+  region = "us-east1"
+
   network       = google_compute_network.default.self_link
   ip_cidr_range = "10.2.0.0/16"
-
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name = "my-service"
   provider = google-beta
+
+  name = "my-service"
   region        = "us-east1"
   health_checks = ["${google_compute_health_check.default.self_link}"]
 }
 
 resource "google_compute_health_check" "default" {
-  name = "my-healthcheck"
   provider = google-beta
+
+  name = "my-healthcheck"
   check_interval_sec = 1
   timeout_sec        = 1
   tcp_health_check {
@@ -115,9 +125,10 @@ resource "google_compute_health_check" "default" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  depends_on = [google_compute_subnetwork.default]
   provider = google-beta
-  name       = ""
+
+  name       = "my-rule"
+  region     = "us-east1"
 
   is_mirroring_collector = true
   ip_protocol            = "TCP"

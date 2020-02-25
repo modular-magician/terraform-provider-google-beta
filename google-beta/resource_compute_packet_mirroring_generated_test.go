@@ -46,8 +46,9 @@ func TestAccComputePacketMirroring_computePacketMirroringFullExample(t *testing.
 func testAccComputePacketMirroring_computePacketMirroringFullExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_compute_instance" "mirror" {
-  name = "tf-test-my-instance%{random_suffix}"
   provider = google-beta
+
+  name = "tf-test-my-instance%{random_suffix}"
   machine_type = "n1-standard-1"
 
   boot_disk {
@@ -65,8 +66,11 @@ resource "google_compute_instance" "mirror" {
 }
 
 resource "google_compute_packet_mirroring" "foobar" {
-  name = "tf-test-my-mirroring%{random_suffix}"
   provider = google-beta
+
+  name = "tf-test-my-mirroring%{random_suffix}"
+  region     = "us-east1"
+
   description = "bar"
   network {
     url = google_compute_network.default.self_link
@@ -85,29 +89,35 @@ resource "google_compute_packet_mirroring" "foobar" {
     cidr_ranges = ["0.0.0.0/0"]
   }
 }
+
 resource "google_compute_network" "default" {
-  name = "tf-test-my-network%{random_suffix}"
   provider = google-beta
+
+  name = "tf-test-my-network%{random_suffix}"
 }
 
 resource "google_compute_subnetwork" "default" {
-  name = "tf-test-my-subnetwork%{random_suffix}"
   provider = google-beta
+
+  name = "tf-test-my-subnetwork%{random_suffix}"
+  region = "us-east1"
+
   network       = google_compute_network.default.self_link
   ip_cidr_range = "10.2.0.0/16"
-
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name = "tf-test-my-service%{random_suffix}"
   provider = google-beta
+
+  name = "tf-test-my-service%{random_suffix}"
   region        = "us-east1"
   health_checks = ["${google_compute_health_check.default.self_link}"]
 }
 
 resource "google_compute_health_check" "default" {
-  name = "tf-test-my-healthcheck%{random_suffix}"
   provider = google-beta
+
+  name = "tf-test-my-healthcheck%{random_suffix}"
   check_interval_sec = 1
   timeout_sec        = 1
   tcp_health_check {
@@ -116,9 +126,10 @@ resource "google_compute_health_check" "default" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  depends_on = [google_compute_subnetwork.default]
   provider = google-beta
-  name       = ""
+
+  name       = "tf-test-my-rule%{random_suffix}"
+  region     = "us-east1"
 
   is_mirroring_collector = true
   ip_protocol            = "TCP"
