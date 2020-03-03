@@ -62,7 +62,7 @@ resource "google_bigtable_instance" "instance" {
 }
 
 resource "google_bigtable_app_profile" "ap" {
-  instance       = google_bigtable_instance.instance.name
+  instance       = google_bigtable_instance.instance.id
   app_profile_id = "tf-test-bt-profile%{random_suffix}"
 
   multi_cluster_routing_use_any = true
@@ -109,7 +109,7 @@ resource "google_bigtable_instance" "instance" {
 }
 
 resource "google_bigtable_app_profile" "ap" {
-  instance       = google_bigtable_instance.instance.name
+  instance       = google_bigtable_instance.instance.id
   app_profile_id = "tf-test-bt-profile%{random_suffix}"
 
   single_cluster_routing {
