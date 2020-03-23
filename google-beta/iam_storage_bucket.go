@@ -15,10 +15,12 @@ package google
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"google.golang.org/api/cloudresourcemanager/v1"
+	"google.golang.org/api/googleapi"
 )
 
 var StorageBucketIamSchema = map[string]*schema.Schema{
@@ -113,20 +115,27 @@ func (u *StorageBucketIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.
 }
 
 func (u *StorageBucketIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanager.Policy) error {
-	json, err := ConvertToMap(policy)
-	if err != nil {
-		return err
-	}
-
-	obj := json
-
 	url, err := u.qualifyBucketUrl("iam")
 	if err != nil {
 		return err
 	}
-
-	_, err = sendRequestWithTimeout(u.Config, "PUT", "", url, obj, u.d.Timeout(schema.TimeoutCreate))
+	err = u.SendPolicyRequest(url, policy)
 	if err != nil {
+		// Cloud storage guards against race conditions with precondition checks, the policy etag
+		// may be updated by the time we need to delete. See https://cloud.google.com/storage/docs/generations-preconditions
+		gerr, ok := err.(*googleapi.Error)
+		if ok && gerr.Code == 412 {
+			log.Printf("[DEBUG] Received 412 error, retrying once with updated etag")
+			updatedPolicy, err := u.GetResourceIamPolicy()
+			if err != nil {
+				return err
+			}
+			policy.Etag = updatedPolicy.Etag
+			err = u.SendPolicyRequest(url, policy)
+			if err == nil {
+				return nil
+			}
+		}
 		return errwrap.Wrapf(fmt.Sprintf("Error setting IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
 
@@ -152,4 +161,16 @@ func (u *StorageBucketIamUpdater) GetMutexKey() string {
 
 func (u *StorageBucketIamUpdater) DescribeResource() string {
 	return fmt.Sprintf("storage bucket %q", u.GetResourceId())
+}
+
+func (u *StorageBucketIamUpdater) SendPolicyRequest(url string, policy *cloudresourcemanager.Policy) error {
+	json, err := ConvertToMap(policy)
+	if err != nil {
+		return err
+	}
+
+	obj := json
+
+	_, err = sendRequestWithTimeout(u.Config, "PUT", "", url, obj, u.d.Timeout(schema.TimeoutCreate))
+	return err
 }
