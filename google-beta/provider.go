@@ -561,6 +561,9 @@ func Provider() terraform.ResourceProvider {
 			"google_folder":                                   dataSourceGoogleFolder(),
 			"google_folder_organization_policy":               dataSourceGoogleFolderOrganizationPolicy(),
 			"google_monitoring_notification_channel":          dataSourceMonitoringNotificationChannel(),
+			"google_monitoring_app_engine_service":            dataSourceMonitoringServiceAppEngine(),
+			"google_monitoring_cloud_endpoints_service":       dataSourceMonitoringServiceCloudEndpoints(),
+			"google_monitoring_mesh_istio_service":            dataSourceMonitoringServiceMeshIstio(),
 			"google_monitoring_uptime_check_ips":              dataSourceGoogleMonitoringUptimeCheckIps(),
 			"google_netblock_ip_ranges":                       dataSourceGoogleNetblockIpRanges(),
 			"google_organization":                             dataSourceGoogleOrganization(),
@@ -595,9 +598,9 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
-// Generated resources: 138
+// Generated resources: 139
 // Generated IAM resources: 54
-// Total generated resources: 192
+// Total generated resources: 193
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -758,6 +761,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_monitoring_alert_policy":                               resourceMonitoringAlertPolicy(),
 			"google_monitoring_group":                                      resourceMonitoringGroup(),
 			"google_monitoring_notification_channel":                       resourceMonitoringNotificationChannel(),
+			"google_monitoring_service":                                    resourceMonitoringService(),
 			"google_monitoring_uptime_check_config":                        resourceMonitoringUptimeCheckConfig(),
 			"google_os_login_ssh_public_key":                               resourceOSLoginSSHPublicKey(),
 			"google_pubsub_topic":                                          resourcePubsubTopic(),
