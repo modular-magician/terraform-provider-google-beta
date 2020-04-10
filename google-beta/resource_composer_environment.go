@@ -538,7 +538,14 @@ func resourceComposerEnvironmentPostCreateUpdate(updateEnv *composer.Environment
 		log.Printf("[DEBUG] Running post-create update for Environment %q", d.Id())
 		err := resourceComposerEnvironmentPatchField("config.softwareConfig.pypiPackages", updateEnv, d, cfg)
 		if err != nil {
-			return err
+			err = CheckEnvExistsDespiteError(d, cfg, err)
+			// TODO (mbang): When warnings are available in the SDK, add a warning here, if possible
+			// This will likely create a permadiff, but that's ok, because what's in state won't match the config
+			// The user will be able to see the diff, and where the error was and what they maybe need to fix. But this way
+			// The environment will at least be in state that they won't need to manually destroy and re-create.
+			if err != nil {
+				return err
+			}
 		}
 
 		log.Printf("[DEBUG] Finish update to Environment %q post create for update only fields", d.Id())
@@ -614,6 +621,21 @@ func resourceComposerEnvironmentImport(d *schema.ResourceData, meta interface{})
 	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
+}
+
+// In some cases err will be populated, but really the environment is ok, we'll fetch the environment here
+// check that it exists, and if it's fine, we'll continue, if not, we'll return the original error
+func CheckEnvExistsDespiteError(d *schema.ResourceData, cfg *Config, err error) error {
+	envName, envNameErr := resourceComposerEnvironmentName(d, cfg)
+	if envNameErr != nil {
+		return envNameErr
+	}
+
+	if _, readErr := cfg.clientComposer.Projects.Locations.Environments.Get(envName.resourceName()).Do(); readErr != nil {
+		return err
+	}
+
+	return nil
 }
 
 func flattenComposerEnvironmentConfig(envCfg *composer.EnvironmentConfig) interface{} {
