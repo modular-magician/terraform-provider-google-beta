@@ -3,8 +3,6 @@
 package google
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"strings"
 	"time"
 
@@ -49,12 +47,6 @@ func ipCidrRangeDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
 	}
 
 	return false
-}
-
-// sha256DiffSuppress
-// if old is the hex-encoded sha256 sum of new, treat them as equal
-func sha256DiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
-	return hex.EncodeToString(sha256.New().Sum([]byte(old))) == new
 }
 
 func caseDiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
