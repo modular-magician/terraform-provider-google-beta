@@ -1798,7 +1798,7 @@ func resourceComputeUrlMapCreate(d *schema.ResourceData, meta interface{}) error
 
 	err = computeOperationWaitTime(
 		config, res, project, "Creating UrlMap",
-		int(d.Timeout(schema.TimeoutCreate).Minutes()))
+		d.Timeout(schema.TimeoutCreate))
 
 	if err != nil {
 		// The resource didn't actually create
@@ -1941,7 +1941,7 @@ func resourceComputeUrlMapUpdate(d *schema.ResourceData, meta interface{}) error
 
 	err = computeOperationWaitTime(
 		config, res, project, "Updating UrlMap",
-		int(d.Timeout(schema.TimeoutUpdate).Minutes()))
+		d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return err
@@ -1973,7 +1973,7 @@ func resourceComputeUrlMapDelete(d *schema.ResourceData, meta interface{}) error
 
 	err = computeOperationWaitTime(
 		config, res, project, "Deleting UrlMap",
-		int(d.Timeout(schema.TimeoutDelete).Minutes()))
+		d.Timeout(schema.TimeoutDelete))
 
 	if err != nil {
 		return err
