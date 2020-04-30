@@ -386,6 +386,7 @@ connections, but still work to finish started).`,
 
 			"consistent_hash": {
 				Type:     schema.TypeList,
+				Computed: true,
 				Optional: true,
 				Description: `Consistent Hash-based load balancing can be used to provide soft session
 affinity based on HTTP headers, cookies or other properties. This load balancing
