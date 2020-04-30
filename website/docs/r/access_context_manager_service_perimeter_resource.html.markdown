@@ -81,6 +81,8 @@ The following arguments are supported:
   (Required)
   The name of the Service Perimeter to add this resource to.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 

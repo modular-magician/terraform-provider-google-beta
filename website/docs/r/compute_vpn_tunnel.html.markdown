@@ -209,6 +209,8 @@ The following arguments are supported:
   Shared secret used to set the secure session between the Cloud VPN
   gateway and the peer VPN gateway.  **Note**: This property is sensitive and will not be displayed in the plan.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -286,6 +288,20 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -310,6 +326,11 @@ In addition to the arguments listed above, the following computed attributes are
   Detailed status message for the VPN tunnel.
 * `self_link` - The URI of the created resource.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

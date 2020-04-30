@@ -80,7 +80,8 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `telemetry` block supports:
 
 * `resource_name` -
@@ -88,6 +89,9 @@ The `telemetry` block supports:
   The full name of the resource that defines this service.
   Formatted as described in
   https://cloud.google.com/apis/design/resource_names.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -99,6 +103,7 @@ In addition to the arguments listed above, the following computed attributes are
   The full resource name for this service. The syntax is:
   projects/[PROJECT_ID]/services/[SERVICE_ID].
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

@@ -89,6 +89,8 @@ The following arguments are supported:
   applied by default to all realms and clusters. For example,
   `projects/my-project/locations/global/gameServerDeployments/my-game/configs/my-config`.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -103,7 +105,7 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
 The `game_server_config_overrides` block supports:
 
 * `realms_selector` -
@@ -114,12 +116,15 @@ The `game_server_config_overrides` block supports:
   (Optional)
   Version of the configuration.
 
-
+Hm, this should make a mess in the diffs.
 The `realms_selector` block supports:
 
 * `realms` -
   (Optional)
   List of realms to match against.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -131,6 +136,7 @@ In addition to the arguments listed above, the following computed attributes are
   The resource id of the game server deployment
   eg: `projects/my-project/locations/global/gameServerDeployments/my-deployment/rollout`.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

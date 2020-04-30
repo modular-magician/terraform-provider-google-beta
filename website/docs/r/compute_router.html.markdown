@@ -80,6 +80,8 @@ The following arguments are supported:
   (Required)
   A reference to the network to which this router belongs.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -99,7 +101,8 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `bgp` block supports:
 
 * `asn` -
@@ -135,7 +138,10 @@ The `bgp` block supports:
   ranges will be advertised in addition to any specified groups.
   Leave this field blank to advertise no custom IP ranges.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `advertised_ip_ranges` block supports:
 
 * `range` -
@@ -147,6 +153,10 @@ The `advertised_ip_ranges` block supports:
   (Optional)
   User-specified description for the IP range.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -157,6 +167,7 @@ In addition to the arguments listed above, the following computed attributes are
   Creation timestamp in RFC3339 text format.
 * `self_link` - The URI of the created resource.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

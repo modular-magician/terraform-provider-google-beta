@@ -161,6 +161,9 @@ The following arguments are supported:
   The network this subnet belongs to.
   Only networks that are in the distributed mode can have subnetworks.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -226,7 +229,10 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `secondary_ip_range` block supports:
 
 * `range_name` -
@@ -243,6 +249,11 @@ The `secondary_ip_range` block supports:
   Ranges must be unique and non-overlapping with all primary and
   secondary IP ranges within a network. Only IPv4 is supported.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `log_config` block supports:
 
 * `aggregation_interval` -
@@ -282,6 +293,10 @@ The `log_config` block supports:
   * `EXCLUDE_ALL_METADATA`
   * `INCLUDE_ALL_METADATA`
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -296,6 +311,8 @@ In addition to the arguments listed above, the following computed attributes are
   outside this subnetwork.
 * `self_link` - The URI of the created resource.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

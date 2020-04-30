@@ -185,6 +185,8 @@ The following arguments are supported:
   (Required)
   The write-only private key in PEM format.  **Note**: This property is sensitive and will not be displayed in the plan.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -216,6 +218,9 @@ The following arguments are supported:
 
 * `name_prefix` - (Optional) Creates a unique name beginning with the
  specified prefix. Conflicts with `name`.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -230,6 +235,8 @@ In addition to the arguments listed above, the following computed attributes are
   The unique identifier for the resource.
 * `self_link` - The URI of the created resource.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

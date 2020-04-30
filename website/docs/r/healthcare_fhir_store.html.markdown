@@ -85,6 +85,8 @@ The following arguments are supported:
   Identifies the dataset addressed by this request. Must be in the format
   'projects/{project}/locations/{location}/datasets/{dataset}'
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -150,7 +152,13 @@ The following arguments are supported:
   (Optional)
   A nested object resource  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `notification_config` block supports:
 
 * `pubsub_topic` -
@@ -162,6 +170,8 @@ The `notification_config` block supports:
   project. cloud-healthcare@system.gserviceaccount.com must have publisher permissions on the given
   Cloud Pub/Sub topic. Not having adequate permissions will cause the calls that send notifications to fail.
 
+Hm, this should make a mess in the diffs.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -171,6 +181,7 @@ In addition to the arguments listed above, the following computed attributes are
 * `self_link` -
   The fully qualified name of this dataset
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

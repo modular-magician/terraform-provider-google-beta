@@ -93,6 +93,7 @@ The following arguments are supported:
   (Required)
   The type of the notification channel. This field matches the value of the NotificationChannelDescriptor.type field. See https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.notificationChannelDescriptors/list to get the list of valid values such as "email", "slack", etc...
 
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -134,7 +135,8 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `sensitive_labels` block supports:
 
 * `auth_token` -
@@ -148,6 +150,14 @@ The `sensitive_labels` block supports:
 * `service_key` -
   (Optional)
   An servicekey token for a notification channel. Channel types that support this field include: pagerduty  **Note**: This property is sensitive and will not be displayed in the plan.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -163,6 +173,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `verification_status` -
   Indicates whether this channel has been verified or not. On a ListNotificationChannels or GetNotificationChannel operation, this field is expected to be populated.If the value is UNVERIFIED, then it indicates that the channel is non-functioning (it both requires verification and lacks verification); otherwise, it is assumed that the channel works.If the channel is neither VERIFIED nor UNVERIFIED, it implies that the channel is of a type that does not require verification or that this specific channel has been exempted from verification because it was created prior to verification being required for channels of this type.This field cannot be modified using a standard UpdateNotificationChannel operation. To change the value of this field, you must call VerifyNotificationChannel.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

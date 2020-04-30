@@ -98,6 +98,7 @@ The following arguments are supported:
   (Required)
   User assigned name for this policy.
 
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -131,7 +132,7 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
 The `alternative_name_server_config` block supports:
 
 * `target_name_servers` -
@@ -140,13 +141,18 @@ The `alternative_name_server_config` block supports:
   all DNS queries are forwarded to a name server that you choose. Names such as .internal
   are not available when an alternative name server is specified.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `target_name_servers` block supports:
 
 * `ipv4_address` -
   (Required)
   IPv4 address to forward to.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `networks` block supports:
 
 * `network_url` -
@@ -154,6 +160,8 @@ The `networks` block supports:
   The fully qualified URL of the VPC network to bind to.
   This should be formatted like
   `https://www.googleapis.com/compute/v1/projects/{project}/global/networks/{network}`
+
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

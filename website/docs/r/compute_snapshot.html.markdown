@@ -96,6 +96,8 @@ The following arguments are supported:
   (Required)
   A reference to the disk used to create this snapshot.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -126,7 +128,10 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `snapshot_encryption_key` block supports:
 
 * `raw_key` -
@@ -138,12 +143,17 @@ The `snapshot_encryption_key` block supports:
   The RFC 4648 base64 encoded SHA-256 hash of the customer-supplied
   encryption key that protects this resource.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `source_disk_encryption_key` block supports:
 
 * `raw_key` -
   (Optional)
   Specifies a 256-bit customer-supplied encryption key, encoded in
   RFC 4648 base64 to either encrypt or decrypt this resource.  **Note**: This property is sensitive and will not be displayed in the plan.
+
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -176,6 +186,12 @@ In addition to the arguments listed above, the following computed attributes are
   internally during updates.
 * `self_link` - The URI of the created resource.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

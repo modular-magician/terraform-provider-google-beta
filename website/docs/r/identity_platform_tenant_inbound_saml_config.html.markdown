@@ -91,7 +91,10 @@ The following arguments are supported:
   SAML SP (Service Provider) configuration when the project acts as the relying party to receive
   and accept an authentication assertion issued by a SAML identity provider.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `idp_config` block supports:
 
 * `idp_entity_id` -
@@ -110,13 +113,18 @@ The `idp_config` block supports:
   (Required)
   The IDP's certificate data to verify the signature in the SAMLResponse issued by the IDP.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `idp_certificates` block supports:
 
 * `x509_certificate` -
   (Optional)
   The x509 certificate
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `sp_config` block supports:
 
 * `sp_entity_id` -
@@ -130,11 +138,15 @@ The `sp_config` block supports:
 * `sp_certificates` -
   The IDP's certificate data to verify the signature in the SAMLResponse issued by the IDP.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `sp_certificates` block contains:
 
 * `x509_certificate` -
   The x509 certificate
+
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -146,6 +158,7 @@ The `sp_certificates` block contains:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

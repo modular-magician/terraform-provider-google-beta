@@ -84,7 +84,9 @@ The following arguments are supported:
   Game server cluster connection information. This information is used to
   manage game server clusters.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `connection_info` block supports:
 
 * `gke_cluster_reference` -
@@ -97,7 +99,7 @@ The `connection_info` block supports:
   instances will be created. The namespace existence will be validated
   during creation.
 
-
+Hm, this should make a mess in the diffs.
 The `gke_cluster_reference` block supports:
 
 * `cluster` -
@@ -110,6 +112,9 @@ The `gke_cluster_reference` block supports:
   If project and location are not specified, the project and location of the
   GameServerCluster resource are used to generate the full name of the
   GKE cluster.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -130,6 +135,9 @@ The `gke_cluster_reference` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -143,6 +151,7 @@ In addition to the arguments listed above, the following computed attributes are
   For example,
   `projects/my-project/locations/{location}/realms/zanzibar/gameServerClusters/my-onprem-cluster`.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

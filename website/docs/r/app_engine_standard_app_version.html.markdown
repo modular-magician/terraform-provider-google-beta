@@ -129,7 +129,8 @@ The following arguments are supported:
   (Required)
   Code and application artifacts that make up this version.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `deployment` block supports:
 
 * `zip` -
@@ -141,7 +142,7 @@ The `deployment` block supports:
   Manifest of the files stored in Google Cloud Storage that are included as part of this version.
   All files must be readable using the credentials supplied with this call.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `zip` block supports:
 
 * `source_url` -
@@ -152,6 +153,9 @@ The `zip` block supports:
   (Optional)
   files count
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `files` block supports:
 
 * `name` - (Required) The identifier for this object. Format specified above.
@@ -163,6 +167,9 @@ The `files` block supports:
 * `source_url` -
   (Required)
   Source URL
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -225,7 +232,10 @@ The `files` block supports:
 
 * `noop_on_destroy` - (Optional) If set to `true`, the application version will not be deleted.
 * `delete_service_on_destroy` - (Optional) If set to `true`, the service will be deleted if it is the last version.    
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `handlers` block supports:
 
 * `url_regex` -
@@ -279,13 +289,20 @@ The `handlers` block supports:
   (Optional)
   Files served directly to the user for a given URL, such as images, CSS stylesheets, or JavaScript source files. Static file handlers describe which files in the application directory are static files, and which URLs serve them.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `script` block supports:
 
 * `script_path` -
   (Required)
   Path to the script from the application root directory.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `static_files` block supports:
 
 * `path` -
@@ -319,6 +336,14 @@ The `static_files` block supports:
   (Optional)
   Whether files should also be uploaded as code data. By default, files declared in static file handlers are uploaded as static data and are only served to end users; they cannot be read by the application. If enabled, uploads are charged against both your code and static data storage resource quotas.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `libraries` block supports:
 
 * `name` -
@@ -329,12 +354,19 @@ The `libraries` block supports:
   (Optional)
   Version of the library to select, or "latest".
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `entrypoint` block supports:
 
 * `shell` -
   (Required)
   The format should be a shell command that can be fed to bash -c.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `automatic_scaling` block supports:
 
 * `max_concurrent_requests` -
@@ -364,7 +396,12 @@ The `automatic_scaling` block supports:
   (Optional)
   Scheduler settings for standard environment.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `standard_scheduler_settings` block supports:
 
 * `target_cpu_utilization` -
@@ -383,6 +420,11 @@ The `standard_scheduler_settings` block supports:
   (Optional)
   Maximum number of instances to run for this version. Set to zero to disable maxInstances configuration.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `basic_scaling` block supports:
 
 * `idle_timeout` -
@@ -394,6 +436,9 @@ The `basic_scaling` block supports:
   (Required)
   Maximum number of instances to create for this version. Must be in the range [1.0, 200.0].
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `manual_scaling` block supports:
 
 * `instances` -
@@ -401,6 +446,9 @@ The `manual_scaling` block supports:
   Number of instances to assign to the service at the start.
   **Note:** When managing the number of instances at runtime through the App Engine Admin API or the (now deprecated) Python 2 
   Modules API set_num_instances() you must use `lifecycle.ignore_changes = ["manual_scaling"[0].instances]` to prevent drift detection.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -411,6 +459,7 @@ In addition to the arguments listed above, the following computed attributes are
 * `name` -
   Full path to the Version resource in the API. Example, "v1".
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

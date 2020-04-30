@@ -95,6 +95,8 @@ The following arguments are supported:
     To refer to all members of the Google Apps for Business domain
     example.com, the entity would be domain-example.com.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -108,6 +110,7 @@ The following arguments are supported:
   * `READER`
   * `WRITER`
 
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -121,6 +124,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `email` -
   The email address associated with the entity.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

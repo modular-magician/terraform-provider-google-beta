@@ -104,6 +104,8 @@ The following arguments are supported:
   must contain only letters (a-z, A-Z), numbers (0-9), or
   underscores (_). The maximum length is 1,024 characters.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -188,7 +190,7 @@ The following arguments are supported:
 * `delete_contents_on_destroy` - (Optional) If set to `true`, delete all the tables in the
 dataset when destroying the resource; otherwise,
 destroying the resource will fail if tables are present.
-
+Hm, this should make a mess in the diffs.
 The `access` block supports:
 
 * `domain` -
@@ -234,7 +236,12 @@ The `access` block supports:
   set. If that view is updated by any user, access to the view
   needs to be granted again via an update operation.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `view` block supports:
 
 * `dataset_id` -
@@ -251,6 +258,16 @@ The `view` block supports:
   A-Z), numbers (0-9), or underscores (_). The maximum length
   is 1,024 characters.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `default_encryption_configuration` block supports:
 
 * `kms_key_name` -
@@ -258,6 +275,8 @@ The `default_encryption_configuration` block supports:
   Describes the Cloud KMS encryption key that will be used to protect destination
   BigQuery table. The BigQuery Service Account associated with your project requires
   access to this encryption key.
+
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -277,6 +296,9 @@ In addition to the arguments listed above, the following computed attributes are
   milliseconds since the epoch.
 * `self_link` - The URI of the created resource.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

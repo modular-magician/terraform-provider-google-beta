@@ -154,6 +154,10 @@ The following arguments are supported:
   (Required)
   The name of the Cloud Router in which this NAT will be configured.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -206,7 +210,9 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `subnetwork` block supports:
 
 * `name` -
@@ -227,6 +233,15 @@ The `subnetwork` block supports:
   `LIST_OF_SECONDARY_IP_RANGES` is one of the values in
   sourceIpRangesToNat
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `log_config` block supports:
 
 * `enable` -
@@ -241,6 +256,10 @@ The `log_config` block supports:
   * `ERRORS_ONLY`
   * `TRANSLATIONS_ONLY`
   * `ALL`
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

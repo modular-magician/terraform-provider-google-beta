@@ -82,6 +82,11 @@ The following arguments are supported:
   (Required)
   The name of the Cloud Router in which this BgpPeer will be configured.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -131,7 +136,10 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `advertised_ip_ranges` block supports:
 
 * `range` -
@@ -142,6 +150,10 @@ The `advertised_ip_ranges` block supports:
 * `description` -
   (Optional)
   User-specified description for the IP range.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -164,6 +176,8 @@ In addition to the arguments listed above, the following computed attributes are
   PARTNER InterconnectAttachment is created, updated,
   or deleted.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

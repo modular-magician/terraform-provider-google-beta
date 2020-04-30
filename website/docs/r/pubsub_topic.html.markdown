@@ -96,6 +96,7 @@ The following arguments are supported:
   (Required)
   Name of the topic.
 
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -121,7 +122,9 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `message_storage_policy` block supports:
 
 * `allowed_persistence_regions` -
@@ -132,6 +135,8 @@ The `message_storage_policy` block supports:
   of GCP altogether) will be routed for storage in one of the
   allowed regions. An empty list means that no regions are allowed,
   and is not a valid configuration.
+
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

@@ -60,6 +60,7 @@ The following arguments are supported:
   characters must be a dash, lowercase letter, or digit, except the last
   character, which cannot be a dash.
 
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -94,6 +95,10 @@ The following arguments are supported:
 
 * `delete_default_routes_on_create` - (Optional) If set to `true`, default routes (`0.0.0.0/0`) will be deleted
 immediately after network creation. Defaults to `false`.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -106,6 +111,7 @@ In addition to the arguments listed above, the following computed attributes are
   is selected by GCP.
 * `self_link` - The URI of the created resource.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

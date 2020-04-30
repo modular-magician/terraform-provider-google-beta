@@ -72,6 +72,8 @@ The following arguments are supported:
   (Required)
   Application name displayed on OAuth consent screen.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -95,6 +97,8 @@ In addition to the arguments listed above, the following computed attributes are
   identification corresponds to the project number as only one
   brand per project can be created.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

@@ -109,7 +109,8 @@ The following arguments are supported:
   Parameters that define your deployment, including the deployment
   configuration and relevant templates.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `target` block supports:
 
 * `config` -
@@ -122,13 +123,15 @@ The `target` block supports:
   used to import templates or other files. For example, you might
   import a text file in order to use the file in a template.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `config` block supports:
 
 * `content` -
   (Required)
   The full YAML contents of your configuration file.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `imports` block supports:
 
 * `content` -
@@ -139,6 +142,9 @@ The `imports` block supports:
   (Optional)
   The name of the template to import, as declared in the YAML
   configuration.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -192,7 +198,8 @@ The `imports` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `labels` block supports:
 
 * `key` -
@@ -202,6 +209,12 @@ The `labels` block supports:
 * `value` -
   (Optional)
   Value of label.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -219,6 +232,9 @@ In addition to the arguments listed above, the following computed attributes are
 * `self_link` -
   Output only. Server defined URL for the resource.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

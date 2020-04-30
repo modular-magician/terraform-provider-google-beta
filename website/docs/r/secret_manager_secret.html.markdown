@@ -76,7 +76,7 @@ The following arguments are supported:
   (Required)
   This must be unique within the project.
 
-
+Hm, this should make a mess in the diffs.
 The `replication` block supports:
 
 * `automatic` -
@@ -87,19 +87,23 @@ The `replication` block supports:
   (Optional)
   The Secret will automatically be replicated without any restrictions.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `user_managed` block supports:
 
 * `replicas` -
   (Required)
   The list of Replicas for this Secret. Cannot be empty.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `replicas` block supports:
 
 * `location` -
   (Required)
   The canonical IDs of the location to replicate data. For example: "us-east1".
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -118,6 +122,7 @@ The `replicas` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -132,6 +137,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `create_time` -
   The time at which the Secret was created.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

@@ -154,6 +154,9 @@ The following arguments are supported:
   (Required)
   The network that this route applies to.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -218,6 +221,14 @@ The following arguments are supported:
   specified)  The zone of the instance specified in
   `next_hop_instance`.  Omit if `next_hop_instance` is specified as
   a URL.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -229,6 +240,7 @@ In addition to the arguments listed above, the following computed attributes are
   URL to a Network that should handle matching packets.
 * `self_link` - The URI of the created resource.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

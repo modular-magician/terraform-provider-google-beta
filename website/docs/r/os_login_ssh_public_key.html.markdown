@@ -62,6 +62,8 @@ The following arguments are supported:
   (Required)
   The user email.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -70,6 +72,7 @@ The following arguments are supported:
   (Optional)
   An expiration time in microseconds since epoch.
 
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -80,6 +83,7 @@ In addition to the arguments listed above, the following computed attributes are
 * `fingerprint` -
   The SHA-256 fingerprint of the SSH public key.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

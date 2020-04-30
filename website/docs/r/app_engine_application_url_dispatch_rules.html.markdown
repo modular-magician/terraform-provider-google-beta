@@ -94,7 +94,7 @@ The following arguments are supported:
   (Required)
   Rules to match an HTTP request and dispatch that request to a service.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `dispatch_rules` block supports:
 
 * `domain` -
@@ -111,6 +111,10 @@ The `dispatch_rules` block supports:
   (Required)
   Pathname within the host. Must start with a "/". A single "*" can be included at the end of the path.
   The sum of the lengths of the domain and path may not exceed 100 characters.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 

@@ -79,6 +79,9 @@ The following arguments are supported:
   The descriptive name for this instance as it appears in UIs. Must be
   unique per project and between 4 and 30 characters in length.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -95,6 +98,8 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -105,6 +110,7 @@ In addition to the arguments listed above, the following computed attributes are
 * `state` -
   Instance status: `CREATING` or `READY`.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

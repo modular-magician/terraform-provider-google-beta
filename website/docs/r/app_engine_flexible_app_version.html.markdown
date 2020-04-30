@@ -138,7 +138,8 @@ The following arguments are supported:
   (Required)
   Health checking configuration for VM instances. Unhealthy instances are killed and replaced with new instances.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `readiness_check` block supports:
 
 * `path` -
@@ -170,6 +171,14 @@ The `readiness_check` block supports:
   A maximum time limit on application initialization, measured from moment the application successfully
   replies to a healthcheck until it is ready to serve traffic. Default: "300s"
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `liveness_check` block supports:
 
 * `path` -
@@ -199,6 +208,14 @@ The `liveness_check` block supports:
 * `initial_delay` -
   (Optional)
   The initial delay before starting to execute the checks. Default: "300s"
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -303,7 +320,10 @@ The `liveness_check` block supports:
 
 * `noop_on_destroy` - (Optional) If set to `true`, the application version will not be deleted.
 * `delete_service_on_destroy` - (Optional) If set to `true`, the service will be deleted if it is the last version.    
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `network` block supports:
 
 * `forwarded_ports` -
@@ -330,6 +350,12 @@ The `network` block supports:
   (Optional)
   Enable session affinity.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `resources` block supports:
 
 * `cpu` -
@@ -348,7 +374,10 @@ The `resources` block supports:
   (Optional)
   List of ports, or port pairs, to forward from the virtual machine to the application container.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `volumes` block supports:
 
 * `name` -
@@ -363,6 +392,15 @@ The `volumes` block supports:
   (Required)
   Volume size in gigabytes.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `api_config` block supports:
 
 * `auth_fail_action` -
@@ -402,6 +440,15 @@ The `api_config` block supports:
   (Optional)
   URL to serve the endpoint at.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `deployment` block supports:
 
 * `zip` -
@@ -421,7 +468,7 @@ The `deployment` block supports:
   (Optional)
   Options for the build operations performed as a part of the version deployment. Only applicable when creating a version using source code directly.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `zip` block supports:
 
 * `source_url` -
@@ -432,6 +479,9 @@ The `zip` block supports:
   (Optional)
   files count
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `files` block supports:
 
 * `name` - (Required) The identifier for this object. Format specified above.
@@ -444,6 +494,9 @@ The `files` block supports:
   (Required)
   Source URL
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `container` block supports:
 
 * `image` -
@@ -451,6 +504,8 @@ The `container` block supports:
   URI to the hosted container image in Google Container Registry. The URI must be fully qualified and include a tag or digest.
   Examples: "gcr.io/my-project/image:tag" or "gcr.io/my-project/image@digest"
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `cloud_build_options` block supports:
 
 * `app_yaml_path` -
@@ -462,6 +517,9 @@ The `cloud_build_options` block supports:
   The Cloud Build timeout used as part of any dependent builds performed by version creation. Defaults to 10 minutes.
   A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `endpoints_api_service` block supports:
 
 * `name` -
@@ -491,18 +549,27 @@ The `endpoints_api_service` block supports:
   (Optional)
   Enable or disable trace sampling. By default, this is set to false for enabled.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `entrypoint` block supports:
 
 * `shell` -
   (Required)
   The format should be a shell command that can be fed to bash -c.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `vpc_access_connector` block supports:
 
 * `name` -
   (Required)
   Full Serverless VPC Access Connector name e.g. /projects/my-project/locations/us-central1/connectors/c1.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `automatic_scaling` block supports:
 
 * `cool_down_period` -
@@ -556,7 +623,8 @@ The `automatic_scaling` block supports:
   (Optional)
   Target scaling by network usage.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `cpu_utilization` block supports:
 
 * `aggregation_window_length` -
@@ -567,6 +635,16 @@ The `cpu_utilization` block supports:
   (Required)
   Target CPU utilization ratio to maintain when scaling. Must be between 0 and 1.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `request_utilization` block supports:
 
 * `target_request_count_per_second` -
@@ -577,6 +655,9 @@ The `request_utilization` block supports:
   (Optional)
   Target number of concurrent requests.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `disk_utilization` block supports:
 
 * `target_write_bytes_per_second` -
@@ -595,6 +676,11 @@ The `disk_utilization` block supports:
   (Optional)
   Target ops read per seconds.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `network_utilization` block supports:
 
 * `target_sent_bytes_per_second` -
@@ -613,6 +699,11 @@ The `network_utilization` block supports:
   (Optional)
   Target packets received per second.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `manual_scaling` block supports:
 
 * `instances` -
@@ -620,6 +711,9 @@ The `manual_scaling` block supports:
   Number of instances to assign to the service at the start.
   **Note:** When managing the number of instances at runtime through the App Engine Admin API or the (now deprecated) Python 2 
   Modules API set_num_instances() you must use `lifecycle.ignore_changes = ["manual_scaling"[0].instances]` to prevent drift detection.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -630,6 +724,7 @@ In addition to the arguments listed above, the following computed attributes are
 * `name` -
   Full path to the Version resource in the API. Example, "v1".
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

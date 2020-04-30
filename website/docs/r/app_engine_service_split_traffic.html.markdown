@@ -113,7 +113,8 @@ The following arguments are supported:
   (Required)
   Mapping that defines fractional HTTP traffic diversion to different versions within the service.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `split` block supports:
 
 * `shard_by` -
@@ -130,6 +131,9 @@ The `split` block supports:
   (Required)
   Mapping from version IDs within the service to fractional (0.000, 1] allocations of traffic for that version. Each version can be specified only once, but some versions in the service may not have any traffic allocation. Services that have traffic allocated cannot be deleted until either the service is deleted or their traffic allocation is removed. Allocations must sum to 1. Up to two decimal place precision is supported for IP-based splits and up to three decimal places is supported for cookie-based splits.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+
 - - -
 
 
@@ -140,6 +144,7 @@ The `split` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

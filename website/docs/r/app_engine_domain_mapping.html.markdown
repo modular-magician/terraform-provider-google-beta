@@ -58,6 +58,7 @@ The following arguments are supported:
   (Required)
   Relative name of the domain serving the application. Example: example.com.
 
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -79,7 +80,7 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
 The `ssl_settings` block supports:
 
 * `certificate_id` -
@@ -107,6 +108,11 @@ The `ssl_settings` block supports:
   field will be left empty. To remove SSL support while there is still a pending managed certificate, clear the
   `certificateId` field with an update request.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -120,7 +126,8 @@ In addition to the arguments listed above, the following computed attributes are
   The resource records required to configure this domain mapping. These records must be added to the domain's DNS
   configuration in order to serve the application via this domain mapping.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `resource_records` block contains:
 
 * `name` -
@@ -139,6 +146,10 @@ The `resource_records` block contains:
   * `A`
   * `AAAA`
   * `CNAME`
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

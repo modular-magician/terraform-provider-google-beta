@@ -289,6 +289,8 @@ The following arguments are supported:
   (Required)
   The network this VPN gateway is accepting traffic for.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -304,6 +306,8 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -315,7 +319,7 @@ In addition to the arguments listed above, the following computed attributes are
   A list of interfaces on this VPN gateway.  Structure is documented below.
 * `self_link` - The URI of the created resource.
 
-
+Hm, this should make a mess in the diffs.
 The `vpn_interfaces` block contains:
 
 * `id` -
@@ -325,6 +329,9 @@ The `vpn_interfaces` block contains:
 * `ip_address` -
   (Optional)
   The external IP address for this VPN gateway interface.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

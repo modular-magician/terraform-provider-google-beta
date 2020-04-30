@@ -170,6 +170,7 @@ The following arguments are supported:
   characters must be a dash, lowercase letter, or digit, except the last
   character, which cannot be a dash.
 
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -194,7 +195,9 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `interface` block supports:
 
 * `id` -
@@ -211,6 +214,9 @@ The `interface` block supports:
   Only IPv4 is supported. This IP address can be either from
   your on-premise gateway or another Cloud provider’s VPN gateway,
   it cannot be an IP address from Google Compute Engine.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

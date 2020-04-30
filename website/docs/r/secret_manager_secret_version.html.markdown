@@ -73,6 +73,9 @@ The following arguments are supported:
   (Required)
   Secret Manager secret resource
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -85,6 +88,7 @@ The following arguments are supported:
   (Optional)
   The secret data. Must be no larger than 64KiB.  **Note**: This property is sensitive and will not be displayed in the plan.
 
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -102,6 +106,9 @@ In addition to the arguments listed above, the following computed attributes are
 * `destroy_time` -
   The time at which the Secret was destroyed. Only present if state is DESTROYED.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

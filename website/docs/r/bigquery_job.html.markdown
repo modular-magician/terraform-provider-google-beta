@@ -326,8 +326,11 @@ The following arguments are supported:
   (Required)
   The ID of the job. The ID must contain only letters (a-z, A-Z), numbers (0-9), underscores (_), or dashes (-). The maximum length is 1,024 characters.
 
-
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `query` block supports:
 
 * `query` -
@@ -438,7 +441,8 @@ The `query` block supports:
   (Optional)
   Options controlling the execution of scripts.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `destination_table` block supports:
 
 * `project_id` -
@@ -453,6 +457,10 @@ The `destination_table` block supports:
   (Required)
   The ID of the table.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `user_defined_function_resources` block supports:
 
 * `resource_uri` -
@@ -464,6 +472,11 @@ The `user_defined_function_resources` block supports:
   An inline resource that contains code for a user-defined function (UDF).
   Providing a inline code resource is equivalent to providing a URI for a file containing the same code.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `default_dataset` block supports:
 
 * `dataset_id` -
@@ -474,6 +487,18 @@ The `default_dataset` block supports:
   (Optional)
   The ID of the project containing this table.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `destination_encryption_configuration` block supports:
 
 * `kms_key_name` -
@@ -481,6 +506,8 @@ The `destination_encryption_configuration` block supports:
   Describes the Cloud KMS encryption key that will be used to protect destination BigQuery table.
   The BigQuery Service Account associated with your project requires access to this encryption key.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `script_options` block supports:
 
 * `statement_timeout_ms` -
@@ -500,6 +527,10 @@ The `script_options` block supports:
   * `LAST`
   * `FIRST_SELECT`
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `load` block supports:
 
 * `source_uris` -
@@ -639,7 +670,8 @@ The `load` block supports:
   (Optional)
   Custom encryption configuration (e.g., Cloud KMS keys)  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `destination_table` block supports:
 
 * `project_id` -
@@ -654,6 +686,25 @@ The `destination_table` block supports:
   (Required)
   The ID of the table.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `time_partitioning` block supports:
 
 * `type` -
@@ -671,6 +722,10 @@ The `time_partitioning` block supports:
   The field must be a top-level TIMESTAMP or DATE field. Its mode must be NULLABLE or REQUIRED.
   A wrapper is used here because an empty string is an invalid value.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `destination_encryption_configuration` block supports:
 
 * `kms_key_name` -
@@ -678,6 +733,8 @@ The `destination_encryption_configuration` block supports:
   Describes the Cloud KMS encryption key that will be used to protect destination BigQuery table.
   The BigQuery Service Account associated with your project requires access to this encryption key.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `copy` block supports:
 
 * `source_tables` -
@@ -719,7 +776,7 @@ The `copy` block supports:
   (Optional)
   Custom encryption configuration (e.g., Cloud KMS keys)  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `source_tables` block supports:
 
 * `project_id` -
@@ -734,6 +791,10 @@ The `source_tables` block supports:
   (Required)
   The ID of the table.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `destination_table` block supports:
 
 * `project_id` -
@@ -748,6 +809,12 @@ The `destination_table` block supports:
   (Required)
   The ID of the table.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `destination_encryption_configuration` block supports:
 
 * `kms_key_name` -
@@ -755,6 +822,8 @@ The `destination_encryption_configuration` block supports:
   Describes the Cloud KMS encryption key that will be used to protect destination BigQuery table.
   The BigQuery Service Account associated with your project requires access to this encryption key.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `extract` block supports:
 
 * `destination_uris` -
@@ -793,7 +862,13 @@ The `extract` block supports:
   (Optional)
   A reference to the model being exported.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `source_table` block supports:
 
 * `project_id` -
@@ -808,6 +883,10 @@ The `source_table` block supports:
   (Required)
   The ID of the table.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `source_model` block supports:
 
 * `project_id` -
@@ -821,6 +900,10 @@ The `source_model` block supports:
 * `model_id` -
   (Required)
   The ID of the model.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -856,6 +939,9 @@ The `source_model` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -869,6 +955,7 @@ In addition to the arguments listed above, the following computed attributes are
 * `job_type` -
   The type of the job.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

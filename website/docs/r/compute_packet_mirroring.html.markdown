@@ -154,19 +154,24 @@ The following arguments are supported:
   (Required)
   A means of specifying which resources to mirror.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `network` block supports:
 
 * `url` -
   (Required)
   The full self_link URL of the network where this rule is active.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `collector_ilb` block supports:
 
 * `url` -
   (Required)
   The URL of the forwarding rule.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `mirrored_resources` block supports:
 
 * `subnetworks` -
@@ -181,18 +186,23 @@ The `mirrored_resources` block supports:
   (Optional)
   All instances with these tags will be mirrored.
 
-
+Hm, this should make a mess in the diffs.
 The `subnetworks` block supports:
 
 * `url` -
   (Required)
   The URL of the subnetwork where this rule should be active.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `instances` block supports:
 
 * `url` -
   (Required)
   The URL of the instances where this rule should be active.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -219,7 +229,10 @@ The `instances` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `filter` block supports:
 
 * `ip_protocols` -
@@ -230,6 +243,9 @@ The `filter` block supports:
   (Optional)
   IP CIDR ranges that apply as a filter on the source (ingress) or
   destination (egress) IP in the IP header. Only IPv4 is supported.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

@@ -74,6 +74,10 @@ The following arguments are supported:
   list is meaningless and will be rejected.
   e.g. ['resourcemanager.projects.delete']
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -91,6 +95,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `create_time` -
   Time of creation
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

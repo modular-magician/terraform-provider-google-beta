@@ -102,6 +102,8 @@ The following arguments are supported:
   The full name of the CryptoKey that will be used to encrypt the provided plaintext.
   Format: `'projects/{{project}}/locations/{{location}}/keyRings/{{keyRing}}/cryptoKeys/{{cryptoKey}}'`
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -110,6 +112,7 @@ The following arguments are supported:
   (Optional)
   The additional authenticated data used for integrity checks during encryption and decryption.  **Note**: This property is sensitive and will not be displayed in the plan.
 
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -120,6 +123,7 @@ In addition to the arguments listed above, the following computed attributes are
 * `ciphertext` -
   Contains the result of encrypting the provided plaintext, encoded in base64.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

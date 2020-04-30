@@ -83,6 +83,8 @@ The following arguments are supported:
   The Resource ID must be 1-63 characters long, including digits,
   lowercase letters or the hyphen character.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -103,6 +105,9 @@ The following arguments are supported:
   up to 512 characters, spread across all key-value pairs.
   Metadata that goes beyond any these limits will be rejected.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -114,6 +119,7 @@ In addition to the arguments listed above, the following computed attributes are
   The resource name for the endpoint in the format
   `projects/*/locations/*/namespaces/*/services/*/endpoints/*`.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

@@ -75,6 +75,9 @@ The following arguments are supported:
   (Required)
   The backend bucket this signed URL key belongs.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 

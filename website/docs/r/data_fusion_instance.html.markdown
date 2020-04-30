@@ -100,6 +100,8 @@ The following arguments are supported:
   * `BASIC`
   * `ENTERPRISE`
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -142,7 +144,13 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `network_config` block supports:
 
 * `ip_allocation` -
@@ -155,6 +163,10 @@ The `network_config` block supports:
   Name of the network in the project with which the tenant project
   will be peered for executing pipelines. In case of shared VPC where the network resides in another host
   project the network should specified in the form of projects/{host-project-id}/global/networks/{network}
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -189,6 +201,13 @@ In addition to the arguments listed above, the following computed attributes are
 * `service_account` -
   Service account which will be used to access resources in the customer project.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

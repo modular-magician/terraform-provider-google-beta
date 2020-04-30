@@ -123,8 +123,9 @@ The following arguments are supported:
   (Required)
   ID of the billing account to set a budget on.
 
-
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `budget_filter` block supports:
 
 * `projects` -
@@ -155,6 +156,10 @@ The `budget_filter` block supports:
   through the Catalog API:
   https://cloud.google.com/billing/v1/how-tos/catalog-api.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `amount` block supports:
 
 * `specified_amount` -
@@ -163,7 +168,7 @@ The `amount` block supports:
   optional. If specified, it must match the currency of the
   billing account. The currencyCode is provided on output.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `specified_amount` block supports:
 
 * `currency_code` -
@@ -185,6 +190,10 @@ The `specified_amount` block supports:
   zero. For example $-1.75 is represented as units=-1 and
   nanos=-750,000,000.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `threshold_rules` block supports:
 
 * `threshold_percent` -
@@ -202,6 +211,9 @@ The `threshold_rules` block supports:
   * `CURRENT_SPEND`
   * `FORECASTED_SPEND`
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `all_updates_rule` block supports:
 
 * `pubsub_topic` -
@@ -216,6 +228,10 @@ The `all_updates_rule` block supports:
   The schema version of the notification. Only "1.0" is
   accepted. It represents the JSON schema as defined in
   https://cloud.google.com/billing/docs/how-to/budgets#notification_format.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -247,6 +263,7 @@ In addition to the arguments listed above, the following computed attributes are
   implies the scope of a budget. Values are of the form
   billingAccounts/{billingAccountId}/budgets/{budgetId}.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

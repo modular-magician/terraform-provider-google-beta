@@ -82,7 +82,8 @@ The following arguments are supported:
   in a composite index is not directional, the `__name__` will be
   ordered `"ASCENDING"` (unless explicitly specified otherwise).  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `fields` block supports:
 
 * `field_path` -
@@ -106,6 +107,10 @@ The `fields` block supports:
   Possible values are:
   * `CONTAINS`
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+
 - - -
 
 
@@ -125,6 +130,8 @@ The `fields` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -136,6 +143,7 @@ In addition to the arguments listed above, the following computed attributes are
   A server defined name for this index. Format:
   `projects/{{project}}/databases/{{database}}/collectionGroups/{{collection}}/indexes/{{server_generated_id}}`
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

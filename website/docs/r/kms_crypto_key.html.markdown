@@ -97,6 +97,8 @@ The following arguments are supported:
   The KeyRing that this key belongs to.
   Format: `'projects/{{project}}/locations/{{location}}/keyRings/{{keyRing}}'`.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -128,7 +130,10 @@ The following arguments are supported:
   (Optional)
   A template describing settings for new crypto key versions.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `version_template` block supports:
 
 * `algorithm` -
@@ -144,6 +149,9 @@ The `version_template` block supports:
   Possible values are:
   * `SOFTWARE`
   * `HSM`
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

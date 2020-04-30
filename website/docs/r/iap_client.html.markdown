@@ -76,6 +76,8 @@ The following arguments are supported:
   is attached to. The format is
   `projects/{project_number}/brands/{brand_id}/identityAwareProxyClients/{client_id}`.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -93,6 +95,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `client_id` -
   Output only. Unique identifier of the OAuth client.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 * `client_id`: The OAuth2 ID of the client.
 

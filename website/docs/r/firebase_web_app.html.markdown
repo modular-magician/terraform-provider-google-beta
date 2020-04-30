@@ -99,6 +99,7 @@ The following arguments are supported:
   (Required)
   The user-assigned display name of the App.
 
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -121,6 +122,8 @@ In addition to the arguments listed above, the following computed attributes are
   Immutable. The globally unique, Firebase-assigned identifier of the App.
   This identifier should be treated as an opaque token, as the data format is not specified.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

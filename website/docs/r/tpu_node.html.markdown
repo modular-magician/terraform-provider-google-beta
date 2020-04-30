@@ -120,6 +120,11 @@ The following arguments are supported:
   (Required)
   The GCP location for the TPU.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -146,12 +151,17 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `scheduling_config` block supports:
 
 * `preemptible` -
   (Required)
   Defines whether the TPU instance is preemptible.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -170,7 +180,8 @@ In addition to the arguments listed above, the following computed attributes are
   It is recommended that Tensorflow clients of the node first reach out
   to the first (index 0) entry.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `network_endpoints` block contains:
 
 * `ip_address` -
@@ -178,6 +189,9 @@ The `network_endpoints` block contains:
 
 * `port` -
   The port of this network endpoint.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

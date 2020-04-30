@@ -96,7 +96,9 @@ The following arguments are supported:
   The fleet config contains list of fleet specs. In the Single Cloud, there
   will be only one.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `fleet_configs` block supports:
 
 * `fleet_spec` -
@@ -112,6 +114,9 @@ The `fleet_configs` block supports:
 * `name` -
   (Required)
   The name of the FleetConfig.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -136,7 +141,10 @@ The `fleet_configs` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `scaling_configs` block supports:
 
 * `name` -
@@ -159,13 +167,17 @@ The `scaling_configs` block supports:
   (Optional)
   The schedules to which this scaling config applies.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `selectors` block supports:
 
 * `labels` -
   (Optional)
   Set of labels to group by.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `schedules` block supports:
 
 * `start_time` -
@@ -190,6 +202,11 @@ The `schedules` block supports:
   https://en.wikipedia.org/wiki/Cron. Cron spec specifies the local time as
   defined by the realm.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -200,6 +217,7 @@ In addition to the arguments listed above, the following computed attributes are
   The resource name of the game server config, in the form:
   `projects/{project_id}/locations/{location}/gameServerDeployments/{deployment_id}/configs/{config_id}`.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

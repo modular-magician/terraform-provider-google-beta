@@ -93,7 +93,8 @@ The following arguments are supported:
   (Required)
   The location of the cloud run instance. eg us-central1
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `spec` block supports:
 
 * `force_override` -
@@ -117,6 +118,10 @@ The `spec` block supports:
   * `NONE`
   * `AUTOMATIC`
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `metadata` block supports:
 
 * `labels` -
@@ -157,6 +162,15 @@ The `metadata` block supports:
   may be set by external tools to store and retrieve arbitrary metadata. More
   info: http://kubernetes.io/docs/user-guide/annotations
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+
 - - -
 
 
@@ -173,7 +187,7 @@ In addition to the arguments listed above, the following computed attributes are
 * `status` -
   The current status of the DomainMapping.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `status` block contains:
 
 * `conditions` -
@@ -193,7 +207,7 @@ The `status` block contains:
 * `mapped_route_name` -
   The name of the route that the mapping currently points to.
 
-
+Hm, this should make a mess in the diffs.
 The `conditions` block contains:
 
 * `message` -
@@ -208,6 +222,12 @@ The `conditions` block contains:
 * `type` -
   Type of domain mapping condition.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `resource_records` block supports:
 
 * `type` -
@@ -226,6 +246,11 @@ The `resource_records` block supports:
 * `name` -
   Relative name of the object affected by this record. Only applicable for
   `CNAME` records. Example: 'www'.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

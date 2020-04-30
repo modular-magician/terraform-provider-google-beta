@@ -143,7 +143,9 @@ The following arguments are supported:
   (Required)
   The metric descriptor associated with the logs-based metric.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `metric_descriptor` block supports:
 
 * `unit` -
@@ -190,7 +192,10 @@ The `metric_descriptor` block supports:
   without an ending period, for example "Request count". This field is optional but it is 
   recommended to be set for any metrics associated with user-visible concepts, such as Quota.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `labels` block supports:
 
 * `key` -
@@ -210,6 +215,11 @@ The `labels` block supports:
   * `BOOL`
   * `INT64`
   * `STRING`
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -244,7 +254,10 @@ The `labels` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `bucket_options` block supports:
 
 * `linear_buckets` -
@@ -261,7 +274,7 @@ The `bucket_options` block supports:
   (Optional)
   Specifies a set of buckets with arbitrary widths.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `linear_buckets` block supports:
 
 * `num_finite_buckets` -
@@ -276,6 +289,10 @@ The `linear_buckets` block supports:
   (Optional)
   Lower bound of the first bucket.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `exponential_buckets` block supports:
 
 * `num_finite_buckets` -
@@ -290,11 +307,17 @@ The `exponential_buckets` block supports:
   (Optional)
   Must be greater than 0.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `explicit_buckets` block supports:
 
 * `bounds` -
   (Required)
   The values must be monotonically increasing.
+
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

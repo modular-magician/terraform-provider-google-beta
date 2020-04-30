@@ -84,7 +84,8 @@ The following arguments are supported:
   (Required)
   The zone where the reservation is made.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `specific_reservation` block supports:
 
 * `count` -
@@ -98,7 +99,9 @@ The `specific_reservation` block supports:
   (Required)
   The instance properties for the reservation.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `instance_properties` block supports:
 
 * `machine_type` -
@@ -121,7 +124,9 @@ The `instance_properties` block supports:
   The amount of local ssd to reserve with each instance. This
   reserves disks of type `local-ssd`.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `guest_accelerators` block supports:
 
 * `accelerator_type` -
@@ -136,6 +141,9 @@ The `guest_accelerators` block supports:
   The number of the guest accelerator cards exposed to
   this instance.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `local_ssds` block supports:
 
 * `interface` -
@@ -150,6 +158,10 @@ The `local_ssds` block supports:
 * `disk_size_gb` -
   (Required)
   The size of the disk in base-2 GB.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -167,6 +179,8 @@ The `local_ssds` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -185,6 +199,9 @@ In addition to the arguments listed above, the following computed attributes are
   The status of the reservation.
 * `self_link` - The URI of the created resource.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

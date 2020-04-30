@@ -129,6 +129,9 @@ The following arguments are supported:
   begin with a letter and only include alphanumeric and '_'.
   Format: accessPolicies/{policy_id}/servicePerimeters/{short_name}
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -185,7 +188,9 @@ The following arguments are supported:
   between currently enforced and suggested restrictions. useExplicitDryRunSpec must
   bet set to True if any of the fields in the spec are set to non-default values.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `status` block supports:
 
 * `resources` -
@@ -219,7 +224,10 @@ The `status` block supports:
   Specifies how APIs are allowed to communicate within the Service
   Perimeter.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `vpc_accessible_services` block supports:
 
 * `enable_restriction` -
@@ -232,6 +240,9 @@ The `vpc_accessible_services` block supports:
   The list of APIs usable within the Service Perimeter.
   Must be empty unless `enableRestriction` is True.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `spec` block supports:
 
 * `resources` -
@@ -265,7 +276,10 @@ The `spec` block supports:
   Specifies how APIs are allowed to communicate within the Service
   Perimeter.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `vpc_accessible_services` block supports:
 
 * `enable_restriction` -
@@ -277,6 +291,10 @@ The `vpc_accessible_services` block supports:
   (Optional)
   The list of APIs usable within the Service Perimeter.
   Must be empty unless `enableRestriction` is True.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -290,6 +308,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `update_time` -
   Time the AccessPolicy was updated in UTC.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

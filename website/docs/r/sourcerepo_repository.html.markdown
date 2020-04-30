@@ -82,6 +82,7 @@ The following arguments are supported:
   Resource name of the repository, of the form `{{repo}}`.
   The repo name may contain slashes. eg, `name/with/slash`
 
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -94,7 +95,7 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
 The `pubsub_configs` block supports:
 
 * `topic` - (Required) The identifier for this object. Format specified above.
@@ -116,6 +117,9 @@ The `pubsub_configs` block supports:
   the caller needs to have iam.serviceAccounts.actAs permission on this service account. 
   If unspecified, it defaults to the compute engine default service account.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -128,6 +132,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `size` -
   The disk usage of the repo, in bytes.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

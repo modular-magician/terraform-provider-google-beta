@@ -140,7 +140,8 @@ The following arguments are supported:
   (Required)
   A Container Analysis ATTESTATION_AUTHORITY Note, created by the user.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `attestation_authority_note` block supports:
 
 * `note_reference` -
@@ -174,7 +175,8 @@ The `attestation_authority_note` block supports:
   account email; future versions may use an email based on a
   different naming pattern.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `public_keys` block supports:
 
 * `comment` -
@@ -210,7 +212,10 @@ The `public_keys` block supports:
   blank, a default one will be computed based on the digest of the DER
   encoding of the public key.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `pkix_public_key` block supports:
 
 * `public_key_pem` -
@@ -226,6 +231,10 @@ The `pkix_public_key` block supports:
   publicKeyPem (i.e. this algorithm must match that of the
   public key).
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+
 - - -
 
 
@@ -237,6 +246,7 @@ The `pkix_public_key` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

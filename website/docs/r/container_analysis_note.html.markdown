@@ -71,7 +71,8 @@ The following arguments are supported:
   Attestation Occurrences, even if they don't all live in the same
   project.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `attestation_authority` block supports:
 
 * `hint` -
@@ -85,13 +86,15 @@ The `attestation_authority` block supports:
   in security sensitive contexts, such as when looking up
   Attestations to verify.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `hint` block supports:
 
 * `human_readable_name` -
   (Required)
   The human readable name of this Attestation Authority, for
   example "qa".
+
+Hm, this should make a mess in the diffs.
 
 - - -
 

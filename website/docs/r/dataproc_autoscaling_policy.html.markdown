@@ -76,6 +76,7 @@ The following arguments are supported:
   and hyphens (-). Cannot begin or end with underscore or hyphen. Must consist of between
   3 and 50 characters.
 
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -100,7 +101,7 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
 The `worker_config` block supports:
 
 * `min_instances` -
@@ -126,6 +127,10 @@ The `worker_config` block supports:
   the cluster will default to zero weight on the unset group. For example if weight is set
   only on primary workers, the cluster will use primary workers only and no secondary workers.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `secondary_worker_config` block supports:
 
 * `min_instances` -
@@ -153,6 +158,10 @@ The `secondary_worker_config` block supports:
   the cluster will default to zero weight on the unset group. For example if weight is set
   only on primary workers, the cluster will use primary workers only and no secondary workers.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `basic_algorithm` block supports:
 
 * `cooldown_period` -
@@ -165,7 +174,8 @@ The `basic_algorithm` block supports:
   (Required)
   YARN autoscaling configuration.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `yarn_config` block supports:
 
 * `graceful_decommission_timeout` -
@@ -209,6 +219,13 @@ The `yarn_config` block supports:
   means the autoscaler will scale down on any recommended change.
   Bounds: [0.0, 1.0]. Default: 0.0.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -218,6 +235,7 @@ In addition to the arguments listed above, the following computed attributes are
 * `name` -
   The "resource name" of the autoscaling policy.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

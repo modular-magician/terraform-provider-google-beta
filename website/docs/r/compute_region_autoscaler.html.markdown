@@ -132,7 +132,8 @@ The following arguments are supported:
   (Required)
   URL of the managed instance group that this autoscaler will scale.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `autoscaling_policy` block supports:
 
 * `min_replicas` -
@@ -175,7 +176,10 @@ The `autoscaling_policy` block supports:
   (Optional)
   Configuration parameters of autoscaling based on a load balancer.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `cpu_utilization` block supports:
 
 * `target` -
@@ -192,6 +196,8 @@ The `cpu_utilization` block supports:
   specified or until the average utilization reaches the target
   utilization.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `metric` block supports:
 
 * `name` -
@@ -268,6 +274,12 @@ The `metric` block supports:
   TimeSeries are returned upon the query execution, the autoscaler
   will sum their respective values to obtain its scaling value.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `load_balancing_utilization` block supports:
 
 * `target` -
@@ -275,6 +287,9 @@ The `load_balancing_utilization` block supports:
   Fraction of backend capacity utilization (set in HTTP(s) load
   balancing configuration) that autoscaler should maintain. Must
   be a positive float value. If not defined, the default is 0.8.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -290,6 +305,8 @@ The `load_balancing_utilization` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -301,6 +318,7 @@ In addition to the arguments listed above, the following computed attributes are
   Creation timestamp in RFC3339 text format.
 * `self_link` - The URI of the created resource.
 
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

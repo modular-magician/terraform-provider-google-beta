@@ -117,7 +117,7 @@ The following arguments are supported:
   (Required)
   Cloud SQL properties.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `cloud_sql` block supports:
 
 * `instance_id` -
@@ -136,6 +136,10 @@ The `cloud_sql` block supports:
   * `DATABASE_TYPE_UNSPECIFIED`
   * `POSTGRES`
   * `MYSQL`
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -162,6 +166,10 @@ The `cloud_sql` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
@@ -176,6 +184,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `has_credential` -
   True if the connection has credential assigned.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Timeouts
 

@@ -148,6 +148,8 @@ The following arguments are supported:
   (Required)
   A reference to a Topic resource.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -221,7 +223,8 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `push_config` block supports:
 
 * `oidc_token` -
@@ -256,7 +259,7 @@ The `push_config` block supports:
   - v1beta1: uses the push format defined in the v1beta1 Pub/Sub API.
   - v1 or v1beta2: uses the push format defined in the v1 Pub/Sub API.
 
-
+Hm, this should make a mess in the diffs.
 The `oidc_token` block supports:
 
 * `service_account_email` -
@@ -275,6 +278,14 @@ The `oidc_token` block supports:
   token audience here: https://tools.ietf.org/html/rfc7519#section-4.1.3
   Note: if not specified, the Push endpoint URL will be used.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `expiration_policy` block supports:
 
 * `ttl` -
@@ -285,6 +296,8 @@ The `expiration_policy` block supports:
   A duration in seconds with up to nine fractional digits, terminated by 's'.
   Example - "3.5s".
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `dead_letter_policy` block supports:
 
 * `dead_letter_topic` -
@@ -309,6 +322,9 @@ The `dead_letter_policy` block supports:
   client libraries may automatically extend ack_deadlines.
   This field will be honored on a best effort basis.
   If this parameter is 0, a default value of 5 is used.
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

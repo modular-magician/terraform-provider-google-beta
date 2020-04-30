@@ -110,7 +110,7 @@ The following arguments are supported:
   Default admission rule for a cluster without a per-cluster admission
   rule.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `default_admission_rule` block supports:
 
 * `evaluation_mode` -
@@ -140,6 +140,10 @@ The `default_admission_rule` block supports:
   Possible values are:
   * `ENFORCED_BLOCK_AND_AUDIT_LOG`
   * `DRYRUN_AUDIT_LOG_ONLY`
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -179,7 +183,9 @@ The `default_admission_rule` block supports:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `admission_whitelist_patterns` block supports:
 
 * `name_pattern` -
@@ -189,6 +195,8 @@ The `admission_whitelist_patterns` block supports:
   wildcard, but this is allowed only in text after the registry/
   part.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `cluster_admission_rules` block supports:
 
 * `cluster` - (Required) The identifier for this object. Format specified above.
@@ -220,6 +228,10 @@ The `cluster_admission_rules` block supports:
   Possible values are:
   * `ENFORCED_BLOCK_AND_AUDIT_LOG`
   * `DRYRUN_AUDIT_LOG_ONLY`
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 

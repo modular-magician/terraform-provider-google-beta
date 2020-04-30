@@ -115,6 +115,7 @@ The following arguments are supported:
   must be a dash, lowercase letter, or digit, except the last character,
   which cannot be a dash.
 
+Hm, this should make a mess in the diffs.
 
 - - -
 
@@ -134,7 +135,7 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
-
+Hm, this should make a mess in the diffs.
 The `snapshot_schedule_policy` block supports:
 
 * `schedule` -
@@ -149,7 +150,7 @@ The `snapshot_schedule_policy` block supports:
   (Optional)
   Properties with which the snapshots are created, such as labels.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `schedule` block supports:
 
 * `hourly_schedule` -
@@ -164,7 +165,7 @@ The `schedule` block supports:
   (Optional)
   Allows specifying a snapshot time for each day of the week.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `hourly_schedule` block supports:
 
 * `hours_in_cycle` -
@@ -178,6 +179,9 @@ The `hourly_schedule` block supports:
   where HH : [00-23] and MM : [00] GMT.
   eg: 21:00
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `daily_schedule` block supports:
 
 * `days_in_cycle` -
@@ -190,13 +194,16 @@ The `daily_schedule` block supports:
   00:00, 04:00, 08:00, 12:00, 16:00, or 20:00. For example,
   both 13:00-5 and 08:00 are valid.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `weekly_schedule` block supports:
 
 * `day_of_weeks` -
   (Required)
   May contain up to seven (one for each day of the week) snapshot times.  Structure is documented below.
 
-
+Hm, this should make a mess in the diffs.
 The `day_of_weeks` block supports:
 
 * `start_time` -
@@ -217,6 +224,9 @@ The `day_of_weeks` block supports:
   * `SATURDAY`
   * `SUNDAY`
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `retention_policy` block supports:
 
 * `max_retention_days` -
@@ -233,6 +243,9 @@ The `retention_policy` block supports:
   * `KEEP_AUTO_SNAPSHOTS`
   * `APPLY_RETENTION_POLICY`
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `snapshot_properties` block supports:
 
 * `labels` -
@@ -248,6 +261,10 @@ The `snapshot_properties` block supports:
   (Optional)
   Whether to perform a 'guest aware' snapshot.
 
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 The `group_placement_policy` block supports:
 
 * `vm_count` -
@@ -268,6 +285,11 @@ The `group_placement_policy` block supports:
 
   Possible values are:
   * `COLLOCATED`
+
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
+Hm, this should make a mess in the diffs.
 
 ## Attributes Reference
 
