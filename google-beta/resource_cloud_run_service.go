@@ -509,6 +509,11 @@ More info: http://kubernetes.io/docs/user-guide/identifiers#uids`,
 					},
 				},
 			},
+			"vpc_connector": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `The VPC connector the cloud run instance will use`,
+			},
 			"status": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -597,6 +602,12 @@ func resourceCloudRunServiceCreate(d *schema.ResourceData, meta interface{}) err
 	config := meta.(*Config)
 
 	obj := make(map[string]interface{})
+	vpc_connectorProp, err := expandCloudRunServiceVPCConnector(d.Get("vpc_connector"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("vpc_connector"); !isEmptyValue(reflect.ValueOf(vpc_connectorProp)) && (ok || !reflect.DeepEqual(v, vpc_connectorProp)) {
+		obj["vpc_connector"] = vpc_connectorProp
+	}
 	specProp, err := expandCloudRunServiceSpec(nil, d, config)
 	if err != nil {
 		return err
@@ -717,6 +728,9 @@ func resourceCloudRunServiceRead(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
 
+	if err := d.Set("vpc_connector", flattenCloudRunServiceVPCConnector(res["vpc_connector"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Service: %s", err)
+	}
 	// Terraform must set the top level schema field, but since this object contains collapsed properties
 	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
 	if flattenedProp := flattenCloudRunServiceSpec(res["spec"], d, config); flattenedProp != nil {
@@ -749,6 +763,12 @@ func resourceCloudRunServiceUpdate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	obj := make(map[string]interface{})
+	vpc_connectorProp, err := expandCloudRunServiceVPCConnector(d.Get("vpc_connector"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("vpc_connector"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, vpc_connectorProp)) {
+		obj["vpc_connector"] = vpc_connectorProp
+	}
 	specProp, err := expandCloudRunServiceSpec(nil, d, config)
 	if err != nil {
 		return err
@@ -833,6 +853,10 @@ func resourceCloudRunServiceImport(d *schema.ResourceData, meta interface{}) ([]
 	d.Set("autogenerate_revision_name", false)
 
 	return []*schema.ResourceData{d}, nil
+}
+
+func flattenCloudRunServiceVPCConnector(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
 }
 
 func flattenCloudRunServiceSpec(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -1363,6 +1387,10 @@ func flattenCloudRunServiceMetadataNamespace(v interface{}, d *schema.ResourceDa
 
 func flattenCloudRunServiceMetadataAnnotations(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
+}
+
+func expandCloudRunServiceVPCConnector(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandCloudRunServiceSpec(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {

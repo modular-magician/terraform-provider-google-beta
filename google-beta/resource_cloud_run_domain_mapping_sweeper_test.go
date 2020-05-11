@@ -61,7 +61,7 @@ func testSweepCloudRunDomainMapping(region string) error {
 		},
 	}
 
-	listTemplate := strings.Split("https://{{location}}-run.googleapis.com/apis/domains.cloudrun.com/v1/namespaces/{{project}}/domainmappings", "?")[0]
+	listTemplate := strings.Split("https://{{location}}-run.googleapis.com/v1beta1/apis/domains.cloudrun.com/v1/namespaces/{{project}}/domainmappings", "?")[0]
 	listUrl, err := replaceVars(d, config, listTemplate)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
@@ -99,7 +99,7 @@ func testSweepCloudRunDomainMapping(region string) error {
 			continue
 		}
 
-		deleteTemplate := "https://{{location}}-run.googleapis.com/apis/domains.cloudrun.com/v1/namespaces/{{project}}/domainmappings/{{name}}"
+		deleteTemplate := "https://{{location}}-run.googleapis.com/v1beta1/apis/domains.cloudrun.com/v1/namespaces/{{project}}/domainmappings/{{name}}"
 		deleteUrl, err := replaceVars(d, config, deleteTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing delete url: %s", err)

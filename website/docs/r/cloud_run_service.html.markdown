@@ -464,6 +464,10 @@ The `resources` block supports:
 - - -
 
 
+* `vpc_connector` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The VPC connector the cloud run instance will use
+
 * `traffic` -
   (Optional)
   Traffic specifies how to distribute traffic over a collection of Knative Revisions

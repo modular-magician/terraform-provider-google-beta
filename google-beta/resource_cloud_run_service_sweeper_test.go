@@ -61,7 +61,7 @@ func testSweepCloudRunService(region string) error {
 		},
 	}
 
-	listTemplate := strings.Split("https://{{location}}-run.googleapis.com/apis/serving.knative.dev/v1/namespaces/{{project}}/services", "?")[0]
+	listTemplate := strings.Split("https://{{location}}-run.googleapis.com/v1beta1/apis/serving.knative.dev/v1/namespaces/{{project}}/services", "?")[0]
 	listUrl, err := replaceVars(d, config, listTemplate)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
@@ -99,7 +99,7 @@ func testSweepCloudRunService(region string) error {
 			continue
 		}
 
-		deleteTemplate := "https://{{location}}-run.googleapis.com/apis/serving.knative.dev/v1/namespaces/{{project}}/services/{{name}}"
+		deleteTemplate := "https://{{location}}-run.googleapis.com/v1beta1/apis/serving.knative.dev/v1/namespaces/{{project}}/services/{{name}}"
 		deleteUrl, err := replaceVars(d, config, deleteTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing delete url: %s", err)
