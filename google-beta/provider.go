@@ -205,6 +205,14 @@ func Provider() terraform.ResourceProvider {
 					"GOOGLE_CLOUD_FUNCTIONS_CUSTOM_ENDPOINT",
 				}, CloudFunctionsDefaultBasePath),
 			},
+			"cloud_iot_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateCustomEndpoint,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"GOOGLE_CLOUD_IOT_CUSTOM_ENDPOINT",
+				}, CloudIotDefaultBasePath),
+			},
 			"cloud_run_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -533,7 +541,6 @@ func Provider() terraform.ResourceProvider {
 			IAMCustomEndpointEntryKey:                    IAMCustomEndpointEntry,
 			ServiceNetworkingCustomEndpointEntryKey:      ServiceNetworkingCustomEndpointEntry,
 			ServiceUsageCustomEndpointEntryKey:           ServiceUsageCustomEndpointEntry,
-			CloudIoTCustomEndpointEntryKey:               CloudIoTCustomEndpointEntry,
 			StorageTransferCustomEndpointEntryKey:        StorageTransferCustomEndpointEntry,
 			BigtableAdminCustomEndpointEntryKey:          BigtableAdminCustomEndpointEntry,
 		},
@@ -622,9 +629,9 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
-// Generated resources: 153
+// Generated resources: 154
 // Generated IAM resources: 63
-// Total generated resources: 216
+// Total generated resources: 217
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -664,6 +671,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_cloudfunctions_function_iam_binding":                   ResourceIamBinding(CloudFunctionsCloudFunctionIamSchema, CloudFunctionsCloudFunctionIamUpdaterProducer, CloudFunctionsCloudFunctionIdParseFunc),
 			"google_cloudfunctions_function_iam_member":                    ResourceIamMember(CloudFunctionsCloudFunctionIamSchema, CloudFunctionsCloudFunctionIamUpdaterProducer, CloudFunctionsCloudFunctionIdParseFunc),
 			"google_cloudfunctions_function_iam_policy":                    ResourceIamPolicy(CloudFunctionsCloudFunctionIamSchema, CloudFunctionsCloudFunctionIamUpdaterProducer, CloudFunctionsCloudFunctionIdParseFunc),
+			"google_cloudiot_registry":                                     resourceCloudIotDeviceRegistry(),
 			"google_cloud_run_domain_mapping":                              resourceCloudRunDomainMapping(),
 			"google_cloud_run_service":                                     resourceCloudRunService(),
 			"google_cloud_run_service_iam_binding":                         ResourceIamBinding(CloudRunServiceIamSchema, CloudRunServiceIamUpdaterProducer, CloudRunServiceIdParseFunc),
@@ -863,7 +871,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_billing_account_iam_member":            ResourceIamMember(IamBillingAccountSchema, NewBillingAccountIamUpdater, BillingAccountIdParseFunc),
 			"google_billing_account_iam_policy":            ResourceIamPolicy(IamBillingAccountSchema, NewBillingAccountIamUpdater, BillingAccountIdParseFunc),
 			"google_cloudfunctions_function":               resourceCloudFunctionsFunction(),
-			"google_cloudiot_registry":                     resourceCloudIoTRegistry(),
 			"google_composer_environment":                  resourceComposerEnvironment(),
 			"google_compute_attached_disk":                 resourceComputeAttachedDisk(),
 			"google_compute_instance":                      resourceComputeInstance(),
@@ -1026,6 +1033,7 @@ func providerConfigure(d *schema.ResourceData, p *schema.Provider, terraformVers
 	config.BinaryAuthorizationBasePath = d.Get("binary_authorization_custom_endpoint").(string)
 	config.CloudBuildBasePath = d.Get("cloud_build_custom_endpoint").(string)
 	config.CloudFunctionsBasePath = d.Get("cloud_functions_custom_endpoint").(string)
+	config.CloudIotBasePath = d.Get("cloud_iot_custom_endpoint").(string)
 	config.CloudRunBasePath = d.Get("cloud_run_custom_endpoint").(string)
 	config.CloudSchedulerBasePath = d.Get("cloud_scheduler_custom_endpoint").(string)
 	config.CloudTasksBasePath = d.Get("cloud_tasks_custom_endpoint").(string)
@@ -1082,7 +1090,6 @@ func providerConfigure(d *schema.ResourceData, p *schema.Provider, terraformVers
 	config.IAMBasePath = d.Get(IAMCustomEndpointEntryKey).(string)
 	config.ServiceNetworkingBasePath = d.Get(ServiceNetworkingCustomEndpointEntryKey).(string)
 	config.ServiceUsageBasePath = d.Get(ServiceUsageCustomEndpointEntryKey).(string)
-	config.CloudIoTBasePath = d.Get(CloudIoTCustomEndpointEntryKey).(string)
 	config.StorageTransferBasePath = d.Get(StorageTransferCustomEndpointEntryKey).(string)
 	config.BigtableAdminBasePath = d.Get(BigtableAdminCustomEndpointEntryKey).(string)
 
