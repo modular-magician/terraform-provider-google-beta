@@ -194,11 +194,19 @@ The `pull_request` block supports:
   * `COMMENTS_DISABLED`
   * `COMMENTS_ENABLED`
 
+* `invert_regex` -
+  (Optional)
+  If true, branches that do NOT match the git_ref will trigger a build.
+
 The `push` block supports:
 
 * `branch` -
   (Optional)
   Regex of branches to match.  Specify only one of branch or tag.
+
+* `invert_regex` -
+  (Optional)
+  When true, only trigger a build if the revision regex does NOT match the given ref regex.
 
 * `tag` -
   (Optional)

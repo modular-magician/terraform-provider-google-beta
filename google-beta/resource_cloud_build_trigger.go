@@ -328,6 +328,11 @@ https://github.com/googlecloudplatform/cloud-builders is "googlecloudplatform".`
 										ValidateFunc: validation.StringInSlice([]string{"COMMENTS_DISABLED", "COMMENTS_ENABLED", ""}, false),
 										Description:  `Whether to block builds on a "/gcbrun" comment from a repository owner or collaborator. Possible values: ["COMMENTS_DISABLED", "COMMENTS_ENABLED"]`,
 									},
+									"invert_regex": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `If true, branches that do NOT match the git_ref will trigger a build.`,
+									},
 								},
 							},
 							ExactlyOneOf: []string{"github.0.pull_request", "github.0.push"},
@@ -344,6 +349,11 @@ https://github.com/googlecloudplatform/cloud-builders is "googlecloudplatform".`
 										Optional:     true,
 										Description:  `Regex of branches to match.  Specify only one of branch or tag.`,
 										ExactlyOneOf: []string{"github.0.push.0.branch", "github.0.push.0.tag"},
+									},
+									"invert_regex": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `When true, only trigger a build if the revision regex does NOT match the given ref regex.`,
 									},
 									"tag": {
 										Type:         schema.TypeString,
@@ -905,6 +915,8 @@ func flattenCloudBuildTriggerGithubPullRequest(v interface{}, d *schema.Resource
 		flattenCloudBuildTriggerGithubPullRequestBranch(original["branch"], d, config)
 	transformed["comment_control"] =
 		flattenCloudBuildTriggerGithubPullRequestCommentControl(original["commentControl"], d, config)
+	transformed["invert_regex"] =
+		flattenCloudBuildTriggerGithubPullRequestInvertRegex(original["invertRegex"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudBuildTriggerGithubPullRequestBranch(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -912,6 +924,10 @@ func flattenCloudBuildTriggerGithubPullRequestBranch(v interface{}, d *schema.Re
 }
 
 func flattenCloudBuildTriggerGithubPullRequestCommentControl(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenCloudBuildTriggerGithubPullRequestInvertRegex(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -926,11 +942,17 @@ func flattenCloudBuildTriggerGithubPush(v interface{}, d *schema.ResourceData, c
 	transformed := make(map[string]interface{})
 	transformed["branch"] =
 		flattenCloudBuildTriggerGithubPushBranch(original["branch"], d, config)
+	transformed["invert_regex"] =
+		flattenCloudBuildTriggerGithubPushInvertRegex(original["invertRegex"], d, config)
 	transformed["tag"] =
 		flattenCloudBuildTriggerGithubPushTag(original["tag"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudBuildTriggerGithubPushBranch(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenCloudBuildTriggerGithubPushInvertRegex(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -1248,6 +1270,13 @@ func expandCloudBuildTriggerGithubPullRequest(v interface{}, d TerraformResource
 		transformed["commentControl"] = transformedCommentControl
 	}
 
+	transformedInvertRegex, err := expandCloudBuildTriggerGithubPullRequestInvertRegex(original["invert_regex"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInvertRegex); val.IsValid() && !isEmptyValue(val) {
+		transformed["invertRegex"] = transformedInvertRegex
+	}
+
 	return transformed, nil
 }
 
@@ -1256,6 +1285,10 @@ func expandCloudBuildTriggerGithubPullRequestBranch(v interface{}, d TerraformRe
 }
 
 func expandCloudBuildTriggerGithubPullRequestCommentControl(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudBuildTriggerGithubPullRequestInvertRegex(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1275,6 +1308,13 @@ func expandCloudBuildTriggerGithubPush(v interface{}, d TerraformResourceData, c
 		transformed["branch"] = transformedBranch
 	}
 
+	transformedInvertRegex, err := expandCloudBuildTriggerGithubPushInvertRegex(original["invert_regex"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInvertRegex); val.IsValid() && !isEmptyValue(val) {
+		transformed["invertRegex"] = transformedInvertRegex
+	}
+
 	transformedTag, err := expandCloudBuildTriggerGithubPushTag(original["tag"], d, config)
 	if err != nil {
 		return nil, err
@@ -1286,6 +1326,10 @@ func expandCloudBuildTriggerGithubPush(v interface{}, d TerraformResourceData, c
 }
 
 func expandCloudBuildTriggerGithubPushBranch(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudBuildTriggerGithubPushInvertRegex(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
