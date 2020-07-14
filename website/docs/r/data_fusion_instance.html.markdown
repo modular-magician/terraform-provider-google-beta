@@ -108,6 +108,10 @@ The following arguments are supported:
   (Optional)
   An optional description of the instance.
 
+* `version` -
+  (Optional)
+  An optional version of the instance.
+
 * `enable_stackdriver_logging` -
   (Optional)
   Option to enable Stackdriver Logging.

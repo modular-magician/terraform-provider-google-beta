@@ -132,6 +132,12 @@ able to access the public internet.`,
 				ForceNew:    true,
 				Description: `The region of the Data Fusion instance.`,
 			},
+			"version": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `An optional version of the instance.`,
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -198,6 +204,12 @@ func resourceDataFusionInstanceCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
+	}
+	versionProp, err := expandDataFusionInstanceVersion(d.Get("version"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("version"); !isEmptyValue(reflect.ValueOf(versionProp)) && (ok || !reflect.DeepEqual(v, versionProp)) {
+		obj["version"] = versionProp
 	}
 	typeProp, err := expandDataFusionInstanceType(d.Get("type"), d, config)
 	if err != nil {
@@ -325,6 +337,9 @@ func resourceDataFusionInstanceRead(d *schema.ResourceData, meta interface{}) er
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err := d.Set("description", flattenDataFusionInstanceDescription(res["description"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err := d.Set("version", flattenDataFusionInstanceVersion(res["version"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err := d.Set("type", flattenDataFusionInstanceType(res["type"], d, config)); err != nil {
@@ -489,6 +504,10 @@ func flattenDataFusionInstanceDescription(v interface{}, d *schema.ResourceData,
 	return v
 }
 
+func flattenDataFusionInstanceVersion(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func flattenDataFusionInstanceType(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
@@ -569,6 +588,10 @@ func expandDataFusionInstanceName(v interface{}, d TerraformResourceData, config
 }
 
 func expandDataFusionInstanceDescription(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataFusionInstanceVersion(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
