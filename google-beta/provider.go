@@ -117,6 +117,14 @@ func Provider() terraform.ResourceProvider {
 					"GOOGLE_ACCESS_CONTEXT_MANAGER_CUSTOM_ENDPOINT",
 				}, AccessContextManagerDefaultBasePath),
 			},
+			"active_directory_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateCustomEndpoint,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"GOOGLE_ACTIVE_DIRECTORY_CUSTOM_ENDPOINT",
+				}, ActiveDirectoryDefaultBasePath),
+			},
 			"app_engine_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -684,9 +692,9 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
-// Generated resources: 170
+// Generated resources: 171
 // Generated IAM resources: 66
-// Total generated resources: 236
+// Total generated resources: 237
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -699,6 +707,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_access_context_manager_access_level":                   resourceAccessContextManagerAccessLevel(),
 			"google_access_context_manager_service_perimeter":              resourceAccessContextManagerServicePerimeter(),
 			"google_access_context_manager_service_perimeter_resource":     resourceAccessContextManagerServicePerimeterResource(),
+			"google_active_directory_domain":                               resourceActiveDirectoryDomain(),
 			"google_app_engine_domain_mapping":                             resourceAppEngineDomainMapping(),
 			"google_app_engine_firewall_rule":                              resourceAppEngineFirewallRule(),
 			"google_app_engine_standard_app_version":                       resourceAppEngineStandardAppVersion(),
@@ -1101,6 +1110,7 @@ func providerConfigure(d *schema.ResourceData, p *schema.Provider, terraformVers
 
 	// Generated products
 	config.AccessContextManagerBasePath = d.Get("access_context_manager_custom_endpoint").(string)
+	config.ActiveDirectoryBasePath = d.Get("active_directory_custom_endpoint").(string)
 	config.AppEngineBasePath = d.Get("app_engine_custom_endpoint").(string)
 	config.ArtifactRegistryBasePath = d.Get("artifact_registry_custom_endpoint").(string)
 	config.BigQueryBasePath = d.Get("big_query_custom_endpoint").(string)
