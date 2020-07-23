@@ -1086,7 +1086,7 @@ func resourceContainerCluster() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"disabled": {
 							Type:        schema.TypeBool,
-							Required:    true,
+							Optional:    true,
 							Description: `When disabled is set to false, default IP masquerade rules will be applied to the nodes to prevent sNAT on cluster internal traffic.`,
 						},
 					},
