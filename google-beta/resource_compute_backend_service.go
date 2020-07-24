@@ -163,21 +163,6 @@ func resourceComputeBackendService() *schema.Resource {
 		SchemaVersion: 1,
 
 		Schema: map[string]*schema.Schema{
-			"health_checks": {
-				Type:     schema.TypeSet,
-				Required: true,
-				Description: `The set of URLs to the HttpHealthCheck or HttpsHealthCheck resource
-for health checking this BackendService. Currently at most one health
-check can be specified, and a health check is required.
-
-For internal load balancing, a URL to a HealthCheck resource must be specified instead.`,
-				MinItems: 1,
-				MaxItems: 1,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Set: selfLinkRelativePathHash,
-			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -490,6 +475,23 @@ requests.`,
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: `If true, enable Cloud CDN for this BackendService.`,
+			},
+			"health_checks": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Description: `The set of URLs to the HttpHealthCheck or HttpsHealthCheck resource
+for health checking this BackendService.
+
+Unless the backend of this service is a NetworkEndpointGroup, a health check is required.
+Currently at most one health check can be specified.
+
+For internal load balancing, a URL to a HealthCheck resource must be specified instead.`,
+				MinItems: 1,
+				MaxItems: 1,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Set: selfLinkRelativePathHash,
 			},
 			"iap": {
 				Type:        schema.TypeList,
@@ -917,9 +919,8 @@ either maxRate or maxRatePerInstance must be set.`,
 				Type:     schema.TypeFloat,
 				Optional: true,
 				Description: `Used when balancingMode is UTILIZATION. This ratio defines the
-CPU utilization target for the group. The default is 0.8. Valid
+CPU utilization target for the group. Valid
 range is [0.0, 1.0].`,
-				Default: 0.8,
 			},
 		},
 	}
@@ -2506,7 +2507,7 @@ func expandComputeBackendServiceBackend(v interface{}, d TerraformResourceData, 
 		transformedMaxUtilization, err := expandComputeBackendServiceBackendMaxUtilization(original["max_utilization"], d, config)
 		if err != nil {
 			return nil, err
-		} else {
+		} else if val := reflect.ValueOf(transformedMaxUtilization); val.IsValid() && !isEmptyValue(val) {
 			transformed["maxUtilization"] = transformedMaxUtilization
 		}
 
