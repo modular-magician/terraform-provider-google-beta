@@ -100,12 +100,14 @@ The following arguments are supported:
   (Optional)
   The list of ALLOW rules specified by this firewall. Each rule
   specifies a protocol and port-range tuple that describes a permitted
-  connection.  Structure is documented below.
+  connection.
+  Structure is documented below.
 
 * `deny` -
   (Optional)
   The list of DENY rules specified by this firewall. Each rule specifies
-  a protocol and port-range tuple that describes a denied connection.  Structure is documented below.
+  a protocol and port-range tuple that describes a denied connection.
+  Structure is documented below.
 
 * `description` -
   (Optional)
@@ -124,10 +126,7 @@ The following arguments are supported:
   INGRESS. Note: For INGRESS traffic, it is NOT supported to specify
   destinationRanges; For EGRESS traffic, it is NOT supported to specify
   sourceRanges OR sourceTags.
-
-  Possible values are:
-  * `INGRESS`
-  * `EGRESS`
+  Possible values are `INGRESS` and `EGRESS`.
 
 * `disabled` -
   (Optional)
