@@ -48,10 +48,6 @@ resource "google_spanner_instance" "main" {
 resource "google_spanner_database" "database" {
   instance = google_spanner_instance.main.name
   name     = "my-database"
-  ddl = [
-    "CREATE TABLE t1 (t1 INT64 NOT NULL,) PRIMARY KEY(t1)",
-    "CREATE TABLE t2 (t2 INT64 NOT NULL,) PRIMARY KEY(t2)",
-  ]
 }
 ```
 
@@ -79,6 +75,9 @@ The following arguments are supported:
   database. Statements can create tables, indexes, etc. These statements
   execute atomically with the creation of the database: if there is an
   error in any statement, the database is not created.
+  Once a database is created, changes to this list cannot be used to
+  migrate the schema in the existing database. We recommend users to
+  rely on schema management tools instead of using this option.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
