@@ -43,7 +43,7 @@ To get more information about TargetTcpProxy, see:
 ## Example Usage - Target Tcp Proxy Basic
 
 
-```hcl
+```terraform
 resource "google_compute_target_tcp_proxy" "default" {
   name            = "test-proxy"
   backend_service = google_compute_backend_service.default.id

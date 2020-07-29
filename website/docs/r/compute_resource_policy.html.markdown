@@ -34,7 +34,7 @@ A policy that can be attached to a resource to specify or schedule actions on th
 ## Example Usage - Resource Policy Basic
 
 
-```hcl
+```terraform
 resource "google_compute_resource_policy" "foo" {
   name   = "policy"
   region = "us-central1"
@@ -56,7 +56,7 @@ resource "google_compute_resource_policy" "foo" {
 ## Example Usage - Resource Policy Full
 
 
-```hcl
+```terraform
 resource "google_compute_resource_policy" "bar" {
   name   = "policy"
   region = "us-central1"
@@ -89,7 +89,7 @@ resource "google_compute_resource_policy" "bar" {
 ## Example Usage - Resource Policy Placement Policy
 
 
-```hcl
+```terraform
 resource "google_compute_resource_policy" "baz" {
   name   = "policy"
   region = "us-central1"

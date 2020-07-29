@@ -43,7 +43,7 @@ To get more information about PacketMirroring, see:
 ## Example Usage - Compute Packet Mirroring Full
 
 
-```hcl
+```terraform
 resource "google_compute_instance" "mirror" {
   name = "my-instance"
   provider = google-beta

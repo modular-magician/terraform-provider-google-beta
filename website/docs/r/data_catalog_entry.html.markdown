@@ -44,7 +44,7 @@ To get more information about Entry, see:
 ## Example Usage - Data Catalog Entry Basic
 
 
-```hcl
+```terraform
 resource "google_data_catalog_entry" "basic_entry" {
   entry_group = google_data_catalog_entry_group.entry_group.id
   entry_id = "my_entry"
@@ -65,7 +65,7 @@ resource "google_data_catalog_entry_group" "entry_group" {
 ## Example Usage - Data Catalog Entry Fileset
 
 
-```hcl
+```terraform
 resource "google_data_catalog_entry" "basic_entry" {
   entry_group = google_data_catalog_entry_group.entry_group.id
   entry_id = "my_entry"
@@ -89,7 +89,7 @@ resource "google_data_catalog_entry_group" "entry_group" {
 ## Example Usage - Data Catalog Entry Full
 
 
-```hcl
+```terraform
 resource "google_data_catalog_entry" "basic_entry" {
   entry_group = google_data_catalog_entry_group.entry_group.id
   entry_id = "my_entry"

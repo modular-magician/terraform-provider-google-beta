@@ -42,7 +42,7 @@ To get more information about GameServerDeploymentRollout, see:
 ## Example Usage - Game Service Deployment Rollout Basic
 
 
-```hcl
+```terraform
 resource "google_game_services_game_server_deployment" "default" {
   provider = google-beta
 

@@ -45,7 +45,7 @@ To get more information about Project, see:
 ## Example Usage - Firebase Project Basic
 
 
-```hcl
+```terraform
 resource "google_project" "default" {
   provider = google-beta
 

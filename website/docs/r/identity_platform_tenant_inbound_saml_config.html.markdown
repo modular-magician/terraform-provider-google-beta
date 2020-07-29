@@ -38,7 +38,7 @@ the marketplace prior to using this resource.
 ## Example Usage - Identity Platform Tenant Inbound Saml Config Basic
 
 
-```hcl
+```terraform
 resource "google_identity_platform_tenant" "tenant" {
   display_name  = "tenant"
 }

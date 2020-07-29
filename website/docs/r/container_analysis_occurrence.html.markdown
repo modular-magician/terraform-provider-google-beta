@@ -36,7 +36,7 @@ To get more information about Occurrence, see:
 ## Example Usage - Container Analysis Occurrence Kms
 
 
-```hcl
+```terraform
 resource "google_binary_authorization_attestor" "attestor" {
   name = "attestor"
   attestation_authority_note {

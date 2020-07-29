@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Identity-Aware Pro
 
 ## google\_iap\_web\_type\_app\_engine\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/iap.httpsResourceAccessor"
@@ -54,7 +54,7 @@ resource "google_iap_web_type_app_engine_iam_policy" "policy" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/iap.httpsResourceAccessor"
@@ -78,7 +78,7 @@ resource "google_iap_web_type_app_engine_iam_policy" "policy" {
 ```
 ## google\_iap\_web\_type\_app\_engine\_iam\_binding
 
-```hcl
+```terraform
 resource "google_iap_web_type_app_engine_iam_binding" "binding" {
   project = google_app_engine_application.app.project
   app_id = google_app_engine_application.app.app_id
@@ -91,7 +91,7 @@ resource "google_iap_web_type_app_engine_iam_binding" "binding" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 resource "google_iap_web_type_app_engine_iam_binding" "binding" {
   project = google_app_engine_application.app.project
   app_id = google_app_engine_application.app.app_id
@@ -109,7 +109,7 @@ resource "google_iap_web_type_app_engine_iam_binding" "binding" {
 ```
 ## google\_iap\_web\_type\_app\_engine\_iam\_member
 
-```hcl
+```terraform
 resource "google_iap_web_type_app_engine_iam_member" "member" {
   project = google_app_engine_application.app.project
   app_id = google_app_engine_application.app.app_id
@@ -120,7 +120,7 @@ resource "google_iap_web_type_app_engine_iam_member" "member" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 resource "google_iap_web_type_app_engine_iam_member" "member" {
   project = google_app_engine_application.app.project
   app_id = google_app_engine_application.app.app_id

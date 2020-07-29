@@ -42,7 +42,7 @@ To get more information about StandardAppVersion, see:
 ## Example Usage - App Engine Standard App Version
 
 
-```hcl
+```terraform
 resource "google_app_engine_standard_app_version" "myapp_v1" {
   version_id = "v1"
   service    = "myapp"

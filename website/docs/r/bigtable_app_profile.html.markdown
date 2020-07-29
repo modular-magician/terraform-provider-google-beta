@@ -34,7 +34,7 @@ App profile is a configuration object describing how Cloud Bigtable should treat
 ## Example Usage - Bigtable App Profile Multicluster
 
 
-```hcl
+```terraform
 resource "google_bigtable_instance" "instance" {
   name = "bt-instance"
   cluster {
@@ -63,7 +63,7 @@ resource "google_bigtable_app_profile" "ap" {
 ## Example Usage - Bigtable App Profile Singlecluster
 
 
-```hcl
+```terraform
 resource "google_bigtable_instance" "instance" {
   name = "bt-instance"
   cluster {

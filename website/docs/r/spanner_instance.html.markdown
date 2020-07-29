@@ -41,7 +41,7 @@ To get more information about Instance, see:
 ## Example Usage - Spanner Instance Basic
 
 
-```hcl
+```terraform
 resource "google_spanner_instance" "example" {
   config       = "regional-us-central1"
   display_name = "Test Spanner Instance"

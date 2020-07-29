@@ -37,7 +37,7 @@ See [Provider Versions](https://terraform.io/docs/providers/google/guides/provid
 
 ## google\_artifact\_registry\_repository\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
@@ -57,7 +57,7 @@ resource "google_artifact_registry_repository_iam_policy" "policy" {
 
 ## google\_artifact\_registry\_repository\_iam\_binding
 
-```hcl
+```terraform
 resource "google_artifact_registry_repository_iam_binding" "binding" {
   project = google_artifact_registry_repository.my-repo.project
   location = google_artifact_registry_repository.my-repo.location
@@ -71,7 +71,7 @@ resource "google_artifact_registry_repository_iam_binding" "binding" {
 
 ## google\_artifact\_registry\_repository\_iam\_member
 
-```hcl
+```terraform
 resource "google_artifact_registry_repository_iam_member" "member" {
   project = google_artifact_registry_repository.my-repo.project
   location = google_artifact_registry_repository.my-repo.location

@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Cloud Run Service.
 
 ## google\_cloud\_run\_service\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
@@ -55,7 +55,7 @@ resource "google_cloud_run_service_iam_policy" "policy" {
 
 ## google\_cloud\_run\_service\_iam\_binding
 
-```hcl
+```terraform
 resource "google_cloud_run_service_iam_binding" "binding" {
   location = google_cloud_run_service.default.location
   project = google_cloud_run_service.default.project
@@ -69,7 +69,7 @@ resource "google_cloud_run_service_iam_binding" "binding" {
 
 ## google\_cloud\_run\_service\_iam\_member
 
-```hcl
+```terraform
 resource "google_cloud_run_service_iam_member" "member" {
   location = google_cloud_run_service.default.location
   project = google_cloud_run_service.default.project

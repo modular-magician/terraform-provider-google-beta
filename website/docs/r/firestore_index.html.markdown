@@ -41,7 +41,7 @@ To get more information about Index, see:
 ## Example Usage - Firestore Index Basic
 
 
-```hcl
+```terraform
 resource "google_firestore_index" "my-index" {
   project = "my-project-name"
 

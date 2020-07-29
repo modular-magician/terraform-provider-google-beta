@@ -40,7 +40,7 @@ To get more information about GlobalNetworkEndpointGroup, see:
 ## Example Usage - Global Network Endpoint Group
 
 
-```hcl
+```terraform
 resource "google_compute_global_network_endpoint_group" "neg" {
   name                  = "my-lb-neg"
   default_port          = "90"
@@ -55,7 +55,7 @@ resource "google_compute_global_network_endpoint_group" "neg" {
 ## Example Usage - Global Network Endpoint Group Ip Address
 
 
-```hcl
+```terraform
 resource "google_compute_global_network_endpoint_group" "neg" {
   name                  = "my-lb-neg"
   network_endpoint_type = "INTERNET_IP_PORT"

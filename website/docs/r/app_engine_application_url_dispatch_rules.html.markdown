@@ -37,7 +37,7 @@ To get more information about ApplicationUrlDispatchRules, see:
 ## Example Usage - App Engine Application Url Dispatch Rules Basic
 
 
-```hcl
+```terraform
 resource "google_app_engine_application_url_dispatch_rules" "web_service" {
   dispatch_rules {
     domain  = "*"

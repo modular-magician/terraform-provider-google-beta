@@ -19,7 +19,7 @@ whole cluster!
 
 ## Example Usage - Basic
 
-```hcl
+```terraform
 resource "google_dataproc_cluster" "simplecluster" {
   name   = "simplecluster"
   region = "us-central1"
@@ -28,7 +28,7 @@ resource "google_dataproc_cluster" "simplecluster" {
 
 ## Example Usage - Advanced
 
-```hcl
+```terraform
 resource "google_dataproc_cluster" "mycluster" {
   name     = "mycluster"
   region   = "us-central1"
@@ -91,7 +91,7 @@ resource "google_dataproc_cluster" "mycluster" {
 
 ## Example Usage - Using a GPU accelerator
 
-```hcl
+```terraform
 resource "google_dataproc_cluster" "accelerated_cluster" {
   name   = "my-cluster-with-gpu"
   region = "us-central1"
@@ -135,7 +135,7 @@ resource "google_dataproc_cluster" "accelerated_cluster" {
 
 The `cluster_config` block supports:
 
-```hcl
+```terraform
     cluster_config {
         gce_cluster_config        { ... }
         master_config             { ... }
@@ -184,16 +184,16 @@ The `cluster_config` block supports:
 * `encryption_config` (Optional) The Customer managed encryption keys settings for the cluster.
    Structure defined below.
 
-* `lifecycle_config` (Optional, Beta) The settings for auto deletion cluster schedule.
+* `lifecycle_config` (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html)) The settings for auto deletion cluster schedule.
    Structure defined below.
 
-* `endpoint_config` (Optional, Beta) The config settings for port access on the cluster.
+* `endpoint_config` (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html)) The config settings for port access on the cluster.
    Structure defined below.
 - - -
 
 The `cluster_config.gce_cluster_config` block supports:
 
-```hcl
+```terraform
   cluster_config {
     gce_cluster_config {
       zone = "us-central1-a"
@@ -251,7 +251,7 @@ The `cluster_config.gce_cluster_config` block supports:
 
 The `cluster_config.master_config` block supports:
 
-```hcl
+```terraform
 cluster_config {
   master_config {
     num_instances    = 1
@@ -310,7 +310,7 @@ if you are trying to use accelerators in a given zone.
 
 The `cluster_config.worker_config` block supports:
 
-```hcl
+```terraform
 cluster_config {
   worker_config {
     num_instances    = 3
@@ -373,7 +373,7 @@ if you are trying to use accelerators in a given zone.
 
 The `cluster_config.preemptible_worker_config` block supports:
 
-```hcl
+```terraform
 cluster_config {
   preemptible_worker_config {
     num_instances = 1
@@ -410,7 +410,7 @@ will be set for you based on whatever was set for the `worker_config.machine_typ
 
 The `cluster_config.software_config` block supports:
 
-```hcl
+```terraform
 cluster_config {
   # Override or set some custom properties
   software_config {
@@ -452,7 +452,7 @@ cluster_config {
 
 The `cluster_config.security_config` block supports:
 
-```hcl
+```terraform
 cluster_config {
   # Override or set some custom properties
   security_config {
@@ -516,7 +516,7 @@ cluster_config {
 
 The `cluster_config.autoscaling_config` block supports:
 
-```hcl
+```terraform
 cluster_config {
   # Override or set some custom properties
   autoscaling_config {
@@ -537,7 +537,7 @@ Note that the policy must be in the same project and Cloud Dataproc region.
 
 The `initialization_action` block (Optional) can be specified multiple times and supports:
 
-```hcl
+```terraform
 cluster_config {
   # You can define multiple initialization_action blocks
   initialization_action {
@@ -558,7 +558,7 @@ cluster_config {
 
 The `encryption_config` block supports:
 
-```hcl
+```terraform
 cluster_config {
   encryption_config {
     kms_key_name = "projects/projectId/locations/region/keyRings/keyRingName/cryptoKeys/keyName"
@@ -573,7 +573,7 @@ cluster_config {
 
 The `lifecycle_config` block supports:
 
-```hcl
+```terraform
 cluster_config {
   lifecycle_config {
     idle_delete_ttl = "10m"
@@ -593,7 +593,7 @@ cluster_config {
 
 The `endpoint_config` block (Optional, Computed, Beta) supports:
 
-```hcl
+```terraform
 cluster_config {
   endpoint_config {
     enable_http_port_access = "true"

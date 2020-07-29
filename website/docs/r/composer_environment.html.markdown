@@ -35,7 +35,7 @@ To get more information about Environments, see:
 ## Example Usage
 
 ### Basic Usage
-```hcl
+```terraform
 resource "google_composer_environment" "test" {
   name   = "my-composer-env"
   region = "us-central1"
@@ -48,7 +48,7 @@ resource "google_composer_environment" "test" {
 (i.e. at a project level). This will probably require an explicit dependency
 on the IAM policy binding (see `google_project_iam_member` below).
 
-```hcl
+```terraform
 resource "google_composer_environment" "test" {
   name   = "mycomposer"
   region = "us-central1"
@@ -93,7 +93,7 @@ resource "google_project_iam_member" "composer-worker" {
 ```
 
 ### With Software (Airflow) Config
-```hcl
+```terraform
 resource "google_composer_environment" "test" {
   name   = "mycomposer"
   region = "us-central1"
@@ -172,7 +172,6 @@ The `config` block supports:
 * `web_server_network_access_control` -
   (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   The network-level access control policy for the Airflow web server. If unspecified, no network-level access restrictions will be applied.
-
 
 The `node_config` block supports:
 

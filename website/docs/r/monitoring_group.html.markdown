@@ -42,7 +42,7 @@ To get more information about Group, see:
 ## Example Usage - Monitoring Group Basic
 
 
-```hcl
+```terraform
 resource "google_monitoring_group" "basic" {
   display_name = "tf-test MonitoringGroup"
 
@@ -57,7 +57,7 @@ resource "google_monitoring_group" "basic" {
 ## Example Usage - Monitoring Group Subgroup
 
 
-```hcl
+```terraform
 resource "google_monitoring_group" "parent" {
   display_name = "tf-test MonitoringParentGroup"
   filter       = "resource.metadata.region=\"europe-west2\""

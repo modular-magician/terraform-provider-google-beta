@@ -36,7 +36,7 @@ Google's cloud.
 ## Example Usage - Sql Database Basic
 
 
-```hcl
+```terraform
 resource "google_sql_database" "database" {
   name     = "my-database"
   instance = google_sql_database_instance.instance.name

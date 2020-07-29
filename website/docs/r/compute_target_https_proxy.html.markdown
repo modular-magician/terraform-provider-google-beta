@@ -41,7 +41,7 @@ To get more information about TargetHttpsProxy, see:
 ## Example Usage - Target Https Proxy Basic
 
 
-```hcl
+```terraform
 resource "google_compute_target_https_proxy" "default" {
   name             = "test-proxy"
   url_map          = google_compute_url_map.default.id

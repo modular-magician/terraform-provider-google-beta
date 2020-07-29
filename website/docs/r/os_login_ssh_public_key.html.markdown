@@ -39,7 +39,7 @@ To get more information about SSHPublicKey, see:
 ## Example Usage - Os Login Ssh Key Provided User
 
 
-```hcl
+```terraform
 data "google_client_openid_userinfo" "me" {
 }
 

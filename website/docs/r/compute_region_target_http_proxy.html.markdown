@@ -41,7 +41,7 @@ To get more information about RegionTargetHttpProxy, see:
 ## Example Usage - Region Target Http Proxy Basic
 
 
-```hcl
+```terraform
 resource "google_compute_region_target_http_proxy" "default" {
   region  = "us-central1"
   name    = "test-proxy"
@@ -94,7 +94,7 @@ resource "google_compute_region_health_check" "default" {
 ## Example Usage - Region Target Http Proxy Https Redirect
 
 
-```hcl
+```terraform
 resource "google_compute_region_target_http_proxy" "default" {
   region  = "us-central1"
   name    = "test-https-redirect-proxy"

@@ -34,7 +34,7 @@ A named resource to which messages are sent by publishers.
 ## Example Usage - Queue Basic
 
 
-```hcl
+```terraform
 resource "google_cloud_tasks_queue" "default" {
   name = "cloud-tasks-queue-test"
   location = "us-central1"

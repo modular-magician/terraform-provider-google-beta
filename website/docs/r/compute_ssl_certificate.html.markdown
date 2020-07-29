@@ -44,7 +44,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Ssl Certificate Basic
 
 
-```hcl
+```terraform
 resource "google_compute_ssl_certificate" "default" {
   name_prefix = "my-certificate-"
   description = "a description"
@@ -64,7 +64,7 @@ resource "google_compute_ssl_certificate" "default" {
 ## Example Usage - Ssl Certificate Random Provider
 
 
-```hcl
+```terraform
 # You may also want to control name generation explicitly:
 resource "google_compute_ssl_certificate" "default" {
   # The name will contain 8 random hex digits,
@@ -97,7 +97,7 @@ resource "random_id" "certificate" {
 ## Example Usage - Ssl Certificate Target Https Proxies
 
 
-```hcl
+```terraform
 // Using with Target HTTPS Proxies
 //
 // SSL certificates cannot be updated after creation. In order to apply

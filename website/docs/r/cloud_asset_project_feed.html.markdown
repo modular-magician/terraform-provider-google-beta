@@ -39,7 +39,7 @@ To get more information about ProjectFeed, see:
 ## Example Usage - Cloud Asset Project Feed
 
 
-```hcl
+```terraform
 # Create a feed that sends notifications about network resource updates.
 resource "google_cloud_asset_project_feed" "project_feed" {
   project          = "my-project-name"

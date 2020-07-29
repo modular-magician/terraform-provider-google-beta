@@ -41,7 +41,7 @@ To get more information about Reservation, see:
 ## Example Usage - Bigquery Reservation Basic
 
 
-```hcl
+```terraform
 resource "google_bigquery_reservation" "reservation" {
 	provider       = google-beta
 	name           = "reservation"

@@ -36,7 +36,7 @@ To get more information about GlobalNetworkEndpoint, see:
 ## Example Usage - Global Network Endpoint
 
 
-```hcl
+```terraform
 resource "google_compute_global_network_endpoint" "default-endpoint" {
   global_network_endpoint_group = google_compute_global_network_endpoint_group.neg.name
 

@@ -22,7 +22,7 @@ plaintext. [Read more about sensitive data in state](/docs/state/sensitive-data.
 
 ## Example Usage - with a separately managed node pool (recommended)
 
-```hcl
+```terraform
 resource "google_container_cluster" "primary" {
   name     = "my-gke-cluster"
   location = "us-central1"
@@ -67,7 +67,7 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
 
 ## Example Usage - with the default node pool
 
-```hcl
+```terraform
 resource "google_container_cluster" "primary" {
   name               = "marcellus-wallace"
   location           = "us-central1-a"
@@ -186,7 +186,7 @@ VPC-native clusters. Adding this block enables [IP aliasing](https://cloud.googl
 making the cluster VPC-native instead of routes-based. Structure is documented
 below.
 
-* `networking_mode` - (Optional, [Beta]) Determines whether alias IPs or routes will be used for pod IPs in the cluster.
+* `networking_mode` - (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html)) Determines whether alias IPs or routes will be used for pod IPs in the cluster.
 Options are `VPC_NATIVE` or `ROUTES`. `VPC_NATIVE` enables [IP aliasing](https://cloud.google.com/kubernetes-engine/docs/how-to/ip-aliases),
 and requires the `ip_allocation_policy` block to be defined. By default when this field is unspecified, GKE will create a `ROUTES`-based cluster.
 
@@ -364,7 +364,7 @@ The `addons_config` block supports:
 * `gce_persistent_disk_csi_driver_config` - (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html)).
     Whether this cluster should enable the Google Compute Engine Persistent Disk Container Storage Interface (CSI) Driver. Defaults to disabled; set `enabled = true` to enable. 
 
-* `kalm_config` - (Optional, [Beta](https://terraform.io/docs/providers/google/guides/ provider_versions.html)).
+* `kalm_config` - (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html)).
     Configuration for the KALM addon, which manages the lifecycle of k8s. It is disabled by default; Set `enabled = true` to enable.
 
 *  `config_connector_config` -  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html)).
@@ -372,7 +372,7 @@ The `addons_config` block supports:
 
 This example `addons_config` disables two addons:
 
-```hcl
+```terraform
 addons_config {
   http_load_balancing {
     disabled = true
@@ -448,7 +448,7 @@ The `maintenance_policy` block supports:
     Specify `start_time` in [RFC3339](https://www.ietf.org/rfc/rfc3339.txt) format "HH:MM”,
     where HH : \[00-23\] and MM : \[00-59\] GMT. For example:
 
-```hcl
+```terraform
 maintenance_policy {
   daily_maintenance_window {
     start_time = "03:00"
@@ -519,7 +519,7 @@ The `master_auth` block supports:
 
 * `client_certificate_config` - (Optional) Whether client certificate authorization is enabled for this cluster.  For example:
 
-```hcl
+```terraform
 master_auth {
   client_certificate_config {
     issue_client_certificate = false
@@ -643,7 +643,7 @@ The `workload_identity_config` block supports:
 
 * `identity_namespace` (Required) - Currently, the only supported identity namespace is the project's default.
 
-```hcl
+```terraform
 workload_identity_config {
   identity_namespace = "${data.google_project.project.project_id}.svc.id.goog"
 }
@@ -726,7 +726,7 @@ billing export. Defaults to `true`.
 
 * `bigquery_destination.dataset_id` (Required) - The ID of a BigQuery Dataset. For Example:
 
-```hcl
+```terraform
 resource_usage_export_config {
   enable_network_egress_metering = false
   enable_resource_consumption_metering = true

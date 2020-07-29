@@ -39,7 +39,7 @@ To get more information about Dataset, see:
 ## Example Usage - Bigquery Dataset Basic
 
 
-```hcl
+```terraform
 resource "google_bigquery_dataset" "dataset" {
   dataset_id                  = "example_dataset"
   friendly_name               = "test"
@@ -69,7 +69,7 @@ resource "google_service_account" "bqowner" {
 ## Example Usage - Bigquery Dataset Cmek
 
 
-```hcl
+```terraform
 resource "google_bigquery_dataset" "dataset" {
   dataset_id                  = "example_dataset"
   friendly_name               = "test"

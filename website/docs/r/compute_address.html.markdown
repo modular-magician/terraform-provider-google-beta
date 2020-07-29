@@ -52,7 +52,7 @@ To get more information about Address, see:
 ## Example Usage - Address Basic
 
 
-```hcl
+```terraform
 resource "google_compute_address" "ip_address" {
   name = "my-address"
 }
@@ -65,7 +65,7 @@ resource "google_compute_address" "ip_address" {
 ## Example Usage - Address With Subnetwork
 
 
-```hcl
+```terraform
 resource "google_compute_network" "default" {
   name = "my-network"
 }
@@ -93,7 +93,7 @@ resource "google_compute_address" "internal_with_subnet_and_address" {
 ## Example Usage - Address With Gce Endpoint
 
 
-```hcl
+```terraform
 resource "google_compute_address" "internal_with_gce_endpoint" {
   name         = "my-internal-address-"
   address_type = "INTERNAL"
@@ -108,7 +108,7 @@ resource "google_compute_address" "internal_with_gce_endpoint" {
 ## Example Usage - Instance With Ip
 
 
-```hcl
+```terraform
 resource "google_compute_address" "static" {
   name = "ipv4-address"
 }

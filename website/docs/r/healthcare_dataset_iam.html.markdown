@@ -9,9 +9,6 @@ description: |-
 
 # IAM policy for Google Cloud Healthcare dataset
 
-~> **Warning:** These resources are in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
-
 Three different resources help you manage your IAM policy for Healthcare dataset. Each of these resources serves a different use case:
 
 * `google_healthcare_dataset_iam_policy`: Authoritative. Sets the IAM policy for the dataset and replaces any existing policy already attached.
@@ -24,7 +21,7 @@ Three different resources help you manage your IAM policy for Healthcare dataset
 
 ## google\_healthcare\_dataset\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/editor"
@@ -43,7 +40,7 @@ resource "google_healthcare_dataset_iam_policy" "dataset" {
 
 ## google\_healthcare\_dataset\_iam\_binding
 
-```hcl
+```terraform
 resource "google_healthcare_dataset_iam_binding" "dataset" {
   dataset_id = "your-dataset-id"
   role       = "roles/editor"
@@ -56,7 +53,7 @@ resource "google_healthcare_dataset_iam_binding" "dataset" {
 
 ## google\_healthcare\_dataset\_iam\_member
 
-```hcl
+```terraform
 resource "google_healthcare_dataset_iam_member" "dataset" {
   dataset_id = "your-dataset-id"
   role       = "roles/editor"

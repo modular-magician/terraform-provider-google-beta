@@ -35,7 +35,7 @@ Once a BigQuery job is created, it cannot be changed or deleted.
 ## Example Usage - Bigquery Job Query
 
 
-```hcl
+```terraform
 resource "google_bigquery_table" "foo" {
   dataset_id = google_bigquery_dataset.bar.dataset_id
   table_id   = "job_query_table"
@@ -81,7 +81,7 @@ resource "google_bigquery_job" "job" {
 ## Example Usage - Bigquery Job Query Table Reference
 
 
-```hcl
+```terraform
 resource "google_bigquery_table" "foo" {
   dataset_id = google_bigquery_dataset.bar.dataset_id
   table_id   = "job_query_table"
@@ -129,7 +129,7 @@ resource "google_bigquery_job" "job" {
 ## Example Usage - Bigquery Job Load
 
 
-```hcl
+```terraform
 resource "google_bigquery_table" "foo" {
   dataset_id = google_bigquery_dataset.bar.dataset_id
   table_id   = "job_load_table"
@@ -176,7 +176,7 @@ resource "google_bigquery_job" "job" {
 ## Example Usage - Bigquery Job Copy
 
 
-```hcl
+```terraform
 resource "google_bigquery_table" "source" {
   count = length(google_bigquery_dataset.source)
 
@@ -308,7 +308,7 @@ resource "google_bigquery_job" "job" {
 ## Example Usage - Bigquery Job Extract
 
 
-```hcl
+```terraform
 resource "google_bigquery_table" "source-one" {
   dataset_id = google_bigquery_dataset.source-one.dataset_id
   table_id   = "job_extract_table"

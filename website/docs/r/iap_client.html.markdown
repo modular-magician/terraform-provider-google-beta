@@ -41,7 +41,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Iap Client
 
 
-```hcl
+```terraform
 resource "google_project" "project" {
   project_id = "tf-test%{random_suffix}"
   name       = "tf-test%{random_suffix}"

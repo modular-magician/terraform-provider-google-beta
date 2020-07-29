@@ -34,7 +34,7 @@ To get more information about RouterNat, see:
 ## Example Usage - Router Nat Basic
 
 
-```hcl
+```terraform
 resource "google_compute_network" "net" {
   name = "my-network"
 }
@@ -72,7 +72,7 @@ resource "google_compute_router_nat" "nat" {
 ## Example Usage - Router Nat Manual Ips
 
 
-```hcl
+```terraform
 resource "google_compute_network" "net" {
   name = "my-network"
 }

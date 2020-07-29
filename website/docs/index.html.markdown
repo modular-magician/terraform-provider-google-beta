@@ -3,20 +3,20 @@ layout: "google"
 page_title: "Provider: Google Cloud Platform"
 sidebar_current: "docs-google-provider-x"
 description: |-
-   The Google provider is used to configure your Google Cloud Platform infrastructure
+   The Google Beta provider is used to configure your Google Cloud Platform infrastructure
 ---
 
 # Google Cloud Platform Provider
 
--> Try out Terraform 0.12 with the Google provider! `google` and `google-beta` are 0.12-compatible from `2.5.0` onwards.
+-> Try out Terraform 0.12 with the Google Beta provider! `google-beta` is 0.12-compatible from `2.5.0` onwards.
 
-The Google provider is used to configure your [Google Cloud Platform](https://cloud.google.com/) infrastructure.
+The Google Beta provider is used to configure your [Google Cloud Platform](https://cloud.google.com/) infrastructure.
 See the [Getting Started](/docs/providers/google/guides/getting_started.html) page for an introduction to using the provider.
 
 A typical provider configuration will look something like:
 
-```hcl
-provider "google" {
+```terraform
+provider "google-beta" {
   credentials = file("account.json")
   project     = "my-project-id"
   region      = "us-central1"
@@ -29,7 +29,7 @@ for more details on authentication or otherwise configuring the provider.
 Take advantage of [Modules](https://www.terraform.io/docs/modules/index.html)
 to simplify your config by browsing the [Module Registry for GCP modules](https://registry.terraform.io/browse?provider=google).
 
-The Google provider is jointly maintained by:
+The Google Beta provider is jointly maintained by:
 
 * The [Google Cloud Graphite Team](https://cloudplatform.googleblog.com/2017/03/partnering-on-open-source-Google-and-HashiCorp-engineers-on-managing-GCP-infrastructure.html) at Google
 * The Terraform team at [HashiCorp](https://www.hashicorp.com/)
@@ -48,20 +48,20 @@ and the [`google-beta` provider changelog](https://github.com/terraform-provider
 for release notes and additional information.
 
 Per [Terraform Provider Versioning](https://www.hashicorp.com/blog/hashicorp-terraform-provider-versioning),
-the Google provider follows [semantic versioning](https://semver.org/).
+the Google Beta provider follows [semantic versioning](https://semver.org/).
 
 In practice, patch / bugfix-only releases of the provider are infrequent. Most
 provider releases are either minor or major releases.
 
 ### Minor Releases
 
-The Google provider currently aims to publish a minor release every 2 weeks,
+The Google Beta provider currently aims to publish a minor release every week,
 although the timing of individual releases may differ if required by the
 provider team.
 
 ### Major Releases
 
-The Google provider publishes major releases roughly yearly. An upgrade guide
+The Google Beta provider publishes major releases roughly yearly. An upgrade guide
 will be published to help ease you through the transition between the prior
 releases series and the new major release.
 
@@ -75,14 +75,14 @@ lifecycle to give users plenty of time to safely update their configs.
 
 ## Features and Bug Requests
 
-The Google provider's bugs and feature requests can be found in the [GitHub repo issues](https://github.com/terraform-providers/terraform-provider-google/issues).
+The Google Beta provider's bugs and feature requests can be found in the [GitHub repo issues](https://github.com/terraform-providers/terraform-provider-google/issues).
 Please avoid "me too" or "+1" comments. Instead, use a thumbs up [reaction](https://blog.github.com/2016-03-10-add-reactions-to-pull-requests-issues-and-comments/)
 on enhancement requests. Provider maintainers will often prioritize work based on the
 number of thumbs on an issue.
 
 Community input is appreciated on outstanding issues! We love to hear what use
 cases you have for new features, and want to provide the best possible
-experience for you using the Google provider.
+experience for you using the Google Beta provider.
 
 If you have a bug or feature request without an existing issue
 
@@ -103,7 +103,7 @@ the issue!
 
 ## Contributing
 
-If you'd like to help extend the Google provider, we gladly accept community
+If you'd like to help extend the Google Beta provider, we gladly accept community
 contributions! Our full contribution guide is available at [CONTRIBUTING.md](https://github.com/terraform-providers/terraform-provider-google/blob/master/.github/CONTRIBUTING.md)
 
 Pull requests can be made against either provider repo where a maintainer will

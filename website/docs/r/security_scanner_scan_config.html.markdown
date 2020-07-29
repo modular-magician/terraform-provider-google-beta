@@ -44,7 +44,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Scan Config Basic
 
 
-```hcl
+```terraform
 resource "google_compute_address" "scanner_static_ip" {
   provider = google-beta
   name     = "scan-basic-static-ip"

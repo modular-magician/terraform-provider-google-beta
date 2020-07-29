@@ -37,7 +37,7 @@ To get more information about ServiceSplitTraffic, see:
 ## Example Usage - App Engine Service Split Traffic
 
 
-```hcl
+```terraform
 resource "google_storage_bucket" "bucket" {
 	name = "appengine-static-content"
 }

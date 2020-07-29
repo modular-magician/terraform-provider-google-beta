@@ -43,7 +43,7 @@ To get more information about ConnectivityTest, see:
 ## Example Usage - Network Management Connectivity Test Instances
 
 
-```hcl
+```terraform
 resource "google_network_management_connectivity_test" "instance-test" {
   name = "conn-test-instances"
   source {
@@ -108,7 +108,7 @@ data "google_compute_image" "debian_9" {
 ## Example Usage - Network Management Connectivity Test Addresses
 
 
-```hcl
+```terraform
 resource "google_network_management_connectivity_test" "address-test" {
   name = "conn-test-addr"
   source {

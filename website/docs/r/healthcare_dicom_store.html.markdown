@@ -41,7 +41,7 @@ To get more information about DicomStore, see:
 ## Example Usage - Healthcare Dicom Store Basic
 
 
-```hcl
+```terraform
 resource "google_healthcare_dicom_store" "default" {
   name    = "example-dicom-store"
   dataset = google_healthcare_dataset.dataset.id

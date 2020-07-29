@@ -30,7 +30,7 @@ information, see Creating VLAN Attachments.
 ## Example Usage - Interconnect Attachment Basic
 
 
-```hcl
+```terraform
 resource "google_compute_interconnect_attachment" "on_prem" {
   name         = "on-prem-attachment"
   interconnect = "my-interconnect-id"

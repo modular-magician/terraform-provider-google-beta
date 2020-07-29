@@ -48,7 +48,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Storage Hmac Key
 
 
-```hcl
+```terraform
 resource "google_service_account" "service_account" {
   account_id = "my-svc-acc"
 }

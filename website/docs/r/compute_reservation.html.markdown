@@ -46,7 +46,7 @@ To get more information about Reservation, see:
 ## Example Usage - Reservation Basic
 
 
-```hcl
+```terraform
 resource "google_compute_reservation" "gce_reservation" {
   name = "gce-reservation"
   zone = "us-central1-a"

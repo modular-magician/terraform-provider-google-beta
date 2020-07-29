@@ -59,7 +59,7 @@ In conclusion: Be extremely cautious.
 ## Example Usage - Managed Ssl Certificate Basic
 
 
-```hcl
+```terraform
 resource "google_compute_managed_ssl_certificate" "default" {
   provider = google-beta
 
@@ -160,7 +160,7 @@ provider "google-beta" {
 ## Example Usage - Managed Ssl Certificate Recreation
 
 
-```hcl
+```terraform
 // This example allows the list of managed domains to be modified and will
 // recreate the ssl certificate and update the target https proxy correctly
 

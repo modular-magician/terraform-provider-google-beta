@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Cloud Functions Cl
 
 ## google\_cloudfunctions\_function\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
@@ -55,7 +55,7 @@ resource "google_cloudfunctions_function_iam_policy" "policy" {
 
 ## google\_cloudfunctions\_function\_iam\_binding
 
-```hcl
+```terraform
 resource "google_cloudfunctions_function_iam_binding" "binding" {
   project = google_cloudfunctions_function.function.project
   region = google_cloudfunctions_function.function.region
@@ -69,7 +69,7 @@ resource "google_cloudfunctions_function_iam_binding" "binding" {
 
 ## google\_cloudfunctions\_function\_iam\_member
 
-```hcl
+```terraform
 resource "google_cloudfunctions_function_iam_member" "member" {
   project = google_cloudfunctions_function.function.project
   region = google_cloudfunctions_function.function.region

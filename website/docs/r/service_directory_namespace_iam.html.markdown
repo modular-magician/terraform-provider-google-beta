@@ -37,7 +37,7 @@ See [Provider Versions](https://terraform.io/docs/providers/google/guides/provid
 
 ## google\_service\_directory\_namespace\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
@@ -55,7 +55,7 @@ resource "google_service_directory_namespace_iam_policy" "policy" {
 
 ## google\_service\_directory\_namespace\_iam\_binding
 
-```hcl
+```terraform
 resource "google_service_directory_namespace_iam_binding" "binding" {
   name = google_service_directory_namespace.example.name
   role = "roles/viewer"
@@ -67,7 +67,7 @@ resource "google_service_directory_namespace_iam_binding" "binding" {
 
 ## google\_service\_directory\_namespace\_iam\_member
 
-```hcl
+```terraform
 resource "google_service_directory_namespace_iam_member" "member" {
   name = google_service_directory_namespace.example.name
   role = "roles/viewer"

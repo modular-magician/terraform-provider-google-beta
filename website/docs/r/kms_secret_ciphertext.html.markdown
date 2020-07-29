@@ -43,7 +43,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Kms Secret Ciphertext Basic
 
 
-```hcl
+```terraform
 resource "google_kms_key_ring" "keyring" {
   name     = "keyring-example"
   location = "global"

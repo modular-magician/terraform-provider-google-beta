@@ -18,7 +18,7 @@ and [API](https://cloud.google.com/compute/docs/reference/latest/instanceGroupMa
 
 ## Example Usage with top level instance template (`google` provider)
 
-```hcl
+```terraform
 resource "google_compute_health_check" "autohealing" {
   name                = "autohealing-health-check"
   check_interval_sec  = 5
@@ -58,7 +58,7 @@ resource "google_compute_instance_group_manager" "appserver" {
 ```
 
 ## Example Usage with multiple versions (`google-beta` provider)
-```hcl
+```terraform
 resource "google_compute_instance_group_manager" "appserver" {
   provider = google-beta
   name     = "appserver-igm"
@@ -142,7 +142,7 @@ group. You can specify only one value. Structure is documented below. For more i
 
 The `update_policy` block supports:
 
-```hcl
+```terraform
 update_policy {
   type                  = "PROACTIVE"
   minimal_action        = "REPLACE"
@@ -183,7 +183,7 @@ The `auto_healing_policies` block supports:
 
 The `version` block supports:
 
-```hcl
+```terraform
 version {
   name              = "appserver-canary"
   instance_template = google_compute_instance_template.appserver-canary.id
@@ -194,7 +194,7 @@ version {
 }
 ```
 
-```hcl
+```terraform
 version {
   name              = "appserver-canary"
   instance_template = google_compute_instance_template.appserver-canary.id

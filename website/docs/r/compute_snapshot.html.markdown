@@ -53,7 +53,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Snapshot Basic
 
 
-```hcl
+```terraform
 resource "google_compute_snapshot" "snapshot" {
   name        = "my-snapshot"
   source_disk = google_compute_disk.persistent.name

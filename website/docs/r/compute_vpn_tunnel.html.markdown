@@ -43,7 +43,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Vpn Tunnel Basic
 
 
-```hcl
+```terraform
 resource "google_compute_vpn_tunnel" "tunnel1" {
   name          = "tunnel1"
   peer_ip       = "15.0.0.120"
@@ -111,7 +111,7 @@ resource "google_compute_route" "route1" {
 ## Example Usage - Vpn Tunnel Beta
 
 
-```hcl
+```terraform
 resource "google_compute_vpn_tunnel" "tunnel1" {
   provider      = google-beta
   name          = "tunnel1"

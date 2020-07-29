@@ -38,7 +38,7 @@ To get more information about RouterBgpPeer, see:
 ## Example Usage - Router Peer Basic
 
 
-```hcl
+```terraform
 resource "google_compute_router_peer" "peer" {
   name                      = "my-router-peer"
   router                    = "my-router"

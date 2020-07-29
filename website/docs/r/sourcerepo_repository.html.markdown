@@ -39,7 +39,7 @@ To get more information about Repository, see:
 ## Example Usage - Sourcerepo Repository Basic
 
 
-```hcl
+```terraform
 resource "google_sourcerepo_repository" "my-repo" {
   name = "my/repository"
 }
@@ -52,7 +52,7 @@ resource "google_sourcerepo_repository" "my-repo" {
 ## Example Usage - Sourcerepo Repository Full
 
 
-```hcl
+```terraform
 resource "google_service_account" "test-account" {
   account_id   = "my-account"
   display_name = "Test Service Account"

@@ -35,7 +35,7 @@ To get more information about Intent, see:
 ## Example Usage - Dialogflow Intent Basic
 
 
-```hcl
+```terraform
 resource "google_dialogflow_agent" "basic_agent" {
   display_name = "example_agent"
   default_language_code = "en"
@@ -55,7 +55,7 @@ resource "google_dialogflow_intent" "basic_intent" {
 ## Example Usage - Dialogflow Intent Full
 
 
-```hcl
+```terraform
 resource "google_project" "agent_project" {
   project_id = "tf-test-dialogflow-%{random_suffix}"
   name = "tf-test-dialogflow-%{random_suffix}"

@@ -41,7 +41,7 @@ To get more information about Instance, see:
 ## Example Usage - Data Fusion Instance Basic
 
 
-```hcl
+```terraform
 resource "google_data_fusion_instance" "basic_instance" {
   provider = "google-beta"
   name = "my-instance"
@@ -57,7 +57,7 @@ resource "google_data_fusion_instance" "basic_instance" {
 ## Example Usage - Data Fusion Instance Full
 
 
-```hcl
+```terraform
 resource "google_data_fusion_instance" "extended_instance" {
   provider = "google-beta"
   name = "my-instance"

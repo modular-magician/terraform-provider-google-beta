@@ -39,7 +39,7 @@ To get more information about KeyRing, see:
 ## Example Usage - Kms Key Ring Basic
 
 
-```hcl
+```terraform
 resource "google_kms_key_ring" "example-keyring" {
   name     = "keyring-example"
   location = "global"

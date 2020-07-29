@@ -41,7 +41,7 @@ To get more information about NodeTemplate, see:
 ## Example Usage - Node Template Basic
 
 
-```hcl
+```terraform
 resource "google_compute_node_template" "template" {
   name      = "soletenant-tmpl"
   region    = "us-central1"
@@ -56,7 +56,7 @@ resource "google_compute_node_template" "template" {
 ## Example Usage - Node Template Server Binding
 
 
-```hcl
+```terraform
 provider "google-beta" {
   region = "us-central1"
   zone   = "us-central1-a"

@@ -36,7 +36,7 @@ To get more information about AccessLevel, see:
 ## Example Usage - Access Context Manager Access Level Basic
 
 
-```hcl
+```terraform
 resource "google_access_context_manager_access_level" "access-level" {
   parent = "accessPolicies/${google_access_context_manager_access_policy.access-policy.name}"
   name   = "accessPolicies/${google_access_context_manager_access_policy.access-policy.name}/accessLevels/chromeos_no_lock"

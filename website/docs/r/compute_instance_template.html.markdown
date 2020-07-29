@@ -17,7 +17,7 @@ and
 
 ## Example Usage
 
-```hcl
+```terraform
 resource "google_compute_instance_template" "default" {
   name        = "appserver-template"
   description = "This template is used to create app server instances."
@@ -89,7 +89,7 @@ it's recommended to specify `create_before_destroy` in a [lifecycle][2] block.
 Either omit the Instance Template `name` attribute, or specify a partial name
 with `name_prefix`.  Example:
 
-```hcl
+```terraform
 resource "google_compute_instance_template" "instance_template" {
   name_prefix  = "instance-template-"
   machine_type = "n1-standard-1"
@@ -140,7 +140,7 @@ You can achieve this by using the [`google_compute_image`](../d/compute_image.ht
 data source, which will retrieve the latest image on every `terraform apply`, and will update
 the template to use that specific image:
 
-```tf
+```terraform
 data "google_compute_image" "my_image" {
   family  = "debian-9"
   project = "debian-cloud"
@@ -162,7 +162,7 @@ To have instances update to the latest on every scaling event or instance re-cre
 use the family as the image for the disk, and it will use GCP's default behavior, setting
 the image for the template to the family:
 
-```tf
+```terraform
 resource "google_compute_instance_template" "instance_template" {
   name_prefix  = "instance-template-"
   machine_type = "n1-standard-1"
@@ -384,6 +384,9 @@ The `scheduling` block supports:
    groups will use as host systems. Read more on sole-tenant node creation
    [here](https://cloud.google.com/compute/docs/nodes/create-nodes).
    Structure documented below.
+
+* `min_node_cpus` - (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html)) The minimum number of virtual CPUs
+   this instance will consume when running on a sole-tenant node.
 
 The `guest_accelerator` block supports:
 

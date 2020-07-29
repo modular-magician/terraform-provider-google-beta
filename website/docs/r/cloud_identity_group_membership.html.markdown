@@ -36,7 +36,7 @@ See [Provider Versions](https://terraform.io/docs/providers/google/guides/provid
 ## Example Usage - Cloud Identity Group Membership
 
 
-```hcl
+```terraform
 resource "google_cloud_identity_group" "group" {
   provider = google-beta
   display_name = "my-identity-group"
@@ -88,7 +88,7 @@ resource "google_cloud_identity_group_membership" "cloud_identity_group_membersh
 ## Example Usage - Cloud Identity Group Membership User
 
 
-```hcl
+```terraform
 resource "google_cloud_identity_group" "group" {
   provider = google-beta
   display_name = "my-identity-group"

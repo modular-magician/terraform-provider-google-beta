@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Binary Authorizati
 
 ## google\_binary\_authorization\_attestor\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
@@ -54,7 +54,7 @@ resource "google_binary_authorization_attestor_iam_policy" "policy" {
 
 ## google\_binary\_authorization\_attestor\_iam\_binding
 
-```hcl
+```terraform
 resource "google_binary_authorization_attestor_iam_binding" "binding" {
   project = google_binary_authorization_attestor.attestor.project
   attestor = google_binary_authorization_attestor.attestor.name
@@ -67,7 +67,7 @@ resource "google_binary_authorization_attestor_iam_binding" "binding" {
 
 ## google\_binary\_authorization\_attestor\_iam\_member
 
-```hcl
+```terraform
 resource "google_binary_authorization_attestor_iam_member" "member" {
   project = google_binary_authorization_attestor.attestor.project
   attestor = google_binary_authorization_attestor.attestor.name

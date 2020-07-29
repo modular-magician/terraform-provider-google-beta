@@ -42,7 +42,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Uptime Check Config Http
 
 
-```hcl
+```terraform
 resource "google_monitoring_uptime_check_config" "http" {
   display_name = "http-uptime-check"
   timeout      = "60s"
@@ -76,7 +76,7 @@ resource "google_monitoring_uptime_check_config" "http" {
 ## Example Usage - Uptime Check Config Https
 
 
-```hcl
+```terraform
 resource "google_monitoring_uptime_check_config" "https" {
   display_name = "https-uptime-check"
   timeout = "60s"
@@ -109,7 +109,7 @@ resource "google_monitoring_uptime_check_config" "https" {
 ## Example Usage - Uptime Check Tcp
 
 
-```hcl
+```terraform
 resource "google_monitoring_uptime_check_config" "tcp_group" {
   display_name = "tcp-uptime-check"
   timeout      = "60s"

@@ -43,7 +43,7 @@ To get more information about NetworkPeeringRoutesConfig, see:
 ## Example Usage - Network Peering Routes Config Basic
 
 
-```hcl
+```terraform
 resource "google_compute_network_peering_routes_config" "peering_primary_routes" {
   peering = google_compute_network_peering.peering_primary.name
   network = google_compute_network.network_primary.name
@@ -85,7 +85,7 @@ resource "google_compute_network" "network_secondary" {
 ## Example Usage - Network Peering Routes Config Gke
 
 
-```hcl
+```terraform
 resource "google_compute_network_peering_routes_config" "peering_gke_routes" {
   peering = google_container_cluster.private_cluster.private_cluster_config[0].peering_name
   network = google_compute_network.container_network.name

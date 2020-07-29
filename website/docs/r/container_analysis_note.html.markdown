@@ -42,7 +42,7 @@ To get more information about Note, see:
 ## Example Usage - Container Analysis Note Basic
 
 
-```hcl
+```terraform
 resource "google_container_analysis_note" "note" {
   name = "attestor-note"
   attestation_authority {
@@ -60,7 +60,7 @@ resource "google_container_analysis_note" "note" {
 ## Example Usage - Container Analysis Note Attestation Full
 
 
-```hcl
+```terraform
 resource "google_container_analysis_note" "note" {
   name = "attestor-note"
 

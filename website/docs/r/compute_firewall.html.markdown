@@ -51,7 +51,7 @@ To get more information about Firewall, see:
 ## Example Usage - Firewall Basic
 
 
-```hcl
+```terraform
 resource "google_compute_firewall" "default" {
   name    = "test-firewall"
   network = google_compute_network.default.name

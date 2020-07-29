@@ -41,7 +41,7 @@ To get more information about Environment, see:
 ## Example Usage - Notebook Environment Basic
 
 
-```hcl
+```terraform
 resource "google_notebooks_environment" "environment" {
   provider = google-beta
   name = "notebooks-environment"

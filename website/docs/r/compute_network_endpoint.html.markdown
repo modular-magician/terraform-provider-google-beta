@@ -39,7 +39,7 @@ To get more information about NetworkEndpoint, see:
 ## Example Usage - Network Endpoint
 
 
-```hcl
+```terraform
 resource "google_compute_network_endpoint" "default-endpoint" {
   network_endpoint_group = google_compute_network_endpoint_group.neg.name
 

@@ -41,7 +41,7 @@ To get more information about RegionBackendService, see:
 ## Example Usage - Region Backend Service Basic
 
 
-```hcl
+```terraform
 resource "google_compute_region_backend_service" "default" {
   name                            = "region-service"
   region                          = "us-central1"
@@ -68,7 +68,7 @@ resource "google_compute_health_check" "default" {
 ## Example Usage - Region Backend Service Ilb Round Robin
 
 
-```hcl
+```terraform
 resource "google_compute_region_backend_service" "default" {
   region = "us-central1"
   name = "region-service"
@@ -93,7 +93,7 @@ resource "google_compute_health_check" "health_check" {
 ## Example Usage - Region Backend Service Ilb Ring Hash
 
 
-```hcl
+```terraform
 resource "google_compute_region_backend_service" "default" {
   region = "us-central1"
   name = "region-service"
@@ -134,7 +134,7 @@ resource "google_compute_health_check" "health_check" {
 ## Example Usage - Region Backend Service Balancing Mode
 
 
-```hcl
+```terraform
 resource "google_compute_region_backend_service" "default" {
   load_balancing_scheme = "INTERNAL_MANAGED"
 

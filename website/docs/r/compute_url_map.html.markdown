@@ -39,7 +39,7 @@ To get more information about UrlMap, see:
 ## Example Usage - Url Map Basic
 
 
-```hcl
+```terraform
 resource "google_compute_url_map" "urlmap" {
   name        = "urlmap"
   description = "a description"
@@ -132,7 +132,7 @@ resource "google_storage_bucket" "static" {
 ## Example Usage - Url Map Traffic Director Route
 
 
-```hcl
+```terraform
 resource "google_compute_url_map" "urlmap" {
   name        = "urlmap"
   description = "a description"
@@ -225,7 +225,7 @@ resource "google_compute_health_check" "default" {
 ## Example Usage - Url Map Traffic Director Route Partial
 
 
-```hcl
+```terraform
 resource "google_compute_url_map" "urlmap" {
   name        = "urlmap"
   description = "a description"
@@ -289,7 +289,7 @@ resource "google_compute_health_check" "default" {
 ## Example Usage - Url Map Traffic Director Path
 
 
-```hcl
+```terraform
 resource "google_compute_url_map" "urlmap" {
   name        = "urlmap"
   description = "a description"
@@ -402,7 +402,7 @@ resource "google_compute_health_check" "default" {
 ## Example Usage - Url Map Traffic Director Path Partial
 
 
-```hcl
+```terraform
 resource "google_compute_url_map" "urlmap" {
   name        = "urlmap"
   description = "a description"
@@ -484,7 +484,7 @@ resource "google_compute_health_check" "default" {
 ## Example Usage - Url Map Header Based Routing
 
 
-```hcl
+```terraform
 resource "google_compute_url_map" "urlmap" {
   name        = "urlmap"
   description = "header-based routing example"
@@ -568,7 +568,7 @@ resource "google_compute_http_health_check" "default" {
 ## Example Usage - Url Map Parameter Based Routing
 
 
-```hcl
+```terraform
 resource "google_compute_url_map" "urlmap" {
   name        = "urlmap"
   description = "parameter-based routing example"

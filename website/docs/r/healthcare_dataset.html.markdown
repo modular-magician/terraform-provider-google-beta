@@ -39,7 +39,7 @@ To get more information about Dataset, see:
 ## Example Usage - Healthcare Dataset Basic
 
 
-```hcl
+```terraform
 resource "google_healthcare_dataset" "default" {
   name      = "example-dataset"
   location  = "us-central1"

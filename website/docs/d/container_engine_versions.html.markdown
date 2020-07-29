@@ -17,9 +17,12 @@ the datasource. A region can have a different set of supported versions than
 its component zones, and not all zones in a region are guaranteed to
 support the same version.
 
+~> **Warning:** This datasource is in beta, and should be used with the terraform-provider-google-beta provider.
+See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
+
 ## Example Usage
 
-```hcl
+```terraform
 data "google_container_engine_versions" "central1b" {
   provider       = "google-beta"
   location       = "us-central1-b"

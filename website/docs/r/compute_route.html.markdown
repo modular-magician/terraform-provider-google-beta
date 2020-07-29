@@ -60,7 +60,7 @@ To get more information about Route, see:
 ## Example Usage - Route Basic
 
 
-```hcl
+```terraform
 resource "google_compute_route" "default" {
   name        = "network-route"
   dest_range  = "15.0.0.0/24"
@@ -81,7 +81,7 @@ resource "google_compute_network" "default" {
 ## Example Usage - Route Ilb
 
 
-```hcl
+```terraform
 resource "google_compute_network" "default" {
   name                    = "compute-network"
   auto_create_subnetworks = false

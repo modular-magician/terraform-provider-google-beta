@@ -40,7 +40,7 @@ https://cloud.google.com/compute/docs/load-balancing/http/
 ## Example Usage - Global Forwarding Rule Http
 
 
-```hcl
+```terraform
 resource "google_compute_global_forwarding_rule" "default" {
   name       = "global-rule"
   target     = google_compute_target_http_proxy.default.id
@@ -98,7 +98,7 @@ resource "google_compute_http_health_check" "default" {
 ## Example Usage - Global Forwarding Rule Internal
 
 
-```hcl
+```terraform
 resource "google_compute_global_forwarding_rule" "default" {
   provider              = google-beta
   name                  = "global-rule"

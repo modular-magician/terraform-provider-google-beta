@@ -39,7 +39,7 @@ To get more information about Database, see:
 ## Example Usage - Spanner Database Basic
 
 
-```hcl
+```terraform
 resource "google_spanner_instance" "main" {
   config       = "regional-europe-west1"
   display_name = "main-instance"

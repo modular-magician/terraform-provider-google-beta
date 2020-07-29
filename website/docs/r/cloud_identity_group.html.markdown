@@ -36,7 +36,7 @@ See [Provider Versions](https://terraform.io/docs/providers/google/guides/provid
 ## Example Usage - Cloud Identity Groups Basic
 
 
-```hcl
+```terraform
 resource "google_cloud_identity_group" "cloud_identity_group_basic" {
   provider = google-beta
   display_name = "my-identity-group"

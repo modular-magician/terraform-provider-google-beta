@@ -36,7 +36,7 @@ To get more information about Subscription, see:
 ## Example Usage - Pubsub Subscription Push
 
 
-```hcl
+```terraform
 resource "google_pubsub_topic" "example" {
   name = "example-topic"
 }
@@ -68,7 +68,7 @@ resource "google_pubsub_subscription" "example" {
 ## Example Usage - Pubsub Subscription Pull
 
 
-```hcl
+```terraform
 resource "google_pubsub_topic" "example" {
   name = "example-topic"
 }
@@ -95,7 +95,7 @@ resource "google_pubsub_subscription" "example" {
 ## Example Usage - Pubsub Subscription Different Project
 
 
-```hcl
+```terraform
 resource "google_pubsub_topic" "example" {
   project = "topic-project"
   name    = "example-topic"
@@ -115,7 +115,7 @@ resource "google_pubsub_subscription" "example" {
 ## Example Usage - Pubsub Subscription Dead Letter
 
 
-```hcl
+```terraform
 resource "google_pubsub_topic" "example" {
   name = "example-topic"
 }

@@ -49,7 +49,7 @@ To get more information about HealthCheck, see:
 ## Example Usage - Health Check Tcp
 
 
-```hcl
+```terraform
 resource "google_compute_health_check" "tcp-health-check" {
   name = "tcp-health-check"
 
@@ -69,7 +69,7 @@ resource "google_compute_health_check" "tcp-health-check" {
 ## Example Usage - Health Check Tcp Full
 
 
-```hcl
+```terraform
 resource "google_compute_health_check" "tcp-health-check" {
   name        = "tcp-health-check"
   description = "Health check via tcp"
@@ -96,7 +96,7 @@ resource "google_compute_health_check" "tcp-health-check" {
 ## Example Usage - Health Check Ssl
 
 
-```hcl
+```terraform
 resource "google_compute_health_check" "ssl-health-check" {
   name = "ssl-health-check"
 
@@ -116,7 +116,7 @@ resource "google_compute_health_check" "ssl-health-check" {
 ## Example Usage - Health Check Ssl Full
 
 
-```hcl
+```terraform
 resource "google_compute_health_check" "ssl-health-check" {
   name        = "ssl-health-check"
   description = "Health check via ssl"
@@ -143,7 +143,7 @@ resource "google_compute_health_check" "ssl-health-check" {
 ## Example Usage - Health Check Http
 
 
-```hcl
+```terraform
 resource "google_compute_health_check" "http-health-check" {
   name = "http-health-check"
 
@@ -163,7 +163,7 @@ resource "google_compute_health_check" "http-health-check" {
 ## Example Usage - Health Check Http Full
 
 
-```hcl
+```terraform
 resource "google_compute_health_check" "http-health-check" {
   name        = "http-health-check"
   description = "Health check via http"
@@ -191,7 +191,7 @@ resource "google_compute_health_check" "http-health-check" {
 ## Example Usage - Health Check Https
 
 
-```hcl
+```terraform
 resource "google_compute_health_check" "https-health-check" {
   name = "https-health-check"
 
@@ -211,7 +211,7 @@ resource "google_compute_health_check" "https-health-check" {
 ## Example Usage - Health Check Https Full
 
 
-```hcl
+```terraform
 resource "google_compute_health_check" "https-health-check" {
   name        = "https-health-check"
   description = "Health check via https"
@@ -239,7 +239,7 @@ resource "google_compute_health_check" "https-health-check" {
 ## Example Usage - Health Check Http2
 
 
-```hcl
+```terraform
 resource "google_compute_health_check" "http2-health-check" {
   name = "http2-health-check"
 
@@ -259,7 +259,7 @@ resource "google_compute_health_check" "http2-health-check" {
 ## Example Usage - Health Check Http2 Full
 
 
-```hcl
+```terraform
 resource "google_compute_health_check" "http2-health-check" {
   name        = "http2-health-check"
   description = "Health check via http2"
@@ -287,7 +287,7 @@ resource "google_compute_health_check" "http2-health-check" {
 ## Example Usage - Health Check With Logging
 
 
-```hcl
+```terraform
 resource "google_compute_health_check" "health-check-with-logging" {
   provider = google-beta
 

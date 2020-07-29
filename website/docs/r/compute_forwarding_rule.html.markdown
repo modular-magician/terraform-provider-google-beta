@@ -41,7 +41,7 @@ To get more information about ForwardingRule, see:
 ## Example Usage - Forwarding Rule Global Internallb
 
 
-```hcl
+```terraform
 // Forwarding rule for Internal Load Balancing
 resource "google_compute_forwarding_rule" "default" {
   name                  = "website-forwarding-rule"
@@ -85,7 +85,7 @@ resource "google_compute_subnetwork" "default" {
 ## Example Usage - Forwarding Rule Basic
 
 
-```hcl
+```terraform
 resource "google_compute_forwarding_rule" "default" {
   name       = "website-forwarding-rule"
   target     = google_compute_target_pool.default.id
@@ -104,7 +104,7 @@ resource "google_compute_target_pool" "default" {
 ## Example Usage - Forwarding Rule Internallb
 
 
-```hcl
+```terraform
 // Forwarding rule for Internal Load Balancing
 resource "google_compute_forwarding_rule" "default" {
   name   = "website-forwarding-rule"
@@ -153,7 +153,7 @@ resource "google_compute_subnetwork" "default" {
 ## Example Usage - Forwarding Rule Http Lb
 
 
-```hcl
+```terraform
 // Forwarding rule for Internal Load Balancing
 resource "google_compute_forwarding_rule" "default" {
   provider = google-beta

@@ -17,7 +17,7 @@ and
 
 ## Example Usage
 
-```hcl
+```terraform
 resource "google_compute_instance" "default" {
   name         = "test"
   machine_type = "n1-standard-1"
@@ -323,6 +323,9 @@ The `scheduling` block supports:
    groups will use as host systems. Read more on sole-tenant node creation
    [here](https://cloud.google.com/compute/docs/nodes/create-nodes).
    Structure documented below.
+
+* `min_node_cpus` - (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html)) The minimum number of virtual CPUs
+   this instance will consume when running on a sole-tenant node.
 
 The `guest_accelerator` block supports:
 

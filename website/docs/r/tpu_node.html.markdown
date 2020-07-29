@@ -39,7 +39,7 @@ To get more information about Node, see:
 ## Example Usage - TPU Node Basic
 
 
-```hcl
+```terraform
 
 data "google_tpu_tensorflow_versions" "available" {
 }
@@ -61,7 +61,7 @@ resource "google_tpu_node" "tpu" {
 ## Example Usage - TPU Node Full
 
 
-```hcl
+```terraform
 data "google_tpu_tensorflow_versions" "available" {
 }
 

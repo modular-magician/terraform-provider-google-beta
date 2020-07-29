@@ -9,9 +9,6 @@ description: |-
 
 # IAM policy for Google Cloud Healthcare DICOM store
 
-~> **Warning:** These resources are in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
-
 Three different resources help you manage your IAM policy for Healthcare DICOM store. Each of these resources serves a different use case:
 
 * `google_healthcare_dicom_store_iam_policy`: Authoritative. Sets the IAM policy for the DICOM store and replaces any existing policy already attached.
@@ -24,7 +21,7 @@ Three different resources help you manage your IAM policy for Healthcare DICOM s
 
 ## google\_healthcare\_dicom\_store\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/editor"
@@ -43,7 +40,7 @@ resource "google_healthcare_dicom_store_iam_policy" "dicom_store" {
 
 ## google\_healthcare\_dicom\_store\_iam\_binding
 
-```hcl
+```terraform
 resource "google_healthcare_dicom_store_iam_binding" "dicom_store" {
   dicom_store_id = "your-dicom-store-id"
   role           = "roles/editor"
@@ -56,7 +53,7 @@ resource "google_healthcare_dicom_store_iam_binding" "dicom_store" {
 
 ## google\_healthcare\_dicom\_store\_iam\_member
 
-```hcl
+```terraform
 resource "google_healthcare_dicom_store_iam_member" "dicom_store" {
   dicom_store_id = "your-dicom-store-id"
   role           = "roles/editor"

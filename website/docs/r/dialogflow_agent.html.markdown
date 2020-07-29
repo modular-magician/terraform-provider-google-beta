@@ -42,7 +42,7 @@ To get more information about Agent, see:
 ## Example Usage - Dialogflow Agent Full
 
 
-```hcl
+```terraform
 resource "google_dialogflow_agent" "full_agent" {
   display_name = "dialogflow-agent"
   default_language_code = "en"

@@ -38,7 +38,7 @@ the marketplace prior to using this resource.
 ## Example Usage - Identity Platform Inbound Saml Config Basic
 
 
-```hcl
+```terraform
 resource "google_identity_platform_inbound_saml_config" "saml_config" {
   name         = "saml.tf-config"
   display_name = "Display Name"

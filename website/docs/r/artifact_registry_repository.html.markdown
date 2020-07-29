@@ -41,7 +41,7 @@ To get more information about Repository, see:
 ## Example Usage - Artifact Registry Repository Basic
 
 
-```hcl
+```terraform
 resource "google_artifact_registry_repository" "my-repo" {
   provider = google-beta
 
@@ -59,7 +59,7 @@ resource "google_artifact_registry_repository" "my-repo" {
 ## Example Usage - Artifact Registry Repository Cmek
 
 
-```hcl
+```terraform
 resource "google_artifact_registry_repository" "my-repo" {
   provider = google-beta
 
@@ -78,7 +78,7 @@ resource "google_artifact_registry_repository" "my-repo" {
 ## Example Usage - Artifact Registry Repository Iam
 
 
-```hcl
+```terraform
 resource "google_artifact_registry_repository" "my-repo" {
   provider = google-beta
 

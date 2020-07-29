@@ -39,7 +39,7 @@ To get more information about EntryGroup, see:
 ## Example Usage - Data Catalog Entry Group Basic
 
 
-```hcl
+```terraform
 resource "google_data_catalog_entry_group" "basic_entry_group" {
   entry_group_id = "my_group"
 }
@@ -52,7 +52,7 @@ resource "google_data_catalog_entry_group" "basic_entry_group" {
 ## Example Usage - Data Catalog Entry Group Full
 
 
-```hcl
+```terraform
 resource "google_data_catalog_entry_group" "basic_entry_group" {
   entry_group_id = "my_group"
 

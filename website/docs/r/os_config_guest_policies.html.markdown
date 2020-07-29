@@ -43,7 +43,7 @@ To get more information about GuestPolicies, see:
 ## Example Usage - Os Config Guest Policies Basic
 
 
-```hcl
+```terraform
 data "google_compute_image" "my_image" {
   provider = google-beta
   family  = "debian-9"
@@ -95,7 +95,7 @@ resource "google_os_config_guest_policies" "guest_policies" {
 ## Example Usage - Os Config Guest Policies Packages
 
 
-```hcl
+```terraform
 resource "google_os_config_guest_policies" "guest_policies" {
   provider = google-beta
   guest_policy_id = "guest-policy"
@@ -159,7 +159,7 @@ resource "google_os_config_guest_policies" "guest_policies" {
 ## Example Usage - Os Config Guest Policies Recipes
 
 
-```hcl
+```terraform
 resource "google_os_config_guest_policies" "guest_policies" {
   provider = google-beta
   guest_policy_id = "guest-policy"

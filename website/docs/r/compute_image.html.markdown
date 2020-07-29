@@ -54,7 +54,7 @@ To get more information about Image, see:
 ## Example Usage - Image Basic
 
 
-```hcl
+```terraform
 resource "google_compute_image" "example" {
   name = "example-image"
 
@@ -71,7 +71,7 @@ resource "google_compute_image" "example" {
 ## Example Usage - Image Guest Os
 
 
-```hcl
+```terraform
 resource "google_compute_image" "example" {
   name = "example-image"
 

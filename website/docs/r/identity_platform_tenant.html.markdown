@@ -41,7 +41,7 @@ the Cloud Console prior to creating tenants.
 ## Example Usage - Identity Platform Tenant Basic
 
 
-```hcl
+```terraform
 resource "google_identity_platform_tenant" "tenant" {
   display_name          = "tenant"
   allow_password_signup = true

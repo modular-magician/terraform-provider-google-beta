@@ -35,7 +35,7 @@ To get more information about Config, see:
 ## Example Usage - Bigquerydatatransfer Config Scheduled Query
 
 
-```hcl
+```terraform
 data "google_project" "project" {
 }
 

@@ -43,7 +43,7 @@ To get more information about ConsumerQuotaOverride, see:
 ## Example Usage - Consumer Quota Override
 
 
-```hcl
+```terraform
 resource "google_project" "my_project" {
   provider   = google-beta
   name       = "tf-test-project"

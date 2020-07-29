@@ -40,7 +40,7 @@ To get more information about TagTemplate, see:
 ## Example Usage - Data Catalog Tag Template Basic
 
 
-```hcl
+```terraform
 resource "google_data_catalog_tag_template" "basic_tag_template" {
   tag_template_id = "my_template"
   region = "us-central1"

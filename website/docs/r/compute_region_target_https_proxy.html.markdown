@@ -41,7 +41,7 @@ To get more information about RegionTargetHttpsProxy, see:
 ## Example Usage - Region Target Https Proxy Basic
 
 
-```hcl
+```terraform
 resource "google_compute_region_target_https_proxy" "default" {
   region           = "us-central1"
   name             = "test-proxy"

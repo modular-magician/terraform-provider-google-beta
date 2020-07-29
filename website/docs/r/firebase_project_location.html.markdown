@@ -50,7 +50,7 @@ To get more information about ProjectLocation, see:
 ## Example Usage - Firebase Project Location Basic
 
 
-```hcl
+```terraform
 resource "google_project" "default" {
   provider = google-beta
 

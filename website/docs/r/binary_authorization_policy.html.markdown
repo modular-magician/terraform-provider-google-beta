@@ -34,7 +34,7 @@ To get more information about Policy, see:
 ## Example Usage - Binary Authorization Policy Basic
 
 
-```hcl
+```terraform
 resource "google_binary_authorization_policy" "policy" {
   admission_whitelist_patterns {
     name_pattern = "gcr.io/google_containers/*"
@@ -72,7 +72,7 @@ resource "google_binary_authorization_attestor" "attestor" {
 ## Example Usage - Binary Authorization Policy Global Evaluation
 
 
-```hcl
+```terraform
 resource "google_binary_authorization_policy" "policy" {
   default_admission_rule {
     evaluation_mode         = "REQUIRE_ATTESTATION"

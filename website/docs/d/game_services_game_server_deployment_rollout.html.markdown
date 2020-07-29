@@ -13,10 +13,12 @@ Use this data source to get the rollout state.
 
 https://cloud.google.com/game-servers/docs/reference/rest/v1beta/GameServerDeploymentRollout
 
-## Example Usage 
+~> **Warning:** This datasource is in beta, and should be used with the terraform-provider-google-beta provider.
+See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
 
+## Example Usage
 
-```hcl
+```terraform
 data "google_game_services_game_server_deployment_rollout" "qa" {
     provider = google-beta
     deployment_id = "tf-test-deployment-s8sn12jt2c"

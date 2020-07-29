@@ -42,7 +42,7 @@ To get more information about ManagedZone, see:
 ## Example Usage - Dns Managed Zone Basic
 
 
-```hcl
+```terraform
 resource "google_dns_managed_zone" "example-zone" {
   name        = "example-zone"
   dns_name    = "example-${random_id.rnd.hex}.com."
@@ -64,7 +64,7 @@ resource "random_id" "rnd" {
 ## Example Usage - Dns Managed Zone Private
 
 
-```hcl
+```terraform
 resource "google_dns_managed_zone" "private-zone" {
   name        = "private-zone"
   dns_name    = "private.example.com."
@@ -98,7 +98,7 @@ resource "google_compute_network" "network-2" {
 ## Example Usage - Dns Managed Zone Private Forwarding
 
 
-```hcl
+```terraform
 resource "google_dns_managed_zone" "private-zone" {
   name        = "private-zone"
   dns_name    = "private.example.com."
@@ -146,7 +146,7 @@ resource "google_compute_network" "network-2" {
 ## Example Usage - Dns Managed Zone Private Peering
 
 
-```hcl
+```terraform
 resource "google_dns_managed_zone" "peering-zone" {
   name        = "peering-zone"
   dns_name    = "peering.example.com."
@@ -185,7 +185,7 @@ resource "google_compute_network" "network-target" {
 ## Example Usage - Dns Managed Zone Service Directory
 
 
-```hcl
+```terraform
 resource "google_dns_managed_zone" "sd-zone" {
   provider = google-beta
 

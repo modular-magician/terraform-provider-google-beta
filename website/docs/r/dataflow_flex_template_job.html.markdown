@@ -16,7 +16,7 @@ and [Dataflow](https://cloud.google.com/dataflow/).
 
 ## Example Usage
 
-```hcl
+```terraform
 resource "google_dataflow_flex_template_job" "big_data_job" {
   provider                = google-beta
   name                    = "dataflow-flextemplates-job"

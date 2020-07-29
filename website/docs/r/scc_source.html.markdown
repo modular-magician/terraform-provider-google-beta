@@ -37,7 +37,7 @@ To get more information about Source, see:
 ## Example Usage - Scc Source Basic
 
 
-```hcl
+```terraform
 resource "google_scc_source" "custom_source" {
   display_name = "My Source"
   organization = "123456789"

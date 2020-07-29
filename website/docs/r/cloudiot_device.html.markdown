@@ -39,7 +39,7 @@ To get more information about Device, see:
 ## Example Usage - Cloudiot Device Basic
 
 
-```hcl
+```terraform
 resource "google_cloudiot_registry" "registry" {
   name     = "cloudiot-device-registry"
 }
@@ -57,7 +57,7 @@ resource "google_cloudiot_device" "test-device" {
 ## Example Usage - Cloudiot Device Full
 
 
-```hcl
+```terraform
 resource "google_cloudiot_registry" "registry" {
   name     = "cloudiot-device-registry"
 }

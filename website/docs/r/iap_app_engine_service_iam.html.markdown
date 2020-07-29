@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Identity-Aware Pro
 
 ## google\_iap\_app\_engine\_service\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/iap.httpsResourceAccessor"
@@ -55,7 +55,7 @@ resource "google_iap_app_engine_service_iam_policy" "policy" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/iap.httpsResourceAccessor"
@@ -80,7 +80,7 @@ resource "google_iap_app_engine_service_iam_policy" "policy" {
 ```
 ## google\_iap\_app\_engine\_service\_iam\_binding
 
-```hcl
+```terraform
 resource "google_iap_app_engine_service_iam_binding" "binding" {
   project = "${google_app_engine_standard_app_version.version.project}"
   app_id = "${google_app_engine_standard_app_version.version.project}"
@@ -94,7 +94,7 @@ resource "google_iap_app_engine_service_iam_binding" "binding" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 resource "google_iap_app_engine_service_iam_binding" "binding" {
   project = "${google_app_engine_standard_app_version.version.project}"
   app_id = "${google_app_engine_standard_app_version.version.project}"
@@ -113,7 +113,7 @@ resource "google_iap_app_engine_service_iam_binding" "binding" {
 ```
 ## google\_iap\_app\_engine\_service\_iam\_member
 
-```hcl
+```terraform
 resource "google_iap_app_engine_service_iam_member" "member" {
   project = "${google_app_engine_standard_app_version.version.project}"
   app_id = "${google_app_engine_standard_app_version.version.project}"
@@ -125,7 +125,7 @@ resource "google_iap_app_engine_service_iam_member" "member" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 resource "google_iap_app_engine_service_iam_member" "member" {
   project = "${google_app_engine_standard_app_version.version.project}"
   app_id = "${google_app_engine_standard_app_version.version.project}"

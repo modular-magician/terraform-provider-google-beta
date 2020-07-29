@@ -49,7 +49,7 @@ To get more information about RegionHealthCheck, see:
 ## Example Usage - Region Health Check Tcp
 
 
-```hcl
+```terraform
 resource "google_compute_region_health_check" "tcp-region-health-check" {
   name     = "tcp-region-health-check"
 
@@ -69,7 +69,7 @@ resource "google_compute_region_health_check" "tcp-region-health-check" {
 ## Example Usage - Region Health Check Tcp Full
 
 
-```hcl
+```terraform
 resource "google_compute_region_health_check" "tcp-region-health-check" {
   name        = "tcp-region-health-check"
   description = "Health check via tcp"
@@ -96,7 +96,7 @@ resource "google_compute_region_health_check" "tcp-region-health-check" {
 ## Example Usage - Region Health Check Ssl
 
 
-```hcl
+```terraform
 resource "google_compute_region_health_check" "ssl-region-health-check" {
   name     = "ssl-region-health-check"
 
@@ -116,7 +116,7 @@ resource "google_compute_region_health_check" "ssl-region-health-check" {
 ## Example Usage - Region Health Check Ssl Full
 
 
-```hcl
+```terraform
 resource "google_compute_region_health_check" "ssl-region-health-check" {
   name        = "ssl-region-health-check"
   description = "Health check via ssl"
@@ -143,7 +143,7 @@ resource "google_compute_region_health_check" "ssl-region-health-check" {
 ## Example Usage - Region Health Check Http
 
 
-```hcl
+```terraform
 resource "google_compute_region_health_check" "http-region-health-check" {
   name     = "http-region-health-check"
 
@@ -163,7 +163,7 @@ resource "google_compute_region_health_check" "http-region-health-check" {
 ## Example Usage - Region Health Check Http Logs
 
 
-```hcl
+```terraform
 resource "google_compute_region_health_check" "http-region-health-check" {
   provider = google-beta
 
@@ -189,7 +189,7 @@ resource "google_compute_region_health_check" "http-region-health-check" {
 ## Example Usage - Region Health Check Http Full
 
 
-```hcl
+```terraform
 resource "google_compute_region_health_check" "http-region-health-check" {
   name        = "http-region-health-check"
   description = "Health check via http"
@@ -217,7 +217,7 @@ resource "google_compute_region_health_check" "http-region-health-check" {
 ## Example Usage - Region Health Check Https
 
 
-```hcl
+```terraform
 resource "google_compute_region_health_check" "https-region-health-check" {
   name     = "https-region-health-check"
 
@@ -237,7 +237,7 @@ resource "google_compute_region_health_check" "https-region-health-check" {
 ## Example Usage - Region Health Check Https Full
 
 
-```hcl
+```terraform
 resource "google_compute_region_health_check" "https-region-health-check" {
   name        = "https-region-health-check"
   description = "Health check via https"
@@ -265,7 +265,7 @@ resource "google_compute_region_health_check" "https-region-health-check" {
 ## Example Usage - Region Health Check Http2
 
 
-```hcl
+```terraform
 resource "google_compute_region_health_check" "http2-region-health-check" {
   name     = "http2-region-health-check"
 
@@ -285,7 +285,7 @@ resource "google_compute_region_health_check" "http2-region-health-check" {
 ## Example Usage - Region Health Check Http2 Full
 
 
-```hcl
+```terraform
 resource "google_compute_region_health_check" "http2-region-health-check" {
   name        = "http2-region-health-check"
   description = "Health check via http2"

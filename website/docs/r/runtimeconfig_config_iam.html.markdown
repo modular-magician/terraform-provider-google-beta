@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Runtime Configurat
 
 ## google\_runtimeconfig\_config\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
@@ -54,7 +54,7 @@ resource "google_runtimeconfig_config_iam_policy" "policy" {
 
 ## google\_runtimeconfig\_config\_iam\_binding
 
-```hcl
+```terraform
 resource "google_runtimeconfig_config_iam_binding" "binding" {
   project = google_runtimeconfig_config.config.project
   config = google_runtimeconfig_config.config.name
@@ -67,7 +67,7 @@ resource "google_runtimeconfig_config_iam_binding" "binding" {
 
 ## google\_runtimeconfig\_config\_iam\_member
 
-```hcl
+```terraform
 resource "google_runtimeconfig_config_iam_member" "member" {
   project = google_runtimeconfig_config.config.project
   config = google_runtimeconfig_config.config.name

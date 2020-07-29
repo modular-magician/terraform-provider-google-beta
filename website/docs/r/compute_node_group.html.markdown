@@ -44,7 +44,7 @@ Terraform to delete and recreate the node group.
 ## Example Usage - Node Group Basic
 
 
-```hcl
+```terraform
 resource "google_compute_node_template" "soletenant-tmpl" {
   name      = "soletenant-tmpl"
   region    = "us-central1"
@@ -68,7 +68,7 @@ resource "google_compute_node_group" "nodes" {
 ## Example Usage - Node Group Autoscaling Policy
 
 
-```hcl
+```terraform
 resource "google_compute_node_template" "soletenant-tmpl" {
   provider = google-beta
   name      = "soletenant-tmpl"

@@ -40,7 +40,7 @@ To get more information about Instance, see:
 ## Example Usage - Memcache Instance Basic
 
 
-```hcl
+```terraform
 resource "google_compute_network" "network" {
   provider = google-beta
   name = "tf-test%{random_suffix}"

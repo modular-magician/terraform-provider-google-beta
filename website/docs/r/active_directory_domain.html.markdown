@@ -39,7 +39,7 @@ To get more information about Domain, see:
 ## Example Usage - Active Directory Domain Basic
 
 
-```hcl
+```terraform
 resource "google_active_directory_domain" "ad-domain" {
   domain_name       = "mydomain.org.com"
   locations         = ["us-central1"]

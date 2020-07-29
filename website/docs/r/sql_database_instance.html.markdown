@@ -43,7 +43,7 @@ a restricted host and strong password.
 
 ### SQL Second Generation Instance
 
-```hcl
+```terraform
 resource "google_sql_database_instance" "master" {
   name             = "master-instance"
   database_version = "POSTGRES_11"
@@ -59,7 +59,7 @@ resource "google_sql_database_instance" "master" {
 
 ### Granular restriction of network access
 
-```hcl
+```terraform
 resource "google_compute_instance" "apps" {
   count        = 8
   name         = "apps-${count.index + 1}"
@@ -124,7 +124,7 @@ resource "google_sql_database_instance" "postgres" {
 ### Private IP Instance
 ~> **NOTE**: For private IP instance setup, note that the `google_sql_database_instance` does not actually interpolate values from `google_service_networking_connection`. You must explicitly add a `depends_on`reference as shown below.
 
-```hcl
+```terraform
 resource "google_compute_network" "private_network" {
   provider = google-beta
 

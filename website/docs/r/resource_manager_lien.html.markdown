@@ -29,7 +29,7 @@ A Lien represents an encumbrance on the actions that can be performed on a resou
 ## Example Usage - Resource Manager Lien
 
 
-```hcl
+```terraform
 resource "google_resource_manager_lien" "lien" {
   parent       = "projects/${google_project.project.number}"
   restrictions = ["resourcemanager.projects.delete"]

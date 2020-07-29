@@ -56,7 +56,7 @@ To get more information about BucketAccessControl, see:
 ## Example Usage - Storage Bucket Access Control Public Bucket
 
 
-```hcl
+```terraform
 resource "google_storage_bucket_access_control" "public_rule" {
   bucket = google_storage_bucket.bucket.name
   role   = "READER"

@@ -34,7 +34,7 @@ Describes an autoscaling policy for Dataproc cluster autoscaler.
 ## Example Usage - Dataproc Autoscaling Policy
 
 
-```hcl
+```terraform
 resource "google_dataproc_cluster" "basic" {
   name     = "dataproc-policy"
   region   = "us-central1"

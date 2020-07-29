@@ -36,7 +36,7 @@ will remove it from state but *will not delete the resource on the server.*
 ## Example Usage - Iap Brand
 
 
-```hcl
+```terraform
 resource "google_project" "project" {
   project_id = "tf-test%{random_suffix}"
   name       = "tf-test%{random_suffix}"

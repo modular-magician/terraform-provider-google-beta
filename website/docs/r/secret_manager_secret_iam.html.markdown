@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Secret Manager Sec
 
 ## google\_secret\_manager\_secret\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/secretmanager.secretAccessor"
@@ -54,7 +54,7 @@ resource "google_secret_manager_secret_iam_policy" "policy" {
 
 ## google\_secret\_manager\_secret\_iam\_binding
 
-```hcl
+```terraform
 resource "google_secret_manager_secret_iam_binding" "binding" {
   project = google_secret_manager_secret.secret-basic.project
   secret_id = google_secret_manager_secret.secret-basic.secret_id
@@ -67,7 +67,7 @@ resource "google_secret_manager_secret_iam_binding" "binding" {
 
 ## google\_secret\_manager\_secret\_iam\_member
 
-```hcl
+```terraform
 resource "google_secret_manager_secret_iam_member" "member" {
   project = google_secret_manager_secret.secret-basic.project
   secret_id = google_secret_manager_secret.secret-basic.secret_id

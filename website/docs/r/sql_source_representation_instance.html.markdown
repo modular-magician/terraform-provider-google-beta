@@ -39,7 +39,7 @@ affect billing. You cannot update the source representation instance.
 ## Example Usage - Sql Source Representation Instance Basic
 
 
-```hcl
+```terraform
 resource "google_sql_source_representation_instance" "instance" {
   name             = "my-instance"
   region           = "us-central1"

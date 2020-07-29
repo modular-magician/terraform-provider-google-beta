@@ -39,7 +39,7 @@ To get more information about OrganizationFeed, see:
 ## Example Usage - Cloud Asset Organization Feed
 
 
-```hcl
+```terraform
 # Create a feed that sends notifications about network resource updates under a
 # particular organization.
 resource "google_cloud_asset_organization_feed" "organization_feed" {

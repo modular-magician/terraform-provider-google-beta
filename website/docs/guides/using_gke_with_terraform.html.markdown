@@ -42,11 +42,14 @@ When using the `kubernetes` and `helm` providers,
 can allow you to connect to clusters defined in the same config or in a remote
 state. You can configure either using configuration such as the following:
 
-```hcl
+```terraform
 # Retrieve an access token as the Terraform runner
-data "google_client_config" "provider" {}
+data "google_client_config" "provider" {
+  provider = google-beta
+}
 
 data "google_container_cluster" "my_cluster" {
+  provider = google-beta
   name     = "my-cluster"
   location = "us-central1"
 }
@@ -66,14 +69,17 @@ Alternatively, you can authenticate as another service account on which your
 Terraform runner has been granted the `roles/iam.serviceAccountTokenCreator`
 role:
 
-```hcl
+```terraform
 data "google_service_account_access_token" "my_kubernetes_sa" {
+  provider = google-beta
+
   target_service_account = "{{service_account}}"
   scopes                 = ["userinfo-email", "cloud-platform"]
   lifetime               = "3600s"
 }
 
 data "google_container_cluster" "my_cluster" {
+  provider = google-beta
   name     = "my-cluster"
   location = "us-central1"
 }
@@ -122,8 +128,10 @@ behaviour is to create a routes-based cluster for backwards compatibility.
 It's recommended that you create a VPC-native cluster, done by specifying the
 `ip_allocation_policy` block. Configuration will look like the following:
 
-```hcl
+```terraform
 resource "google_container_cluster" "my_vpc_native_cluster" {
+  provider = google-beta
+
   name               = "my-vpc-native-cluster"
   location           = "us-central1"
   initial_node_count = 1
@@ -153,8 +161,9 @@ to delete a cluster based on changes to inline node pools.
 However, the GKE API doesn't allow creating a cluster without nodes. It's common
 for Terraform users to define a block such as the following:
 
-```hcl
+```terraform
 resource "google_container_cluster" "my-gke-cluster" {
+  provider = google-beta
   name     = "my-gke-cluster"
   location = "us-central1"
 
@@ -183,8 +192,10 @@ If you've disabled that service account, or want to use a
 for the temporary  node pool, you can add the following configuration to your
 `google_container_cluster` block:
 
-```hcl
+```terraform
 resource "google_container_cluster" "my-gke-cluster" {
+  provider = google-beta
+
   # other settings...
 
   node_config {

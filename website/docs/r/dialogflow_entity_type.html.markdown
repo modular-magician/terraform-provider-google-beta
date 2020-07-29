@@ -34,7 +34,7 @@ To get more information about EntityType, see:
 ## Example Usage - Dialogflow Entity Type Basic
 
 
-```hcl
+```terraform
 resource "google_dialogflow_agent" "basic_agent" {
   display_name = "example_agent"
   default_language_code = "en"

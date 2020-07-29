@@ -46,7 +46,7 @@ To get more information about BackendBucket, see:
 ## Example Usage - Backend Bucket Basic
 
 
-```hcl
+```terraform
 resource "google_compute_backend_bucket" "image_backend" {
   name        = "image-backend-bucket"
   description = "Contains beautiful images"

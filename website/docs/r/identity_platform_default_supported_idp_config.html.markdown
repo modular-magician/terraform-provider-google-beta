@@ -33,7 +33,7 @@ the marketplace prior to using this resource.
 ## Example Usage - Identity Platform Default Supported Idp Config Basic
 
 
-```hcl
+```terraform
 resource "google_identity_platform_default_supported_idp_config" "idp_config" {
   enabled       = true
   idp_id        = "playgames.google.com"

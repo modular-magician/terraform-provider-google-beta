@@ -62,7 +62,7 @@ To get more information about Subnetwork, see:
 ## Example Usage - Subnetwork Basic
 
 
-```hcl
+```terraform
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
   name          = "test-subnetwork"
   ip_cidr_range = "10.2.0.0/16"
@@ -87,7 +87,7 @@ resource "google_compute_network" "custom-test" {
 ## Example Usage - Subnetwork Logging Config
 
 
-```hcl
+```terraform
 resource "google_compute_subnetwork" "subnet-with-logging" {
   name          = "log-test-subnetwork"
   ip_cidr_range = "10.2.0.0/16"
@@ -114,7 +114,7 @@ resource "google_compute_network" "custom-test" {
 ## Example Usage - Subnetwork Internal L7lb
 
 
-```hcl
+```terraform
 resource "google_compute_subnetwork" "network-for-l7lb" {
   provider = google-beta
 

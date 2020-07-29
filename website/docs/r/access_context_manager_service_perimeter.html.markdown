@@ -44,7 +44,7 @@ To get more information about ServicePerimeter, see:
 ## Example Usage - Access Context Manager Service Perimeter Basic
 
 
-```hcl
+```terraform
 resource "google_access_context_manager_service_perimeter" "service-perimeter" {
   parent = "accessPolicies/${google_access_context_manager_access_policy.access-policy.name}"
   name   = "accessPolicies/${google_access_context_manager_access_policy.access-policy.name}/servicePerimeters/restrict_storage"
@@ -83,7 +83,7 @@ resource "google_access_context_manager_access_policy" "access-policy" {
 ## Example Usage - Access Context Manager Service Perimeter Dry Run
 
 
-```hcl
+```terraform
 resource "google_access_context_manager_service_perimeter" "service-perimeter" {
   parent = "accessPolicies/${google_access_context_manager_access_policy.access-policy.name}"
   name   = "accessPolicies/${google_access_context_manager_access_policy.access-policy.name}/servicePerimeters/restrict_bigquery_dryrun_storage"

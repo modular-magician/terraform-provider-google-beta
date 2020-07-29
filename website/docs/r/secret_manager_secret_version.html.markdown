@@ -37,7 +37,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Secret Version Basic
 
 
-```hcl
+```terraform
 resource "google_secret_manager_secret" "secret-basic" {
   secret_id = "secret-version"
   

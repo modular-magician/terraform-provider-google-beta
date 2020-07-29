@@ -38,7 +38,7 @@ To get more information about VpnGateway, see:
 ## Example Usage - Target Vpn Gateway Basic
 
 
-```hcl
+```terraform
 resource "google_compute_vpn_gateway" "target_gateway" {
   name    = "vpn1"
   network = google_compute_network.network1.id

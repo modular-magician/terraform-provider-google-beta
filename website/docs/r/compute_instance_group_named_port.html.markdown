@@ -43,7 +43,7 @@ To get more information about InstanceGroupNamedPort, see:
 ## Example Usage - Instance Group Named Port Gke
 
 
-```hcl
+```terraform
 resource "google_compute_instance_group_named_port" "my_port" {
   group = google_container_cluster.my_cluster.instance_group_urls[0]
   zone = "us-central1-a"

@@ -39,7 +39,7 @@ To get more information about Connector, see:
 ## Example Usage - VPC Access Connector
 
 
-```hcl
+```terraform
 resource "google_vpc_access_connector" "connector" {
   name          = "vpcconn"
   region        = "us-central1"

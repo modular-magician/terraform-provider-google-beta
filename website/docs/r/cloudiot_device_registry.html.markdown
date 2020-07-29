@@ -39,7 +39,7 @@ To get more information about DeviceRegistry, see:
 ## Example Usage - Cloudiot Device Registry Basic
 
 
-```hcl
+```terraform
 resource "google_cloudiot_registry" "test-registry" {
   name     = "cloudiot-registry"
 }
@@ -52,7 +52,7 @@ resource "google_cloudiot_registry" "test-registry" {
 ## Example Usage - Cloudiot Device Registry Single Event Notification Configs
 
 
-```hcl
+```terraform
 resource "google_pubsub_topic" "default-telemetry" {
   name = "default-telemetry"
 }
@@ -75,7 +75,7 @@ resource "google_cloudiot_registry" "test-registry" {
 ## Example Usage - Cloudiot Device Registry Full
 
 
-```hcl
+```terraform
 resource "google_pubsub_topic" "default-devicestatus" {
   name = "default-devicestatus"
 }

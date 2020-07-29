@@ -39,7 +39,7 @@ To get more information about FolderFeed, see:
 ## Example Usage - Cloud Asset Folder Feed
 
 
-```hcl
+```terraform
 # Create a feed that sends notifications about network resource updates under a
 # particular folder.
 resource "google_cloud_asset_folder_feed" "folder_feed" {

@@ -39,7 +39,7 @@ To get more information about DomainMapping, see:
 ## Example Usage - App Engine Domain Mapping Basic
 
 
-```hcl
+```terraform
 resource "google_app_engine_domain_mapping" "domain_mapping" {
   domain_name = "verified-domain.com"
 

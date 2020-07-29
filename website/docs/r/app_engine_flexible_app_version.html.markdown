@@ -45,7 +45,7 @@ To get more information about FlexibleAppVersion, see:
 ## Example Usage - App Engine Flexible App Version
 
 
-```hcl
+```terraform
 resource "google_project" "my_project" {
   name = "appeng-flex"
   project_id = "appeng-flex"

@@ -44,7 +44,7 @@ To get more information about HaVpnGateway, see:
 ## Example Usage - Ha Vpn Gateway Basic
 
 
-```hcl
+```terraform
 resource "google_compute_ha_vpn_gateway" "ha_gateway1" {
   provider = google-beta
   region   = "us-central1"
@@ -66,7 +66,7 @@ resource "google_compute_network" "network1" {
 ## Example Usage - Ha Vpn Gateway Gcp To Gcp
 
 
-```hcl
+```terraform
 resource "google_compute_ha_vpn_gateway" "ha_gateway1" {
   provider = google-beta
   region   = "us-central1"

@@ -38,7 +38,7 @@ the marketplace prior to using this resource.
 ## Example Usage - Identity Platform Oauth Idp Config Basic
 
 
-```hcl
+```terraform
 resource "google_identity_platform_oauth_idp_config" "oauth_idp_config" {
   name          = "oidc.oauth-idp-config"
   display_name  = "Display Name"

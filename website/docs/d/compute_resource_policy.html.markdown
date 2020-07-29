@@ -14,7 +14,9 @@ Provide access to a Resource Policy's attributes. For more information see [the 
 ~> **Warning:** This datasource is in beta, and should be used with the terraform-provider-google-beta provider.
 See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
 
-```hcl
+## Example Usage
+
+```terraform
 provider "google-beta" {
   region = "us-central1"
   zone   = "us-central1-a"

@@ -48,7 +48,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Backend Service Basic
 
 
-```hcl
+```terraform
 resource "google_compute_backend_service" "default" {
   name          = "backend-service"
   health_checks = [google_compute_http_health_check.default.id]
@@ -69,7 +69,7 @@ resource "google_compute_http_health_check" "default" {
 ## Example Usage - Backend Service Traffic Director Round Robin
 
 
-```hcl
+```terraform
 resource "google_compute_backend_service" "default" {
   provider = google-beta
 
@@ -96,7 +96,7 @@ resource "google_compute_health_check" "health_check" {
 ## Example Usage - Backend Service Traffic Director Ring Hash
 
 
-```hcl
+```terraform
 resource "google_compute_backend_service" "default" {
   provider = google-beta
 
@@ -139,7 +139,7 @@ resource "google_compute_health_check" "health_check" {
 ## Example Usage - Backend Service Network Endpoint
 
 
-```hcl
+```terraform
 resource "google_compute_global_network_endpoint_group" "external_proxy" {
   name                  = "network-endpoint"
   network_endpoint_type = "INTERNET_FQDN_PORT"

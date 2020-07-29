@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Cloud Pub/Sub Topi
 
 ## google\_pubsub\_topic\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
@@ -54,7 +54,7 @@ resource "google_pubsub_topic_iam_policy" "policy" {
 
 ## google\_pubsub\_topic\_iam\_binding
 
-```hcl
+```terraform
 resource "google_pubsub_topic_iam_binding" "binding" {
   project = google_pubsub_topic.example.project
   topic = google_pubsub_topic.example.name
@@ -67,7 +67,7 @@ resource "google_pubsub_topic_iam_binding" "binding" {
 
 ## google\_pubsub\_topic\_iam\_member
 
-```hcl
+```terraform
 resource "google_pubsub_topic_iam_member" "member" {
   project = google_pubsub_topic.example.project
   topic = google_pubsub_topic.example.name

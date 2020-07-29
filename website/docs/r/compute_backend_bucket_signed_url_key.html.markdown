@@ -37,7 +37,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Backend Bucket Signed Url Key
 
 
-```hcl
+```terraform
 resource "google_compute_backend_bucket_signed_url_key" "backend_key" {
   name           = "test-key"
   key_value      = "pPsVemX8GM46QVeezid6Rw=="

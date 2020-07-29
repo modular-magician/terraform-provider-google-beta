@@ -57,7 +57,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Disk Basic
 
 
-```hcl
+```terraform
 resource "google_compute_disk" "default" {
   name  = "test-disk"
   type  = "pd-ssd"

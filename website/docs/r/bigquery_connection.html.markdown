@@ -44,7 +44,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Bigquery Connection Basic
 
 
-```hcl
+```terraform
 resource "google_sql_database_instance" "instance" {
     provider         = google-beta
     name             = "my-database-instance"
@@ -96,7 +96,7 @@ resource "google_bigquery_connection" "connection" {
 ## Example Usage - Bigquery Connection Full
 
 
-```hcl
+```terraform
 resource "google_sql_database_instance" "instance" {
     provider         = google-beta
     name             = "my-database-instance"

@@ -44,7 +44,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Region Ssl Certificate Basic
 
 
-```hcl
+```terraform
 resource "google_compute_region_ssl_certificate" "default" {
   region      = "us-central1"
   name_prefix = "my-certificate-"
@@ -65,7 +65,7 @@ resource "google_compute_region_ssl_certificate" "default" {
 ## Example Usage - Region Ssl Certificate Random Provider
 
 
-```hcl
+```terraform
 # You may also want to control name generation explicitly:
 resource "google_compute_region_ssl_certificate" "default" {
   region   = "us-central1"
@@ -100,7 +100,7 @@ resource "random_id" "certificate" {
 ## Example Usage - Region Ssl Certificate Target Https Proxies
 
 
-```hcl
+```terraform
 // Using with Region Target HTTPS Proxies
 //
 // SSL certificates cannot be updated after creation. In order to apply

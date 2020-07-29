@@ -46,7 +46,7 @@ To get more information about Instance, see:
 ## Example Usage - Notebook Instance Basic
 
 
-```hcl
+```terraform
 resource "google_notebooks_instance" "instance" {
   provider = google-beta
   name = "notebooks-instance"
@@ -66,7 +66,7 @@ resource "google_notebooks_instance" "instance" {
 ## Example Usage - Notebook Instance Basic Container
 
 
-```hcl
+```terraform
 resource "google_notebooks_instance" "instance" {
   provider = google-beta
   name = "notebooks-instance"
@@ -90,7 +90,7 @@ resource "google_notebooks_instance" "instance" {
 ## Example Usage - Notebook Instance Basic Gpu
 
 
-```hcl
+```terraform
 resource "google_notebooks_instance" "instance" {
   provider = google-beta
   name = "notebooks-instance"
@@ -116,7 +116,7 @@ resource "google_notebooks_instance" "instance" {
 ## Example Usage - Notebook Instance Full
 
 
-```hcl
+```terraform
 resource "google_notebooks_instance" "instance" {
   provider = google-beta
   name = "notebooks-instance"

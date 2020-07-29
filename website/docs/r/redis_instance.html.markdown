@@ -39,7 +39,7 @@ To get more information about Instance, see:
 ## Example Usage - Redis Instance Basic
 
 
-```hcl
+```terraform
 resource "google_redis_instance" "cache" {
   name           = "memory-cache"
   memory_size_gb = 1
@@ -53,7 +53,7 @@ resource "google_redis_instance" "cache" {
 ## Example Usage - Redis Instance Full
 
 
-```hcl
+```terraform
 resource "google_redis_instance" "cache" {
   name           = "ha-memory-cache"
   tier           = "STANDARD_HA"
@@ -94,7 +94,7 @@ data "google_compute_network" "redis-network" {
 ## Example Usage - Redis Instance Private Service
 
 
-```hcl
+```terraform
 resource "google_compute_network" "network" {
   name = "tf-test%{random_suffix}"
 }

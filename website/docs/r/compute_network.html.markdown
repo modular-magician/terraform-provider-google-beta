@@ -39,7 +39,7 @@ To get more information about Network, see:
 ## Example Usage - Network Basic
 
 
-```hcl
+```terraform
 resource "google_compute_network" "vpc_network" {
   name = "vpc-network"
 }

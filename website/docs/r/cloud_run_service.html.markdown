@@ -52,7 +52,7 @@ To get more information about Service, see:
 ## Example Usage - Cloud Run Service Basic
 
 
-```hcl
+```terraform
 resource "google_cloud_run_service" "default" {
   name     = "cloudrun-srv"
   location = "us-central1"
@@ -79,7 +79,7 @@ resource "google_cloud_run_service" "default" {
 ## Example Usage - Cloud Run Service Sql
 
 
-```hcl
+```terraform
 resource "google_cloud_run_service" "default" {
   name     = "cloudrun-srv"
   location = "us-central1"
@@ -118,7 +118,7 @@ resource "google_sql_database_instance" "instance" {
 ## Example Usage - Cloud Run Service Noauth
 
 
-```hcl
+```terraform
 resource "google_cloud_run_service" "default" {
   name     = "cloudrun-srv"
   location = "us-central1"
@@ -157,7 +157,7 @@ resource "google_cloud_run_service_iam_policy" "noauth" {
 ## Example Usage - Cloud Run Service Multiple Environment Variables
 
 
-```hcl
+```terraform
 resource "google_cloud_run_service" "default" {
   name     = "cloudrun-srv"
   location = "us-central1"
@@ -188,7 +188,7 @@ resource "google_cloud_run_service" "default" {
 ## Example Usage - Cloud Run Service Traffic Split
 
 
-```hcl
+```terraform
 resource "google_cloud_run_service" "default" {
   name     = "cloudrun-srv"
   location = "us-central1"

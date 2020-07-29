@@ -40,7 +40,7 @@ To get more information about DatasetAccess, see:
 ## Example Usage - Bigquery Dataset Access Basic User
 
 
-```hcl
+```terraform
 resource "google_bigquery_dataset_access" "access" {
   dataset_id    = google_bigquery_dataset.dataset.dataset_id
   role          = "OWNER"
@@ -58,7 +58,7 @@ resource "google_service_account" "bqowner" {
 ## Example Usage - Bigquery Dataset Access View
 
 
-```hcl
+```terraform
 resource "google_bigquery_dataset_access" "access" {
   dataset_id    = google_bigquery_dataset.private.dataset_id
   view {

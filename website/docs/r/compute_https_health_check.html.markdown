@@ -47,7 +47,7 @@ To get more information about HttpsHealthCheck, see:
 ## Example Usage - Https Health Check Basic
 
 
-```hcl
+```terraform
 resource "google_compute_https_health_check" "default" {
   name         = "authentication-health-check"
   request_path = "/health_check"

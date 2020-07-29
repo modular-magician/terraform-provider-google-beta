@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Cloud Storage Buck
 
 ## google\_storage\_bucket\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/storage.admin"
@@ -53,7 +53,7 @@ resource "google_storage_bucket_iam_policy" "policy" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/storage.admin"
@@ -76,7 +76,7 @@ resource "google_storage_bucket_iam_policy" "policy" {
 ```
 ## google\_storage\_bucket\_iam\_binding
 
-```hcl
+```terraform
 resource "google_storage_bucket_iam_binding" "binding" {
   bucket = google_storage_bucket.default.name
   role = "roles/storage.admin"
@@ -88,7 +88,7 @@ resource "google_storage_bucket_iam_binding" "binding" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 resource "google_storage_bucket_iam_binding" "binding" {
   bucket = google_storage_bucket.default.name
   role = "roles/storage.admin"
@@ -105,7 +105,7 @@ resource "google_storage_bucket_iam_binding" "binding" {
 ```
 ## google\_storage\_bucket\_iam\_member
 
-```hcl
+```terraform
 resource "google_storage_bucket_iam_member" "member" {
   bucket = google_storage_bucket.default.name
   role = "roles/storage.admin"
@@ -115,7 +115,7 @@ resource "google_storage_bucket_iam_member" "member" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 resource "google_storage_bucket_iam_member" "member" {
   bucket = google_storage_bucket.default.name
   role = "roles/storage.admin"

@@ -13,9 +13,12 @@ Use this data source to get list of the Cloud Identity Group Memberships within 
 
 https://cloud.google.com/identity/docs/concepts/overview#memberships
 
+~> **Warning:** This datasource is in beta, and should be used with the terraform-provider-google-beta provider.
+See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
+
 ## Example Usage
 
-```tf
+```terraform
 data "google_cloud_identity_group_memberships" "members" {
   group = "groups/123eab45c6defghi"
 }

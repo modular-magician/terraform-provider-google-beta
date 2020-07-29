@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Data catalog Entry
 
 ## google\_data\_catalog\_entry\_group\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
@@ -53,7 +53,7 @@ resource "google_data_catalog_entry_group_iam_policy" "policy" {
 
 ## google\_data\_catalog\_entry\_group\_iam\_binding
 
-```hcl
+```terraform
 resource "google_data_catalog_entry_group_iam_binding" "binding" {
   entry_group = google_data_catalog_entry_group.basic_entry_group.name
   role = "roles/viewer"
@@ -65,7 +65,7 @@ resource "google_data_catalog_entry_group_iam_binding" "binding" {
 
 ## google\_data\_catalog\_entry\_group\_iam\_member
 
-```hcl
+```terraform
 resource "google_data_catalog_entry_group_iam_member" "member" {
   entry_group = google_data_catalog_entry_group.basic_entry_group.name
   role = "roles/viewer"

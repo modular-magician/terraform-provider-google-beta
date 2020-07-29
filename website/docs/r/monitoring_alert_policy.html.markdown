@@ -38,7 +38,7 @@ To get more information about AlertPolicy, see:
 ## Example Usage - Monitoring Alert Policy Basic
 
 
-```hcl
+```terraform
 resource "google_monitoring_alert_policy" "alert_policy" {
   display_name = "My Alert Policy"
   combiner     = "OR"

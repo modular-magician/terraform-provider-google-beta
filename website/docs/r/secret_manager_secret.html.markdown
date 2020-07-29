@@ -37,7 +37,7 @@ To get more information about Secret, see:
 ## Example Usage - Secret Config Basic
 
 
-```hcl
+```terraform
 resource "google_secret_manager_secret" "secret-basic" {
   secret_id = "secret"
   

@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Cloud Source Repos
 
 ## google\_sourcerepo\_repository\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
@@ -54,7 +54,7 @@ resource "google_sourcerepo_repository_iam_policy" "policy" {
 
 ## google\_sourcerepo\_repository\_iam\_binding
 
-```hcl
+```terraform
 resource "google_sourcerepo_repository_iam_binding" "binding" {
   project = google_sourcerepo_repository.my-repo.project
   repository = google_sourcerepo_repository.my-repo.name
@@ -67,7 +67,7 @@ resource "google_sourcerepo_repository_iam_binding" "binding" {
 
 ## google\_sourcerepo\_repository\_iam\_member
 
-```hcl
+```terraform
 resource "google_sourcerepo_repository_iam_member" "member" {
   project = google_sourcerepo_repository.my-repo.project
   repository = google_sourcerepo_repository.my-repo.name

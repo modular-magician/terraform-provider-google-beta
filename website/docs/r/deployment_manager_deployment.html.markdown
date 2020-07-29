@@ -44,7 +44,7 @@ than actually deploying an in-preview deployment (i.e. `preview=true` to
 ## Example Usage - Deployment Manager Deployment Basic
 
 
-```hcl
+```terraform
 resource "google_deployment_manager_deployment" "deployment" {
   name = "my-deployment"
 
@@ -63,7 +63,7 @@ resource "google_deployment_manager_deployment" "deployment" {
 ## Example Usage - Deployment Manager Deployment Imports
 
 
-```hcl
+```terraform
 resource "google_deployment_manager_deployment" "deployment" {
   name = "my-deployment"
   target {

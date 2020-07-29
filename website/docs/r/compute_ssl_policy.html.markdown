@@ -40,7 +40,7 @@ To get more information about SslPolicy, see:
 ## Example Usage - Ssl Policy Basic
 
 
-```hcl
+```terraform
 resource "google_compute_ssl_policy" "prod-ssl-policy" {
   name    = "production-ssl-policy"
   profile = "MODERN"

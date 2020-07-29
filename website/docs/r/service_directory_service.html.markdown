@@ -41,7 +41,7 @@ To get more information about Service, see:
 ## Example Usage - Service Directory Service Basic
 
 
-```hcl
+```terraform
 resource "google_service_directory_namespace" "example" {
   provider     = google-beta
   namespace_id = "example-namespace"

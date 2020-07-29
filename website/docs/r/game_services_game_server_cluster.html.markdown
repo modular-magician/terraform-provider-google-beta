@@ -41,7 +41,7 @@ To get more information about GameServerCluster, see:
 ## Example Usage - Game Service Cluster Basic
 
 
-```hcl
+```terraform
 resource "google_game_services_game_server_cluster" "default" {
   provider   = google-beta
     

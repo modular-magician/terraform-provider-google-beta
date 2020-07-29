@@ -41,7 +41,7 @@ To get more information about Tag, see:
 ## Example Usage - Data Catalog Entry Tag Basic
 
 
-```hcl
+```terraform
 resource "google_data_catalog_entry" "entry" {
   entry_group = google_data_catalog_entry_group.entry_group.id
   entry_id = "my_entry"
@@ -115,7 +115,7 @@ resource "google_data_catalog_tag" "basic_tag" {
 ## Example Usage - Data Catalog Entry Group Tag
 
 
-```hcl
+```terraform
 resource "google_data_catalog_entry" "first_entry" {
   entry_group = google_data_catalog_entry_group.entry_group.id
   entry_id = "first_entry"
@@ -197,7 +197,7 @@ resource "google_data_catalog_tag" "entry_group_tag" {
 ## Example Usage - Data Catalog Entry Tag Full
 
 
-```hcl
+```terraform
 resource "google_data_catalog_entry" "entry" {
   entry_group = google_data_catalog_entry_group.entry_group.id
   entry_id = "my_entry"

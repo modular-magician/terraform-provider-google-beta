@@ -40,7 +40,7 @@ To get more information about PatchDeployment, see:
 ## Example Usage - Os Config Patch Deployment Basic
 
 
-```hcl
+```terraform
 resource "google_os_config_patch_deployment" "patch" {
   patch_deployment_id = "patch-deploy-inst"
 
@@ -71,7 +71,7 @@ resource "google_os_config_patch_deployment" "patch" {
 ## Example Usage - Os Config Patch Deployment Instance
 
 
-```hcl
+```terraform
 data "google_compute_image" "my_image" {
   family  = "debian-9"
   project = "debian-cloud"
@@ -140,7 +140,7 @@ resource "google_os_config_patch_deployment" "patch" {
 ## Example Usage - Os Config Patch Deployment Full
 
 
-```hcl
+```terraform
 resource "google_os_config_patch_deployment" "patch" {
   patch_deployment_id = "patch-deploy-inst"
 

@@ -40,7 +40,7 @@ To get more information about FhirStore, see:
 ## Example Usage - Healthcare Fhir Store Basic
 
 
-```hcl
+```terraform
 resource "google_healthcare_fhir_store" "default" {
   name    = "example-fhir-store"
   dataset = google_healthcare_dataset.dataset.id
@@ -77,7 +77,7 @@ resource "google_healthcare_dataset" "dataset" {
 ## Example Usage - Healthcare Fhir Store Streaming Config
 
 
-```hcl
+```terraform
 resource "google_healthcare_fhir_store" "default" {
   name    = "example-fhir-store"
   dataset = google_healthcare_dataset.dataset.id

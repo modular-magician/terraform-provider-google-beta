@@ -39,7 +39,7 @@ To get more information about Attestor, see:
 ## Example Usage - Binary Authorization Attestor Basic
 
 
-```hcl
+```terraform
 resource "google_binary_authorization_attestor" "attestor" {
   name = "test-attestor"
   attestation_authority_note {
@@ -79,7 +79,7 @@ resource "google_container_analysis_note" "note" {
 ## Example Usage - Binary Authorization Attestor Kms
 
 
-```hcl
+```terraform
 resource "google_binary_authorization_attestor" "attestor" {
   name = "test-attestor"
   attestation_authority_note {

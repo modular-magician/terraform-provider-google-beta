@@ -39,7 +39,7 @@ To get more information about DomainMapping, see:
 ## Example Usage - Cloud Run Domain Mapping Basic
 
 
-```hcl
+```terraform
 
 resource "google_cloud_run_service" "default" {
   name     = "cloudrun-srv"

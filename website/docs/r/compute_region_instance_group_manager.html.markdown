@@ -18,7 +18,7 @@ and [API](https://cloud.google.com/compute/docs/reference/latest/regionInstanceG
 
 ## Example Usage with top level instance template (`google` provider)
 
-```hcl
+```terraform
 resource "google_compute_health_check" "autohealing" {
   name                = "autohealing-health-check"
   check_interval_sec  = 5
@@ -59,7 +59,7 @@ resource "google_compute_region_instance_group_manager" "appserver" {
 ```
 
 ## Example Usage with multiple versions
-```hcl
+```terraform
 resource "google_compute_region_instance_group_manager" "appserver" {
   name = "appserver-igm"
 
@@ -144,7 +144,7 @@ group. You can specify one or more values. For more information, see the [offici
 
 The `update_policy` block supports:
 
-```hcl
+```terraform
 update_policy {
   type                         = "PROACTIVE"
   instance_redistribution_type = "PROACTIVE"
@@ -188,7 +188,7 @@ The `auto_healing_policies` block supports:
 
 The `version` block supports:
 
-```hcl
+```terraform
 version {
   name              = "appserver-canary"
   instance_template = google_compute_instance_template.appserver-canary.id
@@ -199,7 +199,7 @@ version {
 }
 ```
 
-```hcl
+```terraform
 version {
   name              = "appserver-canary"
   instance_template = google_compute_instance_template.appserver-canary.id

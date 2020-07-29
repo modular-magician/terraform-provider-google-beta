@@ -50,7 +50,7 @@ To get more information about NetworkEndpointGroup, see:
 ## Example Usage - Network Endpoint Group
 
 
-```hcl
+```terraform
 resource "google_compute_network_endpoint_group" "neg" {
   name         = "my-lb-neg"
   network      = google_compute_network.default.id

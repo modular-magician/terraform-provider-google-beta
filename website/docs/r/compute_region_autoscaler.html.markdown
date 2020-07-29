@@ -43,7 +43,7 @@ To get more information about RegionAutoscaler, see:
 ## Example Usage - Region Autoscaler Basic
 
 
-```hcl
+```terraform
 resource "google_compute_region_autoscaler" "foobar" {
   name   = "my-region-autoscaler"
   region = "us-central1"

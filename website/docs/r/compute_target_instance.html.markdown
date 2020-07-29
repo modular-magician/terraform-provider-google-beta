@@ -45,7 +45,7 @@ To get more information about TargetInstance, see:
 ## Example Usage - Target Instance Basic
 
 
-```hcl
+```terraform
 resource "google_compute_target_instance" "default" {
   name     = "target"
   instance = google_compute_instance.target-vm.id

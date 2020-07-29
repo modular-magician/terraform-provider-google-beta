@@ -43,7 +43,7 @@ To get more information about MachineImage, see:
 ## Example Usage - Machine Image Basic
 
 
-```hcl
+```terraform
 resource "google_compute_instance" "vm" {
   provider     = google-beta
   name         = "vm"

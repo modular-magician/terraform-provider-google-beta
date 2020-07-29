@@ -45,7 +45,7 @@ To get more information about Job, see:
 ## Example Usage - Scheduler Job Pubsub
 
 
-```hcl
+```terraform
 resource "google_pubsub_topic" "topic" {
   name = "job-topic"
 }
@@ -70,7 +70,7 @@ resource "google_cloud_scheduler_job" "job" {
 ## Example Usage - Scheduler Job Http
 
 
-```hcl
+```terraform
 resource "google_cloud_scheduler_job" "job" {
   name             = "test-job"
   description      = "test http job"
@@ -96,7 +96,7 @@ resource "google_cloud_scheduler_job" "job" {
 ## Example Usage - Scheduler Job App Engine
 
 
-```hcl
+```terraform
 resource "google_cloud_scheduler_job" "job" {
   name             = "test-job"
   schedule         = "*/4 * * * *"
@@ -132,7 +132,7 @@ resource "google_cloud_scheduler_job" "job" {
 ## Example Usage - Scheduler Job Oauth
 
 
-```hcl
+```terraform
 data "google_compute_default_service_account" "default" {
 }
 
@@ -161,7 +161,7 @@ resource "google_cloud_scheduler_job" "job" {
 ## Example Usage - Scheduler Job Oidc
 
 
-```hcl
+```terraform
 data "google_compute_default_service_account" "default" {
 }
 

@@ -41,7 +41,7 @@ To get more information about Endpoint, see:
 ## Example Usage - Service Directory Endpoint Basic
 
 
-```hcl
+```terraform
 resource "google_service_directory_namespace" "example" {
   provider     = google-beta
   namespace_id = "example-namespace"

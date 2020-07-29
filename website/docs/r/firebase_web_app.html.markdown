@@ -41,7 +41,7 @@ To get more information about WebApp, see:
 ## Example Usage - Firebase Web App Basic
 
 
-```hcl
+```terraform
 resource "google_project" "default" {
 	provider = google-beta
 

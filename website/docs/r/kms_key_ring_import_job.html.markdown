@@ -43,7 +43,7 @@ To get more information about KeyRingImportJob, see:
 ## Example Usage - Kms Key Ring Import Job
 
 
-```hcl
+```terraform
 resource "google_kms_key_ring" "keyring" {
   name     = "keyring-example"
   location = "global"

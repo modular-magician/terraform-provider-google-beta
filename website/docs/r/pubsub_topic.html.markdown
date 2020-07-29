@@ -39,7 +39,7 @@ To get more information about Topic, see:
 ## Example Usage - Pubsub Topic Basic
 
 
-```hcl
+```terraform
 resource "google_pubsub_topic" "example" {
   name = "example-topic"
 
@@ -51,7 +51,7 @@ resource "google_pubsub_topic" "example" {
 ## Example Usage - Pubsub Topic Cmek
 
 
-```hcl
+```terraform
 resource "google_pubsub_topic" "example" {
   name         = "example-topic"
   kms_key_name = google_kms_crypto_key.crypto_key.id
@@ -75,7 +75,7 @@ resource "google_kms_key_ring" "key_ring" {
 ## Example Usage - Pubsub Topic Geo Restricted
 
 
-```hcl
+```terraform
 resource "google_pubsub_topic" "example" {
   name = "example-topic"
 

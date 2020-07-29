@@ -37,7 +37,7 @@ ready to receive prediction requests. The model itself is just a container.
 ## Example Usage - Ml Model Basic
 
 
-```hcl
+```terraform
 resource "google_ml_engine_model" "default" {
   name        = "default"
   description = "My model"
@@ -52,7 +52,7 @@ resource "google_ml_engine_model" "default" {
 ## Example Usage - Ml Model Full
 
 
-```hcl
+```terraform
 resource "google_ml_engine_model" "default" {
   name        = "default"
   description = "My model"

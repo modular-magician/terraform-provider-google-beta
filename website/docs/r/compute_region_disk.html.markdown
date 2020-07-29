@@ -57,7 +57,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Region Disk Basic
 
 
-```hcl
+```terraform
 resource "google_compute_region_disk" "regiondisk" {
   name                      = "my-region-disk"
   snapshot                  = google_compute_snapshot.snapdisk.id

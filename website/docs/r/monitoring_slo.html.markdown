@@ -47,7 +47,7 @@ To get more information about Slo, see:
 ## Example Usage - Monitoring Slo Appengine
 
 
-```hcl
+```terraform
 data "google_monitoring_app_engine_service" "default" {
   module_id = "default"
 }
@@ -76,7 +76,7 @@ resource "google_monitoring_slo" "appeng_slo" {
 ## Example Usage - Monitoring Slo Request Based
 
 
-```hcl
+```terraform
 resource "google_monitoring_custom_service" "customsrv" {
   service_id = "custom-srv-request-slos"
   display_name = "My Custom Service"
@@ -113,7 +113,7 @@ resource "google_monitoring_slo" "request_based_slo" {
 ## Example Usage - Monitoring Slo Windows Based Good Bad Metric Filter
 
 
-```hcl
+```terraform
 resource "google_monitoring_custom_service" "customsrv" {
   service_id = "custom-srv-windows-slos"
   display_name = "My Custom Service"
@@ -143,7 +143,7 @@ resource "google_monitoring_slo" "windows_based" {
 ## Example Usage - Monitoring Slo Windows Based Metric Mean
 
 
-```hcl
+```terraform
 resource "google_monitoring_custom_service" "customsrv" {
   service_id = "custom-srv-windows-slos"
   display_name = "My Custom Service"
@@ -179,7 +179,7 @@ resource "google_monitoring_slo" "windows_based" {
 ## Example Usage - Monitoring Slo Windows Based Metric Sum
 
 
-```hcl
+```terraform
 resource "google_monitoring_custom_service" "customsrv" {
   service_id = "custom-srv-windows-slos"
   display_name = "My Custom Service"
@@ -215,7 +215,7 @@ resource "google_monitoring_slo" "windows_based" {
 ## Example Usage - Monitoring Slo Windows Based Ratio Threshold
 
 
-```hcl
+```terraform
 resource "google_monitoring_custom_service" "customsrv" {
   service_id = "custom-srv-windows-slos"
   display_name = "My Custom Service"

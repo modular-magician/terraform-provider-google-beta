@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Compute Engine Ins
 
 ## google\_compute\_instance\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/compute.osLogin"
@@ -55,7 +55,7 @@ resource "google_compute_instance_iam_policy" "policy" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/compute.osLogin"
@@ -80,7 +80,7 @@ resource "google_compute_instance_iam_policy" "policy" {
 ```
 ## google\_compute\_instance\_iam\_binding
 
-```hcl
+```terraform
 resource "google_compute_instance_iam_binding" "binding" {
   project = google_compute_instance.default.project
   zone = google_compute_instance.default.zone
@@ -94,7 +94,7 @@ resource "google_compute_instance_iam_binding" "binding" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 resource "google_compute_instance_iam_binding" "binding" {
   project = google_compute_instance.default.project
   zone = google_compute_instance.default.zone
@@ -113,7 +113,7 @@ resource "google_compute_instance_iam_binding" "binding" {
 ```
 ## google\_compute\_instance\_iam\_member
 
-```hcl
+```terraform
 resource "google_compute_instance_iam_member" "member" {
   project = google_compute_instance.default.project
   zone = google_compute_instance.default.zone
@@ -125,7 +125,7 @@ resource "google_compute_instance_iam_member" "member" {
 
 With IAM Conditions ([beta](https://terraform.io/docs/providers/google/provider_versions.html)):
 
-```hcl
+```terraform
 resource "google_compute_instance_iam_member" "member" {
   project = google_compute_instance.default.project
   zone = google_compute_instance.default.zone

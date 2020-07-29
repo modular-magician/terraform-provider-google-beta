@@ -41,7 +41,7 @@ To get more information about ServicePerimeterResource, see:
 ## Example Usage - Access Context Manager Service Perimeter Resource Basic
 
 
-```hcl
+```terraform
 resource "google_access_context_manager_service_perimeter_resource" "service-perimeter-resource" {
   perimeter_name = google_access_context_manager_service_perimeter.service-perimeter-resource.name
   resource = "projects/987654321"

@@ -39,7 +39,7 @@ To get more information about Router, see:
 ## Example Usage - Router Basic
 
 
-```hcl
+```terraform
 resource "google_compute_router" "foobar" {
   name    = "my-router"
   network = google_compute_network.foobar.name

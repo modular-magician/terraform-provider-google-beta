@@ -43,7 +43,7 @@ To get more information about Autoscaler, see:
 ## Example Usage - Autoscaler Single Instance
 
 
-```hcl
+```terraform
 resource "google_compute_autoscaler" "default" {
   provider = google-beta
 
@@ -131,7 +131,7 @@ provider "google-beta" {
 ## Example Usage - Autoscaler Basic
 
 
-```hcl
+```terraform
 resource "google_compute_autoscaler" "foobar" {
   name   = "my-autoscaler"
   zone   = "us-central1-f"

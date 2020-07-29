@@ -41,7 +41,7 @@ To get more information about Budget, see:
 ## Example Usage - Billing Budget Basic
 
 
-```hcl
+```terraform
 data "google_billing_account" "account" {
   provider = google-beta
   billing_account = "000000-0000000-0000000-000000"
@@ -70,7 +70,7 @@ resource "google_billing_budget" "budget" {
 ## Example Usage - Billing Budget Filter
 
 
-```hcl
+```terraform
 data "google_billing_account" "account" {
   provider = google-beta
   billing_account = "000000-0000000-0000000-000000"

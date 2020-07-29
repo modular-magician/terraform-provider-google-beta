@@ -44,7 +44,7 @@ To get more information about Service, see:
 ## Example Usage - Monitoring Service Custom
 
 
-```hcl
+```terraform
 resource "google_monitoring_custom_service" "custom" {
   service_id = "custom-srv"
   display_name = "My Custom Service custom-srv"

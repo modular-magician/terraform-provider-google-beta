@@ -39,7 +39,7 @@ To get more information about Index, see:
 ## Example Usage - Datastore Index
 
 
-```hcl
+```terraform
 resource "google_datastore_index" "default" {
   kind = "foo"
   properties {

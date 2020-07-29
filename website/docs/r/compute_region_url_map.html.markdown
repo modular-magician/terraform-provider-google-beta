@@ -36,7 +36,7 @@ that you define for the host and path of an incoming URL.
 ## Example Usage - Region Url Map Basic
 
 
-```hcl
+```terraform
 resource "google_compute_region_url_map" "regionurlmap" {
   region = "us-central1"
 
@@ -112,7 +112,7 @@ resource "google_compute_region_health_check" "default" {
 ## Example Usage - Region Url Map L7 Ilb Path
 
 
-```hcl
+```terraform
 resource "google_compute_region_url_map" "regionurlmap" {
   name        = "regionurlmap"
   description = "a description"
@@ -223,7 +223,7 @@ resource "google_compute_region_health_check" "default" {
 ## Example Usage - Region Url Map L7 Ilb Path Partial
 
 
-```hcl
+```terraform
 resource "google_compute_region_url_map" "regionurlmap" {
   name        = "regionurlmap"
   description = "a description"
@@ -302,7 +302,7 @@ resource "google_compute_region_health_check" "default" {
 ## Example Usage - Region Url Map L7 Ilb Route
 
 
-```hcl
+```terraform
 resource "google_compute_region_url_map" "regionurlmap" {
   name            = "regionurlmap"
   description     = "a description"
@@ -394,7 +394,7 @@ resource "google_compute_region_health_check" "default" {
 ## Example Usage - Region Url Map L7 Ilb Route Partial
 
 
-```hcl
+```terraform
 resource "google_compute_region_url_map" "regionurlmap" {
   name        = "regionurlmap"
   description = "a description"

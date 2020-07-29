@@ -59,7 +59,7 @@ state as plain-text. [Read more about sensitive data in state](/docs/state/sensi
 ## Example Usage - Notification Channel Basic
 
 
-```hcl
+```terraform
 resource "google_monitoring_notification_channel" "basic" {
   display_name = "Test Notification Channel"
   type         = "email"
@@ -71,7 +71,7 @@ resource "google_monitoring_notification_channel" "basic" {
 ## Example Usage - Notification Channel Sensitive
 
 
-```hcl
+```terraform
 resource "google_monitoring_notification_channel" "default" {
   display_name = "Test Slack Channel"
   type         = "slack"

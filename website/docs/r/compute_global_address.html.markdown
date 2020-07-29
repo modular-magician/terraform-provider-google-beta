@@ -40,7 +40,7 @@ To get more information about GlobalAddress, see:
 ## Example Usage - Global Address Basic
 
 
-```hcl
+```terraform
 resource "google_compute_global_address" "default" {
   name = "global-appserver-ip"
 }

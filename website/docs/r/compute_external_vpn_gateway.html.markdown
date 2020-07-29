@@ -39,7 +39,7 @@ To get more information about ExternalVpnGateway, see:
 ## Example Usage - External Vpn Gateway
 
 
-```hcl
+```terraform
 resource "google_compute_ha_vpn_gateway" "ha_gateway" {
   provider = google-beta
   region   = "us-central1"

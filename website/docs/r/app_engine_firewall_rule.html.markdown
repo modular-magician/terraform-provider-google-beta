@@ -41,7 +41,7 @@ To get more information about FirewallRule, see:
 ## Example Usage - App Engine Firewall Rule Basic
 
 
-```hcl
+```terraform
 resource "google_project" "my_project" {
   name       = "tf-test-project"
   project_id = "ae-project"

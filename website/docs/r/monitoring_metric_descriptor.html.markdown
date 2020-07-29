@@ -39,7 +39,7 @@ To get more information about MetricDescriptor, see:
 ## Example Usage - Monitoring Metric Descriptor Basic
 
 
-```hcl
+```terraform
 resource "google_monitoring_metric_descriptor" "basic" {
   description = "Daily sales records from all branch stores."
   display_name = "metric-descriptor"
@@ -67,7 +67,7 @@ resource "google_monitoring_metric_descriptor" "basic" {
 ## Example Usage - Monitoring Metric Descriptor Alert
 
 
-```hcl
+```terraform
 resource "google_monitoring_metric_descriptor" "with_alert" {
   description = "Daily sales records from all branch stores."
   display_name = "metric-descriptor"

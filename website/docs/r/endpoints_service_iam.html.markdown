@@ -35,7 +35,7 @@ Three different resources help you manage your IAM policy for Cloud Endpoints Se
 
 ## google\_endpoints\_service\_iam\_policy
 
-```hcl
+```terraform
 data "google_iam_policy" "admin" {
   binding {
     role = "roles/viewer"
@@ -53,7 +53,7 @@ resource "google_endpoints_service_iam_policy" "policy" {
 
 ## google\_endpoints\_service\_iam\_binding
 
-```hcl
+```terraform
 resource "google_endpoints_service_iam_binding" "binding" {
   service_name = google_endpoints_service.endpoints_service.service_name
   role = "roles/viewer"
@@ -65,7 +65,7 @@ resource "google_endpoints_service_iam_binding" "binding" {
 
 ## google\_endpoints\_service\_iam\_member
 
-```hcl
+```terraform
 resource "google_endpoints_service_iam_member" "member" {
   service_name = google_endpoints_service.endpoints_service.service_name
   role = "roles/viewer"

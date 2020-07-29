@@ -41,7 +41,7 @@ To get more information about Instance, see:
 ## Example Usage - Filestore Instance Basic
 
 
-```hcl
+```terraform
 resource "google_filestore_instance" "instance" {
   name = "test-instance"
   zone = "us-central1-b"
@@ -66,7 +66,7 @@ resource "google_filestore_instance" "instance" {
 ## Example Usage - Filestore Instance Full
 
 
-```hcl
+```terraform
 resource "google_filestore_instance" "instance" {
   provider = google-beta
   name = "test-instance"

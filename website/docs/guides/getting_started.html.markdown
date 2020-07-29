@@ -1,12 +1,12 @@
 ---
 layout: "google"
-page_title: "Getting Started with the Google provider"
+page_title: "Getting Started with the Google Beta provider"
 sidebar_current: "docs-google-provider-guides-getting-started"
 description: |-
   Getting started with the Google Cloud Platform provider
 ---
 
-# Getting Started with the Google Provider
+# Getting Started with the Google Beta Provider
 
 ## Before you begin
 
@@ -31,8 +31,8 @@ gcloud authentication will work fine.
 Next, create a Terraform config file named `"main.tf"`. Inside, you'll
 want to include the following configuration:
 
-```hcl
-provider "google" {
+```terraform
+provider "google-beta" {
   project = "{{YOUR GCP PROJECT}}"
   region  = "us-central1"
   zone    = "us-central1-c"
@@ -62,7 +62,7 @@ named `google_compute_instance` in Terraform. The `google` part of the name
 identifies the provider for Terraform, `compute` indicates the GCP product
 family, and `instance` is the resource name.
 
-Google provider resources will generally, although not always, be named after
+Google Beta provider resources will generally, although not always, be named after
 the name used in `gcloud`/the REST API. For example, a VM instance is called
 [`instance` in the API](https://cloud.google.com/compute/docs/reference/rest/v1/instances).
 Most resource field names will also correspond 1:1 with their `gcloud`/REST API
@@ -75,8 +75,10 @@ be used. If omitted, the provider defaults will be used instead.
 
 Add the following to your config file:
 
-```hcl
+```terraform
 resource "google_compute_instance" "vm_instance" {
+  provider = google-beta
+
   name         = "terraform-instance"
   machine_type = "f1-micro"
 
@@ -127,8 +129,10 @@ demonstrate.
 
 Add this block to your config:
 
-```hcl
+```terraform
 resource "google_compute_network" "vpc_network" {
+  provider = google-beta
+
   name                    = "terraform-network"
   auto_create_subnetworks = "true"
 }
@@ -187,8 +191,8 @@ quota or billing issues which don't seem to apply to you, you may want to set
 ## Provisioning your resources
 By now, your config will look something like:
 
-```hcl
-provider "google" {
+```terraform
+provider "google-beta" {
   project = "{{YOUR GCP PROJECT}}"
   region  = "us-central1"
   zone    = "us-central1-c"
@@ -221,11 +225,11 @@ resource "google_compute_network" "vpc_network" {
 With a Terraform config and with your credentials configured, it's time to
 provision your resources:
 
-```hcl
+```bash
 terraform apply
 ```
 
-Congratulations! You've gotten started using the Google provider and provisioned
+Congratulations! You've gotten started using the Google Beta provider and provisioned
 a virtual machine on Google Cloud Platform. The key concepts unique to GCP are:
 
 * How a `project` contains resources

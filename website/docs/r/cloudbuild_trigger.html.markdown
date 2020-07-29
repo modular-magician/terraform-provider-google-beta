@@ -39,7 +39,7 @@ To get more information about Trigger, see:
 ## Example Usage - Cloudbuild Trigger Filename
 
 
-```hcl
+```terraform
 resource "google_cloudbuild_trigger" "filename-trigger" {
   trigger_template {
     branch_name = "master"

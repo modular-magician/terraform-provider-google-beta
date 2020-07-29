@@ -37,7 +37,7 @@ which will be applied to this disk for scheduling snapshot creation.
 ## Example Usage - Disk Resource Policy Attachment Basic
 
 
-```hcl
+```terraform
 resource "google_compute_disk_resource_policy_attachment" "attachment" {
   name = google_compute_resource_policy.policy.name
   disk = google_compute_disk.ssd.name

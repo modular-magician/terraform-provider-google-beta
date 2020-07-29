@@ -42,7 +42,7 @@ To get more information about Metric, see:
 ## Example Usage - Logging Metric Basic
 
 
-```hcl
+```terraform
 resource "google_logging_metric" "logging_metric" {
   name   = "my-(custom)/metric"
   filter = "resource.type=gae_app AND severity>=ERROR"
@@ -84,7 +84,7 @@ resource "google_logging_metric" "logging_metric" {
 ## Example Usage - Logging Metric Counter Basic
 
 
-```hcl
+```terraform
 resource "google_logging_metric" "logging_metric" {
   name   = "my-(custom)/metric"
   filter = "resource.type=gae_app AND severity>=ERROR"
@@ -102,7 +102,7 @@ resource "google_logging_metric" "logging_metric" {
 ## Example Usage - Logging Metric Counter Labels
 
 
-```hcl
+```terraform
 resource "google_logging_metric" "logging_metric" {
   name   = "my-(custom)/metric"
   filter = "resource.type=gae_app AND severity>=ERROR"

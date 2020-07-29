@@ -41,7 +41,7 @@ To get more information about Realm, see:
 ## Example Usage - Game Service Realm Basic
 
 
-```hcl
+```terraform
 resource "google_game_services_realm" "default" {
   provider = google-beta
 
