@@ -221,6 +221,18 @@ The following arguments are supported:
   permission to Acknowledge() messages on this subscription.
   Structure is documented below.
 
+* `retry_policy` -
+  (Optional)
+  A policy that specifies how Cloud Pub/Sub retries message delivery.
+  Retry delay will be exponential based on provided minimum and maximum backoffs.
+  https://en.wikipedia.org/wiki/Exponential_backoff.
+  RetryPolicy will be triggered on NACKs or acknowledgement deadline exceeded events
+  for a given message.
+  Retry Policy is implemented on a best effort basis. At times, the delay between
+  consecutive deliveries may not match the configuration. That is, delay can be more
+  or less than configured backoff.
+  Structure is documented below.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -313,6 +325,22 @@ The `dead_letter_policy` block supports:
   client libraries may automatically extend ack_deadlines.
   This field will be honored on a best effort basis.
   If this parameter is 0, a default value of 5 is used.
+
+The `retry_policy` block supports:
+
+* `maximum_backoff` -
+  (Optional)
+  Specifies the maximum delay between consecutive deliveries of a given message. 
+  Value should be between 0 and 600 seconds. Defaults to 600 seconds.
+  A duration in seconds with up to nine fractional digits, terminated by 's'.
+  Example - "3.5s".
+
+* `minimum_backoff` -
+  (Optional)
+  Specifies the minimum delay between consecutive deliveries of a given message.
+  Value should be between 0 and 600 seconds. Defaults to 10 seconds.
+  A duration in seconds with up to nine fractional digits, terminated by 's'.
+  Example - "3.5s".
 
 ## Attributes Reference
 
