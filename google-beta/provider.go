@@ -701,8 +701,8 @@ func Provider() terraform.ResourceProvider {
 }
 
 // Generated resources: 179
-// Generated IAM resources: 66
-// Total generated resources: 245
+// Generated IAM resources: 69
+// Total generated resources: 248
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -729,6 +729,9 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_bigquery_dataset":                                      resourceBigQueryDataset(),
 			"google_bigquery_dataset_access":                               resourceBigQueryDatasetAccess(),
 			"google_bigquery_job":                                          resourceBigQueryJob(),
+			"google_bigquery_table_iam_binding":                            ResourceIamBinding(BigQueryBigqueryTableIamSchema, BigQueryBigqueryTableIamUpdaterProducer, BigQueryBigqueryTableIdParseFunc),
+			"google_bigquery_table_iam_member":                             ResourceIamMember(BigQueryBigqueryTableIamSchema, BigQueryBigqueryTableIamUpdaterProducer, BigQueryBigqueryTableIdParseFunc),
+			"google_bigquery_table_iam_policy":                             ResourceIamPolicy(BigQueryBigqueryTableIamSchema, BigQueryBigqueryTableIamUpdaterProducer, BigQueryBigqueryTableIdParseFunc),
 			"google_bigquery_connection":                                   resourceBigqueryConnectionConnection(),
 			"google_bigquery_data_transfer_config":                         resourceBigqueryDataTransferConfig(),
 			"google_bigquery_reservation":                                  resourceBigqueryReservationReservation(),
