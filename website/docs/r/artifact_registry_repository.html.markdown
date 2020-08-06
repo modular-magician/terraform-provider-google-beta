@@ -158,7 +158,7 @@ In addition to the arguments listed above, the following computed attributes are
 * `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/repositories/{{repsitory_id}}`
 
 * `name` -
-  The name of the repository, for example:
+  The name of the repository, for example test:
   "projects/p1/locations/us-central1/repositories/repo1"
 
 * `create_time` -
@@ -182,9 +182,10 @@ This resource provides the following
 Repository can be imported using any of these accepted formats:
 
 ```
-$ terraform import -provider=google-beta google_artifact_registry_repository.default projects/{{project}}/locations/{{location}}/repositories/{{name}}
-$ terraform import -provider=google-beta google_artifact_registry_repository.default {{project}}/{{location}}/{{name}}
-$ terraform import -provider=google-beta google_artifact_registry_repository.default {{location}}/{{name}}
+$ terraform import -provider=google-beta google_artifact_registry_repository.default projects/{{project}}/locations/{{location}}/repositories/{{repository_id}}
+$ terraform import -provider=google-beta google_artifact_registry_repository.default {{project}}/{{location}}/{{repository_id}}
+$ terraform import -provider=google-beta google_artifact_registry_repository.default {{location}}/{{repository_id}}
+$ terraform import -provider=google-beta google_artifact_registry_repository.default {{repository_id}}
 ```
 
 -> If you're importing a resource with beta features, make sure to include `-provider=google-beta`

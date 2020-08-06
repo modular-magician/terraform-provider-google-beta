@@ -20,8 +20,8 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 )
 
 func resourceArtifactRegistryRepository() *schema.Resource {
@@ -95,7 +95,7 @@ and dashes.`,
 			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
-				Description: `The name of the repository, for example:
+				Description: `The name of the repository, for example test:
 "projects/p1/locations/us-central1/repositories/repo1"`,
 			},
 			"update_time": {
@@ -333,9 +333,10 @@ func resourceArtifactRegistryRepositoryDelete(d *schema.ResourceData, meta inter
 func resourceArtifactRegistryRepositoryImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
-		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/repositories/(?P<name>[^/]+)",
-		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)",
-		"(?P<location>[^/]+)/(?P<name>[^/]+)",
+		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/repositories/(?P<repository_id>[^/]+)",
+		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<repository_id>[^/]+)",
+		"(?P<location>[^/]+)/(?P<repository_id>[^/]+)",
+		"(?P<repository_id>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}

@@ -22,8 +22,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 )
 
 func resourceSecurityScannerScanConfig() *schema.Resource {
@@ -172,7 +172,8 @@ which means the scan will be scheduled to start immediately.`,
 				Optional:    true,
 				Description: `Set of Cloud Platforms targeted by the scan. If empty, APP_ENGINE will be used as a default. Possible values: ["APP_ENGINE", "COMPUTE"]`,
 				Elem: &schema.Schema{
-					Type: schema.TypeString,
+					Type:         schema.TypeString,
+					ValidateFunc: validation.StringInSlice([]string{"APP_ENGINE", "COMPUTE"}, false),
 				},
 			},
 			"user_agent": {
