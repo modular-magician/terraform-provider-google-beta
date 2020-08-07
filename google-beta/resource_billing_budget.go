@@ -136,6 +136,21 @@ messages will be published, in the form
 projects/{project_id}/topics/{topic_id}. Updates are sent
 at regular intervals to the topic.`,
 						},
+						"monitoring_notification_channels": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `Targets to send notifications to when a threshold is
+exceeded. This is in addition to default recipients who have
+billing account roles. The value is the full REST resource
+name of a monitoring notification channel with the form
+projects/{project_id}/notificationChannels/{channel_id}.
+A maximum of 5 channels are allowed. See
+https://cloud.google.com/billing/docs/how-to/budgets-notification-recipients
+for more details.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
 						"schema_version": {
 							Type:     schema.TypeString,
 							Optional: true,
@@ -509,6 +524,8 @@ func flattenBillingBudgetBudgetAllUpdatesRule(v interface{}, d *schema.ResourceD
 		flattenBillingBudgetBudgetAllUpdatesRulePubsubTopic(original["pubsubTopic"], d, config)
 	transformed["schema_version"] =
 		flattenBillingBudgetBudgetAllUpdatesRuleSchemaVersion(original["schemaVersion"], d, config)
+	transformed["monitoring_notification_channels"] =
+		flattenBillingBudgetBudgetAllUpdatesRuleMonitoringNotificationChannels(original["monitoringNotificationChannels"], d, config)
 	return []interface{}{transformed}
 }
 func flattenBillingBudgetBudgetAllUpdatesRulePubsubTopic(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -516,6 +533,10 @@ func flattenBillingBudgetBudgetAllUpdatesRulePubsubTopic(v interface{}, d *schem
 }
 
 func flattenBillingBudgetBudgetAllUpdatesRuleSchemaVersion(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenBillingBudgetBudgetAllUpdatesRuleMonitoringNotificationChannels(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -732,6 +753,13 @@ func expandBillingBudgetBudgetAllUpdatesRule(v interface{}, d TerraformResourceD
 		transformed["schemaVersion"] = transformedSchemaVersion
 	}
 
+	transformedMonitoringNotificationChannels, err := expandBillingBudgetBudgetAllUpdatesRuleMonitoringNotificationChannels(original["monitoring_notification_channels"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMonitoringNotificationChannels); val.IsValid() && !isEmptyValue(val) {
+		transformed["monitoringNotificationChannels"] = transformedMonitoringNotificationChannels
+	}
+
 	return transformed, nil
 }
 
@@ -740,5 +768,9 @@ func expandBillingBudgetBudgetAllUpdatesRulePubsubTopic(v interface{}, d Terrafo
 }
 
 func expandBillingBudgetBudgetAllUpdatesRuleSchemaVersion(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBillingBudgetBudgetAllUpdatesRuleMonitoringNotificationChannels(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }

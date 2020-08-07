@@ -214,6 +214,17 @@ The `all_updates_rule` block supports:
   accepted. It represents the JSON schema as defined in
   https://cloud.google.com/billing/docs/how-to/budgets#notification_format.
 
+* `monitoring_notification_channels` -
+  (Optional)
+  Targets to send notifications to when a threshold is
+  exceeded. This is in addition to default recipients who have
+  billing account roles. The value is the full REST resource
+  name of a monitoring notification channel with the form
+  projects/{project_id}/notificationChannels/{channel_id}.
+  A maximum of 5 channels are allowed. See
+  https://cloud.google.com/billing/docs/how-to/budgets-notification-recipients
+  for more details.
+
 - - -
 
 
