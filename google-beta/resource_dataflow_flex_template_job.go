@@ -139,12 +139,6 @@ func resourceDataflowFlexTemplateJobRead(d *schema.ResourceData, meta interface{
 	d.Set("project", project)
 	d.Set("labels", job.Labels)
 
-	if _, ok := dataflowTerminalStatesMap[job.CurrentState]; ok {
-		log.Printf("[DEBUG] Removing resource '%s' because it is in state %s.\n", job.Name, job.CurrentState)
-		d.SetId("")
-		return nil
-	}
-
 	return nil
 }
 
