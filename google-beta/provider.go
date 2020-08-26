@@ -301,6 +301,14 @@ func Provider() terraform.ResourceProvider {
 					"GOOGLE_DATA_FUSION_CUSTOM_ENDPOINT",
 				}, DataFusionDefaultBasePath),
 			},
+			"data_loss_prevention_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateCustomEndpoint,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"GOOGLE_DATA_LOSS_PREVENTION_CUSTOM_ENDPOINT",
+				}, DataLossPreventionDefaultBasePath),
+			},
 			"dataproc_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -708,9 +716,9 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
-// Generated resources: 186
+// Generated resources: 188
 // Generated IAM resources: 72
-// Total generated resources: 258
+// Total generated resources: 260
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -857,6 +865,8 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_data_catalog_tag_template":                             resourceDataCatalogTagTemplate(),
 			"google_data_catalog_tag":                                      resourceDataCatalogTag(),
 			"google_data_fusion_instance":                                  resourceDataFusionInstance(),
+			"google_data_loss_prevention_job_trigger":                      resourceDataLossPreventionJobTrigger(),
+			"google_data_loss_prevention_inspect_template":                 resourceDataLossPreventionInspectTemplate(),
 			"google_dataproc_autoscaling_policy":                           resourceDataprocAutoscalingPolicy(),
 			"google_datastore_index":                                       resourceDatastoreIndex(),
 			"google_deployment_manager_deployment":                         resourceDeploymentManagerDeployment(),
@@ -1171,6 +1181,7 @@ func providerConfigure(d *schema.ResourceData, p *schema.Provider, terraformVers
 	config.ContainerAnalysisBasePath = d.Get("container_analysis_custom_endpoint").(string)
 	config.DataCatalogBasePath = d.Get("data_catalog_custom_endpoint").(string)
 	config.DataFusionBasePath = d.Get("data_fusion_custom_endpoint").(string)
+	config.DataLossPreventionBasePath = d.Get("data_loss_prevention_custom_endpoint").(string)
 	config.DataprocBasePath = d.Get("dataproc_custom_endpoint").(string)
 	config.DatastoreBasePath = d.Get("datastore_custom_endpoint").(string)
 	config.DeploymentManagerBasePath = d.Get("deployment_manager_custom_endpoint").(string)
