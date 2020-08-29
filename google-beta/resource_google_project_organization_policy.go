@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/cloudresourcemanager/v1"
 )
 
@@ -87,13 +87,27 @@ func resourceGoogleProjectOrganizationPolicyRead(d *schema.ResourceData, meta in
 		return handleNotFoundError(err, d, fmt.Sprintf("Organization policy for %s", project))
 	}
 
-	d.Set("constraint", policy.Constraint)
-	d.Set("boolean_policy", flattenBooleanOrganizationPolicy(policy.BooleanPolicy))
-	d.Set("list_policy", flattenListOrganizationPolicy(policy.ListPolicy))
-	d.Set("restore_policy", flattenRestoreOrganizationPolicy(policy.RestoreDefault))
-	d.Set("version", policy.Version)
-	d.Set("etag", policy.Etag)
-	d.Set("update_time", policy.UpdateTime)
+	if err := d.Set("constraint", policy.Constraint); err != nil {
+		return fmt.Errorf("Error reading constraint: %s", err)
+	}
+	if err := d.Set("boolean_policy", flattenBooleanOrganizationPolicy(policy.BooleanPolicy)); err != nil {
+		return fmt.Errorf("Error reading boolean_policy: %s", err)
+	}
+	if err := d.Set("list_policy", flattenListOrganizationPolicy(policy.ListPolicy)); err != nil {
+		return fmt.Errorf("Error reading list_policy: %s", err)
+	}
+	if err := d.Set("restore_policy", flattenRestoreOrganizationPolicy(policy.RestoreDefault)); err != nil {
+		return fmt.Errorf("Error reading restore_policy: %s", err)
+	}
+	if err := d.Set("version", policy.Version); err != nil {
+		return fmt.Errorf("Error reading version: %s", err)
+	}
+	if err := d.Set("etag", policy.Etag); err != nil {
+		return fmt.Errorf("Error reading etag: %s", err)
+	}
+	if err := d.Set("update_time", policy.UpdateTime); err != nil {
+		return fmt.Errorf("Error reading update_time: %s", err)
+	}
 
 	return nil
 }

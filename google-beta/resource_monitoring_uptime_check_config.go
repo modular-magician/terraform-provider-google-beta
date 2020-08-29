@@ -260,52 +260,6 @@ func resourceMonitoringUptimeCheckConfig() *schema.Resource {
 				Computed:    true,
 				Description: `The id of the uptime check`,
 			},
-			"is_internal": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Removed:  "This field never worked, and will be removed in 3.0.0.",
-				Computed: true,
-			},
-			"internal_checkers": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Removed:  "This field never worked, and will be removed in 3.0.0.",
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"display_name": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Removed:  "This field never worked, and will be removed in 3.0.0.",
-							Computed: true,
-						},
-						"gcp_zone": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Removed:  "This field never worked, and will be removed in 3.0.0.",
-							Computed: true,
-						},
-						"name": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Removed:  "This field never worked, and will be removed in 3.0.0.",
-							Computed: true,
-						},
-						"network": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Removed:  "This field never worked, and will be removed in 3.0.0.",
-							Computed: true,
-						},
-						"peer_project_id": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Removed:  "This field never worked, and will be removed in 3.0.0.",
-							Computed: true,
-						},
-					},
-				},
-			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -431,7 +385,9 @@ func resourceMonitoringUptimeCheckConfigCreate(d *schema.ResourceData, meta inte
 			return fmt.Errorf("Create response didn't contain critical fields. Create may not have succeeded.")
 		}
 	}
-	d.Set("name", name.(string))
+	if err := d.Set("name", name.(string)); err != nil {
+		return fmt.Errorf("Error setting name: %s", err)
+	}
 	d.SetId(name.(string))
 
 	return resourceMonitoringUptimeCheckConfigRead(d, meta)

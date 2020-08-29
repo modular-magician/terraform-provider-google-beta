@@ -7,10 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	computeBeta "google.golang.org/api/compute/v0.beta"
 )
@@ -36,13 +35,6 @@ func resourceComputeRegionInstanceGroupManager() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: `The base instance name to use for instances in this group. The value must be a valid RFC1035 name. Supported characters are lowercase letters, numbers, and hyphens (-). Instances are named by appending a hyphen and a random four-character string to the base instance name.`,
-			},
-
-			"instance_template": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Removed:     "This field has been replaced by `version.instance_template` in 3.0.0",
-				Description: `The full URL to an instance template from which all new instances of this version will be created.`,
 			},
 
 			"version": {
@@ -156,13 +148,6 @@ func resourceComputeRegionInstanceGroupManager() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `The URL of the created resource.`,
-			},
-
-			"update_strategy": {
-				Type:     schema.TypeString,
-				Removed:  "This field is removed.",
-				Optional: true,
-				Computed: true,
 			},
 
 			"target_pools": {
@@ -430,24 +415,42 @@ func resourceComputeRegionInstanceGroupManagerRead(d *schema.ResourceData, meta 
 		return err
 	}
 
-	d.Set("base_instance_name", manager.BaseInstanceName)
-	d.Set("name", manager.Name)
-	d.Set("region", GetResourceNameFromSelfLink(manager.Region))
-	d.Set("description", manager.Description)
-	d.Set("project", project)
-	d.Set("target_size", manager.TargetSize)
+	if err := d.Set("base_instance_name", manager.BaseInstanceName); err != nil {
+		return fmt.Errorf("Error reading base_instance_name: %s", err)
+	}
+	if err := d.Set("name", manager.Name); err != nil {
+		return fmt.Errorf("Error reading name: %s", err)
+	}
+	if err := d.Set("region", GetResourceNameFromSelfLink(manager.Region)); err != nil {
+		return fmt.Errorf("Error reading region: %s", err)
+	}
+	if err := d.Set("description", manager.Description); err != nil {
+		return fmt.Errorf("Error reading description: %s", err)
+	}
+	if err := d.Set("project", project); err != nil {
+		return fmt.Errorf("Error reading project: %s", err)
+	}
+	if err := d.Set("target_size", manager.TargetSize); err != nil {
+		return fmt.Errorf("Error reading target_size: %s", err)
+	}
 	if err := d.Set("target_pools", mapStringArr(manager.TargetPools, ConvertSelfLinkToV1)); err != nil {
 		return fmt.Errorf("Error setting target_pools in state: %s", err.Error())
 	}
 	if err := d.Set("named_port", flattenNamedPortsBeta(manager.NamedPorts)); err != nil {
 		return fmt.Errorf("Error setting named_port in state: %s", err.Error())
 	}
-	d.Set("fingerprint", manager.Fingerprint)
-	d.Set("instance_group", ConvertSelfLinkToV1(manager.InstanceGroup))
+	if err := d.Set("fingerprint", manager.Fingerprint); err != nil {
+		return fmt.Errorf("Error reading fingerprint: %s", err)
+	}
+	if err := d.Set("instance_group", ConvertSelfLinkToV1(manager.InstanceGroup)); err != nil {
+		return fmt.Errorf("Error reading instance_group: %s", err)
+	}
 	if err := d.Set("distribution_policy_zones", flattenDistributionPolicy(manager.DistributionPolicy)); err != nil {
 		return err
 	}
-	d.Set("self_link", ConvertSelfLinkToV1(manager.SelfLink))
+	if err := d.Set("self_link", ConvertSelfLinkToV1(manager.SelfLink)); err != nil {
+		return fmt.Errorf("Error reading self_link: %s", err)
+	}
 
 	if err := d.Set("auto_healing_policies", flattenAutoHealingPolicies(manager.AutoHealingPolicies)); err != nil {
 		return fmt.Errorf("Error setting auto_healing_policies in state: %s", err.Error())
@@ -555,7 +558,6 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("named_port")
 	}
 
 	// target size should use resize
@@ -573,7 +575,6 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("target_size")
 	}
 
 	d.Partial(false)
@@ -720,11 +721,13 @@ func hashZoneFromSelfLinkOrResourceName(value interface{}) int {
 	parts := strings.Split(value.(string), "/")
 	resource := parts[len(parts)-1]
 
-	return hashcode.String(resource)
+	return hashcode(resource)
 }
 
 func resourceRegionInstanceGroupManagerStateImporter(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	d.Set("wait_for_instances", false)
+	if err := d.Set("wait_for_instances", false); err != nil {
+		return nil, fmt.Errorf("Error reading wait_for_instances: %s", err)
+	}
 	config := meta.(*Config)
 	if err := parseImportId([]string{"projects/(?P<project>[^/]+)/regions/(?P<region>[^/]+)/instanceGroupManagers/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<name>[^/]+)", "(?P<region>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
 		return nil, err

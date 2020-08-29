@@ -4,7 +4,7 @@ import (
 	"fmt"
 	neturl "net/url"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 type monitoringServiceTypeStateSetter func(map[string]interface{}, *schema.ResourceData, interface{}) error
@@ -92,7 +92,9 @@ func dataSourceMonitoringServiceTypeReadFromList(listFilter string, typeStateSet
 		}
 
 		name := flattenMonitoringServiceName(res["name"], d, config).(string)
-		d.Set("name", name)
+		if err := d.Set("name", name); err != nil {
+			return fmt.Errorf("Error reading name: %s", err)
+		}
 		d.SetId(name)
 
 		return nil

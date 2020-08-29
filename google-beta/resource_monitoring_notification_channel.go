@@ -15,6 +15,7 @@
 package google
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"reflect"
@@ -25,7 +26,7 @@ import (
 
 var sensitiveLabels = []string{"auth_token", "service_key", "password"}
 
-func sensitiveLabelCustomizeDiff(diff *schema.ResourceDiff, v interface{}) error {
+func sensitiveLabelCustomizeDiff(_ context.Context, diff *schema.ResourceDiff, v interface{}) error {
 	for _, sl := range sensitiveLabels {
 		mapLabel := diff.Get("labels." + sl).(string)
 		authLabel := diff.Get("sensitive_labels.0." + sl).(string)
@@ -256,7 +257,9 @@ func resourceMonitoringNotificationChannelCreate(d *schema.ResourceData, meta in
 			return fmt.Errorf("Create response didn't contain critical fields. Create may not have succeeded.")
 		}
 	}
-	d.Set("name", name.(string))
+	if err := d.Set("name", name.(string)); err != nil {
+		return fmt.Errorf("Error setting name: %s", err)
+	}
 	d.SetId(name.(string))
 
 	return resourceMonitoringNotificationChannelRead(d, meta)

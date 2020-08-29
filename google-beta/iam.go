@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/errwrap"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/cloudresourcemanager/v1"
 )
 
@@ -358,13 +358,17 @@ func listFromIamAuditConfigMap(acMap map[string]map[string]map[string]struct{}) 
 
 func jsonPolicyDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
 	var oldPolicy, newPolicy cloudresourcemanager.Policy
-	if err := json.Unmarshal([]byte(old), &oldPolicy); err != nil {
-		log.Printf("[ERROR] Could not unmarshal old policy %s: %v", old, err)
-		return false
+	if old != "" {
+		if err := json.Unmarshal([]byte(old), &oldPolicy); err != nil {
+			log.Printf("[ERROR] Could not unmarshal old policy %s: %v", old, err)
+			return false
+		}
 	}
-	if err := json.Unmarshal([]byte(new), &newPolicy); err != nil {
-		log.Printf("[ERROR] Could not unmarshal new policy %s: %v", new, err)
-		return false
+	if new != "" {
+		if err := json.Unmarshal([]byte(new), &newPolicy); err != nil {
+			log.Printf("[ERROR] Could not unmarshal new policy %s: %v", new, err)
+			return false
+		}
 	}
 	return compareIamPolicies(&newPolicy, &oldPolicy)
 }

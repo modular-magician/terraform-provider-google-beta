@@ -23,7 +23,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -159,11 +158,11 @@ one target is given.`,
 							Set: func(v interface{}) int {
 								raw := v.(map[string]interface{})
 								if address, ok := raw["ipv4_address"]; ok {
-									hashcode.String(address.(string))
+									hashcode(address.(string))
 								}
 								var buf bytes.Buffer
 								schema.SerializeResourceForHash(&buf, raw, dnsManagedZoneForwardingConfigTargetNameServersSchema())
-								return hashcode.String(buf.String())
+								return hashcode(buf.String())
 							},
 						},
 					},
@@ -231,7 +230,7 @@ blocks in an update and then apply another update adding all of them back simult
 								}
 								var buf bytes.Buffer
 								schema.SerializeResourceForHash(&buf, raw, dnsManagedZonePrivateVisibilityConfigNetworksSchema())
-								return hashcode.String(buf.String())
+								return hashcode(buf.String())
 							},
 						},
 					},
@@ -778,7 +777,7 @@ func flattenDNSManagedZonePrivateVisibilityConfigNetworks(v interface{}, d *sche
 		}
 		var buf bytes.Buffer
 		schema.SerializeResourceForHash(&buf, raw, dnsManagedZonePrivateVisibilityConfigNetworksSchema())
-		return hashcode.String(buf.String())
+		return hashcode(buf.String())
 	}, []interface{}{})
 	for _, raw := range l {
 		original := raw.(map[string]interface{})
@@ -817,11 +816,11 @@ func flattenDNSManagedZoneForwardingConfigTargetNameServers(v interface{}, d *sc
 	transformed := schema.NewSet(func(v interface{}) int {
 		raw := v.(map[string]interface{})
 		if address, ok := raw["ipv4_address"]; ok {
-			hashcode.String(address.(string))
+			hashcode(address.(string))
 		}
 		var buf bytes.Buffer
 		schema.SerializeResourceForHash(&buf, raw, dnsManagedZoneForwardingConfigTargetNameServersSchema())
-		return hashcode.String(buf.String())
+		return hashcode(buf.String())
 	}, []interface{}{})
 	for _, raw := range l {
 		original := raw.(map[string]interface{})

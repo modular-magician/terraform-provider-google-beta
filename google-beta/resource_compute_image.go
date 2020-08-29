@@ -476,9 +476,6 @@ func resourceComputeImageUpdate(d *schema.ResourceData, meta interface{}) error 
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("labels")
-		d.SetPartial("label_fingerprint")
 	}
 
 	d.Partial(false)

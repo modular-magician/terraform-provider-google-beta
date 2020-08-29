@@ -15,6 +15,7 @@
 package google
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"reflect"
@@ -24,7 +25,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
 
-func sslPolicyCustomizeDiff(diff *schema.ResourceDiff, v interface{}) error {
+func sslPolicyCustomizeDiff(_ context.Context, diff *schema.ResourceDiff, v interface{}) error {
 	profile := diff.Get("profile")
 	customFeaturesCount := diff.Get("custom_features.#")
 

@@ -17,7 +17,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/errwrap"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/cloudresourcemanager/v1"
 )
 
@@ -60,7 +60,9 @@ func IapAppEngineVersionIamUpdaterProducer(d *schema.ResourceData, config *Confi
 
 	project, _ := getProject(d, config)
 	if project != "" {
-		d.Set("project", project)
+		if err := d.Set("project", project); err != nil {
+			return nil, fmt.Errorf("Error reading project: %s", err)
+		}
 	}
 	values["project"] = project
 	if v, ok := d.GetOk("app_id"); ok {
@@ -94,10 +96,18 @@ func IapAppEngineVersionIamUpdaterProducer(d *schema.ResourceData, config *Confi
 		Config:    config,
 	}
 
-	d.Set("project", u.project)
-	d.Set("app_id", u.appId)
-	d.Set("service", u.service)
-	d.Set("version_id", u.GetResourceId())
+	if err := d.Set("project", u.project); err != nil {
+		return nil, fmt.Errorf("Error reading project: %s", err)
+	}
+	if err := d.Set("app_id", u.appId); err != nil {
+		return nil, fmt.Errorf("Error reading app_id: %s", err)
+	}
+	if err := d.Set("service", u.service); err != nil {
+		return nil, fmt.Errorf("Error reading service: %s", err)
+	}
+	if err := d.Set("version_id", u.GetResourceId()); err != nil {
+		return nil, fmt.Errorf("Error reading version_id: %s", err)
+	}
 
 	return u, nil
 }
@@ -127,7 +137,9 @@ func IapAppEngineVersionIdParseFunc(d *schema.ResourceData, config *Config) erro
 		d:         d,
 		Config:    config,
 	}
-	d.Set("version_id", u.GetResourceId())
+	if err := d.Set("version_id", u.GetResourceId()); err != nil {
+		return fmt.Errorf("Error reading version_id: %s", err)
+	}
 	d.SetId(u.GetResourceId())
 	return nil
 }

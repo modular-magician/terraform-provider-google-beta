@@ -419,9 +419,6 @@ func resourceComputeSnapshotUpdate(d *schema.ResourceData, meta interface{}) err
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("labels")
-		d.SetPartial("label_fingerprint")
 	}
 
 	d.Partial(false)
@@ -695,6 +692,8 @@ func expandComputeSnapshotSourceDiskEncryptionKeyRawKey(v interface{}, d Terrafo
 }
 
 func resourceComputeSnapshotDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	d.Set("source_disk_link", ConvertSelfLinkToV1(res["sourceDisk"].(string)))
+	if err := d.Set("source_disk_link", ConvertSelfLinkToV1(res["sourceDisk"].(string))); err != nil {
+		return nil, fmt.Errorf("Error setting source_disk_link: %s", err)
+	}
 	return res, nil
 }

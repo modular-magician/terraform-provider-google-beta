@@ -17,7 +17,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/errwrap"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/cloudresourcemanager/v1"
 )
 
@@ -59,7 +59,9 @@ func ServiceDirectoryServiceIamUpdaterProducer(d *schema.ResourceData, config *C
 		Config: config,
 	}
 
-	d.Set("name", u.GetResourceId())
+	if err := d.Set("name", u.GetResourceId()); err != nil {
+		return nil, fmt.Errorf("Error reading name: %s", err)
+	}
 
 	return u, nil
 }
@@ -81,7 +83,9 @@ func ServiceDirectoryServiceIdParseFunc(d *schema.ResourceData, config *Config) 
 		d:      d,
 		Config: config,
 	}
-	d.Set("name", u.GetResourceId())
+	if err := d.Set("name", u.GetResourceId()); err != nil {
+		return fmt.Errorf("Error reading name: %s", err)
+	}
 	d.SetId(u.GetResourceId())
 	return nil
 }

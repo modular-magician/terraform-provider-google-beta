@@ -15,6 +15,7 @@
 package google
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"reflect"
@@ -91,7 +92,7 @@ func validateInternalBackendServiceBackends(backends []interface{}, d *schema.Re
 	return nil
 }
 
-func customDiffRegionBackendService(d *schema.ResourceDiff, meta interface{}) error {
+func customDiffRegionBackendService(_ context.Context, d *schema.ResourceDiff, meta interface{}) error {
 	v, ok := d.GetOk("backend")
 	if !ok {
 		return nil
@@ -1073,7 +1074,9 @@ func resourceComputeRegionBackendServiceRead(d *schema.ResourceData, meta interf
 		casted := flattenedProp.([]interface{})[0]
 		if casted != nil {
 			for k, v := range casted.(map[string]interface{}) {
-				d.Set(k, v)
+				if err := d.Set(k, v); err != nil {
+					return fmt.Errorf("Error setting %s: %s", k, err)
+				}
 			}
 		}
 	}

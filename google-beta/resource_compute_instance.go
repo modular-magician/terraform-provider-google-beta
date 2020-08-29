@@ -2,6 +2,7 @@
 package google
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
@@ -11,10 +12,10 @@ import (
 	"time"
 
 	"github.com/hashicorp/errwrap"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/customdiff"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/mitchellh/hashstructure"
 	computeBeta "google.golang.org/api/compute/v0.beta"
 	"google.golang.org/api/compute/v1"
@@ -705,7 +706,7 @@ func resourceComputeInstance() *schema.Resource {
 		},
 		CustomizeDiff: customdiff.All(
 			customdiff.If(
-				func(d *schema.ResourceDiff, meta interface{}) bool {
+				func(_ context.Context, d *schema.ResourceDiff, meta interface{}) bool {
 					return d.HasChange("guest_accelerator")
 				},
 				suppressEmptyGuestAcceleratorDiff,
@@ -957,7 +958,9 @@ func resourceComputeInstanceRead(d *schema.ResourceData, meta interface{}) error
 	// we shouldn't move the remote metadata.startup-script to metadata_startup_script.  Otherwise,
 	// we should.
 	if _, ok := existingMetadata["startup-script"]; !ok {
-		d.Set("metadata_startup_script", md["startup-script"])
+		if err := d.Set("metadata_startup_script", md["startup-script"]); err != nil {
+			return fmt.Errorf("Error reading metadata_startup_script: %s", err)
+		}
 		// Note that here we delete startup-script from our metadata list. This is to prevent storing the startup-script
 		// as a value in the metadata since the config specifically tracks it under 'metadata_startup_script'
 		delete(md, "startup-script")
@@ -969,9 +972,15 @@ func resourceComputeInstanceRead(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error setting metadata: %s", err)
 	}
 
-	d.Set("metadata_fingerprint", instance.Metadata.Fingerprint)
-	d.Set("can_ip_forward", instance.CanIpForward)
-	d.Set("machine_type", GetResourceNameFromSelfLink(instance.MachineType))
+	if err := d.Set("metadata_fingerprint", instance.Metadata.Fingerprint); err != nil {
+		return fmt.Errorf("Error reading metadata_fingerprint: %s", err)
+	}
+	if err := d.Set("can_ip_forward", instance.CanIpForward); err != nil {
+		return fmt.Errorf("Error reading can_ip_forward: %s", err)
+	}
+	if err := d.Set("machine_type", GetResourceNameFromSelfLink(instance.MachineType)); err != nil {
+		return fmt.Errorf("Error reading machine_type: %s", err)
+	}
 
 	// Set the networks
 	// Use the first external IP found for the default connection info.
@@ -999,8 +1008,12 @@ func resourceComputeInstanceRead(d *schema.ResourceData, meta interface{}) error
 
 	// Set the tags fingerprint if there is one.
 	if instance.Tags != nil {
-		d.Set("tags_fingerprint", instance.Tags.Fingerprint)
-		d.Set("tags", convertStringArrToInterface(instance.Tags.Items))
+		if err := d.Set("tags_fingerprint", instance.Tags.Fingerprint); err != nil {
+			return fmt.Errorf("Error reading tags_fingerprint: %s", err)
+		}
+		if err := d.Set("tags", convertStringArrToInterface(instance.Tags.Items)); err != nil {
+			return fmt.Errorf("Error reading tags: %s", err)
+		}
 	}
 
 	if err := d.Set("labels", instance.Labels); err != nil {
@@ -1008,7 +1021,9 @@ func resourceComputeInstanceRead(d *schema.ResourceData, meta interface{}) error
 	}
 
 	if instance.LabelFingerprint != "" {
-		d.Set("label_fingerprint", instance.LabelFingerprint)
+		if err := d.Set("label_fingerprint", instance.LabelFingerprint); err != nil {
+			return fmt.Errorf("Error reading label_fingerprint: %s", err)
+		}
 	}
 
 	attachedDiskSources := make(map[string]int)
@@ -1042,7 +1057,9 @@ func resourceComputeInstanceRead(d *schema.ResourceData, meta interface{}) error
 	scratchDisks := []map[string]interface{}{}
 	for _, disk := range instance.Disks {
 		if disk.Boot {
-			d.Set("boot_disk", flattenBootDisk(d, disk, config))
+			if err := d.Set("boot_disk", flattenBootDisk(d, disk, config)); err != nil {
+				return fmt.Errorf("Error reading boot_disk: %s", err)
+			}
 		} else if disk.Type == "SCRATCH" {
 			scratchDisks = append(scratchDisks, flattenScratchDisk(disk))
 		} else {
@@ -1092,7 +1109,9 @@ func resourceComputeInstanceRead(d *schema.ResourceData, meta interface{}) error
 		}
 	}
 
-	d.Set("resource_policies", instance.ResourcePolicies)
+	if err := d.Set("resource_policies", instance.ResourcePolicies); err != nil {
+		return fmt.Errorf("Error reading resource_policies: %s", err)
+	}
 
 	// Remove nils from map in case there were disks in the config that were not present on read;
 	// i.e. a disk was detached out of band
@@ -1105,27 +1124,67 @@ func resourceComputeInstanceRead(d *schema.ResourceData, meta interface{}) error
 
 	zone := GetResourceNameFromSelfLink(instance.Zone)
 
-	d.Set("service_account", flattenServiceAccounts(instance.ServiceAccounts))
-	d.Set("attached_disk", ads)
-	d.Set("scratch_disk", scratchDisks)
-	d.Set("scheduling", flattenScheduling(instance.Scheduling))
-	d.Set("guest_accelerator", flattenGuestAccelerators(instance.GuestAccelerators))
-	d.Set("shielded_instance_config", flattenShieldedVmConfig(instance.ShieldedInstanceConfig))
-	d.Set("enable_display", flattenEnableDisplay(instance.DisplayDevice))
-	d.Set("cpu_platform", instance.CpuPlatform)
-	d.Set("min_cpu_platform", instance.MinCpuPlatform)
-	d.Set("deletion_protection", instance.DeletionProtection)
-	d.Set("self_link", ConvertSelfLinkToV1(instance.SelfLink))
-	d.Set("instance_id", fmt.Sprintf("%d", instance.Id))
-	d.Set("project", project)
-	d.Set("zone", zone)
-	d.Set("name", instance.Name)
-	d.Set("description", instance.Description)
-	d.Set("hostname", instance.Hostname)
-	d.Set("current_status", instance.Status)
-	d.Set("confidential_instance_config", flattenConfidentialInstanceConfig(instance.ConfidentialInstanceConfig))
+	if err := d.Set("service_account", flattenServiceAccounts(instance.ServiceAccounts)); err != nil {
+		return fmt.Errorf("Error reading service_account: %s", err)
+	}
+	if err := d.Set("attached_disk", ads); err != nil {
+		return fmt.Errorf("Error reading attached_disk: %s", err)
+	}
+	if err := d.Set("scratch_disk", scratchDisks); err != nil {
+		return fmt.Errorf("Error reading scratch_disk: %s", err)
+	}
+	if err := d.Set("scheduling", flattenScheduling(instance.Scheduling)); err != nil {
+		return fmt.Errorf("Error reading scheduling: %s", err)
+	}
+	if err := d.Set("guest_accelerator", flattenGuestAccelerators(instance.GuestAccelerators)); err != nil {
+		return fmt.Errorf("Error reading guest_accelerator: %s", err)
+	}
+	if err := d.Set("shielded_instance_config", flattenShieldedVmConfig(instance.ShieldedInstanceConfig)); err != nil {
+		return fmt.Errorf("Error reading shielded_instance_config: %s", err)
+	}
+	if err := d.Set("enable_display", flattenEnableDisplay(instance.DisplayDevice)); err != nil {
+		return fmt.Errorf("Error reading enable_display: %s", err)
+	}
+	if err := d.Set("cpu_platform", instance.CpuPlatform); err != nil {
+		return fmt.Errorf("Error reading cpu_platform: %s", err)
+	}
+	if err := d.Set("min_cpu_platform", instance.MinCpuPlatform); err != nil {
+		return fmt.Errorf("Error reading min_cpu_platform: %s", err)
+	}
+	if err := d.Set("deletion_protection", instance.DeletionProtection); err != nil {
+		return fmt.Errorf("Error reading deletion_protection: %s", err)
+	}
+	if err := d.Set("self_link", ConvertSelfLinkToV1(instance.SelfLink)); err != nil {
+		return fmt.Errorf("Error reading self_link: %s", err)
+	}
+	if err := d.Set("instance_id", fmt.Sprintf("%d", instance.Id)); err != nil {
+		return fmt.Errorf("Error reading instance_id: %s", err)
+	}
+	if err := d.Set("project", project); err != nil {
+		return fmt.Errorf("Error reading project: %s", err)
+	}
+	if err := d.Set("zone", zone); err != nil {
+		return fmt.Errorf("Error reading zone: %s", err)
+	}
+	if err := d.Set("name", instance.Name); err != nil {
+		return fmt.Errorf("Error reading name: %s", err)
+	}
+	if err := d.Set("description", instance.Description); err != nil {
+		return fmt.Errorf("Error reading description: %s", err)
+	}
+	if err := d.Set("hostname", instance.Hostname); err != nil {
+		return fmt.Errorf("Error reading hostname: %s", err)
+	}
+	if err := d.Set("current_status", instance.Status); err != nil {
+		return fmt.Errorf("Error reading current_status: %s", err)
+	}
+	if err := d.Set("confidential_instance_config", flattenConfidentialInstanceConfig(instance.ConfidentialInstanceConfig)); err != nil {
+		return fmt.Errorf("Error reading confidential_instance_config: %s", err)
+	}
 	if d.Get("desired_status") != "" {
-		d.Set("desired_status", instance.Status)
+		if err := d.Set("desired_status", instance.Status); err != nil {
+			return fmt.Errorf("Error reading desired_status: %s", err)
+		}
 	}
 
 	d.SetId(fmt.Sprintf("projects/%s/zones/%s/instances/%s", project, zone, instance.Name))
@@ -1196,8 +1255,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("metadata")
 	}
 
 	if d.HasChange("tags") {
@@ -1216,8 +1273,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 		if opErr != nil {
 			return opErr
 		}
-
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("labels") {
@@ -1234,8 +1289,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 		if opErr != nil {
 			return opErr
 		}
-
-		d.SetPartial("labels")
 	}
 
 	if schedulingHasChange(d) {
@@ -1256,8 +1309,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 		if opErr != nil {
 			return opErr
 		}
-
-		d.SetPartial("scheduling")
 	}
 
 	networkInterfacesCount := d.Get("network_interface.#").(int)
@@ -1365,7 +1416,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 				}
 			}
 		}
-		d.SetPartial("network_interface")
 	}
 
 	if d.HasChange("attached_disk") {
@@ -1458,8 +1508,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 			}
 			log.Printf("[DEBUG] Successfully attached disk %s", disk.Source)
 		}
-
-		d.SetPartial("attached_disk")
 	}
 
 	// d.HasChange("service_account") is oversensitive: see https://github.com/hashicorp/terraform/issues/17411
@@ -1490,8 +1538,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 		if opErr != nil {
 			return opErr
 		}
-
-		d.SetPartial("deletion_protection")
 	}
 
 	needToStopInstanceBeforeUpdating := scopesChange || d.HasChange("service_account.0.email") || d.HasChange("machine_type") || d.HasChange("min_cpu_platform") || d.HasChange("enable_display") || d.HasChange("shielded_instance_config")
@@ -1520,7 +1566,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 				return opErr
 			}
 		}
-		d.SetPartial("desired_status")
 	}
 
 	// Attributes which can only be changed if the instance is stopped
@@ -1562,7 +1607,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 			if opErr != nil {
 				return opErr
 			}
-			d.SetPartial("machine_type")
 		}
 
 		if d.HasChange("min_cpu_platform") {
@@ -1584,7 +1628,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 			if opErr != nil {
 				return opErr
 			}
-			d.SetPartial("min_cpu_platform")
 		}
 
 		if d.HasChange("service_account.0.email") || scopesChange {
@@ -1603,7 +1646,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 			if opErr != nil {
 				return opErr
 			}
-			d.SetPartial("service_account")
 		}
 
 		if d.HasChange("enable_display") {
@@ -1619,7 +1661,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 			if opErr != nil {
 				return opErr
 			}
-			d.SetPartial("enable_display")
 		}
 
 		if d.HasChange("shielded_instance_config") {
@@ -1635,8 +1676,6 @@ func resourceComputeInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 			if opErr != nil {
 				return opErr
 			}
-
-			d.SetPartial("shielded_instance_config")
 		}
 
 		if (statusBeforeUpdate == "RUNNING" && desiredStatus != "TERMINATED") ||
@@ -1797,7 +1836,7 @@ func expandInstanceGuestAccelerators(d TerraformResourceData, config *Config) ([
 // After reconciling the desired and actual state, we would otherwise see a
 // perpetual resembling:
 // 		[] != [{"count":0, "type": "nvidia-tesla-k80"}]
-func suppressEmptyGuestAcceleratorDiff(d *schema.ResourceDiff, meta interface{}) error {
+func suppressEmptyGuestAcceleratorDiff(_ context.Context, d *schema.ResourceDiff, meta interface{}) error {
 	oldi, newi := d.GetChange("guest_accelerator")
 
 	old, ok := oldi.([]interface{})
@@ -1829,7 +1868,7 @@ func suppressEmptyGuestAcceleratorDiff(d *schema.ResourceDiff, meta interface{})
 }
 
 // return an error if the desired_status field is set to a value other than RUNNING on Create.
-func desiredStatusDiff(diff *schema.ResourceDiff, meta interface{}) error {
+func desiredStatusDiff(_ context.Context, diff *schema.ResourceDiff, meta interface{}) error {
 	// when creating an instance, name is not set
 	oldName, _ := diff.GetChange("name")
 

@@ -22,7 +22,6 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
@@ -192,7 +191,7 @@ specifies REQUIRE_ATTESTATION, otherwise it must be empty.`,
 					}
 					var buf bytes.Buffer
 					schema.SerializeResourceForHash(&buf, copy, resourceBinaryAuthorizationPolicy().Schema["cluster_admission_rules"].Elem.(*schema.Resource))
-					return hashcode.String(buf.String())
+					return hashcode(buf.String())
 				},
 			},
 			"description": {

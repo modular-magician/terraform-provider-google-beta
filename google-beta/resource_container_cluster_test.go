@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
@@ -424,7 +424,7 @@ func TestAccContainerCluster_withInvalidReleaseChannel(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccContainerCluster_withReleaseChannelEnabled(clusterName, "CANARY"),
-				ExpectError: regexp.MustCompile(`config is invalid: expected release_channel\.0\.channel to be one of \[UNSPECIFIED RAPID REGULAR STABLE\], got CANARY`),
+				ExpectError: regexp.MustCompile(`expected release_channel\.0\.channel to be one of \[UNSPECIFIED RAPID REGULAR STABLE\], got CANARY`),
 			},
 		},
 	})
@@ -1609,7 +1609,7 @@ func TestAccContainerCluster_withInvalidAutoscalingProfile(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccContainerCluster_withAutoscalingProfile(clusterName, "AS_CHEAP_AS_POSSIBLE"),
-				ExpectError: regexp.MustCompile(`config is invalid: expected cluster_autoscaling\.0\.autoscaling_profile to be one of \[BALANCED OPTIMIZE_UTILIZATION\], got AS_CHEAP_AS_POSSIBLE`),
+				ExpectError: regexp.MustCompile(`expected cluster_autoscaling\.0\.autoscaling_profile to be one of \[BALANCED OPTIMIZE_UTILIZATION\], got AS_CHEAP_AS_POSSIBLE`),
 			},
 		},
 	})
@@ -1954,6 +1954,10 @@ func checkMatch(attributes map[string]string, attr string, gcp interface{}) stri
 }
 
 func checkListMatch(attributes map[string]string, attr string, gcpList []string) string {
+	if attributes[attr+".#"] == "" {
+		attributes[attr+".#"] = "0"
+	}
+
 	num, err := strconv.Atoi(attributes[attr+".#"])
 	if err != nil {
 		return fmt.Sprintf("Error in number conversion for attribute %s: %s", attr, err)
@@ -1972,6 +1976,10 @@ func checkListMatch(attributes map[string]string, attr string, gcpList []string)
 }
 
 func checkMapMatch(attributes map[string]string, attr string, gcpMap map[string]string) string {
+	if attributes[attr+".%"] == "" {
+		attributes[attr+".%"] = "0"
+	}
+
 	num, err := strconv.Atoi(attributes[attr+".%"])
 	if err != nil {
 		return fmt.Sprintf("Error in number conversion for attribute %s: %s", attr, err)

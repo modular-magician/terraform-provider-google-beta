@@ -313,8 +313,6 @@ func resourceComputeTargetSslProxyUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("proxy_header")
 	}
 	if d.HasChange("backend_service") {
 		obj := make(map[string]interface{})
@@ -349,8 +347,6 @@ func resourceComputeTargetSslProxyUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("backend_service")
 	}
 	if d.HasChange("ssl_certificates") {
 		obj := make(map[string]interface{})
@@ -385,8 +381,6 @@ func resourceComputeTargetSslProxyUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("ssl_certificates")
 	}
 	if d.HasChange("ssl_policy") {
 		obj := make(map[string]interface{})
@@ -421,8 +415,6 @@ func resourceComputeTargetSslProxyUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("ssl_policy")
 	}
 
 	d.Partial(false)

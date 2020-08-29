@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cloudidentity "google.golang.org/api/cloudidentity/v1beta1"
 )
 
@@ -59,7 +59,9 @@ func dataSourceGoogleCloudIdentityGroupsRead(d *schema.ResourceData, meta interf
 		return handleNotFoundError(err, d, fmt.Sprintf("CloudIdentityGroups %q", d.Id()))
 	}
 
-	d.Set("groups", result)
+	if err := d.Set("groups", result); err != nil {
+		return fmt.Errorf("Error reading groups: %s", err)
+	}
 	d.SetId(time.Now().UTC().String())
 	return nil
 }

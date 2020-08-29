@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccCloudIoTRegistry_update(t *testing.T) {
@@ -86,20 +86,20 @@ resource "google_cloudiot_registry" "%s" {
     subfolder_matches = ""
   }
 
-  state_notification_config = {
+  state_notification_config {
     pubsub_topic_name = google_pubsub_topic.default-devicestatus.id
   }
 
-  mqtt_config = {
+  mqtt_config {
     mqtt_enabled_state = "MQTT_DISABLED"
   }
 
-  http_config = {
+  http_config {
     http_enabled_state = "HTTP_DISABLED"
   }
 
   credentials {
-    public_key_certificate = {
+    public_key_certificate {
       format      = "X509_CERTIFICATE_PEM"
       certificate = file("test-fixtures/rsa_cert.pem")
     }

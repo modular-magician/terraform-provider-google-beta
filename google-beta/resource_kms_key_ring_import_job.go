@@ -76,7 +76,6 @@ versionTemplate on the CryptoKey you attempt to import into. Possible values: ["
 				Description: `Statement that was generated and signed by the key creator (for example, an HSM) at key creation time.
 Use this statement to verify attributes of the key as stored on the HSM, independently of Google.
 Only present if the chosen ImportMethod is one with a protection level of HSM.`,
-				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"content": {
@@ -108,7 +107,6 @@ This is in RFC3339 text format.`,
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: `The public key with which to wrap key material prior to import. Only returned if state is 'ACTIVE'.`,
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"pem": {
@@ -269,8 +267,12 @@ func resourceKMSKeyRingImportJobImport(d *schema.ResourceData, meta interface{})
 		)
 	}
 
-	d.Set("key_ring", stringParts[3])
-	d.Set("import_job_id", stringParts[5])
+	if err := d.Set("key_ring", stringParts[3]); err != nil {
+		return nil, fmt.Errorf("Error reading key_ring: %s", err)
+	}
+	if err := d.Set("import_job_id", stringParts[5]); err != nil {
+		return nil, fmt.Errorf("Error reading import_job_id: %s", err)
+	}
 	return []*schema.ResourceData{d}, nil
 }
 

@@ -3,7 +3,7 @@ package google
 import (
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceGoogleFirebaseWebApp() *schema.Resource {
@@ -28,6 +28,8 @@ func dataSourceGoogleFirebaseWebAppRead(d *schema.ResourceData, meta interface{}
 	}
 	name := fmt.Sprintf("projects/%s/webApps/%s", project, appId.(string))
 	d.SetId(name)
-	d.Set("name", name)
+	if err := d.Set("name", name); err != nil {
+		return fmt.Errorf("Error reading name: %s", err)
+	}
 	return resourceFirebaseWebAppRead(d, meta)
 }

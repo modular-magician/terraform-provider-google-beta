@@ -258,8 +258,6 @@ func resourceComputeTargetHttpProxyUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("url_map")
 	}
 
 	d.Partial(false)

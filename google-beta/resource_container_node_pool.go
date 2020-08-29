@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/customdiff"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	containerBeta "google.golang.org/api/container/v1beta1"
 )
 
@@ -53,20 +53,6 @@ func resourceContainerNodePool() *schema.Resource {
 					Required:    true,
 					ForceNew:    true,
 					Description: `The cluster to create the node pool for. Cluster must be present in location provided for zonal clusters.`,
-				},
-				"zone": {
-					Type:        schema.TypeString,
-					Optional:    true,
-					Removed:     "use location instead",
-					Computed:    true,
-					Description: `The zone of the cluster`,
-				},
-				"region": {
-					Type:        schema.TypeString,
-					Optional:    true,
-					Removed:     "use location instead",
-					Computed:    true,
-					Description: `The region of the cluster`,
 				},
 				"location": {
 					Type:        schema.TypeString,
@@ -369,11 +355,17 @@ func resourceContainerNodePoolRead(d *schema.ResourceData, meta interface{}) err
 	}
 
 	for k, v := range npMap {
-		d.Set(k, v)
+		if err := d.Set(k, v); err != nil {
+			return fmt.Errorf("Error setting %s: %s", k, err)
+		}
 	}
 
-	d.Set("location", nodePoolInfo.location)
-	d.Set("project", nodePoolInfo.project)
+	if err := d.Set("location", nodePoolInfo.location); err != nil {
+		return fmt.Errorf("Error reading location: %s", err)
+	}
+	if err := d.Set("project", nodePoolInfo.project); err != nil {
+		return fmt.Errorf("Error reading project: %s", err)
+	}
 
 	return nil
 }
@@ -416,7 +408,12 @@ func resourceContainerNodePoolDelete(d *schema.ResourceData, meta interface{}) e
 
 	_, err = containerNodePoolAwaitRestingState(config, nodePoolInfo.fullyQualifiedName(name), nodePoolInfo.project, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
-		return err
+		if isGoogleApiErrorWithCode(err, 404) {
+			log.Printf("node pool %q not found, doesn't need to be cleaned up", name)
+			return nil
+		} else {
+			return err
+		}
 	}
 
 	mutexKV.Lock(nodePoolInfo.lockKey())
@@ -722,10 +719,6 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
 		}
 
 		log.Printf("[INFO] Updated autoscaling in Node Pool %s", d.Id())
-
-		if prefix == "" {
-			d.SetPartial("autoscaling")
-		}
 	}
 
 	if d.HasChange(prefix + "node_config") {
@@ -866,9 +859,6 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
 			log.Printf("[INFO] Updated linux_node_config for node pool %s", name)
 		}
 
-		if prefix == "" {
-			d.SetPartial("node_config")
-		}
 	}
 
 	if d.HasChange(prefix + "node_count") {
@@ -900,10 +890,6 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
 		}
 
 		log.Printf("[INFO] GKE node pool %s size has been updated to %d", name, newSize)
-
-		if prefix == "" {
-			d.SetPartial("node_count")
-		}
 	}
 
 	if d.HasChange(prefix + "management") {
@@ -941,10 +927,6 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
 		}
 
 		log.Printf("[INFO] Updated management in Node Pool %s", name)
-
-		if prefix == "" {
-			d.SetPartial("management")
-		}
 	}
 
 	if d.HasChange(prefix + "version") {
@@ -975,10 +957,6 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
 		}
 
 		log.Printf("[INFO] Updated version in Node Pool %s", name)
-
-		if prefix == "" {
-			d.SetPartial("version")
-		}
 	}
 
 	if d.HasChange(prefix + "node_locations") {
@@ -1006,10 +984,6 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
 		}
 
 		log.Printf("[INFO] Updated node locations in Node Pool %s", name)
-
-		if prefix == "" {
-			d.SetPartial("node_locations")
-		}
 	}
 
 	if d.HasChange(prefix + "upgrade_settings") {
@@ -1043,10 +1017,6 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
 		}
 
 		log.Printf("[INFO] Updated upgrade settings in Node Pool %s", name)
-
-		if prefix == "" {
-			d.SetPartial("upgrade_settings")
-		}
 	}
 
 	return nil
