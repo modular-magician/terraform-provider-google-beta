@@ -298,6 +298,34 @@ func resourceComputeRegionInstanceGroupManager() *schema.Resource {
 					},
 				},
 			},
+			"apply_updates_to_instances": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				MaxItems:    1,
+				Description: `Apply updates to instances in a MIG.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"minimal_action": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `Minimal action to be taken on an instance. You can specify either RESTART to restart existing instances or REPLACE to delete and create new instances from the target template. If you specify a RESTART, the Updater will attempt to perform that action only. However, if the Updater determines that the minimal action you specify is not enough to perform the update, it might perform a more disruptive action.`,
+						},
+
+						"all_instances": {
+							Type:        schema.TypeBool,
+							Required:    true,
+							Description: `Whether all instances are updated, set to true.`,
+						},
+
+						"most_disruptive_allowed_action": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `The most disruptive action that you want to perform on each instance during the update. By default, the most disruptive allowed action is REPLACE. If your update requires a more disruptive action than you set with this flag, the update request will fail.`,
+						},
+					},
+				},
+			},
 
 			"stateful_disk": {
 				Type:        schema.TypeSet,
@@ -574,6 +602,27 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 			return err
 		}
 		d.SetPartial("target_size")
+	}
+
+	// Apply Update to Instances API call
+	if d.Get("update_policy.0.type") == "OPPORTUNISTIC" && d.HasChange("version") {
+
+		update_parameters := &computeBeta.RegionInstanceGroupManagersApplyUpdatesRequest{
+			AllInstances:                d.Get("apply_updates_to_instances.0.all_instances").(bool),
+			MinimalAction:               d.Get("apply_updates_to_instances.0.minimal_action").(string),
+			MostDisruptiveAllowedAction: d.Get("apply_updates_to_instances.0.most_disruptive_allowed_action").(string),
+		}
+		op, err := config.clientComputeBeta.RegionInstanceGroupManagers.ApplyUpdatesToInstances(
+			project, region, d.Get("name").(string), update_parameters).Do()
+
+		if err != nil {
+			return fmt.Errorf("Error applying update to instances of RegionInstanceGroupManager: %s", err)
+		}
+
+		err = computeOperationWaitTime(config, op, project, "Updating instances of RegionInstanceGroupManager", d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return err
+		}
 	}
 
 	d.Partial(false)
