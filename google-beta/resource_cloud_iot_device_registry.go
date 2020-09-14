@@ -27,7 +27,12 @@ import (
 )
 
 func expandCloudIotDeviceRegistryHTTPConfig(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	original := v.(map[string]interface{})
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
 	transformedHTTPEnabledState, err := expandCloudIotDeviceRegistryHTTPEnabledState(original["http_enabled_state"], d, config)
@@ -45,7 +50,12 @@ func expandCloudIotDeviceRegistryHTTPEnabledState(v interface{}, d TerraformReso
 }
 
 func expandCloudIotDeviceRegistryMqttConfig(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	original := v.(map[string]interface{})
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
 	transformedMqttEnabledState, err := expandCloudIotDeviceRegistryMqttEnabledState(original["mqtt_enabled_state"], d, config)
@@ -63,7 +73,12 @@ func expandCloudIotDeviceRegistryMqttEnabledState(v interface{}, d TerraformReso
 }
 
 func expandCloudIotDeviceRegistryStateNotificationConfig(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	original := v.(map[string]interface{})
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
 	transformedPubsubTopicName, err := expandCloudIotDeviceRegistryStateNotificationConfigPubsubTopicName(original["pubsub_topic_name"], d, config)
@@ -105,7 +120,12 @@ func expandCloudIotDeviceRegistryCredentials(v interface{}, d TerraformResourceD
 }
 
 func expandCloudIotDeviceRegistryCredentialsPublicKeyCertificate(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	original := v.(map[string]interface{})
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
 	transformedFormat, err := expandCloudIotDeviceRegistryPublicKeyCertificateFormat(original["format"], d, config)
@@ -176,7 +196,7 @@ func flattenCloudIotDeviceRegistryCredentialsPublicKeyCertificate(v interface{},
 
 	log.Printf("[DEBUG] Transformed public key certificate: %+v", transformed)
 
-	return transformed
+	return []interface{}{transformed}
 }
 
 func flattenCloudIotDeviceRegistryPublicKeyCertificateFormat(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -198,7 +218,7 @@ func flattenCloudIotDeviceRegistryHTTPConfig(v interface{}, d *schema.ResourceDa
 	transformedHTTPEnabledState := flattenCloudIotDeviceRegistryHTTPConfigHTTPEnabledState(original["httpEnabledState"], d, config)
 	transformed["http_enabled_state"] = transformedHTTPEnabledState
 
-	return transformed
+	return []interface{}{transformed}
 }
 
 func flattenCloudIotDeviceRegistryHTTPConfigHTTPEnabledState(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -216,7 +236,7 @@ func flattenCloudIotDeviceRegistryMqttConfig(v interface{}, d *schema.ResourceDa
 	transformedMqttEnabledState := flattenCloudIotDeviceRegistryMqttConfigMqttEnabledState(original["mqttEnabledState"], d, config)
 	transformed["mqtt_enabled_state"] = transformedMqttEnabledState
 
-	return transformed
+	return []interface{}{transformed}
 }
 
 func flattenCloudIotDeviceRegistryMqttConfigMqttEnabledState(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -238,7 +258,7 @@ func flattenCloudIotDeviceRegistryStateNotificationConfig(v interface{}, d *sche
 		transformed["pubsub_topic_name"] = transformedPubsubTopicName
 	}
 
-	return transformed
+	return []interface{}{transformed}
 }
 
 func flattenCloudIotDeviceRegistryStateNotificationConfigPubsubTopicName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -341,9 +361,11 @@ will also enable ERROR logging. Default value: "NONE" Possible values: ["NONE", 
 If it is not provided, the provider region is used.`,
 			},
 			"state_notification_config": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Description: `A PubSub topic to publish device state updates.`,
 				Optional:    true,
+				Computed:    true,
+				ConfigMode:  schema.SchemaConfigModeAttr,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"pubsub_topic_name": {
@@ -356,10 +378,11 @@ If it is not provided, the provider region is used.`,
 				},
 			},
 			"mqtt_config": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Description: `Activate or deactivate MQTT.`,
 				Computed:    true,
 				Optional:    true,
+				ConfigMode:  schema.SchemaConfigModeAttr,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"mqtt_enabled_state": {
@@ -373,10 +396,11 @@ If it is not provided, the provider region is used.`,
 				},
 			},
 			"http_config": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Description: `Activate or deactivate HTTP.`,
 				Computed:    true,
 				Optional:    true,
+				ConfigMode:  schema.SchemaConfigModeAttr,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"http_enabled_state": {
@@ -397,9 +421,10 @@ If it is not provided, the provider region is used.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"public_key_certificate": {
-							Type:        schema.TypeMap,
+							Type:        schema.TypeList,
 							Description: `A public key certificate format and data.`,
 							Required:    true,
+							ConfigMode:  schema.SchemaConfigModeAttr,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"format": {
