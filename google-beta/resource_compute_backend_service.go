@@ -24,7 +24,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/errwrap"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"google.golang.org/api/compute/v1"
@@ -140,8 +139,8 @@ func resourceGoogleComputeBackendServiceBackendHash(v interface{}) int {
 		buf.WriteString(fmt.Sprintf("%v-", v.(bool)))
 	}
 
-	log.Printf("[DEBUG] computed hash value of %v from %v", hashcode.String(buf.String()), buf.String())
-	return hashcode.String(buf.String())
+	log.Printf("[DEBUG] computed hash value of %v from %v", hashcode(buf.String()), buf.String())
+	return hashcode(buf.String())
 }
 
 func resourceComputeBackendService() *schema.Resource {

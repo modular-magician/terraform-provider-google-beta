@@ -651,8 +651,6 @@ func resourceNotebooksInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("labels")
 	}
 
 	d.Partial(false)

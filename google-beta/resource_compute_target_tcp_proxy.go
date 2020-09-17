@@ -275,8 +275,6 @@ func resourceComputeTargetTcpProxyUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("proxy_header")
 	}
 	if d.HasChange("backend_service") {
 		obj := make(map[string]interface{})
@@ -311,8 +309,6 @@ func resourceComputeTargetTcpProxyUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("backend_service")
 	}
 
 	d.Partial(false)

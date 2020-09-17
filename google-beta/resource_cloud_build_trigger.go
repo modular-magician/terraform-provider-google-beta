@@ -15,6 +15,7 @@
 package google
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"reflect"
@@ -25,7 +26,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 )
 
-func stepTimeoutCustomizeDiff(diff *schema.ResourceDiff, v interface{}) error {
+func stepTimeoutCustomizeDiff(_ context.Context, diff *schema.ResourceDiff, v interface{}) error {
 	buildList := diff.Get("build").([]interface{})
 	if len(buildList) == 0 || buildList[0] == nil {
 		return nil
@@ -296,7 +297,6 @@ this location as a prefix.`,
 													Type:        schema.TypeList,
 													Computed:    true,
 													Description: `Output only. Stores timing information for pushing all artifact objects.`,
-													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"end_time": {

@@ -548,9 +548,6 @@ func resourceComputeGlobalForwardingRuleUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("labels")
-		d.SetPartial("label_fingerprint")
 	}
 	if d.HasChange("target") {
 		obj := make(map[string]interface{})
@@ -585,8 +582,6 @@ func resourceComputeGlobalForwardingRuleUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("target")
 	}
 
 	d.Partial(false)

@@ -281,7 +281,6 @@ func resourceStorageHmacKeyUpdate(d *schema.ResourceData, meta interface{}) erro
 			log.Printf("[DEBUG] Finished updating HmacKey %q: %#v", d.Id(), res)
 		}
 
-		d.SetPartial("state")
 	}
 
 	d.Partial(false)
