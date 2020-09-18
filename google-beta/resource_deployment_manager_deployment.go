@@ -212,7 +212,15 @@ func deploymentmanagerDeploymentLabelsSchema() *schema.Resource {
 }
 
 func resourceDeploymentManagerDeploymentCreate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	obj := make(map[string]interface{})
 	nameProp, err := expandDeploymentManagerDeploymentName(d.Get("name"), d, config)
@@ -288,7 +296,15 @@ func resourceDeploymentManagerDeploymentCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceDeploymentManagerDeploymentRead(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	url, err := replaceVars(d, config, "{{DeploymentManagerBasePath}}projects/{{project}}/global/deployments/{{name}}")
 	if err != nil {
@@ -340,7 +356,15 @@ func resourceDeploymentManagerDeploymentRead(d *schema.ResourceData, meta interf
 }
 
 func resourceDeploymentManagerDeploymentUpdate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 
@@ -466,7 +490,15 @@ func resourceDeploymentManagerDeploymentUpdate(d *schema.ResourceData, meta inte
 }
 
 func resourceDeploymentManagerDeploymentDelete(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 

@@ -156,7 +156,15 @@ The [CHANNEL_ID] is automatically assigned by the server on creation.`,
 }
 
 func resourceMonitoringNotificationChannelCreate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	obj := make(map[string]interface{})
 	labelsProp, err := expandMonitoringNotificationChannelLabels(d.Get("labels"), d, config)
@@ -264,7 +272,15 @@ func resourceMonitoringNotificationChannelCreate(d *schema.ResourceData, meta in
 }
 
 func resourceMonitoringNotificationChannelRead(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	url, err := replaceVars(d, config, "{{MonitoringBasePath}}v3/{{name}}")
 	if err != nil {
@@ -334,7 +350,15 @@ func resourceMonitoringNotificationChannelRead(d *schema.ResourceData, meta inte
 }
 
 func resourceMonitoringNotificationChannelUpdate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 
@@ -418,7 +442,15 @@ func resourceMonitoringNotificationChannelUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceMonitoringNotificationChannelDelete(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 

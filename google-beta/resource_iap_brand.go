@@ -80,7 +80,15 @@ brand per project can be created.`,
 }
 
 func resourceIapBrandCreate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	obj := make(map[string]interface{})
 	supportEmailProp, err := expandIapBrandSupportEmail(d.Get("support_email"), d, config)
@@ -187,7 +195,15 @@ func resourceIapBrandPollRead(d *schema.ResourceData, meta interface{}) PollRead
 }
 
 func resourceIapBrandRead(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	url, err := replaceVars(d, config, "{{IapBasePath}}{{name}}")
 	if err != nil {
@@ -233,6 +249,16 @@ func resourceIapBrandRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceIapBrandDelete(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
+	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
+
 	log.Printf("[WARNING] Iap Brand resources"+
 		" cannot be deleted from GCP. The resource %s will be removed from Terraform"+
 		" state, but will still be present on the server.", d.Id())

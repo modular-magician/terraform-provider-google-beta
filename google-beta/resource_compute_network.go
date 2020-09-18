@@ -112,7 +112,15 @@ is selected by GCP.`,
 }
 
 func resourceComputeNetworkCreate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	obj := make(map[string]interface{})
 	descriptionProp, err := expandComputeNetworkDescription(d.Get("description"), d, config)
@@ -219,7 +227,15 @@ func resourceComputeNetworkCreate(d *schema.ResourceData, meta interface{}) erro
 }
 
 func resourceComputeNetworkRead(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	url, err := replaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/networks/{{name}}")
 	if err != nil {
@@ -285,7 +301,15 @@ func resourceComputeNetworkRead(d *schema.ResourceData, meta interface{}) error 
 }
 
 func resourceComputeNetworkUpdate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 
@@ -338,7 +362,15 @@ func resourceComputeNetworkUpdate(d *schema.ResourceData, meta interface{}) erro
 }
 
 func resourceComputeNetworkDelete(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 

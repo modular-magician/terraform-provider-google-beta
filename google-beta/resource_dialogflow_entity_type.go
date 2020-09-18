@@ -110,7 +110,15 @@ Format: projects/<Project ID>/agent/entityTypes/<Entity type ID>.`,
 }
 
 func resourceDialogflowEntityTypeCreate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	obj := make(map[string]interface{})
 	displayNameProp, err := expandDialogflowEntityTypeDisplayName(d.Get("display_name"), d, config)
@@ -194,7 +202,15 @@ func resourceDialogflowEntityTypeCreate(d *schema.ResourceData, meta interface{}
 }
 
 func resourceDialogflowEntityTypeRead(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	url, err := replaceVars(d, config, "{{DialogflowBasePath}}{{name}}")
 	if err != nil {
@@ -243,7 +259,15 @@ func resourceDialogflowEntityTypeRead(d *schema.ResourceData, meta interface{}) 
 }
 
 func resourceDialogflowEntityTypeUpdate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 
@@ -303,7 +327,15 @@ func resourceDialogflowEntityTypeUpdate(d *schema.ResourceData, meta interface{}
 }
 
 func resourceDialogflowEntityTypeDelete(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 

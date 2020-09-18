@@ -93,7 +93,15 @@ e.g. ['resourcemanager.projects.delete']`,
 }
 
 func resourceResourceManagerLienCreate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	obj := make(map[string]interface{})
 	reasonProp, err := expandNestedResourceManagerLienReason(d.Get("reason"), d, config)
@@ -165,7 +173,15 @@ func resourceResourceManagerLienCreate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceResourceManagerLienRead(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	url, err := replaceVars(d, config, "{{ResourceManagerBasePath}}liens?parent={{parent}}")
 	if err != nil {
@@ -231,7 +247,15 @@ func resourceResourceManagerLienRead(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceResourceManagerLienDelete(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 

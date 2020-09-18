@@ -127,7 +127,15 @@ See the [algorithm reference](https://cloud.google.com/kms/docs/reference/rest/v
 }
 
 func resourceKMSCryptoKeyCreate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	obj := make(map[string]interface{})
 	labelsProp, err := expandKMSCryptoKeyLabels(d.Get("labels"), d, config)
@@ -195,7 +203,15 @@ func resourceKMSCryptoKeyCreate(d *schema.ResourceData, meta interface{}) error 
 }
 
 func resourceKMSCryptoKeyRead(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	url, err := replaceVars(d, config, "{{KMSBasePath}}{{key_ring}}/cryptoKeys/{{name}}")
 	if err != nil {
@@ -247,7 +263,15 @@ func resourceKMSCryptoKeyRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceKMSCryptoKeyUpdate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 
@@ -323,6 +347,16 @@ func resourceKMSCryptoKeyUpdate(d *schema.ResourceData, meta interface{}) error 
 }
 
 func resourceKMSCryptoKeyDelete(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
+	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
+
 	config := meta.(*Config)
 
 	cryptoKeyId, err := parseKmsCryptoKeyId(d.Id(), config)

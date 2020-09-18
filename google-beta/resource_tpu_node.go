@@ -242,7 +242,15 @@ permissions to that data.`,
 }
 
 func resourceTPUNodeCreate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	obj := make(map[string]interface{})
 	nameProp, err := expandTPUNodeName(d.Get("name"), d, config)
@@ -360,7 +368,15 @@ func resourceTPUNodeCreate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceTPUNodeRead(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	url, err := replaceVars(d, config, "{{TPUBasePath}}projects/{{project}}/locations/{{zone}}/nodes/{{name}}")
 	if err != nil {
@@ -427,7 +443,15 @@ func resourceTPUNodeRead(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceTPUNodeUpdate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 
@@ -480,7 +504,15 @@ func resourceTPUNodeUpdate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func resourceTPUNodeDelete(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
+
 	config := meta.(*Config)
+	config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleKey)
 
 	billingProject := ""
 
