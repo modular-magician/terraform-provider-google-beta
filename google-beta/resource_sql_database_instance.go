@@ -882,7 +882,14 @@ func expandBackupConfiguration(configured []interface{}) *sqladmin.BackupConfigu
 }
 
 func resourceSqlDatabaseInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
 	config := meta.(*Config)
+	config.clientSqlAdmin.UserAgent = fmt.Sprintf("%s %s", config.clientSqlAdmin.UserAgent, m.ModuleName)
 
 	project, err := getProject(d, config)
 	if err != nil {
@@ -975,7 +982,14 @@ func resourceSqlDatabaseInstanceRead(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceSqlDatabaseInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
 	config := meta.(*Config)
+	config.clientSqlAdmin.UserAgent = fmt.Sprintf("%s %s", config.clientSqlAdmin.UserAgent, m.ModuleName)
 
 	project, err := getProject(d, config)
 	if err != nil {
@@ -1012,7 +1026,14 @@ func resourceSqlDatabaseInstanceUpdate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceSqlDatabaseInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
 	config := meta.(*Config)
+	config.clientSqlAdmin.UserAgent = fmt.Sprintf("%s %s", config.clientSqlAdmin.UserAgent, m.ModuleName)
 
 	project, err := getProject(d, config)
 	if err != nil {

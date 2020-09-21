@@ -520,7 +520,14 @@ func resourceComposerEnvironmentCreate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceComposerEnvironmentRead(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
 	config := meta.(*Config)
+	config.clientComposer.UserAgent = fmt.Sprintf("%s %s", config.clientComposer.UserAgent, m.ModuleName)
 
 	envName, err := resourceComposerEnvironmentName(d, config)
 	if err != nil {
@@ -553,7 +560,14 @@ func resourceComposerEnvironmentRead(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceComposerEnvironmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
 	tfConfig := meta.(*Config)
+	tfConfig.clientComposer.UserAgent = fmt.Sprintf("%s %s", tfConfig.clientComposer.UserAgent, m.ModuleName)
 
 	d.Partial(true)
 
@@ -744,7 +758,14 @@ func resourceComposerEnvironmentPatchField(updateMask string, env *composer.Envi
 }
 
 func resourceComposerEnvironmentDelete(d *schema.ResourceData, meta interface{}) error {
+	var m providerMeta
+
+	err := d.GetProviderMeta(&m)
+	if err != nil {
+		return err
+	}
 	config := meta.(*Config)
+	config.clientComposer.UserAgent = fmt.Sprintf("%s %s", config.clientComposer.UserAgent, m.ModuleName)
 
 	envName, err := resourceComposerEnvironmentName(d, config)
 	if err != nil {

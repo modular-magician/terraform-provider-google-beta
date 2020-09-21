@@ -78,7 +78,15 @@ func ResourceIamPolicyCreate(newUpdaterFunc newResourceIamUpdaterFunc) schema.Cr
 
 func ResourceIamPolicyRead(newUpdaterFunc newResourceIamUpdaterFunc) schema.ReadFunc {
 	return func(d *schema.ResourceData, meta interface{}) error {
+		var m providerMeta
+
+		err := d.GetProviderMeta(&m)
+		if err != nil {
+			return err
+		}
 		config := meta.(*Config)
+		config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleName)
+
 		updater, err := newUpdaterFunc(d, config)
 		if err != nil {
 			return err
@@ -102,7 +110,15 @@ func ResourceIamPolicyRead(newUpdaterFunc newResourceIamUpdaterFunc) schema.Read
 
 func ResourceIamPolicyUpdate(newUpdaterFunc newResourceIamUpdaterFunc) schema.UpdateFunc {
 	return func(d *schema.ResourceData, meta interface{}) error {
+		var m providerMeta
+
+		err := d.GetProviderMeta(&m)
+		if err != nil {
+			return err
+		}
 		config := meta.(*Config)
+		config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleName)
+
 		updater, err := newUpdaterFunc(d, config)
 		if err != nil {
 			return err
@@ -120,7 +136,15 @@ func ResourceIamPolicyUpdate(newUpdaterFunc newResourceIamUpdaterFunc) schema.Up
 
 func ResourceIamPolicyDelete(newUpdaterFunc newResourceIamUpdaterFunc) schema.DeleteFunc {
 	return func(d *schema.ResourceData, meta interface{}) error {
+		var m providerMeta
+
+		err := d.GetProviderMeta(&m)
+		if err != nil {
+			return err
+		}
 		config := meta.(*Config)
+		config.userAgent = fmt.Sprintf("%s %s", config.userAgent, m.ModuleName)
+
 		updater, err := newUpdaterFunc(d, config)
 		if err != nil {
 			return err
