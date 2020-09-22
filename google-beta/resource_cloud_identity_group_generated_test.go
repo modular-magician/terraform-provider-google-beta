@@ -33,11 +33,8 @@ func TestAccCloudIdentityGroup_cloudIdentityGroupsBasicExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProvidersOiCS,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
 		CheckDestroy: testAccCheckCloudIdentityGroupDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{

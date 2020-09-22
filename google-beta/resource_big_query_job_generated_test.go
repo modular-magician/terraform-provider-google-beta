@@ -30,9 +30,6 @@ func TestAccBigQueryJob_bigqueryJobQueryExample(t *testing.T) {
 	vcrTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigQueryJob_bigqueryJobQueryExample(context),
@@ -98,9 +95,6 @@ func TestAccBigQueryJob_bigqueryJobQueryTableReferenceExample(t *testing.T) {
 	vcrTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigQueryJob_bigqueryJobQueryTableReferenceExample(context),
@@ -168,9 +162,6 @@ func TestAccBigQueryJob_bigqueryJobLoadExample(t *testing.T) {
 	vcrTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigQueryJob_bigqueryJobLoadExample(context),
@@ -237,9 +228,6 @@ func TestAccBigQueryJob_bigqueryJobLoadTableReferenceExample(t *testing.T) {
 	vcrTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigQueryJob_bigqueryJobLoadTableReferenceExample(context),
@@ -305,9 +293,6 @@ func TestAccBigQueryJob_bigqueryJobCopyExample(t *testing.T) {
 	vcrTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigQueryJob_bigqueryJobCopyExample(context),
@@ -460,9 +445,6 @@ func TestAccBigQueryJob_bigqueryJobCopyTableReferenceExample(t *testing.T) {
 	vcrTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigQueryJob_bigqueryJobCopyTableReferenceExample(context),
@@ -608,9 +590,6 @@ func TestAccBigQueryJob_bigqueryJobExtractExample(t *testing.T) {
 	vcrTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigQueryJob_bigqueryJobExtractExample(context),
@@ -694,9 +673,6 @@ func TestAccBigQueryJob_bigqueryJobExtractTableReferenceExample(t *testing.T) {
 	vcrTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigQueryJob_bigqueryJobExtractTableReferenceExample(context),

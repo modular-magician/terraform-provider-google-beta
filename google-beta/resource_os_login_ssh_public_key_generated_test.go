@@ -31,11 +31,8 @@ func TestAccOSLoginSSHPublicKey_osLoginSshKeyProvidedUserExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckOSLoginSSHPublicKeyDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{

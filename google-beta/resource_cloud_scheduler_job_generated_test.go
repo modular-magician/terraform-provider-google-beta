@@ -31,11 +31,8 @@ func TestAccCloudSchedulerJob_schedulerJobPubsubExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCloudSchedulerJobDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -79,11 +76,8 @@ func TestAccCloudSchedulerJob_schedulerJobHttpExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCloudSchedulerJobDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -128,11 +122,8 @@ func TestAccCloudSchedulerJob_schedulerJobAppEngineExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCloudSchedulerJobDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -189,11 +180,8 @@ func TestAccCloudSchedulerJob_schedulerJobOauthExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCloudSchedulerJobDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -241,11 +229,8 @@ func TestAccCloudSchedulerJob_schedulerJobOidcExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCloudSchedulerJobDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{

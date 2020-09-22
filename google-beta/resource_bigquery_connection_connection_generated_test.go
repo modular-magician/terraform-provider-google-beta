@@ -32,11 +32,8 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionBasicExample(t *testi
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProvidersOiCS,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
 		CheckDestroy: testAccCheckBigqueryConnectionConnectionDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -102,11 +99,8 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionFullExample(t *testin
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProvidersOiCS,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
 		CheckDestroy: testAccCheckBigqueryConnectionConnectionDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{

@@ -32,11 +32,8 @@ func TestAccBillingBudget_billingBudgetBasicExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProvidersOiCS,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
 		CheckDestroy: testAccCheckBillingBudgetDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -80,11 +77,8 @@ func TestAccBillingBudget_billingBudgetLastperiodExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProvidersOiCS,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
 		CheckDestroy: testAccCheckBillingBudgetDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -134,11 +128,8 @@ func TestAccBillingBudget_billingBudgetFilterExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProvidersOiCS,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
 		CheckDestroy: testAccCheckBillingBudgetDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -194,11 +185,8 @@ func TestAccBillingBudget_billingBudgetNotifyExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProvidersOiCS,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
 		CheckDestroy: testAccCheckBillingBudgetDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{

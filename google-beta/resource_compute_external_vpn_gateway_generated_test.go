@@ -32,11 +32,8 @@ func TestAccComputeExternalVpnGateway_externalVpnGatewayExample(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProvidersOiCS,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-		},
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
 		CheckDestroy: testAccCheckComputeExternalVpnGatewayDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
