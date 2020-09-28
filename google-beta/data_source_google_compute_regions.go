@@ -35,14 +35,11 @@ func dataSourceGoogleComputeRegions() *schema.Resource {
 }
 
 func dataSourceGoogleComputeRegionsRead(d *schema.ResourceData, meta interface{}) error {
-	var m providerMeta
-
-	err := d.GetProviderMeta(&m)
+	config := meta.(*Config)
+	userAgent, err := generateUserAgentString(d, config.userAgent)
 	if err != nil {
 		return err
 	}
-	config := meta.(*Config)
-	config.clientCompute.UserAgent = fmt.Sprintf("%s %s", config.clientCompute.UserAgent, m.ModuleName)
 
 	project, err := getProject(d, config)
 	if err != nil {
@@ -53,7 +50,7 @@ func dataSourceGoogleComputeRegionsRead(d *schema.ResourceData, meta interface{}
 		filter = fmt.Sprintf(" (status eq %s)", s)
 	}
 
-	call := config.clientCompute.Regions.List(project).Filter(filter)
+	call := config.NewComputeClient(userAgent).Regions.List(project).Filter(filter)
 
 	resp, err := call.Do()
 	if err != nil {

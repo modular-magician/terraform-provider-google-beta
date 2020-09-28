@@ -229,7 +229,7 @@ func BootstrapSharedTestNetwork(t *testing.T, testId string) string {
 	}
 
 	log.Printf("[DEBUG] Getting shared test network %q", networkName)
-	_, err := config.clientCompute.Networks.Get(project, networkName).Do()
+	_, err := config.NewComputeClient(config.userAgent).Networks.Get(project, networkName).Do()
 	if err != nil && isGoogleApiErrorWithCode(err, 404) {
 		log.Printf("[DEBUG] Network %q not found, bootstrapping", networkName)
 		url := fmt.Sprintf("%sprojects/%s/global/networks", config.ComputeBasePath, project)
@@ -238,19 +238,19 @@ func BootstrapSharedTestNetwork(t *testing.T, testId string) string {
 			"autoCreateSubnetworks": false,
 		}
 
-		res, err := sendRequestWithTimeout(config, "POST", project, url, netObj, 4*time.Minute)
+		res, err := sendRequestWithTimeout(config, "POST", project, url, config.userAgent, netObj, 4*time.Minute)
 		if err != nil {
 			t.Fatalf("Error bootstrapping shared test network %q: %s", networkName, err)
 		}
 
 		log.Printf("[DEBUG] Waiting for network creation to finish")
-		err = computeOperationWaitTime(config, res, project, "Error bootstrapping shared test network", 4*time.Minute)
+		err = computeOperationWaitTime(config, res, project, "Error bootstrapping shared test network", config.userAgent, 4*time.Minute)
 		if err != nil {
 			t.Fatalf("Error bootstrapping shared test network %q: %s", networkName, err)
 		}
 	}
 
-	network, err := config.clientCompute.Networks.Get(project, networkName).Do()
+	network, err := config.NewComputeClient(config.userAgent).Networks.Get(project, networkName).Do()
 	if err != nil {
 		t.Errorf("Error getting shared test network %q: %s", networkName, err)
 	}
@@ -300,7 +300,7 @@ func BootstrapServicePerimeterProjects(t *testing.T, desiredProjects int) []*clo
 			t.Fatalf("Error bootstrapping shared test project: %s", err)
 		}
 
-		err = resourceManagerOperationWaitTime(config, opAsMap, "creating project", 4)
+		err = resourceManagerOperationWaitTime(config, opAsMap, "creating project", config.userAgent, 4)
 		if err != nil {
 			t.Fatalf("Error bootstrapping shared test project: %s", err)
 		}

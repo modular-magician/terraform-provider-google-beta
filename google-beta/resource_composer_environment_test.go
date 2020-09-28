@@ -970,7 +970,7 @@ func testSweepComposerEnvironments(config *Config) error {
 				allErrors = multierror.Append(allErrors, fmt.Errorf("Unable to delete environment %q: %s", e.Name, deleteErr))
 				continue
 			}
-			waitErr := composerOperationWaitTime(config, op, config.Project, "Sweeping old test environments", 10*time.Minute)
+			waitErr := composerOperationWaitTime(config, op, config.Project, "Sweeping old test environments", config.userAgent, 10*time.Minute)
 			if waitErr != nil {
 				allErrors = multierror.Append(allErrors, fmt.Errorf("Unable to delete environment %q: %s", e.Name, waitErr))
 			}
@@ -1048,12 +1048,12 @@ func testAccCheckClearComposerEnvironmentFirewalls(t *testing.T, networkName str
 	return func(s *terraform.State) error {
 		config := googleProviderConfig(t)
 		config.Project = getTestProjectFromEnv()
-		network, err := config.clientCompute.Networks.Get(getTestProjectFromEnv(), networkName).Do()
+		network, err := config.NewComputeClient(config.userAgent).Networks.Get(getTestProjectFromEnv(), networkName).Do()
 		if err != nil {
 			return err
 		}
 
-		foundFirewalls, err := config.clientCompute.Firewalls.List(config.Project).Do()
+		foundFirewalls, err := config.NewComputeClient(config.userAgent).Firewalls.List(config.Project).Do()
 		if err != nil {
 			return fmt.Errorf("Unable to list firewalls for network %q: %s", network.Name, err)
 		}
@@ -1064,7 +1064,7 @@ func testAccCheckClearComposerEnvironmentFirewalls(t *testing.T, networkName str
 				continue
 			}
 			log.Printf("[DEBUG] Deleting firewall %q for test-resource network %q", firewall.Name, network.Name)
-			op, err := config.clientCompute.Firewalls.Delete(config.Project, firewall.Name).Do()
+			op, err := config.NewComputeClient(config.userAgent).Firewalls.Delete(config.Project, firewall.Name).Do()
 			if err != nil {
 				allErrors = multierror.Append(allErrors,
 					fmt.Errorf("Unable to delete firewalls for network %q: %s", network.Name, err))
@@ -1072,7 +1072,7 @@ func testAccCheckClearComposerEnvironmentFirewalls(t *testing.T, networkName str
 			}
 
 			waitErr := computeOperationWaitTime(config, op, config.Project,
-				"Sweeping test composer environment firewalls", 10)
+				"Sweeping test composer environment firewalls", config.userAgent, 10)
 			if waitErr != nil {
 				allErrors = multierror.Append(allErrors,
 					fmt.Errorf("Error while waiting to delete firewall %q: %s", firewall.Name, waitErr))
