@@ -109,7 +109,7 @@ resource "google_pubsub_topic" "example" {
 resource "google_pubsub_subscription" "example" {
   project = "subscription-project"
   name    = "example-subscription"
-  topic   = google_pubsub_topic.example.name
+  topic   = "projects/${google_pubsub_topic.example.project}/topics/${google_pubsub_topic.example.name}" 
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
