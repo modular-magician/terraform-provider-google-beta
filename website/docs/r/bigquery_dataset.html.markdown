@@ -188,6 +188,9 @@ destroying the resource will fail if tables are present.
 
 The `access` block supports:
 
+* `id` -
+  The fully-qualified unique name of the dataset in the format projectId:datasetId
+
 * `domain` -
   (Optional)
   A domain to grant access to. Any users signed in with the

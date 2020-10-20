@@ -291,6 +291,11 @@ is 1,024 characters.`,
 					},
 				},
 			},
+			"id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The fully-qualified unique name of the dataset in the format projectId:datasetId`,
+			},
 		},
 	}
 }
@@ -658,6 +663,7 @@ func flattenBigQueryDatasetAccess(v interface{}, d *schema.ResourceData, config 
 			continue
 		}
 		transformed.Add(map[string]interface{}{
+			"id":             flattenBigQueryDatasetAccessId(original["id"], d, config),
 			"domain":         flattenBigQueryDatasetAccessDomain(original["domain"], d, config),
 			"group_by_email": flattenBigQueryDatasetAccessGroupByEmail(original["groupByEmail"], d, config),
 			"role":           flattenBigQueryDatasetAccessRole(original["role"], d, config),
@@ -668,6 +674,10 @@ func flattenBigQueryDatasetAccess(v interface{}, d *schema.ResourceData, config 
 	}
 	return transformed
 }
+func flattenBigQueryDatasetAccessId(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func flattenBigQueryDatasetAccessDomain(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
@@ -856,6 +866,13 @@ func expandBigQueryDatasetAccess(v interface{}, d TerraformResourceData, config 
 		original := raw.(map[string]interface{})
 		transformed := make(map[string]interface{})
 
+		transformedId, err := expandBigQueryDatasetAccessId(original["id"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedId); val.IsValid() && !isEmptyValue(val) {
+			transformed["id"] = transformedId
+		}
+
 		transformedDomain, err := expandBigQueryDatasetAccessDomain(original["domain"], d, config)
 		if err != nil {
 			return nil, err
@@ -901,6 +918,10 @@ func expandBigQueryDatasetAccess(v interface{}, d TerraformResourceData, config 
 		req = append(req, transformed)
 	}
 	return req, nil
+}
+
+func expandBigQueryDatasetAccessId(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandBigQueryDatasetAccessDomain(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
