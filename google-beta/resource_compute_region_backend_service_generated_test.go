@@ -139,6 +139,12 @@ func TestAccComputeRegionBackendService_regionBackendServiceExternalExample(t *t
 			{
 				Config: testAccComputeRegionBackendService_regionBackendServiceExternalExample(context),
 			},
+			{
+				ResourceName:            "google_compute_region_backend_service.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"network", "region"},
+			},
 		},
 	})
 }

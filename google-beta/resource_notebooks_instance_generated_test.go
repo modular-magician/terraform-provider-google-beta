@@ -41,6 +41,12 @@ func TestAccNotebooksInstance_notebookInstanceBasicExample(t *testing.T) {
 			{
 				Config: testAccNotebooksInstance_notebookInstanceBasicExample(context),
 			},
+			{
+				ResourceName:            "google_notebooks_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"name", "instance_owners", "boot_disk_type", "boot_disk_size_gb", "data_disk_size_gb", "metadata", "vm_image", "container_image", "location"},
+			},
 		},
 	})
 }
@@ -77,6 +83,12 @@ func TestAccNotebooksInstance_notebookInstanceBasicContainerExample(t *testing.T
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNotebooksInstance_notebookInstanceBasicContainerExample(context),
+			},
+			{
+				ResourceName:            "google_notebooks_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"name", "instance_owners", "boot_disk_type", "boot_disk_size_gb", "data_disk_size_gb", "metadata", "vm_image", "container_image", "location"},
 			},
 		},
 	})
@@ -118,6 +130,12 @@ func TestAccNotebooksInstance_notebookInstanceBasicGpuExample(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNotebooksInstance_notebookInstanceBasicGpuExample(context),
+			},
+			{
+				ResourceName:            "google_notebooks_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"name", "instance_owners", "boot_disk_type", "boot_disk_size_gb", "data_disk_size_gb", "metadata", "vm_image", "container_image", "location"},
 			},
 		},
 	})
@@ -162,6 +180,12 @@ func TestAccNotebooksInstance_notebookInstanceFullExample(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNotebooksInstance_notebookInstanceFullExample(context),
+			},
+			{
+				ResourceName:            "google_notebooks_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"name", "instance_owners", "boot_disk_type", "boot_disk_size_gb", "data_disk_size_gb", "metadata", "vm_image", "container_image", "location"},
 			},
 		},
 	})

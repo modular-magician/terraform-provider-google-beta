@@ -41,6 +41,12 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryBasicExample(t 
 			{
 				Config: testAccArtifactRegistryRepository_artifactRegistryRepositoryBasicExample(context),
 			},
+			{
+				ResourceName:            "google_artifact_registry_repository.my-repo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"repository_id", "location"},
+			},
 		},
 	})
 }
@@ -77,6 +83,12 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryCmekExample(t *
 			{
 				Config: testAccArtifactRegistryRepository_artifactRegistryRepositoryCmekExample(context),
 			},
+			{
+				ResourceName:            "google_artifact_registry_repository.my-repo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"repository_id", "location"},
+			},
 		},
 	})
 }
@@ -112,6 +124,12 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryIamExample(t *t
 		Steps: []resource.TestStep{
 			{
 				Config: testAccArtifactRegistryRepository_artifactRegistryRepositoryIamExample(context),
+			},
+			{
+				ResourceName:            "google_artifact_registry_repository.my-repo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"repository_id", "location"},
 			},
 		},
 	})

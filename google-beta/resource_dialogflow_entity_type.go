@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
-	"strings"
+	"regexp"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -362,16 +362,14 @@ func resourceDialogflowEntityTypeImport(d *schema.ResourceData, meta interface{}
 		return nil, err
 	}
 
-	stringParts := strings.Split(d.Get("name").(string), "/")
-	if len(stringParts) < 2 {
-		return nil, fmt.Errorf(
-			"Could not split project from name: %s",
-			d.Get("name"),
-		)
+	name := d.Get("name").(string)
+	r := regexp.MustCompile("projects/([^/]+)/")
+	parts := r.FindStringSubmatch(name)
+	if len(parts) != 2 {
+		return nil, fmt.Errorf("id %q does not fit the format %s", name, r)
 	}
-
-	if err := d.Set("project", stringParts[1]); err != nil {
-		return nil, fmt.Errorf("Error setting project: %s", err)
+	if err := d.Set("project", parts[1]); err != nil {
+		return nil, fmt.Errorf("error setting project: %s", err)
 	}
 	return []*schema.ResourceData{d}, nil
 }

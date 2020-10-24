@@ -41,6 +41,11 @@ func TestAccComputePacketMirroring_computePacketMirroringFullExample(t *testing.
 			{
 				Config: testAccComputePacketMirroring_computePacketMirroringFullExample(context),
 			},
+			{
+				ResourceName:      "google_compute_packet_mirroring.foobar",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

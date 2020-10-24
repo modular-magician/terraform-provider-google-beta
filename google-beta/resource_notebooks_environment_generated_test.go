@@ -41,6 +41,12 @@ func TestAccNotebooksEnvironment_notebookEnvironmentBasicExample(t *testing.T) {
 			{
 				Config: testAccNotebooksEnvironment_notebookEnvironmentBasicExample(context),
 			},
+			{
+				ResourceName:            "google_notebooks_environment.environment",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"name", "location"},
+			},
 		},
 	})
 }

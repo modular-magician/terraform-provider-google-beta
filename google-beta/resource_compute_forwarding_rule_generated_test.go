@@ -41,6 +41,12 @@ func TestAccComputeForwardingRule_forwardingRuleExternallbExample(t *testing.T) 
 			{
 				Config: testAccComputeForwardingRule_forwardingRuleExternallbExample(context),
 			},
+			{
+				ResourceName:            "google_compute_forwarding_rule.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"backend_service", "network", "subnetwork", "region"},
+			},
 		},
 	})
 }
@@ -274,6 +280,12 @@ func TestAccComputeForwardingRule_forwardingRuleHttpLbExample(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeForwardingRule_forwardingRuleHttpLbExample(context),
+			},
+			{
+				ResourceName:            "google_compute_forwarding_rule.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"backend_service", "network", "subnetwork", "region"},
 			},
 		},
 	})

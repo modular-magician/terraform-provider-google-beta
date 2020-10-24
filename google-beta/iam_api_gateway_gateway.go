@@ -72,7 +72,7 @@ func ApiGatewayGatewayIamUpdaterProducer(d *schema.ResourceData, config *Config)
 	}
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<region>[^/]+)/gateways/(?P<gateway>[^/]+)", "(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<gateway>[^/]+)", "(?P<region>[^/]+)/(?P<gateway>[^/]+)", "(?P<gateway>[^/]+)"}, d, config, d.Get("gateway").(string))
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<region>[^/]+)/gateways/(?P<gateway_id>[^/]+)", "(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<gateway_id>[^/]+)", "(?P<region>[^/]+)/(?P<gateway_id>[^/]+)", "(?P<gateway_id>[^/]+)"}, d, config, d.Get("gateway").(string))
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func ApiGatewayGatewayIdParseFunc(d *schema.ResourceData, config *Config) error 
 		values["region"] = region
 	}
 
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<region>[^/]+)/gateways/(?P<gateway>[^/]+)", "(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<gateway>[^/]+)", "(?P<region>[^/]+)/(?P<gateway>[^/]+)", "(?P<gateway>[^/]+)"}, d, config, d.Id())
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<region>[^/]+)/gateways/(?P<gateway_id>[^/]+)", "(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<gateway_id>[^/]+)", "(?P<region>[^/]+)/(?P<gateway_id>[^/]+)", "(?P<gateway_id>[^/]+)"}, d, config, d.Id())
 	if err != nil {
 		return err
 	}

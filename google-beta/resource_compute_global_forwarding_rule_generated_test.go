@@ -122,6 +122,12 @@ func TestAccComputeGlobalForwardingRule_globalForwardingRuleInternalExample(t *t
 			{
 				Config: testAccComputeGlobalForwardingRule_globalForwardingRuleInternalExample(context),
 			},
+			{
+				ResourceName:            "google_compute_global_forwarding_rule.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"network"},
+			},
 		},
 	})
 }

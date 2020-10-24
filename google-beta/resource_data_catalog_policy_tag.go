@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"regexp"
 	"strings"
 	"time"
 
@@ -295,19 +296,22 @@ func resourceDataCatalogPolicyTagDelete(d *schema.ResourceData, meta interface{}
 
 func resourceDataCatalogPolicyTagImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
-	if err := parseImportId([]string{
-		"(?P<name>[^/]+)",
-	}, d, config); err != nil {
+
+	// current import_formats can't import fields with forward slashes in their value
+	if err := parseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
 		return nil, err
 	}
 
-	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
+	name := d.Get("name").(string)
+	ptRegex := regexp.MustCompile("(projects/.+/locations/.+/taxonomies/.+)/policyTags/.+")
 
+	parts := ptRegex.FindStringSubmatch(name)
+	if len(parts) != 2 {
+		return nil, fmt.Errorf("policy tag name does not fit the format %s", ptRegex)
+	}
+	if err := d.Set("taxonomy", parts[1]); err != nil {
+		return nil, fmt.Errorf("error setting taxonomy: %s", err)
+	}
 	return []*schema.ResourceData{d}, nil
 }
 

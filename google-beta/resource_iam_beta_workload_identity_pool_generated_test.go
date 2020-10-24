@@ -41,6 +41,12 @@ func TestAccIAMBetaWorkloadIdentityPool_iamWorkloadIdentityPoolBasicExample(t *t
 			{
 				Config: testAccIAMBetaWorkloadIdentityPool_iamWorkloadIdentityPoolBasicExample(context),
 			},
+			{
+				ResourceName:            "google_iam_workload_identity_pool.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"workload_identity_pool_id"},
+			},
 		},
 	})
 }
@@ -71,6 +77,12 @@ func TestAccIAMBetaWorkloadIdentityPool_iamWorkloadIdentityPoolFullExample(t *te
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIAMBetaWorkloadIdentityPool_iamWorkloadIdentityPoolFullExample(context),
+			},
+			{
+				ResourceName:            "google_iam_workload_identity_pool.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"workload_identity_pool_id"},
 			},
 		},
 	})

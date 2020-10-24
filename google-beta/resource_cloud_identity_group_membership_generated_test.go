@@ -43,6 +43,12 @@ func TestAccCloudIdentityGroupMembership_cloudIdentityGroupMembershipExample(t *
 			{
 				Config: testAccCloudIdentityGroupMembership_cloudIdentityGroupMembershipExample(context),
 			},
+			{
+				ResourceName:            "google_cloud_identity_group_membership.cloud_identity_group_membership_basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"group"},
+			},
 		},
 	})
 }
@@ -114,6 +120,12 @@ func TestAccCloudIdentityGroupMembership_cloudIdentityGroupMembershipUserExample
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCloudIdentityGroupMembership_cloudIdentityGroupMembershipUserExample(context),
+			},
+			{
+				ResourceName:            "google_cloud_identity_group_membership.cloud_identity_group_membership_basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"group"},
 			},
 		},
 	})

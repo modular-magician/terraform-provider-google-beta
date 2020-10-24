@@ -41,6 +41,12 @@ func TestAccApiGatewayApi_apigatewayApiBasicExample(t *testing.T) {
 			{
 				Config: testAccApiGatewayApi_apigatewayApiBasicExample(context),
 			},
+			{
+				ResourceName:            "google_api_gateway_api.api",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"api_id"},
+			},
 		},
 	})
 }
@@ -71,6 +77,12 @@ func TestAccApiGatewayApi_apigatewayApiFullExample(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccApiGatewayApi_apigatewayApiFullExample(context),
+			},
+			{
+				ResourceName:            "google_api_gateway_api.api",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"api_id"},
 			},
 		},
 	})

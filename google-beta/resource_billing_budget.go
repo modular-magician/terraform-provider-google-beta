@@ -18,12 +18,13 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"google.golang.org/api/googleapi"
 )
 
 func resourceBillingBudget() *schema.Resource {
@@ -44,12 +45,6 @@ func resourceBillingBudget() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"billing_account": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `ID of the billing account to set a budget on.`,
-			},
 			"amount": {
 				Type:        schema.TypeList,
 				Required:    true,
@@ -103,6 +98,12 @@ is "USD", then 1 unit is one US dollar.`,
 						},
 					},
 				},
+			},
+			"billing_account": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: `ID of the billing account to set a budget on.`,
 			},
 			"threshold_rules": {
 				Type:     schema.TypeList,
@@ -169,8 +170,9 @@ at regular intervals to the topic.`,
 							AtLeastOneOf: []string{"all_updates_rule.0.pubsub_topic", "all_updates_rule.0.monitoring_notification_channels"},
 						},
 						"schema_version": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:             schema.TypeString,
+							Optional:         true,
+							DiffSuppressFunc: emptyOrDefaultStringSuppress("1.0"),
 							Description: `The schema version of the notification. Only "1.0" is
 accepted. It represents the JSON schema as defined in
 https://cloud.google.com/billing/docs/how-to/budgets#notification_format.`,
@@ -181,6 +183,7 @@ https://cloud.google.com/billing/docs/how-to/budgets#notification_format.`,
 			},
 			"budget_filter": {
 				Type:     schema.TypeList,
+				Computed: true,
 				Optional: true,
 				Description: `Filters that define which resources are used to compute the actual
 spend against the budget.`,
@@ -193,20 +196,19 @@ spend against the budget.`,
 							ValidateFunc: validation.StringInSlice([]string{"INCLUDE_ALL_CREDITS", "EXCLUDE_ALL_CREDITS", ""}, false),
 							Description: `Specifies how credits should be treated when determining spend
 for threshold calculations. Default value: "INCLUDE_ALL_CREDITS" Possible values: ["INCLUDE_ALL_CREDITS", "EXCLUDE_ALL_CREDITS"]`,
-							Default: "INCLUDE_ALL_CREDITS",
+							Default:      "INCLUDE_ALL_CREDITS",
+							AtLeastOneOf: []string{"budget_filter.0.projects", "budget_filter.0.credit_types_treatment", "budget_filter.0.services"},
 						},
 						"projects": {
 							Type:     schema.TypeList,
 							Optional: true,
-							Description: `A set of projects of the form projects/{project_id},
-specifying that usage from only this set of projects should be
-included in the budget. If omitted, the report will include
-all usage for the billing account, regardless of which project
-the usage occurred on. Only zero or one project can be
-specified currently.`,
+							Description: `{{description}
+If this field is set as a project ID (not number) and the user does not have permission
+to read the project from the API, Terraform will not detect drift on it.`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
+							AtLeastOneOf: []string{"budget_filter.0.projects", "budget_filter.0.credit_types_treatment", "budget_filter.0.services"},
 						},
 						"services": {
 							Type:     schema.TypeList,
@@ -220,17 +222,16 @@ https://cloud.google.com/billing/v1/how-tos/catalog-api.`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
+							AtLeastOneOf: []string{"budget_filter.0.projects", "budget_filter.0.credit_types_treatment", "budget_filter.0.services"},
 						},
 					},
 				},
-				AtLeastOneOf: []string{},
 			},
 			"display_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: `User data for display name in UI. Must be <= 60 chars.`,
 			},
-
 			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -250,11 +251,40 @@ func resourceBillingBudgetCreate(d *schema.ResourceData, meta interface{}) error
 	}
 
 	obj := make(map[string]interface{})
-	budgetProp, err := expandBillingBudgetBudget(nil, d, config)
+	displayNameProp, err := expandBillingBudgetDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if !isEmptyValue(reflect.ValueOf(budgetProp)) {
-		obj["budget"] = budgetProp
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+		obj["displayName"] = displayNameProp
+	}
+	budgetFilterProp, err := expandBillingBudgetBudgetFilter(d.Get("budget_filter"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("budget_filter"); !isEmptyValue(reflect.ValueOf(budgetFilterProp)) && (ok || !reflect.DeepEqual(v, budgetFilterProp)) {
+		obj["budgetFilter"] = budgetFilterProp
+	}
+	amountProp, err := expandBillingBudgetAmount(d.Get("amount"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("amount"); !isEmptyValue(reflect.ValueOf(amountProp)) && (ok || !reflect.DeepEqual(v, amountProp)) {
+		obj["amount"] = amountProp
+	}
+	thresholdRulesProp, err := expandBillingBudgetThresholdRules(d.Get("threshold_rules"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("threshold_rules"); !isEmptyValue(reflect.ValueOf(thresholdRulesProp)) && (ok || !reflect.DeepEqual(v, thresholdRulesProp)) {
+		obj["thresholdRules"] = thresholdRulesProp
+	}
+	allUpdatesRuleProp, err := expandBillingBudgetAllUpdatesRule(d.Get("all_updates_rule"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("all_updates_rule"); !isEmptyValue(reflect.ValueOf(allUpdatesRuleProp)) && (ok || !reflect.DeepEqual(v, allUpdatesRuleProp)) {
+		obj["allUpdatesRule"] = allUpdatesRuleProp
+	}
+
+	obj, err = resourceBillingBudgetEncoder(d, meta, obj)
+	if err != nil {
+		return err
 	}
 
 	url, err := replaceVars(d, config, "{{BillingBasePath}}billingAccounts/{{billing_account}}/budgets")
@@ -335,20 +365,20 @@ func resourceBillingBudgetRead(d *schema.ResourceData, meta interface{}) error {
 	if err := d.Set("name", flattenBillingBudgetName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Budget: %s", err)
 	}
-	// Terraform must set the top level schema field, but since this object contains collapsed properties
-	// it's difficult to know what the top level should be. Instead we just loop over the map returned from flatten.
-	if flattenedProp := flattenBillingBudgetBudget(res["budget"], d, config); flattenedProp != nil {
-		if gerr, ok := flattenedProp.(*googleapi.Error); ok {
-			return fmt.Errorf("Error reading Budget: %s", gerr)
-		}
-		casted := flattenedProp.([]interface{})[0]
-		if casted != nil {
-			for k, v := range casted.(map[string]interface{}) {
-				if err := d.Set(k, v); err != nil {
-					return fmt.Errorf("Error setting %s: %s", k, err)
-				}
-			}
-		}
+	if err := d.Set("display_name", flattenBillingBudgetDisplayName(res["displayName"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Budget: %s", err)
+	}
+	if err := d.Set("budget_filter", flattenBillingBudgetBudgetFilter(res["budgetFilter"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Budget: %s", err)
+	}
+	if err := d.Set("amount", flattenBillingBudgetAmount(res["amount"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Budget: %s", err)
+	}
+	if err := d.Set("threshold_rules", flattenBillingBudgetThresholdRules(res["thresholdRules"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Budget: %s", err)
+	}
+	if err := d.Set("all_updates_rule", flattenBillingBudgetAllUpdatesRule(res["allUpdatesRule"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Budget: %s", err)
 	}
 
 	return nil
@@ -364,11 +394,40 @@ func resourceBillingBudgetUpdate(d *schema.ResourceData, meta interface{}) error
 	billingProject := ""
 
 	obj := make(map[string]interface{})
-	budgetProp, err := expandBillingBudgetBudget(nil, d, config)
+	displayNameProp, err := expandBillingBudgetDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if !isEmptyValue(reflect.ValueOf(budgetProp)) {
-		obj["budget"] = budgetProp
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+		obj["displayName"] = displayNameProp
+	}
+	budgetFilterProp, err := expandBillingBudgetBudgetFilter(d.Get("budget_filter"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("budget_filter"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, budgetFilterProp)) {
+		obj["budgetFilter"] = budgetFilterProp
+	}
+	amountProp, err := expandBillingBudgetAmount(d.Get("amount"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("amount"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, amountProp)) {
+		obj["amount"] = amountProp
+	}
+	thresholdRulesProp, err := expandBillingBudgetThresholdRules(d.Get("threshold_rules"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("threshold_rules"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, thresholdRulesProp)) {
+		obj["thresholdRules"] = thresholdRulesProp
+	}
+	allUpdatesRuleProp, err := expandBillingBudgetAllUpdatesRule(d.Get("all_updates_rule"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("all_updates_rule"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, allUpdatesRuleProp)) {
+		obj["allUpdatesRule"] = allUpdatesRuleProp
+	}
+
+	obj, err = resourceBillingBudgetEncoder(d, meta, obj)
+	if err != nil {
+		return err
 	}
 
 	url, err := replaceVars(d, config, "{{BillingBasePath}}{{name}}")
@@ -426,12 +485,21 @@ func resourceBillingBudgetDelete(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceBillingBudgetImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
 	config := meta.(*Config)
 
-	// current import_formats can't import fields with forward slashes in their value
-	if err := parseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
+	if err := parseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
 		return nil, err
+	}
+
+	name := d.Get("name").(string)
+	r := regexp.MustCompile("billingAccounts/(.+)/budgets/")
+
+	parts := r.FindStringSubmatch(name)
+	if len(parts) != 2 {
+		return nil, fmt.Errorf("billing budget name %q does not fit the format %s", name, r)
+	}
+	if err := d.Set("billing_account", parts[1]); err != nil {
+		return nil, fmt.Errorf("Error setting billing_account: %s", err)
 	}
 
 	return []*schema.ResourceData{d}, nil
@@ -441,32 +509,11 @@ func flattenBillingBudgetName(v interface{}, d *schema.ResourceData, config *Con
 	return v
 }
 
-func flattenBillingBudgetBudget(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["display_name"] =
-		flattenBillingBudgetBudgetDisplayName(original["displayName"], d, config)
-	transformed["budget_filter"] =
-		flattenBillingBudgetBudgetBudgetFilter(original["budgetFilter"], d, config)
-	transformed["amount"] =
-		flattenBillingBudgetBudgetAmount(original["amount"], d, config)
-	transformed["threshold_rules"] =
-		flattenBillingBudgetBudgetThresholdRules(original["thresholdRules"], d, config)
-	transformed["all_updates_rule"] =
-		flattenBillingBudgetBudgetAllUpdatesRule(original["allUpdatesRule"], d, config)
-	return []interface{}{transformed}
-}
-func flattenBillingBudgetBudgetDisplayName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetDisplayName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
-func flattenBillingBudgetBudgetBudgetFilter(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetBudgetFilter(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -476,26 +523,65 @@ func flattenBillingBudgetBudgetBudgetFilter(v interface{}, d *schema.ResourceDat
 	}
 	transformed := make(map[string]interface{})
 	transformed["projects"] =
-		flattenBillingBudgetBudgetBudgetFilterProjects(original["projects"], d, config)
+		flattenBillingBudgetBudgetFilterProjects(original["projects"], d, config)
 	transformed["credit_types_treatment"] =
-		flattenBillingBudgetBudgetBudgetFilterCreditTypesTreatment(original["creditTypesTreatment"], d, config)
+		flattenBillingBudgetBudgetFilterCreditTypesTreatment(original["creditTypesTreatment"], d, config)
 	transformed["services"] =
-		flattenBillingBudgetBudgetBudgetFilterServices(original["services"], d, config)
+		flattenBillingBudgetBudgetFilterServices(original["services"], d, config)
 	return []interface{}{transformed}
 }
-func flattenBillingBudgetBudgetBudgetFilterProjects(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetBudgetFilterProjects(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	stateProjects := d.Get("budget_filter.0.projects").([]interface{})
+	apiProjects := v.([]interface{})
+
+	if len(stateProjects) != len(apiProjects) {
+		// this is a diff anyway, so just return what we got from the API
+		return v
+	}
+
+	transformed := make([]string, len(stateProjects))
+	for i := 0; i < len(stateProjects); i++ {
+		sp := strings.TrimPrefix(stateProjects[i].(string), "projects/")
+		ap := strings.TrimPrefix(apiProjects[i].(string), "projects/")
+
+		// If they already match, great
+		if sp == ap {
+			transformed[i] = "projects/" + sp
+		}
+
+		// If not, try to read the original one to check if the numbers are the same
+		project, err := config.NewResourceManagerClient(config.userAgent).Projects.Get(sp).Do()
+		if err != nil {
+			// We might not be able to read the project due to missing permissions or API enablement.
+			// If that happens, just assume it matches so we don't need to provide those extra requirements.
+			log.Printf("[DEBUG] couldn't read project, assuming match")
+			transformed[i] = "projects/" + sp
+			continue
+		}
+
+		if strconv.FormatInt(project.ProjectNumber, 10) == ap {
+			log.Printf("[DEBUG] project %v number is %v, matches %v", sp, project.ProjectNumber, ap)
+			transformed[i] = "projects/" + sp
+		} else {
+			transformed[i] = "projects/" + ap
+		}
+	}
+
+	return transformed
+}
+
+func flattenBillingBudgetBudgetFilterCreditTypesTreatment(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
-func flattenBillingBudgetBudgetBudgetFilterCreditTypesTreatment(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetBudgetFilterServices(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
-func flattenBillingBudgetBudgetBudgetFilterServices(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	return v
-}
-
-func flattenBillingBudgetBudgetAmount(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetAmount(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -505,12 +591,12 @@ func flattenBillingBudgetBudgetAmount(v interface{}, d *schema.ResourceData, con
 	}
 	transformed := make(map[string]interface{})
 	transformed["specified_amount"] =
-		flattenBillingBudgetBudgetAmountSpecifiedAmount(original["specifiedAmount"], d, config)
+		flattenBillingBudgetAmountSpecifiedAmount(original["specifiedAmount"], d, config)
 	transformed["last_period_amount"] =
-		flattenBillingBudgetBudgetAmountLastPeriodAmount(original["lastPeriodAmount"], d, config)
+		flattenBillingBudgetAmountLastPeriodAmount(original["lastPeriodAmount"], d, config)
 	return []interface{}{transformed}
 }
-func flattenBillingBudgetBudgetAmountSpecifiedAmount(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetAmountSpecifiedAmount(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -520,22 +606,22 @@ func flattenBillingBudgetBudgetAmountSpecifiedAmount(v interface{}, d *schema.Re
 	}
 	transformed := make(map[string]interface{})
 	transformed["currency_code"] =
-		flattenBillingBudgetBudgetAmountSpecifiedAmountCurrencyCode(original["currencyCode"], d, config)
+		flattenBillingBudgetAmountSpecifiedAmountCurrencyCode(original["currencyCode"], d, config)
 	transformed["units"] =
-		flattenBillingBudgetBudgetAmountSpecifiedAmountUnits(original["units"], d, config)
+		flattenBillingBudgetAmountSpecifiedAmountUnits(original["units"], d, config)
 	transformed["nanos"] =
-		flattenBillingBudgetBudgetAmountSpecifiedAmountNanos(original["nanos"], d, config)
+		flattenBillingBudgetAmountSpecifiedAmountNanos(original["nanos"], d, config)
 	return []interface{}{transformed}
 }
-func flattenBillingBudgetBudgetAmountSpecifiedAmountCurrencyCode(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetAmountSpecifiedAmountCurrencyCode(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
-func flattenBillingBudgetBudgetAmountSpecifiedAmountUnits(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetAmountSpecifiedAmountUnits(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
-func flattenBillingBudgetBudgetAmountSpecifiedAmountNanos(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetAmountSpecifiedAmountNanos(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
@@ -552,11 +638,11 @@ func flattenBillingBudgetBudgetAmountSpecifiedAmountNanos(v interface{}, d *sche
 	return v // let terraform core handle it otherwise
 }
 
-func flattenBillingBudgetBudgetAmountLastPeriodAmount(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetAmountLastPeriodAmount(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v != nil
 }
 
-func flattenBillingBudgetBudgetThresholdRules(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetThresholdRules(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	if v == nil {
 		return v
 	}
@@ -569,21 +655,21 @@ func flattenBillingBudgetBudgetThresholdRules(v interface{}, d *schema.ResourceD
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"threshold_percent": flattenBillingBudgetBudgetThresholdRulesThresholdPercent(original["thresholdPercent"], d, config),
-			"spend_basis":       flattenBillingBudgetBudgetThresholdRulesSpendBasis(original["spendBasis"], d, config),
+			"threshold_percent": flattenBillingBudgetThresholdRulesThresholdPercent(original["thresholdPercent"], d, config),
+			"spend_basis":       flattenBillingBudgetThresholdRulesSpendBasis(original["spendBasis"], d, config),
 		})
 	}
 	return transformed
 }
-func flattenBillingBudgetBudgetThresholdRulesThresholdPercent(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetThresholdRulesThresholdPercent(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
-func flattenBillingBudgetBudgetThresholdRulesSpendBasis(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetThresholdRulesSpendBasis(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
-func flattenBillingBudgetBudgetAllUpdatesRule(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetAllUpdatesRule(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -593,76 +679,36 @@ func flattenBillingBudgetBudgetAllUpdatesRule(v interface{}, d *schema.ResourceD
 	}
 	transformed := make(map[string]interface{})
 	transformed["pubsub_topic"] =
-		flattenBillingBudgetBudgetAllUpdatesRulePubsubTopic(original["pubsubTopic"], d, config)
+		flattenBillingBudgetAllUpdatesRulePubsubTopic(original["pubsubTopic"], d, config)
 	transformed["schema_version"] =
-		flattenBillingBudgetBudgetAllUpdatesRuleSchemaVersion(original["schemaVersion"], d, config)
+		flattenBillingBudgetAllUpdatesRuleSchemaVersion(original["schemaVersion"], d, config)
 	transformed["monitoring_notification_channels"] =
-		flattenBillingBudgetBudgetAllUpdatesRuleMonitoringNotificationChannels(original["monitoringNotificationChannels"], d, config)
+		flattenBillingBudgetAllUpdatesRuleMonitoringNotificationChannels(original["monitoringNotificationChannels"], d, config)
 	transformed["disable_default_iam_recipients"] =
-		flattenBillingBudgetBudgetAllUpdatesRuleDisableDefaultIamRecipients(original["disableDefaultIamRecipients"], d, config)
+		flattenBillingBudgetAllUpdatesRuleDisableDefaultIamRecipients(original["disableDefaultIamRecipients"], d, config)
 	return []interface{}{transformed}
 }
-func flattenBillingBudgetBudgetAllUpdatesRulePubsubTopic(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetAllUpdatesRulePubsubTopic(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
-func flattenBillingBudgetBudgetAllUpdatesRuleSchemaVersion(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetAllUpdatesRuleSchemaVersion(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
-func flattenBillingBudgetBudgetAllUpdatesRuleMonitoringNotificationChannels(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetAllUpdatesRuleMonitoringNotificationChannels(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
-func flattenBillingBudgetBudgetAllUpdatesRuleDisableDefaultIamRecipients(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenBillingBudgetAllUpdatesRuleDisableDefaultIamRecipients(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
-func expandBillingBudgetBudget(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	transformed := make(map[string]interface{})
-	transformedDisplayName, err := expandBillingBudgetBudgetDisplayName(d.Get("display_name"), d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedDisplayName); val.IsValid() && !isEmptyValue(val) {
-		transformed["displayName"] = transformedDisplayName
-	}
-
-	transformedBudgetFilter, err := expandBillingBudgetBudgetBudgetFilter(d.Get("budget_filter"), d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedBudgetFilter); val.IsValid() && !isEmptyValue(val) {
-		transformed["budgetFilter"] = transformedBudgetFilter
-	}
-
-	transformedAmount, err := expandBillingBudgetBudgetAmount(d.Get("amount"), d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedAmount); val.IsValid() && !isEmptyValue(val) {
-		transformed["amount"] = transformedAmount
-	}
-
-	transformedThresholdRules, err := expandBillingBudgetBudgetThresholdRules(d.Get("threshold_rules"), d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedThresholdRules); val.IsValid() && !isEmptyValue(val) {
-		transformed["thresholdRules"] = transformedThresholdRules
-	}
-
-	transformedAllUpdatesRule, err := expandBillingBudgetBudgetAllUpdatesRule(d.Get("all_updates_rule"), d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedAllUpdatesRule); val.IsValid() && !isEmptyValue(val) {
-		transformed["allUpdatesRule"] = transformedAllUpdatesRule
-	}
-
-	return transformed, nil
-}
-
-func expandBillingBudgetBudgetDisplayName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetDisplayName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetBudgetFilter(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetBudgetFilter(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -671,21 +717,21 @@ func expandBillingBudgetBudgetBudgetFilter(v interface{}, d TerraformResourceDat
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedProjects, err := expandBillingBudgetBudgetBudgetFilterProjects(original["projects"], d, config)
+	transformedProjects, err := expandBillingBudgetBudgetFilterProjects(original["projects"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedProjects); val.IsValid() && !isEmptyValue(val) {
 		transformed["projects"] = transformedProjects
 	}
 
-	transformedCreditTypesTreatment, err := expandBillingBudgetBudgetBudgetFilterCreditTypesTreatment(original["credit_types_treatment"], d, config)
+	transformedCreditTypesTreatment, err := expandBillingBudgetBudgetFilterCreditTypesTreatment(original["credit_types_treatment"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedCreditTypesTreatment); val.IsValid() && !isEmptyValue(val) {
 		transformed["creditTypesTreatment"] = transformedCreditTypesTreatment
 	}
 
-	transformedServices, err := expandBillingBudgetBudgetBudgetFilterServices(original["services"], d, config)
+	transformedServices, err := expandBillingBudgetBudgetFilterServices(original["services"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedServices); val.IsValid() && !isEmptyValue(val) {
@@ -695,19 +741,19 @@ func expandBillingBudgetBudgetBudgetFilter(v interface{}, d TerraformResourceDat
 	return transformed, nil
 }
 
-func expandBillingBudgetBudgetBudgetFilterProjects(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetBudgetFilterProjects(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetBudgetFilterCreditTypesTreatment(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetBudgetFilterCreditTypesTreatment(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetBudgetFilterServices(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetBudgetFilterServices(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetAmount(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetAmount(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -716,14 +762,14 @@ func expandBillingBudgetBudgetAmount(v interface{}, d TerraformResourceData, con
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedSpecifiedAmount, err := expandBillingBudgetBudgetAmountSpecifiedAmount(original["specified_amount"], d, config)
+	transformedSpecifiedAmount, err := expandBillingBudgetAmountSpecifiedAmount(original["specified_amount"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedSpecifiedAmount); val.IsValid() && !isEmptyValue(val) {
 		transformed["specifiedAmount"] = transformedSpecifiedAmount
 	}
 
-	transformedLastPeriodAmount, err := expandBillingBudgetBudgetAmountLastPeriodAmount(original["last_period_amount"], d, config)
+	transformedLastPeriodAmount, err := expandBillingBudgetAmountLastPeriodAmount(original["last_period_amount"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedLastPeriodAmount); val.IsValid() && !isEmptyValue(val) {
@@ -733,7 +779,7 @@ func expandBillingBudgetBudgetAmount(v interface{}, d TerraformResourceData, con
 	return transformed, nil
 }
 
-func expandBillingBudgetBudgetAmountSpecifiedAmount(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetAmountSpecifiedAmount(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -742,21 +788,21 @@ func expandBillingBudgetBudgetAmountSpecifiedAmount(v interface{}, d TerraformRe
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedCurrencyCode, err := expandBillingBudgetBudgetAmountSpecifiedAmountCurrencyCode(original["currency_code"], d, config)
+	transformedCurrencyCode, err := expandBillingBudgetAmountSpecifiedAmountCurrencyCode(original["currency_code"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedCurrencyCode); val.IsValid() && !isEmptyValue(val) {
 		transformed["currencyCode"] = transformedCurrencyCode
 	}
 
-	transformedUnits, err := expandBillingBudgetBudgetAmountSpecifiedAmountUnits(original["units"], d, config)
+	transformedUnits, err := expandBillingBudgetAmountSpecifiedAmountUnits(original["units"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedUnits); val.IsValid() && !isEmptyValue(val) {
 		transformed["units"] = transformedUnits
 	}
 
-	transformedNanos, err := expandBillingBudgetBudgetAmountSpecifiedAmountNanos(original["nanos"], d, config)
+	transformedNanos, err := expandBillingBudgetAmountSpecifiedAmountNanos(original["nanos"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedNanos); val.IsValid() && !isEmptyValue(val) {
@@ -766,19 +812,19 @@ func expandBillingBudgetBudgetAmountSpecifiedAmount(v interface{}, d TerraformRe
 	return transformed, nil
 }
 
-func expandBillingBudgetBudgetAmountSpecifiedAmountCurrencyCode(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetAmountSpecifiedAmountCurrencyCode(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetAmountSpecifiedAmountUnits(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetAmountSpecifiedAmountUnits(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetAmountSpecifiedAmountNanos(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetAmountSpecifiedAmountNanos(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetAmountLastPeriodAmount(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetAmountLastPeriodAmount(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	if v == nil || !v.(bool) {
 		return nil, nil
 	}
@@ -786,7 +832,7 @@ func expandBillingBudgetBudgetAmountLastPeriodAmount(v interface{}, d TerraformR
 	return struct{}{}, nil
 }
 
-func expandBillingBudgetBudgetThresholdRules(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetThresholdRules(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -796,14 +842,14 @@ func expandBillingBudgetBudgetThresholdRules(v interface{}, d TerraformResourceD
 		original := raw.(map[string]interface{})
 		transformed := make(map[string]interface{})
 
-		transformedThresholdPercent, err := expandBillingBudgetBudgetThresholdRulesThresholdPercent(original["threshold_percent"], d, config)
+		transformedThresholdPercent, err := expandBillingBudgetThresholdRulesThresholdPercent(original["threshold_percent"], d, config)
 		if err != nil {
 			return nil, err
 		} else {
 			transformed["thresholdPercent"] = transformedThresholdPercent
 		}
 
-		transformedSpendBasis, err := expandBillingBudgetBudgetThresholdRulesSpendBasis(original["spend_basis"], d, config)
+		transformedSpendBasis, err := expandBillingBudgetThresholdRulesSpendBasis(original["spend_basis"], d, config)
 		if err != nil {
 			return nil, err
 		} else if val := reflect.ValueOf(transformedSpendBasis); val.IsValid() && !isEmptyValue(val) {
@@ -815,15 +861,15 @@ func expandBillingBudgetBudgetThresholdRules(v interface{}, d TerraformResourceD
 	return req, nil
 }
 
-func expandBillingBudgetBudgetThresholdRulesThresholdPercent(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetThresholdRulesThresholdPercent(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetThresholdRulesSpendBasis(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetThresholdRulesSpendBasis(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetAllUpdatesRule(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetAllUpdatesRule(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -832,28 +878,28 @@ func expandBillingBudgetBudgetAllUpdatesRule(v interface{}, d TerraformResourceD
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedPubsubTopic, err := expandBillingBudgetBudgetAllUpdatesRulePubsubTopic(original["pubsub_topic"], d, config)
+	transformedPubsubTopic, err := expandBillingBudgetAllUpdatesRulePubsubTopic(original["pubsub_topic"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedPubsubTopic); val.IsValid() && !isEmptyValue(val) {
 		transformed["pubsubTopic"] = transformedPubsubTopic
 	}
 
-	transformedSchemaVersion, err := expandBillingBudgetBudgetAllUpdatesRuleSchemaVersion(original["schema_version"], d, config)
+	transformedSchemaVersion, err := expandBillingBudgetAllUpdatesRuleSchemaVersion(original["schema_version"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedSchemaVersion); val.IsValid() && !isEmptyValue(val) {
 		transformed["schemaVersion"] = transformedSchemaVersion
 	}
 
-	transformedMonitoringNotificationChannels, err := expandBillingBudgetBudgetAllUpdatesRuleMonitoringNotificationChannels(original["monitoring_notification_channels"], d, config)
+	transformedMonitoringNotificationChannels, err := expandBillingBudgetAllUpdatesRuleMonitoringNotificationChannels(original["monitoring_notification_channels"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedMonitoringNotificationChannels); val.IsValid() && !isEmptyValue(val) {
 		transformed["monitoringNotificationChannels"] = transformedMonitoringNotificationChannels
 	}
 
-	transformedDisableDefaultIamRecipients, err := expandBillingBudgetBudgetAllUpdatesRuleDisableDefaultIamRecipients(original["disable_default_iam_recipients"], d, config)
+	transformedDisableDefaultIamRecipients, err := expandBillingBudgetAllUpdatesRuleDisableDefaultIamRecipients(original["disable_default_iam_recipients"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedDisableDefaultIamRecipients); val.IsValid() && !isEmptyValue(val) {
@@ -863,18 +909,24 @@ func expandBillingBudgetBudgetAllUpdatesRule(v interface{}, d TerraformResourceD
 	return transformed, nil
 }
 
-func expandBillingBudgetBudgetAllUpdatesRulePubsubTopic(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetAllUpdatesRulePubsubTopic(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetAllUpdatesRuleSchemaVersion(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetAllUpdatesRuleSchemaVersion(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetAllUpdatesRuleMonitoringNotificationChannels(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetAllUpdatesRuleMonitoringNotificationChannels(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBillingBudgetBudgetAllUpdatesRuleDisableDefaultIamRecipients(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandBillingBudgetAllUpdatesRuleDisableDefaultIamRecipients(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceBillingBudgetEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	newObj := make(map[string]interface{})
+	newObj["budget"] = obj
+	return newObj, nil
 }

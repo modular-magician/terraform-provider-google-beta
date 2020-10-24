@@ -794,7 +794,7 @@ The `script_run` block supports:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/guestPolicies/{{guest_policy_id}}`
 
 * `name` -
   Unique name of the resource in this project using one of the following forms: projects/{project_number}/guestPolicies/{guestPolicyId}.
@@ -823,9 +823,9 @@ This resource provides the following
 GuestPolicies can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_os_config_guest_policies.default projects/{{project}}/guestPolicies/{{name}}
-$ terraform import google_os_config_guest_policies.default {{project}}/{{name}}
-$ terraform import google_os_config_guest_policies.default {{name}}
+$ terraform import google_os_config_guest_policies.default projects/{{project}}/guestPolicies/{{guest_policy_id}}
+$ terraform import google_os_config_guest_policies.default {{project}}/{{guest_policy_id}}
+$ terraform import google_os_config_guest_policies.default {{guest_policy_id}}
 ```
 
 ## User Project Overrides

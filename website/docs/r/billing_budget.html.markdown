@@ -217,34 +217,6 @@ The following arguments are supported:
   ID of the billing account to set a budget on.
 
 
-
-The `budget_filter` block supports:
-
-* `projects` -
-  (Optional)
-  A set of projects of the form projects/{project_id},
-  specifying that usage from only this set of projects should be
-  included in the budget. If omitted, the report will include
-  all usage for the billing account, regardless of which project
-  the usage occurred on. Only zero or one project can be
-  specified currently.
-
-* `credit_types_treatment` -
-  (Optional)
-  Specifies how credits should be treated when determining spend
-  for threshold calculations.
-  Default value is `INCLUDE_ALL_CREDITS`.
-  Possible values are `INCLUDE_ALL_CREDITS` and `EXCLUDE_ALL_CREDITS`.
-
-* `services` -
-  (Optional)
-  A set of services of the form services/{service_id},
-  specifying that usage from only this set of services should be
-  included in the budget. If omitted, the report will include
-  usage for all the services. The service names are available
-  through the Catalog API:
-  https://cloud.google.com/billing/v1/how-tos/catalog-api.
-
 The `amount` block supports:
 
 * `specified_amount` -
@@ -297,6 +269,51 @@ The `threshold_rules` block supports:
   Default value is `CURRENT_SPEND`.
   Possible values are `CURRENT_SPEND` and `FORECASTED_SPEND`.
 
+- - -
+
+
+* `display_name` -
+  (Optional)
+  User data for display name in UI. Must be <= 60 chars.
+
+* `budget_filter` -
+  (Optional)
+  Filters that define which resources are used to compute the actual
+  spend against the budget.
+  Structure is documented below.
+
+* `all_updates_rule` -
+  (Optional)
+  Defines notifications that are sent on every update to the
+  billing account's spend, regardless of the thresholds defined
+  using threshold rules.
+  Structure is documented below.
+
+
+The `budget_filter` block supports:
+
+* `projects` -
+  (Optional)
+  {{description}
+  If this field is set as a project ID (not number) and the user does not have permission
+  to read the project from the API, Terraform will not detect drift on it.
+
+* `credit_types_treatment` -
+  (Optional)
+  Specifies how credits should be treated when determining spend
+  for threshold calculations.
+  Default value is `INCLUDE_ALL_CREDITS`.
+  Possible values are `INCLUDE_ALL_CREDITS` and `EXCLUDE_ALL_CREDITS`.
+
+* `services` -
+  (Optional)
+  A set of services of the form services/{service_id},
+  specifying that usage from only this set of services should be
+  included in the budget. If omitted, the report will include
+  usage for all the services. The service names are available
+  through the Catalog API:
+  https://cloud.google.com/billing/v1/how-tos/catalog-api.
+
 The `all_updates_rule` block supports:
 
 * `pubsub_topic` -
@@ -325,27 +342,6 @@ The `all_updates_rule` block supports:
   when a threshold is exceeded. Default recipients are
   those with Billing Account Administrators and Billing
   Account Users IAM roles for the target account.
-
-- - -
-
-
-* `display_name` -
-  (Optional)
-  User data for display name in UI. Must be <= 60 chars.
-
-* `budget_filter` -
-  (Optional)
-  Filters that define which resources are used to compute the actual
-  spend against the budget.
-  Structure is documented below.
-
-* `all_updates_rule` -
-  (Optional)
-  Defines notifications that are sent on every update to the
-  billing account's spend, regardless of the thresholds defined
-  using threshold rules.
-  Structure is documented below.
-
 
 ## Attributes Reference
 

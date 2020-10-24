@@ -41,6 +41,12 @@ func TestAccBigqueryReservationReservation_bigqueryReservationBasicExample(t *te
 			{
 				Config: testAccBigqueryReservationReservation_bigqueryReservationBasicExample(context),
 			},
+			{
+				ResourceName:            "google_bigquery_reservation.reservation",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location", "name"},
+			},
 		},
 	})
 }

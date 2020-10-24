@@ -158,10 +158,6 @@ func resourceApiGatewayApiCreate(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error waiting to create Api: %s", err)
 	}
 
-	if err := d.Set("name", flattenApiGatewayApiName(opRes["name"], d, config)); err != nil {
-		return err
-	}
-
 	// This may have caused the ID to update - update it if so.
 	id, err = replaceVars(d, config, "projects/{{project}}/locations/global/apis/{{api_id}}")
 	if err != nil {
@@ -350,9 +346,9 @@ func resourceApiGatewayApiDelete(d *schema.ResourceData, meta interface{}) error
 func resourceApiGatewayApiImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
-		"projects/(?P<project>[^/]+)/locations/global/apis/(?P<name>[^/]+)",
-		"(?P<project>[^/]+)/(?P<name>[^/]+)",
-		"(?P<name>[^/]+)",
+		"projects/(?P<project>[^/]+)/locations/global/apis/(?P<api_id>[^/]+)",
+		"(?P<project>[^/]+)/(?P<api_id>[^/]+)",
+		"(?P<api_id>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}

@@ -84,6 +84,11 @@ func TestAccComputeBackendService_backendServiceTrafficDirectorRoundRobinExample
 			{
 				Config: testAccComputeBackendService_backendServiceTrafficDirectorRoundRobinExample(context),
 			},
+			{
+				ResourceName:      "google_compute_backend_service.default",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -127,6 +132,11 @@ func TestAccComputeBackendService_backendServiceTrafficDirectorRingHashExample(t
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeBackendService_backendServiceTrafficDirectorRingHashExample(context),
+			},
+			{
+				ResourceName:      "google_compute_backend_service.default",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

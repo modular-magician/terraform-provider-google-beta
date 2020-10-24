@@ -113,9 +113,9 @@ exported:
 
 For all import syntaxes, the "resource in question" can take any of the following forms:
 
-* projects/{{project}}/locations/global/apis/{{name}}
-* {{project}}/{{name}}
-* {{name}}
+* projects/{{project}}/locations/global/apis/{{api_id}}
+* {{project}}/{{api_id}}
+* {{api_id}}
 
 Any variables not passed in the import command will be taken from the provider configuration.
 
@@ -123,17 +123,17 @@ API Gateway api IAM resources can be imported using the resource identifiers, ro
 
 IAM member imports use space-delimited identifiers: the resource in question, the role, and the member identity, e.g.
 ```
-$ terraform import google_api_gateway_api_iam_member.editor "projects/{{project}}/locations/global/apis/{{api}} roles/apigateway.viewer user:jane@example.com"
+$ terraform import google_api_gateway_api_iam_member.editor "projects/{{project}}/locations/global/apis/{{api_id}} roles/apigateway.viewer user:jane@example.com"
 ```
 
 IAM binding imports use space-delimited identifiers: the resource in question and the role, e.g.
 ```
-$ terraform import google_api_gateway_api_iam_binding.editor "projects/{{project}}/locations/global/apis/{{api}} roles/apigateway.viewer"
+$ terraform import google_api_gateway_api_iam_binding.editor "projects/{{project}}/locations/global/apis/{{api_id}} roles/apigateway.viewer"
 ```
 
 IAM policy imports use the identifier of the resource in question, e.g.
 ```
-$ terraform import google_api_gateway_api_iam_policy.editor projects/{{project}}/locations/global/apis/{{api}}
+$ terraform import google_api_gateway_api_iam_policy.editor projects/{{project}}/locations/global/apis/{{api_id}}
 ```
 
 -> **Custom Roles**: If you're importing a IAM resource with a custom role, make sure to use the

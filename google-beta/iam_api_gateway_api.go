@@ -58,7 +58,7 @@ func ApiGatewayApiIamUpdaterProducer(d *schema.ResourceData, config *Config) (Re
 	}
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/global/apis/(?P<api>[^/]+)", "(?P<project>[^/]+)/(?P<api>[^/]+)", "(?P<api>[^/]+)"}, d, config, d.Get("api").(string))
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/global/apis/(?P<api_id>[^/]+)", "(?P<project>[^/]+)/(?P<api_id>[^/]+)", "(?P<api_id>[^/]+)"}, d, config, d.Get("api").(string))
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func ApiGatewayApiIdParseFunc(d *schema.ResourceData, config *Config) error {
 		values["project"] = project
 	}
 
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/global/apis/(?P<api>[^/]+)", "(?P<project>[^/]+)/(?P<api>[^/]+)", "(?P<api>[^/]+)"}, d, config, d.Id())
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/global/apis/(?P<api_id>[^/]+)", "(?P<project>[^/]+)/(?P<api_id>[^/]+)", "(?P<api_id>[^/]+)"}, d, config, d.Id())
 	if err != nil {
 		return err
 	}

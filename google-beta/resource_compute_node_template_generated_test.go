@@ -79,6 +79,12 @@ func TestAccComputeNodeTemplate_nodeTemplateServerBindingExample(t *testing.T) {
 			{
 				Config: testAccComputeNodeTemplate_nodeTemplateServerBindingExample(context),
 			},
+			{
+				ResourceName:            "google_compute_node_template.template",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region"},
+			},
 		},
 	})
 }

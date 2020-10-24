@@ -244,6 +244,10 @@ func resourceComputeOrganizationSecurityPolicyAssociationImport(d *schema.Resour
 		return nil, err
 	}
 
+	if err := d.Set("policy_id", fmt.Sprintf("locations/global/securityPolicies/%s", d.Get("policy_id").(string))); err != nil {
+		return nil, err
+	}
+
 	// Replace import id for the resource id
 	id, err := replaceVars(d, config, "{{policy_id}}/association/{{name}}")
 	if err != nil {

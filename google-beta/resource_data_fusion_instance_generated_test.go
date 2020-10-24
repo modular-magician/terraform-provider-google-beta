@@ -41,6 +41,12 @@ func TestAccDataFusionInstance_dataFusionInstanceBasicExample(t *testing.T) {
 			{
 				Config: testAccDataFusionInstance_dataFusionInstanceBasicExample(context),
 			},
+			{
+				ResourceName:            "google_data_fusion_instance.basic_instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region"},
+			},
 		},
 	})
 }
@@ -73,6 +79,12 @@ func TestAccDataFusionInstance_dataFusionInstanceFullExample(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataFusionInstance_dataFusionInstanceFullExample(context),
+			},
+			{
+				ResourceName:            "google_data_fusion_instance.extended_instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region"},
 			},
 		},
 	})

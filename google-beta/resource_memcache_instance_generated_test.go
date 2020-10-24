@@ -41,6 +41,12 @@ func TestAccMemcacheInstance_memcacheInstanceBasicExample(t *testing.T) {
 			{
 				Config: testAccMemcacheInstance_memcacheInstanceBasicExample(context),
 			},
+			{
+				ResourceName:            "google_memcache_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"name", "region"},
+			},
 		},
 	})
 }

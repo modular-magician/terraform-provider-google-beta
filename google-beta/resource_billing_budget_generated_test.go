@@ -42,6 +42,12 @@ func TestAccBillingBudget_billingBudgetBasicExample(t *testing.T) {
 			{
 				Config: testAccBillingBudget_billingBudgetBasicExample(context),
 			},
+			{
+				ResourceName:            "google_billing_budget.budget",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"billing_account"},
+			},
 		},
 	})
 }
@@ -89,6 +95,12 @@ func TestAccBillingBudget_billingBudgetLastperiodExample(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBillingBudget_billingBudgetLastperiodExample(context),
+			},
+			{
+				ResourceName:            "google_billing_budget.budget",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"billing_account", "budget_filter.0.projects.0"},
 			},
 		},
 	})
@@ -143,6 +155,12 @@ func TestAccBillingBudget_billingBudgetFilterExample(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBillingBudget_billingBudgetFilterExample(context),
+			},
+			{
+				ResourceName:            "google_billing_budget.budget",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"billing_account", "budget_filter.0.projects.0"},
 			},
 		},
 	})
@@ -203,6 +221,12 @@ func TestAccBillingBudget_billingBudgetNotifyExample(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBillingBudget_billingBudgetNotifyExample(context),
+			},
+			{
+				ResourceName:            "google_billing_budget.budget",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"billing_account", "budget_filter.0.projects.0"},
 			},
 		},
 	})

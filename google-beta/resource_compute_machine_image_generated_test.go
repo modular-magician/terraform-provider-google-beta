@@ -41,6 +41,12 @@ func TestAccComputeMachineImage_machineImageBasicExample(t *testing.T) {
 			{
 				Config: testAccComputeMachineImage_machineImageBasicExample(context),
 			},
+			{
+				ResourceName:            "google_compute_machine_image.image",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"source_instance"},
+			},
 		},
 	})
 }

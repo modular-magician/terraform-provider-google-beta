@@ -43,6 +43,11 @@ func TestAccCloudIdentityGroup_cloudIdentityGroupsBasicExample(t *testing.T) {
 			{
 				Config: testAccCloudIdentityGroup_cloudIdentityGroupsBasicExample(context),
 			},
+			{
+				ResourceName:      "google_cloud_identity_group.cloud_identity_group_basic",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

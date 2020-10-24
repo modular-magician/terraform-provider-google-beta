@@ -15,7 +15,7 @@
 package google
 
 import (
-	"log"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -41,6 +41,12 @@ func TestAccComputeOrganizationSecurityPolicyAssociation_organizationSecurityPol
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeOrganizationSecurityPolicyAssociation_organizationSecurityPolicyAssociationBasicExample(context),
+			},
+			{
+				ResourceName:            "google_compute_organization_security_policy_association.policy",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"policy_id"},
 			},
 		},
 	})
@@ -98,7 +104,17 @@ func testAccCheckComputeOrganizationSecurityPolicyAssociationDestroyProducer(t *
 				continue
 			}
 
-			log.Printf("[DEBUG] Ignoring destroy during test")
+			config := googleProviderConfig(t)
+
+			url, err := replaceVarsForTest(config, rs, "{{ComputeBasePath}}{{policy_id}}/getAssociation?name={{name}}")
+			if err != nil {
+				return err
+			}
+
+			_, err = sendRequest(config, "GET", "", url, config.userAgent, nil)
+			if err == nil {
+				return fmt.Errorf("ComputeOrganizationSecurityPolicyAssociation still exists at %s", url)
+			}
 		}
 
 		return nil

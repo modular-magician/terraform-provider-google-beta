@@ -42,6 +42,12 @@ func TestAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideExample(t *te
 			{
 				Config: testAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideExample(context),
 			},
+			{
+				ResourceName:            "google_service_usage_consumer_quota_override.override",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"force", "service", "metric", "limit"},
+			},
 		},
 	})
 }

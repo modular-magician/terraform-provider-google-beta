@@ -166,6 +166,12 @@ func TestAccComputeAddress_addressWithSharedLoadbalancerVipExample(t *testing.T)
 			{
 				Config: testAccComputeAddress_addressWithSharedLoadbalancerVipExample(context),
 			},
+			{
+				ResourceName:            "google_compute_address.internal_with_shared_loadbalancer_vip",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"subnetwork", "region"},
+			},
 		},
 	})
 }

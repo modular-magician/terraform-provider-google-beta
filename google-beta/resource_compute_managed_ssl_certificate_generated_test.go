@@ -41,6 +41,11 @@ func TestAccComputeManagedSslCertificate_managedSslCertificateBasicExample(t *te
 			{
 				Config: testAccComputeManagedSslCertificate_managedSslCertificateBasicExample(context),
 			},
+			{
+				ResourceName:      "google_compute_managed_ssl_certificate.default",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -159,6 +164,11 @@ func TestAccComputeManagedSslCertificate_managedSslCertificateRecreationExample(
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeManagedSslCertificate_managedSslCertificateRecreationExample(context),
+			},
+			{
+				ResourceName:      "google_compute_managed_ssl_certificate.default",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
