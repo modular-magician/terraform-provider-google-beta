@@ -879,15 +879,15 @@ For example, if the disruption budget has a fixed value of 10, and 8 VMs fail to
 										ForceNew:     true,
 										ValidateFunc: validation.IntAtLeast(1),
 										Description:  `Specifies a fixed value.`,
-										ExactlyOneOf: []string{"rollout.0.disruption_budget.0.fixed", "rollout.0.disruption_budget.0.percentage"},
+										ExactlyOneOf: []string{"rollout.0.disruption_budget.0.fixed"},
 									},
-									"percentage": {
+									"percent": {
 										Type:         schema.TypeInt,
 										Optional:     true,
 										ForceNew:     true,
 										ValidateFunc: validation.IntBetween(0, 100),
 										Description:  `Specifies the relative value defined as a percentage, which will be multiplied by a reference value.`,
-										ExactlyOneOf: []string{"rollout.0.disruption_budget.0.fixed", "rollout.0.disruption_budget.0.percentage"},
+										ExactlyOneOf: []string{"rollout.0.disruption_budget.0.fixed"},
 									},
 								},
 							},
@@ -2007,8 +2007,8 @@ func flattenOSConfigPatchDeploymentRolloutDisruptionBudget(v interface{}, d *sch
 	transformed := make(map[string]interface{})
 	transformed["fixed"] =
 		flattenOSConfigPatchDeploymentRolloutDisruptionBudgetFixed(original["fixed"], d, config)
-	transformed["percentage"] =
-		flattenOSConfigPatchDeploymentRolloutDisruptionBudgetPercentage(original["percentage"], d, config)
+	transformed["percent"] =
+		flattenOSConfigPatchDeploymentRolloutDisruptionBudgetPercent(original["percent"], d, config)
 	return []interface{}{transformed}
 }
 func flattenOSConfigPatchDeploymentRolloutDisruptionBudgetFixed(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -2028,7 +2028,7 @@ func flattenOSConfigPatchDeploymentRolloutDisruptionBudgetFixed(v interface{}, d
 	return v // let terraform core handle it otherwise
 }
 
-func flattenOSConfigPatchDeploymentRolloutDisruptionBudgetPercentage(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+func flattenOSConfigPatchDeploymentRolloutDisruptionBudgetPercent(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
@@ -3238,11 +3238,11 @@ func expandOSConfigPatchDeploymentRolloutDisruptionBudget(v interface{}, d Terra
 		transformed["fixed"] = transformedFixed
 	}
 
-	transformedPercentage, err := expandOSConfigPatchDeploymentRolloutDisruptionBudgetPercentage(original["percentage"], d, config)
+	transformedPercent, err := expandOSConfigPatchDeploymentRolloutDisruptionBudgetPercent(original["percent"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPercentage); val.IsValid() && !isEmptyValue(val) {
-		transformed["percentage"] = transformedPercentage
+	} else if val := reflect.ValueOf(transformedPercent); val.IsValid() && !isEmptyValue(val) {
+		transformed["percent"] = transformedPercent
 	}
 
 	return transformed, nil
@@ -3252,7 +3252,7 @@ func expandOSConfigPatchDeploymentRolloutDisruptionBudgetFixed(v interface{}, d 
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRolloutDisruptionBudgetPercentage(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRolloutDisruptionBudgetPercent(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

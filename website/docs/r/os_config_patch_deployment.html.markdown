@@ -758,7 +758,7 @@ The `disruption_budget` block supports:
   (Optional)
   Specifies a fixed value.
 
-* `percentage` -
+* `percent` -
   (Optional)
   Specifies the relative value defined as a percentage, which will be multiplied by a reference value.
 
