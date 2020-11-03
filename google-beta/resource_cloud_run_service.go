@@ -662,7 +662,7 @@ func resourceCloudRunServiceCreate(d *schema.ResourceData, meta interface{}) err
 
 	project, err := getProject(d, config)
 	if err != nil {
-		return err
+		return fmt.Errorf("Error fetching project for Service: %s", err)
 	}
 	billingProject = project
 
@@ -706,7 +706,7 @@ func resourceCloudRunServicePollRead(d *schema.ResourceData, meta interface{}) P
 
 		project, err := getProject(d, config)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Error fetching project for Service: %s", err)
 		}
 		billingProject = project
 
@@ -756,7 +756,7 @@ func resourceCloudRunServiceRead(d *schema.ResourceData, meta interface{}) error
 
 	project, err := getProject(d, config)
 	if err != nil {
-		return err
+		return fmt.Errorf("Error fetching project for Service: %s", err)
 	}
 	billingProject = project
 
@@ -828,7 +828,7 @@ func resourceCloudRunServiceUpdate(d *schema.ResourceData, meta interface{}) err
 
 	project, err := getProject(d, config)
 	if err != nil {
-		return err
+		return fmt.Errorf("Error fetching project for Service: %s", err)
 	}
 	billingProject = project
 
@@ -890,7 +890,7 @@ func resourceCloudRunServiceDelete(d *schema.ResourceData, meta interface{}) err
 
 	project, err := getProject(d, config)
 	if err != nil {
-		return err
+		return fmt.Errorf("Error fetching project for Service: %s", err)
 	}
 	billingProject = project
 
