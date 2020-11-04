@@ -721,6 +721,7 @@ func Provider() *schema.Provider {
 			"google_iam_policy":                                   dataSourceGoogleIamPolicy(),
 			"google_iam_role":                                     dataSourceGoogleIamRole(),
 			"google_iam_testable_permissions":                     dataSourceGoogleIamTestablePermissions(),
+			"google_iam_workload_identity_pool":                   dataSourceIAMBetaWorkloadIdentityPool(),
 			"google_kms_crypto_key":                               dataSourceGoogleKmsCryptoKey(),
 			"google_kms_crypto_key_version":                       dataSourceGoogleKmsCryptoKeyVersion(),
 			"google_kms_key_ring":                                 dataSourceGoogleKmsKeyRing(),
@@ -765,9 +766,9 @@ func Provider() *schema.Provider {
 	return provider
 }
 
-// Generated resources: 199
+// Generated resources: 200
 // Generated IAM resources: 102
-// Total generated resources: 301
+// Total generated resources: 302
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -973,6 +974,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_healthcare_fhir_store":                                 resourceHealthcareFhirStore(),
 			"google_healthcare_hl7_v2_store":                               resourceHealthcareHl7V2Store(),
 			"google_iam_workload_identity_pool":                            resourceIAMBetaWorkloadIdentityPool(),
+			"google_iam_workload_identity_pool_provider":                   resourceIAMBetaWorkloadIdentityPoolProvider(),
 			"google_iap_web_iam_binding":                                   ResourceIamBinding(IapWebIamSchema, IapWebIamUpdaterProducer, IapWebIdParseFunc),
 			"google_iap_web_iam_member":                                    ResourceIamMember(IapWebIamSchema, IapWebIamUpdaterProducer, IapWebIdParseFunc),
 			"google_iap_web_iam_policy":                                    ResourceIamPolicy(IapWebIamSchema, IapWebIamUpdaterProducer, IapWebIdParseFunc),
@@ -1185,6 +1187,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_organization_iam_audit_config":         ResourceIamAuditConfig(IamOrganizationSchema, NewOrganizationIamUpdater, OrgIdParseFunc),
 			"google_organization_policy":                   resourceGoogleOrganizationPolicy(),
 			"google_project":                               resourceGoogleProject(),
+			"google_project_default_service_accounts":      resourceGoogleProjectDefaultServiceAccounts(),
 			"google_project_iam_policy":                    ResourceIamPolicy(IamPolicyProjectSchema, NewProjectIamPolicyUpdater, ProjectIdParseFunc),
 			"google_project_iam_binding":                   ResourceIamBindingWithBatching(IamProjectSchema, NewProjectIamUpdater, ProjectIdParseFunc, IamBatchingEnabled),
 			"google_project_iam_member":                    ResourceIamMemberWithBatching(IamProjectSchema, NewProjectIamUpdater, ProjectIdParseFunc, IamBatchingEnabled),
