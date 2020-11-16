@@ -43,6 +43,21 @@ func resourceAppEngineFlexibleAppVersion() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"entrypoint": {
+				Type:        schema.TypeList,
+				Required:    true,
+				Description: `The entrypoint for the application.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"shell": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `The format should be a shell command that can be fed to bash -c.`,
+						},
+					},
+				},
+			},
 			"liveness_check": {
 				Type:        schema.TypeList,
 				Required:    true,
@@ -509,21 +524,6 @@ the configuration ID. In this case, configId must be omitted.`,
 							ValidateFunc: validation.StringInSlice([]string{"FIXED", "MANAGED", ""}, false),
 							Description:  `Endpoints rollout strategy. If FIXED, configId must be specified. If MANAGED, configId must be omitted. Default value: "FIXED" Possible values: ["FIXED", "MANAGED"]`,
 							Default:      "FIXED",
-						},
-					},
-				},
-			},
-			"entrypoint": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: `The entrypoint for the application.`,
-				MaxItems:    1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"shell": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: `The format should be a shell command that can be fed to bash -c.`,
 						},
 					},
 				},

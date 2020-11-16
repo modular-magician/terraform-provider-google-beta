@@ -130,6 +130,11 @@ The following arguments are supported:
   Code and application artifacts that make up this version.
   Structure is documented below.
 
+* `entrypoint` -
+  (Required)
+  The entrypoint for the application.
+  Structure is documented below.
+
 * `service` -
   (Required)
   AppEngine service resource
@@ -171,6 +176,12 @@ The `files` block supports:
   (Required)
   Source URL
 
+The `entrypoint` block supports:
+
+* `shell` -
+  (Required)
+  The format should be a shell command that can be fed to bash -c.
+
 - - -
 
 
@@ -201,11 +212,6 @@ The `files` block supports:
 * `env_variables` -
   (Optional)
   Environment variables available to the application.
-
-* `entrypoint` -
-  (Optional)
-  The entrypoint for the application.
-  Structure is documented below.
 
 * `vpc_access_connector` -
   (Optional)
@@ -336,12 +342,6 @@ The `libraries` block supports:
 * `version` -
   (Optional)
   Version of the library to select, or "latest".
-
-The `entrypoint` block supports:
-
-* `shell` -
-  (Required)
-  The format should be a shell command that can be fed to bash -c.
 
 The `vpc_access_connector` block supports:
 

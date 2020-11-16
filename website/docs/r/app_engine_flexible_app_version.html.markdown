@@ -152,6 +152,11 @@ The following arguments are supported:
   Health checking configuration for VM instances. Unhealthy instances are killed and replaced with new instances.
   Structure is documented below.
 
+* `entrypoint` -
+  (Required)
+  The entrypoint for the application.
+  Structure is documented below.
+
 * `service` -
   (Required)
   AppEngine service resource
@@ -217,6 +222,12 @@ The `liveness_check` block supports:
 * `initial_delay` -
   (Optional)
   The initial delay before starting to execute the checks. Default: "300s"
+
+The `entrypoint` block supports:
+
+* `shell` -
+  (Required)
+  The format should be a shell command that can be fed to bash -c.
 
 - - -
 
@@ -303,11 +314,6 @@ The `liveness_check` block supports:
 * `endpoints_api_service` -
   (Optional)
   Code and application artifacts that make up this version.
-  Structure is documented below.
-
-* `entrypoint` -
-  (Optional)
-  The entrypoint for the application.
   Structure is documented below.
 
 * `vpc_access_connector` -
@@ -592,12 +598,6 @@ The `endpoints_api_service` block supports:
 * `disable_trace_sampling` -
   (Optional)
   Enable or disable trace sampling. By default, this is set to false for enabled.
-
-The `entrypoint` block supports:
-
-* `shell` -
-  (Required)
-  The format should be a shell command that can be fed to bash -c.
 
 The `vpc_access_connector` block supports:
 
