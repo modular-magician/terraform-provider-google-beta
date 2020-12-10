@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"log"
 	"reflect"
-	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -104,7 +103,7 @@ resource will not have any SSL policy configured.`,
 				Description: `Creation timestamp in RFC3339 text format.`,
 			},
 			"proxy_id": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `The unique identifier for the resource.`,
 			},
@@ -511,20 +510,7 @@ func flattenComputeTargetHttpsProxyDescription(v interface{}, d *schema.Resource
 }
 
 func flattenComputeTargetHttpsProxyProxyId(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
+	return v
 }
 
 func flattenComputeTargetHttpsProxyName(v interface{}, d *schema.ResourceData, config *Config) interface{} {

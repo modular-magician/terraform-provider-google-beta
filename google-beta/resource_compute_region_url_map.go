@@ -1696,7 +1696,7 @@ succeed only if all of the test cases pass.`,
 updates of this resource.`,
 			},
 			"map_id": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `The unique identifier for the resource.`,
 			},
@@ -2147,20 +2147,7 @@ func flattenComputeRegionUrlMapHostRulePathMatcher(v interface{}, d *schema.Reso
 }
 
 func flattenComputeRegionUrlMapMapId(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
+	return v
 }
 
 func flattenComputeRegionUrlMapFingerprint(v interface{}, d *schema.ResourceData, config *Config) interface{} {

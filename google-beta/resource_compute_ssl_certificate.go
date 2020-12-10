@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"log"
 	"reflect"
-	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -82,7 +81,7 @@ character, which cannot be a dash.
 These are in the same namespace as the managed SSL certificates.`,
 			},
 			"certificate_id": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `The unique identifier for the resource.`,
 			},
@@ -335,20 +334,7 @@ func flattenComputeSslCertificateDescription(v interface{}, d *schema.ResourceDa
 }
 
 func flattenComputeSslCertificateCertificateId(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := strconv.ParseInt(strVal, 10, 64); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
+	return v
 }
 
 func flattenComputeSslCertificateName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
