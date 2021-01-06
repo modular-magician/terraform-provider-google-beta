@@ -61,7 +61,7 @@ resource "google_cloud_run_service" "default" {
   template {
     spec {
       containers {
-        image = "gcr.io/cloudrun/hello"
+        image = "us-docker.pkg.dev/cloudrun/container/hello"
       }
     }
   }
@@ -113,7 +113,7 @@ resource "google_cloud_run_service" "default" {
   template {
     spec {
       containers {
-        image = "gcr.io/cloudrun/hello"
+        image = "us-docker.pkg.dev/cloudrun/container/hello"
       }
     }
 
@@ -178,7 +178,7 @@ resource "google_cloud_run_service" "default" {
   template {
     spec {
       containers {
-        image = "gcr.io/cloudrun/hello"
+        image = "us-docker.pkg.dev/cloudrun/container/hello"
       }
     }
   }
@@ -241,7 +241,7 @@ resource "google_cloud_run_service" "default" {
   template {
     spec {
       containers {
-        image = "gcr.io/cloudrun/hello"
+        image = "us-docker.pkg.dev/cloudrun/container/hello"
         env {
           name = "SOURCE"
           value = "remote"
