@@ -220,6 +220,15 @@ The following arguments are supported:
   Default value is `BASIC`.
   Possible values are `BASIC` and `STANDARD_HA`.
 
+* `transit_encryption_mode` -
+  (Optional)
+  The TLS encryption mode of the Redis instance. Must be one of:
+  - TRANSIT_ENCRYPTION_MODE_UNSPECIFIED
+  - SERVER_AUTHENTICATION
+  - DISABLED
+  Default value is `SERVER_AUTHENTICATION`.
+  Possible values are `TRANSIT_ENCRYPTION_MODE_UNSPECIFIED`, `SERVER_AUTHENTICATION`, and `DISABLED`.
+
 * `region` -
   (Optional)
   The name of the Redis region of the instance.

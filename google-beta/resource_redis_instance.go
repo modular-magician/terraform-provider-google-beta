@@ -163,6 +163,18 @@ network.`,
 - STANDARD_HA: highly available primary/replica instances Default value: "BASIC" Possible values: ["BASIC", "STANDARD_HA"]`,
 				Default: "BASIC",
 			},
+			"transit_encryption_mode": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.StringInSlice([]string{"TRANSIT_ENCRYPTION_MODE_UNSPECIFIED", "SERVER_AUTHENTICATION", "DISABLED", ""}, false),
+				Description: `The TLS encryption mode of the Redis instance. Must be one of:
+
+- TRANSIT_ENCRYPTION_MODE_UNSPECIFIED
+- SERVER_AUTHENTICATION
+- DISABLED Default value: "SERVER_AUTHENTICATION" Possible values: ["TRANSIT_ENCRYPTION_MODE_UNSPECIFIED", "SERVER_AUTHENTICATION", "DISABLED"]`,
+				Default: "SERVER_AUTHENTICATION",
+			},
 			"create_time": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -298,6 +310,12 @@ func resourceRedisInstanceCreate(d *schema.ResourceData, meta interface{}) error
 		return err
 	} else if v, ok := d.GetOkExists("tier"); !isEmptyValue(reflect.ValueOf(tierProp)) && (ok || !reflect.DeepEqual(v, tierProp)) {
 		obj["tier"] = tierProp
+	}
+	transitEncryptionModeProp, err := expandRedisInstanceTransitEncryptionMode(d.Get("transit_encryption_mode"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("transit_encryption_mode"); !isEmptyValue(reflect.ValueOf(transitEncryptionModeProp)) && (ok || !reflect.DeepEqual(v, transitEncryptionModeProp)) {
+		obj["transitEncryptionMode"] = transitEncryptionModeProp
 	}
 
 	obj, err = resourceRedisInstanceEncoder(d, meta, obj)
@@ -478,6 +496,9 @@ func resourceRedisInstanceRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err := d.Set("tier", flattenRedisInstanceTier(res["tier"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err := d.Set("transit_encryption_mode", flattenRedisInstanceTransitEncryptionMode(res["transitEncryptionMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 
@@ -761,6 +782,10 @@ func flattenRedisInstanceTier(v interface{}, d *schema.ResourceData, config *Con
 	return v
 }
 
+func flattenRedisInstanceTransitEncryptionMode(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func expandRedisInstanceAlternativeLocationId(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
@@ -828,6 +853,10 @@ func expandRedisInstanceReservedIpRange(v interface{}, d TerraformResourceData, 
 }
 
 func expandRedisInstanceTier(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandRedisInstanceTransitEncryptionMode(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
