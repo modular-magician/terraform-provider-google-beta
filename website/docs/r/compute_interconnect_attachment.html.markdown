@@ -27,6 +27,10 @@ information, see Creating VLAN Attachments.
 
 
 
+~> **Warning:** If you are using the resource with type 'PARTNER_PROVIDER', you will not be able to create a new 
+interconnect_attachment when passing in a new pairing key. If you want to destroy and create a new 
+interconnect_attachment, you must also change the name. This only applies when the type is 'PARTNER_PROVIDER'
+
 ## Example Usage - Interconnect Attachment Basic
 
 
@@ -47,13 +51,6 @@ resource "google_compute_router" "foobar" {
 
 The following arguments are supported:
 
-
-* `router` -
-  (Required)
-  URL of the cloud router to be used for dynamic routing. This router must be in
-  the same region as this InterconnectAttachment. The InterconnectAttachment will
-  automatically connect the Interconnect to the network & region within which the
-  Cloud Router is configured.
 
 * `name` -
   (Required)
@@ -100,12 +97,31 @@ The following arguments are supported:
   selected availability domain will be provided to the Partner via the
   pairing key so that the provisioned circuit will lie in the specified
   domain. If not specified, the value will default to AVAILABILITY_DOMAIN_ANY.
+  Possible values are `AVAILABILITY_DOMAIN_1`, `AVAILABILITY_DOMAIN_2`, and `AVAILABILITY_DOMAIN_ANY`.
+
+* `partner_metadata` -
+  (Optional)
+  Informational metadata about Partner attachments from Partners to display
+  to customers. Output only for for PARTNER type, mutable for PARTNER_PROVIDER,
+  not available for DEDICATED.
+  Structure is documented below.
+
+* `pairing_key` -
+  (Optional)
+  [Output only for type PARTNER. Input only for PARTNER_PROVIDER. Not present for DEDICATED]. The opaque identifier of an PARTNER attachment used to initiate provisioning with a selected partner. Of the form "XXXXX/region/domain"
 
 * `type` -
   (Optional)
   The type of InterconnectAttachment you wish to create. Defaults to
   DEDICATED.
   Possible values are `DEDICATED`, `PARTNER`, and `PARTNER_PROVIDER`.
+
+* `router` -
+  (Optional)
+  URL of the cloud router to be used for dynamic routing. This router must be in
+  the same region as this InterconnectAttachment. The InterconnectAttachment will
+  automatically connect the Interconnect to the network & region within which the
+  Cloud Router is configured.
 
 * `candidate_subnets` -
   (Optional)
@@ -130,6 +146,20 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+The `partner_metadata` block supports:
+
+* `partner_name` -
+  (Optional)
+  Plain text name of the Partner providing this attachment. This value may be validated to match approved Partner values.
+
+* `interconnect_name` -
+  (Optional)
+  Plain text name of the Interconnect this attachment is connected to, as displayed in the Partner's portal. For instance "Chicago 1". This value may be validated to match approved Partner values.
+
+* `portal_url` -
+  (Optional)
+  URL of the Partner's portal for this Attachment. Partners may customise this to be a deep link to the specific resource on the Partner portal. This value may be validated to match approved Partner values.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -143,11 +173,6 @@ In addition to the arguments listed above, the following computed attributes are
 * `customer_router_ip_address` -
   IPv4 address + prefix length to be configured on the customer
   router subinterface for this interconnect attachment.
-
-* `pairing_key` -
-  [Output only for type PARTNER. Not present for DEDICATED]. The opaque
-  identifier of an PARTNER attachment used to initiate provisioning with
-  a selected partner. Of the form "XXXXX/region/domain"
 
 * `partner_asn` -
   [Output only for type PARTNER. Not present for DEDICATED]. Optional

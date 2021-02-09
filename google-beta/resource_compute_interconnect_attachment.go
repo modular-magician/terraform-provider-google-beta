@@ -75,22 +75,11 @@ name must be 1-63 characters long and match the regular expression
 lowercase letter, and all following characters must be a dash, lowercase
 letter, or digit, except the last character, which cannot be a dash.`,
 			},
-			"router": {
-				Type:             schema.TypeString,
-				Required:         true,
-				ForceNew:         true,
-				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description: `URL of the cloud router to be used for dynamic routing. This router must be in
-the same region as this InterconnectAttachment. The InterconnectAttachment will
-automatically connect the Interconnect to the network & region within which the
-Cloud Router is configured.`,
-			},
 			"admin_enabled": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Description: `Whether the VLAN attachment is enabled or disabled.  When using
 PARTNER type this will Pre-Activate the interconnect attachment`,
-				Default: true,
 			},
 			"bandwidth": {
 				Type:         schema.TypeString,
@@ -124,16 +113,17 @@ Google will randomly select an unused /29 from all of link-local space.`,
 				Description: `An optional description of this resource.`,
 			},
 			"edge_availability_domain": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-				ForceNew: true,
+				Type:         schema.TypeString,
+				Computed:     true,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.StringInSlice([]string{"AVAILABILITY_DOMAIN_1", "AVAILABILITY_DOMAIN_2", "AVAILABILITY_DOMAIN_ANY", ""}, false),
 				Description: `Desired availability domain for the attachment. Only available for type
 PARTNER, at creation time. For improved reliability, customers should
 configure a pair of attachments with one per availability domain. The
 selected availability domain will be provided to the Partner via the
 pairing key so that the provisioned circuit will lie in the specified
-domain. If not specified, the value will default to AVAILABILITY_DOMAIN_ANY.`,
+domain. If not specified, the value will default to AVAILABILITY_DOMAIN_ANY. Possible values: ["AVAILABILITY_DOMAIN_1", "AVAILABILITY_DOMAIN_2", "AVAILABILITY_DOMAIN_ANY"]`,
 			},
 			"interconnect": {
 				Type:             schema.TypeString,
@@ -144,12 +134,58 @@ domain. If not specified, the value will default to AVAILABILITY_DOMAIN_ANY.`,
 traffic will traverse through. Required if type is DEDICATED, must not
 be set if type is PARTNER.`,
 			},
+			"pairing_key": {
+				Type:             schema.TypeString,
+				Computed:         true,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: suppressPartnerProviderPairingKey,
+				Description:      `[Output only for type PARTNER. Input only for PARTNER_PROVIDER. Not present for DEDICATED]. The opaque identifier of an PARTNER attachment used to initiate provisioning with a selected partner. Of the form "XXXXX/region/domain"`,
+			},
+			"partner_metadata": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Optional: true,
+				Description: `Informational metadata about Partner attachments from Partners to display
+to customers. Output only for for PARTNER type, mutable for PARTNER_PROVIDER,
+not available for DEDICATED.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"interconnect_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Plain text name of the Interconnect this attachment is connected to, as displayed in the Partner's portal. For instance "Chicago 1". This value may be validated to match approved Partner values.`,
+						},
+						"partner_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Plain text name of the Partner providing this attachment. This value may be validated to match approved Partner values.`,
+						},
+						"portal_url": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `URL of the Partner's portal for this Attachment. Partners may customise this to be a deep link to the specific resource on the Partner portal. This value may be validated to match approved Partner values.`,
+						},
+					},
+				},
+			},
 			"region": {
 				Type:             schema.TypeString,
 				Computed:         true,
 				Optional:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
 				Description:      `Region where the regional interconnect attachment resides.`,
+			},
+			"router": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
+				Description: `URL of the cloud router to be used for dynamic routing. This router must be in
+the same region as this InterconnectAttachment. The InterconnectAttachment will
+automatically connect the Interconnect to the network & region within which the
+Cloud Router is configured.`,
 			},
 			"type": {
 				Type:         schema.TypeString,
@@ -190,13 +226,6 @@ router subinterface for this interconnect attachment.`,
 				Computed: true,
 				Description: `Google reference ID, to be used when raising support tickets with
 Google or otherwise to debug backend connectivity issues.`,
-			},
-			"pairing_key": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Description: `[Output only for type PARTNER. Not present for DEDICATED]. The opaque
-identifier of an PARTNER attachment used to initiate provisioning with
-a selected partner. Of the form "XXXXX/region/domain"`,
 			},
 			"partner_asn": {
 				Type:     schema.TypeString,
@@ -278,6 +307,18 @@ func resourceComputeInterconnectAttachmentCreate(d *schema.ResourceData, meta in
 		return err
 	} else if v, ok := d.GetOkExists("edge_availability_domain"); !isEmptyValue(reflect.ValueOf(edgeAvailabilityDomainProp)) && (ok || !reflect.DeepEqual(v, edgeAvailabilityDomainProp)) {
 		obj["edgeAvailabilityDomain"] = edgeAvailabilityDomainProp
+	}
+	partnerMetadataProp, err := expandComputeInterconnectAttachmentPartnerMetadata(d.Get("partner_metadata"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("partner_metadata"); !isEmptyValue(reflect.ValueOf(partnerMetadataProp)) && (ok || !reflect.DeepEqual(v, partnerMetadataProp)) {
+		obj["partnerMetadata"] = partnerMetadataProp
+	}
+	pairingKeyProp, err := expandComputeInterconnectAttachmentPairingKey(d.Get("pairing_key"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("pairing_key"); !isEmptyValue(reflect.ValueOf(pairingKeyProp)) && (ok || !reflect.DeepEqual(v, pairingKeyProp)) {
+		obj["pairingKey"] = pairingKeyProp
 	}
 	typeProp, err := expandComputeInterconnectAttachmentType(d.Get("type"), d, config)
 	if err != nil {
@@ -400,9 +441,6 @@ func resourceComputeInterconnectAttachmentRead(d *schema.ResourceData, meta inte
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
 
-	if err := d.Set("admin_enabled", flattenComputeInterconnectAttachmentAdminEnabled(res["adminEnabled"], d, config)); err != nil {
-		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
-	}
 	if err := d.Set("cloud_router_ip_address", flattenComputeInterconnectAttachmentCloudRouterIpAddress(res["cloudRouterIpAddress"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
@@ -419,6 +457,9 @@ func resourceComputeInterconnectAttachmentRead(d *schema.ResourceData, meta inte
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
 	if err := d.Set("edge_availability_domain", flattenComputeInterconnectAttachmentEdgeAvailabilityDomain(res["edgeAvailabilityDomain"], d, config)); err != nil {
+		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
+	}
+	if err := d.Set("partner_metadata", flattenComputeInterconnectAttachmentPartnerMetadata(res["partnerMetadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
 	if err := d.Set("pairing_key", flattenComputeInterconnectAttachmentPairingKey(res["pairingKey"], d, config)); err != nil {
@@ -494,6 +535,12 @@ func resourceComputeInterconnectAttachmentUpdate(d *schema.ResourceData, meta in
 		return err
 	} else if v, ok := d.GetOkExists("bandwidth"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, bandwidthProp)) {
 		obj["bandwidth"] = bandwidthProp
+	}
+	partnerMetadataProp, err := expandComputeInterconnectAttachmentPartnerMetadata(d.Get("partner_metadata"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("partner_metadata"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, partnerMetadataProp)) {
+		obj["partnerMetadata"] = partnerMetadataProp
 	}
 	regionProp, err := expandComputeInterconnectAttachmentRegion(d.Get("region"), d, config)
 	if err != nil {
@@ -602,10 +649,6 @@ func resourceComputeInterconnectAttachmentImport(d *schema.ResourceData, meta in
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenComputeInterconnectAttachmentAdminEnabled(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	return v
-}
-
 func flattenComputeInterconnectAttachmentCloudRouterIpAddress(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
@@ -627,6 +670,35 @@ func flattenComputeInterconnectAttachmentBandwidth(v interface{}, d *schema.Reso
 }
 
 func flattenComputeInterconnectAttachmentEdgeAvailabilityDomain(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenComputeInterconnectAttachmentPartnerMetadata(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["partner_name"] =
+		flattenComputeInterconnectAttachmentPartnerMetadataPartnerName(original["partnerName"], d, config)
+	transformed["interconnect_name"] =
+		flattenComputeInterconnectAttachmentPartnerMetadataInterconnectName(original["interconnectName"], d, config)
+	transformed["portal_url"] =
+		flattenComputeInterconnectAttachmentPartnerMetadataPortalUrl(original["portalUrl"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeInterconnectAttachmentPartnerMetadataPartnerName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenComputeInterconnectAttachmentPartnerMetadataInterconnectName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenComputeInterconnectAttachmentPartnerMetadataPortalUrl(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -736,6 +808,55 @@ func expandComputeInterconnectAttachmentBandwidth(v interface{}, d TerraformReso
 }
 
 func expandComputeInterconnectAttachmentEdgeAvailabilityDomain(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeInterconnectAttachmentPartnerMetadata(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPartnerName, err := expandComputeInterconnectAttachmentPartnerMetadataPartnerName(original["partner_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPartnerName); val.IsValid() && !isEmptyValue(val) {
+		transformed["partnerName"] = transformedPartnerName
+	}
+
+	transformedInterconnectName, err := expandComputeInterconnectAttachmentPartnerMetadataInterconnectName(original["interconnect_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInterconnectName); val.IsValid() && !isEmptyValue(val) {
+		transformed["interconnectName"] = transformedInterconnectName
+	}
+
+	transformedPortalUrl, err := expandComputeInterconnectAttachmentPartnerMetadataPortalUrl(original["portal_url"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPortalUrl); val.IsValid() && !isEmptyValue(val) {
+		transformed["portalUrl"] = transformedPortalUrl
+	}
+
+	return transformed, nil
+}
+
+func expandComputeInterconnectAttachmentPartnerMetadataPartnerName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeInterconnectAttachmentPartnerMetadataInterconnectName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeInterconnectAttachmentPartnerMetadataPortalUrl(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeInterconnectAttachmentPairingKey(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
