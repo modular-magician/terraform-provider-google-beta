@@ -709,7 +709,7 @@ func expandBillingBudgetBudgetFilter(v interface{}, d TerraformResourceData, con
 	transformedProjects, err := expandBillingBudgetBudgetFilterProjects(original["projects"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedProjects); val.IsValid() && !isEmptyValue(val) {
+	} else {
 		transformed["projects"] = transformedProjects
 	}
 
