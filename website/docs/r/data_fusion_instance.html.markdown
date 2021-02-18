@@ -96,7 +96,10 @@ The following arguments are supported:
   of concurrent pipelines, no support for streaming pipelines, etc.
   - ENTERPRISE: Enterprise Data Fusion instance. In Enterprise type, the user will have more features
   available, such as support for streaming pipelines, higher number of concurrent pipelines, etc.
-  Possible values are `BASIC` and `ENTERPRISE`.
+  - DEVELOPER: Developer Data Fusion Instance. This is a new type that has been added to the suite that 
+  gives us all features of an enterprise instance to help teams run development environments using this
+  mode.
+  Possible values are `BASIC`, `ENTERPRISE`, and `DEVELOPER`.
 
 
 - - -
