@@ -120,6 +120,203 @@ Format: accessPolicies/{policy_id}/accessLevels/{access_level_name}`,
 							},
 							AtLeastOneOf: []string{"status.0.resources", "status.0.access_levels", "status.0.restricted_services"},
 						},
+						"egress_policies": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `List of EgressPolicies to apply to the perimeter. A perimeter may have multiple EgressPolicies, each of which is evaluated separately. Access is granted if any EgressPolicy grants it. Must be empty for a perimeter bridge.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"egress_from": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: `Defines conditions on the source of a request causing this EgressPolicy to apply.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"identities": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `A list of identities that are allowed access through this [EgressPolicy]. Should be in the format of email address. The email address should represent individual user or service account only.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+													ExactlyOneOf: []string{},
+												},
+												"identity_type": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													ValidateFunc: validation.StringInSlice([]string{"IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT", ""}, false),
+													Description:  `Specifies the type of identities that are allowed access to outside the perimeter. If left unspecified, then members of 'identities' field will be allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT"]`,
+													ExactlyOneOf: []string{},
+												},
+											},
+										},
+									},
+									"egress_to": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: `Defines the conditions on the ApiOperation and destination resources that cause this EgressPolicy to apply.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"operations": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `A list of ApiOperations that this egress rule applies to. A request matches if it contains an operation/service in this list.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"method_selectors": {
+																Type:        schema.TypeList,
+																Required:    true,
+																Description: `API methods or permissions to allow. Method or permission must belong to the service specified by 'service_name' field. A single MethodSelector entry with '*' specified for the 'method' field will allow all methods AND permissions for the service specified in 'service_name'.`,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"method": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			Description:  `Value for 'method' should be a valid method name for the corresponding 'service_name' in ApiOperation. If '*' used as value for 'method', then ALL methods and permissions are allowed.`,
+																			ExactlyOneOf: []string{},
+																		},
+																		"permission": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			Description:  `Value for 'permission' should be a valid Cloud IAM permission for the corresponding 'service_name' in ApiOperation.`,
+																			ExactlyOneOf: []string{},
+																		},
+																	},
+																},
+															},
+															"service_name": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: `The name of the API whose methods or permissions the IngressPolicy or EgressPolicy want to allow. A single ApiOperation with 'service_name' field set to '*' will allow all methods AND permissions for all services.`,
+															},
+														},
+													},
+												},
+												"resources": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `A list of resources, currently only projects in the form 'projects/', that match this to stanza. A request matches if it contains a resource in this list. If '*' is specified for resources, then this EgressTo rule will authorize access to all resources outside the perimeter.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"ingress_policies": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `List of IngressPolicies to apply to the perimeter. A perimeter may have multiple IngressPolicies, each of which is evaluated separately. Access is granted if any Ingress Policy grants it. Must be empty for a perimeter bridge.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"ingress_from": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: `Defines the conditions on the source of a request causing this IngressPolicy to apply.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"sources": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `Sources that this IngressPolicy authorizes access from.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"access_level": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																Description:  `An AccessLevel resource name that allow resources within the ServicePerimeters to be accessed from the internet. AccessLevels listed must be in the same policy as this ServicePerimeter. Referencing a nonexistent AccessLevel will cause an error. If no AccessLevel names are listed, resources within the perimeter can only be accessed via Google Cloud calls with request origins within the perimeter. Example: 'accessPolicies/MY_POLICY/accessLevels/MY_LEVEL'. If '*' is specified, then all IngressSources will be allowed.`,
+																ExactlyOneOf: []string{},
+															},
+															"resource": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																Description:  `A Google Cloud resource that is allowed to ingress the perimeter. Requests from these resources will be allowed to access perimeter data. Currently only projects are allowed. Format: 'projects/{project_number}' The project may be in any Google Cloud organization, not just the organization that the perimeter is defined in. '*' is not allowed, the case of allowing all Google Cloud resources only is not supported.`,
+																ExactlyOneOf: []string{},
+															},
+														},
+													},
+												},
+												"identities": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `A list of identities that are allowed access through this ingress policy. Should be in the format of email address. The email address should represent individual user or service account only.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+													ExactlyOneOf: []string{},
+												},
+												"identity_type": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													ValidateFunc: validation.StringInSlice([]string{"IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT", ""}, false),
+													Description:  `Specifies the type of identities that are allowed access from outside the perimeter. If left unspecified, then members of 'identities' field will be allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT"]`,
+													ExactlyOneOf: []string{},
+												},
+											},
+										},
+									},
+									"ingress_to": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: `Defines the conditions on the ApiOperation and request destination that cause this IngressPolicy to apply.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"operations": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `A list of ApiOperations the sources specified in corresponding IngressFrom are allowed to perform in this ServicePerimeter.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"method_selectors": {
+																Type:        schema.TypeList,
+																Required:    true,
+																Description: `API methods or permissions to allow. Method or permission must belong to the service specified by 'service_name' field. A single MethodSelector entry with '*' specified for the 'method' field will allow all methods AND permissions for the service specified in 'service_name'.`,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"method": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			Description:  `Value for 'method' should be a valid method name for the corresponding 'service_name' in ApiOperation. If '*' used as value for 'method', then ALL methods and permissions are allowed.`,
+																			ExactlyOneOf: []string{},
+																		},
+																		"permission": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			Description:  `Value for 'permission' should be a valid Cloud IAM permission for the corresponding 'service_name' in ApiOperation.`,
+																			ExactlyOneOf: []string{},
+																		},
+																	},
+																},
+															},
+															"service_name": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: `The name of the API whose methods or permissions the IngressPolicy or EgressPolicy want to allow. A single ApiOperation with 'service_name' field set to '*' will allow all methods AND permissions for all services.`,
+															},
+														},
+													},
+												},
+												"resources": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `A list of resources, currently only projects in the form 'projects/', protected by this ServicePerimeter that are allowed to be accessed by sources defined in the corresponding IngressFrom. A request matches if it contains a resource in this list. If '*' is specified for resources, then this IngressTo rule will authorize access to all resources inside the perimeter, provided that the request also matches the 'operations' field.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
 						"resources": {
 							Type:     schema.TypeList,
 							Optional: true,
@@ -199,6 +396,203 @@ Format: accessPolicies/{policy_id}/accessLevels/{access_level_name}`,
 								Type: schema.TypeString,
 							},
 							AtLeastOneOf: []string{"status.0.resources", "status.0.access_levels", "status.0.restricted_services"},
+						},
+						"egress_policies": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `List of EgressPolicies to apply to the perimeter. A perimeter may have multiple EgressPolicies, each of which is evaluated separately. Access is granted if any EgressPolicy grants it. Must be empty for a perimeter bridge.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"egress_from": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: `Defines conditions on the source of a request causing this EgressPolicy to apply.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"identities": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `A list of identities that are allowed access through this [EgressPolicy]. Should be in the format of email address. The email address should represent individual user or service account only.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+													ExactlyOneOf: []string{},
+												},
+												"identity_type": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													ValidateFunc: validation.StringInSlice([]string{"IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT", ""}, false),
+													Description:  `Specifies the type of identities that are allowed access to outside the perimeter. If left unspecified, then members of 'identities' field will be allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT"]`,
+													ExactlyOneOf: []string{},
+												},
+											},
+										},
+									},
+									"egress_to": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: `Defines the conditions on the ApiOperation and destination resources that cause this EgressPolicy to apply.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"operations": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `A list of ApiOperations that this egress rule applies to. A request matches if it contains an operation/service in this list.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"method_selectors": {
+																Type:        schema.TypeList,
+																Required:    true,
+																Description: `API methods or permissions to allow. Method or permission must belong to the service specified by 'service_name' field. A single MethodSelector entry with '*' specified for the 'method' field will allow all methods AND permissions for the service specified in 'service_name'.`,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"method": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			Description:  `Value for 'method' should be a valid method name for the corresponding 'service_name' in ApiOperation. If '*' used as value for 'method', then ALL methods and permissions are allowed.`,
+																			ExactlyOneOf: []string{},
+																		},
+																		"permission": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			Description:  `Value for 'permission' should be a valid Cloud IAM permission for the corresponding 'service_name' in ApiOperation.`,
+																			ExactlyOneOf: []string{},
+																		},
+																	},
+																},
+															},
+															"service_name": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: `The name of the API whose methods or permissions the IngressPolicy or EgressPolicy want to allow. A single ApiOperation with 'service_name' field set to '*' will allow all methods AND permissions for all services.`,
+															},
+														},
+													},
+												},
+												"resources": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `A list of resources, currently only projects in the form 'projects/', that match this to stanza. A request matches if it contains a resource in this list. If '*' is specified for resources, then this EgressTo rule will authorize access to all resources outside the perimeter.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"ingress_policies": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `List of IngressPolicies to apply to the perimeter. A perimeter may have multiple IngressPolicies, each of which is evaluated separately. Access is granted if any Ingress Policy grants it. Must be empty for a perimeter bridge.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"ingress_from": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: `Defines the conditions on the source of a request causing this IngressPolicy to apply.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"sources": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `Sources that this IngressPolicy authorizes access from.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"access_level": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																Description:  `An AccessLevel resource name that allow resources within the ServicePerimeters to be accessed from the internet. AccessLevels listed must be in the same policy as this ServicePerimeter. Referencing a nonexistent AccessLevel will cause an error. If no AccessLevel names are listed, resources within the perimeter can only be accessed via Google Cloud calls with request origins within the perimeter. Example: 'accessPolicies/MY_POLICY/accessLevels/MY_LEVEL'. If '*' is specified, then all IngressSources will be allowed.`,
+																ExactlyOneOf: []string{},
+															},
+															"resource": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																Description:  `A Google Cloud resource that is allowed to ingress the perimeter. Requests from these resources will be allowed to access perimeter data. Currently only projects are allowed. Format: 'projects/{project_number}' The project may be in any Google Cloud organization, not just the organization that the perimeter is defined in. '*' is not allowed, the case of allowing all Google Cloud resources only is not supported.`,
+																ExactlyOneOf: []string{},
+															},
+														},
+													},
+												},
+												"identities": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `A list of identities that are allowed access through this ingress policy. Should be in the format of email address. The email address should represent individual user or service account only.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+													ExactlyOneOf: []string{},
+												},
+												"identity_type": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													ValidateFunc: validation.StringInSlice([]string{"IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT", ""}, false),
+													Description:  `Specifies the type of identities that are allowed access from outside the perimeter. If left unspecified, then members of 'identities' field will be allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT"]`,
+													ExactlyOneOf: []string{},
+												},
+											},
+										},
+									},
+									"ingress_to": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: `Defines the conditions on the ApiOperation and request destination that cause this IngressPolicy to apply.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"operations": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `A list of ApiOperations the sources specified in corresponding IngressFrom are allowed to perform in this ServicePerimeter.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"method_selectors": {
+																Type:        schema.TypeList,
+																Required:    true,
+																Description: `API methods or permissions to allow. Method or permission must belong to the service specified by 'service_name' field. A single MethodSelector entry with '*' specified for the 'method' field will allow all methods AND permissions for the service specified in 'service_name'.`,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"method": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			Description:  `Value for 'method' should be a valid method name for the corresponding 'service_name' in ApiOperation. If '*' used as value for 'method', then ALL methods and permissions are allowed.`,
+																			ExactlyOneOf: []string{},
+																		},
+																		"permission": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			Description:  `Value for 'permission' should be a valid Cloud IAM permission for the corresponding 'service_name' in ApiOperation.`,
+																			ExactlyOneOf: []string{},
+																		},
+																	},
+																},
+															},
+															"service_name": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: `The name of the API whose methods or permissions the IngressPolicy or EgressPolicy want to allow. A single ApiOperation with 'service_name' field set to '*' will allow all methods AND permissions for all services.`,
+															},
+														},
+													},
+												},
+												"resources": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `A list of resources, currently only projects in the form 'projects/', protected by this ServicePerimeter that are allowed to be accessed by sources defined in the corresponding IngressFrom. A request matches if it contains a resource in this list. If '*' is specified for resources, then this IngressTo rule will authorize access to all resources inside the perimeter, provided that the request also matches the 'operations' field.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+											},
+										},
+									},
+								},
+							},
 						},
 						"resources": {
 							Type:     schema.TypeList,
@@ -675,6 +1069,10 @@ func flattenAccessContextManagerServicePerimeterStatus(v interface{}, d *schema.
 		flattenAccessContextManagerServicePerimeterStatusRestrictedServices(original["restrictedServices"], d, config)
 	transformed["vpc_accessible_services"] =
 		flattenAccessContextManagerServicePerimeterStatusVPCAccessibleServices(original["vpcAccessibleServices"], d, config)
+	transformed["ingress_policies"] =
+		flattenAccessContextManagerServicePerimeterStatusIngressPolicies(original["ingressPolicies"], d, config)
+	transformed["egress_policies"] =
+		flattenAccessContextManagerServicePerimeterStatusEgressPolicies(original["egressPolicies"], d, config)
 	return []interface{}{transformed}
 }
 func flattenAccessContextManagerServicePerimeterStatusResources(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -718,6 +1116,257 @@ func flattenAccessContextManagerServicePerimeterStatusVPCAccessibleServicesAllow
 	return schema.NewSet(schema.HashString, v.([]interface{}))
 }
 
+func flattenAccessContextManagerServicePerimeterStatusIngressPolicies(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"ingress_to":   flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressTo(original["ingressTo"], d, config),
+			"ingress_from": flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFrom(original["ingressFrom"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressTo(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["resources"] =
+		flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToResources(original["resources"], d, config)
+	transformed["operations"] =
+		flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperations(original["operations"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToResources(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperations(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"method_selectors": flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectors(original["methodSelectors"], d, config),
+			"service_name":     flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsServiceName(original["serviceName"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectors(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"permission": flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectorsPermission(original["permission"], d, config),
+			"method":     flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectorsMethod(original["method"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectorsPermission(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectorsMethod(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsServiceName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFrom(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["identities"] =
+		flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromIdentities(original["identities"], d, config)
+	transformed["sources"] =
+		flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSources(original["sources"], d, config)
+	transformed["identity_type"] =
+		flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromIdentityType(original["identityType"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromIdentities(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSources(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"resource":     flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSourcesResource(original["resource"], d, config),
+			"access_level": flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSourcesAccessLevel(original["accessLevel"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSourcesResource(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSourcesAccessLevel(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromIdentityType(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusEgressPolicies(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"egress_from": flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFrom(original["egressFrom"], d, config),
+			"egress_to":   flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressTo(original["egressTo"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFrom(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["identities"] =
+		flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFromIdentities(original["identities"], d, config)
+	transformed["identity_type"] =
+		flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFromIdentityType(original["identityType"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFromIdentities(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFromIdentityType(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressTo(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["resources"] =
+		flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToResources(original["resources"], d, config)
+	transformed["operations"] =
+		flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperations(original["operations"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToResources(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperations(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"method_selectors": flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectors(original["methodSelectors"], d, config),
+			"service_name":     flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsServiceName(original["serviceName"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectors(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"permission": flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectorsPermission(original["permission"], d, config),
+			"method":     flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectorsMethod(original["method"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectorsPermission(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectorsMethod(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsServiceName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func flattenAccessContextManagerServicePerimeterSpec(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	if v == nil {
 		return nil
@@ -735,6 +1384,10 @@ func flattenAccessContextManagerServicePerimeterSpec(v interface{}, d *schema.Re
 		flattenAccessContextManagerServicePerimeterSpecRestrictedServices(original["restrictedServices"], d, config)
 	transformed["vpc_accessible_services"] =
 		flattenAccessContextManagerServicePerimeterSpecVPCAccessibleServices(original["vpcAccessibleServices"], d, config)
+	transformed["ingress_policies"] =
+		flattenAccessContextManagerServicePerimeterSpecIngressPolicies(original["ingressPolicies"], d, config)
+	transformed["egress_policies"] =
+		flattenAccessContextManagerServicePerimeterSpecEgressPolicies(original["egressPolicies"], d, config)
 	return []interface{}{transformed}
 }
 func flattenAccessContextManagerServicePerimeterSpecResources(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -769,6 +1422,257 @@ func flattenAccessContextManagerServicePerimeterSpecVPCAccessibleServicesEnableR
 }
 
 func flattenAccessContextManagerServicePerimeterSpecVPCAccessibleServicesAllowedServices(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecIngressPolicies(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"ingress_to":   flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressTo(original["ingressTo"], d, config),
+			"ingress_from": flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFrom(original["ingressFrom"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressTo(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["resources"] =
+		flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToResources(original["resources"], d, config)
+	transformed["operations"] =
+		flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperations(original["operations"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToResources(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperations(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"method_selectors": flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectors(original["methodSelectors"], d, config),
+			"service_name":     flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsServiceName(original["serviceName"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectors(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"permission": flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectorsPermission(original["permission"], d, config),
+			"method":     flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectorsMethod(original["method"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectorsPermission(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectorsMethod(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsServiceName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFrom(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["identities"] =
+		flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromIdentities(original["identities"], d, config)
+	transformed["sources"] =
+		flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSources(original["sources"], d, config)
+	transformed["identity_type"] =
+		flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromIdentityType(original["identityType"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromIdentities(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSources(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"resource":     flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSourcesResource(original["resource"], d, config),
+			"access_level": flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSourcesAccessLevel(original["accessLevel"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSourcesResource(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSourcesAccessLevel(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromIdentityType(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecEgressPolicies(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"egress_from": flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFrom(original["egressFrom"], d, config),
+			"egress_to":   flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressTo(original["egressTo"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFrom(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["identities"] =
+		flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFromIdentities(original["identities"], d, config)
+	transformed["identity_type"] =
+		flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFromIdentityType(original["identityType"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFromIdentities(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFromIdentityType(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressTo(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["resources"] =
+		flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToResources(original["resources"], d, config)
+	transformed["operations"] =
+		flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperations(original["operations"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToResources(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperations(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"method_selectors": flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectors(original["methodSelectors"], d, config),
+			"service_name":     flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsServiceName(original["serviceName"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectors(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"permission": flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectorsPermission(original["permission"], d, config),
+			"method":     flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectorsMethod(original["method"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectorsPermission(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectorsMethod(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsServiceName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -829,6 +1733,20 @@ func expandAccessContextManagerServicePerimeterStatus(v interface{}, d Terraform
 		transformed["vpcAccessibleServices"] = transformedVPCAccessibleServices
 	}
 
+	transformedIngressPolicies, err := expandAccessContextManagerServicePerimeterStatusIngressPolicies(original["ingress_policies"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIngressPolicies); val.IsValid() && !isEmptyValue(val) {
+		transformed["ingressPolicies"] = transformedIngressPolicies
+	}
+
+	transformedEgressPolicies, err := expandAccessContextManagerServicePerimeterStatusEgressPolicies(original["egress_policies"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEgressPolicies); val.IsValid() && !isEmptyValue(val) {
+		transformed["egressPolicies"] = transformedEgressPolicies
+	}
+
 	return transformed, nil
 }
 
@@ -880,6 +1798,376 @@ func expandAccessContextManagerServicePerimeterStatusVPCAccessibleServicesAllowe
 	return v, nil
 }
 
+func expandAccessContextManagerServicePerimeterStatusIngressPolicies(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedIngressTo, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressTo(original["ingress_to"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedIngressTo); val.IsValid() && !isEmptyValue(val) {
+			transformed["ingressTo"] = transformedIngressTo
+		}
+
+		transformedIngressFrom, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFrom(original["ingress_from"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedIngressFrom); val.IsValid() && !isEmptyValue(val) {
+			transformed["ingressFrom"] = transformedIngressFrom
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressTo(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedResources, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToResources(original["resources"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedResources); val.IsValid() && !isEmptyValue(val) {
+		transformed["resources"] = transformedResources
+	}
+
+	transformedOperations, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperations(original["operations"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOperations); val.IsValid() && !isEmptyValue(val) {
+		transformed["operations"] = transformedOperations
+	}
+
+	return transformed, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToResources(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperations(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedMethodSelectors, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectors(original["method_selectors"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMethodSelectors); val.IsValid() && !isEmptyValue(val) {
+			transformed["methodSelectors"] = transformedMethodSelectors
+		}
+
+		transformedServiceName, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsServiceName(original["service_name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedServiceName); val.IsValid() && !isEmptyValue(val) {
+			transformed["serviceName"] = transformedServiceName
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectors(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedPermission, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectorsPermission(original["permission"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPermission); val.IsValid() && !isEmptyValue(val) {
+			transformed["permission"] = transformedPermission
+		}
+
+		transformedMethod, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectorsMethod(original["method"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMethod); val.IsValid() && !isEmptyValue(val) {
+			transformed["method"] = transformedMethod
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectorsPermission(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsMethodSelectorsMethod(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressToOperationsServiceName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFrom(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedIdentities, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromIdentities(original["identities"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdentities); val.IsValid() && !isEmptyValue(val) {
+		transformed["identities"] = transformedIdentities
+	}
+
+	transformedSources, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSources(original["sources"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSources); val.IsValid() && !isEmptyValue(val) {
+		transformed["sources"] = transformedSources
+	}
+
+	transformedIdentityType, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromIdentityType(original["identity_type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdentityType); val.IsValid() && !isEmptyValue(val) {
+		transformed["identityType"] = transformedIdentityType
+	}
+
+	return transformed, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromIdentities(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSources(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedResource, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSourcesResource(original["resource"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedResource); val.IsValid() && !isEmptyValue(val) {
+			transformed["resource"] = transformedResource
+		}
+
+		transformedAccessLevel, err := expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSourcesAccessLevel(original["access_level"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAccessLevel); val.IsValid() && !isEmptyValue(val) {
+			transformed["accessLevel"] = transformedAccessLevel
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSourcesResource(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromSourcesAccessLevel(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusIngressPoliciesIngressFromIdentityType(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusEgressPolicies(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedEgressFrom, err := expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFrom(original["egress_from"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEgressFrom); val.IsValid() && !isEmptyValue(val) {
+			transformed["egressFrom"] = transformedEgressFrom
+		}
+
+		transformedEgressTo, err := expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressTo(original["egress_to"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEgressTo); val.IsValid() && !isEmptyValue(val) {
+			transformed["egressTo"] = transformedEgressTo
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFrom(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedIdentities, err := expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFromIdentities(original["identities"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdentities); val.IsValid() && !isEmptyValue(val) {
+		transformed["identities"] = transformedIdentities
+	}
+
+	transformedIdentityType, err := expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFromIdentityType(original["identity_type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdentityType); val.IsValid() && !isEmptyValue(val) {
+		transformed["identityType"] = transformedIdentityType
+	}
+
+	return transformed, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFromIdentities(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressFromIdentityType(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressTo(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedResources, err := expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToResources(original["resources"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedResources); val.IsValid() && !isEmptyValue(val) {
+		transformed["resources"] = transformedResources
+	}
+
+	transformedOperations, err := expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperations(original["operations"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOperations); val.IsValid() && !isEmptyValue(val) {
+		transformed["operations"] = transformedOperations
+	}
+
+	return transformed, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToResources(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperations(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedMethodSelectors, err := expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectors(original["method_selectors"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMethodSelectors); val.IsValid() && !isEmptyValue(val) {
+			transformed["methodSelectors"] = transformedMethodSelectors
+		}
+
+		transformedServiceName, err := expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsServiceName(original["service_name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedServiceName); val.IsValid() && !isEmptyValue(val) {
+			transformed["serviceName"] = transformedServiceName
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectors(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedPermission, err := expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectorsPermission(original["permission"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPermission); val.IsValid() && !isEmptyValue(val) {
+			transformed["permission"] = transformedPermission
+		}
+
+		transformedMethod, err := expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectorsMethod(original["method"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMethod); val.IsValid() && !isEmptyValue(val) {
+			transformed["method"] = transformedMethod
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectorsPermission(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsMethodSelectorsMethod(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterStatusEgressPoliciesEgressToOperationsServiceName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandAccessContextManagerServicePerimeterSpec(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
@@ -915,6 +2203,20 @@ func expandAccessContextManagerServicePerimeterSpec(v interface{}, d TerraformRe
 		return nil, err
 	} else if val := reflect.ValueOf(transformedVPCAccessibleServices); val.IsValid() && !isEmptyValue(val) {
 		transformed["vpcAccessibleServices"] = transformedVPCAccessibleServices
+	}
+
+	transformedIngressPolicies, err := expandAccessContextManagerServicePerimeterSpecIngressPolicies(original["ingress_policies"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIngressPolicies); val.IsValid() && !isEmptyValue(val) {
+		transformed["ingressPolicies"] = transformedIngressPolicies
+	}
+
+	transformedEgressPolicies, err := expandAccessContextManagerServicePerimeterSpecEgressPolicies(original["egress_policies"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEgressPolicies); val.IsValid() && !isEmptyValue(val) {
+		transformed["egressPolicies"] = transformedEgressPolicies
 	}
 
 	return transformed, nil
@@ -963,6 +2265,376 @@ func expandAccessContextManagerServicePerimeterSpecVPCAccessibleServicesEnableRe
 }
 
 func expandAccessContextManagerServicePerimeterSpecVPCAccessibleServicesAllowedServices(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPolicies(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedIngressTo, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressTo(original["ingress_to"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedIngressTo); val.IsValid() && !isEmptyValue(val) {
+			transformed["ingressTo"] = transformedIngressTo
+		}
+
+		transformedIngressFrom, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFrom(original["ingress_from"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedIngressFrom); val.IsValid() && !isEmptyValue(val) {
+			transformed["ingressFrom"] = transformedIngressFrom
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressTo(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedResources, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToResources(original["resources"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedResources); val.IsValid() && !isEmptyValue(val) {
+		transformed["resources"] = transformedResources
+	}
+
+	transformedOperations, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperations(original["operations"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOperations); val.IsValid() && !isEmptyValue(val) {
+		transformed["operations"] = transformedOperations
+	}
+
+	return transformed, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToResources(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperations(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedMethodSelectors, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectors(original["method_selectors"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMethodSelectors); val.IsValid() && !isEmptyValue(val) {
+			transformed["methodSelectors"] = transformedMethodSelectors
+		}
+
+		transformedServiceName, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsServiceName(original["service_name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedServiceName); val.IsValid() && !isEmptyValue(val) {
+			transformed["serviceName"] = transformedServiceName
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectors(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedPermission, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectorsPermission(original["permission"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPermission); val.IsValid() && !isEmptyValue(val) {
+			transformed["permission"] = transformedPermission
+		}
+
+		transformedMethod, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectorsMethod(original["method"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMethod); val.IsValid() && !isEmptyValue(val) {
+			transformed["method"] = transformedMethod
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectorsPermission(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsMethodSelectorsMethod(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressToOperationsServiceName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFrom(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedIdentities, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromIdentities(original["identities"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdentities); val.IsValid() && !isEmptyValue(val) {
+		transformed["identities"] = transformedIdentities
+	}
+
+	transformedSources, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSources(original["sources"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSources); val.IsValid() && !isEmptyValue(val) {
+		transformed["sources"] = transformedSources
+	}
+
+	transformedIdentityType, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromIdentityType(original["identity_type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdentityType); val.IsValid() && !isEmptyValue(val) {
+		transformed["identityType"] = transformedIdentityType
+	}
+
+	return transformed, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromIdentities(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSources(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedResource, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSourcesResource(original["resource"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedResource); val.IsValid() && !isEmptyValue(val) {
+			transformed["resource"] = transformedResource
+		}
+
+		transformedAccessLevel, err := expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSourcesAccessLevel(original["access_level"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAccessLevel); val.IsValid() && !isEmptyValue(val) {
+			transformed["accessLevel"] = transformedAccessLevel
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSourcesResource(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromSourcesAccessLevel(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecIngressPoliciesIngressFromIdentityType(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecEgressPolicies(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedEgressFrom, err := expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFrom(original["egress_from"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEgressFrom); val.IsValid() && !isEmptyValue(val) {
+			transformed["egressFrom"] = transformedEgressFrom
+		}
+
+		transformedEgressTo, err := expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressTo(original["egress_to"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEgressTo); val.IsValid() && !isEmptyValue(val) {
+			transformed["egressTo"] = transformedEgressTo
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFrom(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedIdentities, err := expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFromIdentities(original["identities"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdentities); val.IsValid() && !isEmptyValue(val) {
+		transformed["identities"] = transformedIdentities
+	}
+
+	transformedIdentityType, err := expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFromIdentityType(original["identity_type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdentityType); val.IsValid() && !isEmptyValue(val) {
+		transformed["identityType"] = transformedIdentityType
+	}
+
+	return transformed, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFromIdentities(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressFromIdentityType(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressTo(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedResources, err := expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToResources(original["resources"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedResources); val.IsValid() && !isEmptyValue(val) {
+		transformed["resources"] = transformedResources
+	}
+
+	transformedOperations, err := expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperations(original["operations"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOperations); val.IsValid() && !isEmptyValue(val) {
+		transformed["operations"] = transformedOperations
+	}
+
+	return transformed, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToResources(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperations(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedMethodSelectors, err := expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectors(original["method_selectors"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMethodSelectors); val.IsValid() && !isEmptyValue(val) {
+			transformed["methodSelectors"] = transformedMethodSelectors
+		}
+
+		transformedServiceName, err := expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsServiceName(original["service_name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedServiceName); val.IsValid() && !isEmptyValue(val) {
+			transformed["serviceName"] = transformedServiceName
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectors(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedPermission, err := expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectorsPermission(original["permission"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPermission); val.IsValid() && !isEmptyValue(val) {
+			transformed["permission"] = transformedPermission
+		}
+
+		transformedMethod, err := expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectorsMethod(original["method"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMethod); val.IsValid() && !isEmptyValue(val) {
+			transformed["method"] = transformedMethod
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectorsPermission(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsMethodSelectorsMethod(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessContextManagerServicePerimeterSpecEgressPoliciesEgressToOperationsServiceName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

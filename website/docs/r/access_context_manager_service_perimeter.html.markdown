@@ -114,6 +114,73 @@ resource "google_access_context_manager_access_policy" "access-policy" {
   title  = "my policy"
 }
 ```
+## Example Usage - Access Context Manager Service Perimeter Ingress And Egress Policies
+
+
+```hcl
+resource "google_access_context_manager_service_perimeter" "service-perimeter" {
+  parent = "accessPolicies/${google_access_context_manager_access_policy.access-policy.name}"
+  name   = "accessPolicies/${google_access_context_manager_access_policy.access-policy.name}/servicePerimeters/ingress_egress_policy_examples"
+  title  = "ingress_egress_policy_examples"
+
+  status {
+    resources           = ["projects/123456789"]
+    restricted_services = ["storage.googleapis.com"]
+    access_levels       = []
+
+    ingress_policies {
+      ingress_from {
+        sources {
+          resource = "projects/111111111"
+        }
+        identity_type = "ANY_SERVICE_ACCOUNT"
+      }
+
+      ingress_to {
+        resources = ["projects/123456789"]
+
+        operations {
+          service_name = "storage.googleapis.com"
+
+          method_selectors {
+            method = "google.storage.objects.list"
+          }
+          method_selectors {
+            method = "google.storage.objects.get"
+          }
+
+          # This syntax is accepted, but the API does not support any permissions yet.
+          # See https://cloud.google.com/vpc-service-controls/docs/supported-method-restrictions
+          # method_selectors {
+          #   permission = "storage.buckets.list"
+          # }
+        }
+      }
+    }
+
+    egress_policies {
+      egress_from {
+        identities = ["serviceAccount:my-workload@my-project.iam.gserviceaccount.com"]
+      }
+
+      egress_to {
+        resources = ["projects/222222222"]
+        operations {
+          service_name = "storage.googleapis.com"
+          method_selectors {
+            method = "*"
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "google_access_context_manager_access_policy" "access-policy" {
+  parent = "organizations/123456789"
+  title  = "my policy"
+}
+```
 
 ## Argument Reference
 
@@ -225,6 +292,16 @@ The `status` block supports:
   Perimeter.
   Structure is documented below.
 
+* `ingress_policies` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  List of IngressPolicies to apply to the perimeter. A perimeter may have multiple IngressPolicies, each of which is evaluated separately. Access is granted if any Ingress Policy grants it. Must be empty for a perimeter bridge.
+  Structure is documented below.
+
+* `egress_policies` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  List of EgressPolicies to apply to the perimeter. A perimeter may have multiple EgressPolicies, each of which is evaluated separately. Access is granted if any EgressPolicy grants it. Must be empty for a perimeter bridge.
+  Structure is documented below.
+
 
 The `vpc_accessible_services` block supports:
 
@@ -237,6 +314,138 @@ The `vpc_accessible_services` block supports:
   (Optional)
   The list of APIs usable within the Service Perimeter.
   Must be empty unless `enableRestriction` is True.
+
+The `ingress_policies` block supports:
+
+* `ingress_to` -
+  (Required)
+  Defines the conditions on the ApiOperation and request destination that cause this IngressPolicy to apply.
+  Structure is documented below.
+
+* `ingress_from` -
+  (Required)
+  Defines the conditions on the source of a request causing this IngressPolicy to apply.
+  Structure is documented below.
+
+
+The `ingress_to` block supports:
+
+* `resources` -
+  (Required)
+  A list of resources, currently only projects in the form `projects/`, protected by this ServicePerimeter that are allowed to be accessed by sources defined in the corresponding IngressFrom. A request matches if it contains a resource in this list. If `*` is specified for resources, then this IngressTo rule will authorize access to all resources inside the perimeter, provided that the request also matches the `operations` field.
+
+* `operations` -
+  (Required)
+  A list of ApiOperations the sources specified in corresponding IngressFrom are allowed to perform in this ServicePerimeter.
+  Structure is documented below.
+
+
+The `operations` block supports:
+
+* `method_selectors` -
+  (Required)
+  API methods or permissions to allow. Method or permission must belong to the service specified by `service_name` field. A single MethodSelector entry with `*` specified for the `method` field will allow all methods AND permissions for the service specified in `service_name`.
+  Structure is documented below.
+
+* `service_name` -
+  (Required)
+  The name of the API whose methods or permissions the IngressPolicy or EgressPolicy want to allow. A single ApiOperation with `service_name` field set to `*` will allow all methods AND permissions for all services.
+
+
+The `method_selectors` block supports:
+
+* `permission` -
+  (Optional)
+  Value for `permission` should be a valid Cloud IAM permission for the corresponding `service_name` in ApiOperation.
+
+* `method` -
+  (Optional)
+  Value for `method` should be a valid method name for the corresponding `service_name` in ApiOperation. If `*` used as value for `method`, then ALL methods and permissions are allowed.
+
+The `ingress_from` block supports:
+
+* `identities` -
+  (Optional)
+  A list of identities that are allowed access through this ingress policy. Should be in the format of email address. The email address should represent individual user or service account only.
+
+* `sources` -
+  (Required)
+  Sources that this IngressPolicy authorizes access from.
+  Structure is documented below.
+
+* `identity_type` -
+  (Optional)
+  Specifies the type of identities that are allowed access from outside the perimeter. If left unspecified, then members of `identities` field will be allowed access.
+  Possible values are `IDENTITY_TYPE_UNSPECIFIED`, `ANY_IDENTITY`, `ANY_USER_ACCOUNT`, and `ANY_SERVICE_ACCOUNT`.
+
+
+The `sources` block supports:
+
+* `resource` -
+  (Optional)
+  A Google Cloud resource that is allowed to ingress the perimeter. Requests from these resources will be allowed to access perimeter data. Currently only projects are allowed. Format: `projects/{project_number}` The project may be in any Google Cloud organization, not just the organization that the perimeter is defined in. `*` is not allowed, the case of allowing all Google Cloud resources only is not supported.
+
+* `access_level` -
+  (Optional)
+  An AccessLevel resource name that allow resources within the ServicePerimeters to be accessed from the internet. AccessLevels listed must be in the same policy as this ServicePerimeter. Referencing a nonexistent AccessLevel will cause an error. If no AccessLevel names are listed, resources within the perimeter can only be accessed via Google Cloud calls with request origins within the perimeter. Example: `accessPolicies/MY_POLICY/accessLevels/MY_LEVEL`. If `*` is specified, then all IngressSources will be allowed.
+
+The `egress_policies` block supports:
+
+* `egress_from` -
+  (Required)
+  Defines conditions on the source of a request causing this EgressPolicy to apply.
+  Structure is documented below.
+
+* `egress_to` -
+  (Required)
+  Defines the conditions on the ApiOperation and destination resources that cause this EgressPolicy to apply.
+  Structure is documented below.
+
+
+The `egress_from` block supports:
+
+* `identities` -
+  (Optional)
+  A list of identities that are allowed access through this [EgressPolicy]. Should be in the format of email address. The email address should represent individual user or service account only.
+
+* `identity_type` -
+  (Optional)
+  Specifies the type of identities that are allowed access to outside the perimeter. If left unspecified, then members of `identities` field will be allowed access.
+  Possible values are `IDENTITY_TYPE_UNSPECIFIED`, `ANY_IDENTITY`, `ANY_USER_ACCOUNT`, and `ANY_SERVICE_ACCOUNT`.
+
+The `egress_to` block supports:
+
+* `resources` -
+  (Required)
+  A list of resources, currently only projects in the form `projects/`, that match this to stanza. A request matches if it contains a resource in this list. If `*` is specified for resources, then this EgressTo rule will authorize access to all resources outside the perimeter.
+
+* `operations` -
+  (Required)
+  A list of ApiOperations that this egress rule applies to. A request matches if it contains an operation/service in this list.
+  Structure is documented below.
+
+
+The `operations` block supports:
+
+* `method_selectors` -
+  (Required)
+  API methods or permissions to allow. Method or permission must belong to the service specified by `service_name` field. A single MethodSelector entry with `*` specified for the `method` field will allow all methods AND permissions for the service specified in `service_name`.
+  Structure is documented below.
+
+* `service_name` -
+  (Required)
+  The name of the API whose methods or permissions the IngressPolicy or EgressPolicy want to allow. A single ApiOperation with `service_name` field set to `*` will allow all methods AND permissions for all services.
+
+
+The `method_selectors` block supports:
+
+* `permission` -
+  (Optional)
+  Value for `permission` should be a valid Cloud IAM permission for the corresponding `service_name` in ApiOperation.
+
+* `method` -
+  (Optional)
+  Value for `method` should be a valid method name for the corresponding `service_name` in ApiOperation. If `*` used as value for `method`, then ALL methods and permissions are allowed.
 
 The `spec` block supports:
 
@@ -272,6 +481,16 @@ The `spec` block supports:
   Perimeter.
   Structure is documented below.
 
+* `ingress_policies` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  List of IngressPolicies to apply to the perimeter. A perimeter may have multiple IngressPolicies, each of which is evaluated separately. Access is granted if any Ingress Policy grants it. Must be empty for a perimeter bridge.
+  Structure is documented below.
+
+* `egress_policies` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  List of EgressPolicies to apply to the perimeter. A perimeter may have multiple EgressPolicies, each of which is evaluated separately. Access is granted if any EgressPolicy grants it. Must be empty for a perimeter bridge.
+  Structure is documented below.
+
 
 The `vpc_accessible_services` block supports:
 
@@ -284,6 +503,138 @@ The `vpc_accessible_services` block supports:
   (Optional)
   The list of APIs usable within the Service Perimeter.
   Must be empty unless `enableRestriction` is True.
+
+The `ingress_policies` block supports:
+
+* `ingress_to` -
+  (Required)
+  Defines the conditions on the ApiOperation and request destination that cause this IngressPolicy to apply.
+  Structure is documented below.
+
+* `ingress_from` -
+  (Required)
+  Defines the conditions on the source of a request causing this IngressPolicy to apply.
+  Structure is documented below.
+
+
+The `ingress_to` block supports:
+
+* `resources` -
+  (Required)
+  A list of resources, currently only projects in the form `projects/`, protected by this ServicePerimeter that are allowed to be accessed by sources defined in the corresponding IngressFrom. A request matches if it contains a resource in this list. If `*` is specified for resources, then this IngressTo rule will authorize access to all resources inside the perimeter, provided that the request also matches the `operations` field.
+
+* `operations` -
+  (Required)
+  A list of ApiOperations the sources specified in corresponding IngressFrom are allowed to perform in this ServicePerimeter.
+  Structure is documented below.
+
+
+The `operations` block supports:
+
+* `method_selectors` -
+  (Required)
+  API methods or permissions to allow. Method or permission must belong to the service specified by `service_name` field. A single MethodSelector entry with `*` specified for the `method` field will allow all methods AND permissions for the service specified in `service_name`.
+  Structure is documented below.
+
+* `service_name` -
+  (Required)
+  The name of the API whose methods or permissions the IngressPolicy or EgressPolicy want to allow. A single ApiOperation with `service_name` field set to `*` will allow all methods AND permissions for all services.
+
+
+The `method_selectors` block supports:
+
+* `permission` -
+  (Optional)
+  Value for `permission` should be a valid Cloud IAM permission for the corresponding `service_name` in ApiOperation.
+
+* `method` -
+  (Optional)
+  Value for `method` should be a valid method name for the corresponding `service_name` in ApiOperation. If `*` used as value for `method`, then ALL methods and permissions are allowed.
+
+The `ingress_from` block supports:
+
+* `identities` -
+  (Optional)
+  A list of identities that are allowed access through this ingress policy. Should be in the format of email address. The email address should represent individual user or service account only.
+
+* `sources` -
+  (Required)
+  Sources that this IngressPolicy authorizes access from.
+  Structure is documented below.
+
+* `identity_type` -
+  (Optional)
+  Specifies the type of identities that are allowed access from outside the perimeter. If left unspecified, then members of `identities` field will be allowed access.
+  Possible values are `IDENTITY_TYPE_UNSPECIFIED`, `ANY_IDENTITY`, `ANY_USER_ACCOUNT`, and `ANY_SERVICE_ACCOUNT`.
+
+
+The `sources` block supports:
+
+* `resource` -
+  (Optional)
+  A Google Cloud resource that is allowed to ingress the perimeter. Requests from these resources will be allowed to access perimeter data. Currently only projects are allowed. Format: `projects/{project_number}` The project may be in any Google Cloud organization, not just the organization that the perimeter is defined in. `*` is not allowed, the case of allowing all Google Cloud resources only is not supported.
+
+* `access_level` -
+  (Optional)
+  An AccessLevel resource name that allow resources within the ServicePerimeters to be accessed from the internet. AccessLevels listed must be in the same policy as this ServicePerimeter. Referencing a nonexistent AccessLevel will cause an error. If no AccessLevel names are listed, resources within the perimeter can only be accessed via Google Cloud calls with request origins within the perimeter. Example: `accessPolicies/MY_POLICY/accessLevels/MY_LEVEL`. If `*` is specified, then all IngressSources will be allowed.
+
+The `egress_policies` block supports:
+
+* `egress_from` -
+  (Required)
+  Defines conditions on the source of a request causing this EgressPolicy to apply.
+  Structure is documented below.
+
+* `egress_to` -
+  (Required)
+  Defines the conditions on the ApiOperation and destination resources that cause this EgressPolicy to apply.
+  Structure is documented below.
+
+
+The `egress_from` block supports:
+
+* `identities` -
+  (Optional)
+  A list of identities that are allowed access through this [EgressPolicy]. Should be in the format of email address. The email address should represent individual user or service account only.
+
+* `identity_type` -
+  (Optional)
+  Specifies the type of identities that are allowed access to outside the perimeter. If left unspecified, then members of `identities` field will be allowed access.
+  Possible values are `IDENTITY_TYPE_UNSPECIFIED`, `ANY_IDENTITY`, `ANY_USER_ACCOUNT`, and `ANY_SERVICE_ACCOUNT`.
+
+The `egress_to` block supports:
+
+* `resources` -
+  (Required)
+  A list of resources, currently only projects in the form `projects/`, that match this to stanza. A request matches if it contains a resource in this list. If `*` is specified for resources, then this EgressTo rule will authorize access to all resources outside the perimeter.
+
+* `operations` -
+  (Required)
+  A list of ApiOperations that this egress rule applies to. A request matches if it contains an operation/service in this list.
+  Structure is documented below.
+
+
+The `operations` block supports:
+
+* `method_selectors` -
+  (Required)
+  API methods or permissions to allow. Method or permission must belong to the service specified by `service_name` field. A single MethodSelector entry with `*` specified for the `method` field will allow all methods AND permissions for the service specified in `service_name`.
+  Structure is documented below.
+
+* `service_name` -
+  (Required)
+  The name of the API whose methods or permissions the IngressPolicy or EgressPolicy want to allow. A single ApiOperation with `service_name` field set to `*` will allow all methods AND permissions for all services.
+
+
+The `method_selectors` block supports:
+
+* `permission` -
+  (Optional)
+  Value for `permission` should be a valid Cloud IAM permission for the corresponding `service_name` in ApiOperation.
+
+* `method` -
+  (Optional)
+  Value for `method` should be a valid method name for the corresponding `service_name` in ApiOperation. If `*` used as value for `method`, then ALL methods and permissions are allowed.
 
 ## Attributes Reference
 
