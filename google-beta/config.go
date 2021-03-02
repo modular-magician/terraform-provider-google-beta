@@ -133,6 +133,7 @@ type Config struct {
 	MLEngineBasePath             string
 	MonitoringBasePath           string
 	NetworkManagementBasePath    string
+	NetworkServicesBasePath      string
 	NotebooksBasePath            string
 	OSConfigBasePath             string
 	OSLoginBasePath              string
@@ -230,6 +231,7 @@ var MemcacheDefaultBasePath = "https://memcache.googleapis.com/v1beta2/"
 var MLEngineDefaultBasePath = "https://ml.googleapis.com/v1/"
 var MonitoringDefaultBasePath = "https://monitoring.googleapis.com/"
 var NetworkManagementDefaultBasePath = "https://networkmanagement.googleapis.com/v1/"
+var NetworkServicesDefaultBasePath = "https://networkservices.googleapis.com/v1alpha1/"
 var NotebooksDefaultBasePath = "https://notebooks.googleapis.com/v1beta1/"
 var OSConfigDefaultBasePath = "https://osconfig.googleapis.com/v1beta/"
 var OSLoginDefaultBasePath = "https://oslogin.googleapis.com/v1/"
@@ -1039,6 +1041,7 @@ func ConfigureBasePaths(c *Config) {
 	c.MLEngineBasePath = MLEngineDefaultBasePath
 	c.MonitoringBasePath = MonitoringDefaultBasePath
 	c.NetworkManagementBasePath = NetworkManagementDefaultBasePath
+	c.NetworkServicesBasePath = NetworkServicesDefaultBasePath
 	c.NotebooksBasePath = NotebooksDefaultBasePath
 	c.OSConfigBasePath = OSConfigDefaultBasePath
 	c.OSLoginBasePath = OSLoginDefaultBasePath
