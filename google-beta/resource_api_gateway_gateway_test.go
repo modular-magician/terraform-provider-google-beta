@@ -41,6 +41,23 @@ resource "google_api_gateway_api" "api_gw" {
 resource "google_api_gateway_api_config" "api_gw" {
   provider = google-beta
   api = google_api_gateway_api.api_gw.api_id
+  api_config_id = "config%{random_suffix}"
+
+  openapi_documents {
+    document {
+      path = "spec.yaml"
+      contents = filebase64("test-fixtures/apigateway/openapi.yaml")
+    }
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+resource "google_api_gateway_api_config" "api_gw2" {
+  provider = google-beta
+  api = google_api_gateway_api.api_gw.api_id
   api_config_id = "tf-test-api-gw%{random_suffix}"
 
   openapi_documents {
@@ -49,11 +66,15 @@ resource "google_api_gateway_api_config" "api_gw" {
       contents = filebase64("test-fixtures/apigateway/openapi.yaml")
     }
   }
+
+	lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "google_api_gateway_gateway" "api_gw" {
   provider = google-beta
-  api_config = google_api_gateway_api_config.api_gw.id
+  api_config = google_api_gateway_api_config.api_gw2.id
   gateway_id = "tf-test-api-gw%{random_suffix}"
   display_name = "MM Dev API Gateway"
   labels = {
