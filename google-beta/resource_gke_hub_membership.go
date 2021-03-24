@@ -157,7 +157,7 @@ func resourceGKEHubMembershipCreate(d *schema.ResourceData, meta interface{}) er
 		obj["authority"] = authorityProp
 	}
 
-	url, err := replaceVars(d, config, "{{GKEHubBasePath}}projects/{{project}}/locations/global/memberships?membershipId={{membership_id}}")
+	url, err := replaceVars(d, config, "{{GKEHubBasePath}}v1beta1/projects/{{project}}/locations/global/memberships?membershipId={{membership_id}}")
 	if err != nil {
 		return err
 	}
@@ -223,7 +223,7 @@ func resourceGKEHubMembershipRead(d *schema.ResourceData, meta interface{}) erro
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{GKEHubBasePath}}{{name}}")
+	url, err := replaceVars(d, config, "{{GKEHubBasePath}}v1beta1/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -304,7 +304,7 @@ func resourceGKEHubMembershipUpdate(d *schema.ResourceData, meta interface{}) er
 		obj["authority"] = authorityProp
 	}
 
-	url, err := replaceVars(d, config, "{{GKEHubBasePath}}projects/{{project}}/locations/global/memberships/{{membership_id}}")
+	url, err := replaceVars(d, config, "{{GKEHubBasePath}}v1beta1/projects/{{project}}/locations/global/memberships/{{membership_id}}")
 	if err != nil {
 		return err
 	}
@@ -369,7 +369,7 @@ func resourceGKEHubMembershipDelete(d *schema.ResourceData, meta interface{}) er
 	}
 	billingProject = project
 
-	url, err := replaceVars(d, config, "{{GKEHubBasePath}}{{name}}")
+	url, err := replaceVars(d, config, "{{GKEHubBasePath}}v1beta1/{{name}}")
 	if err != nil {
 		return err
 	}

@@ -23,7 +23,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccGKEHubMembership_gkehubMembershipBasicExample(t *testing.T) {
+func TestAccGKEHubFeature_gkehubFeatureBasicMciExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -36,16 +36,16 @@ func TestAccGKEHubMembership_gkehubMembershipBasicExample(t *testing.T) {
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 		},
-		CheckDestroy: testAccCheckGKEHubMembershipDestroyProducer(t),
+		CheckDestroy: testAccCheckGKEHubFeatureDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGKEHubMembership_gkehubMembershipBasicExample(context),
+				Config: testAccGKEHubFeature_gkehubFeatureBasicMciExample(context),
 			},
 		},
 	})
 }
 
-func testAccGKEHubMembership_gkehubMembershipBasicExample(context map[string]interface{}) string {
+func testAccGKEHubFeature_gkehubFeatureBasicMciExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_container_cluster" "primary" {
   name               = "basiccluster%{random_suffix}"
@@ -64,14 +64,23 @@ resource "google_gke_hub_membership" "membership" {
   description = "test resource."
   provider = google-beta
 }
+
+resource "google_gke_hub_feature" "feature" {
+  feature_id = "multiclusteringress"
+  spec {
+    multiclusteringress {
+    	config_membership = google_gke_hub_membership.membership.id
+	 }
+  }
+  provider = google-beta
+}
 `, context)
 }
 
-func TestAccGKEHubMembership_gkehubMembershipIssuerExample(t *testing.T) {
+func TestAccGKEHubFeature_gkehubFeatureBasicAcmExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"project":       getTestProjectFromEnv(),
 		"random_suffix": randString(t, 10),
 	}
 
@@ -81,24 +90,25 @@ func TestAccGKEHubMembership_gkehubMembershipIssuerExample(t *testing.T) {
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 		},
-		CheckDestroy: testAccCheckGKEHubMembershipDestroyProducer(t),
+		CheckDestroy: testAccCheckGKEHubFeatureDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGKEHubMembership_gkehubMembershipIssuerExample(context),
+				Config: testAccGKEHubFeature_gkehubFeatureBasicAcmExample(context),
 			},
 		},
 	})
 }
 
-func testAccGKEHubMembership_gkehubMembershipIssuerExample(context map[string]interface{}) string {
+func testAccGKEHubFeature_gkehubFeatureBasicAcmExample(context map[string]interface{}) string {
 	return Nprintf(`
+data "google_project" "project" {
+  provider = google-beta
+}
+
 resource "google_container_cluster" "primary" {
   name               = "basiccluster%{random_suffix}"
   location           = "us-central1-a"
   initial_node_count = 1
-  workload_identity_config {
-    identity_namespace = "%{project}.svc.id.goog"
-  }
   provider = google-beta
 }
 
@@ -109,19 +119,33 @@ resource "google_gke_hub_membership" "membership" {
       resource_link = "//container.googleapis.com/${google_container_cluster.primary.id}"
     }
   }
-  authority {
-    issuer = "https://container.googleapis.com/v1/${google_container_cluster.primary.id}"
-  }
   description = "test resource."
+  provider = google-beta
+}
+
+resource "google_gke_hub_feature" "feature" {
+  feature_id = "configmanagement"
+  membership_specs {
+    membership_id = "projects/${data.google_project.project.number}/locations/global/memberships/${google_gke_hub_membership.membership.membership_id}"
+    configmanagement {
+      version = "1.6.2"
+      config_sync {
+        source_format = "hierarchy"
+        git {
+          sync_repo = "https://github.com/GoogleCloudPlatform/magic-modules"
+        }
+      }
+    }
+  }
   provider = google-beta
 }
 `, context)
 }
 
-func testAccCheckGKEHubMembershipDestroyProducer(t *testing.T) func(s *terraform.State) error {
+func testAccCheckGKEHubFeatureDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
-			if rs.Type != "google_gke_hub_membership" {
+			if rs.Type != "google_gke_hub_feature" {
 				continue
 			}
 			if strings.HasPrefix(name, "data.") {
@@ -130,7 +154,7 @@ func testAccCheckGKEHubMembershipDestroyProducer(t *testing.T) func(s *terraform
 
 			config := googleProviderConfig(t)
 
-			url, err := replaceVarsForTest(config, rs, "{{GKEHubBasePath}}v1beta1/{{name}}")
+			url, err := replaceVarsForTest(config, rs, "{{GKEHubBasePath}}v1beta/projects/{{project}}/locations/global/features/{{feature_id}}")
 			if err != nil {
 				return err
 			}
@@ -143,7 +167,7 @@ func testAccCheckGKEHubMembershipDestroyProducer(t *testing.T) func(s *terraform
 
 			_, err = sendRequest(config, "GET", billingProject, url, config.userAgent, nil)
 			if err == nil {
-				return fmt.Errorf("GKEHubMembership still exists at %s", url)
+				return fmt.Errorf("GKEHubFeature still exists at %s", url)
 			}
 		}
 
