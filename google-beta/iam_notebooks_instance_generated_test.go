@@ -126,6 +126,9 @@ resource "google_notebooks_instance" "instance" {
     project      = "deeplearning-platform-release"
     image_family = "tf-latest-cpu"
   }
+  labels = {
+    goog-caip-notebook = ""
+  }
 }
 
 resource "google_notebooks_instance_iam_member" "foo" {
@@ -147,6 +150,9 @@ resource "google_notebooks_instance" "instance" {
   vm_image {
     project      = "deeplearning-platform-release"
     image_family = "tf-latest-cpu"
+  }
+  labels = {
+    goog-caip-notebook = ""
   }
 }
 
@@ -176,6 +182,9 @@ resource "google_notebooks_instance" "instance" {
     project      = "deeplearning-platform-release"
     image_family = "tf-latest-cpu"
   }
+  labels = {
+    goog-caip-notebook = ""
+  }
 }
 
 data "google_iam_policy" "foo" {
@@ -200,6 +209,9 @@ resource "google_notebooks_instance" "instance" {
     project      = "deeplearning-platform-release"
     image_family = "tf-latest-cpu"
   }
+  labels = {
+    goog-caip-notebook = ""
+  }
 }
 
 resource "google_notebooks_instance_iam_binding" "foo" {
@@ -221,6 +233,9 @@ resource "google_notebooks_instance" "instance" {
   vm_image {
     project      = "deeplearning-platform-release"
     image_family = "tf-latest-cpu"
+  }
+  labels = {
+    goog-caip-notebook = ""
   }
 }
 

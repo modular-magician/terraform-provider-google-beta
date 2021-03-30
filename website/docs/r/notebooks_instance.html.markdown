@@ -53,6 +53,9 @@ resource "google_notebooks_instance" "instance" {
     project      = "deeplearning-platform-release"
     image_family = "tf-latest-cpu"
   }
+  labels = {
+    goog-caip-notebook = ""
+  }
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
@@ -75,6 +78,10 @@ resource "google_notebooks_instance" "instance" {
   container_image {
     repository = "gcr.io/deeplearning-platform-release/base-cpu"
     tag = "latest"
+  }
+  labels = {
+    k = "val"
+    goog-caip-notebook = ""
   }
 }
 ```
@@ -100,6 +107,11 @@ resource "google_notebooks_instance" "instance" {
   vm_image {
     project      = "deeplearning-platform-release"
     image_family = "tf-latest-gpu"
+  }
+
+  labels = {
+    k = "val"
+    goog-caip-notebook = ""
   }
 }
 ```
@@ -137,6 +149,7 @@ resource "google_notebooks_instance" "instance" {
 
   labels = {
     k = "val"
+    goog-caip-notebook = ""
   }
 
   metadata = {
