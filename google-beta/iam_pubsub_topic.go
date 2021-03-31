@@ -124,7 +124,6 @@ func (u *PubsubTopicIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Po
 	if err != nil {
 		return nil, err
 	}
-	var obj map[string]interface{}
 
 	userAgent, err := generateUserAgentString(u.d, u.Config.userAgent)
 	if err != nil {

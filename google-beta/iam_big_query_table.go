@@ -139,8 +139,7 @@ func (u *BigQueryTableIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.
 	if err != nil {
 		return nil, err
 	}
-	var obj map[string]interface{}
-	obj = map[string]interface{}{
+	obj := map[string]interface{}{
 		"options": map[string]interface{}{
 			"requestedPolicyVersion": 1,
 		},

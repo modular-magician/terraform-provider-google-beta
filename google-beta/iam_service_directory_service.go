@@ -96,8 +96,6 @@ func (u *ServiceDirectoryServiceIamUpdater) GetResourceIamPolicy() (*cloudresour
 		return nil, err
 	}
 
-	var obj map[string]interface{}
-
 	userAgent, err := generateUserAgentString(u.d, u.Config.userAgent)
 	if err != nil {
 		return nil, err
