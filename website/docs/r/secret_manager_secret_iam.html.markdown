@@ -82,9 +82,6 @@ resource "google_secret_manager_secret_iam_member" "member" {
 The following arguments are supported:
 
 
-* `project` - (Optional) The ID of the project in which the resource belongs.
-    If it is not provided, the project will be parsed from the identifier of the parent resource. If no project is provided in the parent identifier and no project is specified, the provider project is used.
-
 * `member/members` - (Required) Identities that will be granted the privilege in `role`.
   Each entry can have one of the following values:
   * **allUsers**: A special identifier that represents anyone who is on the internet; with or without a Google account.

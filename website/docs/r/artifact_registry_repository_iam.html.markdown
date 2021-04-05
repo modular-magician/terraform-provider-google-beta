@@ -90,9 +90,6 @@ The following arguments are supported:
 * `location` - (Required) The name of the location this repository is located in.
  Used to find the parent resource to bind the IAM policy to
 
-* `project` - (Optional) The ID of the project in which the resource belongs.
-    If it is not provided, the project will be parsed from the identifier of the parent resource. If no project is provided in the parent identifier and no project is specified, the provider project is used.
-
 * `member/members` - (Required) Identities that will be granted the privilege in `role`.
   Each entry can have one of the following values:
   * **allUsers**: A special identifier that represents anyone who is on the internet; with or without a Google account.
