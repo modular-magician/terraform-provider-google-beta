@@ -97,6 +97,43 @@ resource "google_pubsub_topic" "example" {
 `, context)
 }
 
+func TestAccPubsubTopic_pubsubTopicSchemaSettingsExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckPubsubTopicDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccPubsubTopic_pubsubTopicSchemaSettingsExample(context),
+			},
+			{
+				ResourceName:      "google_pubsub_topic.example",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccPubsubTopic_pubsubTopicSchemaSettingsExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_pubsub_topic" "example" {
+  name = "tf-test-example-topic%{random_suffix}"
+
+  schema_settings {
+    schema = "topic-schema"
+    encoding = "ENCODING_UNSPECIFIED"
+  }
+}
+`, context)
+}
+
 func testAccCheckPubsubTopicDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
