@@ -18,6 +18,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var BigqueryReservationEndpointEntryKey = "bigquery_reservation_custom_endpoint"
+var BigqueryReservationEndpointEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_BIGQUERY_RESERVATION_CUSTOM_ENDPOINT",
+	}, ""),
+}
+
 var EventarcEndpointEntryKey = "eventarc_custom_endpoint"
 var EventarcEndpointEntry = &schema.Schema{
 	Type:     schema.TypeString,
@@ -28,16 +37,21 @@ var EventarcEndpointEntry = &schema.Schema{
 }
 
 //Add new values to config.go.erb config object declaration
+//BigqueryReservationBasePath string
+// clientBigqueryReservationDCL *bigqueryreservationDcl.Client
 // clientDataprocDCL *dataprocDcl.Client
 //EventarcBasePath string
 // clientEventarcDCL *eventarcDcl.Client
 
 //Add new values to config.go.erb object initialization
+// c.clientBigqueryReservationDCL = bigqueryreservationDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions,dclLoggerOptions, dcl.WithBasePath(c.BigqueryReservationBasePath)))
 // c.clientDataprocDCL = dataprocDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions,dclLoggerOptions, dcl.WithBasePath(c.DataprocBasePath)))
 // c.clientEventarcDCL = eventarcDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions,dclLoggerOptions, dcl.WithBasePath(c.EventarcBasePath)))
 
 //Add new values to provider.go.erb schema initialization
+// BigqueryReservationEndpointEntryKey:               BigqueryReservationEndpointEntry,
 // EventarcEndpointEntryKey:               EventarcEndpointEntry,
 
 //Add new values to provider.go.erb - provider block read
+// config.BigqueryReservationBasePath = d.Get(BigqueryReservationEndpointEntryKey).(string)
 // config.EventarcBasePath = d.Get(EventarcEndpointEntryKey).(string)

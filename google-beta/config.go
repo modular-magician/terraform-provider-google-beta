@@ -15,6 +15,7 @@ import (
 
 	dcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/dcl"
 	dataprocDcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/dataproc/beta"
+	bigqueryreservationDcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/eventarc"
 	eventarcDcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/eventarc/beta"
 	"golang.org/x/oauth2"
 	googleoauth "golang.org/x/oauth2/google"
@@ -93,7 +94,6 @@ type Config struct {
 	BigQueryBasePath             string
 	BigqueryConnectionBasePath   string
 	BigqueryDataTransferBasePath string
-	BigqueryReservationBasePath  string
 	BigtableBasePath             string
 	BillingBasePath              string
 	BinaryAuthorizationBasePath  string
@@ -175,6 +175,7 @@ type Config struct {
 	requestBatcherIam          *RequestBatcher
 
 	// start DCL clients
+	clientBigqueryReservationDCL *bigqueryreservationDcl.Client
 	// dataprocBasePath is implemented in mm
 	clientDataprocDCL *dataprocDcl.Client
 	EventarcBasePath  string
@@ -192,7 +193,6 @@ var ArtifactRegistryDefaultBasePath = "https://artifactregistry.googleapis.com/v
 var BigQueryDefaultBasePath = "https://bigquery.googleapis.com/bigquery/v2/"
 var BigqueryConnectionDefaultBasePath = "https://bigqueryconnection.googleapis.com/v1beta1/"
 var BigqueryDataTransferDefaultBasePath = "https://bigquerydatatransfer.googleapis.com/v1/"
-var BigqueryReservationDefaultBasePath = "https://bigqueryreservation.googleapis.com/v1beta1/"
 var BigtableDefaultBasePath = "https://bigtableadmin.googleapis.com/v2/"
 var BillingDefaultBasePath = "https://billingbudgets.googleapis.com/v1/"
 var BinaryAuthorizationDefaultBasePath = "https://binaryauthorization.googleapis.com/v1/"
@@ -322,6 +322,7 @@ func (c *Config) LoadAndValidate(ctx context.Context) error {
 	dclLoggerOptions := dcl.WithLogger(dclLogger{})
 	// each product needs it own client currently since basepath can only be specified at
 	// the config level.
+	c.clientBigqueryReservationDCL = bigqueryreservationDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions, dclLoggerOptions, dcl.WithBasePath(c.BigqueryReservationBasePath)))
 	c.clientDataprocDCL = dataprocDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions, dclLoggerOptions, dcl.WithBasePath(c.DataprocBasePath)))
 	c.clientEventarcDCL = eventarcDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions, dclLoggerOptions, dcl.WithBasePath(c.EventarcBasePath)))
 
@@ -1027,7 +1028,6 @@ func ConfigureBasePaths(c *Config) {
 	c.BigQueryBasePath = BigQueryDefaultBasePath
 	c.BigqueryConnectionBasePath = BigqueryConnectionDefaultBasePath
 	c.BigqueryDataTransferBasePath = BigqueryDataTransferDefaultBasePath
-	c.BigqueryReservationBasePath = BigqueryReservationDefaultBasePath
 	c.BigtableBasePath = BigtableDefaultBasePath
 	c.BillingBasePath = BillingDefaultBasePath
 	c.BinaryAuthorizationBasePath = BinaryAuthorizationDefaultBasePath
