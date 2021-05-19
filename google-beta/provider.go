@@ -207,14 +207,6 @@ func Provider() *schema.Provider {
 					"GOOGLE_BIGQUERY_DATA_TRANSFER_CUSTOM_ENDPOINT",
 				}, BigqueryDataTransferDefaultBasePath),
 			},
-			"bigquery_reservation_custom_endpoint": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateCustomEndpoint,
-				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
-					"GOOGLE_BIGQUERY_RESERVATION_CUSTOM_ENDPOINT",
-				}, BigqueryReservationDefaultBasePath),
-			},
 			"bigtable_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -722,7 +714,8 @@ func Provider() *schema.Provider {
 			BigtableAdminCustomEndpointEntryKey:     BigtableAdminCustomEndpointEntry,
 
 			// dcl
-			EventarcEndpointEntryKey: EventarcEndpointEntry,
+			BigqueryReservationEndpointEntryKey: BigqueryReservationEndpointEntry,
+			EventarcEndpointEntryKey:            EventarcEndpointEntry,
 		},
 
 		ProviderMetaSchema: map[string]*schema.Schema{
@@ -839,9 +832,9 @@ func Provider() *schema.Provider {
 	return provider
 }
 
-// Generated resources: 222
+// Generated resources: 221
 // Generated IAM resources: 117
-// Total generated resources: 339
+// Total generated resources: 338
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -900,7 +893,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_bigquery_routine":                                      resourceBigQueryRoutine(),
 			"google_bigquery_connection":                                   resourceBigqueryConnectionConnection(),
 			"google_bigquery_data_transfer_config":                         resourceBigqueryDataTransferConfig(),
-			"google_bigquery_reservation":                                  resourceBigqueryReservationReservation(),
 			"google_bigtable_app_profile":                                  resourceBigtableAppProfile(),
 			"google_billing_budget":                                        resourceBillingBudget(),
 			"google_binary_authorization_attestor":                         resourceBinaryAuthorizationAttestor(),
@@ -1193,6 +1185,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 		map[string]*schema.Resource{
 			"google_app_engine_application":                resourceAppEngineApplication(),
 			"google_bigquery_table":                        resourceBigQueryTable(),
+			"google_bigquery_reservation":                  resourceBigqueryreservationReservation(),
 			"google_bigtable_gc_policy":                    resourceBigtableGCPolicy(),
 			"google_bigtable_instance":                     resourceBigtableInstance(),
 			"google_bigtable_table":                        resourceBigtableTable(),
@@ -1409,7 +1402,6 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.BigQueryBasePath = d.Get("big_query_custom_endpoint").(string)
 	config.BigqueryConnectionBasePath = d.Get("bigquery_connection_custom_endpoint").(string)
 	config.BigqueryDataTransferBasePath = d.Get("bigquery_data_transfer_custom_endpoint").(string)
-	config.BigqueryReservationBasePath = d.Get("bigquery_reservation_custom_endpoint").(string)
 	config.BigtableBasePath = d.Get("bigtable_custom_endpoint").(string)
 	config.BillingBasePath = d.Get("billing_custom_endpoint").(string)
 	config.BinaryAuthorizationBasePath = d.Get("binary_authorization_custom_endpoint").(string)
@@ -1491,6 +1483,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.BigtableAdminBasePath = d.Get(BigtableAdminCustomEndpointEntryKey).(string)
 
 	// dcl
+	config.BigqueryReservationBasePath = d.Get(BigqueryReservationEndpointEntryKey).(string)
 	config.EventarcBasePath = d.Get(EventarcEndpointEntryKey).(string)
 
 	stopCtx, ok := schema.StopContext(ctx)
