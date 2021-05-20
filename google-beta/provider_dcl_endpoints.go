@@ -18,6 +18,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var ApikeysEndpointEntryKey = "apikeys_custom_endpoint"
+var ApikeysEndpointEntry = &schema.Schema{
+	Type:     schema.TypeString,
+	Optional: true,
+	DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+		"GOOGLE_APIKEYS_CUSTOM_ENDPOINT",
+	}, ""),
+}
+
 var EventarcEndpointEntryKey = "eventarc_custom_endpoint"
 var EventarcEndpointEntry = &schema.Schema{
 	Type:     schema.TypeString,
@@ -28,16 +37,21 @@ var EventarcEndpointEntry = &schema.Schema{
 }
 
 //Add new values to config.go.erb config object declaration
+//ApikeysBasePath string
+// clientApikeysDCL *apikeysDcl.Client
 // clientDataprocDCL *dataprocDcl.Client
 //EventarcBasePath string
 // clientEventarcDCL *eventarcDcl.Client
 
 //Add new values to config.go.erb object initialization
+// c.clientApikeysDCL = apikeysDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions,dclLoggerOptions, dcl.WithBasePath(c.ApikeysBasePath)))
 // c.clientDataprocDCL = dataprocDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions,dclLoggerOptions, dcl.WithBasePath(c.DataprocBasePath)))
 // c.clientEventarcDCL = eventarcDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions,dclLoggerOptions, dcl.WithBasePath(c.EventarcBasePath)))
 
 //Add new values to provider.go.erb schema initialization
+// ApikeysEndpointEntryKey:               ApikeysEndpointEntry,
 // EventarcEndpointEntryKey:               EventarcEndpointEntry,
 
 //Add new values to provider.go.erb - provider block read
+// config.ApikeysBasePath = d.Get(ApikeysEndpointEntryKey).(string)
 // config.EventarcBasePath = d.Get(EventarcEndpointEntryKey).(string)

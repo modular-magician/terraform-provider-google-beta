@@ -14,6 +14,7 @@ import (
 	"google.golang.org/api/option"
 
 	dcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/dcl"
+	apikeysDcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/apikeys/beta"
 	dataprocDcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/dataproc/beta"
 	eventarcDcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/eventarc/beta"
 	"golang.org/x/oauth2"
@@ -179,6 +180,8 @@ type Config struct {
 	clientDataprocDCL *dataprocDcl.Client
 	EventarcBasePath  string
 	clientEventarcDCL *eventarcDcl.Client
+	ApikeysBasePath   string
+	clientApikeysDCL  *apikeysDcl.Client
 }
 
 // Generated product base paths
@@ -324,6 +327,7 @@ func (c *Config) LoadAndValidate(ctx context.Context) error {
 	// the config level.
 	c.clientDataprocDCL = dataprocDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions, dclLoggerOptions, dcl.WithBasePath(c.DataprocBasePath)))
 	c.clientEventarcDCL = eventarcDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions, dclLoggerOptions, dcl.WithBasePath(c.EventarcBasePath)))
+	c.clientApikeysDCL = apikeysDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions, dclLoggerOptions, dcl.WithBasePath(c.ApikeysBasePath)))
 
 	return nil
 }

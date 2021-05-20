@@ -723,6 +723,7 @@ func Provider() *schema.Provider {
 
 			// dcl
 			EventarcEndpointEntryKey: EventarcEndpointEntry,
+			ApikeysEndpointEntryKey:  ApikeysEndpointEntry,
 		},
 
 		ProviderMetaSchema: map[string]*schema.Schema{
@@ -1191,6 +1192,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_workflows_workflow":                                    resourceWorkflowsWorkflow(),
 		},
 		map[string]*schema.Resource{
+			"google_apikeys_key":                           resourceApikeysKey(),
 			"google_app_engine_application":                resourceAppEngineApplication(),
 			"google_bigquery_table":                        resourceBigQueryTable(),
 			"google_bigtable_gc_policy":                    resourceBigtableGCPolicy(),
@@ -1492,6 +1494,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 
 	// dcl
 	config.EventarcBasePath = d.Get(EventarcEndpointEntryKey).(string)
+	config.ApikeysBasePath = d.Get(ApikeysEndpointEntryKey).(string)
 
 	stopCtx, ok := schema.StopContext(ctx)
 	if !ok {
