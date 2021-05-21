@@ -28,11 +28,13 @@ var EventarcEndpointEntry = &schema.Schema{
 }
 
 //Add new values to config.go.erb config object declaration
+// clientBigqueryReservationDCL *bigqueryreservationDcl.Client
 // clientDataprocDCL *dataprocDcl.Client
 //EventarcBasePath string
 // clientEventarcDCL *eventarcDcl.Client
 
 //Add new values to config.go.erb object initialization
+// c.clientBigqueryReservationDCL = bigqueryreservationDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions,dclLoggerOptions, dcl.WithBasePath(c.BigqueryReservationBasePath)))
 // c.clientDataprocDCL = dataprocDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions,dclLoggerOptions, dcl.WithBasePath(c.DataprocBasePath)))
 // c.clientEventarcDCL = eventarcDcl.NewClient(dcl.NewConfig(dclClientOptions, dclUserAgentOptions,dclLoggerOptions, dcl.WithBasePath(c.EventarcBasePath)))
 
