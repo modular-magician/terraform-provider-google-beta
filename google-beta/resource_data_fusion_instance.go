@@ -76,6 +76,12 @@ pipelines at low cost. Possible values: ["BASIC", "ENTERPRISE", "DEVELOPER"]`,
 				ForceNew:    true,
 				Description: `An optional description of the instance.`,
 			},
+			"enable_rbac": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Option to enable granular role-based access control. This feature may require additional allow-listing.`,
+			},
 			"enable_stackdriver_logging": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -269,6 +275,12 @@ func resourceDataFusionInstanceCreate(d *schema.ResourceData, meta interface{}) 
 	} else if v, ok := d.GetOkExists("network_config"); !isEmptyValue(reflect.ValueOf(networkConfigProp)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
 		obj["networkConfig"] = networkConfigProp
 	}
+	enableRbacProp, err := expandDataFusionInstanceEnableRbac(d.Get("enable_rbac"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("enable_rbac"); !isEmptyValue(reflect.ValueOf(enableRbacProp)) && (ok || !reflect.DeepEqual(v, enableRbacProp)) {
+		obj["enableRbac"] = enableRbacProp
+	}
 
 	url, err := replaceVars(d, config, "{{DataFusionBasePath}}projects/{{project}}/locations/{{region}}/instances?instanceId={{name}}")
 	if err != nil {
@@ -420,6 +432,9 @@ func resourceDataFusionInstanceRead(d *schema.ResourceData, meta interface{}) er
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err := d.Set("network_config", flattenDataFusionInstanceNetworkConfig(res["networkConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err := d.Set("enable_rbac", flattenDataFusionInstanceEnableRbac(res["enableRbac"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 
@@ -648,6 +663,10 @@ func flattenDataFusionInstanceNetworkConfigNetwork(v interface{}, d *schema.Reso
 	return v
 }
 
+func flattenDataFusionInstanceEnableRbac(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func expandDataFusionInstanceName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return replaceVars(d, config, "projects/{{project}}/locations/{{region}}/instances/{{name}}")
 }
@@ -733,5 +752,9 @@ func expandDataFusionInstanceNetworkConfigIpAllocation(v interface{}, d Terrafor
 }
 
 func expandDataFusionInstanceNetworkConfigNetwork(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataFusionInstanceEnableRbac(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
