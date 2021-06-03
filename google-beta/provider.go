@@ -780,6 +780,7 @@ func Provider() *schema.Provider {
 			"google_container_registry_repository":                dataSourceGoogleContainerRepo(),
 			"google_dns_keys":                                     dataSourceDNSKeys(),
 			"google_dns_managed_zone":                             dataSourceDnsManagedZone(),
+			"google_firebase_ios_app":                             dataSourceGoogleFirebaseIosApp(),
 			"google_game_services_game_server_deployment_rollout": dataSourceGameServicesGameServerDeploymentRollout(),
 			"google_iam_policy":                                   dataSourceGoogleIamPolicy(),
 			"google_iam_role":                                     dataSourceGoogleIamRole(),
@@ -839,9 +840,9 @@ func Provider() *schema.Provider {
 	return provider
 }
 
-// Generated resources: 223
+// Generated resources: 224
 // Generated IAM resources: 117
-// Total generated resources: 340
+// Total generated resources: 341
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1050,6 +1051,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_firebase_project":                                      resourceFirebaseProject(),
 			"google_firebase_project_location":                             resourceFirebaseProjectLocation(),
 			"google_firebase_web_app":                                      resourceFirebaseWebApp(),
+			"google_firebase_ios_app":                                      resourceFirebaseIosApp(),
 			"google_firestore_index":                                       resourceFirestoreIndex(),
 			"google_firestore_document":                                    resourceFirestoreDocument(),
 			"google_game_services_realm":                                   resourceGameServicesRealm(),
