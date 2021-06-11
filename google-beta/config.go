@@ -175,7 +175,6 @@ type Config struct {
 	// start DCLBasePaths
 	// dataprocBasePath is implemented in mm
 	EventarcBasePath string
-	GkeHubBasePath   string
 }
 
 // Generated product base paths

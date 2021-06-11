@@ -730,8 +730,7 @@ func Provider() *schema.Provider {
 			BigtableAdminCustomEndpointEntryKey:     BigtableAdminCustomEndpointEntry,
 
 			// dcl
-			EventarcEndpointEntryKey:            EventarcEndpointEntry,
-			GkeHubFeatureCustomEndpointEntryKey: GkeHubFeatureCustomEndpointEntry,
+			EventarcEndpointEntryKey: EventarcEndpointEntry,
 		},
 
 		ProviderMetaSchema: map[string]*schema.Schema{
@@ -848,9 +847,9 @@ func Provider() *schema.Provider {
 	return provider
 }
 
-// Generated resources: 225
+// Generated resources: 224
 // Generated IAM resources: 117
-// Total generated resources: 342
+// Total generated resources: 341
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1000,7 +999,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_compute_managed_ssl_certificate":                       resourceComputeManagedSslCertificate(),
 			"google_compute_region_ssl_certificate":                        resourceComputeRegionSslCertificate(),
 			"google_compute_reservation":                                   resourceComputeReservation(),
-			"google_compute_service_attachment":                            resourceComputeServiceAttachment(),
 			"google_compute_ssl_policy":                                    resourceComputeSslPolicy(),
 			"google_compute_subnetwork":                                    resourceComputeSubnetwork(),
 			"google_compute_subnetwork_iam_binding":                        ResourceIamBinding(ComputeSubnetworkIamSchema, ComputeSubnetworkIamUpdaterProducer, ComputeSubnetworkIdParseFunc),
@@ -1240,8 +1238,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_eventarc_trigger":                      resourceEventarcTrigger(),
 			"google_folder":                                resourceGoogleFolder(),
 			"google_folder_organization_policy":            resourceGoogleFolderOrganizationPolicy(),
-			"google_gke_hub_feature":                       resourceGkeHubFeature(),
-			"google_gke_hub_feature_membership":            resourceGkeHubFeatureMembership(),
 			"google_logging_billing_account_sink":          resourceLoggingBillingAccountSink(),
 			"google_logging_billing_account_exclusion":     ResourceLoggingExclusion(BillingAccountLoggingExclusionSchema, NewBillingAccountLoggingExclusionUpdater, billingAccountLoggingExclusionIdParseFunc),
 			"google_logging_billing_account_bucket_config": ResourceLoggingBillingAccountBucketConfig(),
@@ -1507,7 +1503,6 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 
 	// dcl
 	config.EventarcBasePath = d.Get(EventarcEndpointEntryKey).(string)
-	config.GkeHubBasePath = d.Get(GkeHubFeatureCustomEndpointEntryKey).(string)
 
 	stopCtx, ok := schema.StopContext(ctx)
 	if !ok {
