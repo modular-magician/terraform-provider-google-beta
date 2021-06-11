@@ -86,6 +86,7 @@ The following arguments are supported:
 * `placement` -
   (Required)
   Required. WorkflowTemplate scheduling information.
+  
 
 The `jobs` block supports:
     
@@ -136,9 +137,7 @@ The `jobs` block supports:
 * `step_id` -
   (Required)
   Required. The step id. The id must be unique among all jobs within the template. The step id is used as prefix for job id, as job `goog-dataproc-workflow-step-id` label, and in field from other steps. The id must contain only letters (a-z, A-Z), numbers (0-9), underscores (_), and hyphens (-). Cannot begin or end with underscore or hyphen. Must consist of between 3 and 50 characters.
-    
-
-The `placement` block supports:
+    The `placement` block supports:
     
 * `cluster_selector` -
   (Optional)
@@ -147,9 +146,7 @@ The `placement` block supports:
 * `managed_cluster` -
   (Optional)
   A cluster that is managed by the workflow.
-    
-
-The `config` block supports:
+    The `config` block supports:
     
 * `autoscaling_config` -
   (Optional)
@@ -234,7 +231,6 @@ The `config` block supports:
   Optional. Used to perform a consistent read-modify-write. This field should be left blank for a `CreateWorkflowTemplate` request. It is required for an `UpdateWorkflowTemplate` request, and must match the current server version. A typical update template flow would fetch the current template with a `GetWorkflowTemplate` request, which will return the current template with the `version` field filled in with the current server version. The user updates other fields in the template, then returns it as part of the `UpdateWorkflowTemplate` request.
   
 
-
 The `hadoop_job` block supports:
     
 * `archive_uris` -
@@ -268,14 +264,12 @@ The `hadoop_job` block supports:
 * `properties` -
   (Optional)
   Optional. A mapping of property names to values, used to configure Hadoop. Properties that conflict with values set by the Dataproc API may be overwritten. Can include properties set in /etc/hadoop/conf/*-site and classes in user code.
-    
-The `logging_config` block supports:
+    The `logging_config` block supports:
     
 * `driver_log_levels` -
   (Optional)
   The per-package log levels for the driver. This may include "root" package name to configure rootLogger. Examples: 'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'
-    
-The `hive_job` block supports:
+    The `hive_job` block supports:
     
 * `continue_on_failure` -
   (Optional)
@@ -300,14 +294,12 @@ The `hive_job` block supports:
 * `script_variables` -
   (Optional)
   Optional. Mapping of query variable names to values (equivalent to the Hive command: `SET name="value";`).
-    
-The `query_list` block supports:
+    The `query_list` block supports:
     
 * `queries` -
   (Required)
   Required. The queries to execute. You do not need to end a query expression with a semicolon. Multiple queries can be specified in one string by separating each with a semicolon. Here is an example of a Dataproc API snippet that uses a QueryList to specify a HiveJob: "hiveJob": { "queryList": { "queries": } }
-    
-The `pig_job` block supports:
+    The `pig_job` block supports:
     
 * `continue_on_failure` -
   (Optional)
@@ -336,20 +328,17 @@ The `pig_job` block supports:
 * `script_variables` -
   (Optional)
   Optional. Mapping of query variable names to values (equivalent to the Pig command: `name=`).
-    
-The `logging_config` block supports:
+    The `logging_config` block supports:
     
 * `driver_log_levels` -
   (Optional)
   The per-package log levels for the driver. This may include "root" package name to configure rootLogger. Examples: 'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'
-    
-The `query_list` block supports:
+    The `query_list` block supports:
     
 * `queries` -
   (Required)
   Required. The queries to execute. You do not need to end a query expression with a semicolon. Multiple queries can be specified in one string by separating each with a semicolon. Here is an example of a Dataproc API snippet that uses a QueryList to specify a HiveJob: "hiveJob": { "queryList": { "queries": } }
-    
-The `presto_job` block supports:
+    The `presto_job` block supports:
     
 * `client_tags` -
   (Optional)
@@ -378,20 +367,17 @@ The `presto_job` block supports:
 * `query_list` -
   (Optional)
   A list of queries.
-    
-The `logging_config` block supports:
+    The `logging_config` block supports:
     
 * `driver_log_levels` -
   (Optional)
   The per-package log levels for the driver. This may include "root" package name to configure rootLogger. Examples: 'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'
-    
-The `query_list` block supports:
+    The `query_list` block supports:
     
 * `queries` -
   (Required)
   Required. The queries to execute. You do not need to end a query expression with a semicolon. Multiple queries can be specified in one string by separating each with a semicolon. Here is an example of a Dataproc API snippet that uses a QueryList to specify a HiveJob: "hiveJob": { "queryList": { "queries": } }
-    
-The `pyspark_job` block supports:
+    The `pyspark_job` block supports:
     
 * `archive_uris` -
   (Optional)
@@ -424,14 +410,12 @@ The `pyspark_job` block supports:
 * `python_file_uris` -
   (Optional)
   Optional. HCFS file URIs of Python files to pass to the PySpark framework. Supported file types: .py, .egg, and .zip.
-    
-The `logging_config` block supports:
+    The `logging_config` block supports:
     
 * `driver_log_levels` -
   (Optional)
   The per-package log levels for the driver. This may include "root" package name to configure rootLogger. Examples: 'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'
-    
-The `scheduling` block supports:
+    The `scheduling` block supports:
     
 * `max_failures_per_hour` -
   (Optional)
@@ -440,8 +424,7 @@ The `scheduling` block supports:
 * `max_failures_total` -
   (Optional)
   Optional. Maximum number of times in total a driver may be restarted as a result of driver exiting with non-zero code before job is reported failed. Maximum value is 240
-    
-The `spark_job` block supports:
+    The `spark_job` block supports:
     
 * `archive_uris` -
   (Optional)
@@ -474,14 +457,12 @@ The `spark_job` block supports:
 * `properties` -
   (Optional)
   Optional. A mapping of property names to values, used to configure Spark. Properties that conflict with values set by the Dataproc API may be overwritten. Can include properties set in /etc/spark/conf/spark-defaults.conf and classes in user code.
-    
-The `logging_config` block supports:
+    The `logging_config` block supports:
     
 * `driver_log_levels` -
   (Optional)
   The per-package log levels for the driver. This may include "root" package name to configure rootLogger. Examples: 'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'
-    
-The `spark_r_job` block supports:
+    The `spark_r_job` block supports:
     
 * `archive_uris` -
   (Optional)
@@ -506,14 +487,12 @@ The `spark_r_job` block supports:
 * `properties` -
   (Optional)
   Optional. A mapping of property names to values, used to configure SparkR. Properties that conflict with values set by the Dataproc API may be overwritten. Can include properties set in /etc/spark/conf/spark-defaults.conf and classes in user code.
-    
-The `logging_config` block supports:
+    The `logging_config` block supports:
     
 * `driver_log_levels` -
   (Optional)
   The per-package log levels for the driver. This may include "root" package name to configure rootLogger. Examples: 'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'
-    
-The `spark_sql_job` block supports:
+    The `spark_sql_job` block supports:
     
 * `jar_file_uris` -
   (Optional)
@@ -538,20 +517,17 @@ The `spark_sql_job` block supports:
 * `script_variables` -
   (Optional)
   Optional. Mapping of query variable names to values (equivalent to the Spark SQL command: SET `name="value";`).
-    
-The `logging_config` block supports:
+    The `logging_config` block supports:
     
 * `driver_log_levels` -
   (Optional)
   The per-package log levels for the driver. This may include "root" package name to configure rootLogger. Examples: 'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'
-    
-The `query_list` block supports:
+    The `query_list` block supports:
     
 * `queries` -
   (Required)
   Required. The queries to execute. You do not need to end a query expression with a semicolon. Multiple queries can be specified in one string by separating each with a semicolon. Here is an example of a Dataproc API snippet that uses a QueryList to specify a HiveJob: "hiveJob": { "queryList": { "queries": } }
-    
-The `parameters` block supports:
+    The `parameters` block supports:
     
 * `description` -
   (Optional)
@@ -568,8 +544,7 @@ The `parameters` block supports:
 * `validation` -
   (Optional)
   Optional. Validation rules to be applied to this parameter's value.
-    
-The `validation` block supports:
+    The `validation` block supports:
     
 * `regex` -
   (Optional)
@@ -578,20 +553,17 @@ The `validation` block supports:
 * `values` -
   (Optional)
   Validation based on a list of allowed values.
-    
-The `regex` block supports:
+    The `regex` block supports:
     
 * `regexes` -
   (Required)
   Required. RE2 regular expressions used to validate the parameter's value. The value must match the regex in its entirety (substring matches are not sufficient).
-    
-The `values` block supports:
+    The `values` block supports:
     
 * `values` -
   (Required)
   Required. List of allowed values for the parameter.
-    
-The `cluster_selector` block supports:
+    The `cluster_selector` block supports:
     
 * `cluster_labels` -
   (Required)
@@ -600,8 +572,7 @@ The `cluster_selector` block supports:
 * `zone` -
   (Optional)
   Optional. The zone where workflow process executes. This parameter does not affect the selection of the cluster. If unspecified, the zone of the first cluster matching the selector is used.
-    
-The `managed_cluster` block supports:
+    The `managed_cluster` block supports:
     
 * `cluster_name` -
   (Required)
@@ -614,8 +585,7 @@ The `managed_cluster` block supports:
 * `labels` -
   (Optional)
   Optional. The labels to associate with this cluster. Label keys must be between 1 and 63 characters long, and must conform to the following PCRE regular expression: {0,63} No more than 32 labels can be associated with a given cluster.
-    
-The `master_config` block supports:
+    The `secondary_worker_config` block supports:
     
 * `accelerators` -
   (Optional)
@@ -653,8 +623,7 @@ The `master_config` block supports:
     
 * `managed_group_config` -
   Output only. The config for Compute Engine Instance Group Manager that manages this group. This is only used for preemptible instance groups.
-    
-The `accelerators` block supports:
+    The `accelerators` block supports:
     
 * `accelerator_count` -
   (Optional)
@@ -663,8 +632,7 @@ The `accelerators` block supports:
 * `accelerator_type` -
   (Optional)
   Full URL, partial URI, or short name of the accelerator type resource to expose to this instance. See (https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone#using_auto_zone_placement) feature, you must use the short name of the accelerator type resource, for example, `nvidia-tesla-k80`.
-    
-The `disk_config` block supports:
+    The `disk_config` block supports:
     
 * `boot_disk_size_gb` -
   (Optional)
@@ -677,20 +645,17 @@ The `disk_config` block supports:
 * `num_local_ssds` -
   (Optional)
   Optional. Number of attached SSDs, from 0 to 4 (default is 0). If SSDs are not attached, the boot disk is used to store runtime logs and (https://hadoop.apache.org/docs/r1.2.1/hdfs_user_guide.html) data. If one or more SSDs are attached, this runtime bulk data is spread across them, and the boot disk contains only basic config and installed binaries.
-    
-The `autoscaling_config` block supports:
+    The `autoscaling_config` block supports:
     
 * `policy` -
   (Optional)
   Optional. The autoscaling policy used by the cluster. Only resource names including projectid and location (region) are valid. Examples: * `https://www.googleapis.com/compute/v1/projects/` Note that the policy must be in the same project and Dataproc region.
-    
-The `encryption_config` block supports:
+    The `encryption_config` block supports:
     
 * `gce_pd_kms_key_name` -
   (Optional)
   Optional. The Cloud KMS key name to use for PD disk encryption for all instances in the cluster.
-    
-The `endpoint_config` block supports:
+    The `endpoint_config` block supports:
     
 * `enable_http_port_access` -
   (Optional)
@@ -698,8 +663,7 @@ The `endpoint_config` block supports:
     
 * `http_ports` -
   Output only. The map of port descriptions to URLs. Will only be populated if enable_http_port_access is true.
-    
-The `gce_cluster_config` block supports:
+    The `gce_cluster_config` block supports:
     
 * `internal_ip_only` -
   (Optional)
@@ -744,14 +708,12 @@ The `gce_cluster_config` block supports:
 * `zone` -
   (Optional)
   Optional. The zone where the Compute Engine cluster will be located. On a create request, it is required in the "global" region. If omitted in a non-global Dataproc region, the service will pick a zone in the corresponding Compute Engine region. On a get request, zone will always be present. A full URL, partial URI, or short name are valid. Examples: * `https://www.googleapis.com/compute/v1/projects/` * `us-central1-f`
-    
-The `node_group_affinity` block supports:
+    The `node_group_affinity` block supports:
     
 * `node_group` -
   (Required)
   Required. The URI of a sole-tenant /zones/us-central1-a/nodeGroups/node-group-1` * `node-group-1`
-    
-The `reservation_affinity` block supports:
+    The `reservation_affinity` block supports:
     
 * `consume_reservation_type` -
   (Optional)
@@ -764,14 +726,12 @@ The `reservation_affinity` block supports:
 * `values` -
   (Optional)
   Optional. Corresponds to the label values of reservation resource.
-    
-The `gke_cluster_config` block supports:
+    The `gke_cluster_config` block supports:
     
 * `namespaced_gke_deployment_target` -
   (Optional)
   Optional. A target for the deployment.
-    
-The `namespaced_gke_deployment_target` block supports:
+    The `namespaced_gke_deployment_target` block supports:
     
 * `cluster_namespace` -
   (Optional)
@@ -780,8 +740,7 @@ The `namespaced_gke_deployment_target` block supports:
 * `target_gke_cluster` -
   (Optional)
   Optional. The target GKE cluster to deploy to. Format: 'projects/{project}/locations/{location}/clusters/{cluster_id}'
-    
-The `initialization_actions` block supports:
+    The `initialization_actions` block supports:
     
 * `executable_file` -
   (Optional)
@@ -790,8 +749,7 @@ The `initialization_actions` block supports:
 * `execution_timeout` -
   (Optional)
   Optional. Amount of time executable has to complete. Default is 10 minutes (see JSON representation of (https://developers.google.com/protocol-buffers/docs/proto3#json)). Cluster creation fails with an explanatory error message (the name of the executable that caused the error and the exceeded timeout period) if the executable is not completed at end of the timeout period.
-    
-The `lifecycle_config` block supports:
+    The `lifecycle_config` block supports:
     
 * `auto_delete_time` -
   (Optional)
@@ -807,20 +765,17 @@ The `lifecycle_config` block supports:
     
 * `idle_start_time` -
   Output only. The time when cluster became idle (most recent job finished) and became eligible for deletion due to idleness (see JSON representation of (https://developers.google.com/protocol-buffers/docs/proto3#json)).
-    
-The `metastore_config` block supports:
+    The `metastore_config` block supports:
     
 * `dataproc_metastore_service` -
   (Required)
   Required. Resource name of an existing Dataproc Metastore service. Example: * `projects/`
-    
-The `security_config` block supports:
+    The `security_config` block supports:
     
 * `kerberos_config` -
   (Optional)
   Kerberos related configuration.
-    
-The `kerberos_config` block supports:
+    The `kerberos_config` block supports:
     
 * `cross_realm_trust_admin_server` -
   (Optional)
@@ -881,8 +836,7 @@ The `kerberos_config` block supports:
 * `truststore_password` -
   (Optional)
   Optional. The Cloud Storage URI of a KMS encrypted file containing the password to the user provided truststore. For the self-signed certificate, this password is generated by Dataproc.
-    
-The `software_config` block supports:
+    The `software_config` block supports:
     
 * `image_version` -
   (Optional)
