@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/GoogleCloudPlatform/declarative-resource-client-library/dcl"
+	dcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/dcl"
 	gkehub "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/gkehub/beta"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -547,7 +547,7 @@ func testAccCheckGkeHubFeatureMembershipPresent(t *testing.T, project, location,
 			Project:    dcl.String(project),
 		}
 
-		_, err := CreateGkeHubClient(config, "", "").GetFeatureMembership(context.Background(), obj)
+		_, err := NewDCLGkeHubClient(config, "", "").GetFeatureMembership(context.Background(), obj)
 		if err != nil {
 			return err
 		}
@@ -565,7 +565,7 @@ func testAccCheckGkeHubFeatureMembershipNotPresent(t *testing.T, project, locati
 			Project:    dcl.String(project),
 		}
 
-		_, err := CreateGkeHubClient(config, "", "").GetFeatureMembership(context.Background(), obj)
+		_, err := NewDCLGkeHubClient(config, "", "").GetFeatureMembership(context.Background(), obj)
 		if err == nil {
 			return fmt.Errorf("Did not expect to find GKE Feature Membership for projects/%s/locations/%s/features/%s/membershipId/%s", project, location, feature, membership)
 		}
