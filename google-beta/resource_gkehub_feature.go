@@ -23,18 +23,18 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	dcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/dcl"
-	gke_hub "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/gkehub/beta"
+	gkehub "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/gkehub/beta"
 )
 
-func resourceGkeHubFeature() *schema.Resource {
+func resourceGkehubFeature() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceGkeHubFeatureCreate,
-		Read:   resourceGkeHubFeatureRead,
-		Update: resourceGkeHubFeatureUpdate,
-		Delete: resourceGkeHubFeatureDelete,
+		Create: resourceGkehubFeatureCreate,
+		Read:   resourceGkehubFeatureRead,
+		Update: resourceGkehubFeatureUpdate,
+		Delete: resourceGkehubFeatureDelete,
 
 		Importer: &schema.ResourceImporter{
-			State: resourceGkeHubFeatureImport,
+			State: resourceGkehubFeatureImport,
 		},
 
 		Timeouts: &schema.ResourceTimeout{
@@ -79,7 +79,7 @@ func resourceGkeHubFeature() *schema.Resource {
 				Optional:    true,
 				Description: ``,
 				MaxItems:    1,
-				Elem:        GkeHubFeatureSpecSchema(),
+				Elem:        GkehubFeatureSpecSchema(),
 			},
 
 			"create_time": {
@@ -103,7 +103,7 @@ func resourceGkeHubFeature() *schema.Resource {
 	}
 }
 
-func GkeHubFeatureSpecSchema() *schema.Resource {
+func GkehubFeatureSpecSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"multiclusteringress": {
@@ -111,13 +111,13 @@ func GkeHubFeatureSpecSchema() *schema.Resource {
 				Optional:    true,
 				Description: ``,
 				MaxItems:    1,
-				Elem:        GkeHubFeatureSpecMulticlusteringressSchema(),
+				Elem:        GkehubFeatureSpecMulticlusteringressSchema(),
 			},
 		},
 	}
 }
 
-func GkeHubFeatureSpecMulticlusteringressSchema() *schema.Resource {
+func GkehubFeatureSpecMulticlusteringressSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"config_membership": {
@@ -130,19 +130,19 @@ func GkeHubFeatureSpecMulticlusteringressSchema() *schema.Resource {
 	}
 }
 
-func resourceGkeHubFeatureCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceGkehubFeatureCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	obj := &gke_hub.Feature{
+	obj := &gkehub.Feature{
 		Location: dcl.String(d.Get("location").(string)),
 		Labels:   checkStringMap(d.Get("labels")),
 		Name:     dcl.String(d.Get("name").(string)),
 		Project:  dcl.String(project),
-		Spec:     expandGkeHubFeatureSpec(d.Get("spec")),
+		Spec:     expandGkehubFeatureSpec(d.Get("spec")),
 	}
 	lockName, err := replaceVarsForId(d, config, "{{project}}/{{location}}/{{feature}}")
 	if err != nil {
@@ -176,22 +176,22 @@ func resourceGkeHubFeatureCreate(d *schema.ResourceData, meta interface{}) error
 
 	log.Printf("[DEBUG] Finished creating Feature %q: %#v", d.Id(), res)
 
-	return resourceGkeHubFeatureRead(d, meta)
+	return resourceGkehubFeatureRead(d, meta)
 }
 
-func resourceGkeHubFeatureRead(d *schema.ResourceData, meta interface{}) error {
+func resourceGkehubFeatureRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	obj := &gke_hub.Feature{
+	obj := &gkehub.Feature{
 		Location: dcl.String(d.Get("location").(string)),
 		Labels:   checkStringMap(d.Get("labels")),
 		Name:     dcl.String(d.Get("name").(string)),
 		Project:  dcl.String(project),
-		Spec:     expandGkeHubFeatureSpec(d.Get("spec")),
+		Spec:     expandGkehubFeatureSpec(d.Get("spec")),
 	}
 
 	userAgent, err := generateUserAgentString(d, config.userAgent)
@@ -223,7 +223,7 @@ func resourceGkeHubFeatureRead(d *schema.ResourceData, meta interface{}) error {
 	if err = d.Set("project", res.Project); err != nil {
 		return fmt.Errorf("error setting project in state: %s", err)
 	}
-	if err = d.Set("spec", flattenGkeHubFeatureSpec(res.Spec)); err != nil {
+	if err = d.Set("spec", flattenGkehubFeatureSpec(res.Spec)); err != nil {
 		return fmt.Errorf("error setting spec in state: %s", err)
 	}
 	if err = d.Set("create_time", res.CreateTime); err != nil {
@@ -238,19 +238,19 @@ func resourceGkeHubFeatureRead(d *schema.ResourceData, meta interface{}) error {
 
 	return nil
 }
-func resourceGkeHubFeatureUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceGkehubFeatureUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	obj := &gke_hub.Feature{
+	obj := &gkehub.Feature{
 		Location: dcl.String(d.Get("location").(string)),
 		Labels:   checkStringMap(d.Get("labels")),
 		Name:     dcl.String(d.Get("name").(string)),
 		Project:  dcl.String(project),
-		Spec:     expandGkeHubFeatureSpec(d.Get("spec")),
+		Spec:     expandGkehubFeatureSpec(d.Get("spec")),
 	}
 	lockName, err := replaceVarsForId(d, config, "{{project}}/{{location}}/{{feature}}")
 	if err != nil {
@@ -277,22 +277,22 @@ func resourceGkeHubFeatureUpdate(d *schema.ResourceData, meta interface{}) error
 
 	log.Printf("[DEBUG] Finished creating Feature %q: %#v", d.Id(), res)
 
-	return resourceGkeHubFeatureRead(d, meta)
+	return resourceGkehubFeatureRead(d, meta)
 }
 
-func resourceGkeHubFeatureDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceGkehubFeatureDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	obj := &gke_hub.Feature{
+	obj := &gkehub.Feature{
 		Location: dcl.String(d.Get("location").(string)),
 		Labels:   checkStringMap(d.Get("labels")),
 		Name:     dcl.String(d.Get("name").(string)),
 		Project:  dcl.String(project),
-		Spec:     expandGkeHubFeatureSpec(d.Get("spec")),
+		Spec:     expandGkehubFeatureSpec(d.Get("spec")),
 	}
 	lockName, err := replaceVarsForId(d, config, "{{project}}/{{location}}/{{feature}}")
 	if err != nil {
@@ -320,7 +320,7 @@ func resourceGkeHubFeatureDelete(d *schema.ResourceData, meta interface{}) error
 	return nil
 }
 
-func resourceGkeHubFeatureImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+func resourceGkehubFeatureImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/features/(?P<name>[^/]+)",
@@ -340,47 +340,47 @@ func resourceGkeHubFeatureImport(d *schema.ResourceData, meta interface{}) ([]*s
 	return []*schema.ResourceData{d}, nil
 }
 
-func expandGkeHubFeatureSpec(o interface{}) *gke_hub.FeatureSpec {
+func expandGkehubFeatureSpec(o interface{}) *gkehub.FeatureSpec {
 	if o == nil {
-		return gke_hub.EmptyFeatureSpec
+		return gkehub.EmptyFeatureSpec
 	}
 	objArr := o.([]interface{})
 	if len(objArr) == 0 {
-		return gke_hub.EmptyFeatureSpec
+		return gkehub.EmptyFeatureSpec
 	}
 	obj := objArr[0].(map[string]interface{})
-	return &gke_hub.FeatureSpec{
-		Multiclusteringress: expandGkeHubFeatureSpecMulticlusteringress(obj["multiclusteringress"]),
+	return &gkehub.FeatureSpec{
+		Multiclusteringress: expandGkehubFeatureSpecMulticlusteringress(obj["multiclusteringress"]),
 	}
 }
 
-func flattenGkeHubFeatureSpec(obj *gke_hub.FeatureSpec) interface{} {
+func flattenGkehubFeatureSpec(obj *gkehub.FeatureSpec) interface{} {
 	if obj == nil || obj.Empty() {
 		return nil
 	}
 	transformed := map[string]interface{}{
-		"multiclusteringress": flattenGkeHubFeatureSpecMulticlusteringress(obj.Multiclusteringress),
+		"multiclusteringress": flattenGkehubFeatureSpecMulticlusteringress(obj.Multiclusteringress),
 	}
 
 	return []interface{}{transformed}
 
 }
 
-func expandGkeHubFeatureSpecMulticlusteringress(o interface{}) *gke_hub.FeatureSpecMulticlusteringress {
+func expandGkehubFeatureSpecMulticlusteringress(o interface{}) *gkehub.FeatureSpecMulticlusteringress {
 	if o == nil {
-		return gke_hub.EmptyFeatureSpecMulticlusteringress
+		return gkehub.EmptyFeatureSpecMulticlusteringress
 	}
 	objArr := o.([]interface{})
 	if len(objArr) == 0 {
-		return gke_hub.EmptyFeatureSpecMulticlusteringress
+		return gkehub.EmptyFeatureSpecMulticlusteringress
 	}
 	obj := objArr[0].(map[string]interface{})
-	return &gke_hub.FeatureSpecMulticlusteringress{
+	return &gkehub.FeatureSpecMulticlusteringress{
 		ConfigMembership: dcl.String(obj["config_membership"].(string)),
 	}
 }
 
-func flattenGkeHubFeatureSpecMulticlusteringress(obj *gke_hub.FeatureSpecMulticlusteringress) interface{} {
+func flattenGkehubFeatureSpecMulticlusteringress(obj *gkehub.FeatureSpecMulticlusteringress) interface{} {
 	if obj == nil || obj.Empty() {
 		return nil
 	}
