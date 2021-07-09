@@ -369,10 +369,14 @@ running 'gcloud privateca locations list'.`,
 										},
 									},
 									"additional_extensions": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										ForceNew:    true,
-										Description: `Specifies an X.509 extension, which may be used in different parts of X.509 objects like certificates, CSRs, and CRLs.`,
+										Type:     schema.TypeList,
+										Optional: true,
+										ForceNew: true,
+										Description: `Specifies an X.509 extension, which may be used in different
+parts of X.509 objects like certificates, CSRs, and CRLs.
+Specifying extensions using Terraform is not recommended, as
+there may be undesirable behaviour(s) if the fields are promoted
+in the API. If extensions are in use, carefully review your plan.`,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"critical": {

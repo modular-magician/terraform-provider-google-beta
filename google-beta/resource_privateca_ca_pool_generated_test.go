@@ -132,9 +132,9 @@ resource "google_privateca_ca_pool" "default" {
       aia_ocsp_servers = ["example.com"]
       additional_extensions {
         critical = true
-        value = "asdf"
+        value = "AwIBgg=="
         object_id {
-          object_id_path = [123, 899]
+          object_id_path = [2, 5, 29, 15]
         }
       }
       policy_ids {

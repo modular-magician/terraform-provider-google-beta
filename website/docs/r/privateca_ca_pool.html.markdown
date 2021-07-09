@@ -99,9 +99,9 @@ resource "google_privateca_ca_pool" "default" {
       aia_ocsp_servers = ["example.com"]
       additional_extensions {
         critical = true
-        value = "asdf"
+        value = "AwIBgg=="
         object_id {
-          object_id_path = [123, 899]
+          object_id_path = [2, 5, 29, 15]
         }
       }
       policy_ids {
@@ -298,7 +298,12 @@ The `baseline_values` block supports:
 
 * `additional_extensions` -
   (Optional)
-  Specifies an X.509 extension, which may be used in different parts of X.509 objects like certificates, CSRs, and CRLs.
+  Specifies an X.509 extension, which may be used in different
+  parts of X.509 objects like certificates, CSRs, and CRLs.
+  Specifying extensions using Terraform is not recommended, as
+  there may be undesirable behaviour(s) if the fields are
+  promoted in the API. If extensions are in use, carefully
+  review your plan.
   Structure is documented below.
 
 * `policy_ids` -

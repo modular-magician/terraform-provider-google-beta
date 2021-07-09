@@ -334,7 +334,11 @@ The `x509_config` block supports:
 
 * `additional_extensions` -
   (Optional)
-  Specifies an X.509 extension, which may be used in different parts of X.509 objects like certificates, CSRs, and CRLs.
+  Specifies an X.509 extension, which may be used in different
+  parts of X.509 objects like certificates, CSRs, and CRLs.
+  Specifying extensions using Terraform is not recommended, as
+  there may be undesirable behaviour(s) if the fields are promoted
+  in the API. If extensions are in use, carefully review your plan.
   Structure is documented below.
 
 * `policy_ids` -
