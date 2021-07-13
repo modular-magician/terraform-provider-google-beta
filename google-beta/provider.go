@@ -886,9 +886,9 @@ func Provider() *schema.Provider {
 	return provider
 }
 
-// Generated resources: 238
+// Generated resources: 239
 // Generated IAM resources: 117
-// Total generated resources: 355
+// Total generated resources: 356
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1208,6 +1208,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_secret_manager_secret_iam_policy":                      ResourceIamPolicy(SecretManagerSecretIamSchema, SecretManagerSecretIamUpdaterProducer, SecretManagerSecretIdParseFunc),
 			"google_secret_manager_secret_version":                         resourceSecretManagerSecretVersion(),
 			"google_scc_source":                                            resourceSecurityCenterSource(),
+			"google_scc_notification_config":                               resourceSecurityCenterNotificationConfig(),
 			"google_security_scanner_scan_config":                          resourceSecurityScannerScanConfig(),
 			"google_service_directory_namespace":                           resourceServiceDirectoryNamespace(),
 			"google_service_directory_namespace_iam_binding":               ResourceIamBinding(ServiceDirectoryNamespaceIamSchema, ServiceDirectoryNamespaceIamUpdaterProducer, ServiceDirectoryNamespaceIdParseFunc),
