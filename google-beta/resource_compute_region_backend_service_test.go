@@ -235,6 +235,39 @@ func TestAccComputeRegionBackendService_ilbUpdateFull(t *testing.T) {
 	})
 }
 
+func TestAccComputeRegionBackendService_ilbTcpUpdateFull(t *testing.T) {
+	t.Parallel()
+
+	randString := randString(t, 10)
+
+	backendName := fmt.Sprintf("foo-%s", randString)
+	checkName := fmt.Sprintf("bar-%s", randString)
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckComputeRegionBackendServiceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeRegionBackendService_ilbTcpFull(backendName, checkName),
+			},
+			{
+				ResourceName:      "google_compute_region_backend_service.foobar",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccComputeRegionBackendService_ilbTcpUpdateFull(backendName, checkName),
+			},
+			{
+				ResourceName:      "google_compute_region_backend_service.foobar",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func testAccComputeRegionBackendService_ilbBasic(serviceName, checkName string) string {
 	return fmt.Sprintf(`
 resource "google_compute_region_backend_service" "foobar" {
@@ -435,6 +468,45 @@ resource "google_compute_health_check" "health_check" {
   }
 }
 `, serviceName, igName, instanceName, checkName)
+}
+
+func testAccComputeRegionBackendService_ilbTcpFull(serviceName, checkName string) string {
+	return fmt.Sprintf(`
+resource "google_compute_region_backend_service" "foobar" {
+  name                  = "%s"
+  health_checks         = [google_compute_health_check.health_check.self_link]
+  protocol              = "TCP"
+  load_balancing_scheme = "INTERNAL"  
+  subsetting {
+	  policy = "CONSISTENT_HASH_SUBSETTING"
+  }
+}
+
+resource "google_compute_health_check" "health_check" {
+  name     = "%s"
+  http_health_check {
+    port = 80
+  }
+}
+`, serviceName, checkName)
+}
+
+func testAccComputeRegionBackendService_ilbTcpUpdateFull(serviceName, checkName string) string {
+	return fmt.Sprintf(`
+resource "google_compute_region_backend_service" "foobar" {
+  name                  = "%s"
+  health_checks         = [google_compute_health_check.health_check.self_link]
+  protocol              = "TCP"
+  load_balancing_scheme = "INTERNAL"  
+}
+
+resource "google_compute_health_check" "health_check" {
+  name     = "%s"
+  http_health_check {
+    port = 80
+  }
+}
+`, serviceName, checkName)
 }
 
 func testAccComputeRegionBackendService_basic(serviceName, checkName string) string {

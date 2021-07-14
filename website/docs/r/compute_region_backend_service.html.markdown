@@ -437,6 +437,11 @@ The following arguments are supported:
   The URL of the network to which this backend service belongs.
   This field can only be specified when the load balancing scheme is set to INTERNAL.
 
+* `subsetting` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Subsetting configuration for this BackendService. Currently this is applicable only for Internal TCP/UDP load balancing and Internal HTTP(S) load balancing.
+  Structure is documented below.
+
 * `region` -
   (Optional)
   The Region in which the created backend service should reside.
@@ -902,6 +907,13 @@ The `log_config` block supports:
   the field must be in [0, 1]. This configures the sampling rate of requests to the load balancer
   where 1.0 means all logged requests are reported and 0.0 means no logged requests are reported.
   The default value is 1.0.
+
+The `subsetting` block supports:
+
+* `policy` -
+  (Required)
+  "Valid values are currently CONSISTENT_HASH_SUBSETTING and NONE."
+  Possible values are `NONE` and `CONSISTENT_HASH_SUBSETTING`.
 
 ## Attributes Reference
 
