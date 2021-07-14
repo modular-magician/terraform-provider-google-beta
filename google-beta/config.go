@@ -11,6 +11,8 @@ import (
 
 	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/logging"
+	"github.com/hashicorp/terraform-provider-google-beta/version"
+
 	"google.golang.org/api/option"
 
 	"golang.org/x/oauth2"
@@ -54,6 +56,8 @@ import (
 type providerMeta struct {
 	ModuleName string `cty:"module_name"`
 }
+
+var providerVersion string
 
 // Config is the configuration structure used to instantiate the Google
 // provider.
@@ -430,6 +434,8 @@ func (c *Config) LoadAndValidate(ctx context.Context) error {
 	c.requestBatcherServiceUsage = NewRequestBatcher("Service Usage", ctx, c.BatchingConfig)
 	c.requestBatcherIam = NewRequestBatcher("IAM", ctx, c.BatchingConfig)
 	c.PollInterval = 10 * time.Second
+
+	providerVersion = "google-beta/" + version.ProviderVersion
 
 	return nil
 }
