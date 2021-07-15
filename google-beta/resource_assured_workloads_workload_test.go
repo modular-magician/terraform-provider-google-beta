@@ -86,6 +86,7 @@ resource "google_assured_workloads_workload" "meep" {
 	compliance_regime = "FEDRAMP_MODERATE"
 	organization = "%{org_id}"
 	location = "us-central1"
+	provisioned_resources_parent = "folders/177863664720"
 }
 `, context)
 }
@@ -101,6 +102,7 @@ resource "google_assured_workloads_workload" "meep" {
 	compliance_regime = "FEDRAMP_MODERATE"
 	organization = "%{org_id}"
 	location = "us-central1"
+	provisioned_resources_parent = "folders/177863664720"
 }
 `, context)
 }
@@ -118,10 +120,6 @@ resource "google_assured_workloads_workload" "meep" {
 		rotation_period = "864000s"
 	}
 	provisioned_resources_parent = "folders/177863664720"
-	resource_settings {
-		resource_id = "tf-test-prj-%{random_suffix}"
-		resource_type = "CONSUMER_PROJECT"
-	}
 }
 `, context)
 }
