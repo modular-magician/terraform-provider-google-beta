@@ -35,7 +35,7 @@ func TestAccBigqueryReservationReservation_bigqueryReservation(t *testing.T) {
 func testAccBigqueryReservationReservation_bigqueryReservationBasic(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_bigquery_reservation" "reservation" {
-	name           = "reservation%{random_suffix}"
+	name           = "tf-test-reservation%{random_suffix}"
 	location       = "%{location}"
 	// Set to 0 for testing purposes
 	// In reality this would be larger than zero
