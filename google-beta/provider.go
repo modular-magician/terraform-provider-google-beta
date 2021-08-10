@@ -761,6 +761,7 @@ func Provider() *schema.Provider {
 			AssuredWorkloadsEndpointEntryKey:     AssuredWorkloadsEndpointEntry,
 			EventarcEndpointEntryKey:             EventarcEndpointEntry,
 			GkeHubFeatureCustomEndpointEntryKey:  GkeHubFeatureCustomEndpointEntry,
+			GkemulticloudEndpointEntryKey:        GkemulticloudEndpointEntry,
 			CloudBuildWorkerPoolEndpointEntryKey: CloudBuildWorkerPoolEndpointEntry,
 		},
 
@@ -1248,6 +1249,11 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_workflows_workflow":                                    resourceWorkflowsWorkflow(),
 		},
 		map[string]*schema.Resource{
+			"google_gke_multicloud_aws_cluster":            resourceGkemulticloudAwsCluster(),
+			"google_gke_multicloud_aws_node_pool":          resourceGkemulticloudAwsNodePool(),
+			"google_gke_multicloud_azure_client":           resourceGkemulticloudAzureClient(),
+			"google_gke_multicloud_azure_cluster":          resourceGkemulticloudAzureCluster(),
+			"google_gke_multicloud_azure_node_pool":        resourceGkemulticloudAzureNodePool(),
 			"google_assured_workloads_workload":            resourceAssuredWorkloadsWorkload(),
 			"google_app_engine_application":                resourceAppEngineApplication(),
 			"google_bigquery_table":                        resourceBigQueryTable(),
@@ -1558,6 +1564,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.AssuredWorkloadsBasePath = d.Get(AssuredWorkloadsEndpointEntryKey).(string)
 	config.EventarcBasePath = d.Get(EventarcEndpointEntryKey).(string)
 	config.GkeHubBasePath = d.Get(GkeHubFeatureCustomEndpointEntryKey).(string)
+	config.GkemulticloudBasePath = d.Get(GkemulticloudEndpointEntryKey).(string)
 	config.CloudBuildWorkerPoolBasePath = d.Get(CloudBuildWorkerPoolEndpointEntryKey).(string)
 
 	stopCtx, ok := schema.StopContext(ctx)
