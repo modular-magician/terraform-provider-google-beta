@@ -152,7 +152,7 @@ resource "google_iap_app_engine_version_iam_member" "member" {
 
 The following arguments are supported:
 
-* `app_id` - (Required) Id of the App Engine application. Used to find the parent resource to bind the IAM policy to
+* `app_id` - (Required) ID of the App Engine application. Used to find the parent resource to bind the IAM policy to
 * `service` - (Required) Service id of the App Engine application Used to find the parent resource to bind the IAM policy to
 * `version_id` - (Required) Version id of the App Engine application Used to find the parent resource to bind the IAM policy to
 
