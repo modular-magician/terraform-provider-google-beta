@@ -161,6 +161,38 @@ expiration time indicated by this property.`,
 organize and group your datasets`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"linked_dataset_source": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `The source when the dataset is of type LINKED.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"source_dataset": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `The source dataset reference contains project numbers and not project ids.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"dataset_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `The ID of the project containing the source dataset.`,
+									},
+									"project_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `The unique ID of the source dataset.`,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"location": {
 				Type:             schema.TypeString,
 				Optional:         true,
@@ -196,6 +228,14 @@ epoch.`,
 				Computed: true,
 				Description: `The date when this dataset or any of its tables was last modified, in
 milliseconds since the epoch.`,
+			},
+			"type": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `The type of the dataset, one of:
+  DEFAULT - only accessible by owner and authorized accounts,
+  LINKED - linked dataset,
+  EXTERNAL - dataset with definition in external metadata catalog.`,
 			},
 			"delete_contents_on_destroy": {
 				Type:     schema.TypeBool,
@@ -360,6 +400,12 @@ func resourceBigQueryDatasetCreate(d *schema.ResourceData, meta interface{}) err
 	} else if v, ok := d.GetOkExists("default_encryption_configuration"); !isEmptyValue(reflect.ValueOf(defaultEncryptionConfigurationProp)) && (ok || !reflect.DeepEqual(v, defaultEncryptionConfigurationProp)) {
 		obj["defaultEncryptionConfiguration"] = defaultEncryptionConfigurationProp
 	}
+	linkedDatasetSourceProp, err := expandBigQueryDatasetLinkedDatasetSource(d.Get("linked_dataset_source"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("linked_dataset_source"); !isEmptyValue(reflect.ValueOf(linkedDatasetSourceProp)) && (ok || !reflect.DeepEqual(v, linkedDatasetSourceProp)) {
+		obj["linkedDatasetSource"] = linkedDatasetSourceProp
+	}
 
 	url, err := replaceVars(d, config, "{{BigQueryBasePath}}projects/{{project}}/datasets")
 	if err != nil {
@@ -485,6 +531,12 @@ func resourceBigQueryDatasetRead(d *schema.ResourceData, meta interface{}) error
 	if err := d.Set("default_encryption_configuration", flattenBigQueryDatasetDefaultEncryptionConfiguration(res["defaultEncryptionConfiguration"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Dataset: %s", err)
 	}
+	if err := d.Set("type", flattenBigQueryDatasetType(res["type"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Dataset: %s", err)
+	}
+	if err := d.Set("linked_dataset_source", flattenBigQueryDatasetLinkedDatasetSource(res["linkedDatasetSource"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Dataset: %s", err)
+	}
 	if err := d.Set("self_link", ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
 		return fmt.Errorf("Error reading Dataset: %s", err)
 	}
@@ -561,6 +613,12 @@ func resourceBigQueryDatasetUpdate(d *schema.ResourceData, meta interface{}) err
 		return err
 	} else if v, ok := d.GetOkExists("default_encryption_configuration"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, defaultEncryptionConfigurationProp)) {
 		obj["defaultEncryptionConfiguration"] = defaultEncryptionConfigurationProp
+	}
+	linkedDatasetSourceProp, err := expandBigQueryDatasetLinkedDatasetSource(d.Get("linked_dataset_source"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("linked_dataset_source"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, linkedDatasetSourceProp)) {
+		obj["linkedDatasetSource"] = linkedDatasetSourceProp
 	}
 
 	url, err := replaceVars(d, config, "{{BigQueryBasePath}}projects/{{project}}/datasets/{{dataset_id}}")
@@ -848,6 +906,46 @@ func flattenBigQueryDatasetDefaultEncryptionConfigurationKmsKeyName(v interface{
 	return v
 }
 
+func flattenBigQueryDatasetType(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenBigQueryDatasetLinkedDatasetSource(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["source_dataset"] =
+		flattenBigQueryDatasetLinkedDatasetSourceSourceDataset(original["sourceDataset"], d, config)
+	return []interface{}{transformed}
+}
+func flattenBigQueryDatasetLinkedDatasetSourceSourceDataset(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["project_id"] =
+		flattenBigQueryDatasetLinkedDatasetSourceSourceDatasetProjectId(original["projectId"], d, config)
+	transformed["dataset_id"] =
+		flattenBigQueryDatasetLinkedDatasetSourceSourceDatasetDatasetId(original["datasetId"], d, config)
+	return []interface{}{transformed}
+}
+func flattenBigQueryDatasetLinkedDatasetSourceSourceDatasetProjectId(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenBigQueryDatasetLinkedDatasetSourceSourceDatasetDatasetId(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func expandBigQueryDatasetAccess(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	l := v.([]interface{})
@@ -1038,5 +1136,58 @@ func expandBigQueryDatasetDefaultEncryptionConfiguration(v interface{}, d Terraf
 }
 
 func expandBigQueryDatasetDefaultEncryptionConfigurationKmsKeyName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigQueryDatasetLinkedDatasetSource(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedSourceDataset, err := expandBigQueryDatasetLinkedDatasetSourceSourceDataset(original["source_dataset"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSourceDataset); val.IsValid() && !isEmptyValue(val) {
+		transformed["sourceDataset"] = transformedSourceDataset
+	}
+
+	return transformed, nil
+}
+
+func expandBigQueryDatasetLinkedDatasetSourceSourceDataset(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedProjectId, err := expandBigQueryDatasetLinkedDatasetSourceSourceDatasetProjectId(original["project_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !isEmptyValue(val) {
+		transformed["projectId"] = transformedProjectId
+	}
+
+	transformedDatasetId, err := expandBigQueryDatasetLinkedDatasetSourceSourceDatasetDatasetId(original["dataset_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDatasetId); val.IsValid() && !isEmptyValue(val) {
+		transformed["datasetId"] = transformedDatasetId
+	}
+
+	return transformed, nil
+}
+
+func expandBigQueryDatasetLinkedDatasetSourceSourceDatasetProjectId(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigQueryDatasetLinkedDatasetSourceSourceDatasetDatasetId(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }

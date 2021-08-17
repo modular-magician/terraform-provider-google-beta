@@ -182,6 +182,11 @@ The following arguments are supported:
   this value, unless table creation request (or query) overrides the key.
   Structure is documented below.
 
+* `linked_dataset_source` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The source when the dataset is of type LINKED.
+  Structure is documented below.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -260,6 +265,24 @@ The `default_encryption_configuration` block supports:
   BigQuery table. The BigQuery Service Account associated with your project requires
   access to this encryption key.
 
+The `linked_dataset_source` block supports:
+
+* `source_dataset` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The source dataset reference contains project numbers and not project ids.
+  Structure is documented below.
+
+
+The `source_dataset` block supports:
+
+* `project_id` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The unique ID of the source dataset.
+
+* `dataset_id` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The ID of the project containing the source dataset.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -276,6 +299,13 @@ In addition to the arguments listed above, the following computed attributes are
 * `last_modified_time` -
   The date when this dataset or any of its tables was last modified, in
   milliseconds since the epoch.
+
+* `type` -
+  ([Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The type of the dataset, one of:
+    DEFAULT - only accessible by owner and authorized accounts,
+    LINKED - linked dataset,
+    EXTERNAL - dataset with definition in external metadata catalog.
 * `self_link` - The URI of the created resource.
 
 
