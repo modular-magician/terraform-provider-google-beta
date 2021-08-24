@@ -81,7 +81,6 @@ RFC1035.`,
 			},
 			"guest_os_features": {
 				Type:     schema.TypeSet,
-				Computed: true,
 				Optional: true,
 				ForceNew: true,
 				Description: `A list of features to enable on the guest operating system.
