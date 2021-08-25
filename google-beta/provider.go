@@ -1261,6 +1261,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_assured_workloads_workload":            resourceAssuredWorkloadsWorkload(),
 			"google_app_engine_application":                resourceAppEngineApplication(),
 			"google_bigquery_table":                        resourceBigQueryTable(),
+			"google_bigquery_reservation_assignment":       resourceBigqueryReservationAssignment(),
 			"google_bigtable_gc_policy":                    resourceBigtableGCPolicy(),
 			"google_bigtable_instance":                     resourceBigtableInstance(),
 			"google_bigtable_table":                        resourceBigtableTable(),

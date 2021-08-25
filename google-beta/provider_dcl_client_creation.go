@@ -19,6 +19,7 @@ import (
 	dcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/dcl"
 
 	assuredworkloads "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/assuredworkloads/beta"
+	bigqueryreservation "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/bigqueryreservation/beta"
 	cloudbuild "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/cloudbuild/beta"
 	compute "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/compute/beta"
 	dataproc "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/dataproc/beta"
@@ -44,6 +45,25 @@ func NewDCLAssuredWorkloadsClient(config *Config, userAgent, billingProject stri
 
 	dclConfig := dcl.NewConfig(configOptions...)
 	return assuredworkloads.NewClient(dclConfig)
+}
+
+func NewDCLBigqueryReservationClient(config *Config, userAgent, billingProject string) *bigqueryreservation.Client {
+	configOptions := []dcl.ConfigOption{
+		dcl.WithHTTPClient(config.client),
+		dcl.WithUserAgent(userAgent),
+		dcl.WithLogger(dclLogger{}),
+		dcl.WithBasePath(config.BigqueryReservationBasePath),
+	}
+
+	if config.UserProjectOverride {
+		configOptions = append(configOptions, dcl.WithUserProjectOverride())
+		if billingProject != "" {
+			configOptions = append(configOptions, dcl.WithBillingProject(billingProject))
+		}
+	}
+
+	dclConfig := dcl.NewConfig(configOptions...)
+	return bigqueryreservation.NewClient(dclConfig)
 }
 
 func NewDCLCloudbuildClient(config *Config, userAgent, billingProject string) *cloudbuild.Client {
