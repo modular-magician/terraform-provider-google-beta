@@ -963,6 +963,7 @@ resource "google_composer_environment" "test" {
 
 			service_account = google_service_account.test.name
 			max_pods_per_node = 33
+			enable_ip_masq_agent = true
 			ip_allocation_policy {
 				use_ip_aliases          = true
 				cluster_ipv4_cidr_block = "10.0.0.0/16"
