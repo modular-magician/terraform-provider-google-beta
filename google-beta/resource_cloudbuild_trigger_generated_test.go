@@ -96,7 +96,7 @@ resource "google_cloudbuild_trigger" "build-trigger" {
     branch_name = "master"
     repo_name   = "my-repo"
   }
-  
+  service_account = "projects/$PROJECT_ID/serviceAccounts/service@organization.iam.gserviceaccount.com"
   build {
     step {
       name = "gcr.io/cloud-builders/gsutil"

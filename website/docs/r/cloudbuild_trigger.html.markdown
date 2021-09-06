@@ -70,7 +70,7 @@ resource "google_cloudbuild_trigger" "build-trigger" {
     branch_name = "master"
     repo_name   = "my-repo"
   }
-  
+  service_account = "projects/$PROJECT_ID/serviceAccounts/service@organization.iam.gserviceaccount.com"
   build {
     step {
       name = "gcr.io/cloud-builders/gsutil"
@@ -149,6 +149,10 @@ The following arguments are supported:
 * `disabled` -
   (Optional)
   Whether the trigger is disabled or not. If true, the trigger will never result in a build.
+
+* `service_account` -
+  (Optional)
+  Service account to run build's trigger.
 
 * `substitutions` -
   (Optional)

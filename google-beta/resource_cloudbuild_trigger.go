@@ -801,6 +801,11 @@ Only populated on get requests.`,
 				},
 				ExactlyOneOf: []string{"trigger_template", "github", "pubsub_config", "webhook_config"},
 			},
+			"service_account": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `Service account to run build's trigger.`,
+			},
 			"substitutions": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -956,6 +961,12 @@ func resourceCloudBuildTriggerCreate(d *schema.ResourceData, meta interface{}) e
 		return err
 	} else if v, ok := d.GetOkExists("disabled"); !isEmptyValue(reflect.ValueOf(disabledProp)) && (ok || !reflect.DeepEqual(v, disabledProp)) {
 		obj["disabled"] = disabledProp
+	}
+	serviceAccountProp, err := expandCloudBuildTriggerServiceAccount(d.Get("service_account"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("service_account"); !isEmptyValue(reflect.ValueOf(serviceAccountProp)) && (ok || !reflect.DeepEqual(v, serviceAccountProp)) {
+		obj["serviceAccount"] = serviceAccountProp
 	}
 	substitutionsProp, err := expandCloudBuildTriggerSubstitutions(d.Get("substitutions"), d, config)
 	if err != nil {
@@ -1117,6 +1128,9 @@ func resourceCloudBuildTriggerRead(d *schema.ResourceData, meta interface{}) err
 	if err := d.Set("create_time", flattenCloudBuildTriggerCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+	if err := d.Set("service_account", flattenCloudBuildTriggerServiceAccount(res["serviceAccount"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Trigger: %s", err)
+	}
 	if err := d.Set("substitutions", flattenCloudBuildTriggerSubstitutions(res["substitutions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
@@ -1187,6 +1201,12 @@ func resourceCloudBuildTriggerUpdate(d *schema.ResourceData, meta interface{}) e
 		return err
 	} else if v, ok := d.GetOkExists("disabled"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, disabledProp)) {
 		obj["disabled"] = disabledProp
+	}
+	serviceAccountProp, err := expandCloudBuildTriggerServiceAccount(d.Get("service_account"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("service_account"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, serviceAccountProp)) {
+		obj["serviceAccount"] = serviceAccountProp
 	}
 	substitutionsProp, err := expandCloudBuildTriggerSubstitutions(d.Get("substitutions"), d, config)
 	if err != nil {
@@ -1345,6 +1365,10 @@ func flattenCloudBuildTriggerDisabled(v interface{}, d *schema.ResourceData, con
 }
 
 func flattenCloudBuildTriggerCreateTime(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenCloudBuildTriggerServiceAccount(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -2041,6 +2065,10 @@ func expandCloudBuildTriggerTags(v interface{}, d TerraformResourceData, config 
 }
 
 func expandCloudBuildTriggerDisabled(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudBuildTriggerServiceAccount(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
