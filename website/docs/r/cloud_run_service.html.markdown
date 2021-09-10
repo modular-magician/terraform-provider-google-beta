@@ -70,6 +70,42 @@ resource "google_cloud_run_service" "default" {
   }
 }
 ```
+## Example Usage - Cloud Run Service VPC Connector
+
+
+```hcl
+resource "google_cloud_run_service" "default" {
+  name     = "cloudrun-srv"
+  location = "us-central1"
+
+  template {
+    spec {
+      containers {
+        image = "gcr.io/cloudrun/hello"
+      }
+    }
+    metadata {
+      annotations = {
+        # limit scale up to prevent any cost blow outs!
+        "autoscaling.knative.dev/maxScale" = "5"
+        # Set minimum if do not require scale to zero
+        # "autoscaling.knative.dev/minScale" = "1"
+        # use the VPC Connector above
+        "run.googleapis.com/vpc-access-connector" = "central-serverless"
+        # all egress from the service should go through the VPC Connector
+        "run.googleapis.com/vpc-access-egress" = "all"
+      }
+    }
+  }
+}
+
+resource "google_cloud_run_service_iam_member" "public-access" {
+  location = google_cloud_run_service.default.location
+  service  = google_cloud_run_service.default.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=cloud_run_service_sql&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
