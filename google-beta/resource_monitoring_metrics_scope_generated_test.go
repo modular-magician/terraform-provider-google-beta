@@ -35,8 +35,9 @@ func TestAccMonitoringMetricsScope_BasicMetricsScope(t *testing.T) {
 	}
 
 	vcrTest(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck: func() { testAccPreCheck(t) },
+
+		Providers:    testAccProvidersOiCS,
 		CheckDestroy: testAccCheckMonitoringMetricsScopeDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{

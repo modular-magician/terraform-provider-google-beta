@@ -18,12 +18,12 @@ layout: "google"
 page_title: "Google: google_monitoring_monitored_project"
 sidebar_current: "docs-google-monitoring-monitored-project"
 description: |-
-
+Beta only
 ---
 
 # google\_monitoring\_monitored\_project
 
-
+Beta only
 ## Example Usage - basic_monitored_project
 A basic example of a monitoring monitored project
 ```hcl

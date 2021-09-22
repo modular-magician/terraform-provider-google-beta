@@ -18,12 +18,12 @@ layout: "google"
 page_title: "Google: google_monitoring_metrics_scope"
 sidebar_current: "docs-google-monitoring-metrics-scope"
 description: |-
-
+Beta only
 ---
 
 # google\_monitoring\_metrics\_scope
 
-
+Beta only
 ## Example Usage - basic_metrics_scope
 A basic example of a monitoring metrics scope
 ```hcl
