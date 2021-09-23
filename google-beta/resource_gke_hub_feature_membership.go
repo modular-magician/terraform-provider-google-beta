@@ -300,7 +300,7 @@ func resourceGkeHubFeatureMembershipCreate(d *schema.ResourceData, meta interfac
 	mutexKV.Lock(lockName)
 	defer mutexKV.Unlock(lockName)
 
-	id, err := replaceVarsForId(d, config, "projects/{{project}}/locations/{{location}}/features/{{feature}}/membershipId/{{membership}}")
+	id, err := obj.ID()
 	if err != nil {
 		return fmt.Errorf("error constructing id: %s", err)
 	}

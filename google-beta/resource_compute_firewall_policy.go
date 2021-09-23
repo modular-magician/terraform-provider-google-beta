@@ -120,7 +120,7 @@ func resourceComputeFirewallPolicyCreate(d *schema.ResourceData, meta interface{
 		Description: dcl.String(d.Get("description").(string)),
 	}
 
-	id, err := replaceVars(d, config, "locations/global/firewallPolicies/{{name}}")
+	id, err := obj.ID()
 	if err != nil {
 		return fmt.Errorf("error constructing id: %s", err)
 	}

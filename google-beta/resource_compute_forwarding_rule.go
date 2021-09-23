@@ -257,7 +257,7 @@ func resourceComputeForwardingRuleCreate(d *schema.ResourceData, meta interface{
 		Target:               dcl.String(d.Get("target").(string)),
 	}
 
-	id, err := replaceVarsForId(d, config, "projects/{{project}}/regions/{{region}}/forwardingRules/{{name}}")
+	id, err := obj.ID()
 	if err != nil {
 		return fmt.Errorf("error constructing id: %s", err)
 	}

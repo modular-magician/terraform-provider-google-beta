@@ -220,7 +220,7 @@ func resourceComputeGlobalForwardingRuleCreate(d *schema.ResourceData, meta inte
 		Project:             dcl.String(project),
 	}
 
-	id, err := replaceVarsForId(d, config, "projects/{{project}}/global/forwardingRules/{{name}}")
+	id, err := obj.ID()
 	if err != nil {
 		return fmt.Errorf("error constructing id: %s", err)
 	}
