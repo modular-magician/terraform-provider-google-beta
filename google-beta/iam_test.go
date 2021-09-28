@@ -977,10 +977,10 @@ func TestIamRemoveAllAuditConfigsWithService(t *testing.T) {
 		},
 		// Multiple removal/merge
 		{
-			service: "kms.googleapis.com",
+			service: "cloudkms.googleapis.com",
 			input: []*cloudresourcemanager.AuditConfig{
 				{
-					Service: "kms.googleapis.com",
+					Service: "cloudkms.googleapis.com",
 					AuditLogConfigs: []*cloudresourcemanager.AuditLogConfig{
 						{
 							LogType: "ADMIN_READ",
@@ -1001,7 +1001,7 @@ func TestIamRemoveAllAuditConfigsWithService(t *testing.T) {
 					},
 				},
 				{
-					Service: "kms.googleapis.com",
+					Service: "cloudkms.googleapis.com",
 					AuditLogConfigs: []*cloudresourcemanager.AuditLogConfig{
 						{
 							LogType:         "DATA_WRITE",
@@ -1028,7 +1028,7 @@ func TestIamRemoveAllAuditConfigsWithService(t *testing.T) {
 					},
 				},
 				{
-					Service: "kms.googleapis.com",
+					Service: "cloudkms.googleapis.com",
 					AuditLogConfigs: []*cloudresourcemanager.AuditLogConfig{
 						{
 							LogType:         "DATA_WRITE",
@@ -1158,7 +1158,7 @@ func TestIamCreateIamAuditConfigsMap(t *testing.T) {
 		{
 			input: []*cloudresourcemanager.AuditConfig{
 				{
-					Service: "kms.googleapis.com",
+					Service: "cloudkms.googleapis.com",
 					AuditLogConfigs: []*cloudresourcemanager.AuditLogConfig{
 						{
 							LogType: "ADMIN_READ",
@@ -1179,7 +1179,7 @@ func TestIamCreateIamAuditConfigsMap(t *testing.T) {
 					},
 				},
 				{
-					Service: "kms.googleapis.com",
+					Service: "cloudkms.googleapis.com",
 					AuditLogConfigs: []*cloudresourcemanager.AuditLogConfig{
 						{
 							LogType:         "ADMIN_READ",
@@ -1198,7 +1198,7 @@ func TestIamCreateIamAuditConfigsMap(t *testing.T) {
 				},
 			},
 			expect: map[string]map[string]map[string]struct{}{
-				"kms.googleapis.com": {
+				"cloudkms.googleapis.com": {
 					"ADMIN_READ": map[string]struct{}{"user-1": {}, "user-2": {}},
 				},
 				"foo.googleapis.com": {
@@ -1272,7 +1272,7 @@ func TestIamListFromIamAuditConfigsMap(t *testing.T) {
 		},
 		{
 			input: map[string]map[string]map[string]struct{}{
-				"kms.googleapis.com": {
+				"cloudkms.googleapis.com": {
 					"ADMIN_READ": map[string]struct{}{},
 					"DATA_READ":  map[string]struct{}{"user-1": {}, "user-2": {}},
 				},
@@ -1284,7 +1284,7 @@ func TestIamListFromIamAuditConfigsMap(t *testing.T) {
 			},
 			expect: []*cloudresourcemanager.AuditConfig{
 				{
-					Service: "kms.googleapis.com",
+					Service: "cloudkms.googleapis.com",
 					AuditLogConfigs: []*cloudresourcemanager.AuditLogConfig{
 						{
 							LogType: "ADMIN_READ",
