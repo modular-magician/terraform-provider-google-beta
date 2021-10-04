@@ -1402,7 +1402,7 @@ func expandPrivatecaCaPoolIssuancePolicyBaselineValuesCaOptions(v interface{}, d
 	transformedIsCa, err := expandPrivatecaCaPoolIssuancePolicyBaselineValuesCaOptionsIsCa(original["is_ca"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIsCa); val.IsValid() && !isEmptyValue(val) {
+	} else {
 		transformed["isCa"] = transformedIsCa
 	}
 

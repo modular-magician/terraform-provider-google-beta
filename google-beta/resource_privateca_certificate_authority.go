@@ -1311,7 +1311,7 @@ func expandPrivatecaCertificateAuthorityConfigX509ConfigCaOptions(v interface{},
 	transformedIsCa, err := expandPrivatecaCertificateAuthorityConfigX509ConfigCaOptionsIsCa(original["is_ca"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIsCa); val.IsValid() && !isEmptyValue(val) {
+	} else {
 		transformed["isCa"] = transformedIsCa
 	}
 
