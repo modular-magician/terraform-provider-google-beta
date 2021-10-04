@@ -467,7 +467,7 @@ The following arguments are supported:
   Possible values are `NONE`, `CLIENT_IP`, `CLIENT_IP_PORT_PROTO`, `CLIENT_IP_PROTO`, `GENERATED_COOKIE`, `HEADER_FIELD`, `HTTP_COOKIE`, and `CLIENT_IP_NO_DESTINATION`.
 
 * `connection_tracking_policy` -
-  (Optional)
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Connection Tracking configuration for this BackendService.
   This is available only for Layer 4 Internal Load Balancing and
   Network Load Balancing.
