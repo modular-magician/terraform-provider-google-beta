@@ -435,6 +435,12 @@ unhealthy backends regardless of protocol and session affinity. It is
 generally not recommended to use this mode overriding the default. Default value: "DEFAULT_FOR_PROTOCOL" Possible values: ["DEFAULT_FOR_PROTOCOL", "NEVER_PERSIST", "ALWAYS_PERSIST"]`,
 							Default: "DEFAULT_FOR_PROTOCOL",
 						},
+						"enable_strong_affinity": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Optional:    true,
+							Description: `Enable Strong Session Affinity. Not currently available publicly.`,
+						},
 						"idle_timeout_sec": {
 							Type:     schema.TypeInt,
 							Computed: true,
@@ -2759,6 +2765,8 @@ func flattenComputeRegionBackendServiceConnectionTrackingPolicy(v interface{}, d
 	transformed := make(map[string]interface{})
 	transformed["idle_timeout_sec"] =
 		flattenComputeRegionBackendServiceConnectionTrackingPolicyIdleTimeoutSec(original["idleTimeoutSec"], d, config)
+	transformed["enable_strong_affinity"] =
+		flattenComputeRegionBackendServiceConnectionTrackingPolicyEnableStrongAffinity(original["enableStrongAffinity"], d, config)
 	transformed["tracking_mode"] =
 		flattenComputeRegionBackendServiceConnectionTrackingPolicyTrackingMode(original["trackingMode"], d, config)
 	transformed["connection_persistence_on_unhealthy_backends"] =
@@ -2780,6 +2788,10 @@ func flattenComputeRegionBackendServiceConnectionTrackingPolicyIdleTimeoutSec(v 
 	}
 
 	return v // let terraform core handle it otherwise
+}
+
+func flattenComputeRegionBackendServiceConnectionTrackingPolicyEnableStrongAffinity(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
 }
 
 func flattenComputeRegionBackendServiceConnectionTrackingPolicyTrackingMode(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -3785,6 +3797,13 @@ func expandComputeRegionBackendServiceConnectionTrackingPolicy(v interface{}, d 
 		transformed["idleTimeoutSec"] = transformedIdleTimeoutSec
 	}
 
+	transformedEnableStrongAffinity, err := expandComputeRegionBackendServiceConnectionTrackingPolicyEnableStrongAffinity(original["enable_strong_affinity"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableStrongAffinity); val.IsValid() && !isEmptyValue(val) {
+		transformed["enableStrongAffinity"] = transformedEnableStrongAffinity
+	}
+
 	transformedTrackingMode, err := expandComputeRegionBackendServiceConnectionTrackingPolicyTrackingMode(original["tracking_mode"], d, config)
 	if err != nil {
 		return nil, err
@@ -3803,6 +3822,10 @@ func expandComputeRegionBackendServiceConnectionTrackingPolicy(v interface{}, d 
 }
 
 func expandComputeRegionBackendServiceConnectionTrackingPolicyIdleTimeoutSec(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeRegionBackendServiceConnectionTrackingPolicyEnableStrongAffinity(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
