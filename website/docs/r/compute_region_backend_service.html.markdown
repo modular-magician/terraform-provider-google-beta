@@ -966,6 +966,10 @@ The following arguments are supported:
   For L4 ILB the minimum(default) is 10 minutes and maximum is 16 hours.
   For NLB the minimum(default) is 60 seconds and the maximum is 16 hours.
 
+* `enable_strong_affinity` -
+  (Optional)
+  Enable Strong Session Affinity. Not currently available publicly.
+
 * `tracking_mode` -
   (Optional)
   Specifies the key used for connection tracking. There are two options:
