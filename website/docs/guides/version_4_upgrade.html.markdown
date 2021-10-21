@@ -15,6 +15,8 @@ description: |-
     - [Runtime Configurator (`runtimeconfig`) resources have been removed from the GA provider](#runtime-configurator-runtimeconfig-resources-have-been-removed-from-the-ga-provider)
   - [Datasource: `google_product_resource`](#datasource-google_product_resource)
     - [Datasource-level change example](#datasource-level-change-example)
+  - [Resource: `google_compute_firewall`](#resource-google_compute_firewall)
+    - [One of `source_tags`, `source_ranges` or `source_service_accounts` are required on INGRESS firewalls](#one-of-source_tags-source_ranges-or-source_service_accounts-are-required-on-ingress-firewalls)
   - [Resource: `google_compute_instance_group_manager`](#resource-google_compute_instance_group_manager)
     - [`update_policy.min_ready_sec` is removed from the GA provider](#update_policymin_ready_sec-is-removed-from-the-ga-provider)
   - [Resource: `google_compute_region_instance_group_manager`](#resource-google_compute_region_instance_group_manager)
@@ -27,6 +29,8 @@ description: |-
     - [`node_config.workload_metadata_config.node_metadata` is now removed](#node_configworkload_metadata_confignode_metadata-is-now-removed)
     - [`workload_identity_config.0.identity_namespace` is now removed](#workload_identity_config0identity_namespace-is-now-removed)
     - [`pod_security_policy_config` is removed from the GA provider](#pod_security_policy_config-is-removed-from-the-ga-provider)
+  - [Resource: `google_project_service`](#resource-google_project_service)
+    - [`bigquery-json.googleapis.com` is no longer a valid service name](#bigquery-json.googleapis.com-is-no-longer-a-valid-service-name)
 
 <!-- /TOC -->
 
@@ -162,10 +166,15 @@ resource "google_runtimeconfig_config" "my-runtime-config" {
 
 Description of the change and how users should adjust their configuration (if needed).
 
+## Resource: `google_compute_firewall`
+
+### One of `source_tags`, `source_ranges` or `source_service_accounts` are required on INGRESS firewalls
+
+Previously, if all of these fields were left empty, the firewall defaulted to allowing traffic from 0.0.0.0/0, which is a suboptimal default.
+
 ## Resource: `google_compute_instance_group_manager`
 
 ### `update_policy.min_ready_sec` is removed from the GA provider
-
 This field was incorrectly included in the GA `google` provider in past releases.
 In order to continue to use the feature, add `provider = google-beta` to your
 resource definition.
@@ -225,3 +234,12 @@ resource "google_container_cluster" "cluster" {
 This field was incorrectly included in the GA `google` provider in past releases.
 In order to continue to use the feature, add `provider = google-beta` to your
 resource definition.
+
+## Resource: `google_project_service`
+
+### `bigquery-json.googleapis.com` is no longer a valid service name
+
+`bigquery-json.googleapis.com` was deprecated in the `3.0.0` release, however, at that point the provider
+converted it while the upstream API migration was in progress. Now that the API migration has finished,
+the provider will no longer convert the service name. Use `bigquery.googleapis.com` instead.
+
