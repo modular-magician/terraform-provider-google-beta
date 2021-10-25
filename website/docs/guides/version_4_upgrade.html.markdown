@@ -52,6 +52,8 @@ description: |-
   - [Resource: `google_project`](#resource-google_project)
     - [`org_id`, `folder_id` now conflict at plan time](#org_id-folder_id-now-confict-at-plan-time)
     - [`org_id`, `folder_id` are unset when removed from config](#org_id-folder_id-are-unset-when-removed-from-config)
+  - [Resource: `google_project_iam`](#resource-google_project_iam)
+    - [`project` field is now required](#project-field-is-now-required)
   - [Resource: `google_project_service`](#resource-google_project_service)
     - [`bigquery-json.googleapis.com` is no longer a valid service name](#bigquery-json.googleapis.com-is-no-longer-a-valid-service-name)
   - [Resource: `google_data_loss_prevention_trigger`](#resource-google_data_loss_prevention_trigger)
@@ -277,6 +279,28 @@ The provider will now enforce at plan time that one of these fields be set.
 
 Previously, if all of these fields were left empty, the firewall defaulted to allowing traffic from 0.0.0.0/0, which is a suboptimal default.
 
+## Resource: `google_compute_instance`
+
+### `metadata_startup_script` is no longer set on import
+
+Earlier versions of the provider set the `metadata_startup_script` value on
+import, omitting the value of `metadata.startup-script` for historical backwards
+compatibility. This was dangerous in practice, as `metadata_startup_script`
+would flag an instance for recreation if the values differed rather than for
+just an update.
+
+In `4.0.0` the behaviour has been flipped, and `metadata.startup-script` is the
+default value that gets written. Users who want `metadata_startup_script` set
+on an imported instance will need to modify their state manually. This is more
+consistent with our expectations for the field, that a user who manages an
+instance **only** through Terraform uses it but that most users should prefer
+the `metadata` block.
+
+No action is required for user configs with instances already imported. If you
+have a config or module where neither is specified- where `import` will be run,
+or an old config that is not reconciled with the API- the value that gets set
+will change.
+
 ## Resource: `google_compute_instance_group_manager`
 
 ### `update_policy.min_ready_sec` is removed from the GA provider
@@ -389,6 +413,19 @@ from config, changing the value on next refresh. Going forward, removing one of
 the values or switching values will generate a correct plan that removes the
 value.
 
+## Resource: `google_project_iam`
+
+### `project` field is now required
+
+The `project` field is now required for all `google_project_iam_*` resources.
+Previously, it was only required for `google_project_iam_policy`. This will make
+configuration of the project IAM resources more explicit, given that the project
+is the targeted resource.
+
+`terraform plan` will indicate any project IAM resources that had drawn a value
+with a provider, and you are able to specify the project explicitly to remove
+the proposed diff.
+
 ## Resource: `google_project_service`
 
 ### `bigquery-json.googleapis.com` is no longer a valid service name
@@ -400,4 +437,5 @@ the provider will no longer convert the service name. Use `bigquery.googleapis.c
 ## Resource: `google_spanner_instance`
 
 ### Exactly one of `num_nodes` or `processing_units` is required
+
 The provider will now enforce at plan time that one of these fields be set.
