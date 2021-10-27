@@ -753,9 +753,7 @@ func Provider() *schema.Provider {
 			// Handwritten Products / Versioned / Atypical Entries
 			CloudBillingCustomEndpointEntryKey:      CloudBillingCustomEndpointEntry,
 			ComposerCustomEndpointEntryKey:          ComposerCustomEndpointEntry,
-			ComputeBetaCustomEndpointEntryKey:       ComputeBetaCustomEndpointEntry,
 			ContainerCustomEndpointEntryKey:         ContainerCustomEndpointEntry,
-			ContainerBetaCustomEndpointEntryKey:     ContainerBetaCustomEndpointEntry,
 			DataprocBetaCustomEndpointEntryKey:      DataprocBetaCustomEndpointEntry,
 			DataflowCustomEndpointEntryKey:          DataflowCustomEndpointEntry,
 			IamCredentialsCustomEndpointEntryKey:    IamCredentialsCustomEndpointEntry,
@@ -1583,9 +1581,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 
 	config.CloudBillingBasePath = d.Get(CloudBillingCustomEndpointEntryKey).(string)
 	config.ComposerBasePath = d.Get(ComposerCustomEndpointEntryKey).(string)
-	config.ComputeBetaBasePath = d.Get(ComputeBetaCustomEndpointEntryKey).(string)
 	config.ContainerBasePath = d.Get(ContainerCustomEndpointEntryKey).(string)
-	config.ContainerBetaBasePath = d.Get(ContainerBetaCustomEndpointEntryKey).(string)
 	config.DataprocBetaBasePath = d.Get(DataprocBetaCustomEndpointEntryKey).(string)
 	config.DataflowBasePath = d.Get(DataflowCustomEndpointEntryKey).(string)
 	config.IamCredentialsBasePath = d.Get(IamCredentialsCustomEndpointEntryKey).(string)
