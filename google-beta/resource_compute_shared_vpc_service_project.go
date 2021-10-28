@@ -7,9 +7,8 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"google.golang.org/api/compute/v1"
 	"google.golang.org/api/googleapi"
-
-	compute "google.golang.org/api/compute/v0.beta"
 )
 
 func resourceComputeSharedVpcServiceProject() *schema.Resource {

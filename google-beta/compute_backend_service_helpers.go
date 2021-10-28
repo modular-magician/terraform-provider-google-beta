@@ -1,8 +1,6 @@
 package google
 
-import (
-	compute "google.golang.org/api/compute/v0.beta"
-)
+import "google.golang.org/api/compute/v1"
 
 // Incredibly hacky way of getting a reference to an SPR of the right type into
 // the generated BackendService code. goimports will always import `compute`, so

@@ -9,9 +9,8 @@ import (
 	"testing"
 	"time"
 
-	compute "google.golang.org/api/compute/v0.beta"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"google.golang.org/api/compute/v1"
 )
 
 func TestAccComputeInstanceMigrateState(t *testing.T) {

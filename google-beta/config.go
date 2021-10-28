@@ -11,6 +11,8 @@ import (
 
 	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/logging"
+	"google.golang.org/api/compute/v1"
+	"google.golang.org/api/container/v1"
 	"google.golang.org/api/option"
 
 	"golang.org/x/oauth2"
@@ -27,8 +29,6 @@ import (
 	"google.golang.org/api/cloudresourcemanager/v1"
 	resourceManagerV2 "google.golang.org/api/cloudresourcemanager/v2"
 	composer "google.golang.org/api/composer/v1beta1"
-	compute "google.golang.org/api/compute/v0.beta"
-	container "google.golang.org/api/container/v1beta1"
 	dataflow "google.golang.org/api/dataflow/v1b3"
 	dataproc "google.golang.org/api/dataproc/v1beta2"
 	"google.golang.org/api/dns/v1"

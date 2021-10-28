@@ -9,7 +9,7 @@ import (
 	"log"
 	"time"
 
-	compute "google.golang.org/api/compute/v0.beta"
+	"google.golang.org/api/compute/v1"
 )
 
 type ComputeOperationWaiter struct {

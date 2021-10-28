@@ -6,7 +6,7 @@ import (
 	"log"
 	"sort"
 
-	compute "google.golang.org/api/compute/v0.beta"
+	"google.golang.org/api/compute/v1"
 )
 
 const METADATA_FINGERPRINT_RETRIES = 10

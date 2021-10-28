@@ -5,7 +5,7 @@ import (
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	compute "google.golang.org/api/compute/v0.beta"
+	"google.golang.org/api/compute/v1"
 )
 
 func computeInstanceDeleteAccessConfigs(d *schema.ResourceData, config *Config, instNetworkInterface *compute.NetworkInterface, project, zone, userAgent, instanceName string) error {
