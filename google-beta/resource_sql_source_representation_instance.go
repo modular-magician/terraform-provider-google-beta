@@ -162,7 +162,7 @@ func resourceSQLSourceRepresentationInstanceCreate(d *schema.ResourceData, meta 
 	d.SetId(id)
 
 	err = sqlAdminOperationWaitTime(
-		config, res, project, "Creating SourceRepresentationInstance", userAgent,
+		config, res, project, billingProject, "Creating SourceRepresentationInstance", userAgent,
 		d.Timeout(schema.TimeoutCreate))
 
 	if err != nil {
@@ -284,7 +284,7 @@ func resourceSQLSourceRepresentationInstanceDelete(d *schema.ResourceData, meta 
 	}
 
 	err = sqlAdminOperationWaitTime(
-		config, res, project, "Deleting SourceRepresentationInstance", userAgent,
+		config, res, project, billingProject, "Deleting SourceRepresentationInstance", userAgent,
 		d.Timeout(schema.TimeoutDelete))
 
 	if err != nil {

@@ -163,7 +163,7 @@ func resourceSQLDatabaseCreate(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(id)
 
 	err = sqlAdminOperationWaitTime(
-		config, res, project, "Creating Database", userAgent,
+		config, res, project, billingProject, "Creating Database", userAgent,
 		d.Timeout(schema.TimeoutCreate))
 
 	if err != nil {
@@ -299,7 +299,7 @@ func resourceSQLDatabaseUpdate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	err = sqlAdminOperationWaitTime(
-		config, res, project, "Updating Database", userAgent,
+		config, res, project, billingProject, "Updating Database", userAgent,
 		d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
@@ -350,7 +350,7 @@ func resourceSQLDatabaseDelete(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	err = sqlAdminOperationWaitTime(
-		config, res, project, "Deleting Database", userAgent,
+		config, res, project, billingProject, "Deleting Database", userAgent,
 		d.Timeout(schema.TimeoutDelete))
 
 	if err != nil {
