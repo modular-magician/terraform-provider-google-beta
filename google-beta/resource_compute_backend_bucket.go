@@ -706,7 +706,7 @@ func expandComputeBackendBucketCdnPolicy(v interface{}, d TerraformResourceData,
 	transformedDefaultTtl, err := expandComputeBackendBucketCdnPolicyDefaultTtl(original["default_ttl"], d, config)
 	if err != nil {
 		return nil, err
-	} else {
+	} else if val := reflect.ValueOf(transformedDefaultTtl); val.IsValid() && !isEmptyValue(val) {
 		transformed["defaultTtl"] = transformedDefaultTtl
 	}
 
@@ -720,7 +720,7 @@ func expandComputeBackendBucketCdnPolicy(v interface{}, d TerraformResourceData,
 	transformedClientTtl, err := expandComputeBackendBucketCdnPolicyClientTtl(original["client_ttl"], d, config)
 	if err != nil {
 		return nil, err
-	} else {
+	} else if val := reflect.ValueOf(transformedClientTtl); val.IsValid() && !isEmptyValue(val) {
 		transformed["clientTtl"] = transformedClientTtl
 	}
 
