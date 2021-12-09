@@ -149,6 +149,11 @@ func (u *PrivatecaCaPoolIamUpdater) GetResourceIamPolicy() (*cloudresourcemanage
 		return nil, err
 	}
 	var obj map[string]interface{}
+	obj = map[string]interface{}{
+		"options": map[string]interface{}{
+			"requestedPolicyVersion": iamPolicyVersion,
+		},
+	}
 
 	userAgent, err := generateUserAgentString(u.d, u.Config.userAgent)
 	if err != nil {
