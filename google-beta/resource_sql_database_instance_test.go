@@ -30,6 +30,14 @@ var ignoredReplicaConfigurationFields = []string{
 	"deletion_protection",
 }
 
+var ignoredSourceRepresentationFields = []string{
+	"ca_certificate",
+	"client_certificate",
+	"client_key",
+	"dump_file_path",
+	"password",
+}
+
 func init() {
 	resource.AddTestSweepers("gcp_sql_db_instance", &resource.Sweeper{
 		Name: "gcp_sql_db_instance",
@@ -414,6 +422,53 @@ func TestAccSqlDatabaseInstance_slave(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+		},
+	})
+}
+
+func TestAccSqlDatabaseInstance_sourceRepresentation_minimal(t *testing.T) {
+	t.Parallel()
+
+	databaseID := randInt(t)
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccSqlSourceRepresentationInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(
+					testGoogleSqlDatabaseInstance_sourceRepresentation_minimal, databaseID),
+			},
+			{
+				ResourceName:      "google_sql_source_representation_instance.source_representation",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccSqlDatabaseInstance_sourceRepresentation_full(t *testing.T) {
+	t.Parallel()
+
+	databaseID := randInt(t)
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccSqlSourceRepresentationInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(
+					testGoogleSqlDatabaseInstance_sourceRepresentation_full, databaseID),
+			},
+			{
+				ResourceName:            "google_sql_source_representation_instance.source_representation",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: ignoredSourceRepresentationFields,
 			},
 		},
 	})
@@ -834,6 +889,25 @@ func TestAccSqlDatabaseInstance_cloneWithSettings(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testAccSqlSourceRepresentationInstanceDestroyProducer(t *testing.T) func(s *terraform.State) error {
+	return func(s *terraform.State) error {
+		for _, rs := range s.RootModule().Resources {
+			config := googleProviderConfig(t)
+			if rs.Type != "google_sql_source_representation_instance" {
+				continue
+			}
+
+			_, err := config.NewSqlAdminClient(config.userAgent).Instances.Get(config.Project,
+				rs.Primary.Attributes["name"]).Do()
+			if err == nil {
+				return fmt.Errorf("Source Representation Instance still exists")
+			}
+		}
+
+		return nil
+	}
 }
 
 func testAccSqlDatabaseInstanceDestroyProducer(t *testing.T) func(s *terraform.State) error {
@@ -1298,6 +1372,31 @@ resource "google_sql_database_instance" "instance_slave" {
   settings {
     tier = "db-f1-micro"
   }
+}
+`
+
+var testGoogleSqlDatabaseInstance_sourceRepresentation_minimal = `
+resource "google_sql_source_representation_instance" "source_representation" {
+  name             = "tf-lw-%d"
+  database_version = "MYSQL_8_0"
+  region           = "us-central1"
+  host             = "1.1.1.1"
+  port             = "3307"
+}
+`
+
+var testGoogleSqlDatabaseInstance_sourceRepresentation_full = `
+resource "google_sql_source_representation_instance" "source_representation" {
+  name               = "tf-lw-%d"
+  database_version   = "MYSQL_8_0"
+  region             = "us-central1"
+  host               = "1.1.1.1"
+  port               = "3307"
+  password           = "password"
+  ca_certificate     = file("test-fixtures/sql/server-ca.pem")
+  client_certificate = file("test-fixtures/sql/client-cert.pem")
+  client_key         = file("test-fixtures/sql/client-key.pem")
+  dump_file_path     = "gs://irrelevant-bucket-name/irrelevant-file-name.mysqldump"
 }
 `
 

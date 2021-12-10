@@ -31,6 +31,9 @@ affect billing. You cannot update the source representation instance.
 
 
 
+~> **Warning:** All arguments including `on_premises_configuration.password` and `on_premises_configuration.client_key` will be stored in the raw
+state as plain-text. [Read more about sensitive data in state](/docs/state/sensitive-data.html).
+
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=sql_source_representation_instance_basic&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
@@ -46,6 +49,49 @@ resource "google_sql_source_representation_instance" "instance" {
   database_version = "MYSQL_8_0"
   host             = "10.20.30.40"
   port             = 3306
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=sql_source_representation_instance_from_dump_file&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Sql Source Representation Instance From Dump File
+
+
+```hcl
+resource "google_sql_source_representation_instance" "instance" {
+  name               = "my-instance"
+  region             = "us-central1"
+  database_version   = "MYSQL_8_0"
+  host               = "10.20.30.40"
+  port               = 3306
+  username           = "someuser"
+  password           = "password"
+  dump_file_path     = "gs://path/to/mysqldump"
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=sql_source_representation_instance_with_ssl&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Sql Source Representation Instance With Ssl
+
+
+```hcl
+resource "google_sql_source_representation_instance" "instance" {
+  name               = "my-instance"
+  region             = "us-central1"
+  database_version   = "MYSQL_8_0"
+  host               = "10.20.30.40"
+  port               = 3306
+  username           = "someuser"
+  password           = "password"
+  ca_certificate     = file("path/to/server-ca.pem")
+  client_certificate = file("path/to/client-cert.pem")
+  client_key         = file("path/to/client-key.pem")
+  dump_file_path     = "gs://path/to/mysqldump"
 }
 ```
 
@@ -80,6 +126,32 @@ The following arguments are supported:
   (Optional)
   The externally accessible port for the source database server.
   Defaults to 3306.
+
+* `username` -
+  (Optional)
+  The username for connecting to the on-premises instance.
+
+* `password` -
+  (Optional)
+  The password for connecting to the on-premises instance.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `ca_certificate` -
+  (Optional)
+  PEM representation of the trusted CA's x509 certificate.
+
+* `client_certificate` -
+  (Optional)
+  PEM representation of the replica's x509 certificate.
+
+* `client_key` -
+  (Optional)
+  PEM representation of the replica's private key. The corresponsing public key is encoded in the client's certificate.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `dump_file_path` -
+  (Optional)
+  The dump file to create the Cloud SQL replica.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

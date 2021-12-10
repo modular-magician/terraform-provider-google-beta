@@ -59,6 +59,87 @@ resource "google_sql_source_representation_instance" "instance" {
 `, context)
 }
 
+func TestAccSQLSourceRepresentationInstance_sqlSourceRepresentationInstanceFromDumpFileExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckSQLSourceRepresentationInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSQLSourceRepresentationInstance_sqlSourceRepresentationInstanceFromDumpFileExample(context),
+			},
+			{
+				ResourceName:      "google_sql_source_representation_instance.instance",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccSQLSourceRepresentationInstance_sqlSourceRepresentationInstanceFromDumpFileExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_sql_source_representation_instance" "instance" {
+  name               = "tf-test-my-instance%{random_suffix}"
+  region             = "us-central1"
+  database_version   = "MYSQL_8_0"
+  host               = "10.20.30.40"
+  port               = 3306
+  username           = "someuser"
+  password           = "password"
+  dump_file_path     = "gs://path/to/mysqldump"
+}
+`, context)
+}
+
+func TestAccSQLSourceRepresentationInstance_sqlSourceRepresentationInstanceWithSslExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckSQLSourceRepresentationInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSQLSourceRepresentationInstance_sqlSourceRepresentationInstanceWithSslExample(context),
+			},
+			{
+				ResourceName:      "google_sql_source_representation_instance.instance",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccSQLSourceRepresentationInstance_sqlSourceRepresentationInstanceWithSslExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_sql_source_representation_instance" "instance" {
+  name               = "tf-test-my-instance%{random_suffix}"
+  region             = "us-central1"
+  database_version   = "MYSQL_8_0"
+  host               = "10.20.30.40"
+  port               = 3306
+  username           = "someuser"
+  password           = "password"
+  ca_certificate     = file("path/to/server-ca.pem")
+  client_certificate = file("path/to/client-cert.pem")
+  client_key         = file("path/to/client-key.pem")
+  dump_file_path     = "gs://path/to/mysqldump"
+}
+`, context)
+}
+
 func testAccCheckSQLSourceRepresentationInstanceDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
