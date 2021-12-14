@@ -169,11 +169,11 @@ The following arguments are supported:
 
 * `start_time` -
   (Optional)
-  Exclude files or rows older than this value.
+  Exclude files or rows older than this value. If unset, no lower time limit is applied.
 
 * `end_time` -
   (Optional)
-  Exclude files or rows newer than this value. If set to zero, no upper time limit is applied.
+  Exclude files or rows newer than this value. If unset, no upper time limit is applied.
 
 * `enable_auto_population_of_timespan_config` -
   (Optional)
