@@ -65,7 +65,7 @@ it will create a subnet for each region automatically across the
 '10.128.0.0/9' address range.
 
 When set to 'false', the network is created in "custom subnet mode" so
-the user can explicitly connect subnetwork resources.`,
+the user can explicitly connect subnetwork resources. Defaults to 'true'.`,
 				Default: true,
 			},
 			"description": {
