@@ -1450,7 +1450,9 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 		Zone:                d.Get("zone").(string),
 		UserProjectOverride: d.Get("user_project_override").(bool),
 		BillingProject:      d.Get("billing_project").(string),
-		userAgent:           p.UserAgent("terraform-provider-google-beta", version.ProviderVersion),
+
+		userAgent:       p.UserAgent("terraform-provider-google-beta", version.ProviderVersion),
+		ProviderVersion: "google-beta/" + version.ProviderVersion,
 	}
 
 	// opt in extension for adding to the User-Agent header

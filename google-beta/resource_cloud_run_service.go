@@ -2839,6 +2839,7 @@ func expandCloudRunServiceMetadataAnnotations(v interface{}, d TerraformResource
 }
 
 func resourceCloudRunServiceEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	config := meta.(*Config)
 	name := d.Get("name").(string)
 	if obj["metadata"] == nil {
 		obj["metadata"] = make(map[string]interface{})
@@ -2849,6 +2850,16 @@ func resourceCloudRunServiceEncoder(d *schema.ResourceData, meta interface{}, ob
 	// The only acceptable version/kind right now
 	obj["apiVersion"] = "serving.knative.dev/v1"
 	obj["kind"] = "Service"
+
+	// Insert client-name and version https://github.com/hashicorp/terraform-provider-google/issues/5385
+	if metadata["annotations"] == nil {
+		metadata["annotations"] = make(map[string]interface{})
+	}
+
+	annotations := metadata["annotations"].(map[string]interface{})
+	annotations["run.googleapis.com/client-name"] = "hashicorp-terraform"
+	annotations["run.googleapis.com/client-version"] = config.ProviderVersion
+
 	return obj, nil
 }
 
@@ -2857,6 +2868,18 @@ func resourceCloudRunServiceDecoder(d *schema.ResourceData, meta interface{}, re
 	if obj, ok := res["metadata"]; ok {
 		if meta, ok := obj.(map[string]interface{}); ok {
 			res["name"] = meta["name"]
+			// Remove the keys inserted in the decoder to avoid diffs
+
+			annotations := meta["annotations"].(map[string]interface{})
+
+			if _, found := annotations["run.googleapis.com/client-name"]; found {
+				delete(annotations, "run.googleapis.com/client-name")
+			}
+
+			if _, found := annotations["run.googleapis.com/client-version"]; found {
+				delete(annotations, "run.googleapis.com/client-version")
+			}
+
 		} else {
 			return nil, fmt.Errorf("Unable to decode 'metadata' block from API response.")
 		}
