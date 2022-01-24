@@ -150,6 +150,10 @@ The following arguments are supported:
   Network configuration options. These are required when a private Data Fusion instance is to be created.
   Structure is [documented below](#nested_network_config).
 
+* `enable_rbac` -
+  (Optional)
+  Option to enable granular role-based access control. This feature may require additional allow-listing.
+
 * `region` -
   (Optional)
   The region of the Data Fusion instance.
