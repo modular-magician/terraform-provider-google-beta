@@ -97,7 +97,7 @@ func resourceRedisInstance() *schema.Resource {
 				Computed: true,
 				Optional: true,
 				ForceNew: true,
-				Description: `Only applicable to STANDARD_HA tier which protects the instance
+				Description: `Only applicable to STANDARD_HA tier which protects the instances
 against zonal failures by provisioning it across two zones.
 If provided, it must be a different zone from the one provided in
 [locationId].`,
@@ -290,9 +290,9 @@ resolution and up to nine fractional digits.`,
 				ValidateFunc: validateEnum([]string{"READ_REPLICAS_DISABLED", "READ_REPLICAS_ENABLED", ""}),
 				Description: `Optional. Read replica mode. Can only be specified when trying to create the instance.
 If not set, Memorystore Redis backend will default to READ_REPLICAS_DISABLED.
-- READ_REPLICAS_DISABLED: If disabled, read endpoint will not be provided and the 
+- READ_REPLICAS_DISABLED: If disabled, read endpoint will not be provided and the
 instance cannot scale up or down the number of replicas.
-- READ_REPLICAS_ENABLED: If enabled, read endpoint will be provided and the instance 
+- READ_REPLICAS_ENABLED: If enabled, read endpoint will be provided and the instance
 can scale up and down the number of replicas. Default value: "READ_REPLICAS_DISABLED" Possible values: ["READ_REPLICAS_DISABLED", "READ_REPLICAS_ENABLED"]`,
 				Default: "READ_REPLICAS_DISABLED",
 			},
@@ -309,7 +309,7 @@ https://cloud.google.com/memorystore/docs/redis/reference/rest/v1/projects.locat
 				Computed: true,
 				Optional: true,
 				Description: `The version of Redis software. If not provided, latest supported
-version will be used. Please check the API documentation linked 
+version will be used. Please check the API documentation linked
 at the top for the latest valid values.`,
 			},
 			"region": {
@@ -323,9 +323,9 @@ at the top for the latest valid values.`,
 				Type:     schema.TypeInt,
 				Computed: true,
 				Optional: true,
-				Description: `Optional. The number of replica nodes. The valid range for the Standard Tier with 
+				Description: `Optional. The number of replica nodes. The valid range for the Standard Tier with
 read replicas enabled is [1-5] and defaults to 2. If read replicas are not enabled
-for a Standard Tier instance, the only valid value is 1 and the default is 1. 
+for a Standard Tier instance, the only valid value is 1 and the default is 1.
 The valid value for basic tier is 0 and the default is also 0.`,
 			},
 			"reserved_ip_range": {
@@ -423,7 +423,7 @@ will exhibit some lag behind the primary. Write requests must target 'host'.`,
 			"read_endpoint_port": {
 				Type:     schema.TypeInt,
 				Computed: true,
-				Description: `Output only. The port number of the exposed readonly redis endpoint. Standard tier only. 
+				Description: `Output only. The port number of the exposed readonly redis endpoint. Standard tier only.
 Write requests should target 'port'.`,
 			},
 			"server_ca_certs": {

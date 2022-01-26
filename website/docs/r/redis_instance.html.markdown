@@ -216,7 +216,7 @@ The following arguments are supported:
 
 * `alternative_location_id` -
   (Optional)
-  Only applicable to STANDARD_HA tier which protects the instance
+  Only applicable to STANDARD_HA tier which protects the instances
   against zonal failures by provisioning it across two zones.
   If provided, it must be a different zone from the one provided in
   [locationId].
@@ -274,7 +274,7 @@ The following arguments are supported:
 * `redis_version` -
   (Optional)
   The version of Redis software. If not provided, latest supported
-  version will be used. Please check the API documentation linked 
+  version will be used. Please check the API documentation linked
   at the top for the latest valid values.
 
 * `reserved_ip_range` -
@@ -302,18 +302,18 @@ The following arguments are supported:
 
 * `replica_count` -
   (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
-  Optional. The number of replica nodes. The valid range for the Standard Tier with 
+  Optional. The number of replica nodes. The valid range for the Standard Tier with
   read replicas enabled is [1-5] and defaults to 2. If read replicas are not enabled
-  for a Standard Tier instance, the only valid value is 1 and the default is 1. 
+  for a Standard Tier instance, the only valid value is 1 and the default is 1.
   The valid value for basic tier is 0 and the default is also 0.
 
 * `read_replicas_mode` -
   (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Optional. Read replica mode. Can only be specified when trying to create the instance.
   If not set, Memorystore Redis backend will default to READ_REPLICAS_DISABLED.
-  - READ_REPLICAS_DISABLED: If disabled, read endpoint will not be provided and the 
+  - READ_REPLICAS_DISABLED: If disabled, read endpoint will not be provided and the
   instance cannot scale up or down the number of replicas.
-  - READ_REPLICAS_ENABLED: If enabled, read endpoint will be provided and the instance 
+  - READ_REPLICAS_ENABLED: If enabled, read endpoint will be provided and the instance
   can scale up and down the number of replicas.
   Default value is `READ_REPLICAS_DISABLED`.
   Possible values are `READ_REPLICAS_DISABLED` and `READ_REPLICAS_ENABLED`.
@@ -465,7 +465,7 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `read_endpoint_port` -
   ([Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
-  Output only. The port number of the exposed readonly redis endpoint. Standard tier only. 
+  Output only. The port number of the exposed readonly redis endpoint. Standard tier only.
   Write requests should target 'port'.
 
 
