@@ -476,12 +476,11 @@ func ContainerAwsClusterFleetSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"project": {
-				Type:             schema.TypeString,
-				Computed:         true,
-				Optional:         true,
-				ForceNew:         true,
-				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description:      "The number of the Fleet host project where this cluster will be registered.",
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The number of the Fleet host project where this cluster will be registered.",
 			},
 
 			"membership": {
