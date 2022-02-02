@@ -96,7 +96,7 @@ For KIND_LIST entity types:
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `The unique identifier of the entity type. 
-Format: projects/<Project ID>/agent/entityTypes/<Entity type ID>.`,
+Format: projects/{{project_id}}/agent/entityTypes/{{entity_type_id}}`,
 			},
 			"project": {
 				Type:     schema.TypeString,

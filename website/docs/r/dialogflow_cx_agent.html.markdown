@@ -105,7 +105,7 @@ The following arguments are supported:
 
 * `security_settings` -
   (Optional)
-  Name of the SecuritySettings reference for the agent. Format: projects/<Project ID>/locations/<Location ID>/securitySettings/<Security Settings ID>.
+  Name of the SecuritySettings reference for the agent. Format: projects/{{project_id}}/locations/{{location}}/securitySettings/{{security_settings_id}}.
 
 * `enable_stackdriver_logging` -
   (Optional)
@@ -132,10 +132,10 @@ In addition to the arguments listed above, the following computed attributes are
 * `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/agents/{{name}}`
 
 * `name` -
-  The unique identifier of the agent.
+  The unique identifier of the agent. Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}
 
 * `start_flow` -
-  Name of the start flow in this agent. A start flow will be automatically created when the agent is created, and can only be deleted by deleting the agent. Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.
+  Name of the start flow in this agent. A start flow will be automatically created when the agent is created, and can only be deleted by deleting the agent. Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}
 
 
 ## Timeouts

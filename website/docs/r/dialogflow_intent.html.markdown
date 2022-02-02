@@ -137,7 +137,7 @@ The following arguments are supported:
 * `input_context_names` -
   (Optional)
   The list of context names required for this intent to be triggered.
-  Format: projects/<Project ID>/agent/sessions/-/contexts/<Context ID>.
+  Format: projects/{{project_id}}/agent/sessions/-/contexts/{{context_id}}.
 
 * `events` -
   (Optional)
@@ -163,7 +163,7 @@ The following arguments are supported:
 * `parent_followup_intent_name` -
   (Optional)
   The unique identifier of the parent intent in the chain of followup intents.
-  Format: projects/<Project ID>/agent/intents/<Intent ID>.
+  Format: projects/{{project_id}}/agent/intents/{{intent_id}}.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -173,16 +173,16 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `{{name}}`
+* `id` - an identifier for the resource with format `{{name}}`, see `{{name}}` below for details
 
 * `name` -
   The unique identifier of this intent. 
-  Format: projects/<Project ID>/agent/intents/<Intent ID>.
+  Format: projects/{{project_id}}/agent/intents/{{intent_id}}.
 
 * `root_followup_intent_name` -
   The unique identifier of the root intent in the chain of followup intents. It identifies the correct followup
   intents chain for this intent.
-  Format: projects/<Project ID>/agent/intents/<Intent ID>.
+  Format: projects/{{project_id}}/agent/intents/{{intent_id}}.
 
 * `followup_intent_info` -
   Information about all followup intents that have this intent as a direct or indirect parent. We populate this field
@@ -195,12 +195,12 @@ In addition to the arguments listed above, the following computed attributes are
 * `followup_intent_name` -
   (Optional)
   The unique identifier of the followup intent.
-  Format: projects/<Project ID>/agent/intents/<Intent ID>.
+  Format: projects/{{project_id}}/agent/intents/{{intent_id}}.
 
 * `parent_followup_intent_name` -
   (Optional)
   The unique identifier of the followup intent's parent.
-  Format: projects/<Project ID>/agent/intents/<Intent ID>.
+  Format: projects/{{project_id}}/agent/intents/{{intent_id}}.
 
 ## Timeouts
 

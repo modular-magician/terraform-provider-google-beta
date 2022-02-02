@@ -79,7 +79,7 @@ func testAccCheckDialogflowCXAgentDestroyProducer(t *testing.T) func(s *terrafor
 
 			config := googleProviderConfig(t)
 
-			url, err := replaceVarsForTest(config, rs, "{{DialogflowCXBasePath}}projects/{{project}}/locations/{{location}}/agents/{{name}}")
+			url, err := replaceVarsForTest(config, rs, "{{DialogflowCXBasePath}}{{name}}")
 			if err != nil {
 				return err
 			}

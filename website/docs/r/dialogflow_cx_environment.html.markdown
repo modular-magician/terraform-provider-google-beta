@@ -92,7 +92,7 @@ The following arguments are supported:
 
 * `version` -
   (Required)
-  Format: projects/{{project}}/locations/{{location}}/agents/{{agent}}/flows/{{flow}}/versions/{{version}}.
+  Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}/versions/{{version}}.
 
 - - -
 
@@ -104,7 +104,7 @@ The following arguments are supported:
 * `parent` -
   (Optional)
   The Agent to create an Environment for. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}
 
 
 ## Attributes Reference

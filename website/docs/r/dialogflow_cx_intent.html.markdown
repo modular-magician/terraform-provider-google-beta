@@ -136,7 +136,7 @@ The following arguments are supported:
 * `parent` -
   (Optional)
   The agent to create an intent for.
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}.
 
 * `language_code` -
   (Optional)
@@ -185,7 +185,7 @@ The following arguments are supported:
 * `entity_type` -
   (Required)
   The entity type of the parameter. 
-  Format: projects/-/locations/-/agents/-/entityTypes/<System Entity Type ID> for system entity types (for example, projects/-/locations/-/agents/-/entityTypes/sys.date), or projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/entityTypes/<Entity Type ID> for developer entity types.
+  Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/entityTypes/{{system_entity_type_id}} for system entity types (for example, projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/entityTypes/sys.date) or projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/entityTypes/{{entity_type_id}} for developer entity types.
 
 * `is_list` -
   (Optional)
@@ -204,7 +204,7 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `name` -
   The unique identifier of the intent.  
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/intents/<Intent ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/intents/{{intent_id}}.
 
 
 ## Timeouts

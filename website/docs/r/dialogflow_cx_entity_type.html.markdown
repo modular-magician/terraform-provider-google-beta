@@ -136,7 +136,7 @@ The following arguments are supported:
 * `parent` -
   (Optional)
   The agent to create a entity type for. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}.
 
 * `language_code` -
   (Optional)
@@ -161,7 +161,7 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `name` -
   The unique identifier of the entity type.
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/entityTypes/<Entity Type ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/entityTypes/{{entity_type_id}}
 
 
 ## Timeouts

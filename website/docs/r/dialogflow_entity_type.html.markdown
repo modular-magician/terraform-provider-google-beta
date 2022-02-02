@@ -113,11 +113,11 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `{{name}}`
+* `id` - an identifier for the resource with format `{{name}}`, see `{{name}}` below for details
 
 * `name` -
   The unique identifier of the entity type. 
-  Format: projects/<Project ID>/agent/entityTypes/<Entity type ID>.
+  Format: projects/{{project_id}}/agent/entityTypes/{{entity_type_id}}
 
 
 ## Timeouts

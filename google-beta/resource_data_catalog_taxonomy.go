@@ -72,7 +72,7 @@ long when encoded in UTF-8. If not set, defaults to an empty description.`,
 				Computed:    true,
 				Optional:    true,
 				ForceNew:    true,
-				Description: `Taxonomy location region.`,
+				Description: `The regional location of this taxonomy resource.`,
 			},
 			"name": {
 				Type:     schema.TypeString,

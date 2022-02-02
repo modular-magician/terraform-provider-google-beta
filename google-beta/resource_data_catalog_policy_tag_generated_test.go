@@ -94,6 +94,14 @@ func TestAccDataCatalogPolicyTag_dataCatalogTaxonomiesPolicyTagChildPoliciesExam
 
 func testAccDataCatalogPolicyTag_dataCatalogTaxonomiesPolicyTagChildPoliciesExample(context map[string]interface{}) string {
 	return Nprintf(`
+resource "google_data_catalog_taxonomy" "my_taxonomy" {
+  provider = google-beta
+  region = "us"
+  display_name =  "tf_test_taxonomy_display_name%{random_suffix}"
+  description = "A collection of policy tags"
+  activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
+}
+
 resource "google_data_catalog_policy_tag" "parent_policy" {
   provider = google-beta
   taxonomy = google_data_catalog_taxonomy.my_taxonomy.id
@@ -117,14 +125,6 @@ resource "google_data_catalog_policy_tag" "child_policy2" {
   parent_policy_tag = google_data_catalog_policy_tag.parent_policy.id
   // depends_on to avoid concurrent delete issues
   depends_on = [google_data_catalog_policy_tag.child_policy]
-}
-
-resource "google_data_catalog_taxonomy" "my_taxonomy" {
-  provider = google-beta
-  region = "us"
-  display_name =  "tf_test_taxonomy_display_name%{random_suffix}"
-  description = "A collection of policy tags"
-  activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
 `, context)
 }

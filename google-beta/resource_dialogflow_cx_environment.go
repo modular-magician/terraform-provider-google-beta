@@ -58,7 +58,7 @@ func resourceDialogflowCXEnvironment() *schema.Resource {
 						"version": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: `Format: projects/{{project}}/locations/{{location}}/agents/{{agent}}/flows/{{flow}}/versions/{{version}}.`,
+							Description: `Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}/versions/{{version}}.`,
 						},
 					},
 				},
@@ -74,7 +74,7 @@ func resourceDialogflowCXEnvironment() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 				Description: `The Agent to create an Environment for. 
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}`,
 			},
 			"name": {
 				Type:        schema.TypeString,

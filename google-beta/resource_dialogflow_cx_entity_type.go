@@ -126,7 +126,7 @@ If not specified, the agent's default language is used. Many languages are suppo
 				Optional: true,
 				ForceNew: true,
 				Description: `The agent to create a entity type for. 
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}.`,
 			},
 			"redact": {
 				Type:        schema.TypeBool,
@@ -137,7 +137,7 @@ Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>.`,
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `The unique identifier of the entity type.
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/entityTypes/<Entity Type ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/entityTypes/{{entity_type_id}}`,
 			},
 		},
 		UseJSONNumber: true,

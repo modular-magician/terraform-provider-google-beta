@@ -117,11 +117,11 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `{{name}}`
+* `id` - an identifier for the resource with format `{{name}}`, see `{{name}}` below for details
 
 * `name` -
   The unique identifier of the fulfillment. 
-  Format: projects/<Project ID>/agent/fulfillment - projects/<Project ID>/locations/<Location ID>/agent/fulfillment
+  Format: projects/{{project_id}}/agent/fulfillment - projects/{{project_id}}/locations/{{location}}/agent/fulfillment
 
 
 ## Timeouts

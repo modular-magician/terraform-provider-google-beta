@@ -146,7 +146,7 @@ The following arguments are supported:
   A flow's transition route group serve two purposes:
   They are responsible for matching the user's first utterances in the flow.
   They are inherited by every page's [transition route groups][Page.transition_route_groups]. Transition route groups defined in the page have higher priority than those defined in the flow.
-  Format:projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>/transitionRouteGroups/<TransitionRouteGroup ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}/transitionRouteGroups/{{transition_route_group_id}}.
 
 * `nlu_settings` -
   (Optional)
@@ -156,7 +156,7 @@ The following arguments are supported:
 * `parent` -
   (Optional)
   The agent to create a flow for. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}.
 
 * `language_code` -
   (Optional)
@@ -176,7 +176,7 @@ The following arguments are supported:
 * `intent` -
   (Optional)
   The unique identifier of an Intent. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/intents/<Intent ID>. Indicates that the transition can only happen when the given intent is matched. At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/intents/{{intent_id}}. Indicates that the transition can only happen when the given intent is matched. At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled.
 
 * `condition` -
   (Optional)
@@ -191,12 +191,12 @@ The following arguments are supported:
 * `target_page` -
   (Optional)
   The target page to transition to. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>/pages/<Page ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/flows/{{flow_id}}/pages/{{page_id}}.
 
 * `target_flow` -
   (Optional)
   The target flow to transition to. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/flows/{{flow_id}}.
 
 
 <a name="nested_trigger_fulfillment"></a>The `trigger_fulfillment` block supports:
@@ -208,7 +208,7 @@ The following arguments are supported:
 
 * `webhook` -
   (Optional)
-  The webhook to call. Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/webhooks/<Webhook ID>.
+  The webhook to call. Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/webhooks/{{webhook_id}}.
 
 * `return_partial_responses` -
   (Optional)
@@ -253,12 +253,12 @@ The following arguments are supported:
 * `target_page` -
   (Optional)
   The target page to transition to. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>/pages/<Page ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/flows/{{flow_id}}/pages/{{page_id}}.
 
 * `target_flow` -
   (Optional)
   The target flow to transition to. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/flows/{{flow_id}}.
 
 
 <a name="nested_trigger_fulfillment"></a>The `trigger_fulfillment` block supports:
@@ -270,7 +270,7 @@ The following arguments are supported:
 
 * `webhook` -
   (Optional)
-  The webhook to call. Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/webhooks/<Webhook ID>.
+  The webhook to call. Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/webhooks/{{webhook_id}}.
 
 * `return_partial_responses` -
   (Optional)
@@ -327,7 +327,7 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `name` -
   The unique identifier of the flow. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/flows/{{flow_id}}.
 
 
 ## Timeouts

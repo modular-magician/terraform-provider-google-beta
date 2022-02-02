@@ -78,7 +78,7 @@ the contexts must be present in the active user session for an event to trigger 
 				Type:     schema.TypeList,
 				Optional: true,
 				Description: `The list of context names required for this intent to be triggered.
-Format: projects/<Project ID>/agent/sessions/-/contexts/<Context ID>.`,
+Format: projects/{{project_id}}/agent/sessions/-/contexts/{{context_id}}.`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -103,7 +103,7 @@ ONLY match mode. Also, auto-markup in the UI is turned off.`,
 				Optional: true,
 				ForceNew: true,
 				Description: `The unique identifier of the parent intent in the chain of followup intents.
-Format: projects/<Project ID>/agent/intents/<Intent ID>.`,
+Format: projects/{{project_id}}/agent/intents/{{intent_id}}.`,
 			},
 			"priority": {
 				Type:     schema.TypeInt,
@@ -141,13 +141,13 @@ only in the output.`,
 							Type:     schema.TypeString,
 							Optional: true,
 							Description: `The unique identifier of the followup intent.
-Format: projects/<Project ID>/agent/intents/<Intent ID>.`,
+Format: projects/{{project_id}}/agent/intents/{{intent_id}}.`,
 						},
 						"parent_followup_intent_name": {
 							Type:     schema.TypeString,
 							Optional: true,
 							Description: `The unique identifier of the followup intent's parent.
-Format: projects/<Project ID>/agent/intents/<Intent ID>.`,
+Format: projects/{{project_id}}/agent/intents/{{intent_id}}.`,
 						},
 					},
 				},
@@ -156,14 +156,14 @@ Format: projects/<Project ID>/agent/intents/<Intent ID>.`,
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `The unique identifier of this intent. 
-Format: projects/<Project ID>/agent/intents/<Intent ID>.`,
+Format: projects/{{project_id}}/agent/intents/{{intent_id}}.`,
 			},
 			"root_followup_intent_name": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `The unique identifier of the root intent in the chain of followup intents. It identifies the correct followup
 intents chain for this intent.
-Format: projects/<Project ID>/agent/intents/<Intent ID>.`,
+Format: projects/{{project_id}}/agent/intents/{{intent_id}}.`,
 			},
 			"project": {
 				Type:     schema.TypeString,

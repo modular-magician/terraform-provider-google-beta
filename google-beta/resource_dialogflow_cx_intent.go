@@ -87,7 +87,7 @@ If not specified, the agent's default language is used. Many languages are suppo
 							Type:     schema.TypeString,
 							Required: true,
 							Description: `The entity type of the parameter. 
-Format: projects/-/locations/-/agents/-/entityTypes/<System Entity Type ID> for system entity types (for example, projects/-/locations/-/agents/-/entityTypes/sys.date), or projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/entityTypes/<Entity Type ID> for developer entity types.`,
+Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/entityTypes/{{system_entity_type_id}} for system entity types (for example, projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/entityTypes/sys.date) or projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/entityTypes/{{entity_type_id}} for developer entity types.`,
 						},
 						"id": {
 							Type:        schema.TypeString,
@@ -113,7 +113,7 @@ Note: the parameter content is subject to redaction if either parameter level re
 				Optional: true,
 				ForceNew: true,
 				Description: `The agent to create an intent for.
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}.`,
 			},
 			"priority": {
 				Type:     schema.TypeInt,
@@ -170,7 +170,7 @@ Part.text is set to a part of the phrase that you want to annotate, and the para
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `The unique identifier of the intent.  
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/intents/<Intent ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/intents/{{intent_id}}.`,
 			},
 		},
 		UseJSONNumber: true,

@@ -95,7 +95,7 @@ Europe/Paris.`,
 			"security_settings": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: `Name of the SecuritySettings reference for the agent. Format: projects/<Project ID>/locations/<Location ID>/securitySettings/<Security Settings ID>.`,
+				Description: `Name of the SecuritySettings reference for the agent. Format: projects/{{project_id}}/locations/{{location}}/securitySettings/{{security_settings_id}}.`,
 			},
 			"speech_to_text_settings": {
 				Type:        schema.TypeList,
@@ -123,12 +123,12 @@ Europe/Paris.`,
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: `The unique identifier of the agent.`,
+				Description: `The unique identifier of the agent. Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}`,
 			},
 			"start_flow": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: `Name of the start flow in this agent. A start flow will be automatically created when the agent is created, and can only be deleted by deleting the agent. Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.`,
+				Description: `Name of the start flow in this agent. A start flow will be automatically created when the agent is created, and can only be deleted by deleting the agent. Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -256,7 +256,7 @@ func resourceDialogflowCXAgentRead(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{DialogflowCXBasePath}}projects/{{project}}/locations/{{location}}/agents/{{name}}")
+	url, err := replaceVars(d, config, "{{DialogflowCXBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -394,7 +394,7 @@ func resourceDialogflowCXAgentUpdate(d *schema.ResourceData, meta interface{}) e
 		obj["enableSpellCorrection"] = enableSpellCorrectionProp
 	}
 
-	url, err := replaceVars(d, config, "{{DialogflowCXBasePath}}projects/{{project}}/locations/{{location}}/agents/{{name}}")
+	url, err := replaceVars(d, config, "{{DialogflowCXBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -475,7 +475,7 @@ func resourceDialogflowCXAgentDelete(d *schema.ResourceData, meta interface{}) e
 	}
 	billingProject = project
 
-	url, err := replaceVars(d, config, "{{DialogflowCXBasePath}}projects/{{project}}/locations/{{location}}/agents/{{name}}")
+	url, err := replaceVars(d, config, "{{DialogflowCXBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}

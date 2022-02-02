@@ -81,7 +81,7 @@ The following arguments are supported:
 
 * `region` -
   (Optional)
-  Taxonomy location region.
+  The regional location of this taxonomy resource.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -91,7 +91,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `{{name}}`
+* `id` - an identifier for the resource with format `{{name}}`, see `{{name}}` below for details
 
 * `name` -
   Resource name of this taxonomy, whose format is:

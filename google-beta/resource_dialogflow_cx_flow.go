@@ -73,13 +73,13 @@ Unlike transitionRoutes, these handlers are evaluated on a first-match basis. Th
 							Type:     schema.TypeString,
 							Optional: true,
 							Description: `The target flow to transition to. 
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/flows/{{flow_id}}.`,
 						},
 						"target_page": {
 							Type:     schema.TypeString,
 							Optional: true,
 							Description: `The target page to transition to. 
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>/pages/<Page ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/flows/{{flow_id}}/pages/{{page_id}}.`,
 						},
 						"trigger_fulfillment": {
 							Type:        schema.TypeList,
@@ -133,7 +133,7 @@ Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<F
 									"webhook": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: `The webhook to call. Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/webhooks/<Webhook ID>.`,
+										Description: `The webhook to call. Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/webhooks/{{webhook_id}}.`,
 									},
 								},
 							},
@@ -194,7 +194,7 @@ If the returned score value is less than the threshold value, then a no-match ev
 				Optional: true,
 				ForceNew: true,
 				Description: `The agent to create a flow for. 
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}.`,
 			},
 			"transition_route_groups": {
 				Type:     schema.TypeList,
@@ -202,7 +202,7 @@ Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>.`,
 				Description: `A flow's transition route group serve two purposes:
 They are responsible for matching the user's first utterances in the flow.
 They are inherited by every page's [transition route groups][Page.transition_route_groups]. Transition route groups defined in the page have higher priority than those defined in the flow.
-Format:projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>/transitionRouteGroups/<TransitionRouteGroup ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}/transitionRouteGroups/{{transition_route_group_id}}.`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -230,19 +230,19 @@ At least one of intent or condition must be specified. When both intent and cond
 							Type:     schema.TypeString,
 							Optional: true,
 							Description: `The unique identifier of an Intent. 
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/intents/<Intent ID>. Indicates that the transition can only happen when the given intent is matched. At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/intents/{{intent_id}}. Indicates that the transition can only happen when the given intent is matched. At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled.`,
 						},
 						"target_flow": {
 							Type:     schema.TypeString,
 							Optional: true,
 							Description: `The target flow to transition to. 
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/flows/{{flow_id}}.`,
 						},
 						"target_page": {
 							Type:     schema.TypeString,
 							Optional: true,
 							Description: `The target page to transition to. 
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>/pages/<Page ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/flows/{{flow_id}}/pages/{{page_id}}.`,
 						},
 						"trigger_fulfillment": {
 							Type:        schema.TypeList,
@@ -296,7 +296,7 @@ Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<F
 									"webhook": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: `The webhook to call. Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/webhooks/<Webhook ID>.`,
+										Description: `The webhook to call. Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/webhooks/{{webhook_id}}.`,
 									},
 								},
 							},
@@ -313,7 +313,7 @@ Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<F
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `The unique identifier of the flow. 
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.`,
+Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/flows/{{flow_id}}.`,
 			},
 		},
 		UseJSONNumber: true,

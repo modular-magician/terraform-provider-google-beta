@@ -133,7 +133,7 @@ The following arguments are supported:
   Ordered list of TransitionRouteGroups associated with the page. Transition route groups must be unique within a page.
   If multiple transition routes within a page scope refer to the same intent, then the precedence order is: page's transition route -> page's transition route group -> flow's transition routes.
   If multiple transition route groups within a page contain the same intent, then the first group in the ordered list takes precedence.
-  Format:projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>/transitionRouteGroups/<TransitionRouteGroup ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}/transitionRouteGroups/{{transition_route_group_id}}.
 
 * `transition_routes` -
   (Optional)
@@ -155,7 +155,7 @@ The following arguments are supported:
 * `parent` -
   (Optional)
   The flow to create a page for. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agent/{{agent_id}}/flows/{{flow_id}}.
 
 * `language_code` -
   (Optional)
@@ -182,7 +182,7 @@ The following arguments are supported:
 
 * `webhook` -
   (Optional)
-  The webhook to call. Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/webhooks/<Webhook ID>.
+  The webhook to call. Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/webhooks/{{webhook_id}}.
 
 * `return_partial_responses` -
   (Optional)
@@ -232,7 +232,7 @@ The following arguments are supported:
 * `entity_type` -
   (Optional)
   The entity type of the parameter. 
-  Format: projects/-/locations/-/agents/-/entityTypes/<System Entity Type ID> for system entity types (for example, projects/-/locations/-/agents/-/entityTypes/sys.date), or projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/entityTypes/<Entity Type ID> for developer entity types.
+  Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/entityTypes/{{system_entity_type_id}} for system entity types (for example, projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/entityTypes/sys.date) or projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/entityTypes/{{entity_type_id}} for developer entity types.
 
 * `is_list` -
   (Optional)
@@ -266,7 +266,7 @@ The following arguments are supported:
 
 * `webhook` -
   (Optional)
-  The webhook to call. Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/webhooks/<Webhook ID>.
+  The webhook to call. Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/webhooks/{{webhook_id}}.
 
 * `return_partial_responses` -
   (Optional)
@@ -302,7 +302,8 @@ The following arguments are supported:
 * `intent` -
   (Optional)
   The unique identifier of an Intent. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/intents/<Intent ID>. Indicates that the transition can only happen when the given intent is matched. At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled.
+  Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/intents/{{intent_id}}.
+   Indicates that the transition can only happen when the given intent is matched. At least one of intent or condition must be specified. When both intent and condition are specified, the transition can only happen when both are fulfilled.
 
 * `condition` -
   (Optional)
@@ -317,12 +318,12 @@ The following arguments are supported:
 * `target_page` -
   (Optional)
   The target page to transition to. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>/pages/<Page ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}/pages/{{page_id}}.
 
 * `target_flow` -
   (Optional)
   The target flow to transition to. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}.
 
 
 <a name="nested_trigger_fulfillment"></a>The `trigger_fulfillment` block supports:
@@ -334,7 +335,7 @@ The following arguments are supported:
 
 * `webhook` -
   (Optional)
-  The webhook to call. Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/webhooks/<Webhook ID>.
+  The webhook to call. Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/webhooks/{{webhook_id}}.
 
 * `return_partial_responses` -
   (Optional)
@@ -379,12 +380,12 @@ The following arguments are supported:
 * `target_page` -
   (Optional)
   The target page to transition to. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>/pages/<Page ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}/pages/{{page_id}}.
 
 * `target_flow` -
   (Optional)
   The target flow to transition to. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}.
 
 
 <a name="nested_trigger_fulfillment"></a>The `trigger_fulfillment` block supports:
@@ -396,7 +397,7 @@ The following arguments are supported:
 
 * `webhook` -
   (Optional)
-  The webhook to call. Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/webhooks/<Webhook ID>.
+  The webhook to call. Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/webhooks/{{webhook_id}}.
 
 * `return_partial_responses` -
   (Optional)
@@ -432,7 +433,7 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `name` -
   The unique identifier of the page. 
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>/pages/<Page ID>.
+  Format: projects/{{project_id}}/locations/{{location}}/agents/{{agent_id}}/flows/{{flow_id}}/pages/{{page_id}}.
 
 
 ## Timeouts
