@@ -639,8 +639,6 @@ func flattenComputeSnapshotSnapshotEncryptionKey(v interface{}, d *schema.Resour
 		return nil
 	}
 	transformed := make(map[string]interface{})
-	transformed["raw_key"] =
-		flattenComputeSnapshotSnapshotEncryptionKeyRawKey(original["rawKey"], d, config)
 	transformed["sha256"] =
 		flattenComputeSnapshotSnapshotEncryptionKeySha256(original["sha256"], d, config)
 	transformed["kms_key_self_link"] =

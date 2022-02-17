@@ -2436,8 +2436,6 @@ func flattenComputeRegionBackendServiceIap(v interface{}, d *schema.ResourceData
 	transformed := make(map[string]interface{})
 	transformed["oauth2_client_id"] =
 		flattenComputeRegionBackendServiceIapOauth2ClientId(original["oauth2ClientId"], d, config)
-	transformed["oauth2_client_secret"] =
-		flattenComputeRegionBackendServiceIapOauth2ClientSecret(original["oauth2ClientSecret"], d, config)
 	transformed["oauth2_client_secret_sha256"] =
 		flattenComputeRegionBackendServiceIapOauth2ClientSecretSha256(original["oauth2ClientSecretSha256"], d, config)
 	return []interface{}{transformed}
