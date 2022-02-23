@@ -11,6 +11,18 @@ import (
 	dataproc "google.golang.org/api/dataproc/v1beta2"
 )
 
+loggingLevels := []string{
+	"LEVEL_UNSPECIFIED",
+	"ALL",
+	"TRACE",
+	"DEBUG",
+	"INFO",
+	"WARN",
+	"ERROR",
+	"FATAL",
+	"OFF",
+}
+
 func resourceDataprocJob() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceDataprocJobCreate,
@@ -420,11 +432,12 @@ var loggingConfig = &schema.Schema{
 	Elem: &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"driver_log_levels": {
-				Type:        schema.TypeMap,
-				Description: "Optional. The per-package log levels for the driver. This may include 'root' package name to configure rootLogger. Examples: 'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'.",
-				Required:    true,
-				ForceNew:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Type:         schema.TypeMap,
+				Description:  "Optional. The per-package log levels for the driver. This may include 'root' package name to configure rootLogger. Examples: 'com.google = FATAL', 'root = INFO', 'org.apache = DEBUG'.",
+				Required:     true,
+				ForceNew:     true,
+				Elem:         &schema.Schema{Type: schema.TypeString},
+				ValidateFunc: validation.StringInSlice(loggingLevels, false),
 			},
 		},
 	},
