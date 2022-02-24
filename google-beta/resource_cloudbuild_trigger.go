@@ -105,7 +105,7 @@ run directly. If not, the host will attempt to pull the image first, using
 the builder service account's credentials if necessary.
 
 The Docker daemon's cache will already have the latest versions of all of
-the officially supported build steps (see https://github.com/GoogleCloudPlatform/cloud-builders 
+the officially supported build steps (see https://github.com/GoogleCloudPlatform/cloud-builders
 for images and examples).
 The Docker daemon will also have cached many of the layers for some popular
 images, like "ubuntu", "debian", but they will be refreshed at the time
@@ -368,7 +368,7 @@ If any of the images fail to be pushed, the build status is marked FAILURE.`,
 						"logs_bucket": {
 							Type:     schema.TypeString,
 							Optional: true,
-							Description: `Google Cloud Storage bucket where logs should be written. 
+							Description: `Google Cloud Storage bucket where logs should be written.
 Logs file names will be of the format ${logsBucket}/log-${build_id}.txt.`,
 						},
 						"options": {
@@ -503,7 +503,7 @@ This field is experimental.`,
 						"queue_ttl": {
 							Type:     schema.TypeString,
 							Optional: true,
-							Description: `TTL in queue for this build. If provided and the build is enqueued longer than this value, 
+							Description: `TTL in queue for this build. If provided and the build is enqueued longer than this value,
 the build will expire and the build status will be EXPIRED.
 The TTL starts ticking from createTime.
 A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
@@ -523,8 +523,8 @@ A duration in seconds with up to nine fractional digits, terminated by 's'. Exam
 										Type:     schema.TypeMap,
 										Optional: true,
 										Description: `Map of environment variable name to its encrypted value.
-Secret environment variables must be unique across all of a build's secrets, 
-and must be used by at least one build step. Values can be at most 64 KB in size. 
+Secret environment variables must be unique across all of a build's secrets,
+and must be used by at least one build step. Values can be at most 64 KB in size.
 There can be at most 100 secret values across all of a build's secrets.`,
 										Elem: &schema.Schema{Type: schema.TypeString},
 									},
@@ -556,7 +556,7 @@ One of 'storageSource' or 'repoSource' must be provided.`,
 													Type:     schema.TypeString,
 													Optional: true,
 													Description: `Regex matching branches to build. Exactly one a of branch name, tag, or commit SHA must be provided.
-The syntax of the regular expressions accepted is the syntax accepted by RE2 and 
+The syntax of the regular expressions accepted is the syntax accepted by RE2 and
 described at https://github.com/google/re2/wiki/Syntax`,
 													ExactlyOneOf: []string{"build.0.source.0.repo_source.0.branch_name", "build.0.source.0.repo_source.0.commit_sha", "build.0.source.0.repo_source.0.tag_name"},
 												},
@@ -570,7 +570,7 @@ described at https://github.com/google/re2/wiki/Syntax`,
 													Type:     schema.TypeString,
 													Optional: true,
 													Description: `Directory, relative to the source root, in which to run the build.
-This must be a relative path. If a step's dir is specified and is an absolute path, 
+This must be a relative path. If a step's dir is specified and is an absolute path,
 this value is ignored for that step's execution.`,
 												},
 												"invert_regex": {
@@ -581,7 +581,7 @@ this value is ignored for that step's execution.`,
 												"project_id": {
 													Type:     schema.TypeString,
 													Optional: true,
-													Description: `ID of the project that owns the Cloud Source Repository. 
+													Description: `ID of the project that owns the Cloud Source Repository.
 If omitted, the project ID requesting the build is assumed.`,
 												},
 												"substitutions": {
@@ -594,7 +594,7 @@ If omitted, the project ID requesting the build is assumed.`,
 													Type:     schema.TypeString,
 													Optional: true,
 													Description: `Regex matching tags to build. Exactly one a of branch name, tag, or commit SHA must be provided.
-The syntax of the regular expressions accepted is the syntax accepted by RE2 and 
+The syntax of the regular expressions accepted is the syntax accepted by RE2 and
 described at https://github.com/google/re2/wiki/Syntax`,
 													ExactlyOneOf: []string{"build.0.source.0.repo_source.0.branch_name", "build.0.source.0.repo_source.0.commit_sha", "build.0.source.0.repo_source.0.tag_name"},
 												},
@@ -622,7 +622,7 @@ This object must be a gzipped archive file (.tar.gz) containing source to build.
 												"generation": {
 													Type:     schema.TypeString,
 													Optional: true,
-													Description: `Google Cloud Storage generation for the object. 
+													Description: `Google Cloud Storage generation for the object.
 If the generation is omitted, the latest generation will be used`,
 												},
 											},
@@ -657,7 +657,7 @@ Default time is ten minutes (600s).`,
 						},
 					},
 				},
-				ExactlyOneOf: []string{"filename", "build"},
+				ExactlyOneOf: []string{"filename", "build", "git_file_source"},
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -673,7 +673,43 @@ Default time is ten minutes (600s).`,
 				Type:         schema.TypeString,
 				Optional:     true,
 				Description:  `Path, from the source root, to a file whose contents is used for the template. Either a filename or build template must be provided.`,
-				ExactlyOneOf: []string{"filename", "build"},
+				ExactlyOneOf: []string{"filename", "build", "git_file_source"},
+			},
+			"git_file_source": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `The file source describing the local or remote Build template.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"path": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `The path of the file, with the repo root as the root of the path.`,
+						},
+						"repo_type": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validateEnum([]string{"UNKNOWN", "CLOUD_SOURCE_REPOSITORIES", "GITHUB", ""}),
+							Description:  `The type of the repo, since it may not be explicit from the repo field (e.g from a URL). Default value: "UNKNOWN" Possible values: ["UNKNOWN", "CLOUD_SOURCE_REPOSITORIES", "GITHUB"]`,
+							Default:      "UNKNOWN",
+						},
+						"revision": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The branch, tag, arbitrary ref, or SHA version of the repo to use when resolving the filename (optional).
+This field respects the same syntax/resolution as described here: https://git-scm.com/docs/gitrevisions
+If unspecified, the revision from which the trigger invocation originated is assumed to be the revision from which to read the specified path.`,
+						},
+						"uri": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The URI of the repo (optional).
+If unspecified, the repo from which the trigger invocation originated is assumed to be the repo from which to read the specified path.`,
+						},
+					},
+				},
+				ExactlyOneOf: []string{"filename", "build", "git_file_source"},
 			},
 			"github": {
 				Type:     schema.TypeList,
@@ -798,7 +834,7 @@ a build.`,
 			"pubsub_config": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Description: `PubsubConfig describes the configuration of a trigger that creates 
+				Description: `PubsubConfig describes the configuration of a trigger that creates
 a build whenever a Pub/Sub message is published.
 
 One of 'trigger_template', 'github', 'pubsub_config' or 'webhook_config' must be provided.`,
@@ -840,6 +876,36 @@ If no service account is set, then the standard Cloud Build service account
 ([PROJECT_NUM]@system.gserviceaccount.com) will be used instead.
 
 Format: projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT_ID_OR_EMAIL}`,
+			},
+			"source_to_build": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `The repo and ref of the repository from which to build.
+This field is used only for those triggers that do not respond to SCM events.
+Triggers that respond to such events build source at whatever commit caused the event.
+This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ref": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `The branch or tag to use. Must start with "refs/" (required).`,
+						},
+						"repo_type": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validateEnum([]string{"UNKNOWN", "CLOUD_SOURCE_REPOSITORIES", "GITHUB", ""}),
+							Description:  `The type of the repo, since it may not be explicit from the repo field (e.g from a URL). Default value: "UNKNOWN" Possible values: ["UNKNOWN", "CLOUD_SOURCE_REPOSITORIES", "GITHUB"]`,
+							Default:      "UNKNOWN",
+						},
+						"uri": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `The URI of the repo (required).`,
+						},
+					},
+				},
 			},
 			"substitutions": {
 				Type:        schema.TypeMap,
@@ -922,7 +988,7 @@ This field is a regular expression.`,
 			"webhook_config": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Description: `WebhookConfig describes the configuration of a trigger that creates 
+				Description: `WebhookConfig describes the configuration of a trigger that creates
 a build whenever a webhook is sent to a trigger's webhook URL.
 
 One of 'trigger_template', 'github', 'pubsub_config' or 'webhook_config' must be provided.`,
@@ -1026,6 +1092,18 @@ func resourceCloudBuildTriggerCreate(d *schema.ResourceData, meta interface{}) e
 		return err
 	} else if v, ok := d.GetOkExists("included_files"); !isEmptyValue(reflect.ValueOf(includedFilesProp)) && (ok || !reflect.DeepEqual(v, includedFilesProp)) {
 		obj["includedFiles"] = includedFilesProp
+	}
+	sourceToBuildProp, err := expandCloudBuildTriggerSourceToBuild(d.Get("source_to_build"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("source_to_build"); !isEmptyValue(reflect.ValueOf(sourceToBuildProp)) && (ok || !reflect.DeepEqual(v, sourceToBuildProp)) {
+		obj["sourceToBuild"] = sourceToBuildProp
+	}
+	gitFileSourceProp, err := expandCloudBuildTriggerGitFileSource(d.Get("git_file_source"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("git_file_source"); !isEmptyValue(reflect.ValueOf(gitFileSourceProp)) && (ok || !reflect.DeepEqual(v, gitFileSourceProp)) {
+		obj["gitFileSource"] = gitFileSourceProp
 	}
 	triggerTemplateProp, err := expandCloudBuildTriggerTriggerTemplate(d.Get("trigger_template"), d, config)
 	if err != nil {
@@ -1178,6 +1256,12 @@ func resourceCloudBuildTriggerRead(d *schema.ResourceData, meta interface{}) err
 	if err := d.Set("included_files", flattenCloudBuildTriggerIncludedFiles(res["includedFiles"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
+	if err := d.Set("source_to_build", flattenCloudBuildTriggerSourceToBuild(res["sourceToBuild"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Trigger: %s", err)
+	}
+	if err := d.Set("git_file_source", flattenCloudBuildTriggerGitFileSource(res["gitFileSource"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Trigger: %s", err)
+	}
 	if err := d.Set("trigger_template", flattenCloudBuildTriggerTriggerTemplate(res["triggerTemplate"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Trigger: %s", err)
 	}
@@ -1266,6 +1350,18 @@ func resourceCloudBuildTriggerUpdate(d *schema.ResourceData, meta interface{}) e
 		return err
 	} else if v, ok := d.GetOkExists("included_files"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, includedFilesProp)) {
 		obj["includedFiles"] = includedFilesProp
+	}
+	sourceToBuildProp, err := expandCloudBuildTriggerSourceToBuild(d.Get("source_to_build"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("source_to_build"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, sourceToBuildProp)) {
+		obj["sourceToBuild"] = sourceToBuildProp
+	}
+	gitFileSourceProp, err := expandCloudBuildTriggerGitFileSource(d.Get("git_file_source"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("git_file_source"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, gitFileSourceProp)) {
+		obj["gitFileSource"] = gitFileSourceProp
 	}
 	triggerTemplateProp, err := expandCloudBuildTriggerTriggerTemplate(d.Get("trigger_template"), d, config)
 	if err != nil {
@@ -1420,6 +1516,70 @@ func flattenCloudBuildTriggerIgnoredFiles(v interface{}, d *schema.ResourceData,
 }
 
 func flattenCloudBuildTriggerIncludedFiles(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenCloudBuildTriggerSourceToBuild(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["uri"] =
+		flattenCloudBuildTriggerSourceToBuildUri(original["uri"], d, config)
+	transformed["ref"] =
+		flattenCloudBuildTriggerSourceToBuildRef(original["ref"], d, config)
+	transformed["repo_type"] =
+		flattenCloudBuildTriggerSourceToBuildRepoType(original["repoType"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCloudBuildTriggerSourceToBuildUri(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenCloudBuildTriggerSourceToBuildRef(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenCloudBuildTriggerSourceToBuildRepoType(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenCloudBuildTriggerGitFileSource(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["path"] =
+		flattenCloudBuildTriggerGitFileSourcePath(original["path"], d, config)
+	transformed["uri"] =
+		flattenCloudBuildTriggerGitFileSourceUri(original["uri"], d, config)
+	transformed["repo_type"] =
+		flattenCloudBuildTriggerGitFileSourceRepoType(original["repoType"], d, config)
+	transformed["revision"] =
+		flattenCloudBuildTriggerGitFileSourceRevision(original["revision"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCloudBuildTriggerGitFileSourcePath(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenCloudBuildTriggerGitFileSourceUri(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenCloudBuildTriggerGitFileSourceRepoType(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenCloudBuildTriggerGitFileSourceRevision(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -2169,6 +2329,107 @@ func expandCloudBuildTriggerIgnoredFiles(v interface{}, d TerraformResourceData,
 }
 
 func expandCloudBuildTriggerIncludedFiles(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudBuildTriggerSourceToBuild(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedUri, err := expandCloudBuildTriggerSourceToBuildUri(original["uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !isEmptyValue(val) {
+		transformed["uri"] = transformedUri
+	}
+
+	transformedRef, err := expandCloudBuildTriggerSourceToBuildRef(original["ref"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRef); val.IsValid() && !isEmptyValue(val) {
+		transformed["ref"] = transformedRef
+	}
+
+	transformedRepoType, err := expandCloudBuildTriggerSourceToBuildRepoType(original["repo_type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRepoType); val.IsValid() && !isEmptyValue(val) {
+		transformed["repoType"] = transformedRepoType
+	}
+
+	return transformed, nil
+}
+
+func expandCloudBuildTriggerSourceToBuildUri(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudBuildTriggerSourceToBuildRef(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudBuildTriggerSourceToBuildRepoType(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudBuildTriggerGitFileSource(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPath, err := expandCloudBuildTriggerGitFileSourcePath(original["path"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !isEmptyValue(val) {
+		transformed["path"] = transformedPath
+	}
+
+	transformedUri, err := expandCloudBuildTriggerGitFileSourceUri(original["uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !isEmptyValue(val) {
+		transformed["uri"] = transformedUri
+	}
+
+	transformedRepoType, err := expandCloudBuildTriggerGitFileSourceRepoType(original["repo_type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRepoType); val.IsValid() && !isEmptyValue(val) {
+		transformed["repoType"] = transformedRepoType
+	}
+
+	transformedRevision, err := expandCloudBuildTriggerGitFileSourceRevision(original["revision"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRevision); val.IsValid() && !isEmptyValue(val) {
+		transformed["revision"] = transformedRevision
+	}
+
+	return transformed, nil
+}
+
+func expandCloudBuildTriggerGitFileSourcePath(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudBuildTriggerGitFileSourceUri(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudBuildTriggerGitFileSourceRepoType(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudBuildTriggerGitFileSourceRevision(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

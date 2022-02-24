@@ -219,6 +219,76 @@ resource "google_project_iam_member" "logs_writer" {
 `, context)
 }
 
+func TestAccCloudBuildTrigger_cloudbuildTriggerWebhookExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCloudBuildTriggerDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCloudBuildTrigger_cloudbuildTriggerWebhookExample(context),
+			},
+			{
+				ResourceName:      "google_cloudbuild_trigger.webhook-trigger",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccCloudBuildTrigger_cloudbuildTriggerWebhookExample(context map[string]interface{}) string {
+	return Nprintf(`
+data "google_project" "project" {
+}
+
+resource "google_cloudbuild_trigger" "webhook-trigger" {
+  git_file_source {
+    path = "someuri.com/cloudbuild.yaml"
+    repo_type = "GITHUB"
+    revision = "revision-tag"
+  }
+  webhook_config {
+    secret = google_secret_manager_secret_version.secret-version-basic.name
+  }
+  source_to_build {
+    uri = "someuri.com"
+    repo_type = "GITHUB"
+  }
+}
+
+resource "google_secret_manager_secret" "secret-basic" {
+  secret_id = "secret-version"
+
+  labels = {
+    label = "my-label"
+  }
+
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "secret-version-basic" {
+  secret = google_secret_manager_secret.secret-basic.id
+  secret_data = "secret-data"
+}
+
+resource "google_secret_manager_secret_iam_member" "member" {
+  project = google_secret_manager_secret.secret-basic.project
+  secret_id = google_secret_manager_secret.secret-basic.secret_id
+  role = "roles/secretmanager.secretAccessor"
+  member = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"
+}
+`, context)
+}
+
 func testAccCheckCloudBuildTriggerDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
