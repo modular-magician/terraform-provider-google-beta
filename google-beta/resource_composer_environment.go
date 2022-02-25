@@ -138,6 +138,7 @@ func resourceComposerEnvironment() *schema.Resource {
 			},
 			"region": {
 				Type:        schema.TypeString,
+				Computed:    true,
 				Optional:    true,
 				ForceNew:    true,
 				Description: `The location or Compute Engine region for the environment.`,
