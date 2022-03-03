@@ -212,6 +212,67 @@ an empty list as an intent to stream all the supported resource types in this FH
 					},
 				},
 			},
+			"validation_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Configuration for how to validate incoming FHIR resources against configured profiles.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"disable_fhirpath_validation": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `Whether to disable FHIRPath validation for incoming resources. Set this to true to disable checking incoming
+resources for conformance against FHIRPath requirement defined in the FHIR specification. This property only
+affects resource types that do not have profiles configured for them, any rules in enabled implementation
+guides will still be enforced.`,
+						},
+						"disable_profile_validation": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `Whether to disable profile validation for this FHIR store. Set this to true to disable checking incoming
+resources for conformance against structure definitions in this FHIR store.`,
+						},
+						"disable_reference_type_validation": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `Whether to disable reference type validation for incoming resources. Set this to true to disable checking
+incoming resources for conformance against reference type requirement defined in the FHIR specification.
+This property only affects resource types that do not have profiles configured for them, any rules in enabled
+implementation guides will still be enforced.`,
+						},
+						"disable_required_field_validation": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `Whether to disable required fields validation for incoming resources. Set this to true to disable checking
+incoming resources for conformance against required fields requirement defined in the FHIR specification.
+This property only affects resource types that do not have profiles configured for them, any rules in enabled
+implementation guides will still be enforced.`,
+						},
+						"enabled_implementation_guides": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `A list of implementation guide URLs in this FHIR store that are used to configure the profiles to use for
+validation. For example, to use the US Core profiles for validation, set enabledImplementationGuides to
+["http://hl7.org/fhir/us/core/ImplementationGuide/ig"]. If enabledImplementationGuides is empty or omitted,
+then incoming resources are only required to conform to the base FHIR profiles. Otherwise, a resource must
+conform to at least one profile listed in the global property of one of the enabled ImplementationGuides.
+
+The Cloud Healthcare API does not currently enforce all of the rules in a StructureDefinition.
+The following rules are supported:
+* min/max
+* minValue/maxValue
+* type
+* fixed[x]
+* pattern[x] on simple types
+* slicing, when using "value" as the discriminator type`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 			"version": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -285,6 +346,12 @@ func resourceHealthcareFhirStoreCreate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("notification_config"); !isEmptyValue(reflect.ValueOf(notificationConfigProp)) && (ok || !reflect.DeepEqual(v, notificationConfigProp)) {
 		obj["notificationConfig"] = notificationConfigProp
+	}
+	validationConfigProp, err := expandHealthcareFhirStoreValidationConfig(d.Get("validation_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("validation_config"); !isEmptyValue(reflect.ValueOf(validationConfigProp)) && (ok || !reflect.DeepEqual(v, validationConfigProp)) {
+		obj["validationConfig"] = validationConfigProp
 	}
 	streamConfigsProp, err := expandHealthcareFhirStoreStreamConfigs(d.Get("stream_configs"), d, config)
 	if err != nil {
@@ -383,6 +450,9 @@ func resourceHealthcareFhirStoreRead(d *schema.ResourceData, meta interface{}) e
 	if err := d.Set("notification_config", flattenHealthcareFhirStoreNotificationConfig(res["notificationConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FhirStore: %s", err)
 	}
+	if err := d.Set("validation_config", flattenHealthcareFhirStoreValidationConfig(res["validationConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading FhirStore: %s", err)
+	}
 	if err := d.Set("stream_configs", flattenHealthcareFhirStoreStreamConfigs(res["streamConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FhirStore: %s", err)
 	}
@@ -418,6 +488,12 @@ func resourceHealthcareFhirStoreUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("notification_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, notificationConfigProp)) {
 		obj["notificationConfig"] = notificationConfigProp
 	}
+	validationConfigProp, err := expandHealthcareFhirStoreValidationConfig(d.Get("validation_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("validation_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, validationConfigProp)) {
+		obj["validationConfig"] = validationConfigProp
+	}
 	streamConfigsProp, err := expandHealthcareFhirStoreStreamConfigs(d.Get("stream_configs"), d, config)
 	if err != nil {
 		return err
@@ -443,6 +519,10 @@ func resourceHealthcareFhirStoreUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("notification_config") {
 		updateMask = append(updateMask, "notificationConfig")
+	}
+
+	if d.HasChange("validation_config") {
+		updateMask = append(updateMask, "validationConfig")
 	}
 
 	if d.HasChange("stream_configs") {
@@ -563,6 +643,47 @@ func flattenHealthcareFhirStoreNotificationConfig(v interface{}, d *schema.Resou
 	return []interface{}{transformed}
 }
 func flattenHealthcareFhirStoreNotificationConfigPubsubTopic(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenHealthcareFhirStoreValidationConfig(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["disable_profile_validation"] =
+		flattenHealthcareFhirStoreValidationConfigDisableProfileValidation(original["disableProfileValidation"], d, config)
+	transformed["disable_required_field_validation"] =
+		flattenHealthcareFhirStoreValidationConfigDisableRequiredFieldValidation(original["disableRequiredFieldValidation"], d, config)
+	transformed["disable_reference_type_validation"] =
+		flattenHealthcareFhirStoreValidationConfigDisableReferenceTypeValidation(original["disableReferenceTypeValidation"], d, config)
+	transformed["disable_fhirpath_validation"] =
+		flattenHealthcareFhirStoreValidationConfigDisableFhirpathValidation(original["disableFhirpathValidation"], d, config)
+	transformed["enabled_implementation_guides"] =
+		flattenHealthcareFhirStoreValidationConfigEnabledImplementationGuides(original["enabledImplementationGuides"], d, config)
+	return []interface{}{transformed}
+}
+func flattenHealthcareFhirStoreValidationConfigDisableProfileValidation(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenHealthcareFhirStoreValidationConfigDisableRequiredFieldValidation(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenHealthcareFhirStoreValidationConfigDisableReferenceTypeValidation(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenHealthcareFhirStoreValidationConfigDisableFhirpathValidation(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenHealthcareFhirStoreValidationConfigEnabledImplementationGuides(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -699,6 +820,73 @@ func expandHealthcareFhirStoreNotificationConfig(v interface{}, d TerraformResou
 }
 
 func expandHealthcareFhirStoreNotificationConfigPubsubTopic(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandHealthcareFhirStoreValidationConfig(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedDisableProfileValidation, err := expandHealthcareFhirStoreValidationConfigDisableProfileValidation(original["disable_profile_validation"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDisableProfileValidation); val.IsValid() && !isEmptyValue(val) {
+		transformed["disableProfileValidation"] = transformedDisableProfileValidation
+	}
+
+	transformedDisableRequiredFieldValidation, err := expandHealthcareFhirStoreValidationConfigDisableRequiredFieldValidation(original["disable_required_field_validation"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDisableRequiredFieldValidation); val.IsValid() && !isEmptyValue(val) {
+		transformed["disableRequiredFieldValidation"] = transformedDisableRequiredFieldValidation
+	}
+
+	transformedDisableReferenceTypeValidation, err := expandHealthcareFhirStoreValidationConfigDisableReferenceTypeValidation(original["disable_reference_type_validation"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDisableReferenceTypeValidation); val.IsValid() && !isEmptyValue(val) {
+		transformed["disableReferenceTypeValidation"] = transformedDisableReferenceTypeValidation
+	}
+
+	transformedDisableFhirpathValidation, err := expandHealthcareFhirStoreValidationConfigDisableFhirpathValidation(original["disable_fhirpath_validation"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDisableFhirpathValidation); val.IsValid() && !isEmptyValue(val) {
+		transformed["disableFhirpathValidation"] = transformedDisableFhirpathValidation
+	}
+
+	transformedEnabledImplementationGuides, err := expandHealthcareFhirStoreValidationConfigEnabledImplementationGuides(original["enabled_implementation_guides"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnabledImplementationGuides); val.IsValid() && !isEmptyValue(val) {
+		transformed["enabledImplementationGuides"] = transformedEnabledImplementationGuides
+	}
+
+	return transformed, nil
+}
+
+func expandHealthcareFhirStoreValidationConfigDisableProfileValidation(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandHealthcareFhirStoreValidationConfigDisableRequiredFieldValidation(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandHealthcareFhirStoreValidationConfigDisableReferenceTypeValidation(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandHealthcareFhirStoreValidationConfigDisableFhirpathValidation(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandHealthcareFhirStoreValidationConfigEnabledImplementationGuides(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

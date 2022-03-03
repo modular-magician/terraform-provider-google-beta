@@ -55,6 +55,16 @@ resource "google_healthcare_fhir_store" "default" {
     pubsub_topic = google_pubsub_topic.topic.id
   }
 
+  validation_config {
+    disable_profile_validation        = false
+    disable_required_field_validation = false
+    disable_reference_type_validation = false
+    disable_fhirpath_validation       = false
+    enabled_implementation_guides = [
+      "https://some.url/to-an-implementation-guide"
+    ]
+  }
+
   labels = {
     label1 = "labelvalue1"
   }
@@ -198,6 +208,11 @@ The following arguments are supported:
   A nested object resource
   Structure is [documented below](#nested_notification_config).
 
+* `validation_config` -
+  (Optional)
+  Configuration for how to validate incoming FHIR resources against configured profiles.
+  Structure is [documented below](#nested_validation_config).
+
 * `stream_configs` -
   (Optional)
   A list of streaming configs that configure the destinations of streaming export for every resource mutation in
@@ -219,6 +234,50 @@ The following arguments are supported:
   was published. Notifications are only sent if the topic is non-empty. Topic names must be scoped to a
   project. service-PROJECT_NUMBER@gcp-sa-healthcare.iam.gserviceaccount.com must have publisher permissions on the given
   Cloud Pub/Sub topic. Not having adequate permissions will cause the calls that send notifications to fail.
+
+<a name="nested_validation_config"></a>The `validation_config` block supports:
+
+* `disable_profile_validation` -
+  (Optional)
+  Whether to disable profile validation for this FHIR store. Set this to true to disable checking incoming
+  resources for conformance against structure definitions in this FHIR store.
+
+* `disable_required_field_validation` -
+  (Optional)
+  Whether to disable required fields validation for incoming resources. Set this to true to disable checking
+  incoming resources for conformance against required fields requirement defined in the FHIR specification.
+  This property only affects resource types that do not have profiles configured for them, any rules in enabled
+  implementation guides will still be enforced.
+
+* `disable_reference_type_validation` -
+  (Optional)
+  Whether to disable reference type validation for incoming resources. Set this to true to disable checking
+  incoming resources for conformance against reference type requirement defined in the FHIR specification.
+  This property only affects resource types that do not have profiles configured for them, any rules in enabled
+  implementation guides will still be enforced.
+
+* `disable_fhirpath_validation` -
+  (Optional)
+  Whether to disable FHIRPath validation for incoming resources. Set this to true to disable checking incoming
+  resources for conformance against FHIRPath requirement defined in the FHIR specification. This property only
+  affects resource types that do not have profiles configured for them, any rules in enabled implementation
+  guides will still be enforced.
+
+* `enabled_implementation_guides` -
+  (Optional)
+  A list of implementation guide URLs in this FHIR store that are used to configure the profiles to use for
+  validation. For example, to use the US Core profiles for validation, set enabledImplementationGuides to
+  ["http://hl7.org/fhir/us/core/ImplementationGuide/ig"]. If enabledImplementationGuides is empty or omitted,
+  then incoming resources are only required to conform to the base FHIR profiles. Otherwise, a resource must
+  conform to at least one profile listed in the global property of one of the enabled ImplementationGuides.
+  The Cloud Healthcare API does not currently enforce all of the rules in a StructureDefinition.
+  The following rules are supported:
+  * min/max
+  * minValue/maxValue
+  * type
+  * fixed[x]
+  * pattern[x] on simple types
+  * slicing, when using "value" as the discriminator type
 
 <a name="nested_stream_configs"></a>The `stream_configs` block supports:
 
