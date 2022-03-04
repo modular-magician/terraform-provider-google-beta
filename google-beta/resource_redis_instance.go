@@ -285,6 +285,7 @@ resolution and up to nine fractional digits.`,
 			},
 			"read_replicas_mode": {
 				Type:         schema.TypeString,
+				Computed:     true,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateEnum([]string{"READ_REPLICAS_DISABLED", "READ_REPLICAS_ENABLED", ""}),
@@ -338,6 +339,18 @@ instance. If not provided, the service will choose an unused /29
 block, for example, 10.0.0.0/29 or 192.168.0.0/29. Ranges must be
 unique and non-overlapping with existing subnets in an authorized
 network.`,
+			},
+			"secondary_ip_range": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional: true,
+				ForceNew: true,
+				Description: `Optional. Additional ip ranges for node placement, beyond those specified
+in reserved_ip_range. At most 1 secondary IP range is supported. The mask
+value must not exceed /28. Not supported for BASIC tier. Updates can only
+add new ranges, once added ranges cannot be changed or deleted. Values in
+this list cannot overlap with the reserved_ip_range. Not supported during
+instance creation.`,
 			},
 			"tier": {
 				Type:         schema.TypeString,
@@ -593,6 +606,12 @@ func resourceRedisInstanceCreate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("read_replicas_mode"); !isEmptyValue(reflect.ValueOf(readReplicasModeProp)) && (ok || !reflect.DeepEqual(v, readReplicasModeProp)) {
 		obj["readReplicasMode"] = readReplicasModeProp
 	}
+	secondaryIpRangeProp, err := expandRedisInstanceSecondaryIpRange(d.Get("secondary_ip_range"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("secondary_ip_range"); !isEmptyValue(reflect.ValueOf(secondaryIpRangeProp)) && (ok || !reflect.DeepEqual(v, secondaryIpRangeProp)) {
+		obj["secondaryIpRange"] = secondaryIpRangeProp
+	}
 
 	obj, err = resourceRedisInstanceEncoder(d, meta, obj)
 	if err != nil {
@@ -799,6 +818,9 @@ func resourceRedisInstanceRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err := d.Set("read_replicas_mode", flattenRedisInstanceReadReplicasMode(res["readReplicasMode"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err := d.Set("secondary_ip_range", flattenRedisInstanceSecondaryIpRange(res["secondaryIpRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 
@@ -1440,6 +1462,10 @@ func flattenRedisInstanceReadReplicasMode(v interface{}, d *schema.ResourceData,
 	return v
 }
 
+func flattenRedisInstanceSecondaryIpRange(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func expandRedisInstanceAlternativeLocationId(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
@@ -1721,6 +1747,10 @@ func expandRedisInstanceReplicaCount(v interface{}, d TerraformResourceData, con
 }
 
 func expandRedisInstanceReadReplicasMode(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandRedisInstanceSecondaryIpRange(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

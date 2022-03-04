@@ -318,6 +318,15 @@ The following arguments are supported:
   Default value is `READ_REPLICAS_DISABLED`.
   Possible values are `READ_REPLICAS_DISABLED` and `READ_REPLICAS_ENABLED`.
 
+* `secondary_ip_range` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Optional. Additional ip ranges for node placement, beyond those specified
+  in reserved_ip_range. At most 1 secondary IP range is supported. The mask
+  value must not exceed /28. Not supported for BASIC tier. Updates can only
+  add new ranges, once added ranges cannot be changed or deleted. Values in
+  this list cannot overlap with the reserved_ip_range. Not supported during
+  instance creation.
+
 * `region` -
   (Optional)
   The name of the Redis region of the instance.
