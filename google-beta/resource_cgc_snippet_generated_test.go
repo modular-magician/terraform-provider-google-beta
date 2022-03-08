@@ -321,6 +321,145 @@ resource "google_sql_database_instance" "default" {
 `, context)
 }
 
+func TestAccCGCSnippet_sqlMysqlInstanceBackupRetentionExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"deletion_protection": false,
+		"random_suffix":       randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCGCSnippet_sqlMysqlInstanceBackupRetentionExample(context),
+			},
+			{
+				ResourceName:            "google_sql_database_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+		},
+	})
+}
+
+func testAccCGCSnippet_sqlMysqlInstanceBackupRetentionExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_sql_database_instance" "instance" {
+  name             = "tf-test-mysql-instance-backup%{random_suffix}"
+  region           = "asia-northeast1"
+  database_version = "MYSQL_5_7"
+  settings {
+    tier = "db-f1-micro"
+    backup_configuration {
+      enabled                        = true
+      backup_retention_settings {
+        retained_backups               = 365
+        retention_unit                 = "COUNT"
+      }
+    }
+  }
+  deletion_protection =  "%{deletion_protection}"
+}
+`, context)
+}
+
+func TestAccCGCSnippet_sqlPostgresInstanceBackupRetentionExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"deletion_protection": false,
+		"random_suffix":       randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCGCSnippet_sqlPostgresInstanceBackupRetentionExample(context),
+			},
+			{
+				ResourceName:            "google_sql_database_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+		},
+	})
+}
+
+func testAccCGCSnippet_sqlPostgresInstanceBackupRetentionExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_sql_database_instance" "instance" {
+  name             = "tf-test-postgres-instance-backup%{random_suffix}"
+  region           = "us-central1"
+  database_version = "POSTGRES_12"
+  settings {
+    tier = "db-custom-2-7680"
+    backup_configuration {
+      enabled                        = true
+      backup_retention_settings {
+        retained_backups               = 365
+        retention_unit                 = "COUNT"
+      }
+    }
+  }
+  deletion_protection =  "%{deletion_protection}"
+}
+`, context)
+}
+
+func TestAccCGCSnippet_sqlSqlserverInstanceBackupRetentionExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"deletion_protection": false,
+		"random_suffix":       randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCGCSnippet_sqlSqlserverInstanceBackupRetentionExample(context),
+			},
+			{
+				ResourceName:            "google_sql_database_instance.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"root_password", "deletion_protection"},
+			},
+		},
+	})
+}
+
+func testAccCGCSnippet_sqlSqlserverInstanceBackupRetentionExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_sql_database_instance" "default" {
+  name             = ""
+  region           = "us-central1"
+  database_version = "SQLSERVER_2017_STANDARD"
+  root_password = "INSERT-PASSWORD-HERE"
+  settings {
+    tier = "db-custom-2-7680"
+    backup_configuration {
+      enabled                        = true
+      backup_retention_settings {
+        retained_backups               = 365
+        retention_unit                 = "COUNT"
+      }
+    }
+  }
+  deletion_protection =  "%{deletion_protection}"
+}
+`, context)
+}
+
 func TestAccCGCSnippet_storageNewBucketExample(t *testing.T) {
 	t.Parallel()
 
