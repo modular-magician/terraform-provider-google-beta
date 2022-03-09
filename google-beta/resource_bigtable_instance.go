@@ -85,6 +85,21 @@ func resourceBigtableInstance() *schema.Resource {
 							Computed:    true,
 							Description: `Describes the Cloud KMS encryption key that will be used to protect the destination Bigtable cluster. The requirements for this key are: 1) The Cloud Bigtable service account associated with the project that contains this cluster must be granted the cloudkms.cryptoKeyEncrypterDecrypter role on the CMEK key. 2) Only regional keys can be used and the region of the CMEK key must match the region of the cluster. 3) All clusters within an instance must use the same CMEK key. Values are of the form projects/{project}/locations/{location}/keyRings/{keyring}/cryptoKeys/{key}`,
 						},
+						"autoscaling_min_nodes": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `The minimum number of nodes for autoscaling.`,
+						},
+						"autoscaling_max_nodes": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `The maximum number of nodes for autoscaling.`,
+						},
+						"autoscaling_cpu_target": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `The target CPU utilization for autoscaling. Value must be between 10 and 80.`,
+						},
 					},
 				},
 			},
@@ -358,6 +373,9 @@ func flattenBigtableCluster(c *bigtable.ClusterInfo) map[string]interface{} {
 		"cluster_id":   c.Name,
 		"storage_type": storageType,
 		"kms_key_name": c.KMSKeyName,
+		"autoscaling_min_nodes": c.AutoscalingConfig.MinNodes,
+		"autoscaling_max_nodes": c.AutoscalingConfig.MaxNodes,
+		"autoscaling_cpu_target": c.AutoscalingConfig.CPUTargetPercent,
 	}
 }
 
@@ -383,6 +401,11 @@ func expandBigtableClusters(clusters []interface{}, instanceID string, config *C
 			NumNodes:    int32(cluster["num_nodes"].(int)),
 			StorageType: storageType,
 			KMSKeyName:  cluster["kms_key_name"].(string),
+			AutoscalingConfig: &bigtable.AutoscalingConfig{
+				MinNodes: cluster["autoscaling_min_nodes"].(int),
+				MaxNodes: cluster["autoscaling_max_nodes"].(int),
+				CPUTargetPercent: cluster["autoscaling_cpu_target"].(int),
+			},
 		})
 	}
 	return results, nil

@@ -185,6 +185,40 @@ func TestAccBigtableInstance_kms(t *testing.T) {
 	})
 }
 
+func TestAccBigtableInstance_autoscaling(t *testing.T) {
+	// bigtable instance does not use the shared HTTP client, this test creates an instance
+	skipIfVcr(t)
+	t.Parallel()
+
+	instanceName := fmt.Sprintf("tf-test-%s", randString(t, 10))
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckBigtableInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBigtableInstance_autoscalingCluster(instanceName, 2, 5, 70),
+			},
+			{
+				ResourceName:            "google_bigtable_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection", "instance_type"}, // we don't read instance type back
+			},
+			// {
+			// 	Config: testAccBigtableInstance(instanceName, 4),
+			// },
+			// {
+			// 	ResourceName:            "google_bigtable_instance.instance",
+			// 	ImportState:             true,
+			// 	ImportStateVerify:       true,
+			// 	ImportStateVerifyIgnore: []string{"deletion_protection", "instance_type"}, // we don't read instance type back
+			// },
+		},
+	})
+}
+
 func testAccCheckBigtableInstanceDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		var ctx = context.Background()
@@ -394,4 +428,20 @@ resource "google_bigtable_instance" "instance" {
 
 }
 `, pid, instanceName, instanceName, numNodes, kmsKey)
+}
+
+func testAccBigtableInstance_autoscalingCluster(instanceName string, min int, max int, cpuTarget int) string {
+	return fmt.Sprintf(`resource "google_bigtable_instance" "instance" {
+	  name = "%s"
+	  cluster {
+	    cluster_id   = "%s-c1"
+	    zone         = "us-central1-b"
+	    storage_type = "HDD"
+			autoscaling_min_nodes = %d
+			autoscaling_max_nodes = %d
+			autoscaling_cpu_target = %d
+	  }
+	  deletion_protection = false
+
+	}`, instanceName, instanceName, min, max, cpuTarget)
 }
