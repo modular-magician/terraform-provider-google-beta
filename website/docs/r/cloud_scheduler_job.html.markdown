@@ -17,14 +17,14 @@ layout: "google"
 page_title: "Google: google_cloud_scheduler_job"
 sidebar_current: "docs-google-cloud-scheduler-job"
 description: |-
-  A scheduled job that can publish a PubSub message or an HTTP request
-  every X interval of time, using a crontab format string.
+  A scheduled job that can publish a pubsub message or a http request
+  every X interval of time, using crontab format string.
 ---
 
 # google\_cloud\_scheduler\_job
 
-A scheduled job that can publish a PubSub message or an HTTP request
-every X interval of time, using a crontab format string.
+A scheduled job that can publish a pubsub message or a http request
+every X interval of time, using crontab format string.
 
 
 To get more information about Job, see:
