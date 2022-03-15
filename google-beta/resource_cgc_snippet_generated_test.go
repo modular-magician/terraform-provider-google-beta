@@ -365,6 +365,46 @@ resource "google_sql_database_instance" "default" {
 `, context)
 }
 
+func TestAccCGCSnippet_sqlSqlserverInstanceCloneExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"deletion_protection": false,
+		"random_suffix":       randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCGCSnippet_sqlSqlserverInstanceCloneExample(context),
+			},
+			{
+				ResourceName:            "google_sql_database_instance.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"root_password", "deletion_protection"},
+			},
+		},
+	})
+}
+
+func testAccCGCSnippet_sqlSqlserverInstanceCloneExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_sql_database_instance" "default" {
+  name             = ""
+  region           = "us-central1"
+  database_version = "SQLSERVER_2017_STANDARD"
+  root_password = "INSERT-PASSWORD-HERE"
+  clone {
+    source_instance_name = ""
+  }
+  deletion_protection =  "%{deletion_protection}"
+}
+`, context)
+}
+
 func TestAccCGCSnippet_storageNewBucketExample(t *testing.T) {
 	t.Parallel()
 
