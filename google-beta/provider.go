@@ -771,6 +771,7 @@ func Provider() *schema.Provider {
 			ServiceUsageCustomEndpointEntryKey:      ServiceUsageCustomEndpointEntry,
 			StorageTransferCustomEndpointEntryKey:   StorageTransferCustomEndpointEntry,
 			BigtableAdminCustomEndpointEntryKey:     BigtableAdminCustomEndpointEntry,
+			ResourceSettingsCustomEndpointEntryKey:  ResourceSettingsCustomEndpointEntry,
 
 			// dcl
 			AssuredWorkloadsEndpointEntryKey:             AssuredWorkloadsEndpointEntry,
@@ -1375,6 +1376,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_storage_default_object_acl":            resourceStorageDefaultObjectAcl(),
 			"google_storage_notification":                  resourceStorageNotification(),
 			"google_storage_transfer_job":                  resourceStorageTransferJob(),
+			"google_organization_resource_setting":         resourceGoogleOrganizationResourceSetting(),
 		},
 		// resources implemented within tpgtools
 		map[string]*schema.Resource{
@@ -1639,6 +1641,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.ServiceUsageBasePath = d.Get(ServiceUsageCustomEndpointEntryKey).(string)
 	config.StorageTransferBasePath = d.Get(StorageTransferCustomEndpointEntryKey).(string)
 	config.BigtableAdminBasePath = d.Get(BigtableAdminCustomEndpointEntryKey).(string)
+	config.ResourceSettingsBasePath = d.Get(ResourceSettingsCustomEndpointEntryKey).(string)
 
 	// dcl
 	config.ApikeysBasePath = d.Get(ApikeysEndpointEntryKey).(string)
