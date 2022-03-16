@@ -315,8 +315,14 @@ The following arguments are supported:
   instance cannot scale up or down the number of replicas.
   - READ_REPLICAS_ENABLED: If enabled, read endpoint will be provided and the instance 
   can scale up and down the number of replicas.
-  Default value is `READ_REPLICAS_DISABLED`.
   Possible values are `READ_REPLICAS_DISABLED` and `READ_REPLICAS_ENABLED`.
+
+* `secondary_ip_range` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Optional. Additional IP range for node placement. Required when enabling read replicas on
+  an existing instance. For DIRECT_PEERING mode value must be a CIDR range of size /28, or
+  "auto". For PRIVATE_SERVICE_ACCESS mode value must be the name of an allocated address 
+  range associated with the private service access connection, or "auto".
 
 * `region` -
   (Optional)

@@ -285,6 +285,7 @@ resolution and up to nine fractional digits.`,
 			},
 			"read_replicas_mode": {
 				Type:         schema.TypeString,
+				Computed:     true,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateEnum([]string{"READ_REPLICAS_DISABLED", "READ_REPLICAS_ENABLED", ""}),
@@ -293,8 +294,7 @@ If not set, Memorystore Redis backend will default to READ_REPLICAS_DISABLED.
 - READ_REPLICAS_DISABLED: If disabled, read endpoint will not be provided and the 
 instance cannot scale up or down the number of replicas.
 - READ_REPLICAS_ENABLED: If enabled, read endpoint will be provided and the instance 
-can scale up and down the number of replicas. Default value: "READ_REPLICAS_DISABLED" Possible values: ["READ_REPLICAS_DISABLED", "READ_REPLICAS_ENABLED"]`,
-				Default: "READ_REPLICAS_DISABLED",
+can scale up and down the number of replicas. Possible values: ["READ_REPLICAS_DISABLED", "READ_REPLICAS_ENABLED"]`,
 			},
 			"redis_configs": {
 				Type:     schema.TypeMap,
@@ -338,6 +338,16 @@ instance. If not provided, the service will choose an unused /29
 block, for example, 10.0.0.0/29 or 192.168.0.0/29. Ranges must be
 unique and non-overlapping with existing subnets in an authorized
 network.`,
+			},
+			"secondary_ip_range": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional: true,
+				ForceNew: true,
+				Description: `Optional. Additional IP range for node placement. Required when enabling read replicas on
+an existing instance. For DIRECT_PEERING mode value must be a CIDR range of size /28, or
+"auto". For PRIVATE_SERVICE_ACCESS mode value must be the name of an allocated address 
+range associated with the private service access connection, or "auto".`,
 			},
 			"tier": {
 				Type:         schema.TypeString,
@@ -593,6 +603,12 @@ func resourceRedisInstanceCreate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("read_replicas_mode"); !isEmptyValue(reflect.ValueOf(readReplicasModeProp)) && (ok || !reflect.DeepEqual(v, readReplicasModeProp)) {
 		obj["readReplicasMode"] = readReplicasModeProp
 	}
+	secondaryIpRangeProp, err := expandRedisInstanceSecondaryIpRange(d.Get("secondary_ip_range"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("secondary_ip_range"); !isEmptyValue(reflect.ValueOf(secondaryIpRangeProp)) && (ok || !reflect.DeepEqual(v, secondaryIpRangeProp)) {
+		obj["secondaryIpRange"] = secondaryIpRangeProp
+	}
 
 	obj, err = resourceRedisInstanceEncoder(d, meta, obj)
 	if err != nil {
@@ -799,6 +815,9 @@ func resourceRedisInstanceRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err := d.Set("read_replicas_mode", flattenRedisInstanceReadReplicasMode(res["readReplicasMode"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err := d.Set("secondary_ip_range", flattenRedisInstanceSecondaryIpRange(res["secondaryIpRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 
@@ -1440,6 +1459,10 @@ func flattenRedisInstanceReadReplicasMode(v interface{}, d *schema.ResourceData,
 	return v
 }
 
+func flattenRedisInstanceSecondaryIpRange(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func expandRedisInstanceAlternativeLocationId(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
@@ -1721,6 +1744,10 @@ func expandRedisInstanceReplicaCount(v interface{}, d TerraformResourceData, con
 }
 
 func expandRedisInstanceReadReplicasMode(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandRedisInstanceSecondaryIpRange(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

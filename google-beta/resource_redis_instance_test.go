@@ -40,6 +40,69 @@ func TestAccRedisInstance_update(t *testing.T) {
 	})
 }
 
+func TestAccRedisInstance_updateReadReplicasMode(t *testing.T) {
+	t.Parallel()
+
+	name := fmt.Sprintf("tf-test-%d", randInt(t))
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckRedisInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccRedisInstance_readReplicasDisabled(name),
+			},
+			{
+				ResourceName:      "google_redis_instance.test",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccRedisInstance_readReplicasEnabled(name),
+			},
+			{
+				ResourceName:      "google_redis_instance.test",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccRedisInstance_readReplicasDisabled(name string) string {
+	return fmt.Sprintf(`
+resource "google_redis_instance" "test" {
+  name           = "%s"
+  display_name   = "redissss"
+  memory_size_gb = 1
+  region         = "us-central1"
+  redis_configs = {
+    maxmemory-policy       = "allkeys-lru"
+    notify-keyspace-events = "KEA"
+  }
+  read_replicas_mode = "READ_REPLICAS_DISABLED"
+}
+`, name)
+}
+
+func testAccRedisInstance_readReplicasEnabled(name string) string {
+	return fmt.Sprintf(`
+resource "google_redis_instance" "test" {
+  name           = "%s"
+  display_name   = "redissss"
+  memory_size_gb = 1
+  region         = "us-central1"
+  redis_configs = {
+    maxmemory-policy       = "allkeys-lru"
+    notify-keyspace-events = "KEA"
+  }
+  read_replicas_mode = "READ_REPLICAS_ENABLED"
+  secondary_ip_range = "10.1.0.0"
+}
+`, name)
+}
+
 func TestAccRedisInstance_regionFromLocation(t *testing.T) {
 	t.Parallel()
 
