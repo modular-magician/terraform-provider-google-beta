@@ -443,6 +443,7 @@ func resourceContainerCluster() *schema.Resource {
 										Default:     "default",
 										Description: `The Google Cloud Platform Service Account to be used by the node VMs.`,
 									},
+
 									"image_type": {
 										Type:         schema.TypeString,
 										Optional:     true,
@@ -450,11 +451,100 @@ func resourceContainerCluster() *schema.Resource {
 										Description:  `The default image type used by NAP once a new node pool is being created.`,
 										ValidateFunc: validation.StringInSlice([]string{"COS_CONTAINERD", "COS", "UBUNTU_CONTAINERD", "UBUNTU"}, false),
 									},
+
 									"min_cpu_platform": {
 										Type:             schema.TypeString,
 										Optional:         true,
 										DiffSuppressFunc: emptyOrDefaultStringSuppress("automatic"),
 										Description:      `Minimum CPU platform to be used by this instance. The instance may be scheduled on the specified or newer CPU platform. Applicable values are the friendly names of CPU platforms, such as Intel Haswell.`,
+									},
+									"disk_size_gb": {
+										Type:         schema.TypeInt,
+										Optional:     true,
+										Default:      100,
+										ValidateFunc: validation.IntAtLeast(10),
+										Description:  `Size of the disk attached to each node, specified in GB. The smallest allowed disk size is 10GB. If unspecified, the default disk size is 100GB.`,
+									},
+									"disk_type": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										Default:      "pd-standard",
+										ValidateFunc: validation.StringInSlice([]string{"pd-standard", "pd-balanced", "pd-ssd"}, false),
+										Description:  `Type of the disk attached to each node. If unspecified, the default disk type is 'pd-standard'`,
+									},
+									"boot_disk_kms_key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: `The Customer Managed Encryption Key used to encrypt the boot disk attached to each node in the node pool. This should be of the form projects/[KEY_PROJECT_ID]/locations/[LOCATION]/keyRings/[RING_NAME]/cryptoKeys/[KEY_NAME]. For more information about protecting resources with Cloud KMS Keys please see: https://cloud.google.com/compute/docs/disks/customer-managed-encryption.`,
+									},
+									"shielded_instance_config": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Shielded Instance options.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enable_secure_boot": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Default:     false,
+													Description: `Defines whether the instance has Secure Boot enabled.`,
+												},
+												"enable_integrity_monitoring": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Default:     true,
+													Description: `Defines whether the instance has integrity monitoring enabled.`,
+												},
+											},
+										},
+									},
+									"upgrade_settings": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										MaxItems:    1,
+										Description: `Specifies the upgrade settings for NAP created node pools.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"max_surge": {
+													Type:         schema.TypeInt,
+													Required:     true,
+													ValidateFunc: validation.IntAtLeast(0),
+													Description:  `The number of additional nodes that can be added to the node pool during an upgrade. Increasing max_surge raises the number of nodes that can be upgraded simultaneously. Can be set to 0 or greater.`,
+												},
+
+												"max_unavailable": {
+													Type:         schema.TypeInt,
+													Required:     true,
+													ValidateFunc: validation.IntAtLeast(0),
+													Description:  `The number of nodes that can be simultaneously unavailable during an upgrade. Increasing max_unavailable raises the number of nodes that can be upgraded in parallel. Can be set to 0 or greater.`,
+												},
+											},
+										},
+									},
+									"management": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										MaxItems:    1,
+										Description: `Specifies the node management options for NAP created node-pools.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"auto_repair": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Default:     false,
+													Description: `Whether the nodes will be automatically repaired.`,
+												},
+
+												"auto_upgrade": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Default:     false,
+													Description: `Whether the nodes will be automatically upgraded.`,
+												},
+											},
+										},
 									},
 								},
 							},
@@ -1779,7 +1869,7 @@ func resourceContainerClusterRead(d *schema.ResourceData, meta interface{}) erro
 	if err := d.Set("subnetwork", cluster.NetworkConfig.Subnetwork); err != nil {
 		return fmt.Errorf("Error setting subnetwork: %s", err)
 	}
-	if err := d.Set("cluster_autoscaling", flattenClusterAutoscaling(cluster.Autoscaling)); err != nil {
+	if err := d.Set("cluster_autoscaling", flattenClusterAutoscaling(cluster.Autoscaling, d)); err != nil {
 		return err
 	}
 	if err := d.Set("enable_binary_authorization", cluster.BinaryAuthorization != nil && cluster.BinaryAuthorization.Enabled); err != nil {
@@ -3202,11 +3292,11 @@ func expandClusterAutoscaling(configured interface{}, d *schema.ResourceData) *c
 		EnableNodeAutoprovisioning:       config["enabled"].(bool),
 		ResourceLimits:                   resourceLimits,
 		AutoscalingProfile:               config["autoscaling_profile"].(string),
-		AutoprovisioningNodePoolDefaults: expandAutoProvisioningDefaults(config["auto_provisioning_defaults"], d),
+		AutoprovisioningNodePoolDefaults: expandAutoProvisioningDefaults(config["auto_provisioning_defaults"], "cluster_autoscaling.0.auto_provisioning_defaults.0.", d),
 	}
 }
 
-func expandAutoProvisioningDefaults(configured interface{}, d *schema.ResourceData) *container.AutoprovisioningNodePoolDefaults {
+func expandAutoProvisioningDefaults(configured interface{}, prefix string, d *schema.ResourceData) *container.AutoprovisioningNodePoolDefaults {
 	l, ok := configured.([]interface{})
 	if !ok || l == nil || len(l) == 0 || l[0] == nil {
 		return &container.AutoprovisioningNodePoolDefaults{}
@@ -3214,17 +3304,78 @@ func expandAutoProvisioningDefaults(configured interface{}, d *schema.ResourceDa
 	config := l[0].(map[string]interface{})
 
 	npd := &container.AutoprovisioningNodePoolDefaults{
-		OauthScopes:    convertStringArr(config["oauth_scopes"].([]interface{})),
-		ServiceAccount: config["service_account"].(string),
-		ImageType:      config["image_type"].(string),
+		OauthScopes:            convertStringArr(config["oauth_scopes"].([]interface{})),
+		ServiceAccount:         config["service_account"].(string),
+		Management:             &container.NodeManagement{},
+		ShieldedInstanceConfig: &container.ShieldedInstanceConfig{},
+		UpgradeSettings:        &container.UpgradeSettings{},
+		ImageType:              config["image_type"].(string),
 	}
 
-	cpu := config["min_cpu_platform"].(string)
-	// the only way to unset the field is to pass "automatic" as its value
-	if cpu == "" {
-		cpu = "automatic"
+	if minCPUPlatform, ok := d.GetOk(prefix + "min_cpu_platform"); ok {
+		npd.MinCpuPlatform = minCPUPlatform.(string)
+	} else {
+		// the only way to unset the field is to pass "automatic" as its value
+		npd.MinCpuPlatform = "automatic"
 	}
-	npd.MinCpuPlatform = cpu
+
+	if diskSizeGb, ok := d.GetOk(prefix + "disk_size_gb"); ok {
+		npd.DiskSizeGb = int64(diskSizeGb.(int))
+	}
+
+	if diskType, ok := d.GetOk(prefix + "disk_type"); ok {
+		npd.DiskType = diskType.(string)
+	}
+
+	if imageType, ok := d.GetOk(prefix + "image_type"); ok {
+		npd.ImageType = imageType.(string)
+	}
+
+	if bootDiskKmsKey, ok := d.GetOk(prefix + "boot_disk_kms_key"); ok {
+		npd.BootDiskKmsKey = bootDiskKmsKey.(string)
+	}
+
+	if v, ok := d.GetOk(prefix + "management"); ok && len(v.([]interface{})) > 0 {
+		management := v.([]interface{})[0].(map[string]interface{})
+
+		if v, ok := management["auto_repair"]; ok {
+			npd.Management.AutoRepair = v.(bool)
+			npd.Management.ForceSendFields = append(npd.Management.ForceSendFields, "AutoRepair")
+		}
+
+		if v, ok := management["auto_upgrade"]; ok {
+			npd.Management.AutoUpgrade = v.(bool)
+			npd.Management.ForceSendFields = append(npd.Management.ForceSendFields, "AutoUpgrade")
+		}
+	}
+
+	if v, ok := d.GetOk(prefix + "upgrade_settings"); ok && len(v.([]interface{})) > 0 {
+		upgradeSettings := v.([]interface{})[0].(map[string]interface{})
+		if v, ok := upgradeSettings["max_surge"]; ok {
+			npd.UpgradeSettings.MaxSurge = int64(v.(int))
+			npd.UpgradeSettings.ForceSendFields = append(npd.UpgradeSettings.ForceSendFields, "MaxSurge")
+		}
+
+		if v, ok := upgradeSettings["max_unavailable"]; ok {
+			npd.UpgradeSettings.MaxUnavailable = int64(v.(int))
+			npd.UpgradeSettings.ForceSendFields = append(npd.UpgradeSettings.ForceSendFields, "MaxUnavailable")
+		}
+	}
+
+	if v, ok := d.GetOk(prefix + "shielded_instance_config"); ok && len(v.([]interface{})) > 0 {
+		shieldedInstanceConfig := v.([]interface{})[0].(map[string]interface{})
+
+		if v, ok := shieldedInstanceConfig["enable_secure_boot"]; ok {
+			npd.ShieldedInstanceConfig.EnableSecureBoot = v.(bool)
+			npd.ShieldedInstanceConfig.ForceSendFields = append(npd.ShieldedInstanceConfig.ForceSendFields, "EnableSecureBoot")
+		}
+
+		if v, ok := shieldedInstanceConfig["enable_integrity_monitoring"]; ok {
+			npd.ShieldedInstanceConfig.EnableIntegrityMonitoring = v.(bool)
+			npd.ShieldedInstanceConfig.ForceSendFields = append(npd.ShieldedInstanceConfig.ForceSendFields, "EnableIntegrityMonitoring")
+		}
+	}
+
 	return npd
 }
 
@@ -3904,7 +4055,7 @@ func flattenMasterAuth(ma *container.MasterAuth) []map[string]interface{} {
 	return masterAuth
 }
 
-func flattenClusterAutoscaling(a *container.ClusterAutoscaling) []map[string]interface{} {
+func flattenClusterAutoscaling(a *container.ClusterAutoscaling, d *schema.ResourceData) []map[string]interface{} {
 	r := make(map[string]interface{})
 	if a == nil {
 		r["enabled"] = false
@@ -3922,21 +4073,52 @@ func flattenClusterAutoscaling(a *container.ClusterAutoscaling) []map[string]int
 		}
 		r["resource_limits"] = resourceLimits
 		r["enabled"] = true
-		r["auto_provisioning_defaults"] = flattenAutoProvisioningDefaults(a.AutoprovisioningNodePoolDefaults)
+		r["auto_provisioning_defaults"] = flattenAutoProvisioningDefaults(a.AutoprovisioningNodePoolDefaults, d)
 	} else {
 		r["enabled"] = false
 	}
+
 	r["autoscaling_profile"] = a.AutoscalingProfile
 
 	return []map[string]interface{}{r}
 }
 
-func flattenAutoProvisioningDefaults(a *container.AutoprovisioningNodePoolDefaults) []map[string]interface{} {
+func flattenAutoProvisioningDefaults(a *container.AutoprovisioningNodePoolDefaults, d *schema.ResourceData) []map[string]interface{} {
 	r := make(map[string]interface{})
 	r["oauth_scopes"] = a.OauthScopes
 	r["service_account"] = a.ServiceAccount
 	r["image_type"] = a.ImageType
 	r["min_cpu_platform"] = a.MinCpuPlatform
+	r["disk_type"] = a.DiskType
+	r["disk_size_gb"] = a.DiskSizeGb
+	r["boot_disk_kms_key"] = a.BootDiskKmsKey
+
+	if a.ShieldedInstanceConfig != nil && !reflect.DeepEqual(*a.ShieldedInstanceConfig, container.ShieldedInstanceConfig{}) {
+		r["shielded_instance_config"] = []map[string]interface{}{
+			{
+				"enable_secure_boot":          a.ShieldedInstanceConfig.EnableSecureBoot,
+				"enable_integrity_monitoring": a.ShieldedInstanceConfig.EnableIntegrityMonitoring,
+			},
+		}
+	}
+
+	if a.Management != nil && !reflect.DeepEqual(*a.Management, container.NodeManagement{}) {
+		r["management"] = []map[string]interface{}{
+			{
+				"auto_repair":  a.Management.AutoRepair,
+				"auto_upgrade": a.Management.AutoUpgrade,
+			},
+		}
+	}
+
+	if a.UpgradeSettings != nil && !reflect.DeepEqual(*a.UpgradeSettings, container.UpgradeSettings{}) {
+		r["upgrade_settings"] = []map[string]interface{}{
+			{
+				"max_surge":       a.UpgradeSettings.MaxSurge,
+				"max_unavailable": a.UpgradeSettings.MaxUnavailable,
+			},
+		}
+	}
 
 	return []map[string]interface{}{r}
 }
