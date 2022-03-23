@@ -171,6 +171,10 @@ The following arguments are supported:
   (Optional)
   Minimum number of ports allocated to a VM from this NAT.
 
+* `max_ports_per_vm` -
+  (Optional)
+  Maximum number of ports allocated to a VM from this NAT.
+
 * `udp_idle_timeout_sec` -
   (Optional)
   Timeout (in seconds) for UDP connections. Defaults to 30s if not set.
@@ -193,6 +197,16 @@ The following arguments are supported:
   (Optional)
   Configuration for logging on NAT
   Structure is [documented below](#nested_log_config).
+
+* `enable_dynamic_port_allocation` -
+  (Optional)
+  If not specified, it is disabled by default. If set to true, 
+  Dynamic Port Allocation will be enabled on this NAT config. 
+  enableEndpointIndependentMapping cannot be set to true.
+  If minPorts is set, minPortsPerVm must be set to a power of 
+  two greater than or equal to 32. If minPortsPerVm is not set, 
+  a minimum of 32 ports will be allocated to a VM from this NAT config. 
+  For more information see the [official documentation](https://cloud.google.com/nat/docs/overview#specs-rfcs).
 
 * `enable_endpoint_independent_mapping` -
   (Optional)

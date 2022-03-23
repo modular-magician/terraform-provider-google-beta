@@ -181,6 +181,19 @@ valid static external IPs that have been assigned to the NAT.`,
 				},
 				// Default schema.HashSchema is used.
 			},
+			"enable_dynamic_port_allocation": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				ForceNew: true,
+				Description: `If not specified, it is disabled by default. If set to true, 
+Dynamic Port Allocation will be enabled on this NAT config. 
+enableEndpointIndependentMapping cannot be set to true.
+If minPorts is set, minPortsPerVm must be set to a power of 
+two greater than or equal to 32. If minPortsPerVm is not set, 
+a minimum of 32 ports will be allocated to a VM from this NAT config. 
+For more information see the [official documentation](https://cloud.google.com/nat/docs/overview#specs-rfcs).`,
+				Default: false,
+			},
 			"enable_endpoint_independent_mapping": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -214,6 +227,11 @@ see the [official documentation](https://cloud.google.com/nat/docs/overview#spec
 						},
 					},
 				},
+			},
+			"max_ports_per_vm": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: `Maximum number of ports allocated to a VM from this NAT.`,
 			},
 			"min_ports_per_vm": {
 				Type:        schema.TypeInt,
@@ -366,6 +384,12 @@ func resourceComputeRouterNatCreate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("min_ports_per_vm"); !isEmptyValue(reflect.ValueOf(minPortsPerVmProp)) && (ok || !reflect.DeepEqual(v, minPortsPerVmProp)) {
 		obj["minPortsPerVm"] = minPortsPerVmProp
 	}
+	maxPortsPerVmProp, err := expandNestedComputeRouterNatMaxPortsPerVm(d.Get("max_ports_per_vm"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("max_ports_per_vm"); !isEmptyValue(reflect.ValueOf(maxPortsPerVmProp)) && (ok || !reflect.DeepEqual(v, maxPortsPerVmProp)) {
+		obj["maxPortsPerVm"] = maxPortsPerVmProp
+	}
 	udpIdleTimeoutSecProp, err := expandNestedComputeRouterNatUdpIdleTimeoutSec(d.Get("udp_idle_timeout_sec"), d, config)
 	if err != nil {
 		return err
@@ -395,6 +419,12 @@ func resourceComputeRouterNatCreate(d *schema.ResourceData, meta interface{}) er
 		return err
 	} else if v, ok := d.GetOkExists("log_config"); ok || !reflect.DeepEqual(v, logConfigProp) {
 		obj["logConfig"] = logConfigProp
+	}
+	enableDynamicPortAllocationProp, err := expandNestedComputeRouterNatEnableDynamicPortAllocation(d.Get("enable_dynamic_port_allocation"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("enable_dynamic_port_allocation"); !isEmptyValue(reflect.ValueOf(enableDynamicPortAllocationProp)) && (ok || !reflect.DeepEqual(v, enableDynamicPortAllocationProp)) {
+		obj["enableDynamicPortAllocation"] = enableDynamicPortAllocationProp
 	}
 	enableEndpointIndependentMappingProp, err := expandNestedComputeRouterNatEnableEndpointIndependentMapping(d.Get("enable_endpoint_independent_mapping"), d, config)
 	if err != nil {
@@ -528,6 +558,9 @@ func resourceComputeRouterNatRead(d *schema.ResourceData, meta interface{}) erro
 	if err := d.Set("min_ports_per_vm", flattenNestedComputeRouterNatMinPortsPerVm(res["minPortsPerVm"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNat: %s", err)
 	}
+	if err := d.Set("max_ports_per_vm", flattenNestedComputeRouterNatMaxPortsPerVm(res["maxPortsPerVm"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RouterNat: %s", err)
+	}
 	if err := d.Set("udp_idle_timeout_sec", flattenNestedComputeRouterNatUdpIdleTimeoutSec(res["udpIdleTimeoutSec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNat: %s", err)
 	}
@@ -541,6 +574,9 @@ func resourceComputeRouterNatRead(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error reading RouterNat: %s", err)
 	}
 	if err := d.Set("log_config", flattenNestedComputeRouterNatLogConfig(res["logConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RouterNat: %s", err)
+	}
+	if err := d.Set("enable_dynamic_port_allocation", flattenNestedComputeRouterNatEnableDynamicPortAllocation(res["enableDynamicPortAllocation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNat: %s", err)
 	}
 	if err := d.Set("enable_endpoint_independent_mapping", flattenNestedComputeRouterNatEnableEndpointIndependentMapping(res["enableEndpointIndependentMapping"], d, config)); err != nil {
@@ -601,6 +637,12 @@ func resourceComputeRouterNatUpdate(d *schema.ResourceData, meta interface{}) er
 		return err
 	} else if v, ok := d.GetOkExists("min_ports_per_vm"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, minPortsPerVmProp)) {
 		obj["minPortsPerVm"] = minPortsPerVmProp
+	}
+	maxPortsPerVmProp, err := expandNestedComputeRouterNatMaxPortsPerVm(d.Get("max_ports_per_vm"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("max_ports_per_vm"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, maxPortsPerVmProp)) {
+		obj["maxPortsPerVm"] = maxPortsPerVmProp
 	}
 	udpIdleTimeoutSecProp, err := expandNestedComputeRouterNatUdpIdleTimeoutSec(d.Get("udp_idle_timeout_sec"), d, config)
 	if err != nil {
@@ -844,6 +886,23 @@ func flattenNestedComputeRouterNatMinPortsPerVm(v interface{}, d *schema.Resourc
 	return v // let terraform core handle it otherwise
 }
 
+func flattenNestedComputeRouterNatMaxPortsPerVm(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := stringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
 func flattenNestedComputeRouterNatUdpIdleTimeoutSec(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	if v == nil || isEmptyValue(reflect.ValueOf(v)) {
 		return 30
@@ -920,6 +979,10 @@ func flattenNestedComputeRouterNatLogConfigEnable(v interface{}, d *schema.Resou
 }
 
 func flattenNestedComputeRouterNatLogConfigFilter(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenNestedComputeRouterNatEnableDynamicPortAllocation(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -1032,6 +1095,10 @@ func expandNestedComputeRouterNatMinPortsPerVm(v interface{}, d TerraformResourc
 	return v, nil
 }
 
+func expandNestedComputeRouterNatMaxPortsPerVm(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandNestedComputeRouterNatUdpIdleTimeoutSec(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
@@ -1079,6 +1146,10 @@ func expandNestedComputeRouterNatLogConfigEnable(v interface{}, d TerraformResou
 }
 
 func expandNestedComputeRouterNatLogConfigFilter(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNestedComputeRouterNatEnableDynamicPortAllocation(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
