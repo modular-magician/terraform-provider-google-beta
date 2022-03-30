@@ -59,6 +59,13 @@ resource "google_sql_database_instance" "instance" {
   deletion_protection =  "%{deletion_protection}"
 }
 # [END cloud_sql_sqlserver_instance_80_db_n1_s2]
+
+resource "google_sql_user" "default" {
+  name     = "tf-test-users-name%{random_suffix}"
+  instance = google_sql_database_instance.instance.name
+  host     = "example.com"
+  password = "changeme"
+}
 `, context)
 }
 
@@ -100,6 +107,12 @@ resource "google_sql_database_instance" "instance" {
   deletion_protection =  "%{deletion_protection}"
 }
 # [END cloud_sql_postgres_instance_80_db_n1_s2]
+
+resource "google_sql_user" "default" {
+  name     = "tf-test-users-name%{random_suffix}"
+  instance = google_sql_database_instance.instance.name
+  password = "changeme"
+}
 `, context)
 }
 
@@ -141,6 +154,13 @@ resource "google_sql_database_instance" "instance" {
   deletion_protection =  "%{deletion_protection}"
 }
 # [END cloud_sql_mysql_instance_80_db_n1_s2]
+
+resource "google_sql_user" "default" {
+  name     = "tf-test-users-name%{random_suffix}"
+  instance = google_sql_database_instance.instance.name
+  host     = "example.com"
+  password = "changeme"
+}
 `, context)
 }
 
