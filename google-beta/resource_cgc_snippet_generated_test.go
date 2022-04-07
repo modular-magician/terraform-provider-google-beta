@@ -620,6 +620,57 @@ resource "google_sql_database_instance" "read_replica" {
 `, context)
 }
 
+func TestAccCGCSnippet_sqlSqlserverInstanceCloneExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"deletion_protection": false,
+		"random_suffix":       randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCGCSnippet_sqlSqlserverInstanceCloneExample(context),
+			},
+			{
+				ResourceName:            "google_sql_database_instance.clone",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection", "root_password"},
+			},
+		},
+	})
+}
+
+func testAccCGCSnippet_sqlSqlserverInstanceCloneExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_sql_database_instance" "source" {
+  name             = "tf-test-sqlserver-instance-source-name%{random_suffix}"
+  region           = "us-central1"
+  database_version = "SQLSERVER_2017_STANDARD"
+  root_password = "INSERT-PASSWORD-HERE"
+  settings {
+    tier = "db-custom-2-7680"
+  }
+  deletion_protection =  "%{deletion_protection}"
+}
+
+resource "google_sql_database_instance" "clone" {
+  name             = "tf-test-sqlserver-instance-clone-name%{random_suffix}"
+  region           = "us-central1"
+  database_version = "SQLSERVER_2017_STANDARD"
+  root_password = "INSERT-PASSWORD-HERE"
+  clone {
+    source_instance_name = google_sql_database_instance.source.id
+  }
+  deletion_protection =  "%{deletion_protection}"
+}
+`, context)
+}
+
 func TestAccCGCSnippet_sqlSqlserverInstancePrivateIpExample(t *testing.T) {
 	t.Parallel()
 
