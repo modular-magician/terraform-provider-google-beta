@@ -110,6 +110,8 @@ customer-supplied encryption key that protects this resource.`,
 			"storage_locations": {
 				Type:        schema.TypeList,
 				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
 				Description: `The regional or multi-regional Cloud Storage bucket location where the machine image is stored.`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -155,6 +157,12 @@ func resourceComputeMachineImageCreate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("source_instance"); !isEmptyValue(reflect.ValueOf(sourceInstanceProp)) && (ok || !reflect.DeepEqual(v, sourceInstanceProp)) {
 		obj["sourceInstance"] = sourceInstanceProp
+	}
+	storageLocationsProp, err := expandComputeMachineImageStorageLocations(d.Get("storage_locations"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("storage_locations"); !isEmptyValue(reflect.ValueOf(storageLocationsProp)) && (ok || !reflect.DeepEqual(v, storageLocationsProp)) {
+		obj["storageLocations"] = storageLocationsProp
 	}
 	guestFlushProp, err := expandComputeMachineImageGuestFlush(d.Get("guest_flush"), d, config)
 	if err != nil {
@@ -411,6 +419,10 @@ func expandComputeMachineImageSourceInstance(v interface{}, d TerraformResourceD
 		return nil, fmt.Errorf("Invalid value for source_instance: %s", err)
 	}
 	return f.RelativeLink(), nil
+}
+
+func expandComputeMachineImageStorageLocations(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandComputeMachineImageGuestFlush(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {

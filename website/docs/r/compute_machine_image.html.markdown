@@ -146,6 +146,10 @@ The following arguments are supported:
   (Optional)
   A text description of the resource.
 
+* `storage_locations` -
+  (Optional)
+  The regional or multi-regional Cloud Storage bucket location where the machine image is stored.
+
 * `guest_flush` -
   (Optional)
   Specify this to create an application consistent machine image by informing the OS to prepare for the snapshot process.
@@ -188,9 +192,6 @@ The following arguments are supported:
 In addition to the arguments listed above, the following computed attributes are exported:
 
 * `id` - an identifier for the resource with format `projects/{{project}}/global/machineImages/{{name}}`
-
-* `storage_locations` -
-  The regional or multi-regional Cloud Storage bucket location where the machine image is stored.
 * `self_link` - The URI of the created resource.
 
 
