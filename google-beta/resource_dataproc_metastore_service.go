@@ -62,6 +62,7 @@ and hyphens (-). Cannot begin or end with underscore or hyphen. Must consist of 
 							Required:    true,
 							ForceNew:    true,
 							Description: `The Hive metastore schema version.`,
+							Default:     "3.1.2",
 						},
 						"config_overrides": {
 							Type:             schema.TypeMap,
@@ -119,12 +120,10 @@ The mappings override system defaults (some keys cannot be overridden)`,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"location": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Description: `The  location where the autoscaling policy should reside.
-The default value is 'global'.`,
-				Default: "global",
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `The  location where the metastore service should reside.`,
 			},
 			"maintenance_window": {
 				Type:     schema.TypeList,
