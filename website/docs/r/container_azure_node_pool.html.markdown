@@ -51,7 +51,7 @@ resource "google_container_azure_cluster" "primary" {
     }
 
     subnet_id = "/subscriptions/12345678-1234-1234-1234-123456789111/resourceGroups/my--dev-byo/providers/Microsoft.Network/virtualNetworks/my--dev-vnet/subnets/default"
-    version   = "${data.google_container_azure_versions.versions.valid_versions[0]}"
+    version   = "${data.google_container_azure_versions.versions.valid_versions[1]}"
   }
 
   fleet {
@@ -111,7 +111,7 @@ resource "google_container_azure_node_pool" "primary" {
 
   name      = "node-pool-name"
   subnet_id = "/subscriptions/12345678-1234-1234-1234-123456789111/resourceGroups/my--dev-byo/providers/Microsoft.Network/virtualNetworks/my--dev-vnet/subnets/default"
-  version   = "${data.google_container_azure_versions.versions.valid_versions[0]}"
+  version   = "${data.google_container_azure_versions.versions.valid_versions[1]}"
 
   annotations = {
     annotation-one = "value-one"
