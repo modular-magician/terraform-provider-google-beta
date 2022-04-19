@@ -622,6 +622,100 @@ resource "google_sql_database_instance" "instance" {
 `, context)
 }
 
+func TestAccCGCSnippet_sqlSqlserverInstanceHaExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"deletion_protection": false,
+		"random_suffix":       randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCGCSnippet_sqlSqlserverInstanceHaExample(context),
+			},
+			{
+				ResourceName:            "google_sql_database_instance.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection", "root_password"},
+			},
+		},
+	})
+}
+
+func testAccCGCSnippet_sqlSqlserverInstanceHaExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_sql_database_instance" "default" {
+  name             = "tf-test-sqlserver-instance-ha%{random_suffix}"
+  region           = "us-central1"
+  database_version = "SQLSERVER_2019_STANDARD"
+  root_password = "INSERT-PASSWORD-HERE"
+  settings {
+    tier              = "db-custom-2-7680"
+    availability_type = "REGIONAL"
+    backup_configuration {
+      enabled            = true
+      binary_log_enabled = true
+      start_time         = "20:55"
+    }
+  }
+  deletion_protection =  "%{deletion_protection}"
+}
+`, context)
+}
+
+func TestAccCGCSnippet_sqlSqlserverInstanceSslCertExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"deletion_protection": false,
+		"random_suffix":       randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCGCSnippet_sqlSqlserverInstanceSslCertExample(context),
+			},
+			{
+				ResourceName:            "google_sql_database_instance.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection", "root_password"},
+			},
+		},
+	})
+}
+
+func testAccCGCSnippet_sqlSqlserverInstanceSslCertExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_sql_database_instance" "default" {
+  name             = "tf-test-sqlserver-instance%{random_suffix}"
+  region           = "asia-northeast1"
+  database_version = "SQLSERVER_2019_STANDARD"
+  root_password = "INSERT-PASSWORD-HERE"
+  settings {
+    tier              = "db-custom-2-7680"
+    ip_configuration {
+      require_ssl = "true"
+    }
+  }
+  deletion_protection = "%{deletion_protection}"
+}
+
+resource "google_sql_ssl_cert" "client_cert" {
+  common_name = "tf-test-client-name%{random_suffix}"
+  instance    = google_sql_database_instance.default.name
+}
+`, context)
+}
+
 func TestAccCGCSnippet_storageNewBucketExample(t *testing.T) {
 	t.Parallel()
 
