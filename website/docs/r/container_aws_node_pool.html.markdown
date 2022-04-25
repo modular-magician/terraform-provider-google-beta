@@ -237,6 +237,14 @@ The `config` block supports:
   (Required)
   The name of the AWS IAM role assigned to nodes in the pool.
     
+* `image_type` -
+  (Optional)
+  (Beta only) The OS image type to use on node pool instances.
+    
+* `instance_placement` -
+  (Optional)
+  (Beta only) Details of placement information for an instance.
+    
 * `instance_type` -
   (Optional)
   Optional. The AWS instance type. When unspecified, it defaults to `m5.large`.
@@ -289,6 +297,12 @@ The `max_pods_constraint` block supports:
   
 
 
+The `instance_placement` block supports:
+    
+* `tenancy` -
+  (Optional)
+  The tenancy for the instance. Possible values: TENANCY_UNSPECIFIED, DEFAULT, DEDICATED, HOST
+    
 The `root_volume` block supports:
     
 * `iops` -

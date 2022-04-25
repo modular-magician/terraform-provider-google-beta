@@ -196,6 +196,24 @@ func ContainerAwsNodePoolConfigSchema() *schema.Resource {
 				Description: "The name of the AWS IAM role assigned to nodes in the pool.",
 			},
 
+			"image_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The OS image type to use on node pool instances.",
+			},
+
+			"instance_placement": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Details of placement information for an instance.",
+				MaxItems:    1,
+				Elem:        ContainerAwsNodePoolConfigInstancePlacementSchema(),
+			},
+
 			"instance_type": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -263,6 +281,20 @@ func ContainerAwsNodePoolConfigConfigEncryptionSchema() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The ARN of the AWS KMS key used to encrypt node pool configuration.",
+			},
+		},
+	}
+}
+
+func ContainerAwsNodePoolConfigInstancePlacementSchema() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"tenancy": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The tenancy for the instance. Possible values: TENANCY_UNSPECIFIED, DEFAULT, DEDICATED, HOST",
 			},
 		},
 	}
@@ -662,6 +694,8 @@ func expandContainerAwsNodePoolConfig(o interface{}) *containeraws.NodePoolConfi
 	return &containeraws.NodePoolConfig{
 		ConfigEncryption:   expandContainerAwsNodePoolConfigConfigEncryption(obj["config_encryption"]),
 		IamInstanceProfile: dcl.String(obj["iam_instance_profile"].(string)),
+		ImageType:          dcl.StringOrNil(obj["image_type"].(string)),
+		InstancePlacement:  expandContainerAwsNodePoolConfigInstancePlacement(obj["instance_placement"]),
 		InstanceType:       dcl.StringOrNil(obj["instance_type"].(string)),
 		Labels:             checkStringMap(obj["labels"]),
 		RootVolume:         expandContainerAwsNodePoolConfigRootVolume(obj["root_volume"]),
@@ -679,6 +713,8 @@ func flattenContainerAwsNodePoolConfig(obj *containeraws.NodePoolConfig) interfa
 	transformed := map[string]interface{}{
 		"config_encryption":    flattenContainerAwsNodePoolConfigConfigEncryption(obj.ConfigEncryption),
 		"iam_instance_profile": obj.IamInstanceProfile,
+		"image_type":           obj.ImageType,
+		"instance_placement":   flattenContainerAwsNodePoolConfigInstancePlacement(obj.InstancePlacement),
 		"instance_type":        obj.InstanceType,
 		"labels":               obj.Labels,
 		"root_volume":          flattenContainerAwsNodePoolConfigRootVolume(obj.RootVolume),
@@ -712,6 +748,32 @@ func flattenContainerAwsNodePoolConfigConfigEncryption(obj *containeraws.NodePoo
 	}
 	transformed := map[string]interface{}{
 		"kms_key_arn": obj.KmsKeyArn,
+	}
+
+	return []interface{}{transformed}
+
+}
+
+func expandContainerAwsNodePoolConfigInstancePlacement(o interface{}) *containeraws.NodePoolConfigInstancePlacement {
+	if o == nil {
+		return nil
+	}
+	objArr := o.([]interface{})
+	if len(objArr) == 0 || objArr[0] == nil {
+		return nil
+	}
+	obj := objArr[0].(map[string]interface{})
+	return &containeraws.NodePoolConfigInstancePlacement{
+		Tenancy: containeraws.NodePoolConfigInstancePlacementTenancyEnumRef(obj["tenancy"].(string)),
+	}
+}
+
+func flattenContainerAwsNodePoolConfigInstancePlacement(obj *containeraws.NodePoolConfigInstancePlacement) interface{} {
+	if obj == nil || obj.Empty() {
+		return nil
+	}
+	transformed := map[string]interface{}{
+		"tenancy": obj.Tenancy,
 	}
 
 	return []interface{}{transformed}

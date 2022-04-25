@@ -173,6 +173,14 @@ The `autoscaling` block supports:
     
 The `config` block supports:
     
+* `image_type` -
+  (Optional)
+  (Beta only) The OS image type to use on node pool instances.
+    
+* `proxy_config` -
+  (Optional)
+  Proxy configuration for outbound HTTP(S) traffic.
+    
 * `root_volume` -
   (Optional)
   Optional. Configuration related to the root volume provisioned for each node pool machine. When unspecified, it defaults to a 32-GiB Azure Disk.
@@ -217,6 +225,16 @@ The `max_pods_constraint` block supports:
   
 
 
+The `proxy_config` block supports:
+    
+* `resource_group_id` -
+  (Required)
+  The ARM ID the of the resource group containing proxy keyvault. Resource group ids are formatted as `/subscriptions/<subscription-id>/resourceGroups/<resource-group-name>`
+    
+* `secret_id` -
+  (Required)
+  The URL the of the proxy setting secret with its version. Secret ids are formatted as `https:<key-vault-name>.vault.azure.net/secrets/<secret-name>/<secret-version>`.
+    
 The `root_volume` block supports:
     
 * `size_gib` -
