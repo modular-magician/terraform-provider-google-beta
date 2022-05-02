@@ -140,6 +140,15 @@ func resourceComputeGlobalForwardingRule() *schema.Resource {
 				Description:      "The project this resource belongs in.",
 			},
 
+			"service_directory_registrations": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Service Directory resources to register this forwarding rule with. Currently, only supports a single Service Directory resource.",
+				Elem:        ComputeGlobalForwardingRuleServiceDirectoryRegistrationsSchema(),
+			},
+
 			"label_fingerprint": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -198,6 +207,27 @@ func ComputeGlobalForwardingRuleMetadataFilterFilterLabelSchema() *schema.Resour
 	}
 }
 
+func ComputeGlobalForwardingRuleServiceDirectoryRegistrationsSchema() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"namespace": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Service Directory namespace to register the forwarding rule under.",
+			},
+
+			"service": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Service Directory service to register the forwarding rule under.",
+			},
+		},
+	}
+}
+
 func resourceComputeGlobalForwardingRuleCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	project, err := getProject(d, config)
@@ -206,18 +236,19 @@ func resourceComputeGlobalForwardingRuleCreate(d *schema.ResourceData, meta inte
 	}
 
 	obj := &compute.ForwardingRule{
-		Name:                dcl.String(d.Get("name").(string)),
-		Target:              dcl.String(d.Get("target").(string)),
-		Description:         dcl.String(d.Get("description").(string)),
-		IPAddress:           dcl.StringOrNil(d.Get("ip_address").(string)),
-		IPProtocol:          compute.ForwardingRuleIPProtocolEnumRef(d.Get("ip_protocol").(string)),
-		IPVersion:           compute.ForwardingRuleIPVersionEnumRef(d.Get("ip_version").(string)),
-		Labels:              checkStringMap(d.Get("labels")),
-		LoadBalancingScheme: compute.ForwardingRuleLoadBalancingSchemeEnumRef(d.Get("load_balancing_scheme").(string)),
-		MetadataFilter:      expandComputeGlobalForwardingRuleMetadataFilterArray(d.Get("metadata_filters")),
-		Network:             dcl.StringOrNil(d.Get("network").(string)),
-		PortRange:           dcl.String(d.Get("port_range").(string)),
-		Project:             dcl.String(project),
+		Name:                          dcl.String(d.Get("name").(string)),
+		Target:                        dcl.String(d.Get("target").(string)),
+		Description:                   dcl.String(d.Get("description").(string)),
+		IPAddress:                     dcl.StringOrNil(d.Get("ip_address").(string)),
+		IPProtocol:                    compute.ForwardingRuleIPProtocolEnumRef(d.Get("ip_protocol").(string)),
+		IPVersion:                     compute.ForwardingRuleIPVersionEnumRef(d.Get("ip_version").(string)),
+		Labels:                        checkStringMap(d.Get("labels")),
+		LoadBalancingScheme:           compute.ForwardingRuleLoadBalancingSchemeEnumRef(d.Get("load_balancing_scheme").(string)),
+		MetadataFilter:                expandComputeGlobalForwardingRuleMetadataFilterArray(d.Get("metadata_filters")),
+		Network:                       dcl.StringOrNil(d.Get("network").(string)),
+		PortRange:                     dcl.String(d.Get("port_range").(string)),
+		Project:                       dcl.String(project),
+		ServiceDirectoryRegistrations: expandComputeGlobalForwardingRuleServiceDirectoryRegistrationsArray(d.Get("service_directory_registrations")),
 	}
 
 	id, err := replaceVarsForId(d, config, "projects/{{project}}/global/forwardingRules/{{name}}")
@@ -265,18 +296,19 @@ func resourceComputeGlobalForwardingRuleRead(d *schema.ResourceData, meta interf
 	}
 
 	obj := &compute.ForwardingRule{
-		Name:                dcl.String(d.Get("name").(string)),
-		Target:              dcl.String(d.Get("target").(string)),
-		Description:         dcl.String(d.Get("description").(string)),
-		IPAddress:           dcl.StringOrNil(d.Get("ip_address").(string)),
-		IPProtocol:          compute.ForwardingRuleIPProtocolEnumRef(d.Get("ip_protocol").(string)),
-		IPVersion:           compute.ForwardingRuleIPVersionEnumRef(d.Get("ip_version").(string)),
-		Labels:              checkStringMap(d.Get("labels")),
-		LoadBalancingScheme: compute.ForwardingRuleLoadBalancingSchemeEnumRef(d.Get("load_balancing_scheme").(string)),
-		MetadataFilter:      expandComputeGlobalForwardingRuleMetadataFilterArray(d.Get("metadata_filters")),
-		Network:             dcl.StringOrNil(d.Get("network").(string)),
-		PortRange:           dcl.String(d.Get("port_range").(string)),
-		Project:             dcl.String(project),
+		Name:                          dcl.String(d.Get("name").(string)),
+		Target:                        dcl.String(d.Get("target").(string)),
+		Description:                   dcl.String(d.Get("description").(string)),
+		IPAddress:                     dcl.StringOrNil(d.Get("ip_address").(string)),
+		IPProtocol:                    compute.ForwardingRuleIPProtocolEnumRef(d.Get("ip_protocol").(string)),
+		IPVersion:                     compute.ForwardingRuleIPVersionEnumRef(d.Get("ip_version").(string)),
+		Labels:                        checkStringMap(d.Get("labels")),
+		LoadBalancingScheme:           compute.ForwardingRuleLoadBalancingSchemeEnumRef(d.Get("load_balancing_scheme").(string)),
+		MetadataFilter:                expandComputeGlobalForwardingRuleMetadataFilterArray(d.Get("metadata_filters")),
+		Network:                       dcl.StringOrNil(d.Get("network").(string)),
+		PortRange:                     dcl.String(d.Get("port_range").(string)),
+		Project:                       dcl.String(project),
+		ServiceDirectoryRegistrations: expandComputeGlobalForwardingRuleServiceDirectoryRegistrationsArray(d.Get("service_directory_registrations")),
 	}
 
 	userAgent, err := generateUserAgentString(d, config.userAgent)
@@ -337,6 +369,9 @@ func resourceComputeGlobalForwardingRuleRead(d *schema.ResourceData, meta interf
 	if err = d.Set("project", res.Project); err != nil {
 		return fmt.Errorf("error setting project in state: %s", err)
 	}
+	if err = d.Set("service_directory_registrations", flattenComputeGlobalForwardingRuleServiceDirectoryRegistrationsArray(res.ServiceDirectoryRegistrations)); err != nil {
+		return fmt.Errorf("error setting service_directory_registrations in state: %s", err)
+	}
 	if err = d.Set("label_fingerprint", res.LabelFingerprint); err != nil {
 		return fmt.Errorf("error setting label_fingerprint in state: %s", err)
 	}
@@ -354,18 +389,19 @@ func resourceComputeGlobalForwardingRuleUpdate(d *schema.ResourceData, meta inte
 	}
 
 	obj := &compute.ForwardingRule{
-		Name:                dcl.String(d.Get("name").(string)),
-		Target:              dcl.String(d.Get("target").(string)),
-		Description:         dcl.String(d.Get("description").(string)),
-		IPAddress:           dcl.StringOrNil(d.Get("ip_address").(string)),
-		IPProtocol:          compute.ForwardingRuleIPProtocolEnumRef(d.Get("ip_protocol").(string)),
-		IPVersion:           compute.ForwardingRuleIPVersionEnumRef(d.Get("ip_version").(string)),
-		Labels:              checkStringMap(d.Get("labels")),
-		LoadBalancingScheme: compute.ForwardingRuleLoadBalancingSchemeEnumRef(d.Get("load_balancing_scheme").(string)),
-		MetadataFilter:      expandComputeGlobalForwardingRuleMetadataFilterArray(d.Get("metadata_filters")),
-		Network:             dcl.StringOrNil(d.Get("network").(string)),
-		PortRange:           dcl.String(d.Get("port_range").(string)),
-		Project:             dcl.String(project),
+		Name:                          dcl.String(d.Get("name").(string)),
+		Target:                        dcl.String(d.Get("target").(string)),
+		Description:                   dcl.String(d.Get("description").(string)),
+		IPAddress:                     dcl.StringOrNil(d.Get("ip_address").(string)),
+		IPProtocol:                    compute.ForwardingRuleIPProtocolEnumRef(d.Get("ip_protocol").(string)),
+		IPVersion:                     compute.ForwardingRuleIPVersionEnumRef(d.Get("ip_version").(string)),
+		Labels:                        checkStringMap(d.Get("labels")),
+		LoadBalancingScheme:           compute.ForwardingRuleLoadBalancingSchemeEnumRef(d.Get("load_balancing_scheme").(string)),
+		MetadataFilter:                expandComputeGlobalForwardingRuleMetadataFilterArray(d.Get("metadata_filters")),
+		Network:                       dcl.StringOrNil(d.Get("network").(string)),
+		PortRange:                     dcl.String(d.Get("port_range").(string)),
+		Project:                       dcl.String(project),
+		ServiceDirectoryRegistrations: expandComputeGlobalForwardingRuleServiceDirectoryRegistrationsArray(d.Get("service_directory_registrations")),
 	}
 	directive := UpdateDirective
 	userAgent, err := generateUserAgentString(d, config.userAgent)
@@ -408,18 +444,19 @@ func resourceComputeGlobalForwardingRuleDelete(d *schema.ResourceData, meta inte
 	}
 
 	obj := &compute.ForwardingRule{
-		Name:                dcl.String(d.Get("name").(string)),
-		Target:              dcl.String(d.Get("target").(string)),
-		Description:         dcl.String(d.Get("description").(string)),
-		IPAddress:           dcl.StringOrNil(d.Get("ip_address").(string)),
-		IPProtocol:          compute.ForwardingRuleIPProtocolEnumRef(d.Get("ip_protocol").(string)),
-		IPVersion:           compute.ForwardingRuleIPVersionEnumRef(d.Get("ip_version").(string)),
-		Labels:              checkStringMap(d.Get("labels")),
-		LoadBalancingScheme: compute.ForwardingRuleLoadBalancingSchemeEnumRef(d.Get("load_balancing_scheme").(string)),
-		MetadataFilter:      expandComputeGlobalForwardingRuleMetadataFilterArray(d.Get("metadata_filters")),
-		Network:             dcl.StringOrNil(d.Get("network").(string)),
-		PortRange:           dcl.String(d.Get("port_range").(string)),
-		Project:             dcl.String(project),
+		Name:                          dcl.String(d.Get("name").(string)),
+		Target:                        dcl.String(d.Get("target").(string)),
+		Description:                   dcl.String(d.Get("description").(string)),
+		IPAddress:                     dcl.StringOrNil(d.Get("ip_address").(string)),
+		IPProtocol:                    compute.ForwardingRuleIPProtocolEnumRef(d.Get("ip_protocol").(string)),
+		IPVersion:                     compute.ForwardingRuleIPVersionEnumRef(d.Get("ip_version").(string)),
+		Labels:                        checkStringMap(d.Get("labels")),
+		LoadBalancingScheme:           compute.ForwardingRuleLoadBalancingSchemeEnumRef(d.Get("load_balancing_scheme").(string)),
+		MetadataFilter:                expandComputeGlobalForwardingRuleMetadataFilterArray(d.Get("metadata_filters")),
+		Network:                       dcl.StringOrNil(d.Get("network").(string)),
+		PortRange:                     dcl.String(d.Get("port_range").(string)),
+		Project:                       dcl.String(project),
+		ServiceDirectoryRegistrations: expandComputeGlobalForwardingRuleServiceDirectoryRegistrationsArray(d.Get("service_directory_registrations")),
 	}
 
 	log.Printf("[DEBUG] Deleting ForwardingRule %q", d.Id())
@@ -577,6 +614,63 @@ func flattenComputeGlobalForwardingRuleMetadataFilterFilterLabel(obj *compute.Fo
 	transformed := map[string]interface{}{
 		"name":  obj.Name,
 		"value": obj.Value,
+	}
+
+	return transformed
+
+}
+func expandComputeGlobalForwardingRuleServiceDirectoryRegistrationsArray(o interface{}) []compute.ForwardingRuleServiceDirectoryRegistrations {
+	if o == nil {
+		return nil
+	}
+
+	objs := o.([]interface{})
+	if len(objs) == 0 || objs[0] == nil {
+		return nil
+	}
+
+	items := make([]compute.ForwardingRuleServiceDirectoryRegistrations, 0, len(objs))
+	for _, item := range objs {
+		i := expandComputeGlobalForwardingRuleServiceDirectoryRegistrations(item)
+		items = append(items, *i)
+	}
+
+	return items
+}
+
+func expandComputeGlobalForwardingRuleServiceDirectoryRegistrations(o interface{}) *compute.ForwardingRuleServiceDirectoryRegistrations {
+	if o == nil {
+		return nil
+	}
+
+	obj := o.(map[string]interface{})
+	return &compute.ForwardingRuleServiceDirectoryRegistrations{
+		Namespace: dcl.StringOrNil(obj["namespace"].(string)),
+		Service:   dcl.String(obj["service"].(string)),
+	}
+}
+
+func flattenComputeGlobalForwardingRuleServiceDirectoryRegistrationsArray(objs []compute.ForwardingRuleServiceDirectoryRegistrations) []interface{} {
+	if objs == nil {
+		return nil
+	}
+
+	items := []interface{}{}
+	for _, item := range objs {
+		i := flattenComputeGlobalForwardingRuleServiceDirectoryRegistrations(&item)
+		items = append(items, i)
+	}
+
+	return items
+}
+
+func flattenComputeGlobalForwardingRuleServiceDirectoryRegistrations(obj *compute.ForwardingRuleServiceDirectoryRegistrations) interface{} {
+	if obj == nil || obj.Empty() {
+		return nil
+	}
+	transformed := map[string]interface{}{
+		"namespace": obj.Namespace,
+		"service":   obj.Service,
 	}
 
 	return transformed
