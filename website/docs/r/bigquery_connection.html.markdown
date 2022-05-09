@@ -24,8 +24,6 @@ description: |-
 
 A connection allows BigQuery connections to external data sources..
 
-~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
 
 To get more information about Connection, see:
 
@@ -152,10 +150,41 @@ resource "google_bigquery_connection" "connection" {
 The following arguments are supported:
 
 
+
+- - -
+
+
+* `connection_id` -
+  (Optional)
+  Optional connection id that should be assigned to the created connection.
+
+* `location` -
+  (Optional)
+  The geographic location where the connection should reside.
+  Cloud SQL instance must be in the same location as the connection
+  with following exceptions: Cloud SQL us-central1 maps to BigQuery US, Cloud SQL europe-west1 maps to BigQuery EU.
+  Examples: US, EU, asia-northeast1, us-central1, europe-west1. The default value is US.
+
+* `friendly_name` -
+  (Optional)
+  A descriptive name for the connection
+
+* `description` -
+  (Optional)
+  A descriptive description for the connection
+
 * `cloud_sql` -
-  (Required)
+  (Optional)
   Cloud SQL properties.
   Structure is [documented below](#nested_cloud_sql).
+
+* `cloud_resource` -
+  (Optional)
+  Cloud Resource properties.
+  Structure is [documented below](#nested_cloud_resource).
+
+* `project` - (Optional) The ID of the project in which the resource belongs.
+    If it is not provided, the provider project is used.
 
 
 <a name="nested_cloud_sql"></a>The `cloud_sql` block supports:
@@ -190,31 +219,10 @@ The following arguments are supported:
   Password for database.
   **Note**: This property is sensitive and will not be displayed in the plan.
 
-- - -
+<a name="nested_cloud_resource"></a>The `cloud_resource` block supports:
 
-
-* `connection_id` -
-  (Optional)
-  Optional connection id that should be assigned to the created connection.
-
-* `location` -
-  (Optional)
-  The geographic location where the connection should reside.
-  Cloud SQL instance must be in the same location as the connection
-  with following exceptions: Cloud SQL us-central1 maps to BigQuery US, Cloud SQL europe-west1 maps to BigQuery EU.
-  Examples: US, EU, asia-northeast1, us-central1, europe-west1. The default value is US.
-
-* `friendly_name` -
-  (Optional)
-  A descriptive name for the connection
-
-* `description` -
-  (Optional)
-  A descriptive description for the connection
-
-* `project` - (Optional) The ID of the project in which the resource belongs.
-    If it is not provided, the provider project is used.
-
+* `service_account_id` -
+  The account ID of the service created for the purpose of this connection.
 
 ## Attributes Reference
 
