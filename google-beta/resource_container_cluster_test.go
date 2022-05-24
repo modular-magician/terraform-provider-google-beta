@@ -3114,6 +3114,7 @@ resource "google_container_cluster" "with_authenticator_groups" {
 
   authenticator_groups_config {
     security_group = "gke-security-groups@%s"
+    enabled        = true
   }
 
   networking_mode = "VPC_NATIVE"
