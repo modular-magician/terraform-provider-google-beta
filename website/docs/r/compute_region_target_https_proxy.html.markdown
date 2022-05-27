@@ -132,6 +132,12 @@ The following arguments are supported:
   (Optional)
   An optional description of this resource.
 
+* `ssl_policy` -
+  (Optional)
+  A reference to the SslPolicy resource that will be associated with
+  the TargetHttpsProxy resource. If not set, the TargetHttpsProxy
+  resource will not have any SSL policy configured.
+
 * `region` -
   (Optional)
   The Region in which the created target https proxy should reside.
