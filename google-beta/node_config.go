@@ -389,6 +389,23 @@ func schemaNodeConfig() *schema.Schema {
 					ForceNew:    true,
 					Description: `Setting this field will assign instances of this pool to run on the specified node group. This is useful for running workloads on sole tenant nodes.`,
 				},
+				"advanced_machine_features": {
+					Type:        schema.TypeList,
+					MaxItems:    1,
+					Optional:    true,
+					ForceNew:    true,
+					Description: `Controls for advanced machine-related behavior features.`,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"threads_per_core": {
+								Type:        schema.TypeInt,
+								Required:    true,
+								ForceNew:    true,
+								Description: `The number of threads per physical core. To disable simultaneous multithreading (SMT) set this to 1. If unset, the maximum number of threads supported per core by the underlying processor is assumed.`,
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -562,6 +579,10 @@ func expandNodeConfig(v interface{}) *container.NodeConfig {
 		nc.NodeGroup = v.(string)
 	}
 
+	if v, ok := nodeConfig["advanced_machine_features"]; ok {
+		nc.AdvancedMachineFeatures = expandContainerAdvancedMachineFeatures(v)
+	}
+
 	return nc
 }
 
@@ -637,30 +658,31 @@ func flattenNodeConfig(c *container.NodeConfig) []map[string]interface{} {
 	}
 
 	config = append(config, map[string]interface{}{
-		"machine_type":             c.MachineType,
-		"disk_size_gb":             c.DiskSizeGb,
-		"disk_type":                c.DiskType,
-		"guest_accelerator":        flattenContainerGuestAccelerators(c.Accelerators),
-		"local_ssd_count":          c.LocalSsdCount,
-		"ephemeral_storage_config": flattenEphemeralStorageConfig(c.EphemeralStorageConfig),
-		"gcfs_config":              flattenGcfsConfig(c.GcfsConfig),
-		"gvnic":                    flattenGvnic(c.Gvnic),
-		"service_account":          c.ServiceAccount,
-		"metadata":                 c.Metadata,
-		"image_type":               c.ImageType,
-		"labels":                   c.Labels,
-		"tags":                     c.Tags,
-		"preemptible":              c.Preemptible,
-		"spot":                     c.Spot,
-		"min_cpu_platform":         c.MinCpuPlatform,
-		"shielded_instance_config": flattenShieldedInstanceConfig(c.ShieldedInstanceConfig),
-		"taint":                    flattenTaints(c.Taints),
-		"workload_metadata_config": flattenWorkloadMetadataConfig(c.WorkloadMetadataConfig),
-		"sandbox_config":           flattenSandboxConfig(c.SandboxConfig),
-		"boot_disk_kms_key":        c.BootDiskKmsKey,
-		"kubelet_config":           flattenKubeletConfig(c.KubeletConfig),
-		"linux_node_config":        flattenLinuxNodeConfig(c.LinuxNodeConfig),
-		"node_group":               c.NodeGroup,
+		"machine_type":              c.MachineType,
+		"disk_size_gb":              c.DiskSizeGb,
+		"disk_type":                 c.DiskType,
+		"guest_accelerator":         flattenContainerGuestAccelerators(c.Accelerators),
+		"local_ssd_count":           c.LocalSsdCount,
+		"ephemeral_storage_config":  flattenEphemeralStorageConfig(c.EphemeralStorageConfig),
+		"gcfs_config":               flattenGcfsConfig(c.GcfsConfig),
+		"gvnic":                     flattenGvnic(c.Gvnic),
+		"service_account":           c.ServiceAccount,
+		"metadata":                  c.Metadata,
+		"image_type":                c.ImageType,
+		"labels":                    c.Labels,
+		"tags":                      c.Tags,
+		"preemptible":               c.Preemptible,
+		"spot":                      c.Spot,
+		"min_cpu_platform":          c.MinCpuPlatform,
+		"shielded_instance_config":  flattenShieldedInstanceConfig(c.ShieldedInstanceConfig),
+		"taint":                     flattenTaints(c.Taints),
+		"workload_metadata_config":  flattenWorkloadMetadataConfig(c.WorkloadMetadataConfig),
+		"sandbox_config":            flattenSandboxConfig(c.SandboxConfig),
+		"boot_disk_kms_key":         c.BootDiskKmsKey,
+		"kubelet_config":            flattenKubeletConfig(c.KubeletConfig),
+		"linux_node_config":         flattenLinuxNodeConfig(c.LinuxNodeConfig),
+		"node_group":                c.NodeGroup,
+		"advanced_machine_features": flattenContainerAdvancedMachineFeatures(c.AdvancedMachineFeatures),
 	})
 
 	if len(c.OauthScopes) > 0 {
@@ -889,4 +911,32 @@ func flattenLinuxNodeConfig(c *container.LinuxNodeConfig) []map[string]interface
 		})
 	}
 	return result
+}
+
+func expandContainerAdvancedMachineFeatures(v interface{}) *container.AdvancedMachineFeatures {
+	if v == nil {
+		return nil
+	}
+	ls := v.([]interface{})
+	if len(ls) == 0 {
+		return nil
+	}
+	amf := &container.AdvancedMachineFeatures{}
+
+	cfg := ls[0].(map[string]interface{})
+
+	if v, ok := cfg["threads_per_core"]; ok {
+		amf.ThreadsPerCore = int64(v.(int))
+	}
+
+	return amf
+}
+
+func flattenContainerAdvancedMachineFeatures(AdvancedMachineFeatures *container.AdvancedMachineFeatures) []map[string]interface{} {
+	if AdvancedMachineFeatures == nil {
+		return nil
+	}
+	return []map[string]interface{}{{
+		"threads_per_core": AdvancedMachineFeatures.ThreadsPerCore,
+	}}
 }
