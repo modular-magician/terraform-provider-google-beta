@@ -39,7 +39,7 @@ func TestAccCloudRunServiceIamBindingGenerated(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_cloud_run_service_iam_binding.foo",
-				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/services/%s roles/viewer", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-cloudrun-srv%s", context["random_suffix"])),
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/services/%s roles/viewer", getTestProjectFromEnv(), getTestRegionFromEnv()),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -49,7 +49,7 @@ func TestAccCloudRunServiceIamBindingGenerated(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_cloud_run_service_iam_binding.foo",
-				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/services/%s roles/viewer", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-cloudrun-srv%s", context["random_suffix"])),
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/services/%s roles/viewer", getTestProjectFromEnv(), getTestRegionFromEnv()),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -76,7 +76,7 @@ func TestAccCloudRunServiceIamMemberGenerated(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_cloud_run_service_iam_member.foo",
-				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/services/%s roles/viewer user:admin@hashicorptest.com", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-cloudrun-srv%s", context["random_suffix"])),
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/services/%s roles/viewer user:admin@hashicorptest.com", getTestProjectFromEnv(), getTestRegionFromEnv()),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -102,7 +102,7 @@ func TestAccCloudRunServiceIamPolicyGenerated(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_cloud_run_service_iam_policy.foo",
-				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/services/%s", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-cloudrun-srv%s", context["random_suffix"])),
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/services/%s", getTestProjectFromEnv(), getTestRegionFromEnv()),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -111,7 +111,7 @@ func TestAccCloudRunServiceIamPolicyGenerated(t *testing.T) {
 			},
 			{
 				ResourceName:      "google_cloud_run_service_iam_policy.foo",
-				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/services/%s", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-cloudrun-srv%s", context["random_suffix"])),
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/services/%s", getTestProjectFromEnv(), getTestRegionFromEnv()),
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -122,20 +122,62 @@ func TestAccCloudRunServiceIamPolicyGenerated(t *testing.T) {
 func testAccCloudRunServiceIamMember_basicGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloud_run_service" "default" {
-  name     = "tf-test-cloudrun-srv%{random_suffix}"
-  location = "us-central1"
+    name     = "tf_test_cloud_run_service_name%{random_suffix}"
+    location = "us-central1"
 
-  template {
-    spec {
-      containers {
-        image = "us-docker.pkg.dev/cloudrun/container/hello"
+    template {
+      spec {
+            containers {
+                image = "gcr.io/cloudrun/hello"
+            }
       }
     }
-  }
+    traffic {
+      percent         = 100
+      latest_revision = true
+    }
+}
 
-  traffic {
-    percent         = 100
-    latest_revision = true
+resource "google_service_account" "sa" {
+  account_id   = "cloud-run-pubsub-invoker"
+  display_name = "Cloud Run Pub/Sub Invoker"
+}
+
+locals {
+  cloud_run_url = google_cloud_run_service.default.status[0].url
+  pubsub_sa= google_service_account.sa.email
+}
+
+resource "google_cloud_run_service_iam_binding" "binding" {
+  location = google_cloud_run_service.default.location
+  project = google_cloud_run_service.default.project
+  service = google_cloud_run_service.default.name
+  role = "roles/run.invoker"
+  members = ["serviceAccount:${local.pubsub_sa}"]
+}
+
+resource "google_project_iam_binding" "project" {
+  project = "%{project}"
+  role    = "roles/iam.serviceAccountTokenCreator"
+  members = ["serviceAccount:${local.pubsub_sa}"]
+}
+
+resource "google_pubsub_topic" "topic" {
+  name = "tf_test_pubsub_topic%{random_suffix}"
+}
+
+resource "google_pubsub_subscription" "subscription" {
+  name  = "tf_test_pubsub_subscription%{random_suffix}"
+  topic = google_pubsub_topic.topic.name
+
+  push_config {
+    push_endpoint = "${local.cloud_run_url}"
+    oidc_token {
+      service_account_email = "${local.pubsub_sa}"
+    }
+    attributes = {
+      x-goog-version = "v1"
+    }
   }
 }
 
@@ -152,20 +194,62 @@ resource "google_cloud_run_service_iam_member" "foo" {
 func testAccCloudRunServiceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloud_run_service" "default" {
-  name     = "tf-test-cloudrun-srv%{random_suffix}"
-  location = "us-central1"
+    name     = "tf_test_cloud_run_service_name%{random_suffix}"
+    location = "us-central1"
 
-  template {
-    spec {
-      containers {
-        image = "us-docker.pkg.dev/cloudrun/container/hello"
+    template {
+      spec {
+            containers {
+                image = "gcr.io/cloudrun/hello"
+            }
       }
     }
-  }
+    traffic {
+      percent         = 100
+      latest_revision = true
+    }
+}
 
-  traffic {
-    percent         = 100
-    latest_revision = true
+resource "google_service_account" "sa" {
+  account_id   = "cloud-run-pubsub-invoker"
+  display_name = "Cloud Run Pub/Sub Invoker"
+}
+
+locals {
+  cloud_run_url = google_cloud_run_service.default.status[0].url
+  pubsub_sa= google_service_account.sa.email
+}
+
+resource "google_cloud_run_service_iam_binding" "binding" {
+  location = google_cloud_run_service.default.location
+  project = google_cloud_run_service.default.project
+  service = google_cloud_run_service.default.name
+  role = "roles/run.invoker"
+  members = ["serviceAccount:${local.pubsub_sa}"]
+}
+
+resource "google_project_iam_binding" "project" {
+  project = "%{project}"
+  role    = "roles/iam.serviceAccountTokenCreator"
+  members = ["serviceAccount:${local.pubsub_sa}"]
+}
+
+resource "google_pubsub_topic" "topic" {
+  name = "tf_test_pubsub_topic%{random_suffix}"
+}
+
+resource "google_pubsub_subscription" "subscription" {
+  name  = "tf_test_pubsub_subscription%{random_suffix}"
+  topic = google_pubsub_topic.topic.name
+
+  push_config {
+    push_endpoint = "${local.cloud_run_url}"
+    oidc_token {
+      service_account_email = "${local.pubsub_sa}"
+    }
+    attributes = {
+      x-goog-version = "v1"
+    }
   }
 }
 
@@ -188,20 +272,62 @@ resource "google_cloud_run_service_iam_policy" "foo" {
 func testAccCloudRunServiceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloud_run_service" "default" {
-  name     = "tf-test-cloudrun-srv%{random_suffix}"
-  location = "us-central1"
+    name     = "tf_test_cloud_run_service_name%{random_suffix}"
+    location = "us-central1"
 
-  template {
-    spec {
-      containers {
-        image = "us-docker.pkg.dev/cloudrun/container/hello"
+    template {
+      spec {
+            containers {
+                image = "gcr.io/cloudrun/hello"
+            }
       }
     }
-  }
+    traffic {
+      percent         = 100
+      latest_revision = true
+    }
+}
 
-  traffic {
-    percent         = 100
-    latest_revision = true
+resource "google_service_account" "sa" {
+  account_id   = "cloud-run-pubsub-invoker"
+  display_name = "Cloud Run Pub/Sub Invoker"
+}
+
+locals {
+  cloud_run_url = google_cloud_run_service.default.status[0].url
+  pubsub_sa= google_service_account.sa.email
+}
+
+resource "google_cloud_run_service_iam_binding" "binding" {
+  location = google_cloud_run_service.default.location
+  project = google_cloud_run_service.default.project
+  service = google_cloud_run_service.default.name
+  role = "roles/run.invoker"
+  members = ["serviceAccount:${local.pubsub_sa}"]
+}
+
+resource "google_project_iam_binding" "project" {
+  project = "%{project}"
+  role    = "roles/iam.serviceAccountTokenCreator"
+  members = ["serviceAccount:${local.pubsub_sa}"]
+}
+
+resource "google_pubsub_topic" "topic" {
+  name = "tf_test_pubsub_topic%{random_suffix}"
+}
+
+resource "google_pubsub_subscription" "subscription" {
+  name  = "tf_test_pubsub_subscription%{random_suffix}"
+  topic = google_pubsub_topic.topic.name
+
+  push_config {
+    push_endpoint = "${local.cloud_run_url}"
+    oidc_token {
+      service_account_email = "${local.pubsub_sa}"
+    }
+    attributes = {
+      x-goog-version = "v1"
+    }
   }
 }
 
@@ -220,20 +346,62 @@ resource "google_cloud_run_service_iam_policy" "foo" {
 func testAccCloudRunServiceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloud_run_service" "default" {
-  name     = "tf-test-cloudrun-srv%{random_suffix}"
-  location = "us-central1"
+    name     = "tf_test_cloud_run_service_name%{random_suffix}"
+    location = "us-central1"
 
-  template {
-    spec {
-      containers {
-        image = "us-docker.pkg.dev/cloudrun/container/hello"
+    template {
+      spec {
+            containers {
+                image = "gcr.io/cloudrun/hello"
+            }
       }
     }
-  }
+    traffic {
+      percent         = 100
+      latest_revision = true
+    }
+}
 
-  traffic {
-    percent         = 100
-    latest_revision = true
+resource "google_service_account" "sa" {
+  account_id   = "cloud-run-pubsub-invoker"
+  display_name = "Cloud Run Pub/Sub Invoker"
+}
+
+locals {
+  cloud_run_url = google_cloud_run_service.default.status[0].url
+  pubsub_sa= google_service_account.sa.email
+}
+
+resource "google_cloud_run_service_iam_binding" "binding" {
+  location = google_cloud_run_service.default.location
+  project = google_cloud_run_service.default.project
+  service = google_cloud_run_service.default.name
+  role = "roles/run.invoker"
+  members = ["serviceAccount:${local.pubsub_sa}"]
+}
+
+resource "google_project_iam_binding" "project" {
+  project = "%{project}"
+  role    = "roles/iam.serviceAccountTokenCreator"
+  members = ["serviceAccount:${local.pubsub_sa}"]
+}
+
+resource "google_pubsub_topic" "topic" {
+  name = "tf_test_pubsub_topic%{random_suffix}"
+}
+
+resource "google_pubsub_subscription" "subscription" {
+  name  = "tf_test_pubsub_subscription%{random_suffix}"
+  topic = google_pubsub_topic.topic.name
+
+  push_config {
+    push_endpoint = "${local.cloud_run_url}"
+    oidc_token {
+      service_account_email = "${local.pubsub_sa}"
+    }
+    attributes = {
+      x-goog-version = "v1"
+    }
   }
 }
 
@@ -250,20 +418,62 @@ resource "google_cloud_run_service_iam_binding" "foo" {
 func testAccCloudRunServiceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloud_run_service" "default" {
-  name     = "tf-test-cloudrun-srv%{random_suffix}"
-  location = "us-central1"
+    name     = "tf_test_cloud_run_service_name%{random_suffix}"
+    location = "us-central1"
 
-  template {
-    spec {
-      containers {
-        image = "us-docker.pkg.dev/cloudrun/container/hello"
+    template {
+      spec {
+            containers {
+                image = "gcr.io/cloudrun/hello"
+            }
       }
     }
-  }
+    traffic {
+      percent         = 100
+      latest_revision = true
+    }
+}
 
-  traffic {
-    percent         = 100
-    latest_revision = true
+resource "google_service_account" "sa" {
+  account_id   = "cloud-run-pubsub-invoker"
+  display_name = "Cloud Run Pub/Sub Invoker"
+}
+
+locals {
+  cloud_run_url = google_cloud_run_service.default.status[0].url
+  pubsub_sa= google_service_account.sa.email
+}
+
+resource "google_cloud_run_service_iam_binding" "binding" {
+  location = google_cloud_run_service.default.location
+  project = google_cloud_run_service.default.project
+  service = google_cloud_run_service.default.name
+  role = "roles/run.invoker"
+  members = ["serviceAccount:${local.pubsub_sa}"]
+}
+
+resource "google_project_iam_binding" "project" {
+  project = "%{project}"
+  role    = "roles/iam.serviceAccountTokenCreator"
+  members = ["serviceAccount:${local.pubsub_sa}"]
+}
+
+resource "google_pubsub_topic" "topic" {
+  name = "tf_test_pubsub_topic%{random_suffix}"
+}
+
+resource "google_pubsub_subscription" "subscription" {
+  name  = "tf_test_pubsub_subscription%{random_suffix}"
+  topic = google_pubsub_topic.topic.name
+
+  push_config {
+    push_endpoint = "${local.cloud_run_url}"
+    oidc_token {
+      service_account_email = "${local.pubsub_sa}"
+    }
+    attributes = {
+      x-goog-version = "v1"
+    }
   }
 }
 
