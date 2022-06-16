@@ -224,6 +224,11 @@ see the [official documentation](https://cloud.google.com/nat/docs/overview#spec
 					},
 				},
 			},
+			"max_ports_per_vm": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: `Maximum number of ports allocated to a VM from this NAT.`,
+			},
 			"min_ports_per_vm": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -374,6 +379,12 @@ func resourceComputeRouterNatCreate(d *schema.ResourceData, meta interface{}) er
 		return err
 	} else if v, ok := d.GetOkExists("min_ports_per_vm"); !isEmptyValue(reflect.ValueOf(minPortsPerVmProp)) && (ok || !reflect.DeepEqual(v, minPortsPerVmProp)) {
 		obj["minPortsPerVm"] = minPortsPerVmProp
+	}
+	maxPortsPerVmProp, err := expandNestedComputeRouterNatMaxPortsPerVm(d.Get("max_ports_per_vm"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("max_ports_per_vm"); !isEmptyValue(reflect.ValueOf(maxPortsPerVmProp)) && (ok || !reflect.DeepEqual(v, maxPortsPerVmProp)) {
+		obj["maxPortsPerVm"] = maxPortsPerVmProp
 	}
 	enableDynamicPortAllocationProp, err := expandNestedComputeRouterNatEnableDynamicPortAllocation(d.Get("enable_dynamic_port_allocation"), d, config)
 	if err != nil {
@@ -543,6 +554,9 @@ func resourceComputeRouterNatRead(d *schema.ResourceData, meta interface{}) erro
 	if err := d.Set("min_ports_per_vm", flattenNestedComputeRouterNatMinPortsPerVm(res["minPortsPerVm"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNat: %s", err)
 	}
+	if err := d.Set("max_ports_per_vm", flattenNestedComputeRouterNatMaxPortsPerVm(res["maxPortsPerVm"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RouterNat: %s", err)
+	}
 	if err := d.Set("enable_dynamic_port_allocation", flattenNestedComputeRouterNatEnableDynamicPortAllocation(res["enableDynamicPortAllocation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterNat: %s", err)
 	}
@@ -619,6 +633,12 @@ func resourceComputeRouterNatUpdate(d *schema.ResourceData, meta interface{}) er
 		return err
 	} else if v, ok := d.GetOkExists("min_ports_per_vm"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, minPortsPerVmProp)) {
 		obj["minPortsPerVm"] = minPortsPerVmProp
+	}
+	maxPortsPerVmProp, err := expandNestedComputeRouterNatMaxPortsPerVm(d.Get("max_ports_per_vm"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("max_ports_per_vm"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, maxPortsPerVmProp)) {
+		obj["maxPortsPerVm"] = maxPortsPerVmProp
 	}
 	enableDynamicPortAllocationProp, err := expandNestedComputeRouterNatEnableDynamicPortAllocation(d.Get("enable_dynamic_port_allocation"), d, config)
 	if err != nil {
@@ -868,6 +888,23 @@ func flattenNestedComputeRouterNatMinPortsPerVm(v interface{}, d *schema.Resourc
 	return v // let terraform core handle it otherwise
 }
 
+func flattenNestedComputeRouterNatMaxPortsPerVm(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := stringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
 func flattenNestedComputeRouterNatEnableDynamicPortAllocation(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
@@ -1057,6 +1094,10 @@ func expandNestedComputeRouterNatSubnetworkSecondaryIpRangeNames(v interface{}, 
 }
 
 func expandNestedComputeRouterNatMinPortsPerVm(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNestedComputeRouterNatMaxPortsPerVm(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

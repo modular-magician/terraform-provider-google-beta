@@ -171,6 +171,10 @@ The following arguments are supported:
   (Optional)
   Minimum number of ports allocated to a VM from this NAT.
 
+* `max_ports_per_vm` -
+  (Optional)
+  Maximum number of ports allocated to a VM from this NAT.
+
 * `enable_dynamic_port_allocation` -
   (Optional)
   Enable Dynamic Port Allocation.
