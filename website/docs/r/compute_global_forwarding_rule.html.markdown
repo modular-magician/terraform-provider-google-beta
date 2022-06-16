@@ -1093,6 +1093,13 @@ In addition to the arguments listed above, the following computed attributes are
   ([Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   The fingerprint used for optimistic locking of this resource.  Used
   internally during updates.
+
+* `psc_connection_id` -
+  The PSC connection id of the PSC Forwarding Rule in uint64 format.
+
+* `psc_connection_status` -
+  The PSC connection status, can be one of the following: ACCEPTED, CLOSED, PENDING,
+  REJECTED, STATUS_UNSPECIFIED, UNDEFINED_PSC_CONNECTION_STATUS.
 * `self_link` - The URI of the created resource.
 
 

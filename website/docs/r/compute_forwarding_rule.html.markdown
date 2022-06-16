@@ -1222,6 +1222,13 @@ In addition to the arguments listed above, the following computed attributes are
 * `service_name` -
   The internal fully qualified service name for this Forwarding Rule.
   This field is only used for INTERNAL load balancing.
+
+* `psc_connection_id` -
+  The PSC connection id of the PSC Forwarding Rule in uint64 format.
+
+* `psc_connection_status` -
+  The PSC connection status, can be one of the following: ACCEPTED, CLOSED, PENDING,
+  REJECTED, STATUS_UNSPECIFIED, UNDEFINED_PSC_CONNECTION_STATUS.
 * `self_link` - The URI of the created resource.
 
 
