@@ -194,6 +194,47 @@ data "google_compute_network" "redis-network" {
   name = "redis-test-network"
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=redis_instance_scheduled_rdb_snapshot&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Redis Instance Scheduled Rdb Snapshot
+
+
+```hcl
+resource "google_redis_instance" "cache" {
+  name           = "mrr-scheduled-rdb-snapshot"
+  tier           = "STANDARD_HA"
+  memory_size_gb = 1
+
+  location_id             = "us-central1-a"
+  alternative_location_id = "us-central1-f"
+
+  authorized_network = data.google_compute_network.redis-network.id
+
+  redis_version     = "REDIS_6_0"
+  display_name      = "Terraform Test Instance"
+  reserved_ip_range = "192.168.0.0/29"
+
+  persistence_config {
+    persistence_mode  = "RDB"
+    rdbSnapshotPeriod = "TWENTY_FOUR_HOURS"
+  }
+}
+
+// This example assumes this network already exists.
+// The API creates a tenant network per network authorized for a
+// Redis instance and that network is not deleted when the user-created
+// network (authorized_network) is deleted, so this prevents issues
+// with tenant network quota.
+// If this network hasn't been created and you are using this example in your
+// config, add an additional network resource or change
+// this from "data"to "resource"
+data "google_compute_network" "redis-network" {
+  name = "redis-test-network"
+}
+```
 
 ## Argument Reference
 
@@ -322,6 +363,11 @@ The following arguments are supported:
   "auto". For PRIVATE_SERVICE_ACCESS mode value must be the name of an allocated address 
   range associated with the private service access connection, or "auto".
 
+* `persistence_config` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Configuration of the persistence functionality.
+  Structure is [documented below](#nested_persistence_config).
+
 * `region` -
   (Optional)
   The name of the Redis region of the instance.
@@ -421,6 +467,38 @@ The following arguments are supported:
   can not go beyond, including reschedule.
   A timestamp in RFC3339 UTC "Zulu" format, with nanosecond
   resolution and up to nine fractional digits.
+
+<a name="nested_persistence_config"></a>The `persistence_config` block supports:
+
+* `persistence_mode` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Optional. 
+  Controls whether Persistence features are enabled. 
+  - DISABLED: Persistence is disabled for the instance, and any existing snapshots are deleted.
+  - RDB: RDB based Persistence is enabled.
+  Default value is `DISABLED`.
+  Possible values are `DISABLED` and `RDB`.
+
+* `rdb_snapshot_period` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Optional. 
+  Period between RDB snapshots. Snapshots will be attempted every period starting from the provided snapshot start time.
+  - ONE_HOUR: every 1 hour.
+  - SIX_HOURS	every 6 hours.
+  - TWELVE_HOURS: every 12 hours.
+  - TWENTY_FOUR_HOURS: every 24 horus
+  Possible values are `ONE_HOUR`, `SIX_HOURS`, `TWELVE_HOURS`, and `TWENTY_FOUR_HOURS`.
+
+* `rdb_next_snapshot_time` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Output only. 
+  The next time that a snapshot attempt is scheduled to occur in the RFC3339 UTC "Zulu" format.
+
+* `rdb_snapshot_start_time` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Optional. 
+  Date and time in the RFC3339 UTC "Zulu" format at which the first snapshot was/will be attempted, 
+  and to which future snapshots will be aligned. If not provided, the current time will be used.
 
 ## Attributes Reference
 
