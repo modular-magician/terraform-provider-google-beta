@@ -124,6 +124,7 @@ The following arguments are supported:
   (Optional)
   The one hour maintenance window of the metastore service.
   This specifies when the service can be restarted for maintenance purposes in UTC time.
+  Maintenance window is not needed for services with the `SPANNER` database type.
   Structure is [documented below](#nested_maintenance_window).
 
 * `encryption_config` -
@@ -136,6 +137,23 @@ The following arguments are supported:
   (Optional)
   Configuration information specific to running Hive metastore software as the metastore service.
   Structure is [documented below](#nested_hive_metastore_config).
+
+* `database_type` -
+  (Optional)
+  The database type that the Metastore service stores its data.
+  Default value is `MYSQL`.
+  Possible values are `MYSQL` and `SPANNER`.
+
+* `release_channel` -
+  (Optional)
+  The release channel of the service. If unspecified, defaults to `STABLE`.
+  Default value is `STABLE`.
+  Possible values are `CANARY` and `STABLE`.
+
+* `network_config` -
+  (Optional)
+  The configuration specifying the network settings for the Dataproc Metastore service.
+  Structure is [documented below](#nested_network_config).
 
 * `location` -
   (Optional)
@@ -180,6 +198,12 @@ The following arguments are supported:
   Information used to configure the Hive metastore service as a service principal in a Kerberos realm.
   Structure is [documented below](#nested_kerberos_config).
 
+* `endpoint_protocol` -
+  (Optional)
+  The protocol to use for the metastore service endpoint. If unspecified, defaults to `THRIFT`.
+  Default value is `THRIFT`.
+  Possible values are `THRIFT` and `GRPC`.
+
 
 <a name="nested_kerberos_config"></a>The `kerberos_config` block supports:
 
@@ -204,6 +228,26 @@ The following arguments are supported:
   The relative resource name of a Secret Manager secret version, in the following form:
   "projects/{projectNumber}/secrets/{secret_id}/versions/{version_id}".
 
+<a name="nested_network_config"></a>The `network_config` block supports:
+
+* `consumers` -
+  (Required)
+  The consumer-side network configuration for the Dataproc Metastore instance.
+  Structure is [documented below](#nested_consumers).
+
+
+<a name="nested_consumers"></a>The `consumers` block supports:
+
+* `endpoint_uri` -
+  The URI of the endpoint used to access the metastore service.
+
+* `subnetwork` -
+  (Required)
+  The subnetwork of the customer project from which an IP address is reserved and used as the Dataproc Metastore service's endpoint.
+  It is accessible to hosts in the subnet and to all hosts in a subnet in the same region and same network. There must be at least one IP address available in the subnet's primary range.
+  The subnet is specified in the following form:
+  `projects/{projectNumber}/regions/{region_id}/subnetworks/{subnetwork_id}
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -224,6 +268,9 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `artifact_gcs_uri` -
   A Cloud Storage URI (starting with gs://) that specifies where artifacts related to the metastore service are stored.
+
+* `uid` -
+  The globally unique resource identifier of the metastore service.
 
 
 ## Timeouts

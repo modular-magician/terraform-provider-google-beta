@@ -50,6 +50,14 @@ func resourceDataprocMetastoreService() *schema.Resource {
 and hyphens (-). Cannot begin or end with underscore or hyphen. Must consist of between
 3 and 63 characters.`,
 			},
+			"database_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateEnum([]string{"MYSQL", "SPANNER", ""}),
+				Description:  `The database type that the Metastore service stores its data. Default value: "MYSQL" Possible values: ["MYSQL", "SPANNER"]`,
+				Default:      "MYSQL",
+			},
 			"encryption_config": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -89,6 +97,13 @@ Use the following format: 'projects/([^/]+)/locations/([^/]+)/keyRings/([^/]+)/c
 							Description: `A mapping of Hive metastore configuration key-value pairs to apply to the Hive metastore (configured in hive-site.xml).
 The mappings override system defaults (some keys cannot be overridden)`,
 							Elem: &schema.Schema{Type: schema.TypeString},
+						},
+						"endpoint_protocol": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validateEnum([]string{"THRIFT", "GRPC", ""}),
+							Description:  `The protocol to use for the metastore service endpoint. If unspecified, defaults to 'THRIFT'. Default value: "THRIFT" Possible values: ["THRIFT", "GRPC"]`,
+							Default:      "THRIFT",
 						},
 						"kerberos_config": {
 							Type:        schema.TypeList,
@@ -148,7 +163,8 @@ The default value is 'global'.`,
 				Type:     schema.TypeList,
 				Optional: true,
 				Description: `The one hour maintenance window of the metastore service.
-This specifies when the service can be restarted for maintenance purposes in UTC time.`,
+This specifies when the service can be restarted for maintenance purposes in UTC time.
+Maintenance window is not needed for services with the 'SPANNER' database type.`,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -175,11 +191,52 @@ This specifies when the service can be restarted for maintenance purposes in UTC
 
 "projects/{projectNumber}/global/networks/{network_id}".`,
 			},
+			"network_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `The configuration specifying the network settings for the Dataproc Metastore service.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"consumers": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: `The consumer-side network configuration for the Dataproc Metastore instance.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"subnetwork": {
+										Type:     schema.TypeString,
+										Required: true,
+										Description: `The subnetwork of the customer project from which an IP address is reserved and used as the Dataproc Metastore service's endpoint.
+It is accessible to hosts in the subnet and to all hosts in a subnet in the same region and same network. There must be at least one IP address available in the subnet's primary range.
+The subnet is specified in the following form:
+
+'projects/{projectNumber}/regions/{region_id}/subnetworks/{subnetwork_id}`,
+									},
+									"endpoint_uri": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: `The URI of the endpoint used to access the metastore service.`,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"port": {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Optional:    true,
 				Description: `The TCP port at which the metastore service is reached. Default: 9083.`,
+			},
+			"release_channel": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateEnum([]string{"CANARY", "STABLE", ""}),
+				Description:  `The release channel of the service. If unspecified, defaults to 'STABLE'. Default value: "STABLE" Possible values: ["CANARY", "STABLE"]`,
+				Default:      "STABLE",
 			},
 			"tier": {
 				Type:         schema.TypeString,
@@ -212,6 +269,11 @@ This specifies when the service can be restarted for maintenance purposes in UTC
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `Additional information about the current state of the metastore service, if available.`,
+			},
+			"uid": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The globally unique resource identifier of the metastore service.`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -273,6 +335,24 @@ func resourceDataprocMetastoreServiceCreate(d *schema.ResourceData, meta interfa
 		return err
 	} else if v, ok := d.GetOkExists("hive_metastore_config"); !isEmptyValue(reflect.ValueOf(hiveMetastoreConfigProp)) && (ok || !reflect.DeepEqual(v, hiveMetastoreConfigProp)) {
 		obj["hiveMetastoreConfig"] = hiveMetastoreConfigProp
+	}
+	databaseTypeProp, err := expandDataprocMetastoreServiceDatabaseType(d.Get("database_type"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("database_type"); !isEmptyValue(reflect.ValueOf(databaseTypeProp)) && (ok || !reflect.DeepEqual(v, databaseTypeProp)) {
+		obj["databaseType"] = databaseTypeProp
+	}
+	releaseChannelProp, err := expandDataprocMetastoreServiceReleaseChannel(d.Get("release_channel"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("release_channel"); !isEmptyValue(reflect.ValueOf(releaseChannelProp)) && (ok || !reflect.DeepEqual(v, releaseChannelProp)) {
+		obj["releaseChannel"] = releaseChannelProp
+	}
+	networkConfigProp, err := expandDataprocMetastoreServiceNetworkConfig(d.Get("network_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("network_config"); !isEmptyValue(reflect.ValueOf(networkConfigProp)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
+		obj["networkConfig"] = networkConfigProp
 	}
 
 	url, err := replaceVars(d, config, "{{DataprocMetastoreBasePath}}projects/{{project}}/locations/{{location}}/services?serviceId={{service_id}}")
@@ -391,6 +471,18 @@ func resourceDataprocMetastoreServiceRead(d *schema.ResourceData, meta interface
 	if err := d.Set("hive_metastore_config", flattenDataprocMetastoreServiceHiveMetastoreConfig(res["hiveMetastoreConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
+	if err := d.Set("database_type", flattenDataprocMetastoreServiceDatabaseType(res["databaseType"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Service: %s", err)
+	}
+	if err := d.Set("release_channel", flattenDataprocMetastoreServiceReleaseChannel(res["releaseChannel"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Service: %s", err)
+	}
+	if err := d.Set("uid", flattenDataprocMetastoreServiceUid(res["uid"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Service: %s", err)
+	}
+	if err := d.Set("network_config", flattenDataprocMetastoreServiceNetworkConfig(res["networkConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Service: %s", err)
+	}
 
 	return nil
 }
@@ -447,6 +539,12 @@ func resourceDataprocMetastoreServiceUpdate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("hive_metastore_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, hiveMetastoreConfigProp)) {
 		obj["hiveMetastoreConfig"] = hiveMetastoreConfigProp
 	}
+	networkConfigProp, err := expandDataprocMetastoreServiceNetworkConfig(d.Get("network_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("network_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
+		obj["networkConfig"] = networkConfigProp
+	}
 
 	url, err := replaceVars(d, config, "{{DataprocMetastoreBasePath}}projects/{{project}}/locations/{{location}}/services/{{service_id}}")
 	if err != nil {
@@ -478,6 +576,10 @@ func resourceDataprocMetastoreServiceUpdate(d *schema.ResourceData, meta interfa
 
 	if d.HasChange("hive_metastore_config") {
 		updateMask = append(updateMask, "hiveMetastoreConfig")
+	}
+
+	if d.HasChange("network_config") {
+		updateMask = append(updateMask, "networkConfig")
 	}
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
@@ -692,6 +794,8 @@ func flattenDataprocMetastoreServiceHiveMetastoreConfig(v interface{}, d *schema
 		flattenDataprocMetastoreServiceHiveMetastoreConfigConfigOverrides(original["configOverrides"], d, config)
 	transformed["kerberos_config"] =
 		flattenDataprocMetastoreServiceHiveMetastoreConfigKerberosConfig(original["kerberosConfig"], d, config)
+	transformed["endpoint_protocol"] =
+		flattenDataprocMetastoreServiceHiveMetastoreConfigEndpointProtocol(original["endpointProtocol"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDataprocMetastoreServiceHiveMetastoreConfigVersion(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -741,6 +845,62 @@ func flattenDataprocMetastoreServiceHiveMetastoreConfigKerberosConfigPrincipal(v
 }
 
 func flattenDataprocMetastoreServiceHiveMetastoreConfigKerberosConfigKrb5ConfigGcsUri(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenDataprocMetastoreServiceHiveMetastoreConfigEndpointProtocol(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenDataprocMetastoreServiceDatabaseType(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenDataprocMetastoreServiceReleaseChannel(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenDataprocMetastoreServiceUid(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenDataprocMetastoreServiceNetworkConfig(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["consumers"] =
+		flattenDataprocMetastoreServiceNetworkConfigConsumers(original["consumers"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDataprocMetastoreServiceNetworkConfigConsumers(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"endpoint_uri": flattenDataprocMetastoreServiceNetworkConfigConsumersEndpointUri(original["endpointUri"], d, config),
+			"subnetwork":   flattenDataprocMetastoreServiceNetworkConfigConsumersSubnetwork(original["subnetwork"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDataprocMetastoreServiceNetworkConfigConsumersEndpointUri(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenDataprocMetastoreServiceNetworkConfigConsumersSubnetwork(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -854,6 +1014,13 @@ func expandDataprocMetastoreServiceHiveMetastoreConfig(v interface{}, d Terrafor
 		transformed["kerberosConfig"] = transformedKerberosConfig
 	}
 
+	transformedEndpointProtocol, err := expandDataprocMetastoreServiceHiveMetastoreConfigEndpointProtocol(original["endpoint_protocol"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEndpointProtocol); val.IsValid() && !isEmptyValue(val) {
+		transformed["endpointProtocol"] = transformedEndpointProtocol
+	}
+
 	return transformed, nil
 }
 
@@ -933,5 +1100,73 @@ func expandDataprocMetastoreServiceHiveMetastoreConfigKerberosConfigPrincipal(v 
 }
 
 func expandDataprocMetastoreServiceHiveMetastoreConfigKerberosConfigKrb5ConfigGcsUri(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataprocMetastoreServiceHiveMetastoreConfigEndpointProtocol(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataprocMetastoreServiceDatabaseType(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataprocMetastoreServiceReleaseChannel(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataprocMetastoreServiceNetworkConfig(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedConsumers, err := expandDataprocMetastoreServiceNetworkConfigConsumers(original["consumers"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConsumers); val.IsValid() && !isEmptyValue(val) {
+		transformed["consumers"] = transformedConsumers
+	}
+
+	return transformed, nil
+}
+
+func expandDataprocMetastoreServiceNetworkConfigConsumers(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedEndpointUri, err := expandDataprocMetastoreServiceNetworkConfigConsumersEndpointUri(original["endpoint_uri"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEndpointUri); val.IsValid() && !isEmptyValue(val) {
+			transformed["endpointUri"] = transformedEndpointUri
+		}
+
+		transformedSubnetwork, err := expandDataprocMetastoreServiceNetworkConfigConsumersSubnetwork(original["subnetwork"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedSubnetwork); val.IsValid() && !isEmptyValue(val) {
+			transformed["subnetwork"] = transformedSubnetwork
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDataprocMetastoreServiceNetworkConfigConsumersEndpointUri(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataprocMetastoreServiceNetworkConfigConsumersSubnetwork(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
