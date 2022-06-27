@@ -85,6 +85,22 @@ func TestAccDataFusionInstance_dataFusionInstanceFullExample(t *testing.T) {
 
 func testAccDataFusionInstance_dataFusionInstanceFullExample(context map[string]interface{}) string {
 	return Nprintf(`
+data "google_data_fusion_instance_versions" "versions" {
+  location = "us-central1"
+}
+
+resource "google_compute_network" "network" {
+  name = "tf-test-datafusion-full-network%{random_suffix}"
+}
+
+resource "google_compute_global_address" "private_ip_alloc" {
+  name          = "tf-test-datafusion-ip-alloc%{random_suffix}"
+  address_type  = "INTERNAL"
+  purpose       = "VPC_PEERING"
+  prefix_length = 22
+  network       = google_compute_network.network.id
+}
+
 resource "google_data_fusion_instance" "extended_instance" {
   name = "tf-test-my-instance%{random_suffix}"
   description = "My Data Fusion instance"
@@ -98,9 +114,9 @@ resource "google_data_fusion_instance" "extended_instance" {
   private_instance = true
   network_config {
     network = "default"
-    ip_allocation = "10.89.48.0/22"
+    ip_allocation = "${google_compute_global_address.private_ip_alloc.address}/${google_compute_global_address.private_ip_alloc.prefix_length}"
   }
-  version = "6.3.0"
+  version = data.google_data_fusion_instance_versions.versions.instance_versions[0].version_number
   dataproc_service_account = data.google_app_engine_default_service_account.default.email
 }
 

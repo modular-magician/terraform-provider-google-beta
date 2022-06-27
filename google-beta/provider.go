@@ -862,6 +862,7 @@ func Provider() *schema.Provider {
 			"google_container_engine_versions":                    dataSourceGoogleContainerEngineVersions(),
 			"google_container_registry_image":                     dataSourceGoogleContainerImage(),
 			"google_container_registry_repository":                dataSourceGoogleContainerRepo(),
+			"google_data_fusion_instance_versions":                dataSourceDataFusionInstanceVersions(),
 			"google_dataproc_metastore_service":                   dataSourceDataprocMetastoreService(),
 			"google_dns_keys":                                     dataSourceDNSKeys(),
 			"google_dns_managed_zone":                             dataSourceDnsManagedZone(),
