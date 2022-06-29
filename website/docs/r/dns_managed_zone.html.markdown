@@ -427,6 +427,9 @@ In addition to the arguments listed above, the following computed attributes are
 * `managed_zone_id` -
   Unique identifier for the resource; defined by the server.
 
+* `managed_zone_id` -
+  Unique identifier for the resource; defined by the server.
+
 * `name_servers` -
   Delegate your managed_zone to these virtual name servers;
   defined by the server
