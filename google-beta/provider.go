@@ -936,8 +936,8 @@ func Provider() *schema.Provider {
 }
 
 // Generated resources: 252
-// Generated IAM resources: 147
-// Total generated resources: 399
+// Generated IAM resources: 150
+// Total generated resources: 402
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1106,6 +1106,9 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_compute_router_nat":                                    resourceComputeRouterNat(),
 			"google_compute_router_peer":                                   resourceComputeRouterBgpPeer(),
 			"google_compute_snapshot":                                      resourceComputeSnapshot(),
+			"google_compute_snapshot_iam_binding":                          ResourceIamBinding(ComputeSnapshotIamSchema, ComputeSnapshotIamUpdaterProducer, ComputeSnapshotIdParseFunc),
+			"google_compute_snapshot_iam_member":                           ResourceIamMember(ComputeSnapshotIamSchema, ComputeSnapshotIamUpdaterProducer, ComputeSnapshotIdParseFunc),
+			"google_compute_snapshot_iam_policy":                           ResourceIamPolicy(ComputeSnapshotIamSchema, ComputeSnapshotIamUpdaterProducer, ComputeSnapshotIdParseFunc),
 			"google_compute_ssl_certificate":                               resourceComputeSslCertificate(),
 			"google_compute_managed_ssl_certificate":                       resourceComputeManagedSslCertificate(),
 			"google_compute_region_ssl_certificate":                        resourceComputeRegionSslCertificate(),
