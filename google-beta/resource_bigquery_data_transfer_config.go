@@ -73,6 +73,7 @@ func resourceBigqueryDataTransferConfig() *schema.Resource {
 			"params": {
 				Type:     schema.TypeMap,
 				Required: true,
+				ForceNew: true,
 				Description: `Parameters specific to each data source. For more information see the bq tab in the 'Setting up a data transfer'
 section for each data source. For example the parameters for Cloud Storage transfers are listed here:
 https://cloud.google.com/bigquery-transfer/docs/cloud-storage-transfer#bq`,
@@ -500,12 +501,6 @@ func resourceBigqueryDataTransferConfigUpdate(d *schema.ResourceData, meta inter
 	} else if v, ok := d.GetOkExists("disabled"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, disabledProp)) {
 		obj["disabled"] = disabledProp
 	}
-	paramsProp, err := expandBigqueryDataTransferConfigParams(d.Get("params"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("params"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, paramsProp)) {
-		obj["params"] = paramsProp
-	}
 
 	obj, err = resourceBigqueryDataTransferConfigEncoder(d, meta, obj)
 	if err != nil {
@@ -546,10 +541,6 @@ func resourceBigqueryDataTransferConfigUpdate(d *schema.ResourceData, meta inter
 
 	if d.HasChange("disabled") {
 		updateMask = append(updateMask, "disabled")
-	}
-
-	if d.HasChange("params") {
-		updateMask = append(updateMask, "params")
 	}
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
