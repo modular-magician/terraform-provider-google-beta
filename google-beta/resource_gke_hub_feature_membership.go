@@ -197,7 +197,7 @@ func GkeHubFeatureMembershipConfigmanagementConfigSyncGitSchema() *schema.Resour
 			"secret_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Type of secret configured for access to the Git repo.",
+				Description: "Type of secret configured for access to the Git repo. Must be one of ssh, cookiefile, gcenode, token, gcpserviceaccount or none. The validation of this is case-sensitive.",
 			},
 
 			"sync_branch": {

@@ -27,3 +27,5 @@ require (
 )
 
 go 1.16
+
+replace github.com/GoogleCloudPlatform/declarative-resource-client-library => github.com/trodge/declarative-resource-client-library v0.0.0-20220630223415-00cdde6c9dc6
