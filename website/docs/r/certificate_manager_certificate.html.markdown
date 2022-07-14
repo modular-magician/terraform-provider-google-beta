@@ -28,7 +28,7 @@ Certificate represents a HTTP-reachable backend for an Certificate.
 
 ~> **Warning:** These resources require allow-listing to use, and are not openly available to all Cloud customers. Engage with your Cloud account team to discuss how to onboard.
 
-~> **Warning:** All arguments including `self_managed.certificate_pem` and `self_managed.private_key_pem` will be stored in the raw
+~> **Warning:** All arguments including `self_managed.pem_certificate` and `self_managed.pem_private_key` will be stored in the raw
 state as plain-text. [Read more about sensitive data in state](https://www.terraform.io/language/state/sensitive-data).
 
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
@@ -124,13 +124,13 @@ The following arguments are supported:
 
 <a name="nested_self_managed"></a>The `self_managed` block supports:
 
-* `certificate_pem` -
+* `pem_certificate` -
   (Required)
   The certificate chain in PEM-encoded form.
   Leaf certificate comes first, followed by intermediate ones if any.
   **Note**: This property is sensitive and will not be displayed in the plan.
 
-* `private_key_pem` -
+* `pem_private_key` -
   (Required)
   The private key of the leaf certificate in PEM-encoded form.
   **Note**: This property is sensitive and will not be displayed in the plan.
