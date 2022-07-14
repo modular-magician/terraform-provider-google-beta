@@ -66,6 +66,33 @@ func resourceStorageTransferJob() *schema.Resource {
 				ValidateFunc: validation.StringLenBetween(0, 1024),
 				Description:  `Unique description to identify the Transfer Job.`,
 			},
+			"loggingConfig": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"log_actions": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringinSlice([]string{"FIND", "DELETE", "COPY"}, false),
+							Description:  `Specifies the actions to be logged. If empty, no logs are generated. Not supported for transfers with PosixFilesystem data sources; use enableOnpremGcsTransferLogs instead.`,
+						},
+						"log_action_states": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validation.StringinSlice([]string{"SUCEEDED", "FAILED"}, false),
+							Description:  `States in which logActions are logged. If empty, no logs are generated. Not supported for transfers with PosixFilesystem data sources; use enableOnpremGcsTransferLogs instead.`,
+						},
+						"enable_on_prem_gcs_transfer": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: `For transfers with a PosixFilesystem source, this option enables the Cloud Storage transfer logs for this transfer.`,
+						},
+					},
+					Description: `Specifies the logging behavior for transfer operations.`,
+				},
+			},
 			"project": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -494,11 +521,12 @@ func resourceStorageTransferJobCreate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	transferJob := &storagetransfer.TransferJob{
-		Description:  d.Get("description").(string),
-		ProjectId:    project,
-		Status:       d.Get("status").(string),
-		Schedule:     expandTransferSchedules(d.Get("schedule").([]interface{})),
-		TransferSpec: expandTransferSpecs(d.Get("transfer_spec").([]interface{})),
+		Description:   d.Get("description").(string),
+		ProjectId:     project,
+		Status:        d.Get("status").(string),
+		Schedule:      expandTransferSchedules(d.Get("schedule").([]interface{})),
+		TransferSpec:  expandTransferSpecs(d.Get("transfer_spec").([]interface{})),
+		LoggingConfig: expandLoggingConfig(d.Get("logging_config").([]interface{})),
 	}
 
 	var res *storagetransfer.TransferJob
@@ -575,6 +603,11 @@ func resourceStorageTransferJobRead(d *schema.ResourceData, meta interface{}) er
 		return err
 	}
 
+	err = d.Set("logging_config", flattenLoggingConfig(res.LoggingConfig, d))
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -618,6 +651,13 @@ func resourceStorageTransferJobUpdate(d *schema.ResourceData, meta interface{}) 
 		if v, ok := d.GetOk("transfer_spec"); ok {
 			fieldMask = append(fieldMask, "transfer_spec")
 			transferJob.TransferSpec = expandTransferSpecs(v.([]interface{}))
+		}
+	}
+
+	if d.HasChange("logging_config") {
+		if v, ok := d.GetOk("logging_config"); ok {
+			fieldMask = append(fieldMask, "logging_config")
+			transferJob.LoggingConfig = expandLoggingConfig(v.([]interface{}))
 		}
 	}
 
@@ -959,6 +999,35 @@ func flattenAzureBlobStorageData(azureBlobStorageData *storagetransfer.AzureBlob
 	}
 
 	return []map[string]interface{}{data}
+}
+
+func expandLoggingConfig(loggingConfigs []interface{}) *storagetransfer.LoggingConfig {
+	if len(loggingConfigs) == 0 || loggingConfigs[0] == nil {
+		return nil
+	}
+
+	loggingConfig := loggingConfigs[0].(map[string]interface{})
+	return &storagetransfer.LoggingConfig{
+		LogActions:                  loggingConfig["log_actions"].([]interface{}),
+		LogActionStates:             loggingConfig["log_action_states"].([]interface{}),
+		EnableOnPremGcsTransferLogs: loggingConfig["enable_on_prem_gcs_transfer_logs"].([]interface{}),
+	}
+}
+
+func flattenLoggingConfig(loggingConfig *storagetransfer.LoggingConfig, d *schema.ResourceData) []map[string][]map[string]interface{} {
+	data := map[string][]map[string]interface{}{}
+
+	if loggingConfig.LogActions != nil {
+		data["log_actions"] = loggingConfig.LogActions
+	}
+	if loggingConfig.LogActionStates != nil {
+		data["log_action_states"] = loggingConfig.LogActionStates
+	}
+	if loggingConfig.EnableOnPremGcsTransferLogs != nil {
+		data["object_conditions"] = loggingConfig.objectConditions
+	}
+
+	return []map[string][]map[string]interface{}{data}
 }
 
 func expandObjectConditions(conditions []interface{}) *storagetransfer.ObjectConditions {
