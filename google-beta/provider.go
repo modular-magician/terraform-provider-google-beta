@@ -1475,6 +1475,11 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_os_config_os_policy_assignment":      resourceOsConfigOsPolicyAssignment(),
 			"google_privateca_certificate_template":      resourcePrivatecaCertificateTemplate(),
 			"google_recaptcha_enterprise_key":            resourceRecaptchaEnterpriseKey(),
+			"google_vertex_ai_endpoint":                  resourceVertexAiEndpoint(),
+			"google_vertex_ai_endpoint_traffic_split":    resourceVertexAiEndpointTrafficSplit(),
+			"google_vertex_ai_metadata_schema":           resourceVertexAiMetadataSchema(),
+			"google_vertex_ai_model":                     resourceVertexAiModel(),
+			"google_vertex_ai_model_deployment":          resourceVertexAiModelDeployment(),
 			// ####### END tpgtools resources ###########
 		},
 		map[string]*schema.Resource{

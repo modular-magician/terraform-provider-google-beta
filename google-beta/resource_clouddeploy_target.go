@@ -239,12 +239,12 @@ func resourceClouddeployTargetCreate(d *schema.ResourceData, meta interface{}) e
 		RequireApproval:  dcl.Bool(d.Get("require_approval").(bool)),
 	}
 
-	id, err := replaceVarsForId(d, config, "projects/{{project}}/locations/{{location}}/targets/{{name}}")
+	id, err := obj.ID()
 	if err != nil {
 		return fmt.Errorf("error constructing id: %s", err)
 	}
 	d.SetId(id)
-	createDirective := CreateDirective
+	directive := CreateDirective
 	userAgent, err := generateUserAgentString(d, config.userAgent)
 	if err != nil {
 		return err
@@ -261,7 +261,7 @@ func resourceClouddeployTargetCreate(d *schema.ResourceData, meta interface{}) e
 	} else {
 		client.Config.BasePath = bp
 	}
-	res, err := client.ApplyTarget(context.Background(), obj, createDirective...)
+	res, err := client.ApplyTarget(context.Background(), obj, directive...)
 
 	if _, ok := err.(dcl.DiffAfterApplyError); ok {
 		log.Printf("[DEBUG] Diff after apply returned from the DCL: %s", err)
@@ -608,7 +608,6 @@ func flattenClouddeployTargetExecutionConfigsUsagesArray(obj []clouddeploy.Targe
 	}
 	return items
 }
-
 func expandClouddeployTargetExecutionConfigsUsagesArray(o interface{}) []clouddeploy.TargetExecutionConfigsUsagesEnum {
 	objs := o.([]interface{})
 	items := make([]clouddeploy.TargetExecutionConfigsUsagesEnum, 0, len(objs))

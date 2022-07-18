@@ -530,12 +530,12 @@ func resourceContainerAzureClusterCreate(d *schema.ResourceData, meta interface{
 		Project:         dcl.String(project),
 	}
 
-	id, err := replaceVarsForId(d, config, "projects/{{project}}/locations/{{location}}/azureClusters/{{name}}")
+	id, err := obj.ID()
 	if err != nil {
 		return fmt.Errorf("error constructing id: %s", err)
 	}
 	d.SetId(id)
-	createDirective := CreateDirective
+	directive := CreateDirective
 	userAgent, err := generateUserAgentString(d, config.userAgent)
 	if err != nil {
 		return err
@@ -552,7 +552,7 @@ func resourceContainerAzureClusterCreate(d *schema.ResourceData, meta interface{
 	} else {
 		client.Config.BasePath = bp
 	}
-	res, err := client.ApplyCluster(context.Background(), obj, createDirective...)
+	res, err := client.ApplyCluster(context.Background(), obj, directive...)
 
 	if _, ok := err.(dcl.DiffAfterApplyError); ok {
 		log.Printf("[DEBUG] Diff after apply returned from the DCL: %s", err)
@@ -1248,7 +1248,6 @@ func flattenContainerAzureClusterLoggingConfigComponentConfigEnableComponentsArr
 	}
 	return items
 }
-
 func expandContainerAzureClusterLoggingConfigComponentConfigEnableComponentsArray(o interface{}) []containerazure.ClusterLoggingConfigComponentConfigEnableComponentsEnum {
 	objs := o.([]interface{})
 	items := make([]containerazure.ClusterLoggingConfigComponentConfigEnableComponentsEnum, 0, len(objs))

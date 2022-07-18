@@ -2121,12 +2121,12 @@ func resourceDataprocWorkflowTemplateCreate(d *schema.ResourceData, meta interfa
 		Version:    dcl.Int64OrNil(int64(d.Get("version").(int))),
 	}
 
-	id, err := replaceVarsForId(d, config, "projects/{{project}}/locations/{{location}}/workflowTemplates/{{name}}")
+	id, err := obj.ID()
 	if err != nil {
 		return fmt.Errorf("error constructing id: %s", err)
 	}
 	d.SetId(id)
-	createDirective := CreateDirective
+	directive := CreateDirective
 	userAgent, err := generateUserAgentString(d, config.userAgent)
 	if err != nil {
 		return err
@@ -2143,7 +2143,7 @@ func resourceDataprocWorkflowTemplateCreate(d *schema.ResourceData, meta interfa
 	} else {
 		client.Config.BasePath = bp
 	}
-	res, err := client.ApplyWorkflowTemplate(context.Background(), obj, createDirective...)
+	res, err := client.ApplyWorkflowTemplate(context.Background(), obj, directive...)
 
 	if _, ok := err.(dcl.DiffAfterApplyError); ok {
 		log.Printf("[DEBUG] Diff after apply returned from the DCL: %s", err)
@@ -4169,7 +4169,6 @@ func flattenDataprocWorkflowTemplatePlacementManagedClusterConfigSoftwareConfigO
 	}
 	return items
 }
-
 func expandDataprocWorkflowTemplatePlacementManagedClusterConfigSoftwareConfigOptionalComponentsArray(o interface{}) []dataproc.WorkflowTemplatePlacementManagedClusterConfigSoftwareConfigOptionalComponentsEnum {
 	objs := o.([]interface{})
 	items := make([]dataproc.WorkflowTemplatePlacementManagedClusterConfigSoftwareConfigOptionalComponentsEnum, 0, len(objs))
