@@ -24,17 +24,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	dcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/dcl"
-	containerazure "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/containerazure/beta"
+	vertexai "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/vertexai/beta"
 )
 
-func resourceContainerAzureClient() *schema.Resource {
+func resourceVertexAiMetadataSchema() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceContainerAzureClientCreate,
-		Read:   resourceContainerAzureClientRead,
-		Delete: resourceContainerAzureClientDelete,
+		Create: resourceVertexAiMetadataSchemaCreate,
+		Read:   resourceVertexAiMetadataSchemaRead,
+		Delete: resourceVertexAiMetadataSchemaDelete,
 
 		Importer: &schema.ResourceImporter{
-			State: resourceContainerAzureClientImport,
+			State: resourceVertexAiMetadataSchemaImport,
 		},
 
 		Timeouts: &schema.ResourceTimeout{
@@ -43,13 +43,6 @@ func resourceContainerAzureClient() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"application_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "The Azure Active Directory Application ID.",
-			},
-
 			"location": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -57,18 +50,40 @@ func resourceContainerAzureClient() *schema.Resource {
 				Description: "The location for the resource",
 			},
 
+			"metadata_store": {
+				Type:             schema.TypeString,
+				Required:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
+				Description:      "The metadata store for the resource",
+			},
+
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The name of this resource.",
+				Description: "Output only. The resource name of the MetadataSchema.",
 			},
 
-			"tenant_id": {
+			"schema": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The Azure Active Directory Tenant ID.",
+				Description: "Required. The raw YAML string representation of the MetadataSchema. The combination of [MetadataSchema.version] and the schema name given by `title` in [MetadataSchema.schema] must be unique within a MetadataStore. The schema is defined as an OpenAPI 3.0.2 [MetadataSchema Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#schemaObject)",
+			},
+
+			"schema_type": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The type of the MetadataSchema. This is a property that identifies which metadata types will use the MetadataSchema. Possible values: METADATA_SCHEMA_TYPE_UNSPECIFIED, ARTIFACT_TYPE, EXECUTION_TYPE, CONTEXT_TYPE",
+			},
+
+			"schema_version": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The version of the MetadataSchema. The version's format must match the following regular expression: `^[0-9]+.+.+$`, which would allow to order/compare different versions. Example: 1.0.0, 1.0.1, etc.",
 			},
 
 			"project": {
@@ -80,39 +95,29 @@ func resourceContainerAzureClient() *schema.Resource {
 				Description:      "The project for the resource",
 			},
 
-			"certificate": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Output only. The PEM encoded x509 certificate.",
-			},
-
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Output only. The time at which this resource was created.",
-			},
-
-			"uid": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Output only. A globally unique identifier for the client.",
+				Description: "Output only. Timestamp when this MetadataSchema was created.",
 			},
 		},
 	}
 }
 
-func resourceContainerAzureClientCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceVertexAiMetadataSchemaCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	obj := &containerazure.AzureClient{
-		ApplicationId: dcl.String(d.Get("application_id").(string)),
+	obj := &vertexai.MetadataSchema{
 		Location:      dcl.String(d.Get("location").(string)),
+		MetadataStore: dcl.String(d.Get("metadata_store").(string)),
 		Name:          dcl.String(d.Get("name").(string)),
-		TenantId:      dcl.String(d.Get("tenant_id").(string)),
+		Schema:        dcl.String(d.Get("schema").(string)),
+		SchemaType:    vertexai.MetadataSchemaSchemaTypeEnumRef(d.Get("schema_type").(string)),
+		SchemaVersion: dcl.String(d.Get("schema_version").(string)),
 		Project:       dcl.String(project),
 	}
 
@@ -131,40 +136,42 @@ func resourceContainerAzureClientCreate(d *schema.ResourceData, meta interface{}
 	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
-	client := NewDCLContainerAzureClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutCreate))
+	client := NewDCLVertexAiClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutCreate))
 	if bp, err := replaceVars(d, config, client.Config.BasePath); err != nil {
 		d.SetId("")
 		return fmt.Errorf("Could not format %q: %w", client.Config.BasePath, err)
 	} else {
 		client.Config.BasePath = bp
 	}
-	res, err := client.ApplyClient(context.Background(), obj, directive...)
+	res, err := client.ApplyMetadataSchema(context.Background(), obj, directive...)
 
 	if _, ok := err.(dcl.DiffAfterApplyError); ok {
 		log.Printf("[DEBUG] Diff after apply returned from the DCL: %s", err)
 	} else if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
-		return fmt.Errorf("Error creating Client: %s", err)
+		return fmt.Errorf("Error creating MetadataSchema: %s", err)
 	}
 
-	log.Printf("[DEBUG] Finished creating Client %q: %#v", d.Id(), res)
+	log.Printf("[DEBUG] Finished creating MetadataSchema %q: %#v", d.Id(), res)
 
-	return resourceContainerAzureClientRead(d, meta)
+	return resourceVertexAiMetadataSchemaRead(d, meta)
 }
 
-func resourceContainerAzureClientRead(d *schema.ResourceData, meta interface{}) error {
+func resourceVertexAiMetadataSchemaRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	obj := &containerazure.AzureClient{
-		ApplicationId: dcl.String(d.Get("application_id").(string)),
+	obj := &vertexai.MetadataSchema{
 		Location:      dcl.String(d.Get("location").(string)),
+		MetadataStore: dcl.String(d.Get("metadata_store").(string)),
 		Name:          dcl.String(d.Get("name").(string)),
-		TenantId:      dcl.String(d.Get("tenant_id").(string)),
+		Schema:        dcl.String(d.Get("schema").(string)),
+		SchemaType:    vertexai.MetadataSchemaSchemaTypeEnumRef(d.Get("schema_type").(string)),
+		SchemaVersion: dcl.String(d.Get("schema_version").(string)),
 		Project:       dcl.String(project),
 	}
 
@@ -177,100 +184,66 @@ func resourceContainerAzureClientRead(d *schema.ResourceData, meta interface{}) 
 	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
-	client := NewDCLContainerAzureClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutRead))
+	client := NewDCLVertexAiClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutRead))
 	if bp, err := replaceVars(d, config, client.Config.BasePath); err != nil {
 		d.SetId("")
 		return fmt.Errorf("Could not format %q: %w", client.Config.BasePath, err)
 	} else {
 		client.Config.BasePath = bp
 	}
-	res, err := client.GetClient(context.Background(), obj)
+	res, err := client.GetMetadataSchema(context.Background(), obj)
 	if err != nil {
-		resourceName := fmt.Sprintf("ContainerAzureClient %q", d.Id())
+		resourceName := fmt.Sprintf("VertexAiMetadataSchema %q", d.Id())
 		return handleNotFoundDCLError(err, d, resourceName)
 	}
 
-	if err = d.Set("application_id", res.ApplicationId); err != nil {
-		return fmt.Errorf("error setting application_id in state: %s", err)
-	}
 	if err = d.Set("location", res.Location); err != nil {
 		return fmt.Errorf("error setting location in state: %s", err)
+	}
+	if err = d.Set("metadata_store", res.MetadataStore); err != nil {
+		return fmt.Errorf("error setting metadata_store in state: %s", err)
 	}
 	if err = d.Set("name", res.Name); err != nil {
 		return fmt.Errorf("error setting name in state: %s", err)
 	}
-	if err = d.Set("tenant_id", res.TenantId); err != nil {
-		return fmt.Errorf("error setting tenant_id in state: %s", err)
+	if err = d.Set("schema", res.Schema); err != nil {
+		return fmt.Errorf("error setting schema in state: %s", err)
+	}
+	if err = d.Set("schema_type", res.SchemaType); err != nil {
+		return fmt.Errorf("error setting schema_type in state: %s", err)
+	}
+	if err = d.Set("schema_version", res.SchemaVersion); err != nil {
+		return fmt.Errorf("error setting schema_version in state: %s", err)
 	}
 	if err = d.Set("project", res.Project); err != nil {
 		return fmt.Errorf("error setting project in state: %s", err)
 	}
-	if err = d.Set("certificate", res.Certificate); err != nil {
-		return fmt.Errorf("error setting certificate in state: %s", err)
-	}
 	if err = d.Set("create_time", res.CreateTime); err != nil {
 		return fmt.Errorf("error setting create_time in state: %s", err)
 	}
-	if err = d.Set("uid", res.Uid); err != nil {
-		return fmt.Errorf("error setting uid in state: %s", err)
-	}
 
 	return nil
 }
 
-func resourceContainerAzureClientDelete(d *schema.ResourceData, meta interface{}) error {
-	config := meta.(*Config)
-	project, err := getProject(d, config)
-	if err != nil {
-		return err
-	}
+func resourceVertexAiMetadataSchemaDelete(d *schema.ResourceData, meta interface{}) error {
 
-	obj := &containerazure.AzureClient{
-		ApplicationId: dcl.String(d.Get("application_id").(string)),
-		Location:      dcl.String(d.Get("location").(string)),
-		Name:          dcl.String(d.Get("name").(string)),
-		TenantId:      dcl.String(d.Get("tenant_id").(string)),
-		Project:       dcl.String(project),
-	}
-
-	log.Printf("[DEBUG] Deleting Client %q", d.Id())
-	userAgent, err := generateUserAgentString(d, config.userAgent)
-	if err != nil {
-		return err
-	}
-	billingProject := project
-	// err == nil indicates that the billing_project value was found
-	if bp, err := getBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-	client := NewDCLContainerAzureClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutDelete))
-	if bp, err := replaceVars(d, config, client.Config.BasePath); err != nil {
-		d.SetId("")
-		return fmt.Errorf("Could not format %q: %w", client.Config.BasePath, err)
-	} else {
-		client.Config.BasePath = bp
-	}
-	if err := client.DeleteClient(context.Background(), obj); err != nil {
-		return fmt.Errorf("Error deleting Client: %s", err)
-	}
-
-	log.Printf("[DEBUG] Finished deleting Client %q", d.Id())
+	log.Printf("[DEBUG] Finished deleting MetadataSchema %q", d.Id())
 	return nil
 }
 
-func resourceContainerAzureClientImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+func resourceVertexAiMetadataSchemaImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 
 	if err := parseImportId([]string{
-		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/azureClients/(?P<name>[^/]+)",
-		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)",
-		"(?P<location>[^/]+)/(?P<name>[^/]+)",
+		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/metadataStores/(?P<metadata_store>[^/]+)/metadataSchemas/(?P<name>[^/]+)",
+		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<metadata_store>[^/]+)/(?P<name>[^/]+)",
+		"(?P<location>[^/]+)/(?P<metadata_store>[^/]+)/(?P<name>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVarsForId(d, config, "projects/{{project}}/locations/{{location}}/azureClients/{{name}}")
+	id, err := replaceVarsForId(d, config, "projects/{{project}}/locations/{{location}}/metadataStores/{{metadata_store}}/metadataSchemas/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
