@@ -358,7 +358,7 @@ const ContainerAzureBasePathKey = "ContainerAzure"
 var DefaultBasePaths = map[string]string{
 	AccessApprovalBasePathKey:       "https://accessapproval.googleapis.com/v1/",
 	AccessContextManagerBasePathKey: "https://accesscontextmanager.googleapis.com/v1/",
-	ActiveDirectoryBasePathKey:      "https://managedidentities.googleapis.com/v1/",
+	ActiveDirectoryBasePathKey:      "https://managedidentities.googleapis.com/v1beta1/",
 	ApiGatewayBasePathKey:           "https://apigateway.googleapis.com/v1beta/",
 	ApigeeBasePathKey:               "https://apigee.googleapis.com/v1/",
 	AppEngineBasePathKey:            "https://appengine.googleapis.com/v1/",
