@@ -937,8 +937,8 @@ func Provider() *schema.Provider {
 }
 
 // Generated resources: 256
-// Generated IAM resources: 165
-// Total generated resources: 421
+// Generated IAM resources: 168
+// Total generated resources: 424
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1197,6 +1197,9 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_dialogflow_cx_entity_type":                             resourceDialogflowCXEntityType(),
 			"google_dialogflow_cx_environment":                             resourceDialogflowCXEnvironment(),
 			"google_dns_managed_zone":                                      resourceDNSManagedZone(),
+			"google_dns_managed_zone_iam_binding":                          ResourceIamBinding(DNSManagedZoneIamSchema, DNSManagedZoneIamUpdaterProducer, DNSManagedZoneIdParseFunc),
+			"google_dns_managed_zone_iam_member":                           ResourceIamMember(DNSManagedZoneIamSchema, DNSManagedZoneIamUpdaterProducer, DNSManagedZoneIdParseFunc),
+			"google_dns_managed_zone_iam_policy":                           ResourceIamPolicy(DNSManagedZoneIamSchema, DNSManagedZoneIamUpdaterProducer, DNSManagedZoneIdParseFunc),
 			"google_dns_policy":                                            resourceDNSPolicy(),
 			"google_dns_response_policy":                                   resourceDNSResponsePolicy(),
 			"google_dns_response_policy_rule":                              resourceDNSResponsePolicyRule(),

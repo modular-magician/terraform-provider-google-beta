@@ -23,6 +23,52 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
+func TestAccDNSManagedZone_dnsManagedZoneBasicExample(t *testing.T) {
+	skipIfVcr(t)
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"random": {},
+			"time":   {},
+		},
+		CheckDestroy: testAccCheckDNSManagedZoneDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDNSManagedZone_dnsManagedZoneBasicExample(context),
+			},
+			{
+				ResourceName:      "google_dns_managed_zone.example-zone",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccDNSManagedZone_dnsManagedZoneBasicExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_dns_managed_zone" "example-zone" {
+  name        = "example-zone"
+  dns_name    = "example-${random_id.rnd.hex}.com."
+  description = "Example DNS zone"
+  labels = {
+    foo = "bar"
+  }
+}
+
+resource "random_id" "rnd" {
+  byte_length = 4
+}
+`, context)
+}
+
 func TestAccDNSManagedZone_dnsManagedZoneQuickstartExample(t *testing.T) {
 	t.Parallel()
 
@@ -145,52 +191,6 @@ resource "google_dns_record_set" "default" {
   type         = "A"
   rrdatas      = ["10.0.0.1", "10.1.0.1"]
   ttl          = 86400
-}
-`, context)
-}
-
-func TestAccDNSManagedZone_dnsManagedZoneBasicExample(t *testing.T) {
-	skipIfVcr(t)
-	t.Parallel()
-
-	context := map[string]interface{}{
-		"random_suffix": randString(t, 10),
-	}
-
-	vcrTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-			"time":   {},
-		},
-		CheckDestroy: testAccCheckDNSManagedZoneDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccDNSManagedZone_dnsManagedZoneBasicExample(context),
-			},
-			{
-				ResourceName:      "google_dns_managed_zone.example-zone",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-		},
-	})
-}
-
-func testAccDNSManagedZone_dnsManagedZoneBasicExample(context map[string]interface{}) string {
-	return Nprintf(`
-resource "google_dns_managed_zone" "example-zone" {
-  name        = "example-zone"
-  dns_name    = "example-${random_id.rnd.hex}.com."
-  description = "Example DNS zone"
-  labels = {
-    foo = "bar"
-  }
-}
-
-resource "random_id" "rnd" {
-  byte_length = 4
 }
 `, context)
 }
