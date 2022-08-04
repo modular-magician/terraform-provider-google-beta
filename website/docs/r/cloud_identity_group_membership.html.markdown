@@ -137,6 +137,18 @@ The following arguments are supported:
   The name of the MembershipRole. Must be one of OWNER, MANAGER, MEMBER.
   Possible values are `OWNER`, `MANAGER`, and `MEMBER`.
 
+* `expiry_detail` -
+  (Optional)
+  The MembershipRole expiry details.
+  Structure is [documented below](#nested_expiry_detail).
+
+
+<a name="nested_expiry_detail"></a>The `expiry_detail` block supports:
+
+* `expire_time` -
+  (Optional)
+  The time at which the MembershipRole will expire.
+
 - - -
 
 
