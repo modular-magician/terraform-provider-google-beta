@@ -165,6 +165,7 @@ type Config struct {
 	AccessApprovalBasePath       string
 	AccessContextManagerBasePath string
 	ActiveDirectoryBasePath      string
+	AlloydbBasePath              string
 	ApiGatewayBasePath           string
 	ApigeeBasePath               string
 	AppEngineBasePath            string
@@ -265,6 +266,7 @@ type Config struct {
 const AccessApprovalBasePathKey = "AccessApproval"
 const AccessContextManagerBasePathKey = "AccessContextManager"
 const ActiveDirectoryBasePathKey = "ActiveDirectory"
+const AlloydbBasePathKey = "Alloydb"
 const ApiGatewayBasePathKey = "ApiGateway"
 const ApigeeBasePathKey = "Apigee"
 const AppEngineBasePathKey = "AppEngine"
@@ -359,6 +361,7 @@ var DefaultBasePaths = map[string]string{
 	AccessApprovalBasePathKey:       "https://accessapproval.googleapis.com/v1/",
 	AccessContextManagerBasePathKey: "https://accesscontextmanager.googleapis.com/v1/",
 	ActiveDirectoryBasePathKey:      "https://managedidentities.googleapis.com/v1beta1/",
+	AlloydbBasePathKey:              "https://alloydb.googleapis.com/v1beta/",
 	ApiGatewayBasePathKey:           "https://apigateway.googleapis.com/v1beta/",
 	ApigeeBasePathKey:               "https://apigee.googleapis.com/v1/",
 	AppEngineBasePathKey:            "https://appengine.googleapis.com/v1/",
@@ -1229,6 +1232,7 @@ func ConfigureBasePaths(c *Config) {
 	c.AccessApprovalBasePath = DefaultBasePaths[AccessApprovalBasePathKey]
 	c.AccessContextManagerBasePath = DefaultBasePaths[AccessContextManagerBasePathKey]
 	c.ActiveDirectoryBasePath = DefaultBasePaths[ActiveDirectoryBasePathKey]
+	c.AlloydbBasePath = DefaultBasePaths[AlloydbBasePathKey]
 	c.ApiGatewayBasePath = DefaultBasePaths[ApiGatewayBasePathKey]
 	c.ApigeeBasePath = DefaultBasePaths[ApigeeBasePathKey]
 	c.AppEngineBasePath = DefaultBasePaths[AppEngineBasePathKey]
