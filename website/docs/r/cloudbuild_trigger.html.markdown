@@ -41,6 +41,8 @@ To get more information about Trigger, see:
 
 ```hcl
 resource "google_cloudbuild_trigger" "filename-trigger" {
+  location = "us-central1"
+
   trigger_template {
     branch_name = "main"
     repo_name   = "my-repo"
@@ -64,6 +66,8 @@ resource "google_cloudbuild_trigger" "filename-trigger" {
 
 ```hcl
 resource "google_cloudbuild_trigger" "build-trigger" {
+  location = "us-central1"
+
   trigger_template {
     branch_name = "main"
     repo_name   = "my-repo"
@@ -141,6 +145,8 @@ resource "google_cloudbuild_trigger" "build-trigger" {
 data "google_project" "project" {}
 
 resource "google_cloudbuild_trigger" "service-account-trigger" {
+  location = "global"
+
   trigger_template {
     branch_name = "main"
     repo_name   = "my-repo"
@@ -175,6 +181,7 @@ resource "google_project_iam_member" "logs_writer" {
 
 ```hcl
 resource "google_cloudbuild_trigger" "include-build-logs-trigger" {
+  location = "australia-southeast1"
   name     = "include-build-logs-trigger"
   filename = "cloudbuild.yaml"
 
@@ -278,10 +285,11 @@ resource "google_secret_manager_secret_iam_policy" "policy" {
 
 
 resource "google_cloudbuild_trigger" "webhook-config-trigger" {
+  location    = "us-central1"
   name        = "webhook-trigger"
   description = "acceptance test example webhook build trigger"
  
- webhook_config {
+  webhook_config {
     secret = google_secret_manager_secret_version.webhook_trigger_secret_key_data.id
   }
 
@@ -310,6 +318,7 @@ resource "google_cloudbuild_trigger" "webhook-config-trigger" {
 ```hcl
 
 resource "google_cloudbuild_trigger" "manual-trigger" {
+  location    = "us-west4"
   name        = "manual-build"
 
   source_to_build {
@@ -466,6 +475,11 @@ The following arguments are supported:
   (Optional)
   Contents of the build template. Either a filename or build template must be provided.
   Structure is [documented below](#nested_build).
+
+* `location` -
+  (Optional)
+  The [Cloud Build location](https://cloud.google.com/build/docs/locations) for the trigger.
+  If not specified, "global" is used.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -1056,7 +1070,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/triggers/{{trigger_id}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/triggers/{{trigger_id}}`
 
 * `trigger_id` -
   The unique identifier for the trigger.
@@ -1080,6 +1094,7 @@ This resource provides the following
 Trigger can be imported using any of these accepted formats:
 
 ```
+$ terraform import google_cloudbuild_trigger.default projects/{{project}}/locations/{{location}}/triggers/{{trigger_id}}
 $ terraform import google_cloudbuild_trigger.default projects/{{project}}/triggers/{{trigger_id}}
 $ terraform import google_cloudbuild_trigger.default {{project}}/{{trigger_id}}
 $ terraform import google_cloudbuild_trigger.default {{trigger_id}}

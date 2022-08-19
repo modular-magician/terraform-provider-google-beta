@@ -39,9 +39,10 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerFilenameExample(t *testing.T) {
 				Config: testAccCloudBuildTrigger_cloudbuildTriggerFilenameExample(context),
 			},
 			{
-				ResourceName:      "google_cloudbuild_trigger.filename-trigger",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_cloudbuild_trigger.filename-trigger",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location"},
 			},
 		},
 	})
@@ -50,6 +51,8 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerFilenameExample(t *testing.T) {
 func testAccCloudBuildTrigger_cloudbuildTriggerFilenameExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloudbuild_trigger" "filename-trigger" {
+  location = "us-central1"
+
   trigger_template {
     branch_name = "main"
     repo_name   = "my-repo"
@@ -81,9 +84,10 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerBuildExample(t *testing.T) {
 				Config: testAccCloudBuildTrigger_cloudbuildTriggerBuildExample(context),
 			},
 			{
-				ResourceName:      "google_cloudbuild_trigger.build-trigger",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_cloudbuild_trigger.build-trigger",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location"},
 			},
 		},
 	})
@@ -92,6 +96,8 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerBuildExample(t *testing.T) {
 func testAccCloudBuildTrigger_cloudbuildTriggerBuildExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_cloudbuild_trigger" "build-trigger" {
+  location = "us-central1"
+
   trigger_template {
     branch_name = "main"
     repo_name   = "my-repo"
@@ -175,9 +181,10 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerServiceAccountExample(t *testing.
 				Config: testAccCloudBuildTrigger_cloudbuildTriggerServiceAccountExample(context),
 			},
 			{
-				ResourceName:      "google_cloudbuild_trigger.service-account-trigger",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_cloudbuild_trigger.service-account-trigger",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location"},
 			},
 		},
 	})
@@ -188,6 +195,8 @@ func testAccCloudBuildTrigger_cloudbuildTriggerServiceAccountExample(context map
 data "google_project" "project" {}
 
 resource "google_cloudbuild_trigger" "service-account-trigger" {
+  location = "global"
+
   trigger_template {
     branch_name = "main"
     repo_name   = "my-repo"
@@ -235,9 +244,10 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerPubsubConfigExample(t *testing.T)
 				Config: testAccCloudBuildTrigger_cloudbuildTriggerPubsubConfigExample(context),
 			},
 			{
-				ResourceName:      "google_cloudbuild_trigger.pubsub-config-trigger",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_cloudbuild_trigger.pubsub-config-trigger",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location"},
 			},
 		},
 	})
@@ -296,9 +306,10 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerWebhookConfigExample(t *testing.T
 				Config: testAccCloudBuildTrigger_cloudbuildTriggerWebhookConfigExample(context),
 			},
 			{
-				ResourceName:      "google_cloudbuild_trigger.webhook-config-trigger",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_cloudbuild_trigger.webhook-config-trigger",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location"},
 			},
 		},
 	})
@@ -344,10 +355,11 @@ resource "google_secret_manager_secret_iam_policy" "policy" {
 
 
 resource "google_cloudbuild_trigger" "webhook-config-trigger" {
+  location    = "us-central1"
   name        = "webhook-trigger"
   description = "acceptance test example webhook build trigger"
  
- webhook_config {
+  webhook_config {
     secret = google_secret_manager_secret_version.webhook_trigger_secret_key_data.id
   }
 
@@ -383,9 +395,10 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerManualExample(t *testing.T) {
 				Config: testAccCloudBuildTrigger_cloudbuildTriggerManualExample(context),
 			},
 			{
-				ResourceName:      "google_cloudbuild_trigger.manual-trigger",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_cloudbuild_trigger.manual-trigger",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location"},
 			},
 		},
 	})
@@ -395,6 +408,7 @@ func testAccCloudBuildTrigger_cloudbuildTriggerManualExample(context map[string]
 	return Nprintf(`
 
 resource "google_cloudbuild_trigger" "manual-trigger" {
+  location    = "us-west4"
   name        = "manual-build"
 
   source_to_build {
@@ -434,7 +448,7 @@ func testAccCheckCloudBuildTriggerDestroyProducer(t *testing.T) func(s *terrafor
 
 			config := googleProviderConfig(t)
 
-			url, err := replaceVarsForTest(config, rs, "{{CloudBuildBasePath}}projects/{{project}}/triggers/{{trigger_id}}")
+			url, err := replaceVarsForTest(config, rs, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/triggers/{{trigger_id}}")
 			if err != nil {
 				return err
 			}

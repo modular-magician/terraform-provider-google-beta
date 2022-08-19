@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -860,6 +861,15 @@ a build.`,
 					Type: schema.TypeString,
 				},
 			},
+			"location": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: emptyOrDefaultStringSuppress("global"),
+				Description: `The [Cloud Build location](https://cloud.google.com/build/docs/locations) for the trigger.
+If not specified, "global" is used.`,
+				Default: "global",
+			},
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -1192,7 +1202,7 @@ func resourceCloudBuildTriggerCreate(d *schema.ResourceData, meta interface{}) e
 		obj["build"] = buildProp
 	}
 
-	url, err := replaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/triggers")
+	url, err := replaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/triggers")
 	if err != nil {
 		return err
 	}
@@ -1211,13 +1221,14 @@ func resourceCloudBuildTriggerCreate(d *schema.ResourceData, meta interface{}) e
 		billingProject = bp
 	}
 
+	url = strings.ReplaceAll(url, "/locations//", "/locations/global/")
 	res, err := sendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating Trigger: %s", err)
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "projects/{{project}}/triggers/{{trigger_id}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{location}}/triggers/{{trigger_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -1234,10 +1245,13 @@ func resourceCloudBuildTriggerCreate(d *schema.ResourceData, meta interface{}) e
 
 	// Store the ID now. We tried to set it before and it failed because
 	// trigger_id didn't exist yet.
-	id, err = replaceVars(d, config, "projects/{{project}}/triggers/{{trigger_id}}")
+	id, err = replaceVars(d, config, "projects/{{project}}/locations/{{location}}/triggers/{{trigger_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
+	// Force legacy id format for global triggers
+	id = strings.ReplaceAll(id, "/locations//", "/")
+	id = strings.ReplaceAll(id, "/locations/global/", "/")
 	d.SetId(id)
 
 	log.Printf("[DEBUG] Finished creating Trigger %q: %#v", d.Id(), res)
@@ -1252,7 +1266,7 @@ func resourceCloudBuildTriggerRead(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/triggers/{{trigger_id}}")
+	url, err := replaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/triggers/{{trigger_id}}")
 	if err != nil {
 		return err
 	}
@@ -1270,6 +1284,7 @@ func resourceCloudBuildTriggerRead(d *schema.ResourceData, meta interface{}) err
 		billingProject = bp
 	}
 
+	url = strings.ReplaceAll(url, "/locations//", "/locations/global/")
 	res, err := sendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return handleNotFoundError(err, d, fmt.Sprintf("CloudBuildTrigger %q", d.Id()))
@@ -1477,13 +1492,14 @@ func resourceCloudBuildTriggerUpdate(d *schema.ResourceData, meta interface{}) e
 		obj["build"] = buildProp
 	}
 
-	url, err := replaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/triggers/{{trigger_id}}")
+	url, err := replaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/triggers/{{trigger_id}}")
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[DEBUG] Updating Trigger %q: %#v", d.Id(), obj)
 	obj["id"] = d.Get("trigger_id")
+	url = strings.ReplaceAll(url, "/locations//", "/locations/global/")
 
 	// err == nil indicates that the billing_project value was found
 	if bp, err := getBillingProject(d, config); err == nil {
@@ -1516,12 +1532,13 @@ func resourceCloudBuildTriggerDelete(d *schema.ResourceData, meta interface{}) e
 	}
 	billingProject = project
 
-	url, err := replaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/triggers/{{trigger_id}}")
+	url, err := replaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/triggers/{{trigger_id}}")
 	if err != nil {
 		return err
 	}
 
 	var obj map[string]interface{}
+	url = strings.ReplaceAll(url, "/locations//", "/locations/global/")
 	log.Printf("[DEBUG] Deleting Trigger %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
@@ -1541,6 +1558,7 @@ func resourceCloudBuildTriggerDelete(d *schema.ResourceData, meta interface{}) e
 func resourceCloudBuildTriggerImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
+		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/triggers/(?P<trigger_id>[^/]+)",
 		"projects/(?P<project>[^/]+)/triggers/(?P<trigger_id>[^/]+)",
 		"(?P<project>[^/]+)/(?P<trigger_id>[^/]+)",
 		"(?P<trigger_id>[^/]+)",
@@ -1549,10 +1567,15 @@ func resourceCloudBuildTriggerImport(d *schema.ResourceData, meta interface{}) (
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "projects/{{project}}/triggers/{{trigger_id}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{location}}/triggers/{{trigger_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
+	d.SetId(id)
+
+	// Force legacy id format for global triggers.
+	id = strings.ReplaceAll(id, "/locations//", "/")
+	id = strings.ReplaceAll(id, "/locations/global/", "/")
 	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
