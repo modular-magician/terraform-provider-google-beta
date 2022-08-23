@@ -51,4 +51,5 @@ var dclResources = map[string]*schema.Resource{
 	"google_os_config_os_policy_assignment":      resourceOsConfigOsPolicyAssignment(),
 	"google_privateca_certificate_template":      resourcePrivatecaCertificateTemplate(),
 	"google_recaptcha_enterprise_key":            resourceRecaptchaEnterpriseKey(),
+	"google_vertex_ai_endpoint":                  resourceVertexAiEndpoint(),
 }
