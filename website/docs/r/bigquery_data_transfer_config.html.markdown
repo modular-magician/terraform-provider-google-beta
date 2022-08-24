@@ -51,6 +51,7 @@ resource "google_bigquery_data_transfer_config" "query_config" {
 
   display_name           = "my-query"
   location               = "asia-northeast1"
+  version_info           = "0.1"
   data_source_id         = "scheduled_query"
   schedule               = "first sunday of quarter 00:00"
   destination_dataset_id = google_bigquery_dataset.my_dataset.dataset_id
@@ -158,6 +159,18 @@ The following arguments are supported:
   Service account email. If this field is set, transfer config will
   be created with this service account credentials. It requires that
   requesting user calling this API has permissions to act as this service account.
+
+* `version_info` -
+  (Optional)
+  Optional OAuth2 authorization code to use with this transfer configuration. This is required only if
+  data_source_id is 'youtube_channel' and new credentials are needed. Note that this should not be set
+  when service_account_name is used to create the transfer config.
+
+* `authorization_code` -
+  (Optional)
+  Optional version info. This is required only if data_source_id is not 'youtube_channel'
+  and new credentials are needed. Note that this should not be set when serviceAccountName is used to
+  create the transfer config.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

@@ -79,6 +79,13 @@ https://cloud.google.com/bigquery-transfer/docs/cloud-storage-transfer#bq
 **NOTE** : If you are attempting to update a parameter that cannot be updated (due to api limitations) [please force recreation of the resource](https://www.terraform.io/cli/state/taint#forcing-re-creation-of-resources).`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"authorization_code": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `Optional version info. This is required only if data_source_id is not 'youtube_channel'
+and new credentials are needed. Note that this should not be set when serviceAccountName is used to
+create the transfer config.`,
+			},
 			"data_refresh_window_days": {
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -210,6 +217,13 @@ be created with this service account credentials. It requires that
 requesting user calling this API has permissions to act as this service account.`,
 				Default: "",
 			},
+			"version_info": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `Optional OAuth2 authorization code to use with this transfer configuration. This is required only if
+data_source_id is 'youtube_channel' and new credentials are needed. Note that this should not be set
+when service_account_name is used to create the transfer config.`,
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -296,6 +310,18 @@ func resourceBigqueryDataTransferConfigCreate(d *schema.ResourceData, meta inter
 		return err
 	} else if v, ok := d.GetOkExists("params"); !isEmptyValue(reflect.ValueOf(paramsProp)) && (ok || !reflect.DeepEqual(v, paramsProp)) {
 		obj["params"] = paramsProp
+	}
+	versionInfoProp, err := expandBigqueryDataTransferConfigVersionInfo(d.Get("version_info"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("version_info"); !isEmptyValue(reflect.ValueOf(versionInfoProp)) && (ok || !reflect.DeepEqual(v, versionInfoProp)) {
+		obj["versionInfo"] = versionInfoProp
+	}
+	authorizationCodeProp, err := expandBigqueryDataTransferConfigAuthorizationCode(d.Get("authorization_code"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("authorization_code"); !isEmptyValue(reflect.ValueOf(authorizationCodeProp)) && (ok || !reflect.DeepEqual(v, authorizationCodeProp)) {
+		obj["authorizationCode"] = authorizationCodeProp
 	}
 
 	obj, err = resourceBigqueryDataTransferConfigEncoder(d, meta, obj)
@@ -439,6 +465,12 @@ func resourceBigqueryDataTransferConfigRead(d *schema.ResourceData, meta interfa
 	if err := d.Set("params", flattenBigqueryDataTransferConfigParams(res["params"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+	if err := d.Set("version_info", flattenBigqueryDataTransferConfigVersionInfo(res["versionInfo"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Config: %s", err)
+	}
+	if err := d.Set("authorization_code", flattenBigqueryDataTransferConfigAuthorizationCode(res["authorizationCode"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Config: %s", err)
+	}
 
 	return nil
 }
@@ -513,6 +545,18 @@ func resourceBigqueryDataTransferConfigUpdate(d *schema.ResourceData, meta inter
 	} else if v, ok := d.GetOkExists("params"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, paramsProp)) {
 		obj["params"] = paramsProp
 	}
+	versionInfoProp, err := expandBigqueryDataTransferConfigVersionInfo(d.Get("version_info"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("version_info"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, versionInfoProp)) {
+		obj["versionInfo"] = versionInfoProp
+	}
+	authorizationCodeProp, err := expandBigqueryDataTransferConfigAuthorizationCode(d.Get("authorization_code"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("authorization_code"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, authorizationCodeProp)) {
+		obj["authorizationCode"] = authorizationCodeProp
+	}
 
 	obj, err = resourceBigqueryDataTransferConfigEncoder(d, meta, obj)
 	if err != nil {
@@ -561,6 +605,14 @@ func resourceBigqueryDataTransferConfigUpdate(d *schema.ResourceData, meta inter
 
 	if d.HasChange("params") {
 		updateMask = append(updateMask, "params")
+	}
+
+	if d.HasChange("version_info") {
+		updateMask = append(updateMask, "versionInfo")
+	}
+
+	if d.HasChange("authorization_code") {
+		updateMask = append(updateMask, "authorizationCode")
 	}
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
@@ -739,6 +791,14 @@ func flattenBigqueryDataTransferConfigParams(v interface{}, d *schema.ResourceDa
 	return res
 }
 
+func flattenBigqueryDataTransferConfigVersionInfo(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferConfigAuthorizationCode(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func expandBigqueryDataTransferConfigDisplayName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
@@ -844,6 +904,14 @@ func expandBigqueryDataTransferConfigParams(v interface{}, d TerraformResourceDa
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandBigqueryDataTransferConfigVersionInfo(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigqueryDataTransferConfigAuthorizationCode(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
 }
 
 func resourceBigqueryDataTransferConfigEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
