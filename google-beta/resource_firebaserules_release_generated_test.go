@@ -27,6 +27,7 @@ import (
 )
 
 func TestAccFirebaserulesRelease_BasicRelease(t *testing.T) {
+	skipIfVcr(t)
 	t.Parallel()
 
 	context := map[string]interface{}{
