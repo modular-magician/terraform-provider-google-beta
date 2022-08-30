@@ -466,6 +466,76 @@ resource "google_project_iam_member" "os-login-admin-users" {
 `, context)
 }
 
+func TestAccCGCSnippet_computeRunShutdownScriptsExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCGCSnippet_computeRunShutdownScriptsExample(context),
+			},
+			{
+				ResourceName:      "google_compute_instance.shutdown_content_directly",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccCGCSnippet_computeRunShutdownScriptsExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_compute_instance" "shutdown_content_directly" {
+  name         = "tf-test-instance-name-1%{random_suffix}"
+  machine_type = "f1-micro"
+  zone         = "us-central1-c"
+  metadata = {
+    # Shuts down Apache server
+    shutdown-script = "#! /bin/bash /etc/init.d/apache2 stop"
+  }
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+  network_interface {
+    # A default network is created for all Google Cloud projects
+    network = "default"
+    access_config {
+    }
+  }
+}
+
+
+resource "google_compute_instance" "shutdown_content_from_file" {
+  name         = "tf-test-instance-name-2%{random_suffix}"
+  machine_type = "f1-micro"
+  zone         = "us-central1-c"
+  metadata = {
+    # Shuts down Apache server
+    shutdown-script = file("${path.module}/shutdown-script.sh")
+  }
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+  network_interface {
+    # A default network is created for all Google Cloud projects
+    network = "default"
+    access_config {
+    }
+  }
+}
+`, context)
+}
+
 func TestAccCGCSnippet_eventarcWorkflowsExample(t *testing.T) {
 	t.Parallel()
 
