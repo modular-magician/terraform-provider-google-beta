@@ -1724,6 +1724,63 @@ resource "google_cloud_run_service" "default" {
 `, context)
 }
 
+func TestAccCloudRunService_cloudrunCustomDomainMappingExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
+		CheckDestroy: testAccCheckCloudRunServiceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCloudRunService_cloudrunCustomDomainMappingExample(context),
+			},
+			{
+				ResourceName:            "google_cloud_run_service.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"name", "location"},
+			},
+		},
+	})
+}
+
+func testAccCloudRunService_cloudrunCustomDomainMappingExample(context map[string]interface{}) string {
+	return Nprintf(`
+data "google_project" "project" {}
+
+resource "google_cloud_run_service" "default" {
+  name     = "tf-test-cloud-run-srv%{random_suffix}"
+  location = "us-central1"
+  template {
+    spec {
+      containers {
+        image = "gcr.io/cloudrun/hello"
+      }
+    }
+  }
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+}
+resource "google_cloud_run_domain_mapping" "default" {
+  name     = "tf-test-verified-domain%{random_suffix}"
+  location = google_cloud_run_service.default.location
+  metadata {
+    namespace = data.google_project.project.project_id
+  }
+  spec {
+    route_name = google_cloud_run_service.default.name
+  }
+}
+`, context)
+}
+
 func testAccCheckCloudRunServiceDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
