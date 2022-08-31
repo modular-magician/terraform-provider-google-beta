@@ -274,7 +274,7 @@ func resourceIapBrandImport(d *schema.ResourceData, meta interface{}) ([]*schema
 		)
 	}
 
-	if err := d.Set("project", nameParts[1]); err != nil {
+	if err := d.Set("project", config.Project); err != nil {
 		return nil, fmt.Errorf("Error setting project: %s", err)
 	}
 	return []*schema.ResourceData{d}, nil
