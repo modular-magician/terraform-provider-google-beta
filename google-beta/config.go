@@ -194,6 +194,7 @@ type Config struct {
 	DataprocBasePath             string
 	DataprocMetastoreBasePath    string
 	DatastoreBasePath            string
+	DatastreamBasePath           string
 	DeploymentManagerBasePath    string
 	DialogflowBasePath           string
 	DialogflowCXBasePath         string
@@ -294,6 +295,7 @@ const DataLossPreventionBasePathKey = "DataLossPrevention"
 const DataprocBasePathKey = "Dataproc"
 const DataprocMetastoreBasePathKey = "DataprocMetastore"
 const DatastoreBasePathKey = "Datastore"
+const DatastreamBasePathKey = "Datastream"
 const DeploymentManagerBasePathKey = "DeploymentManager"
 const DialogflowBasePathKey = "Dialogflow"
 const DialogflowCXBasePathKey = "DialogflowCX"
@@ -388,6 +390,7 @@ var DefaultBasePaths = map[string]string{
 	DataprocBasePathKey:             "https://dataproc.googleapis.com/v1beta2/",
 	DataprocMetastoreBasePathKey:    "https://metastore.googleapis.com/v1beta/",
 	DatastoreBasePathKey:            "https://datastore.googleapis.com/v1/",
+	DatastreamBasePathKey:           "https://datastream.googleapis.com/v1/",
 	DeploymentManagerBasePathKey:    "https://www.googleapis.com/deploymentmanager/v2/",
 	DialogflowBasePathKey:           "https://dialogflow.googleapis.com/v2/",
 	DialogflowCXBasePathKey:         "https://{{location}}-dialogflow.googleapis.com/v3/",
@@ -1258,6 +1261,7 @@ func ConfigureBasePaths(c *Config) {
 	c.DataprocBasePath = DefaultBasePaths[DataprocBasePathKey]
 	c.DataprocMetastoreBasePath = DefaultBasePaths[DataprocMetastoreBasePathKey]
 	c.DatastoreBasePath = DefaultBasePaths[DatastoreBasePathKey]
+	c.DatastreamBasePath = DefaultBasePaths[DatastreamBasePathKey]
 	c.DeploymentManagerBasePath = DefaultBasePaths[DeploymentManagerBasePathKey]
 	c.DialogflowBasePath = DefaultBasePaths[DialogflowBasePathKey]
 	c.DialogflowCXBasePath = DefaultBasePaths[DialogflowCXBasePathKey]
