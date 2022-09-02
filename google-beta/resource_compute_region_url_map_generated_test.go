@@ -23,6 +23,72 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
+func TestAccComputeRegionUrlMap_urlMapSampleExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckComputeRegionUrlMapDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeRegionUrlMap_urlMapSampleExample(context),
+			},
+			{
+				ResourceName:            "google_compute_region_url_map.url_map",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"default_service", "region"},
+			},
+		},
+	})
+}
+
+func testAccComputeRegionUrlMap_urlMapSampleExample(context map[string]interface{}) string {
+	return Nprintf(`
+
+resource "google_compute_region_health_check" "health-check" {
+  check_interval_sec = 5
+  healthy_threshold  = 2
+
+  http_health_check {
+    port         = 26
+    proxy_header = "NONE"
+    request_path = "/"
+  }
+
+  name                = "tf-test-health-check%{random_suffix}"
+  region              = "us-central1"
+  timeout_sec         = 5
+  unhealthy_threshold = 2
+}
+
+resource "google_compute_region_backend_service" "backend-service" {
+  connection_draining_timeout_sec = 300
+  health_checks                   = [google_compute_region_health_check.health-check.id]
+  load_balancing_scheme           = "EXTERNAL_MANAGED"
+  locality_lb_policy              = "ROUND_ROBIN"
+  name                            = "tf-test-backend-service%{random_suffix}"
+  port_name                       = "http"
+  protocol                        = "HTTP"
+  region                          = "us-central1"
+  session_affinity                = "NONE"
+  timeout_sec                     = 30
+}
+
+resource "google_compute_region_url_map" "url_map" {
+  default_service = google_compute_region_backend_service.backend-service.id
+  name            = "tf-test-url-map%{random_suffix}"
+  region          = "us-central1"
+}
+
+`, context)
+}
+
 func TestAccComputeRegionUrlMap_regionUrlMapBasicExample(t *testing.T) {
 	t.Parallel()
 
