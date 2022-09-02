@@ -823,6 +823,10 @@ func flattenDataprocMetastoreServiceHiveMetastoreConfig(v interface{}, d *schema
 	return []interface{}{transformed}
 }
 func flattenDataprocMetastoreServiceHiveMetastoreConfigEndpointProtocol(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil || isEmptyValue(reflect.ValueOf(v)) {
+		return "THRIFT"
+	}
+
 	return v
 }
 
@@ -905,6 +909,10 @@ func flattenDataprocMetastoreServiceDatabaseType(v interface{}, d *schema.Resour
 }
 
 func flattenDataprocMetastoreServiceReleaseChannel(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil || isEmptyValue(reflect.ValueOf(v)) {
+		return "STABLE"
+	}
+
 	return v
 }
 
