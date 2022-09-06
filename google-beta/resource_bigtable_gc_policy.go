@@ -226,6 +226,7 @@ func resourceBigtableGCPolicyUpsert(d *schema.ResourceData, meta interface{}) er
 
 func resourceBigtableGCPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
+
 	userAgent, err := generateUserAgentString(d, config.userAgent)
 	if err != nil {
 		return err
@@ -254,9 +255,19 @@ func resourceBigtableGCPolicyRead(d *schema.ResourceData, meta interface{}) erro
 		return nil
 	}
 
+	log.Printf("[TRACE] Table info: %v, family info length: %v", ti, len(ti.FamilyInfos))
+
 	for _, fi := range ti.FamilyInfos {
 		if fi.Name == columnFamily {
 			d.SetId(fi.GCPolicy)
+			// Only set gc_rules when local copy has the field
+			if d.Get("gc_rules") != "" {
+				gcRuleJsonString, err := json.Marshal(gcPolicyToGCRuleString(fi.FullGCPolicy, true))
+				if err != nil {
+					return fmt.Errorf("error reading GCPolicy to json: %s", err)
+				}
+				d.Set("gc_rules", string(gcRuleJsonString[:]))
+			}
 			break
 		}
 	}
@@ -266,6 +277,40 @@ func resourceBigtableGCPolicyRead(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	return nil
+}
+
+func gcPolicyToGCRuleString(gc bigtable.GCPolicy, isTopLevel bool) map[string]interface{} {
+	result := make(map[string]interface{})
+	switch bigtable.GetPolicyType(gc) {
+	case bigtable.PolicyMaxAge:
+		age := gc.(bigtable.MaxAgeGCPolicy).GetDurationString()
+		result["max_age"] = age
+	case bigtable.PolicyMaxVersion:
+		version := gc.(bigtable.MaxVersionsGCPolicy)
+		result["max_version"] = version
+	case bigtable.PolicyUnion:
+		result["mode"] = "union"
+		rules := []interface{}{}
+		for _, c := range gc.(bigtable.UnionGCPolicy).Children {
+			rules = append(rules, gcPolicyToGCRuleString(c, false))
+		}
+		result["rules"] = rules
+	case bigtable.PolicyIntersection:
+		result["mode"] = "intersection"
+		rules := []interface{}{}
+		for _, c := range gc.(bigtable.IntersectionGCPolicy).Children {
+			rules = append(rules, gcPolicyToGCRuleString(c, false))
+		}
+		result["rules"] = rules
+	default:
+		break
+	}
+
+	if err := validateNestedPolicy(result, isTopLevel); err != nil {
+		log.Fatalf("Invalid GCPolicy %v parsed from %v: %s", result, gc, err)
+	}
+
+	return result
 }
 
 func resourceBigtableGCPolicyDestroy(d *schema.ResourceData, meta interface{}) error {
