@@ -15,13 +15,13 @@
 subcategory: "Compute Engine"
 page_title: "Google: google_compute_instance_group_named_port"
 description: |-
-  Mange the named ports setting for a managed instance group without
+  Manage the named ports setting for a managed instance group without
   managing the group as whole.
 ---
 
 # google\_compute\_instance\_group\_named\_port
 
-Mange the named ports setting for a managed instance group without
+Manage the named ports setting for a managed instance group without
 managing the group as whole. This resource is primarily intended for use
 with GKE-generated groups that shouldn't otherwise be managed by other
 tools.
