@@ -27,8 +27,9 @@ func TestAccAppEngineStandardAppVersion_appEngineStandardAppVersionExample(t *te
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"org_id":        getTestOrgFromEnv(t),
-		"random_suffix": randString(t, 10),
+		"org_id":          getTestOrgFromEnv(t),
+		"billing_account": getTestBillingAccountFromEnv(t),
+		"random_suffix":   randString(t, 10),
 	}
 
 	vcrTest(t, resource.TestCase{
@@ -55,6 +56,8 @@ resource "google_app_engine_standard_app_version" "myapp_v1" {
   version_id = "v1"
   service    = "myapp"
   runtime    = "nodejs10"
+
+  service_account = google_service_account.default.email
 
   entrypoint {
     shell = "node ./app.js"
@@ -112,6 +115,11 @@ resource "google_app_engine_standard_app_version" "myapp_v2" {
   }
 
   noop_on_destroy = true
+}
+
+resource "google_service_account" "default" {
+  account_id   = "service-account-id"
+  display_name = "Service Account"
 }
 
 resource "google_storage_bucket" "bucket" {

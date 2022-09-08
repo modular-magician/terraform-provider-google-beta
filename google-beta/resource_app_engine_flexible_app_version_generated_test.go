@@ -160,6 +160,131 @@ resource "google_storage_bucket_object" "object" {
 `, context)
 }
 
+func TestAccAppEngineFlexibleAppVersion_appEngineFlexibleAppVersionSaExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"org_id":          getTestOrgFromEnv(t),
+		"billing_account": getTestBillingAccountFromEnv(t),
+		"random_suffix":   randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckAppEngineFlexibleAppVersionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAppEngineFlexibleAppVersion_appEngineFlexibleAppVersionSaExample(context),
+			},
+			{
+				ResourceName:            "google_app_engine_flexible_app_version.myapp_sa_v1",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"beta_settings", "env_variables", "entrypoint", "service", "noop_on_destroy", "deployment.0.zip"},
+			},
+		},
+	})
+}
+
+func testAccAppEngineFlexibleAppVersion_appEngineFlexibleAppVersionSaExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_project" "my_project" {
+  name = "tf-test-appeng-flx%{random_suffix}"
+  project_id = "tf-test-appeng-flx%{random_suffix}"
+  org_id = "%{org_id}"
+  billing_account = "%{billing_account}"
+}
+
+resource "google_app_engine_application" "app" {
+  project     = google_project.my_project.project_id
+  location_id = "us-central"
+}
+
+resource "google_project_service" "service" {
+  project = google_project.my_project.project_id
+  service = "appengineflex.googleapis.com"
+
+  disable_dependent_services = false
+}
+
+resource "google_project_iam_member" "gae_api" {
+  project = google_project_service.service.project
+  role    = "roles/compute.networkUser"
+  member  = "serviceAccount:service-${google_project.my_project.number}@gae-api-prod.google.com.iam.gserviceaccount.com"
+}
+
+resource "google_service_account" "default" {
+  account_id   = "service-account-id"
+  display_name = "Service Account"
+}
+
+resource "google_app_engine_flexible_app_version" "myapp_sa_v1" {
+  version_id = "v1"
+  project    = google_project_iam_member.gae_api.project
+  service    = "default"
+  runtime    = "nodejs"
+
+  entrypoint {
+    shell = "node ./app.js"
+  }
+
+  deployment {
+    zip {
+      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.object.name}"
+    }
+  }
+
+  liveness_check {
+    path = "/"
+  }
+
+  readiness_check {
+    path = "/"
+  }
+
+  env_variables = {
+    port = "8080"
+  }
+
+  service_account = google_service_account.default.email
+
+  handlers {
+    url_regex        = ".*\\/my-path\\/*"
+    security_level   = "SECURE_ALWAYS"
+    login            = "LOGIN_REQUIRED"
+    auth_fail_action = "AUTH_FAIL_ACTION_REDIRECT"
+
+    static_files {
+      path = "my-other-path"
+      upload_path_regex = ".*\\/my-path\\/*"
+    }
+  }
+
+  automatic_scaling {
+    cool_down_period = "120s"
+    cpu_utilization {
+      target_utilization = 0.5
+    }
+  }
+
+  noop_on_destroy = true
+}
+
+resource "google_storage_bucket" "bucket" {
+  project  = google_project.my_project.project_id
+  name     = "tf-test-appengine-static-content%{random_suffix}"
+  location = "US"
+}
+
+resource "google_storage_bucket_object" "object" {
+  name   = "hello-world.zip"
+  bucket = google_storage_bucket.bucket.name
+  source = "./test-fixtures/appengine/hello-world.zip"
+}
+`, context)
+}
+
 func testAccCheckAppEngineFlexibleAppVersionDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

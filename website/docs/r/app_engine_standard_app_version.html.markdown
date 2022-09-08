@@ -41,6 +41,8 @@ resource "google_app_engine_standard_app_version" "myapp_v1" {
   service    = "myapp"
   runtime    = "nodejs10"
 
+  service_account = google_service_account.default.email
+
   entrypoint {
     shell = "node ./app.js"
   }
@@ -97,6 +99,11 @@ resource "google_app_engine_standard_app_version" "myapp_v2" {
   }
 
   noop_on_destroy = true
+}
+
+resource "google_service_account" "default" {
+  account_id   = "service-account-id"
+  display_name = "Service Account"
 }
 
 resource "google_storage_bucket" "bucket" {
@@ -198,6 +205,11 @@ The following arguments are supported:
   Please see the app.yaml reference for valid values at `https://cloud.google.com/appengine/docs/standard/<language>/config/appref`\
   Substitute `<language>` with `python`, `java`, `php`, `ruby`, `go` or `nodejs`.
 
+* `service_account` -
+  (Optional)
+  The identity that the deployed version will run as. Admin API will use the App Engine Appspot
+  service account as default if this field is neither provided in app.yaml file nor through CLI flag.
+
 * `handlers` -
   (Optional)
   An ordered list of URL-matching patterns that should be applied to incoming requests.
@@ -250,7 +262,7 @@ The following arguments are supported:
 
 * `noop_on_destroy` - (Optional) If set to `true`, the application version will not be deleted.
 
-* `delete_service_on_destroy` - (Optional) If set to `true`, the service will be deleted if it is the last version.    
+* `delete_service_on_destroy` - (Optional) If set to `true`, the service will be deleted if it is the last version.
 
 
 <a name="nested_handlers"></a>The `handlers` block supports:

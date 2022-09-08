@@ -145,6 +145,104 @@ resource "google_storage_bucket_object" "object" {
   source = "./test-fixtures/appengine/hello-world.zip"
 }
 ```
+## Example Usage - App Engine Flexible App Version Sa
+
+
+```hcl
+resource "google_project" "my_project" {
+  name = "appeng-flx"
+  project_id = "appeng-flx"
+  org_id = "123456789"
+  billing_account = "000000-0000000-0000000-000000"
+}
+
+resource "google_app_engine_application" "app" {
+  project     = google_project.my_project.project_id
+  location_id = "us-central"
+}
+
+resource "google_project_service" "service" {
+  project = google_project.my_project.project_id
+  service = "appengineflex.googleapis.com"
+
+  disable_dependent_services = false
+}
+
+resource "google_project_iam_member" "gae_api" {
+  project = google_project_service.service.project
+  role    = "roles/compute.networkUser"
+  member  = "serviceAccount:service-${google_project.my_project.number}@gae-api-prod.google.com.iam.gserviceaccount.com"
+}
+
+resource "google_service_account" "default" {
+  account_id   = "service-account-id"
+  display_name = "Service Account"
+}
+
+resource "google_app_engine_flexible_app_version" "myapp_sa_v1" {
+  version_id = "v1"
+  project    = google_project_iam_member.gae_api.project
+  service    = "default"
+  runtime    = "nodejs"
+
+  entrypoint {
+    shell = "node ./app.js"
+  }
+
+  deployment {
+    zip {
+      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.object.name}"
+    }
+  }
+
+  liveness_check {
+    path = "/"
+  }
+
+  readiness_check {
+    path = "/"
+  }
+
+  env_variables = {
+    port = "8080"
+  }
+
+  service_account = google_service_account.default.email
+
+  handlers {
+    url_regex        = ".*\\/my-path\\/*"
+    security_level   = "SECURE_ALWAYS"
+    login            = "LOGIN_REQUIRED"
+    auth_fail_action = "AUTH_FAIL_ACTION_REDIRECT"
+
+    static_files {
+      path = "my-other-path"
+      upload_path_regex = ".*\\/my-path\\/*"
+    }
+  }
+
+  automatic_scaling {
+    cool_down_period = "120s"
+    cpu_utilization {
+      target_utilization = 0.5
+    }
+  }
+
+  noop_on_destroy = true
+}
+
+resource "google_storage_bucket" "bucket" {
+  project  = google_project.my_project.project_id
+  name     = "appengine-static-content"
+  location = "US"
+}
+
+resource "google_storage_bucket_object" "object" {
+  name   = "hello-world.zip"
+  bucket = google_storage_bucket.bucket.name
+  source = "./test-fixtures/appengine/hello-world.zip"
+}
+```
 
 ## Argument Reference
 
@@ -281,6 +379,11 @@ The following arguments are supported:
   Please see the app.yaml reference for valid values at `https://cloud.google.com/appengine/docs/standard/<language>/config/appref`\
   Substitute `<language>` with `python`, `java`, `php`, `ruby`, `go` or `nodejs`.
 
+* `service_account` -
+  (Optional)
+  The identity that the deployed version will run as. Admin API will use the App Engine Appspot
+  service account as default if this field is neither provided in app.yaml file nor through CLI flag.
+
 * `handlers` -
   (Optional)
   An ordered list of URL-matching patterns that should be applied to incoming requests.
@@ -349,7 +452,7 @@ The following arguments are supported:
 
 * `noop_on_destroy` - (Optional) If set to `true`, the application version will not be deleted.
 
-* `delete_service_on_destroy` - (Optional) If set to `true`, the service will be deleted if it is the last version.    
+* `delete_service_on_destroy` - (Optional) If set to `true`, the service will be deleted if it is the last version.
 
 
 <a name="nested_network"></a>The `network` block supports:

@@ -804,6 +804,12 @@ Substitute '<language>' with 'python', 'java', 'php', 'ruby', 'go' or 'nodejs'.`
 			"service_account": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Description: `The identity that the deployed version will run as. Admin API will use the App Engine Appspot
+service account as default if this field is neither provided in app.yaml file nor through CLI flag.`,
+			},
+			"service_account": {
+				Type:     schema.TypeString,
+				Optional: true,
 				Description: `The identity that the deployed version will run as. Admin API will use the App Engine Appspot service account as
 default if this field is neither provided in app.yaml file nor through CLI flag.`,
 			},
@@ -929,6 +935,12 @@ func resourceAppEngineFlexibleAppVersionCreate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("runtime_api_version"); !isEmptyValue(reflect.ValueOf(runtimeApiVersionProp)) && (ok || !reflect.DeepEqual(v, runtimeApiVersionProp)) {
 		obj["runtimeApiVersion"] = runtimeApiVersionProp
+	}
+	serviceAccountProp, err := expandAppEngineFlexibleAppVersionServiceAccount(d.Get("service_account"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("service_account"); !isEmptyValue(reflect.ValueOf(serviceAccountProp)) && (ok || !reflect.DeepEqual(v, serviceAccountProp)) {
+		obj["serviceAccount"] = serviceAccountProp
 	}
 	handlersProp, err := expandAppEngineFlexibleAppVersionHandlers(d.Get("handlers"), d, config)
 	if err != nil {
@@ -1154,6 +1166,9 @@ func resourceAppEngineFlexibleAppVersionRead(d *schema.ResourceData, meta interf
 	if err := d.Set("runtime_api_version", flattenAppEngineFlexibleAppVersionRuntimeApiVersion(res["runtimeApiVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
+	if err := d.Set("service_account", flattenAppEngineFlexibleAppVersionServiceAccount(res["serviceAccount"], d, config)); err != nil {
+		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
+	}
 	if err := d.Set("handlers", flattenAppEngineFlexibleAppVersionHandlers(res["handlers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FlexibleAppVersion: %s", err)
 	}
@@ -1272,6 +1287,12 @@ func resourceAppEngineFlexibleAppVersionUpdate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("runtime_api_version"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, runtimeApiVersionProp)) {
 		obj["runtimeApiVersion"] = runtimeApiVersionProp
+	}
+	serviceAccountProp, err := expandAppEngineFlexibleAppVersionServiceAccount(d.Get("service_account"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("service_account"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, serviceAccountProp)) {
+		obj["serviceAccount"] = serviceAccountProp
 	}
 	handlersProp, err := expandAppEngineFlexibleAppVersionHandlers(d.Get("handlers"), d, config)
 	if err != nil {
@@ -1678,6 +1699,10 @@ func flattenAppEngineFlexibleAppVersionServingStatus(v interface{}, d *schema.Re
 }
 
 func flattenAppEngineFlexibleAppVersionRuntimeApiVersion(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAppEngineFlexibleAppVersionServiceAccount(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -2651,6 +2676,10 @@ func expandAppEngineFlexibleAppVersionServingStatus(v interface{}, d TerraformRe
 }
 
 func expandAppEngineFlexibleAppVersionRuntimeApiVersion(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAppEngineFlexibleAppVersionServiceAccount(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
