@@ -34,7 +34,7 @@ To get more information about DomainMapping, see:
 
 ```hcl
 
-resource "google_cloud_run_service" "default" {
+resource "google_cloud_run_service" "" {
   name     = "cloudrun-srv"
   location = "us-central1"
 
@@ -51,7 +51,7 @@ resource "google_cloud_run_service" "default" {
   }
 }
 
-resource "google_cloud_run_domain_mapping" "default" {
+resource "google_cloud_run_domain_mapping" "" {
   location = "us-central1"
   name     = "verified-domain.com"
 
@@ -60,7 +60,7 @@ resource "google_cloud_run_domain_mapping" "default" {
   }
 
   spec {
-    route_name = google_cloud_run_service.default.name
+    route_name = google_cloud_run_service..name
   }
 }
 ```

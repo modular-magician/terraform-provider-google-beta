@@ -40,7 +40,7 @@ func TestAccCloudRunDomainMapping_cloudRunDomainMappingBasicExample(t *testing.T
 				Config: testAccCloudRunDomainMapping_cloudRunDomainMappingBasicExample(context),
 			},
 			{
-				ResourceName:            "google_cloud_run_domain_mapping.default",
+				ResourceName:            "google_cloud_run_domain_mapping.",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"name", "location"},
@@ -52,7 +52,7 @@ func TestAccCloudRunDomainMapping_cloudRunDomainMappingBasicExample(t *testing.T
 func testAccCloudRunDomainMapping_cloudRunDomainMappingBasicExample(context map[string]interface{}) string {
 	return Nprintf(`
 
-resource "google_cloud_run_service" "default" {
+resource "google_cloud_run_service" "" {
   name     = "tf-test-cloudrun-srv%{random_suffix}"
   location = "us-central1"
 
@@ -69,7 +69,7 @@ resource "google_cloud_run_service" "default" {
   }
 }
 
-resource "google_cloud_run_domain_mapping" "default" {
+resource "google_cloud_run_domain_mapping" "" {
   location = "us-central1"
   name     = "tf-test-domain%{random_suffix}.gcp.tfacc.hashicorptest.com"
 
@@ -78,7 +78,7 @@ resource "google_cloud_run_domain_mapping" "default" {
   }
 
   spec {
-    route_name = google_cloud_run_service.default.name
+    route_name = google_cloud_run_service..name
   }
 }
 `, context)
