@@ -126,10 +126,11 @@ resource "google_cloudfunctions2_function" "function" {
   }
  
   service_config {
-    max_instance_count  = 3
+    max_instance_count = 3
     min_instance_count = 1
-    available_memory    = "256M"
-    timeout_seconds     = 60
+    available_memory   = "256M"
+    timeout_seconds    = 60
+    concurrency        = 1
     environment_variables = {
         SERVICE_CONFIG_TEST = "config_test"
     }
@@ -688,6 +689,13 @@ The following arguments are supported:
   (Optional)
   The limit on the minimum number of function instances that may coexist at a
   given time.
+
+* `concurrency` -
+  (Optional)
+  The amount of concurrent requests a single function instance can handle.
+  Defaults to 1. A concurrency value greater than 1 requires a function to have 1
+  or more vCPUs.
+  More info: https://cloud.google.com/functions/docs/configuring/concurrency
 
 * `vpc_connector` -
   (Optional)

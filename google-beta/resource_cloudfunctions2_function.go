@@ -280,6 +280,14 @@ region. If not provided, defaults to the same region as the function.`,
 Defaults to 256M. Supported units are k, M, G, Mi, Gi. If no unit is
 supplied the value is interpreted as bytes.`,
 						},
+						"concurrency": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							Description: `The amount of concurrent requests a single function instance can handle.
+Defaults to 1. A concurrency value greater than 1 requires a function to have 1
+or more vCPUs.
+More info: https://cloud.google.com/functions/docs/configuring/concurrency`,
+						},
 						"environment_variables": {
 							Type:        schema.TypeMap,
 							Optional:    true,
@@ -1015,6 +1023,8 @@ func flattenCloudfunctions2functionServiceConfig(v interface{}, d *schema.Resour
 		flattenCloudfunctions2functionServiceConfigMaxInstanceCount(original["maxInstanceCount"], d, config)
 	transformed["min_instance_count"] =
 		flattenCloudfunctions2functionServiceConfigMinInstanceCount(original["minInstanceCount"], d, config)
+	transformed["concurrency"] =
+		flattenCloudfunctions2functionServiceConfigConcurrency(original["concurrency"], d, config)
 	transformed["vpc_connector"] =
 		flattenCloudfunctions2functionServiceConfigVPCConnector(original["vpcConnector"], d, config)
 	transformed["vpc_connector_egress_settings"] =
@@ -1082,6 +1092,23 @@ func flattenCloudfunctions2functionServiceConfigMaxInstanceCount(v interface{}, 
 }
 
 func flattenCloudfunctions2functionServiceConfigMinInstanceCount(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := stringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenCloudfunctions2functionServiceConfigConcurrency(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := stringToFixed64(strVal); err == nil {
@@ -1623,6 +1650,13 @@ func expandCloudfunctions2functionServiceConfig(v interface{}, d TerraformResour
 		transformed["minInstanceCount"] = transformedMinInstanceCount
 	}
 
+	transformedConcurrency, err := expandCloudfunctions2functionServiceConfigConcurrency(original["concurrency"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConcurrency); val.IsValid() && !isEmptyValue(val) {
+		transformed["concurrency"] = transformedConcurrency
+	}
+
 	transformedVPCConnector, err := expandCloudfunctions2functionServiceConfigVPCConnector(original["vpc_connector"], d, config)
 	if err != nil {
 		return nil, err
@@ -1717,6 +1751,10 @@ func expandCloudfunctions2functionServiceConfigMaxInstanceCount(v interface{}, d
 }
 
 func expandCloudfunctions2functionServiceConfigMinInstanceCount(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudfunctions2functionServiceConfigConcurrency(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
