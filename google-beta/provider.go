@@ -952,9 +952,9 @@ func Provider() *schema.Provider {
 	return provider
 }
 
-// Generated resources: 261
+// Generated resources: 262
 // Generated IAM resources: 171
-// Total generated resources: 432
+// Total generated resources: 433
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1061,6 +1061,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_cloudiot_registry_iam_policy":                          ResourceIamPolicy(CloudIotDeviceRegistryIamSchema, CloudIotDeviceRegistryIamUpdaterProducer, CloudIotDeviceRegistryIdParseFunc),
 			"google_cloudiot_device":                                       resourceCloudIotDevice(),
 			"google_cloud_run_domain_mapping":                              resourceCloudRunDomainMapping(),
+			"google_cloud_run_job":                                         resourceCloudRunJob(),
 			"google_cloud_run_service":                                     resourceCloudRunService(),
 			"google_cloud_run_service_iam_binding":                         ResourceIamBinding(CloudRunServiceIamSchema, CloudRunServiceIamUpdaterProducer, CloudRunServiceIdParseFunc),
 			"google_cloud_run_service_iam_member":                          ResourceIamMember(CloudRunServiceIamSchema, CloudRunServiceIamUpdaterProducer, CloudRunServiceIdParseFunc),
