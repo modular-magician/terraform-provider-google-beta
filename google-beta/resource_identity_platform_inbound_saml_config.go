@@ -115,7 +115,7 @@ and accept an authentication assertion issued by a SAML identity provider.`,
 						"sp_certificates": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: `The IDP's certificate data to verify the signature in the SAMLResponse issued by the IDP.`,
+							Description: `The SP certificate can be used by the IDP to verify the signature of the SAMLRequest from the SP.`,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"x509_certificate": {

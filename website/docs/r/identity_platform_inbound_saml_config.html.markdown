@@ -120,7 +120,7 @@ The following arguments are supported:
   Callback URI where responses from IDP are handled. Must start with `https://`.
 
 * `sp_certificates` -
-  The IDP's certificate data to verify the signature in the SAMLResponse issued by the IDP.
+  The SP certificate can be used by the IDP to verify the signature of the SAMLRequest from the SP.
   Structure is [documented below](#nested_sp_certificates).
 
 
