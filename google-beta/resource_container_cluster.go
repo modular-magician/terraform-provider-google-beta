@@ -83,6 +83,8 @@ func clusterSchemaNodeConfig() *schema.Schema {
 			changeFieldSchemaToForceNew(sch)
 		}
 	}
+	// Autopilot is only applicable for container cluster
+	nodeConfigSch.ConflictsWith = []string{"enable_autopilot"}
 	return nodeConfigSch
 }
 
@@ -1025,8 +1027,7 @@ func resourceContainerCluster() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: schemaNodePool,
 				},
-				Description:   `List of node pools associated with this cluster. See google_container_node_pool for schema. Warning: node pools defined inside a cluster can't be changed (or added/removed) after cluster creation without deleting and recreating the entire cluster. Unless you absolutely need the ability to say "these are the only node pools associated with this cluster", use the google_container_node_pool resource instead of this property.`,
-				ConflictsWith: []string{"enable_autopilot"},
+				Description: `List of node pools associated with this cluster. See google_container_node_pool for schema. Warning: node pools defined inside a cluster can't be changed (or added/removed) after cluster creation without deleting and recreating the entire cluster. Unless you absolutely need the ability to say "these are the only node pools associated with this cluster", use the google_container_node_pool resource instead of this property. In case of autopilot cluster, you may use this block to assign custom service account and/or oauth scopes`,
 			},
 
 			"node_pool_defaults": clusterSchemaNodePoolDefaults(),
