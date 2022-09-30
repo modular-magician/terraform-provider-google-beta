@@ -403,6 +403,7 @@ func resourceDatastreamConnectionProfileCreate(d *schema.ResourceData, meta inte
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
+
 		return fmt.Errorf("Error waiting to create ConnectionProfile: %s", err)
 	}
 
