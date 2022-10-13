@@ -87,10 +87,11 @@ func OrgPolicyPolicySpecSchema() *schema.Resource {
 			},
 
 			"rules": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Up to 10 PolicyRules are allowed. In Policies for boolean constraints, the following requirements apply: - There must be one and only one PolicyRule where condition is unset. - BooleanPolicyRules with conditions must set `enforced` to the opposite of the PolicyRule without a condition. - During policy evaluation, PolicyRules with conditions that are true for a target resource take precedence.",
 				Elem:        OrgPolicyPolicySpecRulesSchema(),
+				Set:         schema.HashResource(OrgPolicyPolicySpecRulesSchema()),
 			},
 
 			"etag": {
@@ -407,6 +408,8 @@ func expandOrgPolicyPolicySpecRulesArray(o interface{}) []orgpolicy.PolicySpecRu
 	if o == nil {
 		return make([]orgpolicy.PolicySpecRules, 0)
 	}
+
+	o = o.(*schema.Set).List()
 
 	objs := o.([]interface{})
 	if len(objs) == 0 || objs[0] == nil {
