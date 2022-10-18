@@ -54,7 +54,7 @@ func testAccBigqueryDataTransferConfig_scheduledQuery_basic(t *testing.T) {
 				ResourceName:            "google_bigquery_data_transfer_config.query_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ImportStateVerifyIgnore: []string{"project"},
 			},
 		},
 	})
@@ -86,7 +86,7 @@ func testAccBigqueryDataTransferConfig_scheduledQuery_update(t *testing.T) {
 				ResourceName:            "google_bigquery_data_transfer_config.query_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ImportStateVerifyIgnore: []string{"project"},
 			},
 			{
 				Config: testAccBigqueryDataTransferConfig_scheduledQuery(random_suffix, random_suffix2, "second", second_start_time, second_end_time, "z"),
@@ -95,7 +95,7 @@ func testAccBigqueryDataTransferConfig_scheduledQuery_update(t *testing.T) {
 				ResourceName:            "google_bigquery_data_transfer_config.query_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ImportStateVerifyIgnore: []string{"project"},
 			},
 		},
 	})
@@ -121,7 +121,7 @@ func testAccBigqueryDataTransferConfig_scheduledQuery_no_destination(t *testing.
 				ResourceName:            "google_bigquery_data_transfer_config.query_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ImportStateVerifyIgnore: []string{"project"},
 			},
 		},
 	})
@@ -142,7 +142,7 @@ func testAccBigqueryDataTransferConfig_scheduledQuery_with_service_account(t *te
 				ResourceName:            "google_bigquery_data_transfer_config.query_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "service_account_name"},
+				ImportStateVerifyIgnore: []string{"service_account_name", "project"},
 			},
 		},
 	})
@@ -163,7 +163,7 @@ func testAccBigqueryDataTransferConfig_copy_booleanParam(t *testing.T) {
 				ResourceName:            "google_bigquery_data_transfer_config.copy_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ImportStateVerifyIgnore: []string{"project"},
 			},
 		},
 	})
@@ -184,7 +184,7 @@ func testAccBigqueryDataTransferConfig_force_new_update_params(t *testing.T) {
 				ResourceName:            "google_bigquery_data_transfer_config.update_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ImportStateVerifyIgnore: []string{"project"},
 			},
 			{
 				Config: testAccBigqueryDataTransferConfig_update_params_force_new(random_suffix, "new", "old"),
@@ -193,7 +193,7 @@ func testAccBigqueryDataTransferConfig_force_new_update_params(t *testing.T) {
 				ResourceName:            "google_bigquery_data_transfer_config.update_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ImportStateVerifyIgnore: []string{"project"},
 			},
 			{
 				Config: testAccBigqueryDataTransferConfig_update_params_force_new(random_suffix, "new", "new"),
@@ -202,7 +202,7 @@ func testAccBigqueryDataTransferConfig_force_new_update_params(t *testing.T) {
 				ResourceName:            "google_bigquery_data_transfer_config.update_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ImportStateVerifyIgnore: []string{"project"},
 			},
 		},
 	})
@@ -416,7 +416,7 @@ resource "google_bigquery_dataset" "dataset" {
   dataset_id       = "tf_test_%s"
   friendly_name    = "foo"
   description      = "bar"
-  location         = "US"
+  location         = "us"
 }
 
 resource "google_bigquery_data_transfer_config" "update_config" {

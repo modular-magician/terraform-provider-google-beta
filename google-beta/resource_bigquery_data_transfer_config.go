@@ -357,7 +357,7 @@ func resourceBigqueryDataTransferConfigCreate(d *schema.ResourceData, meta inter
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{location}}/transferConfigs/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -376,7 +376,7 @@ func resourceBigqueryDataTransferConfigCreate(d *schema.ResourceData, meta inter
 			return fmt.Errorf("Create response didn't contain critical fields. Create may not have succeeded.")
 		}
 	}
-	if err := d.Set("name", name.(string)); err != nil {
+	if err := d.Set("name", GetResourceNameFromSelfLink(name.(string))); err != nil {
 		return fmt.Errorf("Error setting name: %s", err)
 	}
 	d.SetId(name.(string))
@@ -393,7 +393,7 @@ func resourceBigqueryDataTransferConfigRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{BigqueryDataTransferBasePath}}{{name}}")
+	url, err := replaceVars(d, config, "{{BigqueryDataTransferBasePath}}projects/{{project}}/locations/{{location}}/transferConfigs/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -545,7 +545,7 @@ func resourceBigqueryDataTransferConfigUpdate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{BigqueryDataTransferBasePath}}{{name}}")
+	url, err := replaceVars(d, config, "{{BigqueryDataTransferBasePath}}projects/{{project}}/locations/{{location}}/transferConfigs/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -626,7 +626,7 @@ func resourceBigqueryDataTransferConfigDelete(d *schema.ResourceData, meta inter
 	}
 	billingProject = project
 
-	url, err := replaceVars(d, config, "{{BigqueryDataTransferBasePath}}{{name}}")
+	url, err := replaceVars(d, config, "{{BigqueryDataTransferBasePath}}projects/{{project}}/locations/{{location}}/transferConfigs/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -649,13 +649,21 @@ func resourceBigqueryDataTransferConfigDelete(d *schema.ResourceData, meta inter
 }
 
 func resourceBigqueryDataTransferConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
 	config := meta.(*Config)
-
-	// current import_formats can't import fields with forward slashes in their value
-	if err := parseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
+	if err := parseImportId([]string{
+		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/transferConfigs/(?P<name>[^/]+)",
+		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)",
+		"(?P<location>[^/]+)/(?P<name>[^/]+)",
+	}, d, config); err != nil {
 		return nil, err
 	}
+
+	// Replace import id for the resource id
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{location}}/transferConfigs/{{name}}")
+	if err != nil {
+		return nil, fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
 }
@@ -665,7 +673,10 @@ func flattenBigqueryDataTransferConfigDisplayName(v interface{}, d *schema.Resou
 }
 
 func flattenBigqueryDataTransferConfigName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	return v
+	if v == nil {
+		return v
+	}
+	return NameFromSelfLinkStateFunc(v)
 }
 
 func flattenBigqueryDataTransferConfigDestinationDatasetId(v interface{}, d *schema.ResourceData, config *Config) interface{} {

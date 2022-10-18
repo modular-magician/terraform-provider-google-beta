@@ -205,7 +205,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/transferConfigs/{{name}}`
 
 * `name` -
   The resource name of the transfer config. Transfer config names have the
@@ -229,7 +229,9 @@ This resource provides the following
 Config can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_bigquery_data_transfer_config.default {{name}}
+$ terraform import google_bigquery_data_transfer_config.default projects/{{project}}/locations/{{location}}/transferConfigs/{{name}}
+$ terraform import google_bigquery_data_transfer_config.default {{project}}/{{location}}/{{name}}
+$ terraform import google_bigquery_data_transfer_config.default {{location}}/{{name}}
 ```
 
 ## User Project Overrides
