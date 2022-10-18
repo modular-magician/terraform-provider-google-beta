@@ -407,6 +407,44 @@ resource "google_compute_health_check" "default" {
 `, context)
 }
 
+func TestAccComputeBackendService_backendServiceCoalescingExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckComputeBackendServiceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeBackendService_backendServiceCoalescingExample(context),
+			},
+			{
+				ResourceName:      "google_compute_backend_service.default",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccComputeBackendService_backendServiceCoalescingExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_compute_backend_service" "default" {
+  name        = "tf-test-backend-service%{random_suffix}"
+  description = "Coalescing Activated"
+  enable_cdn  = true
+  cdn_policy {
+    request_coalescing = true
+    signed_url_cache_max_age_sec = 7200
+  }
+}
+`, context)
+}
+
 func testAccCheckComputeBackendServiceDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

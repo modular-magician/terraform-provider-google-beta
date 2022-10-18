@@ -708,6 +708,10 @@ The following arguments are supported:
   Omitting the policy and leaving negativeCaching enabled will use Cloud CDN's default cache TTLs.
   Structure is [documented below](#nested_negative_caching_policy).
 
+* `request_coalescing` -
+  (Optional)
+  If true then Cloud CDN will combine multiple concurrent cache fill requests into a small number of requests to the origin.
+
 * `cache_mode` -
   (Optional)
   Specifies the cache setting for all responses from this backend.
