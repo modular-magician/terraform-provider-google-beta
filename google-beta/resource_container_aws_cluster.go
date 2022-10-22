@@ -122,6 +122,16 @@ func resourceContainerAwsCluster() *schema.Resource {
 				Elem:        ContainerAwsClusterLoggingConfigSchema(),
 			},
 
+			"monitoring_config": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Monitoring configuration.",
+				MaxItems:    1,
+				Elem:        ContainerAwsClusterMonitoringConfigSchema(),
+			},
+
 			"project": {
 				Type:             schema.TypeString,
 				Computed:         true,
@@ -318,7 +328,6 @@ func ContainerAwsClusterControlPlaneSchema() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Optional. A set of AWS resource tags to propagate to all underlying managed AWS resources. Specify at most 50 pairs containing alphanumerics, spaces, and symbols (.+-=_:@/). Keys can be up to 127 Unicode characters. Values can be up to 255 Unicode characters.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
@@ -563,6 +572,36 @@ func ContainerAwsClusterLoggingConfigComponentConfigSchema() *schema.Resource {
 	}
 }
 
+func ContainerAwsClusterMonitoringConfigSchema() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"managed_prometheus_config": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Configuration of the Google Cloud Managed Service for Prometheus.",
+				MaxItems:    1,
+				Elem:        ContainerAwsClusterMonitoringConfigManagedPrometheusConfigSchema(),
+			},
+		},
+	}
+}
+
+func ContainerAwsClusterMonitoringConfigManagedPrometheusConfigSchema() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"enabled": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Configuration of the enable Managed Collection.",
+			},
+		},
+	}
+}
+
 func ContainerAwsClusterWorkloadIdentityConfigSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -595,17 +634,18 @@ func resourceContainerAwsClusterCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	obj := &containeraws.Cluster{
-		Authorization: expandContainerAwsClusterAuthorization(d.Get("authorization")),
-		AwsRegion:     dcl.String(d.Get("aws_region").(string)),
-		ControlPlane:  expandContainerAwsClusterControlPlane(d.Get("control_plane")),
-		Fleet:         expandContainerAwsClusterFleet(d.Get("fleet")),
-		Location:      dcl.String(d.Get("location").(string)),
-		Name:          dcl.String(d.Get("name").(string)),
-		Networking:    expandContainerAwsClusterNetworking(d.Get("networking")),
-		Annotations:   checkStringMap(d.Get("annotations")),
-		Description:   dcl.String(d.Get("description").(string)),
-		LoggingConfig: expandContainerAwsClusterLoggingConfig(d.Get("logging_config")),
-		Project:       dcl.String(project),
+		Authorization:    expandContainerAwsClusterAuthorization(d.Get("authorization")),
+		AwsRegion:        dcl.String(d.Get("aws_region").(string)),
+		ControlPlane:     expandContainerAwsClusterControlPlane(d.Get("control_plane")),
+		Fleet:            expandContainerAwsClusterFleet(d.Get("fleet")),
+		Location:         dcl.String(d.Get("location").(string)),
+		Name:             dcl.String(d.Get("name").(string)),
+		Networking:       expandContainerAwsClusterNetworking(d.Get("networking")),
+		Annotations:      checkStringMap(d.Get("annotations")),
+		Description:      dcl.String(d.Get("description").(string)),
+		LoggingConfig:    expandContainerAwsClusterLoggingConfig(d.Get("logging_config")),
+		MonitoringConfig: expandContainerAwsClusterMonitoringConfig(d.Get("monitoring_config")),
+		Project:          dcl.String(project),
 	}
 
 	id, err := obj.ID()
@@ -653,17 +693,18 @@ func resourceContainerAwsClusterRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	obj := &containeraws.Cluster{
-		Authorization: expandContainerAwsClusterAuthorization(d.Get("authorization")),
-		AwsRegion:     dcl.String(d.Get("aws_region").(string)),
-		ControlPlane:  expandContainerAwsClusterControlPlane(d.Get("control_plane")),
-		Fleet:         expandContainerAwsClusterFleet(d.Get("fleet")),
-		Location:      dcl.String(d.Get("location").(string)),
-		Name:          dcl.String(d.Get("name").(string)),
-		Networking:    expandContainerAwsClusterNetworking(d.Get("networking")),
-		Annotations:   checkStringMap(d.Get("annotations")),
-		Description:   dcl.String(d.Get("description").(string)),
-		LoggingConfig: expandContainerAwsClusterLoggingConfig(d.Get("logging_config")),
-		Project:       dcl.String(project),
+		Authorization:    expandContainerAwsClusterAuthorization(d.Get("authorization")),
+		AwsRegion:        dcl.String(d.Get("aws_region").(string)),
+		ControlPlane:     expandContainerAwsClusterControlPlane(d.Get("control_plane")),
+		Fleet:            expandContainerAwsClusterFleet(d.Get("fleet")),
+		Location:         dcl.String(d.Get("location").(string)),
+		Name:             dcl.String(d.Get("name").(string)),
+		Networking:       expandContainerAwsClusterNetworking(d.Get("networking")),
+		Annotations:      checkStringMap(d.Get("annotations")),
+		Description:      dcl.String(d.Get("description").(string)),
+		LoggingConfig:    expandContainerAwsClusterLoggingConfig(d.Get("logging_config")),
+		MonitoringConfig: expandContainerAwsClusterMonitoringConfig(d.Get("monitoring_config")),
+		Project:          dcl.String(project),
 	}
 
 	userAgent, err := generateUserAgentString(d, config.userAgent)
@@ -718,6 +759,9 @@ func resourceContainerAwsClusterRead(d *schema.ResourceData, meta interface{}) e
 	if err = d.Set("logging_config", flattenContainerAwsClusterLoggingConfig(res.LoggingConfig)); err != nil {
 		return fmt.Errorf("error setting logging_config in state: %s", err)
 	}
+	if err = d.Set("monitoring_config", flattenContainerAwsClusterMonitoringConfig(res.MonitoringConfig)); err != nil {
+		return fmt.Errorf("error setting monitoring_config in state: %s", err)
+	}
 	if err = d.Set("project", res.Project); err != nil {
 		return fmt.Errorf("error setting project in state: %s", err)
 	}
@@ -756,17 +800,18 @@ func resourceContainerAwsClusterUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	obj := &containeraws.Cluster{
-		Authorization: expandContainerAwsClusterAuthorization(d.Get("authorization")),
-		AwsRegion:     dcl.String(d.Get("aws_region").(string)),
-		ControlPlane:  expandContainerAwsClusterControlPlane(d.Get("control_plane")),
-		Fleet:         expandContainerAwsClusterFleet(d.Get("fleet")),
-		Location:      dcl.String(d.Get("location").(string)),
-		Name:          dcl.String(d.Get("name").(string)),
-		Networking:    expandContainerAwsClusterNetworking(d.Get("networking")),
-		Annotations:   checkStringMap(d.Get("annotations")),
-		Description:   dcl.String(d.Get("description").(string)),
-		LoggingConfig: expandContainerAwsClusterLoggingConfig(d.Get("logging_config")),
-		Project:       dcl.String(project),
+		Authorization:    expandContainerAwsClusterAuthorization(d.Get("authorization")),
+		AwsRegion:        dcl.String(d.Get("aws_region").(string)),
+		ControlPlane:     expandContainerAwsClusterControlPlane(d.Get("control_plane")),
+		Fleet:            expandContainerAwsClusterFleet(d.Get("fleet")),
+		Location:         dcl.String(d.Get("location").(string)),
+		Name:             dcl.String(d.Get("name").(string)),
+		Networking:       expandContainerAwsClusterNetworking(d.Get("networking")),
+		Annotations:      checkStringMap(d.Get("annotations")),
+		Description:      dcl.String(d.Get("description").(string)),
+		LoggingConfig:    expandContainerAwsClusterLoggingConfig(d.Get("logging_config")),
+		MonitoringConfig: expandContainerAwsClusterMonitoringConfig(d.Get("monitoring_config")),
+		Project:          dcl.String(project),
 	}
 	directive := UpdateDirective
 	userAgent, err := generateUserAgentString(d, config.userAgent)
@@ -809,17 +854,18 @@ func resourceContainerAwsClusterDelete(d *schema.ResourceData, meta interface{})
 	}
 
 	obj := &containeraws.Cluster{
-		Authorization: expandContainerAwsClusterAuthorization(d.Get("authorization")),
-		AwsRegion:     dcl.String(d.Get("aws_region").(string)),
-		ControlPlane:  expandContainerAwsClusterControlPlane(d.Get("control_plane")),
-		Fleet:         expandContainerAwsClusterFleet(d.Get("fleet")),
-		Location:      dcl.String(d.Get("location").(string)),
-		Name:          dcl.String(d.Get("name").(string)),
-		Networking:    expandContainerAwsClusterNetworking(d.Get("networking")),
-		Annotations:   checkStringMap(d.Get("annotations")),
-		Description:   dcl.String(d.Get("description").(string)),
-		LoggingConfig: expandContainerAwsClusterLoggingConfig(d.Get("logging_config")),
-		Project:       dcl.String(project),
+		Authorization:    expandContainerAwsClusterAuthorization(d.Get("authorization")),
+		AwsRegion:        dcl.String(d.Get("aws_region").(string)),
+		ControlPlane:     expandContainerAwsClusterControlPlane(d.Get("control_plane")),
+		Fleet:            expandContainerAwsClusterFleet(d.Get("fleet")),
+		Location:         dcl.String(d.Get("location").(string)),
+		Name:             dcl.String(d.Get("name").(string)),
+		Networking:       expandContainerAwsClusterNetworking(d.Get("networking")),
+		Annotations:      checkStringMap(d.Get("annotations")),
+		Description:      dcl.String(d.Get("description").(string)),
+		LoggingConfig:    expandContainerAwsClusterLoggingConfig(d.Get("logging_config")),
+		MonitoringConfig: expandContainerAwsClusterMonitoringConfig(d.Get("monitoring_config")),
+		Project:          dcl.String(project),
 	}
 
 	log.Printf("[DEBUG] Deleting Cluster %q", d.Id())
@@ -1328,6 +1374,58 @@ func flattenContainerAwsClusterLoggingConfigComponentConfig(obj *containeraws.Cl
 	}
 	transformed := map[string]interface{}{
 		"enable_components": flattenContainerAwsClusterLoggingConfigComponentConfigEnableComponentsArray(obj.EnableComponents),
+	}
+
+	return []interface{}{transformed}
+
+}
+
+func expandContainerAwsClusterMonitoringConfig(o interface{}) *containeraws.ClusterMonitoringConfig {
+	if o == nil {
+		return nil
+	}
+	objArr := o.([]interface{})
+	if len(objArr) == 0 || objArr[0] == nil {
+		return nil
+	}
+	obj := objArr[0].(map[string]interface{})
+	return &containeraws.ClusterMonitoringConfig{
+		ManagedPrometheusConfig: expandContainerAwsClusterMonitoringConfigManagedPrometheusConfig(obj["managed_prometheus_config"]),
+	}
+}
+
+func flattenContainerAwsClusterMonitoringConfig(obj *containeraws.ClusterMonitoringConfig) interface{} {
+	if obj == nil || obj.Empty() {
+		return nil
+	}
+	transformed := map[string]interface{}{
+		"managed_prometheus_config": flattenContainerAwsClusterMonitoringConfigManagedPrometheusConfig(obj.ManagedPrometheusConfig),
+	}
+
+	return []interface{}{transformed}
+
+}
+
+func expandContainerAwsClusterMonitoringConfigManagedPrometheusConfig(o interface{}) *containeraws.ClusterMonitoringConfigManagedPrometheusConfig {
+	if o == nil {
+		return nil
+	}
+	objArr := o.([]interface{})
+	if len(objArr) == 0 || objArr[0] == nil {
+		return nil
+	}
+	obj := objArr[0].(map[string]interface{})
+	return &containeraws.ClusterMonitoringConfigManagedPrometheusConfig{
+		Enabled: dcl.Bool(obj["enabled"].(bool)),
+	}
+}
+
+func flattenContainerAwsClusterMonitoringConfigManagedPrometheusConfig(obj *containeraws.ClusterMonitoringConfigManagedPrometheusConfig) interface{} {
+	if obj == nil || obj.Empty() {
+		return nil
+	}
+	transformed := map[string]interface{}{
+		"enabled": obj.Enabled,
 	}
 
 	return []interface{}{transformed}
