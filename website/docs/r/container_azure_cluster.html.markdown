@@ -219,6 +219,10 @@ The `networking` block supports:
   (Optional)
   (Beta only) Logging configuration.
   
+* `monitoring_config` -
+  (Optional)
+  (Beta only) Monitoring configuration.
+  
 * `project` -
   (Optional)
   The project for the resource
@@ -274,6 +278,18 @@ The `component_config` block supports:
 * `enable_components` -
   (Optional)
   Components of the logging configuration to be enabled.
+    
+The `monitoring_config` block supports:
+    
+* `managed_prometheus_config` -
+  (Optional)
+  Configuration of the Google Cloud Managed Service for Prometheus.
+    
+The `managed_prometheus_config` block supports:
+    
+* `enabled` -
+  (Optional)
+  Configuration of the enable Managed Collection.
     
 ## Attributes Reference
 

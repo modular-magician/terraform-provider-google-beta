@@ -137,6 +137,16 @@ func resourceContainerAzureCluster() *schema.Resource {
 				Elem:        ContainerAzureClusterLoggingConfigSchema(),
 			},
 
+			"monitoring_config": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Monitoring configuration.",
+				MaxItems:    1,
+				Elem:        ContainerAzureClusterMonitoringConfigSchema(),
+			},
+
 			"project": {
 				Type:             schema.TypeString,
 				Computed:         true,
@@ -483,6 +493,37 @@ func ContainerAzureClusterLoggingConfigComponentConfigSchema() *schema.Resource 
 	}
 }
 
+func ContainerAzureClusterMonitoringConfigSchema() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"managed_prometheus_config": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Configuration of the Google Cloud Managed Service for Prometheus.",
+				MaxItems:    1,
+				Elem:        ContainerAzureClusterMonitoringConfigManagedPrometheusConfigSchema(),
+			},
+		},
+	}
+}
+
+func ContainerAzureClusterMonitoringConfigManagedPrometheusConfigSchema() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"enabled": {
+				Type:             schema.TypeBool,
+				Computed:         true,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: emptyOrDefaultStringSuppress("false"),
+				Description:      "Configuration of the enable Managed Collection.",
+			},
+		},
+	}
+}
+
 func ContainerAzureClusterWorkloadIdentityConfigSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -515,19 +556,20 @@ func resourceContainerAzureClusterCreate(d *schema.ResourceData, meta interface{
 	}
 
 	obj := &containerazure.Cluster{
-		Authorization:   expandContainerAzureClusterAuthorization(d.Get("authorization")),
-		AzureRegion:     dcl.String(d.Get("azure_region").(string)),
-		Client:          dcl.String(d.Get("client").(string)),
-		ControlPlane:    expandContainerAzureClusterControlPlane(d.Get("control_plane")),
-		Fleet:           expandContainerAzureClusterFleet(d.Get("fleet")),
-		Location:        dcl.String(d.Get("location").(string)),
-		Name:            dcl.String(d.Get("name").(string)),
-		Networking:      expandContainerAzureClusterNetworking(d.Get("networking")),
-		ResourceGroupId: dcl.String(d.Get("resource_group_id").(string)),
-		Annotations:     checkStringMap(d.Get("annotations")),
-		Description:     dcl.String(d.Get("description").(string)),
-		LoggingConfig:   expandContainerAzureClusterLoggingConfig(d.Get("logging_config")),
-		Project:         dcl.String(project),
+		Authorization:    expandContainerAzureClusterAuthorization(d.Get("authorization")),
+		AzureRegion:      dcl.String(d.Get("azure_region").(string)),
+		Client:           dcl.String(d.Get("client").(string)),
+		ControlPlane:     expandContainerAzureClusterControlPlane(d.Get("control_plane")),
+		Fleet:            expandContainerAzureClusterFleet(d.Get("fleet")),
+		Location:         dcl.String(d.Get("location").(string)),
+		Name:             dcl.String(d.Get("name").(string)),
+		Networking:       expandContainerAzureClusterNetworking(d.Get("networking")),
+		ResourceGroupId:  dcl.String(d.Get("resource_group_id").(string)),
+		Annotations:      checkStringMap(d.Get("annotations")),
+		Description:      dcl.String(d.Get("description").(string)),
+		LoggingConfig:    expandContainerAzureClusterLoggingConfig(d.Get("logging_config")),
+		MonitoringConfig: expandContainerAzureClusterMonitoringConfig(d.Get("monitoring_config")),
+		Project:          dcl.String(project),
 	}
 
 	id, err := obj.ID()
@@ -575,19 +617,20 @@ func resourceContainerAzureClusterRead(d *schema.ResourceData, meta interface{})
 	}
 
 	obj := &containerazure.Cluster{
-		Authorization:   expandContainerAzureClusterAuthorization(d.Get("authorization")),
-		AzureRegion:     dcl.String(d.Get("azure_region").(string)),
-		Client:          dcl.String(d.Get("client").(string)),
-		ControlPlane:    expandContainerAzureClusterControlPlane(d.Get("control_plane")),
-		Fleet:           expandContainerAzureClusterFleet(d.Get("fleet")),
-		Location:        dcl.String(d.Get("location").(string)),
-		Name:            dcl.String(d.Get("name").(string)),
-		Networking:      expandContainerAzureClusterNetworking(d.Get("networking")),
-		ResourceGroupId: dcl.String(d.Get("resource_group_id").(string)),
-		Annotations:     checkStringMap(d.Get("annotations")),
-		Description:     dcl.String(d.Get("description").(string)),
-		LoggingConfig:   expandContainerAzureClusterLoggingConfig(d.Get("logging_config")),
-		Project:         dcl.String(project),
+		Authorization:    expandContainerAzureClusterAuthorization(d.Get("authorization")),
+		AzureRegion:      dcl.String(d.Get("azure_region").(string)),
+		Client:           dcl.String(d.Get("client").(string)),
+		ControlPlane:     expandContainerAzureClusterControlPlane(d.Get("control_plane")),
+		Fleet:            expandContainerAzureClusterFleet(d.Get("fleet")),
+		Location:         dcl.String(d.Get("location").(string)),
+		Name:             dcl.String(d.Get("name").(string)),
+		Networking:       expandContainerAzureClusterNetworking(d.Get("networking")),
+		ResourceGroupId:  dcl.String(d.Get("resource_group_id").(string)),
+		Annotations:      checkStringMap(d.Get("annotations")),
+		Description:      dcl.String(d.Get("description").(string)),
+		LoggingConfig:    expandContainerAzureClusterLoggingConfig(d.Get("logging_config")),
+		MonitoringConfig: expandContainerAzureClusterMonitoringConfig(d.Get("monitoring_config")),
+		Project:          dcl.String(project),
 	}
 
 	userAgent, err := generateUserAgentString(d, config.userAgent)
@@ -648,6 +691,9 @@ func resourceContainerAzureClusterRead(d *schema.ResourceData, meta interface{})
 	if err = d.Set("logging_config", flattenContainerAzureClusterLoggingConfig(res.LoggingConfig)); err != nil {
 		return fmt.Errorf("error setting logging_config in state: %s", err)
 	}
+	if err = d.Set("monitoring_config", flattenContainerAzureClusterMonitoringConfig(res.MonitoringConfig)); err != nil {
+		return fmt.Errorf("error setting monitoring_config in state: %s", err)
+	}
 	if err = d.Set("project", res.Project); err != nil {
 		return fmt.Errorf("error setting project in state: %s", err)
 	}
@@ -686,19 +732,20 @@ func resourceContainerAzureClusterUpdate(d *schema.ResourceData, meta interface{
 	}
 
 	obj := &containerazure.Cluster{
-		Authorization:   expandContainerAzureClusterAuthorization(d.Get("authorization")),
-		AzureRegion:     dcl.String(d.Get("azure_region").(string)),
-		Client:          dcl.String(d.Get("client").(string)),
-		ControlPlane:    expandContainerAzureClusterControlPlane(d.Get("control_plane")),
-		Fleet:           expandContainerAzureClusterFleet(d.Get("fleet")),
-		Location:        dcl.String(d.Get("location").(string)),
-		Name:            dcl.String(d.Get("name").(string)),
-		Networking:      expandContainerAzureClusterNetworking(d.Get("networking")),
-		ResourceGroupId: dcl.String(d.Get("resource_group_id").(string)),
-		Annotations:     checkStringMap(d.Get("annotations")),
-		Description:     dcl.String(d.Get("description").(string)),
-		LoggingConfig:   expandContainerAzureClusterLoggingConfig(d.Get("logging_config")),
-		Project:         dcl.String(project),
+		Authorization:    expandContainerAzureClusterAuthorization(d.Get("authorization")),
+		AzureRegion:      dcl.String(d.Get("azure_region").(string)),
+		Client:           dcl.String(d.Get("client").(string)),
+		ControlPlane:     expandContainerAzureClusterControlPlane(d.Get("control_plane")),
+		Fleet:            expandContainerAzureClusterFleet(d.Get("fleet")),
+		Location:         dcl.String(d.Get("location").(string)),
+		Name:             dcl.String(d.Get("name").(string)),
+		Networking:       expandContainerAzureClusterNetworking(d.Get("networking")),
+		ResourceGroupId:  dcl.String(d.Get("resource_group_id").(string)),
+		Annotations:      checkStringMap(d.Get("annotations")),
+		Description:      dcl.String(d.Get("description").(string)),
+		LoggingConfig:    expandContainerAzureClusterLoggingConfig(d.Get("logging_config")),
+		MonitoringConfig: expandContainerAzureClusterMonitoringConfig(d.Get("monitoring_config")),
+		Project:          dcl.String(project),
 	}
 	directive := UpdateDirective
 	userAgent, err := generateUserAgentString(d, config.userAgent)
@@ -741,19 +788,20 @@ func resourceContainerAzureClusterDelete(d *schema.ResourceData, meta interface{
 	}
 
 	obj := &containerazure.Cluster{
-		Authorization:   expandContainerAzureClusterAuthorization(d.Get("authorization")),
-		AzureRegion:     dcl.String(d.Get("azure_region").(string)),
-		Client:          dcl.String(d.Get("client").(string)),
-		ControlPlane:    expandContainerAzureClusterControlPlane(d.Get("control_plane")),
-		Fleet:           expandContainerAzureClusterFleet(d.Get("fleet")),
-		Location:        dcl.String(d.Get("location").(string)),
-		Name:            dcl.String(d.Get("name").(string)),
-		Networking:      expandContainerAzureClusterNetworking(d.Get("networking")),
-		ResourceGroupId: dcl.String(d.Get("resource_group_id").(string)),
-		Annotations:     checkStringMap(d.Get("annotations")),
-		Description:     dcl.String(d.Get("description").(string)),
-		LoggingConfig:   expandContainerAzureClusterLoggingConfig(d.Get("logging_config")),
-		Project:         dcl.String(project),
+		Authorization:    expandContainerAzureClusterAuthorization(d.Get("authorization")),
+		AzureRegion:      dcl.String(d.Get("azure_region").(string)),
+		Client:           dcl.String(d.Get("client").(string)),
+		ControlPlane:     expandContainerAzureClusterControlPlane(d.Get("control_plane")),
+		Fleet:            expandContainerAzureClusterFleet(d.Get("fleet")),
+		Location:         dcl.String(d.Get("location").(string)),
+		Name:             dcl.String(d.Get("name").(string)),
+		Networking:       expandContainerAzureClusterNetworking(d.Get("networking")),
+		ResourceGroupId:  dcl.String(d.Get("resource_group_id").(string)),
+		Annotations:      checkStringMap(d.Get("annotations")),
+		Description:      dcl.String(d.Get("description").(string)),
+		LoggingConfig:    expandContainerAzureClusterLoggingConfig(d.Get("logging_config")),
+		MonitoringConfig: expandContainerAzureClusterMonitoringConfig(d.Get("monitoring_config")),
+		Project:          dcl.String(project),
 	}
 
 	log.Printf("[DEBUG] Deleting Cluster %q", d.Id())
@@ -1219,6 +1267,58 @@ func flattenContainerAzureClusterLoggingConfigComponentConfig(obj *containerazur
 	}
 	transformed := map[string]interface{}{
 		"enable_components": flattenContainerAzureClusterLoggingConfigComponentConfigEnableComponentsArray(obj.EnableComponents),
+	}
+
+	return []interface{}{transformed}
+
+}
+
+func expandContainerAzureClusterMonitoringConfig(o interface{}) *containerazure.ClusterMonitoringConfig {
+	if o == nil {
+		return nil
+	}
+	objArr := o.([]interface{})
+	if len(objArr) == 0 || objArr[0] == nil {
+		return nil
+	}
+	obj := objArr[0].(map[string]interface{})
+	return &containerazure.ClusterMonitoringConfig{
+		ManagedPrometheusConfig: expandContainerAzureClusterMonitoringConfigManagedPrometheusConfig(obj["managed_prometheus_config"]),
+	}
+}
+
+func flattenContainerAzureClusterMonitoringConfig(obj *containerazure.ClusterMonitoringConfig) interface{} {
+	if obj == nil || obj.Empty() {
+		return nil
+	}
+	transformed := map[string]interface{}{
+		"managed_prometheus_config": flattenContainerAzureClusterMonitoringConfigManagedPrometheusConfig(obj.ManagedPrometheusConfig),
+	}
+
+	return []interface{}{transformed}
+
+}
+
+func expandContainerAzureClusterMonitoringConfigManagedPrometheusConfig(o interface{}) *containerazure.ClusterMonitoringConfigManagedPrometheusConfig {
+	if o == nil {
+		return nil
+	}
+	objArr := o.([]interface{})
+	if len(objArr) == 0 || objArr[0] == nil {
+		return nil
+	}
+	obj := objArr[0].(map[string]interface{})
+	return &containerazure.ClusterMonitoringConfigManagedPrometheusConfig{
+		Enabled: dcl.Bool(obj["enabled"].(bool)),
+	}
+}
+
+func flattenContainerAzureClusterMonitoringConfigManagedPrometheusConfig(obj *containerazure.ClusterMonitoringConfigManagedPrometheusConfig) interface{} {
+	if obj == nil || obj.Empty() {
+		return nil
+	}
+	transformed := map[string]interface{}{
+		"enabled": obj.Enabled,
 	}
 
 	return []interface{}{transformed}
