@@ -517,6 +517,24 @@ as "Intel Haswell" or "Intel Sandy Bridge".
 
 * `image_type` - (Optional) The default image type used by NAP once a new node pool is being created. Please note that according to the [official documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-provisioning#default-image-type) the value must be one of the [COS_CONTAINERD, COS, UBUNTU_CONTAINERD, UBUNTU]. __NOTE__ : COS AND UBUNTU are deprecated as of `GKE 1.24`
 
+* `management` - (Optional) NodeManagement configuration for this NodePool. Structure is [documented below](#nested_management).
+
+* `shielded_instance_config` - (Optional) A set of Shielded Instance options. Structure is [documented below.](#nested_shielded_instance_config)
+
+<a name="nested_management"></a>The `management` block supports:
+
+* `auto_upgrade` - (Optional) Specifies whether node auto-upgrade is enabled for the node pool. If enabled, node auto-upgrade helps keep the nodes in your node pool up to date with the latest release version of Kubernetes.
+
+* `auto_repair` - (Optional) Specifies whether the node auto-repair is enabled for the node pool. If enabled, the nodes in this node pool will be monitored and, if they fail health checks too many times, an automatic repair action will be triggered.
+
+This block also contains several computed attributes, documented below.
+
+<a name="nested_shielded_instance_config"></a>The `shielded_instance_config` block supports:
+
+* `enable_secure_boot` - (Optional) Defines whether the instance has Secure Boot enabled. Secure Boot helps ensure that the system only runs authentic software by verifying the digital signature of all boot components, and halting the boot process if signature verification fails.
+
+* `enable_integrity_monitoring` - (Optional) Defines whether the instance has integrity monitoring enabled. Enables monitoring and attestation of the boot integrity of the instance. The attestation is performed against the integrity policy baseline. This baseline is initially derived from the implicitly trusted boot image when the instance is created.
+
 <a name="nested_authenticator_groups_config"></a>The `authenticator_groups_config` block supports:
 
 * `security_group` - (Required) The name of the RBAC security group for use with Google security groups in Kubernetes RBAC. Group name must be in format `gke-security-groups@yourdomain.com`.
@@ -1129,6 +1147,8 @@ exported:
   cluster, in [CIDR](http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)
   notation (e.g. `1.2.3.4/29`). Service addresses are typically put in the last
   `/16` from the container CIDR.
+
+* `cluster_autoscaling.0.auto_provisioning_defaults.0.management.0.upgrade_options` - Specifies the [Auto Upgrade knobs](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1beta1/NodeManagement#AutoUpgradeOptions) for the node pool.
 
 ## Timeouts
 

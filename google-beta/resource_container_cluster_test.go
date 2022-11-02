@@ -2012,6 +2012,7 @@ func TestAccContainerCluster_nodeAutoprovisioningDefaults(t *testing.T) {
 	t.Parallel()
 
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", randString(t, 10))
+	includeMinCpuPlatform := true
 
 	vcrTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -2035,6 +2036,25 @@ func TestAccContainerCluster_nodeAutoprovisioningDefaults(t *testing.T) {
 				Config:             testAccContainerCluster_autoprovisioningDefaults(clusterName, true),
 				PlanOnly:           true,
 				ExpectNonEmptyPlan: false,
+			},
+
+			{
+				Config: testAccContainerCluster_autoprovisioningDefaultsMinCpuPlatform(clusterName, includeMinCpuPlatform),
+			},
+			{
+				ResourceName:            "google_container_cluster.with_autoprovisioning",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"min_master_version"},
+			},
+			{
+				Config: testAccContainerCluster_autoprovisioningDefaultsMinCpuPlatform(clusterName, !includeMinCpuPlatform),
+			},
+			{
+				ResourceName:            "google_container_cluster.with_autoprovisioning",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"min_master_version"},
 			},
 		},
 	})
@@ -2411,41 +2431,6 @@ func TestAccContainerCluster_withSoleTenantGroup(t *testing.T) {
 	})
 }
 
-// consider merging this test with TestAccContainerCluster_nodeAutoprovisioningDefaults
-// once the feature is GA
-func TestAccContainerCluster_nodeAutoprovisioningDefaultsMinCpuPlatform(t *testing.T) {
-	t.Parallel()
-
-	clusterName := fmt.Sprintf("tf-test-cluster-%s", randString(t, 10))
-	includeMinCpuPlatform := true
-
-	vcrTest(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccContainerCluster_autoprovisioningDefaultsMinCpuPlatform(clusterName, includeMinCpuPlatform),
-			},
-			{
-				ResourceName:            "google_container_cluster.with_autoprovisioning",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"min_master_version"},
-			},
-			{
-				Config: testAccContainerCluster_autoprovisioningDefaultsMinCpuPlatform(clusterName, !includeMinCpuPlatform),
-			},
-			{
-				ResourceName:            "google_container_cluster.with_autoprovisioning",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"min_master_version"},
-			},
-		},
-	})
-}
-
 func TestAccContainerCluster_withAutoscalingProfile(t *testing.T) {
 	t.Parallel()
 	clusterName := fmt.Sprintf("cluster-test-%s", randString(t, 10))
@@ -2763,6 +2748,68 @@ func TestAccContainerCluster_nodeAutoprovisioningDefaultsImageType(t *testing.T)
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"min_master_version"},
+			},
+		},
+	})
+}
+
+func TestAccContainerCluster_autoprovisioningDefaultsManagement(t *testing.T) {
+	t.Parallel()
+
+	clusterName := fmt.Sprintf("tf-test-cluster-%s", randString(t, 10))
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerCluster_autoprovisioningDefaultsManagement(clusterName, false, false),
+			},
+			{
+				ResourceName:            "google_container_cluster.with_autoprovisioning_management",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"min_master_version"},
+			},
+			{
+				Config: testAccContainerCluster_autoprovisioningDefaultsManagement(clusterName, true, true),
+			},
+			{
+				ResourceName:            "google_container_cluster.with_autoprovisioning_management",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"min_master_version"},
+			},
+		},
+	})
+}
+
+func TestAccContainerCluster_autoprovisioningDefaultsShieldedInstanceConfig(t *testing.T) {
+	t.Parallel()
+
+	clusterName := fmt.Sprintf("tf-test-cluster-%s", randString(t, 10))
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerCluster_autoprovisioningDefaultsShieldedInstanceConfig(clusterName, false, false),
+			},
+			{
+				ResourceName:      "google_container_cluster.with_autoprovisioning_shielded_instance_config",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccContainerCluster_autoprovisioningDefaultsShieldedInstanceConfig(clusterName, true, true),
+			},
+			{
+				ResourceName:      "google_container_cluster.with_autoprovisioning_shielded_instance_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -4537,6 +4584,68 @@ resource "google_container_cluster" "with_boot_disk_kms_key" {
   }
 }
 `, project, clusterName, kmsKeyName)
+}
+
+func testAccContainerCluster_autoprovisioningDefaultsManagement(clusterName string, autoUpgrade, autoRepair bool) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "with_autoprovisioning_management" {
+  name               = "%s"
+  location           = "us-central1-f"
+  initial_node_count = 1
+
+  cluster_autoscaling {
+    enabled = true
+
+	resource_limits {
+	  resource_type = "cpu"
+      maximum       = 2
+	}
+	
+	resource_limits {
+	  resource_type = "memory"
+	  maximum       = 2048
+	}
+
+    auto_provisioning_defaults {
+      management {
+        auto_upgrade    = %t
+        auto_repair     = %t
+      }
+    }
+  }
+}
+`, clusterName, autoUpgrade, autoRepair)
+}
+
+func testAccContainerCluster_autoprovisioningDefaultsShieldedInstanceConfig(clusterName string, enableSecureBoot, enableIntegrityMonitoring bool) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "with_autoprovisioning_shielded_instance_config" {
+  name               = "%s"
+  location           = "us-central1-f"
+  initial_node_count = 1
+
+  cluster_autoscaling {
+    enabled = true
+
+	resource_limits {
+	  resource_type = "cpu"
+      maximum       = 2
+	}
+	
+	resource_limits {
+	  resource_type = "memory"
+	  maximum       = 2048
+	}
+
+    auto_provisioning_defaults {
+      shielded_instance_config {
+        enable_secure_boot          = %t
+        enable_integrity_monitoring = %t
+      }
+    }
+  }
+}
+`, clusterName, enableSecureBoot, enableIntegrityMonitoring)
 }
 
 func testAccContainerCluster_networkRef(cluster, network string) string {

@@ -520,6 +520,72 @@ func resourceContainerCluster() *schema.Resource {
 										ForceNew:    true,
 										Description: `The Customer Managed Encryption Key used to encrypt the boot disk attached to each node in the node pool.`,
 									},
+									"management": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										MaxItems:    1,
+										Description: `NodeManagement configuration for this NodePool.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"auto_upgrade": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Computed:    true,
+													Description: `Specifies whether node auto-upgrade is enabled for the node pool. If enabled, node auto-upgrade helps keep the nodes in your node pool up to date with the latest release version of Kubernetes.`,
+												},
+												"auto_repair": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Computed:    true,
+													Description: `Specifies whether the node auto-repair is enabled for the node pool. If enabled, the nodes in this node pool will be monitored and, if they fail health checks too many times, an automatic repair action will be triggered.`,
+												},
+												"upgrade_options": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Computed:    true,
+													Description: `Specifies the Auto Upgrade knobs for the node pool.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"auto_upgrade_start_time": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: `his field is set when upgrades are about to commence with the approximate start time for the upgrades, in RFC3339 text format.`,
+															},
+															"description": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: `This field is set when upgrades are about to commence with the description of the upgrade.`,
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"shielded_instance_config": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Computed:    true,
+										MaxItems:    1,
+										Description: `A set of Shielded Instance options.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enable_secure_boot": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Computed:    true,
+													Description: `Defines whether the instance has Secure Boot enabled.`,
+												},
+												"enable_integrity_monitoring": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Computed:    true,
+													Description: `Defines whether the instance has integrity monitoring enabled.`,
+												},
+											},
+										},
+									},
 								},
 							},
 						},
@@ -3680,12 +3746,14 @@ func expandAutoProvisioningDefaults(configured interface{}, d *schema.ResourceDa
 	config := l[0].(map[string]interface{})
 
 	npd := &container.AutoprovisioningNodePoolDefaults{
-		OauthScopes:    convertStringArr(config["oauth_scopes"].([]interface{})),
-		ServiceAccount: config["service_account"].(string),
-		DiskSizeGb:     int64(config["disk_size"].(int)),
-		DiskType:       config["disk_type"].(string),
-		ImageType:      config["image_type"].(string),
-		BootDiskKmsKey: config["boot_disk_kms_key"].(string),
+		OauthScopes:            convertStringArr(config["oauth_scopes"].([]interface{})),
+		ServiceAccount:         config["service_account"].(string),
+		ImageType:              config["image_type"].(string),
+		BootDiskKmsKey:         config["boot_disk_kms_key"].(string),
+		DiskSizeGb:             int64(config["disk_size"].(int)),
+		DiskType:               config["disk_type"].(string),
+		Management:             expandManagement(config["management"]),
+		ShieldedInstanceConfig: expandShieldedInstanceConfig(config["shielded_instance_config"]),
 	}
 
 	cpu := config["min_cpu_platform"].(string)
@@ -3694,7 +3762,54 @@ func expandAutoProvisioningDefaults(configured interface{}, d *schema.ResourceDa
 		cpu = "automatic"
 	}
 	npd.MinCpuPlatform = cpu
+
 	return npd
+}
+
+func expandManagement(configured interface{}) *container.NodeManagement {
+	l, ok := configured.([]interface{})
+	if !ok || l == nil || len(l) == 0 || l[0] == nil {
+		return &container.NodeManagement{}
+	}
+	config := l[0].(map[string]interface{})
+
+	mng := &container.NodeManagement{
+		AutoUpgrade:    config["auto_upgrade"].(bool),
+		AutoRepair:     config["auto_repair"].(bool),
+		UpgradeOptions: expandUpgradeOptions(config["upgrade_options"]),
+	}
+
+	return mng
+}
+
+func expandUpgradeOptions(configured interface{}) *container.AutoUpgradeOptions {
+	l, ok := configured.([]interface{})
+	if !ok || l == nil || len(l) == 0 || l[0] == nil {
+		return &container.AutoUpgradeOptions{}
+	}
+	config := l[0].(map[string]interface{})
+
+	upgradeOptions := &container.AutoUpgradeOptions{
+		AutoUpgradeStartTime: config["auto_upgrade_start_time"].(string),
+		Description:          config["description"].(string),
+	}
+
+	return upgradeOptions
+}
+
+func expandShieldedInstanceConfig(configured interface{}) *container.ShieldedInstanceConfig {
+	l, ok := configured.([]interface{})
+	if !ok || l == nil || len(l) == 0 || l[0] == nil {
+		return &container.ShieldedInstanceConfig{}
+	}
+	config := l[0].(map[string]interface{})
+
+	shieldedInstanceConfig := &container.ShieldedInstanceConfig{
+		EnableSecureBoot:          config["enable_secure_boot"].(bool),
+		EnableIntegrityMonitoring: config["enable_integrity_monitoring"].(bool),
+	}
+
+	return shieldedInstanceConfig
 }
 
 func expandAuthenticatorGroupsConfig(configured interface{}) *container.AuthenticatorGroupsConfig {
@@ -4619,6 +4734,43 @@ func flattenAutoProvisioningDefaults(a *container.AutoprovisioningNodePoolDefaul
 	r["image_type"] = a.ImageType
 	r["min_cpu_platform"] = a.MinCpuPlatform
 	r["boot_disk_kms_key"] = a.BootDiskKmsKey
+	r["management"] = flattenManagement(a.Management)
+	r["shielded_instance_config"] = flattenShieldedInstanceConfigContainerCluster(a.ShieldedInstanceConfig)
+
+	return []map[string]interface{}{r}
+}
+
+func flattenManagement(a *container.NodeManagement) []map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	r := make(map[string]interface{})
+	r["auto_upgrade"] = a.AutoUpgrade
+	r["auto_repair"] = a.AutoRepair
+	r["upgrade_options"] = flattenUpgradeOptions(a.UpgradeOptions)
+
+	return []map[string]interface{}{r}
+}
+
+func flattenUpgradeOptions(a *container.AutoUpgradeOptions) []map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+
+	r := make(map[string]interface{})
+	r["auto_upgrade_start_time"] = a.AutoUpgradeStartTime
+	r["description"] = a.Description
+
+	return []map[string]interface{}{r}
+}
+
+func flattenShieldedInstanceConfigContainerCluster(a *container.ShieldedInstanceConfig) []map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	r := make(map[string]interface{})
+	r["enable_secure_boot"] = a.EnableSecureBoot
+	r["enable_integrity_monitoring"] = a.EnableIntegrityMonitoring
 
 	return []map[string]interface{}{r}
 }
