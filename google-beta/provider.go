@@ -1006,9 +1006,9 @@ func Provider() *schema.Provider {
 	return provider
 }
 
-// Generated resources: 276
-// Generated IAM resources: 183
-// Total generated resources: 459
+// Generated resources: 277
+// Generated IAM resources: 186
+// Total generated resources: 463
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1129,6 +1129,10 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_cloud_run_service_iam_binding":                         ResourceIamBinding(CloudRunServiceIamSchema, CloudRunServiceIamUpdaterProducer, CloudRunServiceIdParseFunc),
 			"google_cloud_run_service_iam_member":                          ResourceIamMember(CloudRunServiceIamSchema, CloudRunServiceIamUpdaterProducer, CloudRunServiceIdParseFunc),
 			"google_cloud_run_service_iam_policy":                          ResourceIamPolicy(CloudRunServiceIamSchema, CloudRunServiceIamUpdaterProducer, CloudRunServiceIdParseFunc),
+			"google_cloud_run_job":                                         resourceCloudRunJob(),
+			"google_cloud_run_job_iam_binding":                             ResourceIamBinding(CloudRunJobIamSchema, CloudRunJobIamUpdaterProducer, CloudRunJobIdParseFunc),
+			"google_cloud_run_job_iam_member":                              ResourceIamMember(CloudRunJobIamSchema, CloudRunJobIamUpdaterProducer, CloudRunJobIdParseFunc),
+			"google_cloud_run_job_iam_policy":                              ResourceIamPolicy(CloudRunJobIamSchema, CloudRunJobIamUpdaterProducer, CloudRunJobIdParseFunc),
 			"google_cloud_scheduler_job":                                   resourceCloudSchedulerJob(),
 			"google_cloud_tasks_queue":                                     resourceCloudTasksQueue(),
 			"google_cloud_tasks_queue_iam_binding":                         ResourceIamBinding(CloudTasksQueueIamSchema, CloudTasksQueueIamUpdaterProducer, CloudTasksQueueIdParseFunc),
