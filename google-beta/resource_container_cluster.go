@@ -155,6 +155,7 @@ func resourceContainerCluster() *schema.Resource {
 			containerClusterAutopilotCustomizeDiff,
 			containerClusterNodeVersionRemoveDefaultCustomizeDiff,
 			containerClusterNetworkPolicyEmptyCustomizeDiff,
+			containerClusterSurgeSettingsCustomizeDiff,
 		),
 
 		Timeouts: &schema.ResourceTimeout{
@@ -552,12 +553,12 @@ func resourceContainerCluster() *schema.Resource {
 										},
 									},
 									"upgrade_settings": {
-										Type:             schema.TypeList,
-										Optional:         true,
-										Description:      `Specifies the upgrade settings for NAP created node pools`,
-										Computed:         true,
-										DiffSuppressFunc: UpgradeSettingsDiffSuppress,
-										MaxItems:         1,
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Specifies the upgrade settings for NAP created node pools`,
+										Computed:    true,
+										// DiffSuppressFunc: UpgradeSettingsDiffSuppress,
+										MaxItems: 1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"max_surge": {
@@ -5278,6 +5279,23 @@ func containerClusterNetworkPolicyEmptyCustomizeDiff(_ context.Context, d *schem
 	if o == nil && n == nil {
 		return d.SetNewComputed("network_policy")
 	}
+	return nil
+}
+
+func containerClusterSurgeSettingsCustomizeDiff(_ context.Context, d *schema.ResourceDiff, meta interface{}) error {
+	if v, ok := d.GetOk("cluster_autoscaling.0.auto_provisioning_defaults.0.upgrade_settings.0.strategy"); ok {
+		if v != "SURGE" {
+			if _, maxSurgeIsPresent := d.GetOk("cluster_autoscaling.0.auto_provisioning_defaults.0.upgrade_settings.0.max_surge"); maxSurgeIsPresent {
+				return fmt.Errorf("Surge upgrade settings (max_surge) can only be used when strategy is set to SURGE")
+			}
+		}
+		if v != "SURGE" {
+			if _, maxSurgeIsPresent := d.GetOk("cluster_autoscaling.0.auto_provisioning_defaults.0.upgrade_settings.0.max_unavailable"); maxSurgeIsPresent {
+				return fmt.Errorf("Surge upgrade settings (max_unavailable) can only be used when strategy is set to SURGE")
+			}
+		}
+	}
+
 	return nil
 }
 
