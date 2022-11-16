@@ -6,7 +6,8 @@ import (
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/cloudresourcemanager/v1"
-	dataproc "google.golang.org/api/dataproc/v1beta2"
+
+	"google.golang.org/api/dataproc/v1"
 )
 
 var IamDataprocJobSchema = map[string]*schema.Schema{
@@ -87,12 +88,14 @@ func DataprocJobIdParseFunc(d *schema.ResourceData, config *Config) error {
 
 func (u *DataprocJobIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
 
+	req := &dataproc.GetIamPolicyRequest{}
+
 	userAgent, err := generateUserAgentString(u.d, u.Config.userAgent)
 	if err != nil {
 		return nil, err
 	}
 
-	p, err := u.Config.NewDataprocClient(userAgent).Projects.Regions.Jobs.GetIamPolicy(u.GetResourceId()).Do()
+	p, err := u.Config.NewDataprocClient(userAgent).Projects.Regions.Jobs.GetIamPolicy(u.GetResourceId(), req).Do()
 	if err != nil {
 		return nil, errwrap.Wrapf(fmt.Sprintf("Error retrieving IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
