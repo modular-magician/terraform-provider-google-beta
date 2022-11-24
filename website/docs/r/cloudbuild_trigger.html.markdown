@@ -564,6 +564,11 @@ The following arguments are supported:
 
 <a name="nested_github"></a>The `github` block supports:
 
+* `enterprise_config_resource_name` -
+  (Optional)
+  Optional. The resource name of the github enterprise config that should be applied to this installation.
+  For example: "projects/{$projectId}/githubEnterpriseConfigs/{$configId}".
+
 * `owner` -
   (Optional)
   Owner of the repository. For example: The owner for

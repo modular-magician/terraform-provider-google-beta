@@ -767,6 +767,12 @@ One of 'trigger_template', 'github', 'pubsub_config' or 'webhook_config' must be
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"enterprise_config_resource_name": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `Optional. The resource name of the github enterprise config that should be applied to this installation.
+For example: "projects/{$projectId}/githubEnterpriseConfigs/{$configId}".`,
+						},
 						"name": {
 							Type:     schema.TypeString,
 							Optional: true,
@@ -1778,6 +1784,8 @@ func flattenCloudBuildTriggerGithub(v interface{}, d *schema.ResourceData, confi
 		return nil
 	}
 	transformed := make(map[string]interface{})
+	transformed["enterprise_config_resource_name"] =
+		flattenCloudBuildTriggerGithubEnterpriseConfigResourceName(original["enterpriseConfigResourceName"], d, config)
 	transformed["owner"] =
 		flattenCloudBuildTriggerGithubOwner(original["owner"], d, config)
 	transformed["name"] =
@@ -1788,6 +1796,10 @@ func flattenCloudBuildTriggerGithub(v interface{}, d *schema.ResourceData, confi
 		flattenCloudBuildTriggerGithubPush(original["push"], d, config)
 	return []interface{}{transformed}
 }
+func flattenCloudBuildTriggerGithubEnterpriseConfigResourceName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func flattenCloudBuildTriggerGithubOwner(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
@@ -2690,6 +2702,13 @@ func expandCloudBuildTriggerGithub(v interface{}, d TerraformResourceData, confi
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
+	transformedEnterpriseConfigResourceName, err := expandCloudBuildTriggerGithubEnterpriseConfigResourceName(original["enterprise_config_resource_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnterpriseConfigResourceName); val.IsValid() && !isEmptyValue(val) {
+		transformed["enterpriseConfigResourceName"] = transformedEnterpriseConfigResourceName
+	}
+
 	transformedOwner, err := expandCloudBuildTriggerGithubOwner(original["owner"], d, config)
 	if err != nil {
 		return nil, err
@@ -2719,6 +2738,10 @@ func expandCloudBuildTriggerGithub(v interface{}, d TerraformResourceData, confi
 	}
 
 	return transformed, nil
+}
+
+func expandCloudBuildTriggerGithubEnterpriseConfigResourceName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandCloudBuildTriggerGithubOwner(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
