@@ -134,6 +134,35 @@ resource "google_compute_backend_service" "default" {
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=backend_service_connection_tracking&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Backend Service Connection Tracking
+
+
+```hcl
+resource "google_compute_backend_service" "default" {
+  provider              = google-beta
+  name                  = "backend-service"
+  health_checks         = [google_compute_health_check.health_check.id]
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+  connection_tracking_policy {
+    tracking_mode                                = "PER_SESSION"
+    connection_persistence_on_unhealthy_backends = "NEVER_PERSIST"
+  }
+}
+
+resource "google_compute_health_check" "health_check" {
+  provider = google-beta
+  name     = "health-check"
+
+  http_health_check {
+    port = 80
+  }
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=backend_service_cache&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
@@ -336,6 +365,13 @@ The following arguments are supported:
   (Optional)
   Compress text responses using Brotli or gzip compression, based on the client's Accept-Encoding header.
   Possible values are `AUTOMATIC` and `DISABLED`.
+
+* `connection_tracking_policy` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Connection Tracking configuration for this BackendService.
+  This is available only for Layer 4 Internal Load Balancing and
+  Network Load Balancing.
+  Structure is [documented below](#nested_connection_tracking_policy).
 
 * `consistent_hash` -
   (Optional)
@@ -633,6 +669,43 @@ The following arguments are supported:
   resolution. Durations less than one second are represented
   with a 0 seconds field and a positive nanos field. Must
   be from 0 to 999,999,999 inclusive.
+
+<a name="nested_connection_tracking_policy"></a>The `connection_tracking_policy` block supports:
+
+* `idle_timeout_sec` -
+  (Optional)
+  Specifies how long to keep a Connection Tracking entry while there is
+  no matching traffic (in seconds).
+  For L4 ILB the minimum(default) is 10 minutes and maximum is 16 hours.
+  For NLB the minimum(default) is 60 seconds and the maximum is 16 hours.
+
+* `tracking_mode` -
+  (Optional)
+  Specifies the key used for connection tracking. There are two options:
+  `PER_CONNECTION`: The Connection Tracking is performed as per the
+  Connection Key (default Hash Method) for the specific protocol.
+  `PER_SESSION`: The Connection Tracking is performed as per the
+  configured Session Affinity. It matches the configured Session Affinity.
+  Default value is `PER_CONNECTION`.
+  Possible values are `PER_CONNECTION` and `PER_SESSION`.
+
+* `connection_persistence_on_unhealthy_backends` -
+  (Optional)
+  Specifies connection persistence when backends are unhealthy.
+  If set to `DEFAULT_FOR_PROTOCOL`, the existing connections persist on
+  unhealthy backends only for connection-oriented protocols (TCP and SCTP)
+  and only if the Tracking Mode is PER_CONNECTION (default tracking mode)
+  or the Session Affinity is configured for 5-tuple. They do not persist
+  for UDP.
+  If set to `NEVER_PERSIST`, after a backend becomes unhealthy, the existing
+  connections on the unhealthy backend are never persisted on the unhealthy
+  backend. They are always diverted to newly selected healthy backends
+  (unless all backends are unhealthy).
+  If set to `ALWAYS_PERSIST`, existing connections always persist on
+  unhealthy backends regardless of protocol and session affinity. It is
+  generally not recommended to use this mode overriding the default.
+  Default value is `DEFAULT_FOR_PROTOCOL`.
+  Possible values are `DEFAULT_FOR_PROTOCOL`, `NEVER_PERSIST`, and `ALWAYS_PERSIST`.
 
 <a name="nested_consistent_hash"></a>The `consistent_hash` block supports:
 

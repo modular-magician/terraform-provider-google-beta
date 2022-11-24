@@ -194,6 +194,54 @@ resource "google_compute_backend_service" "default" {
 `, context)
 }
 
+func TestAccComputeBackendService_backendServiceConnectionTrackingExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
+		CheckDestroy: testAccCheckComputeBackendServiceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeBackendService_backendServiceConnectionTrackingExample(context),
+			},
+			{
+				ResourceName:      "google_compute_backend_service.default",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccComputeBackendService_backendServiceConnectionTrackingExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_compute_backend_service" "default" {
+  provider              = google-beta
+  name                  = "tf-test-backend-service%{random_suffix}"
+  health_checks         = [google_compute_health_check.health_check.id]
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+  connection_tracking_policy {
+    tracking_mode                                = "PER_SESSION"
+    connection_persistence_on_unhealthy_backends = "NEVER_PERSIST"
+  }
+}
+
+resource "google_compute_health_check" "health_check" {
+  provider = google-beta
+  name     = "tf-test-health-check%{random_suffix}"
+
+  http_health_check {
+    port = 80
+  }
+}
+`, context)
+}
+
 func TestAccComputeBackendService_backendServiceCacheExample(t *testing.T) {
 	t.Parallel()
 

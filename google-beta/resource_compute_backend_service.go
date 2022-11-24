@@ -486,6 +486,62 @@ connections, but still work to finish started).`,
 				Default: 300,
 			},
 
+			"connection_tracking_policy": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `Connection Tracking configuration for this BackendService.
+This is available only for Layer 4 Internal Load Balancing and
+Network Load Balancing.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"connection_persistence_on_unhealthy_backends": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validateEnum([]string{"DEFAULT_FOR_PROTOCOL", "NEVER_PERSIST", "ALWAYS_PERSIST", ""}),
+							Description: `Specifies connection persistence when backends are unhealthy.
+
+If set to 'DEFAULT_FOR_PROTOCOL', the existing connections persist on
+unhealthy backends only for connection-oriented protocols (TCP and SCTP)
+and only if the Tracking Mode is PER_CONNECTION (default tracking mode)
+or the Session Affinity is configured for 5-tuple. They do not persist
+for UDP.
+
+If set to 'NEVER_PERSIST', after a backend becomes unhealthy, the existing
+connections on the unhealthy backend are never persisted on the unhealthy
+backend. They are always diverted to newly selected healthy backends
+(unless all backends are unhealthy).
+
+If set to 'ALWAYS_PERSIST', existing connections always persist on
+unhealthy backends regardless of protocol and session affinity. It is
+generally not recommended to use this mode overriding the default. Default value: "DEFAULT_FOR_PROTOCOL" Possible values: ["DEFAULT_FOR_PROTOCOL", "NEVER_PERSIST", "ALWAYS_PERSIST"]`,
+							Default: "DEFAULT_FOR_PROTOCOL",
+						},
+						"idle_timeout_sec": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							Description: `Specifies how long to keep a Connection Tracking entry while there is
+no matching traffic (in seconds).
+
+For L4 ILB the minimum(default) is 10 minutes and maximum is 16 hours.
+
+For NLB the minimum(default) is 60 seconds and the maximum is 16 hours.`,
+						},
+						"tracking_mode": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: validateEnum([]string{"PER_CONNECTION", "PER_SESSION", ""}),
+							Description: `Specifies the key used for connection tracking. There are two options:
+'PER_CONNECTION': The Connection Tracking is performed as per the
+Connection Key (default Hash Method) for the specific protocol.
+
+'PER_SESSION': The Connection Tracking is performed as per the
+configured Session Affinity. It matches the configured Session Affinity. Default value: "PER_CONNECTION" Possible values: ["PER_CONNECTION", "PER_SESSION"]`,
+							Default: "PER_CONNECTION",
+						},
+					},
+				},
+			},
 			"consistent_hash": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -1141,6 +1197,12 @@ func resourceComputeBackendServiceCreate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("compression_mode"); !isEmptyValue(reflect.ValueOf(compressionModeProp)) && (ok || !reflect.DeepEqual(v, compressionModeProp)) {
 		obj["compressionMode"] = compressionModeProp
 	}
+	connectionTrackingPolicyProp, err := expandComputeBackendServiceConnectionTrackingPolicy(d.Get("connection_tracking_policy"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("connection_tracking_policy"); !isEmptyValue(reflect.ValueOf(connectionTrackingPolicyProp)) && (ok || !reflect.DeepEqual(v, connectionTrackingPolicyProp)) {
+		obj["connectionTrackingPolicy"] = connectionTrackingPolicyProp
+	}
 	consistentHashProp, err := expandComputeBackendServiceConsistentHash(d.Get("consistent_hash"), d, config)
 	if err != nil {
 		return err
@@ -1397,6 +1459,9 @@ func resourceComputeBackendServiceRead(d *schema.ResourceData, meta interface{})
 	if err := d.Set("compression_mode", flattenComputeBackendServiceCompressionMode(res["compressionMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackendService: %s", err)
 	}
+	if err := d.Set("connection_tracking_policy", flattenComputeBackendServiceConnectionTrackingPolicy(res["connectionTrackingPolicy"], d, config)); err != nil {
+		return fmt.Errorf("Error reading BackendService: %s", err)
+	}
 	if err := d.Set("consistent_hash", flattenComputeBackendServiceConsistentHash(res["consistentHash"], d, config)); err != nil {
 		return fmt.Errorf("Error reading BackendService: %s", err)
 	}
@@ -1521,6 +1586,12 @@ func resourceComputeBackendServiceUpdate(d *schema.ResourceData, meta interface{
 		return err
 	} else if v, ok := d.GetOkExists("compression_mode"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, compressionModeProp)) {
 		obj["compressionMode"] = compressionModeProp
+	}
+	connectionTrackingPolicyProp, err := expandComputeBackendServiceConnectionTrackingPolicy(d.Get("connection_tracking_policy"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("connection_tracking_policy"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, connectionTrackingPolicyProp)) {
+		obj["connectionTrackingPolicy"] = connectionTrackingPolicyProp
 	}
 	consistentHashProp, err := expandComputeBackendServiceConsistentHash(d.Get("consistent_hash"), d, config)
 	if err != nil {
@@ -2071,6 +2142,48 @@ func flattenComputeBackendServiceCircuitBreakersMaxRetries(v interface{}, d *sch
 }
 
 func flattenComputeBackendServiceCompressionMode(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenComputeBackendServiceConnectionTrackingPolicy(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["idle_timeout_sec"] =
+		flattenComputeBackendServiceConnectionTrackingPolicyIdleTimeoutSec(original["idleTimeoutSec"], d, config)
+	transformed["tracking_mode"] =
+		flattenComputeBackendServiceConnectionTrackingPolicyTrackingMode(original["trackingMode"], d, config)
+	transformed["connection_persistence_on_unhealthy_backends"] =
+		flattenComputeBackendServiceConnectionTrackingPolicyConnectionPersistenceOnUnhealthyBackends(original["connectionPersistenceOnUnhealthyBackends"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeBackendServiceConnectionTrackingPolicyIdleTimeoutSec(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := stringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenComputeBackendServiceConnectionTrackingPolicyTrackingMode(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenComputeBackendServiceConnectionTrackingPolicyConnectionPersistenceOnUnhealthyBackends(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -3144,6 +3257,51 @@ func expandComputeBackendServiceCircuitBreakersMaxRetries(v interface{}, d Terra
 }
 
 func expandComputeBackendServiceCompressionMode(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeBackendServiceConnectionTrackingPolicy(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedIdleTimeoutSec, err := expandComputeBackendServiceConnectionTrackingPolicyIdleTimeoutSec(original["idle_timeout_sec"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIdleTimeoutSec); val.IsValid() && !isEmptyValue(val) {
+		transformed["idleTimeoutSec"] = transformedIdleTimeoutSec
+	}
+
+	transformedTrackingMode, err := expandComputeBackendServiceConnectionTrackingPolicyTrackingMode(original["tracking_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTrackingMode); val.IsValid() && !isEmptyValue(val) {
+		transformed["trackingMode"] = transformedTrackingMode
+	}
+
+	transformedConnectionPersistenceOnUnhealthyBackends, err := expandComputeBackendServiceConnectionTrackingPolicyConnectionPersistenceOnUnhealthyBackends(original["connection_persistence_on_unhealthy_backends"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConnectionPersistenceOnUnhealthyBackends); val.IsValid() && !isEmptyValue(val) {
+		transformed["connectionPersistenceOnUnhealthyBackends"] = transformedConnectionPersistenceOnUnhealthyBackends
+	}
+
+	return transformed, nil
+}
+
+func expandComputeBackendServiceConnectionTrackingPolicyIdleTimeoutSec(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeBackendServiceConnectionTrackingPolicyTrackingMode(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeBackendServiceConnectionTrackingPolicyConnectionPersistenceOnUnhealthyBackends(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
