@@ -43,6 +43,7 @@ resource "google_data_catalog_tag_template" "basic_tag_template" {
   tag_template_id = "my_template"
   region = "us-central1"
   display_name = "Demo Tag Template"
+  is_publicly_readable = true
 
   fields {
     field_id = "source"
@@ -168,6 +169,10 @@ The following arguments are supported:
 * `display_name` -
   (Optional)
   The display name for this template.
+
+* `is_publicly_readable` -
+  (Optional)
+  Indicates whether tags created with this template are public.
 
 * `region` -
   (Optional)

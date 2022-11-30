@@ -125,6 +125,7 @@ resource "google_data_catalog_tag_template" "basic_tag_template" {
   tag_template_id = "tf_test_my_template%{random_suffix}"
   region = "us-central1"
   display_name = "Demo Tag Template"
+  is_publicly_readable = true
 
   fields {
     field_id = "source"
@@ -178,6 +179,7 @@ resource "google_data_catalog_tag_template" "basic_tag_template" {
   tag_template_id = "tf_test_my_template%{random_suffix}"
   region = "us-central1"
   display_name = "Demo Tag Template"
+  is_publicly_readable = true
 
   fields {
     field_id = "source"
@@ -237,6 +239,7 @@ resource "google_data_catalog_tag_template" "basic_tag_template" {
   tag_template_id = "tf_test_my_template%{random_suffix}"
   region = "us-central1"
   display_name = "Demo Tag Template"
+  is_publicly_readable = true
 
   fields {
     field_id = "source"
@@ -292,6 +295,7 @@ resource "google_data_catalog_tag_template" "basic_tag_template" {
   tag_template_id = "tf_test_my_template%{random_suffix}"
   region = "us-central1"
   display_name = "Demo Tag Template"
+  is_publicly_readable = true
 
   fields {
     field_id = "source"
@@ -345,6 +349,7 @@ resource "google_data_catalog_tag_template" "basic_tag_template" {
   tag_template_id = "tf_test_my_template%{random_suffix}"
   region = "us-central1"
   display_name = "Demo Tag Template"
+  is_publicly_readable = true
 
   fields {
     field_id = "source"

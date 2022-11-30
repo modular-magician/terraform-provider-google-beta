@@ -142,6 +142,11 @@ Multiple fields can have the same order, and field orders within a tag do not ha
 				Description: `This confirms the deletion of any possible tags using this template. Must be set to true in order to delete the tag template.`,
 				Default:     false,
 			},
+			"is_publicly_readable": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: `Indicates whether tags created with this template are public.`,
+			},
 			"region": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -190,6 +195,12 @@ func resourceDataCatalogTagTemplateCreate(d *schema.ResourceData, meta interface
 		return err
 	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
+	}
+	isPubliclyReadableProp, err := expandDataCatalogTagTemplateIsPubliclyReadable(d.Get("is_publicly_readable"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("is_publicly_readable"); !isEmptyValue(reflect.ValueOf(isPubliclyReadableProp)) && (ok || !reflect.DeepEqual(v, isPubliclyReadableProp)) {
+		obj["isPubliclyReadable"] = isPubliclyReadableProp
 	}
 	fieldsProp, err := expandDataCatalogTagTemplateFields(d.Get("fields"), d, config)
 	if err != nil {
@@ -285,6 +296,9 @@ func resourceDataCatalogTagTemplateRead(d *schema.ResourceData, meta interface{}
 	if err := d.Set("display_name", flattenDataCatalogTagTemplateDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagTemplate: %s", err)
 	}
+	if err := d.Set("is_publicly_readable", flattenDataCatalogTagTemplateIsPubliclyReadable(res["isPubliclyReadable"], d, config)); err != nil {
+		return fmt.Errorf("Error reading TagTemplate: %s", err)
+	}
 	if err := d.Set("fields", flattenDataCatalogTagTemplateFields(res["fields"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagTemplate: %s", err)
 	}
@@ -314,6 +328,12 @@ func resourceDataCatalogTagTemplateUpdate(d *schema.ResourceData, meta interface
 	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+	isPubliclyReadableProp, err := expandDataCatalogTagTemplateIsPubliclyReadable(d.Get("is_publicly_readable"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("is_publicly_readable"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, isPubliclyReadableProp)) {
+		obj["isPubliclyReadable"] = isPubliclyReadableProp
+	}
 
 	url, err := replaceVars(d, config, "{{DataCatalogBasePath}}{{name}}")
 	if err != nil {
@@ -325,6 +345,10 @@ func resourceDataCatalogTagTemplateUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("display_name") {
 		updateMask = append(updateMask, "displayName")
+	}
+
+	if d.HasChange("is_publicly_readable") {
+		updateMask = append(updateMask, "isPubliclyReadable")
 	}
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
@@ -418,6 +442,10 @@ func flattenDataCatalogTagTemplateName(v interface{}, d *schema.ResourceData, co
 }
 
 func flattenDataCatalogTagTemplateDisplayName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenDataCatalogTagTemplateIsPubliclyReadable(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -529,6 +557,10 @@ func flattenDataCatalogTagTemplateFieldsOrder(v interface{}, d *schema.ResourceD
 }
 
 func expandDataCatalogTagTemplateDisplayName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataCatalogTagTemplateIsPubliclyReadable(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
