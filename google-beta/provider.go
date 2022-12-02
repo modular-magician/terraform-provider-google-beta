@@ -541,6 +541,14 @@ func Provider() *schema.Provider {
 					"GOOGLE_FIREBASE_HOSTING_CUSTOM_ENDPOINT",
 				}, DefaultBasePaths[FirebaseHostingBasePathKey]),
 			},
+			"firebase_storage_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateCustomEndpoint,
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{
+					"GOOGLE_FIREBASE_STORAGE_CUSTOM_ENDPOINT",
+				}, DefaultBasePaths[FirebaseStorageBasePathKey]),
+			},
 			"firestore_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -1039,9 +1047,9 @@ func Provider() *schema.Provider {
 	return provider
 }
 
-// Generated resources: 287
+// Generated resources: 288
 // Generated IAM resources: 189
-// Total generated resources: 476
+// Total generated resources: 477
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1341,6 +1349,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_firebase_apple_app":                                    resourceFirebaseAppleApp(),
 			"google_firebase_hosting_site":                                 resourceFirebaseHostingSite(),
 			"google_firebase_hosting_channel":                              resourceFirebaseHostingChannel(),
+			"google_firebase_storage_bucket":                               resourceFirebaseStorageBucket(),
 			"google_firestore_index":                                       resourceFirestoreIndex(),
 			"google_firestore_document":                                    resourceFirestoreDocument(),
 			"google_game_services_realm":                                   resourceGameServicesRealm(),
@@ -1805,6 +1814,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.FilestoreBasePath = d.Get("filestore_custom_endpoint").(string)
 	config.FirebaseBasePath = d.Get("firebase_custom_endpoint").(string)
 	config.FirebaseHostingBasePath = d.Get("firebase_hosting_custom_endpoint").(string)
+	config.FirebaseStorageBasePath = d.Get("firebase_storage_custom_endpoint").(string)
 	config.FirestoreBasePath = d.Get("firestore_custom_endpoint").(string)
 	config.GameServicesBasePath = d.Get("game_services_custom_endpoint").(string)
 	config.GKEHubBasePath = d.Get("gke_hub_custom_endpoint").(string)
