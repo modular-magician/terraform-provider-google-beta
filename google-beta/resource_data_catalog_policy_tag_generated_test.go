@@ -42,7 +42,7 @@ func TestAccDataCatalogPolicyTag_dataCatalogTaxonomiesPolicyTagBasicExample(t *t
 				ResourceName:            "google_data_catalog_policy_tag.basic_policy_tag",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"taxonomy"},
+				ImportStateVerifyIgnore: []string{"parent_policy_tag", "taxonomy"},
 			},
 		},
 	})
@@ -86,7 +86,7 @@ func TestAccDataCatalogPolicyTag_dataCatalogTaxonomiesPolicyTagChildPoliciesExam
 				ResourceName:            "google_data_catalog_policy_tag.child_policy",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"taxonomy"},
+				ImportStateVerifyIgnore: []string{"parent_policy_tag", "taxonomy"},
 			},
 		},
 	})

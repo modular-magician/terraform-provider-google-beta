@@ -50,10 +50,11 @@ taxonomy; contain only unicode letters, numbers, underscores, dashes and spaces;
 not start or end with spaces; and be at most 200 bytes long when encoded in UTF-8.`,
 			},
 			"taxonomy": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `Taxonomy the policy tag is associated with`,
+				Type:             schema.TypeString,
+				Required:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
+				Description:      `Taxonomy the policy tag is associated with`,
 			},
 			"description": {
 				Type:     schema.TypeString,
@@ -64,8 +65,9 @@ encoded in UTF-8. If not set, defaults to an empty description.
 If not set, defaults to an empty description.`,
 			},
 			"parent_policy_tag": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:             schema.TypeString,
+				Optional:         true,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
 				Description: `Resource name of this policy tag's parent policy tag.
 If empty, it means this policy tag is a top level policy tag.
 If not set, defaults to an empty string.`,
@@ -326,7 +328,10 @@ func flattenDataCatalogPolicyTagDescription(v interface{}, d *schema.ResourceDat
 }
 
 func flattenDataCatalogPolicyTagParentPolicyTag(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	return v
+	if v == nil {
+		return v
+	}
+	return ConvertSelfLinkToV1(v.(string))
 }
 
 func flattenDataCatalogPolicyTagChildPolicyTags(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -342,5 +347,9 @@ func expandDataCatalogPolicyTagDescription(v interface{}, d TerraformResourceDat
 }
 
 func expandDataCatalogPolicyTagParentPolicyTag(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
+	f, err := parseGlobalFieldValue("policyTags", v.(string), "project", d, config, true)
+	if err != nil {
+		return nil, fmt.Errorf("Invalid value for parent_policy_tag: %s", err)
+	}
+	return f.RelativeLink(), nil
 }
