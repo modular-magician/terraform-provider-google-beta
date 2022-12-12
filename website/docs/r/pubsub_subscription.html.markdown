@@ -459,6 +459,15 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `id` - an identifier for the resource with format `projects/{{project}}/subscriptions/{{name}}`
 
+* `topic_message_retention_duration` -
+  Indicates the minimum duration for which a message is retained after it is published to the subscription's topic.
+  If this field is set, messages published to the subscription's topic in the last topicMessageRetentionDuration are always available to subscribers.
+  See the messageRetentionDuration field in Topic. This field is set only in responses from the server; it is ignored if it is set in any requests.
+  A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".
+
+* `state` -
+  An output-only field indicating whether or not the subscription can receive messages.
+
 
 ## Timeouts
 

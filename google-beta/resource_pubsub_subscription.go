@@ -366,6 +366,19 @@ A duration in seconds with up to nine fractional digits, terminated by 's'. Exam
 					},
 				},
 			},
+			"state": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `An output-only field indicating whether or not the subscription can receive messages.`,
+			},
+			"topic_message_retention_duration": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `Indicates the minimum duration for which a message is retained after it is published to the subscription's topic.
+If this field is set, messages published to the subscription's topic in the last topicMessageRetentionDuration are always available to subscribers.
+See the messageRetentionDuration field in Topic. This field is set only in responses from the server; it is ignored if it is set in any requests.
+A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -625,6 +638,12 @@ func resourcePubsubSubscriptionRead(d *schema.ResourceData, meta interface{}) er
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
 	if err := d.Set("enable_exactly_once_delivery", flattenPubsubSubscriptionEnableExactlyOnceDelivery(res["enableExactlyOnceDelivery"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Subscription: %s", err)
+	}
+	if err := d.Set("topic_message_retention_duration", flattenPubsubSubscriptionTopicMessageRetentionDuration(res["topicMessageRetentionDuration"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Subscription: %s", err)
+	}
+	if err := d.Set("state", flattenPubsubSubscriptionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
 
@@ -1048,6 +1067,14 @@ func flattenPubsubSubscriptionEnableMessageOrdering(v interface{}, d *schema.Res
 }
 
 func flattenPubsubSubscriptionEnableExactlyOnceDelivery(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenPubsubSubscriptionTopicMessageRetentionDuration(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenPubsubSubscriptionState(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
