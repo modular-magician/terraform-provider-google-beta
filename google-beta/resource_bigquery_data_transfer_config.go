@@ -176,10 +176,11 @@ https://cloud.google.com/appengine/docs/flexible/python/scheduling-jobs-with-cro
 NOTE: the granularity should be at least 8 hours, or less frequent.`,
 			},
 			"schedule_options": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: `Options customizing the data transfer schedule.`,
-				MaxItems:    1,
+				Type:             schema.TypeList,
+				Optional:         true,
+				DiffSuppressFunc: emptyOrUnsetBlockDiffSuppress,
+				Description:      `Options customizing the data transfer schedule.`,
+				MaxItems:         1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"disable_auto_scheduling": {
@@ -802,7 +803,7 @@ func expandBigqueryDataTransferConfigScheduleOptions(v interface{}, d TerraformR
 	transformedDisableAutoScheduling, err := expandBigqueryDataTransferConfigScheduleOptionsDisableAutoScheduling(original["disable_auto_scheduling"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDisableAutoScheduling); val.IsValid() && !isEmptyValue(val) {
+	} else {
 		transformed["disableAutoScheduling"] = transformedDisableAutoScheduling
 	}
 
