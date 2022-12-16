@@ -1058,8 +1058,8 @@ func Provider() *schema.Provider {
 }
 
 // Generated resources: 291
-// Generated IAM resources: 189
-// Total generated resources: 480
+// Generated IAM resources: 192
+// Total generated resources: 483
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1123,6 +1123,9 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_artifact_registry_repository_iam_member":               ResourceIamMember(ArtifactRegistryRepositoryIamSchema, ArtifactRegistryRepositoryIamUpdaterProducer, ArtifactRegistryRepositoryIdParseFunc),
 			"google_artifact_registry_repository_iam_policy":               ResourceIamPolicy(ArtifactRegistryRepositoryIamSchema, ArtifactRegistryRepositoryIamUpdaterProducer, ArtifactRegistryRepositoryIdParseFunc),
 			"google_beyondcorp_app_connector":                              resourceBeyondcorpAppConnector(),
+			"google_beyondcorp_app_connector_iam_binding":                  ResourceIamBinding(BeyondcorpAppConnectorIamSchema, BeyondcorpAppConnectorIamUpdaterProducer, BeyondcorpAppConnectorIdParseFunc),
+			"google_beyondcorp_app_connector_iam_member":                   ResourceIamMember(BeyondcorpAppConnectorIamSchema, BeyondcorpAppConnectorIamUpdaterProducer, BeyondcorpAppConnectorIdParseFunc),
+			"google_beyondcorp_app_connector_iam_policy":                   ResourceIamPolicy(BeyondcorpAppConnectorIamSchema, BeyondcorpAppConnectorIamUpdaterProducer, BeyondcorpAppConnectorIdParseFunc),
 			"google_beyondcorp_app_gateway":                                resourceBeyondcorpAppGateway(),
 			"google_bigquery_dataset":                                      resourceBigQueryDataset(),
 			"google_bigquery_dataset_access":                               resourceBigQueryDatasetAccess(),
