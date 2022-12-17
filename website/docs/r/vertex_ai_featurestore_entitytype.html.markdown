@@ -52,6 +52,7 @@ resource "google_vertex_ai_featurestore_entitytype" "entity" {
   labels = {
     foo = "bar"
   }
+  description = "test description"
   featurestore = google_vertex_ai_featurestore.featurestore.id
   monitoring_config {
     snapshot_analysis {
@@ -131,6 +132,10 @@ The following arguments are supported:
 * `name` -
   (Optional)
   The name of the EntityType. This value may be up to 60 characters, and valid characters are [a-z0-9_]. The first character cannot be a number.
+
+* `description` -
+  (Optional)
+  Optional. Description of the EntityType.
 
 * `labels` -
   (Optional)
