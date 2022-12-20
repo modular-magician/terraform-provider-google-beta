@@ -238,9 +238,9 @@ Mutually exclusive with enableEndpointIndependentMapping.`,
 			"enable_endpoint_independent_mapping": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Description: `Specifies if endpoint independent mapping is enabled. This is enabled by default. For more information
+				Description: `Specifies if endpoint independent mapping is enabled. This is disabled by default. For more information
 see the [official documentation](https://cloud.google.com/nat/docs/overview#specs-rfcs).`,
-				Default: true,
+				Default: false,
 			},
 			"icmp_idle_timeout_sec": {
 				Type:        schema.TypeInt,
