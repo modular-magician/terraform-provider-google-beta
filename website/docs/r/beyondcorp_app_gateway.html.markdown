@@ -88,15 +88,15 @@ The following arguments are supported:
 
 * `type` -
   (Optional)
-  The type of network connectivity used by the AppGateway.
-  Default value is `TYPE_UNSPECIFIED`.
-  Possible values are `TYPE_UNSPECIFIED` and `TCP_PROXY`.
+  The type of network connectivity used by the AppGateway. Refer to
+  https://cloud.google.com/beyondcorp/docs/reference/rest/v1/projects.locations.appGateways#type
+  for a list of possible values.
 
 * `host_type` -
   (Optional)
-  The type of hosting used by the AppGateway.
-  Default value is `HOST_TYPE_UNSPECIFIED`.
-  Possible values are `HOST_TYPE_UNSPECIFIED` and `GCP_REGIONAL_MIG`.
+  The type of hosting used by the AppGateway. Refer to
+  https://cloud.google.com/beyondcorp/docs/reference/rest/v1/projects.locations.appGateways#hosttype
+  for a list of possible values.
 
 * `display_name` -
   (Optional)
@@ -115,9 +115,6 @@ The following arguments are supported:
 In addition to the arguments listed above, the following computed attributes are exported:
 
 * `id` - an identifier for the resource with format `projects/{{project}}/locations/{{region}}/appGateways/{{name}}`
-
-* `state` -
-  Represents the different states of a AppGateway.
 
 * `uri` -
   Server-defined URI for this resource.

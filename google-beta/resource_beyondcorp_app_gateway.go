@@ -52,12 +52,12 @@ func resourceBeyondcorpAppGateway() *schema.Resource {
 				Description: `An arbitrary user-provided name for the AppGateway.`,
 			},
 			"host_type": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: validateEnum([]string{"HOST_TYPE_UNSPECIFIED", "GCP_REGIONAL_MIG", ""}),
-				Description:  `The type of hosting used by the AppGateway. Default value: "HOST_TYPE_UNSPECIFIED" Possible values: ["HOST_TYPE_UNSPECIFIED", "GCP_REGIONAL_MIG"]`,
-				Default:      "HOST_TYPE_UNSPECIFIED",
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `The type of hosting used by the AppGateway. Refer to
+https://cloud.google.com/beyondcorp/docs/reference/rest/v1/projects.locations.appGateways#hosttype
+for a list of possible values.`,
 			},
 			"labels": {
 				Type:        schema.TypeMap,
@@ -73,12 +73,12 @@ func resourceBeyondcorpAppGateway() *schema.Resource {
 				Description: `The region of the AppGateway.`,
 			},
 			"type": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: validateEnum([]string{"TYPE_UNSPECIFIED", "TCP_PROXY", ""}),
-				Description:  `The type of network connectivity used by the AppGateway. Default value: "TYPE_UNSPECIFIED" Possible values: ["TYPE_UNSPECIFIED", "TCP_PROXY"]`,
-				Default:      "TYPE_UNSPECIFIED",
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `The type of network connectivity used by the AppGateway. Refer to
+https://cloud.google.com/beyondcorp/docs/reference/rest/v1/projects.locations.appGateways#type
+for a list of possible values.`,
 			},
 			"allocated_connections": {
 				Type:        schema.TypeList,
@@ -98,11 +98,6 @@ func resourceBeyondcorpAppGateway() *schema.Resource {
 						},
 					},
 				},
-			},
-			"state": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Represents the different states of a AppGateway.`,
 			},
 			"uri": {
 				Type:        schema.TypeString,
@@ -255,9 +250,6 @@ func resourceBeyondcorpAppGatewayRead(d *schema.ResourceData, meta interface{}) 
 	if err := d.Set("labels", flattenBeyondcorpAppGatewayLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppGateway: %s", err)
 	}
-	if err := d.Set("state", flattenBeyondcorpAppGatewayState(res["state"], d, config)); err != nil {
-		return fmt.Errorf("Error reading AppGateway: %s", err)
-	}
 	if err := d.Set("uri", flattenBeyondcorpAppGatewayUri(res["uri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppGateway: %s", err)
 	}
@@ -347,10 +339,6 @@ func flattenBeyondcorpAppGatewayDisplayName(v interface{}, d *schema.ResourceDat
 }
 
 func flattenBeyondcorpAppGatewayLabels(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	return v
-}
-
-func flattenBeyondcorpAppGatewayState(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 

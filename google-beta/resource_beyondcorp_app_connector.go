@@ -90,11 +90,6 @@ func resourceBeyondcorpAppConnector() *schema.Resource {
 				ForceNew:    true,
 				Description: `The region of the AppConnector.`,
 			},
-			"state": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Represents the different states of a AppConnector.`,
-			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -230,9 +225,6 @@ func resourceBeyondcorpAppConnectorRead(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("Error reading AppConnector: %s", err)
 	}
 	if err := d.Set("principal_info", flattenBeyondcorpAppConnectorPrincipalInfo(res["principalInfo"], d, config)); err != nil {
-		return fmt.Errorf("Error reading AppConnector: %s", err)
-	}
-	if err := d.Set("state", flattenBeyondcorpAppConnectorState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppConnector: %s", err)
 	}
 
@@ -425,10 +417,6 @@ func flattenBeyondcorpAppConnectorPrincipalInfoServiceAccount(v interface{}, d *
 	return []interface{}{transformed}
 }
 func flattenBeyondcorpAppConnectorPrincipalInfoServiceAccountEmail(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	return v
-}
-
-func flattenBeyondcorpAppConnectorState(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 

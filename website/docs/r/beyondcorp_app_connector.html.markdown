@@ -140,9 +140,6 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `id` - an identifier for the resource with format `projects/{{project}}/locations/{{region}}/appConnectors/{{name}}`
 
-* `state` -
-  Represents the different states of a AppConnector.
-
 
 ## Timeouts
 
