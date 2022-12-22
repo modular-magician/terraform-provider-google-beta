@@ -406,6 +406,11 @@ The following arguments are supported:
   Default value is `TOP`.
   Possible values are `TOP` and `RANDOM_START`.
 
+* `identifying_fields` -
+  (Optional)
+  Specifies the BigQuery fields that will be returned with findings (each field is expected to be comma separated).
+  If not specified, no identifying fields will be returned for findings.
+
 
 <a name="nested_table_reference"></a>The `table_reference` block supports:
 
