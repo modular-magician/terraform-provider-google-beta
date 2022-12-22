@@ -522,8 +522,7 @@ The following arguments are supported:
 
 * `name` -
   (Required)
-  A user-defined name of the function. Function names must
-  be unique globally and match pattern `projects/*/locations/*/functions/*`.
+  A user-defined name of the function. Must be unique globally.
 
 
 - - -

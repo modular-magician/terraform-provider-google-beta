@@ -43,11 +43,10 @@ func resourceCloudfunctions2function() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				Description: `A user-defined name of the function. Function names must
-be unique globally and match pattern 'projects/*/locations/*/functions/*'.`,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: `A user-defined name of the function. Must be unique globally.`,
 			},
 			"build_config": {
 				Type:     schema.TypeList,
