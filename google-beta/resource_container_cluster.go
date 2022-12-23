@@ -591,13 +591,13 @@ func resourceContainerCluster() *schema.Resource {
 												"auto_upgrade": {
 													Type:        schema.TypeBool,
 													Optional:    true,
-													Computed:    true,
+													Default:     true,
 													Description: `Specifies whether node auto-upgrade is enabled for the node pool. If enabled, node auto-upgrade helps keep the nodes in your node pool up to date with the latest release version of Kubernetes.`,
 												},
 												"auto_repair": {
 													Type:        schema.TypeBool,
 													Optional:    true,
-													Computed:    true,
+													Default:     true,
 													Description: `Specifies whether the node auto-repair is enabled for the node pool. If enabled, the nodes in this node pool will be monitored and, if they fail health checks too many times, an automatic repair action will be triggered.`,
 												},
 												"upgrade_options": {
@@ -4049,7 +4049,7 @@ func expandStandardRolloutPolicy(configured interface{}) *container.StandardRoll
 func expandManagement(configured interface{}) *container.NodeManagement {
 	l, ok := configured.([]interface{})
 	if !ok || l == nil || len(l) == 0 || l[0] == nil {
-		return &container.NodeManagement{}
+		return nil
 	}
 	config := l[0].(map[string]interface{})
 
