@@ -88,6 +88,32 @@ func forceNewIfNetworkIPNotUpdatableFunc(d TerraformResourceDiff) error {
 	return nil
 }
 
+func machineTypeIfAllowStoppingForUpdateFalseFunc(diff TerraformResourceDiff) error {
+
+	old, new := diff.GetChange("machine_type")
+	if old.(string) != new.(string) && old.(string) != "" {
+		allowUpdate := diff.Get("allow_stopping_for_update")
+		oldStatus, newStatus := diff.GetChange("desired_status")
+		if !(allowUpdate.(bool)) {
+			if oldStatus == "" {
+				if newStatus != "TERMINATED" {
+					return fmt.Errorf("allow_stopping_for_update is %v and %v hence updating machine_type isn't possible.", allowUpdate, newStatus)
+				}
+			} else {
+				if oldStatus != "TERMINATED" {
+					return fmt.Errorf("allow_stopping_for_update is %v and %v hence updating machine_type isn't possible.", allowUpdate, oldStatus)
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
+func machineTypeIfAllowStoppingForUpdateFalse(_ context.Context, d *schema.ResourceDiff, meta interface{}) error {
+	return machineTypeIfAllowStoppingForUpdateFalseFunc(d)
+}
+
 func resourceComputeInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceComputeInstanceCreate,
@@ -904,6 +930,7 @@ func resourceComputeInstance() *schema.Resource {
 			),
 			desiredStatusDiff,
 			forceNewIfNetworkIPNotUpdatable,
+			machineTypeIfAllowStoppingForUpdateFalse,
 		),
 		UseJSONNumber: true,
 	}
