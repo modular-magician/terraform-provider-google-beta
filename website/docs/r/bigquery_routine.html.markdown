@@ -67,7 +67,7 @@ resource "google_bigquery_routine" "sproc" {
   dataset_id = google_bigquery_dataset.test.dataset_id
   routine_id     = "tf_test_routine_id%{random_suffix}"
   routine_type = "SCALAR_FUNCTION"
-  language = "JAVASCRIPT"
+  language = "JS"
   definition_body = "CREATE FUNCTION multiplyInputs return x*y;"
   arguments {
     name = "x"
@@ -143,7 +143,7 @@ The following arguments are supported:
 * `language` -
   (Optional)
   The language of the routine.
-  Possible values are `SQL` and `JAVASCRIPT`.
+  Possible values are `SQL` and `JS`.
 
 * `arguments` -
   (Optional)
@@ -171,8 +171,8 @@ The following arguments are supported:
 
 * `imported_libraries` -
   (Optional)
-  Optional. If language = "JAVASCRIPT", this field stores the path of the
-  imported JAVASCRIPT libraries.
+  Optional. If language = "JS", this field stores the path of the
+  imported JS libraries.
 
 * `description` -
   (Optional)

@@ -118,8 +118,8 @@ the schema as returned by the API.`,
 			"imported_libraries": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Description: `Optional. If language = "JAVASCRIPT", this field stores the path of the
-imported JAVASCRIPT libraries.`,
+				Description: `Optional. If language = "JS", this field stores the path of the
+imported JS libraries.`,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -127,8 +127,8 @@ imported JAVASCRIPT libraries.`,
 			"language": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateEnum([]string{"SQL", "JAVASCRIPT", ""}),
-				Description:  `The language of the routine. Possible values: ["SQL", "JAVASCRIPT"]`,
+				ValidateFunc: validateEnum([]string{"SQL", "JS", ""}),
+				Description:  `The language of the routine. Possible values: ["SQL", "JS"]`,
 			},
 			"return_table_type": {
 				Type:         schema.TypeString,
