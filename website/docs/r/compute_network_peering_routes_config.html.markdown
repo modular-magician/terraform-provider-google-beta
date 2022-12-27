@@ -48,6 +48,8 @@ resource "google_compute_network_peering_routes_config" "peering_primary_routes"
 
   import_custom_routes = true
   export_custom_routes = true
+  export_subnet_routes_with_public_ip = true 
+  import_subnet_routes_with_public_ip = true
 }
 
 resource "google_compute_network_peering" "peering_primary" {
@@ -57,6 +59,8 @@ resource "google_compute_network_peering" "peering_primary" {
 
   import_custom_routes = true
   export_custom_routes = true
+  export_subnet_routes_with_public_ip = true 
+  import_subnet_routes_with_public_ip = true
 }
 
 resource "google_compute_network_peering" "peering_secondary" {
@@ -162,6 +166,19 @@ The following arguments are supported:
 
 - - -
 
+
+* `export_subnet_routes_with_public_ip` -
+  (Optional)
+  Whether subnet routes with public IP range are exported. 
+  The default value is true, all subnet routes are exported. 
+  IPv4 special-use ranges are always exported to peers and 
+  are not controlled by this field.
+
+* `import_subnet_routes_with_public_ip` -
+  (Optional)
+  Whether subnet routes with public IP range are imported. 
+  The default value is false. IPv4 special-use ranges are always 
+  imported from peers and are not controlled by this field.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
