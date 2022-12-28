@@ -936,6 +936,7 @@ func flattenWorkloadMetadataConfig(c *container.WorkloadMetadataConfig) []map[st
 	}
 	return result
 }
+
 func flattenSandboxConfig(c *container.SandboxConfig) []map[string]interface{} {
 	result := []map[string]interface{}{}
 	if c != nil {
@@ -993,6 +994,9 @@ func containerNodePoolLabelsSuppress(k, old, new string, d *schema.ResourceData)
 	return true
 }
 
+// containerNodePoolTaintSuppress builds a map of taints that represents the diff between
+// the existing and new configuration. Then GKE default taints are removed from the diff
+// and if the resulting diff is empty, the diff is suppressed.
 func containerNodePoolTaintSuppress(k, old, new string, d *schema.ResourceData) bool {
 	// Node configs are embedded into multiple resources (container cluster and
 	// container node pool) so we determine the node config key dynamically.
@@ -1003,17 +1007,9 @@ func containerNodePoolTaintSuppress(k, old, new string, d *schema.ResourceData) 
 
 	root := k[:idx]
 
-	// Right now, GKE only applies its own out-of-band labels when you enable
-	// Sandbox. We only need to perform diff suppression in this case;
-	// otherwise, the default Terraform behavior is fine.
-	o, n := d.GetChange(root + ".sandbox_config.0.sandbox_type")
-	if o == nil || n == nil {
-		return false
-	}
-
 	// Pull the entire changeset as a list rather than trying to deal with each
 	// element individually.
-	o, n = d.GetChange(root + ".taint")
+	o, n := d.GetChange(root + ".taint")
 	if o == nil || n == nil {
 		return false
 	}
@@ -1022,21 +1018,8 @@ func containerNodePoolTaintSuppress(k, old, new string, d *schema.ResourceData) 
 		Key, Value, Effect string
 	}
 
-	taintSet := make(map[taintType]struct{})
-
-	// Add all new taints to set.
-	for _, raw := range n.([]interface{}) {
-		data := raw.(map[string]interface{})
-		taint := taintType{
-			Key:    data["key"].(string),
-			Value:  data["value"].(string),
-			Effect: data["effect"].(string),
-		}
-		taintSet[taint] = struct{}{}
-	}
-
-	// Remove all current taints, skipping GKE-managed keys if not present in
-	// the new configuration.
+	// Populate a map of existing taints
+	oldTaints := make(map[taintType]struct{})
 	for _, raw := range o.([]interface{}) {
 		data := raw.(map[string]interface{})
 		taint := taintType{
@@ -1044,17 +1027,56 @@ func containerNodePoolTaintSuppress(k, old, new string, d *schema.ResourceData) 
 			Value:  data["value"].(string),
 			Effect: data["effect"].(string),
 		}
-		if _, ok := taintSet[taint]; ok {
-			delete(taintSet, taint)
-		} else if !strings.HasPrefix(taint.Key, "sandbox.gke.io/") {
-			// User-provided taint removed in new configuration.
-			return false
+		oldTaints[taint] = struct{}{}
+	}
+
+	// Populate the diff of new taints
+	newTaints := make(map[taintType]struct{})
+	for _, raw := range n.([]interface{}) {
+		data := raw.(map[string]interface{})
+		taint := taintType{
+			Key:    data["key"].(string),
+			Value:  data["value"].(string),
+			Effect: data["effect"].(string),
+		}
+		newTaints[taint] = struct{}{}
+	}
+
+	// Populate the diff of added and removed taints
+	diff := make(map[taintType]struct{})
+	for taint := range newTaints {
+		if _, ok := oldTaints[taint]; !ok {
+			diff[taint] = struct{}{}
+		}
+	}
+	for taint := range oldTaints {
+		if _, ok := newTaints[taint]; !ok {
+			diff[taint] = struct{}{}
+		}
+	}
+
+	gkeDefaultTaints := map[taintType]struct{}{
+		{
+			Key:    "nvidia.com/gpu",
+			Value:  "present",
+			Effect: "NO_SCHEDULE",
+		}: {},
+	}
+
+	// Remove GKE default taints
+	for taint := range diff {
+		if _, ok := gkeDefaultTaints[taint]; ok {
+			delete(diff, taint)
+		}
+		// Remove sandbox specific taints from the diff.
+		if strings.HasPrefix(taint.Key, "sandbox.gke.io/") {
+			delete(diff, taint)
 		}
 	}
 
 	// If, at this point, the set still has elements, the new configuration
 	// added an additional taint.
-	if len(taintSet) > 0 {
+	if len(diff) > 0 {
 		return false
 	}
 
