@@ -191,6 +191,12 @@ allocated from regional external IP address pool.`,
 					DiffSuppressFunc: compareSelfLinkOrResourceName,
 				},
 			},
+			"labels": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: `Labels to apply to this address.  A list of key->value pairs.`,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 			"mtu": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -244,6 +250,12 @@ router subinterface for this interconnect attachment.`,
 				Computed: true,
 				Description: `Google reference ID, to be used when raising support tickets with
 Google or otherwise to debug backend connectivity issues.`,
+			},
+			"label_fingerprint": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `The fingerprint used for optimistic locking of this resource.  Used
+internally during updates.`,
 			},
 			"pairing_key": {
 				Type:     schema.TypeString,
@@ -326,6 +338,18 @@ func resourceComputeInterconnectAttachmentCreate(d *schema.ResourceData, meta in
 		return err
 	} else if v, ok := d.GetOkExists("mtu"); !isEmptyValue(reflect.ValueOf(mtuProp)) && (ok || !reflect.DeepEqual(v, mtuProp)) {
 		obj["mtu"] = mtuProp
+	}
+	labelsProp, err := expandComputeInterconnectAttachmentLabels(d.Get("labels"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+		obj["labels"] = labelsProp
+	}
+	labelFingerprintProp, err := expandComputeInterconnectAttachmentLabelFingerprint(d.Get("label_fingerprint"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("label_fingerprint"); !isEmptyValue(reflect.ValueOf(labelFingerprintProp)) && (ok || !reflect.DeepEqual(v, labelFingerprintProp)) {
+		obj["labelFingerprint"] = labelFingerprintProp
 	}
 	bandwidthProp, err := expandComputeInterconnectAttachmentBandwidth(d.Get("bandwidth"), d, config)
 	if err != nil {
@@ -490,6 +514,12 @@ func resourceComputeInterconnectAttachmentRead(d *schema.ResourceData, meta inte
 	if err := d.Set("mtu", flattenComputeInterconnectAttachmentMtu(res["mtu"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
+	if err := d.Set("labels", flattenComputeInterconnectAttachmentLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
+	}
+	if err := d.Set("label_fingerprint", flattenComputeInterconnectAttachmentLabelFingerprint(res["labelFingerprint"], d, config)); err != nil {
+		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
+	}
 	if err := d.Set("bandwidth", flattenComputeInterconnectAttachmentBandwidth(res["bandwidth"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
@@ -616,6 +646,50 @@ func resourceComputeInterconnectAttachmentUpdate(d *schema.ResourceData, meta in
 	if err != nil {
 		return err
 	}
+	d.Partial(true)
+
+	if d.HasChange("labels") || d.HasChange("label_fingerprint") {
+		obj := make(map[string]interface{})
+
+		labelsProp, err := expandComputeInterconnectAttachmentLabels(d.Get("labels"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+			obj["labels"] = labelsProp
+		}
+		labelFingerprintProp, err := expandComputeInterconnectAttachmentLabelFingerprint(d.Get("label_fingerprint"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("label_fingerprint"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelFingerprintProp)) {
+			obj["labelFingerprint"] = labelFingerprintProp
+		}
+
+		url, err := replaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/interconnects/{{name}}/setLabels")
+		if err != nil {
+			return err
+		}
+
+		// err == nil indicates that the billing_project value was found
+		if bp, err := getBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		res, err := sendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return fmt.Errorf("Error updating InterconnectAttachment %q: %s", d.Id(), err)
+		} else {
+			log.Printf("[DEBUG] Finished updating InterconnectAttachment %q: %#v", d.Id(), res)
+		}
+
+		err = computeOperationWaitTime(
+			config, res, project, "Updating InterconnectAttachment", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return err
+		}
+	}
+
+	d.Partial(false)
 
 	return resourceComputeInterconnectAttachmentRead(d, meta)
 }
@@ -714,6 +788,14 @@ func flattenComputeInterconnectAttachmentMtu(v interface{}, d *schema.ResourceDa
 	if floatVal, ok := v.(float64); ok {
 		return fmt.Sprintf("%d", int(floatVal))
 	}
+	return v
+}
+
+func flattenComputeInterconnectAttachmentLabels(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenComputeInterconnectAttachmentLabelFingerprint(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -842,6 +924,21 @@ func expandComputeInterconnectAttachmentDescription(v interface{}, d TerraformRe
 }
 
 func expandComputeInterconnectAttachmentMtu(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeInterconnectAttachmentLabels(v interface{}, d TerraformResourceData, config *Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
+func expandComputeInterconnectAttachmentLabelFingerprint(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

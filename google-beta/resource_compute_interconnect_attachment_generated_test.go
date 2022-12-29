@@ -56,6 +56,9 @@ resource "google_compute_interconnect_attachment" "on_prem" {
   type                     = "PARTNER"
   router                   = google_compute_router.foobar.id
   mtu                      = 1500
+  labels                   = {
+    "foo" = "bar"
+  }
 }
 
 resource "google_compute_router" "foobar" {
@@ -109,6 +112,9 @@ resource "google_compute_interconnect_attachment" "ipsec-encrypted-interconnect-
   ipsec_internal_addresses = [
     google_compute_address.address.self_link,
   ]
+  labels                   = {
+    "foo" = "bar"
+  }
 }
 
 resource "google_compute_address" "address" {

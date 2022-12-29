@@ -40,6 +40,9 @@ resource "google_compute_interconnect_attachment" "on_prem" {
   type                     = "PARTNER"
   router                   = google_compute_router.foobar.id
   mtu                      = 1500
+  labels                   = {
+    "foo" = "bar"
+  }
 }
 
 resource "google_compute_router" "foobar" {
@@ -73,6 +76,9 @@ resource "google_compute_interconnect_attachment" "ipsec-encrypted-interconnect-
   ipsec_internal_addresses = [
     google_compute_address.address.self_link,
   ]
+  labels                   = {
+    "foo" = "bar"
+  }
 }
 
 resource "google_compute_address" "address" {
@@ -143,6 +149,10 @@ The following arguments are supported:
   (Optional)
   Maximum Transmission Unit (MTU), in bytes, of packets passing through
   this interconnect attachment. Currently, only 1440 and 1500 are allowed. If not specified, the value will default to 1440.
+
+* `labels` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Labels to apply to this address.  A list of key->value pairs.
 
 * `bandwidth` -
   (Optional)
@@ -239,6 +249,11 @@ In addition to the arguments listed above, the following computed attributes are
 * `customer_router_ip_address` -
   IPv4 address + prefix length to be configured on the customer
   router subinterface for this interconnect attachment.
+
+* `label_fingerprint` -
+  ([Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The fingerprint used for optimistic locking of this resource.  Used
+  internally during updates.
 
 * `pairing_key` -
   [Output only for type PARTNER. Not present for DEDICATED]. The opaque
