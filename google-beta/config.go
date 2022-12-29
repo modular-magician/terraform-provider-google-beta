@@ -430,7 +430,7 @@ var DefaultBasePaths = map[string]string{
 	DataformBasePathKey:             "https://dataform.googleapis.com/v1beta1/",
 	DataFusionBasePathKey:           "https://datafusion.googleapis.com/v1beta1/",
 	DataLossPreventionBasePathKey:   "https://dlp.googleapis.com/v2/",
-	DataprocBasePathKey:             "https://dataproc.googleapis.com/v1beta2/",
+	DataprocBasePathKey:             "https://dataproc.googleapis.com/v1/",
 	DataprocMetastoreBasePathKey:    "https://metastore.googleapis.com/v1beta/",
 	DatastoreBasePathKey:            "https://datastore.googleapis.com/v1/",
 	DatastreamBasePathKey:           "https://datastream.googleapis.com/v1/",

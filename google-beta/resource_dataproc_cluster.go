@@ -68,6 +68,7 @@ var (
 		"cluster_config.0.preemptible_worker_config.0.disk_config.0.num_local_ssds",
 		"cluster_config.0.preemptible_worker_config.0.disk_config.0.boot_disk_size_gb",
 		"cluster_config.0.preemptible_worker_config.0.disk_config.0.boot_disk_type",
+		"cluster_config.0.preemptible_worker_config.0.disk_config.0.local_ssd_interface",
 	}
 
 	clusterSoftwareConfigKeys = []string{
@@ -627,6 +628,24 @@ func resourceDataprocCluster() *schema.Resource {
 											},
 										},
 									},
+									"confidential_instance_config": {
+										Type:         schema.TypeList,
+										Optional:     true,
+										AtLeastOneOf: gceClusterConfigKeys,
+										Computed:     true,
+										MaxItems:     1,
+										Description:  `Confidential Instance Config for clusters using Confidential VMs.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enable_confidential_compute": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													ForceNew:    true,
+													Description: `Defines whether the instance should have confidential compute enabled.`,
+												},
+											},
+										},
+									},
 								},
 							},
 						},
@@ -713,6 +732,14 @@ func resourceDataprocCluster() *schema.Resource {
 													ForceNew:     true,
 													Default:      "pd-standard",
 													Description:  `The disk type of the primary disk attached to each preemptible worker node. Such as "pd-ssd" or "pd-standard". Defaults to "pd-standard".`,
+												},
+												"local_ssd_interface": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													AtLeastOneOf: preemptibleWorkerDiskConfigKeys,
+													ForceNew:     true,
+													Default:      "scsi",
+													Description:  `Interface type of local SSDs (default is "scsi"). Valid values: "scsi" (Small Computer System Interface), "nvme" (Non-Volatile Memory Express).`,
 												},
 											},
 										},
@@ -1101,6 +1128,7 @@ func instanceConfigSchema(parent string) *schema.Schema {
 									"cluster_config.0." + parent + ".0.disk_config.0.num_local_ssds",
 									"cluster_config.0." + parent + ".0.disk_config.0.boot_disk_size_gb",
 									"cluster_config.0." + parent + ".0.disk_config.0.boot_disk_type",
+									"cluster_config.0." + parent + ".0.disk_config.0.local_ssd_interface",
 								},
 								ForceNew: true,
 							},
@@ -1114,6 +1142,7 @@ func instanceConfigSchema(parent string) *schema.Schema {
 									"cluster_config.0." + parent + ".0.disk_config.0.num_local_ssds",
 									"cluster_config.0." + parent + ".0.disk_config.0.boot_disk_size_gb",
 									"cluster_config.0." + parent + ".0.disk_config.0.boot_disk_type",
+									"cluster_config.0." + parent + ".0.disk_config.0.local_ssd_interface",
 								},
 								ForceNew:     true,
 								ValidateFunc: validation.IntAtLeast(10),
@@ -1127,9 +1156,24 @@ func instanceConfigSchema(parent string) *schema.Schema {
 									"cluster_config.0." + parent + ".0.disk_config.0.num_local_ssds",
 									"cluster_config.0." + parent + ".0.disk_config.0.boot_disk_size_gb",
 									"cluster_config.0." + parent + ".0.disk_config.0.boot_disk_type",
+									"cluster_config.0." + parent + ".0.disk_config.0.local_ssd_interface",
 								},
 								ForceNew: true,
 								Default:  "pd-standard",
+							},
+
+							"local_ssd_interface": {
+								Type:     schema.TypeString,
+								Optional: true,
+								AtLeastOneOf: []string{
+									"cluster_config.0." + parent + ".0.disk_config.0.num_local_ssds",
+									"cluster_config.0." + parent + ".0.disk_config.0.boot_disk_size_gb",
+									"cluster_config.0." + parent + ".0.disk_config.0.boot_disk_type",
+									"cluster_config.0." + parent + ".0.disk_config.0.local_ssd_interface",
+								},
+								ForceNew:    true,
+								Default:     "scsi",
+								Description: `Interface type of local SSDs (default is "scsi"). Valid values: "scsi" (Small Computer System Interface), "nvme" (Non-Volatile Memory Express).`,
 							},
 						},
 					},
@@ -1558,6 +1602,13 @@ func expandGceClusterConfig(d *schema.ResourceData, config *Config) (*dataproc.G
 			conf.ShieldedInstanceConfig.EnableVtpm = v.(bool)
 		}
 	}
+	if v, ok := d.GetOk("cluster_config.0.gce_cluster_config.0.confidential_instance_config"); ok {
+		cfgCic := v.([]interface{})[0].(map[string]interface{})
+		conf.ConfidentialInstanceConfig = &dataproc.ConfidentialInstanceConfig{}
+		if v, ok := cfgCic["enable_confidential_compute"]; ok {
+			conf.ConfidentialInstanceConfig.EnableConfidentialCompute = v.(bool)
+		}
+	}
 	return conf, nil
 }
 
@@ -1725,6 +1776,9 @@ func expandPreemptibleInstanceGroupConfig(cfg map[string]interface{}) *dataproc.
 			if v, ok := dcfg["boot_disk_type"]; ok {
 				icg.DiskConfig.BootDiskType = v.(string)
 			}
+			if v, ok := dcfg["local_ssd_interface"]; ok {
+				icg.DiskConfig.LocalSsdInterface = v.(string)
+			}
 		}
 	}
 	if p, ok := cfg["preemptibility"]; ok {
@@ -1763,6 +1817,9 @@ func expandInstanceGroupConfig(cfg map[string]interface{}) *dataproc.InstanceGro
 			}
 			if v, ok := dcfg["boot_disk_type"]; ok {
 				icg.DiskConfig.BootDiskType = v.(string)
+			}
+			if v, ok := dcfg["local_ssd_interface"]; ok {
+				icg.DiskConfig.LocalSsdInterface = v.(string)
 			}
 		}
 	}
@@ -2268,6 +2325,13 @@ func flattenGceClusterConfig(d *schema.ResourceData, gcc *dataproc.GceClusterCon
 			},
 		}
 	}
+	if gcc.ConfidentialInstanceConfig != nil {
+		gceConfig["confidential_instance_config"] = []map[string]interface{}{
+			{
+				"enable_confidential_compute": gcc.ConfidentialInstanceConfig.EnableConfidentialCompute,
+			},
+		}
+	}
 
 	return []map[string]interface{}{gceConfig}
 }
@@ -2300,6 +2364,7 @@ func flattenPreemptibleInstanceGroupConfig(d *schema.ResourceData, icg *dataproc
 			disk["boot_disk_size_gb"] = icg.DiskConfig.BootDiskSizeGb
 			disk["num_local_ssds"] = icg.DiskConfig.NumLocalSsds
 			disk["boot_disk_type"] = icg.DiskConfig.BootDiskType
+			disk["local_ssd_interface"] = icg.DiskConfig.LocalSsdInterface
 		}
 	}
 
@@ -2321,6 +2386,7 @@ func flattenInstanceGroupConfig(d *schema.ResourceData, icg *dataproc.InstanceGr
 			disk["boot_disk_size_gb"] = icg.DiskConfig.BootDiskSizeGb
 			disk["num_local_ssds"] = icg.DiskConfig.NumLocalSsds
 			disk["boot_disk_type"] = icg.DiskConfig.BootDiskType
+			disk["local_ssd_interface"] = icg.DiskConfig.LocalSsdInterface
 		}
 
 		data["accelerators"] = flattenAccelerators(icg.Accelerators)

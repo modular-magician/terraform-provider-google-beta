@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+
 	"google.golang.org/api/dataproc/v1"
 )
 
@@ -1282,6 +1283,7 @@ func flattenJobStatus(s *dataproc.JobStatus) []map[string]interface{} {
 }
 
 func flattenJobPlacement(jp *dataproc.JobPlacement) []map[string]interface{} {
+
 	return []map[string]interface{}{
 		{
 			"cluster_name": jp.ClusterName,

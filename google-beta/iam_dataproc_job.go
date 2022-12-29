@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/cloudresourcemanager/v1"
+
 	"google.golang.org/api/dataproc/v1"
 )
 
@@ -86,6 +87,7 @@ func DataprocJobIdParseFunc(d *schema.ResourceData, config *Config) error {
 }
 
 func (u *DataprocJobIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
+
 	req := &dataproc.GetIamPolicyRequest{}
 
 	userAgent, err := generateUserAgentString(u.d, u.Config.userAgent)
