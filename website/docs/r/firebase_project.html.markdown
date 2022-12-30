@@ -72,11 +72,50 @@ In addition to the arguments listed above, the following computed attributes are
 * `id` - an identifier for the resource with format `projects/{{project}}`
 
 * `project_number` -
-  The number of the google project that firebase is enabled on.
+  Immutable. The globally unique, Google-assigned canonical identifier
+  for the Project. Use this identifier when configuring integrations and/or
+  making API calls to Firebase or third-party services.
 
 * `display_name` -
-  The GCP project display name
+  The user-assigned display name of the Project. This field may only be assigned on Update.
 
+* `resources` -
+  The default Firebase resources associated with the Project. This field will be deprecated.
+  Structure is [documented below](#nested_resources).
+
+
+<a name="nested_resources"></a>The `resources` block contains:
+
+* `hosting_site` -
+  The default Firebase Hosting site name, in the format:
+  `PROJECT_ID` Though rare, your `projectId` might already be used as
+  the name for an existing Hosting site in another project (learn more
+  about creating non-default, [additional sites](https://firebase.google.com/docs/hosting/multisites)).
+  In these cases, your `projectId` is appended with a hyphen then five
+  alphanumeric characters to create your default Hosting site name.
+  For example, if your `projectId` is `myproject123`, your default Hosting
+  site name might be: `myproject123-a5c16`.
+
+* `location_id` -
+  The ID of the Project's default GCP resource location.
+  The location is one of the available [GCP resource locations](https://firebase.google.com/docs/projects/locations).
+  This field is omitted if the default GCP resource location has not
+  been finalized yet. To set a Project's default GCP resource location,
+  call [`FinalizeDefaultLocation`](../projects.defaultLocation/finalize)
+  after you add Firebase resources to the Project.
+
+* `realtime_database_instance` -
+  The default Firebase Realtime Database instance name,
+  in the format: `PROJECT_ID` Though rare, your `projectId` might already
+  be used as the name for an existing Realtime Database instance in
+  another project (learn more about [database sharding](https://firebase.google.com/docs/database/usage/sharding)).
+  In these cases, your `projectId` is appended with a hyphen then five
+  alphanumeric characters to create your default Realtime Database instance
+  name. For example, if your `projectId` is `myproject123`, your default
+  database instance name might be: `myproject123-a5c16`
+
+* `storage_bucket` -
+  The default Cloud Storage for Firebase storage bucket, in the format: `PROJECT_ID.appspot.com`.
 
 ## Timeouts
 

@@ -41,12 +41,62 @@ func resourceFirebaseProject() *schema.Resource {
 			"display_name": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: `The GCP project display name`,
+				Description: `The user-assigned display name of the Project. This field may only be assigned on Update.`,
 			},
 			"project_number": {
-				Type:        schema.TypeString,
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `Immutable. The globally unique, Google-assigned canonical identifier
+for the Project. Use this identifier when configuring integrations and/or
+making API calls to Firebase or third-party services.`,
+			},
+			"resources": {
+				Type:        schema.TypeList,
 				Computed:    true,
-				Description: `The number of the google project that firebase is enabled on.`,
+				Description: `The default Firebase resources associated with the Project. This field will be deprecated.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"hosting_site": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `The default Firebase Hosting site name, in the format:
+'PROJECT_ID' Though rare, your 'projectId' might already be used as
+the name for an existing Hosting site in another project (learn more
+about creating non-default, [additional sites](https://firebase.google.com/docs/hosting/multisites)).
+In these cases, your 'projectId' is appended with a hyphen then five
+alphanumeric characters to create your default Hosting site name.
+For example, if your 'projectId' is 'myproject123', your default Hosting
+site name might be: 'myproject123-a5c16'.`,
+						},
+						"location_id": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `The ID of the Project's default GCP resource location.
+The location is one of the available [GCP resource locations](https://firebase.google.com/docs/projects/locations).
+This field is omitted if the default GCP resource location has not
+been finalized yet. To set a Project's default GCP resource location,
+call ['FinalizeDefaultLocation'](../projects.defaultLocation/finalize)
+after you add Firebase resources to the Project.`,
+						},
+						"realtime_database_instance": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `The default Firebase Realtime Database instance name,
+in the format: 'PROJECT_ID' Though rare, your 'projectId' might already
+be used as the name for an existing Realtime Database instance in
+another project (learn more about [database sharding](https://firebase.google.com/docs/database/usage/sharding)).
+In these cases, your 'projectId' is appended with a hyphen then five
+alphanumeric characters to create your default Realtime Database instance
+name. For example, if your 'projectId' is 'myproject123', your default
+database instance name might be: 'myproject123-a5c16'`,
+						},
+						"storage_bucket": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `The default Cloud Storage for Firebase storage bucket, in the format: 'PROJECT_ID.appspot.com'.`,
+						},
+					},
+				},
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -154,6 +204,9 @@ func resourceFirebaseProjectRead(d *schema.ResourceData, meta interface{}) error
 	if err := d.Set("display_name", flattenFirebaseProjectDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Project: %s", err)
 	}
+	if err := d.Set("resources", flattenFirebaseProjectResources(res["resources"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Project: %s", err)
+	}
 
 	return nil
 }
@@ -191,5 +244,40 @@ func flattenFirebaseProjectProjectNumber(v interface{}, d *schema.ResourceData, 
 }
 
 func flattenFirebaseProjectDisplayName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenFirebaseProjectResources(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["hosting_site"] =
+		flattenFirebaseProjectResourcesHostingSite(original["hostingSite"], d, config)
+	transformed["location_id"] =
+		flattenFirebaseProjectResourcesLocationId(original["locationId"], d, config)
+	transformed["realtime_database_instance"] =
+		flattenFirebaseProjectResourcesRealtimeDatabaseInstance(original["realtimeDatabaseInstance"], d, config)
+	transformed["storage_bucket"] =
+		flattenFirebaseProjectResourcesStorageBucket(original["storageBucket"], d, config)
+	return []interface{}{transformed}
+}
+func flattenFirebaseProjectResourcesHostingSite(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenFirebaseProjectResourcesLocationId(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenFirebaseProjectResourcesRealtimeDatabaseInstance(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenFirebaseProjectResourcesStorageBucket(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
