@@ -392,6 +392,13 @@ func flattenPasswordStatus(status *sqladmin.PasswordStatus) interface{} {
 
 func resourceSqlUserUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
+
+	// Rollback Password to old Password in the State file
+	oldStateFilePsw, newStateFilePsw := d.GetChange("password")
+	if err := d.Set("password", oldStateFilePsw); err != nil {
+		return fmt.Errorf("Error in Rolling Back to old password")
+	}
+
 	userAgent, err := generateUserAgentString(d, config.userAgent)
 	if err != nil {
 		return err
@@ -433,6 +440,10 @@ func resourceSqlUserUpdate(d *schema.ResourceData, meta interface{}) error {
 		if err != nil {
 			return fmt.Errorf("Error, failure waiting for update of %s "+
 				"in %s: %s", name, instance, err)
+		}
+		// Updating Password to the new Password
+		if err := d.Set("password", newStateFilePsw); err != nil {
+			return fmt.Errorf("Error setting to new password")
 		}
 
 		return resourceSqlUserRead(d, meta)
