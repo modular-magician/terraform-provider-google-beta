@@ -169,6 +169,28 @@ Interconnect Attachment (IPsec-encrypted Cloud Interconnect feature).
 
 Not currently available publicly.`,
 			},
+			"md5_authentication_keys": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `An array of MD5 keys that are provided for MD5 authentication.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: `Must be unique within a router. Must be referenced by at least one bgpPeer.
+Must comply with RFC1035.`,
+						},
+						"key": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `For patch and update calls, it can be skipped to copy the value from the previous configuration.
+This is allowed if the key with the same name existed before the operation.
+Maximum length is 80 characters. Can only contain printable ASCII characters.`,
+						},
+					},
+				},
+			},
 			"region": {
 				Type:             schema.TypeString,
 				Computed:         true,
@@ -234,6 +256,12 @@ func resourceComputeRouterCreate(d *schema.ResourceData, meta interface{}) error
 		return err
 	} else if v, ok := d.GetOkExists("encrypted_interconnect_router"); !isEmptyValue(reflect.ValueOf(encryptedInterconnectRouterProp)) && (ok || !reflect.DeepEqual(v, encryptedInterconnectRouterProp)) {
 		obj["encryptedInterconnectRouter"] = encryptedInterconnectRouterProp
+	}
+	md5AuthenticationKeysProp, err := expandComputeRouterMd5AuthenticationKeys(d.Get("md5_authentication_keys"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("md5_authentication_keys"); !isEmptyValue(reflect.ValueOf(md5AuthenticationKeysProp)) && (ok || !reflect.DeepEqual(v, md5AuthenticationKeysProp)) {
+		obj["md5AuthenticationKeys"] = md5AuthenticationKeysProp
 	}
 	regionProp, err := expandComputeRouterRegion(d.Get("region"), d, config)
 	if err != nil {
@@ -347,6 +375,9 @@ func resourceComputeRouterRead(d *schema.ResourceData, meta interface{}) error {
 	if err := d.Set("encrypted_interconnect_router", flattenComputeRouterEncryptedInterconnectRouter(res["encryptedInterconnectRouter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Router: %s", err)
 	}
+	if err := d.Set("md5_authentication_keys", flattenComputeRouterMd5AuthenticationKeys(res["md5AuthenticationKeys"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Router: %s", err)
+	}
 	if err := d.Set("region", flattenComputeRouterRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Router: %s", err)
 	}
@@ -384,6 +415,12 @@ func resourceComputeRouterUpdate(d *schema.ResourceData, meta interface{}) error
 		return err
 	} else if v, ok := d.GetOkExists("bgp"); ok || !reflect.DeepEqual(v, bgpProp) {
 		obj["bgp"] = bgpProp
+	}
+	md5AuthenticationKeysProp, err := expandComputeRouterMd5AuthenticationKeys(d.Get("md5_authentication_keys"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("md5_authentication_keys"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, md5AuthenticationKeysProp)) {
+		obj["md5AuthenticationKeys"] = md5AuthenticationKeysProp
 	}
 
 	lockName, err := replaceVars(d, config, "router/{{region}}/{{name}}")
@@ -610,6 +647,33 @@ func flattenComputeRouterEncryptedInterconnectRouter(v interface{}, d *schema.Re
 	return v
 }
 
+func flattenComputeRouterMd5AuthenticationKeys(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"name": flattenComputeRouterMd5AuthenticationKeysName(original["name"], d, config),
+			"key":  flattenComputeRouterMd5AuthenticationKeysKey(original["key"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenComputeRouterMd5AuthenticationKeysName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenComputeRouterMd5AuthenticationKeysKey(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func flattenComputeRouterRegion(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	if v == nil {
 		return v
@@ -734,6 +798,43 @@ func expandComputeRouterBgpKeepaliveInterval(v interface{}, d TerraformResourceD
 }
 
 func expandComputeRouterEncryptedInterconnectRouter(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeRouterMd5AuthenticationKeys(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedName, err := expandComputeRouterMd5AuthenticationKeysName(original["name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
+			transformed["name"] = transformedName
+		}
+
+		transformedKey, err := expandComputeRouterMd5AuthenticationKeysKey(original["key"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedKey); val.IsValid() && !isEmptyValue(val) {
+			transformed["key"] = transformedKey
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandComputeRouterMd5AuthenticationKeysName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeRouterMd5AuthenticationKeysKey(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

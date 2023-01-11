@@ -239,6 +239,11 @@ The following arguments are supported:
   IP address of the interface inside Google Cloud Platform.
   Only IPv4 is supported.
 
+* `md5_authentication_key_name` -
+  (Optional)
+  Present if MD5 authentication is enabled for the peering. Must be
+  the name of one of the entries in the Router.md5_authentication_keys array.
+
 * `advertised_route_priority` -
   (Optional)
   The priority of routes advertised to this BGP peer.

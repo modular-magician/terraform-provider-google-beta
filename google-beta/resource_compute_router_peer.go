@@ -203,6 +203,12 @@ The default is true.`,
 				Description: `IP address of the interface inside Google Cloud Platform.
 Only IPv4 is supported.`,
 			},
+			"md5_authentication_key_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `Present if MD5 authentication is enabled for the peering. Must be
+the name of one of the entries in the Router.md5_authentication_keys array.`,
+			},
 			"region": {
 				Type:             schema.TypeString,
 				Computed:         true,
@@ -277,6 +283,12 @@ func resourceComputeRouterBgpPeerCreate(d *schema.ResourceData, meta interface{}
 		return err
 	} else if v, ok := d.GetOkExists("peer_ip_address"); !isEmptyValue(reflect.ValueOf(peerIpAddressProp)) && (ok || !reflect.DeepEqual(v, peerIpAddressProp)) {
 		obj["peerIpAddress"] = peerIpAddressProp
+	}
+	md5AuthenticationKeyNameProp, err := expandNestedComputeRouterBgpPeerMd5AuthenticationKeyName(d.Get("md5_authentication_key_name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("md5_authentication_key_name"); !isEmptyValue(reflect.ValueOf(md5AuthenticationKeyNameProp)) && (ok || !reflect.DeepEqual(v, md5AuthenticationKeyNameProp)) {
+		obj["md5AuthenticationKeyName"] = md5AuthenticationKeyNameProp
 	}
 	peerAsnProp, err := expandNestedComputeRouterBgpPeerPeerAsn(d.Get("peer_asn"), d, config)
 	if err != nil {
@@ -443,6 +455,9 @@ func resourceComputeRouterBgpPeerRead(d *schema.ResourceData, meta interface{}) 
 	if err := d.Set("peer_ip_address", flattenNestedComputeRouterBgpPeerPeerIpAddress(res["peerIpAddress"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterBgpPeer: %s", err)
 	}
+	if err := d.Set("md5_authentication_key_name", flattenNestedComputeRouterBgpPeerMd5AuthenticationKeyName(res["md5AuthenticationKeyName"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RouterBgpPeer: %s", err)
+	}
 	if err := d.Set("peer_asn", flattenNestedComputeRouterBgpPeerPeerAsn(res["peerAsn"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RouterBgpPeer: %s", err)
 	}
@@ -501,6 +516,12 @@ func resourceComputeRouterBgpPeerUpdate(d *schema.ResourceData, meta interface{}
 		return err
 	} else if v, ok := d.GetOkExists("peer_ip_address"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, peerIpAddressProp)) {
 		obj["peerIpAddress"] = peerIpAddressProp
+	}
+	md5AuthenticationKeyNameProp, err := expandNestedComputeRouterBgpPeerMd5AuthenticationKeyName(d.Get("md5_authentication_key_name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("md5_authentication_key_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, md5AuthenticationKeyNameProp)) {
+		obj["md5AuthenticationKeyName"] = md5AuthenticationKeyNameProp
 	}
 	peerAsnProp, err := expandNestedComputeRouterBgpPeerPeerAsn(d.Get("peer_asn"), d, config)
 	if err != nil {
@@ -688,6 +709,10 @@ func flattenNestedComputeRouterBgpPeerPeerIpAddress(v interface{}, d *schema.Res
 	return v
 }
 
+func flattenNestedComputeRouterBgpPeerMd5AuthenticationKeyName(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func flattenNestedComputeRouterBgpPeerPeerAsn(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
@@ -871,6 +896,10 @@ func expandNestedComputeRouterBgpPeerIpAddress(v interface{}, d TerraformResourc
 }
 
 func expandNestedComputeRouterBgpPeerPeerIpAddress(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNestedComputeRouterBgpPeerMd5AuthenticationKeyName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
