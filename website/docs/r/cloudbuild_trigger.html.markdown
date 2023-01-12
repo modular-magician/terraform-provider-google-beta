@@ -346,6 +346,83 @@ resource "google_cloudbuild_trigger" "manual-trigger" {
   
 }
 ```
+## Example Usage - Cloudbuild Trigger Repo
+
+
+```hcl
+terraform {
+    required_providers {
+        google-beta = {}
+        google = {}
+    }
+}
+
+provider "google-beta" {}
+
+resource "google_secret_manager_secret" "github-token-secret" {
+    project = "{{project}}"
+    secret_id = "github-token-secret"
+
+    replication {
+        automatic = true
+    }
+}
+
+resource "google_secret_manager_secret_version" "github-token-secret-version" {
+    secret = google_secret_manager_secret.github-token-secret.id
+    secret_data = file("my-github-token.txt")
+}
+
+data "google_iam_policy" "p4sa-secretAccessor" {
+    binding {
+        role = "roles/secretmanager.secretAccessor"
+        // Here, {{projectNum}} is the Google Cloud project number for {{project}}.
+        members = ["serviceAccount:service-{{projectNum}}@gcp-sa-cloudbuild.iam.gserviceaccount.com"]
+    }
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy" {
+  project = google_secret_manager_secret.github-token-secret.project
+  secret_id = google_secret_manager_secret.github-token-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_cloudbuildv2_connection" "my-connection" {
+    provider = google-beta
+    project = "{{project}}"
+    location = "{{region}}"
+    name = "my-connection"
+
+    github_config {
+        app_installation_id = {{installation-id}}
+        authorizer_credential {
+            oauth_token_secret_version = google_secret_manager_secret_version.github-token-secret-version.id
+        }
+    }
+}
+
+resource "google_cloudbuildv2_repository" "my-repository" {
+    provider = google-beta
+    project = "{{project}}"
+    name = "my-repo"
+    parent_connection = google_cloudbuildv2_connection.my-connection.id
+    remote_uri = "{{remote_uri}}"
+}
+
+resource "google_cloudbuild_trigger" "repo-trigger" {
+  provider = google-beta
+  location = "us-central1"
+
+  repository_event_config {
+    repository = "projects/{{project}}/locations/{{region}}/connections/my-connection/repositories/my-repo"
+    push {
+      branch = "feature-.*"
+    }
+  }
+
+  filename = "cloudbuild.yaml"
+}
+```
 
 ## Argument Reference
 
@@ -405,6 +482,11 @@ The following arguments are supported:
   (Optional)
   The file source describing the local or remote Build template.
   Structure is [documented below](#nested_git_file_source).
+
+* `repository_event_config` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The configuration of a trigger that creates a build whenever an event from Repo API is received.
+  Structure is [documented below](#nested_repository_event_config).
 
 * `source_to_build` -
   (Optional)
@@ -509,6 +591,58 @@ The following arguments are supported:
   The branch, tag, arbitrary ref, or SHA version of the repo to use when resolving the 
   filename (optional). This field respects the same syntax/resolution as described here: https://git-scm.com/docs/gitrevisions 
   If unspecified, the revision from which the trigger invocation originated is assumed to be the revision from which to read the specified path.
+
+<a name="nested_repository_event_config"></a>The `repository_event_config` block supports:
+
+* `repository` -
+  (Optional)
+  The resource name of the Repo API resource.
+
+* `pull_request` -
+  (Optional)
+  Contains filter properties for matching Pull Requests.
+  Structure is [documented below](#nested_pull_request).
+
+* `push` -
+  (Optional)
+  Contains filter properties for matching git pushes.
+  Structure is [documented below](#nested_push).
+
+
+<a name="nested_pull_request"></a>The `pull_request` block supports:
+
+* `branch` -
+  (Optional)
+  Regex of branches to match.
+  The syntax of the regular expressions accepted is the syntax accepted by
+  RE2 and described at https://github.com/google/re2/wiki/Syntax
+
+* `invert_regex` -
+  (Optional)
+  If true, branches that do NOT match the git_ref will trigger a build.
+
+* `comment_control` -
+  (Optional)
+  Configure builds to run whether a repository owner or collaborator need to comment `/gcbrun`.
+  Possible values are `COMMENTS_DISABLED`, `COMMENTS_ENABLED`, and `COMMENTS_ENABLED_FOR_EXTERNAL_CONTRIBUTORS_ONLY`.
+
+<a name="nested_push"></a>The `push` block supports:
+
+* `branch` -
+  (Optional)
+  Regex of branches to match.
+  The syntax of the regular expressions accepted is the syntax accepted by
+  RE2 and described at https://github.com/google/re2/wiki/Syntax
+
+* `tag` -
+  (Optional)
+  Regex of tags to match.
+  The syntax of the regular expressions accepted is the syntax accepted by
+  RE2 and described at https://github.com/google/re2/wiki/Syntax
+
+* `invert_regex` -
+  (Optional)
+  If true, only trigger a build if the revision regex does NOT match the git_ref regex.
 
 <a name="nested_source_to_build"></a>The `source_to_build` block supports:
 
