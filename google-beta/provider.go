@@ -1087,9 +1087,9 @@ func Provider() *schema.Provider {
 	return provider
 }
 
-// Generated resources: 296
+// Generated resources: 297
 // Generated IAM resources: 192
-// Total generated resources: 488
+// Total generated resources: 489
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1584,6 +1584,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_vertex_ai_featurestore_entitytype_feature":             resourceVertexAIFeaturestoreEntitytypeFeature(),
 			"google_vertex_ai_metadata_store":                              resourceVertexAIMetadataStore(),
 			"google_vertex_ai_index":                                       resourceVertexAIIndex(),
+			"google_vertex_ai_metadata_schema":                             resourceVertexAIMetadataSchema(),
 			"google_vpc_access_connector":                                  resourceVPCAccessConnector(),
 			"google_workflows_workflow":                                    resourceWorkflowsWorkflow(),
 		},
