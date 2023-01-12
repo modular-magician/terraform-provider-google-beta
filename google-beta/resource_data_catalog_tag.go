@@ -70,6 +70,11 @@ Valid field IDs are defined by the tag's template. A tag must have at least 1 fi
 							Description: `The display name of the enum value.`,
 						},
 
+						"richtext_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Holds the value for a tag field with richtext type.`,
+						},
 						"string_value": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -402,6 +407,7 @@ func flattenNestedDataCatalogTagFields(v interface{}, d *schema.ResourceData, co
 			"order":           flattenNestedDataCatalogTagFieldsOrder(original["order"], d, config),
 			"double_value":    flattenNestedDataCatalogTagFieldsDoubleValue(original["doubleValue"], d, config),
 			"string_value":    flattenNestedDataCatalogTagFieldsStringValue(original["stringValue"], d, config),
+			"richtext_value":  flattenNestedDataCatalogTagFieldsRichtextValue(original["richtextValue"], d, config),
 			"bool_value":      flattenNestedDataCatalogTagFieldsBoolValue(original["boolValue"], d, config),
 			"timestamp_value": flattenNestedDataCatalogTagFieldsTimestampValue(original["timestampValue"], d, config),
 			"enum_value":      flattenNestedDataCatalogTagFieldsEnumValue(original["enumValue"], d, config),
@@ -435,6 +441,10 @@ func flattenNestedDataCatalogTagFieldsDoubleValue(v interface{}, d *schema.Resou
 }
 
 func flattenNestedDataCatalogTagFieldsStringValue(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenNestedDataCatalogTagFieldsRichtextValue(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -499,6 +509,13 @@ func expandNestedDataCatalogTagFields(v interface{}, d TerraformResourceData, co
 			transformed["stringValue"] = transformedStringValue
 		}
 
+		transformedRichtextValue, err := expandNestedDataCatalogTagFieldsRichtextValue(original["richtext_value"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedRichtextValue); val.IsValid() && !isEmptyValue(val) {
+			transformed["richtextValue"] = transformedRichtextValue
+		}
+
 		transformedBoolValue, err := expandNestedDataCatalogTagFieldsBoolValue(original["bool_value"], d, config)
 		if err != nil {
 			return nil, err
@@ -542,6 +559,10 @@ func expandNestedDataCatalogTagFieldsDoubleValue(v interface{}, d TerraformResou
 }
 
 func expandNestedDataCatalogTagFieldsStringValue(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNestedDataCatalogTagFieldsRichtextValue(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

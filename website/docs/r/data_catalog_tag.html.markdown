@@ -262,6 +262,14 @@ resource "google_data_catalog_tag_template" "tag_template" {
   }
 
   fields {
+    field_id = "description"
+    display_name = "Small description of the column"
+    type {
+      primitive_type = "RICHTEXT"
+    }
+  }
+
+  fields {
     field_id = "num_rows"
     display_name = "Number of rows in the data asset"
     type {
@@ -322,6 +330,11 @@ resource "google_data_catalog_tag" "second-tag" {
   }
 
   fields {
+    field_name   = "description"
+    richtext_value = "The first name of our client"
+  }
+
+  fields {
     field_name = "pii_type"
     enum_value = "NONE"
   }
@@ -367,6 +380,10 @@ The following arguments are supported:
 * `string_value` -
   (Optional)
   Holds the value for a tag field with string type.
+
+* `richtext_value` -
+  (Optional)
+  Holds the value for a tag field with richtext type.
 
 * `bool_value` -
   (Optional)
