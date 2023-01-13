@@ -1088,8 +1088,8 @@ func Provider() *schema.Provider {
 }
 
 // Generated resources: 296
-// Generated IAM resources: 192
-// Total generated resources: 488
+// Generated IAM resources: 195
+// Total generated resources: 491
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1408,6 +1408,9 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_game_services_game_server_config":                      resourceGameServicesGameServerConfig(),
 			"google_game_services_game_server_deployment_rollout":          resourceGameServicesGameServerDeploymentRollout(),
 			"google_gke_backup_backup_plan":                                resourceGKEBackupBackupPlan(),
+			"google_gke_backup_backup_plan_iam_binding":                    ResourceIamBinding(GKEBackupBackupPlanIamSchema, GKEBackupBackupPlanIamUpdaterProducer, GKEBackupBackupPlanIdParseFunc),
+			"google_gke_backup_backup_plan_iam_member":                     ResourceIamMember(GKEBackupBackupPlanIamSchema, GKEBackupBackupPlanIamUpdaterProducer, GKEBackupBackupPlanIdParseFunc),
+			"google_gke_backup_backup_plan_iam_policy":                     ResourceIamPolicy(GKEBackupBackupPlanIamSchema, GKEBackupBackupPlanIamUpdaterProducer, GKEBackupBackupPlanIdParseFunc),
 			"google_gke_hub_membership":                                    resourceGKEHubMembership(),
 			"google_gke_hub_membership_iam_binding":                        ResourceIamBinding(GKEHubMembershipIamSchema, GKEHubMembershipIamUpdaterProducer, GKEHubMembershipIdParseFunc),
 			"google_gke_hub_membership_iam_member":                         ResourceIamMember(GKEHubMembershipIamSchema, GKEHubMembershipIamUpdaterProducer, GKEHubMembershipIdParseFunc),
