@@ -1088,8 +1088,8 @@ func Provider() *schema.Provider {
 }
 
 // Generated resources: 296
-// Generated IAM resources: 198
-// Total generated resources: 494
+// Generated IAM resources: 201
+// Total generated resources: 497
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1114,6 +1114,9 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_access_context_manager_access_levels":                  resourceAccessContextManagerAccessLevels(),
 			"google_active_directory_peering":                              resourceActiveDirectoryPeering(),
 			"google_active_directory_domain":                               resourceActiveDirectoryDomain(),
+			"google_active_directory_domain_iam_binding":                   ResourceIamBinding(ActiveDirectoryDomainIamSchema, ActiveDirectoryDomainIamUpdaterProducer, ActiveDirectoryDomainIdParseFunc),
+			"google_active_directory_domain_iam_member":                    ResourceIamMember(ActiveDirectoryDomainIamSchema, ActiveDirectoryDomainIamUpdaterProducer, ActiveDirectoryDomainIdParseFunc),
+			"google_active_directory_domain_iam_policy":                    ResourceIamPolicy(ActiveDirectoryDomainIamSchema, ActiveDirectoryDomainIamUpdaterProducer, ActiveDirectoryDomainIdParseFunc),
 			"google_active_directory_domain_trust":                         resourceActiveDirectoryDomainTrust(),
 			"google_alloydb_cluster":                                       resourceAlloydbCluster(),
 			"google_alloydb_instance":                                      resourceAlloydbInstance(),

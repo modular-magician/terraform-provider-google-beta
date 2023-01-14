@@ -55,6 +55,7 @@ https://cloud.google.com/managed-microsoft-ad/reference/rest/v1/projects.locatio
 				Required: true,
 				Description: `Locations where domain needs to be provisioned. [regions][compute/docs/regions-zones/] 
 e.g. us-west1 or us-east4 Service supports up to 4 locations at once. Each location will use a /26 block.`,
+				MaxItems: 4,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
