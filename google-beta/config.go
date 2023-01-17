@@ -193,6 +193,7 @@ type Config struct {
 	CertificateManagerBasePath   string
 	CloudAssetBasePath           string
 	CloudBuildBasePath           string
+	CloudDeployBasePath          string
 	CloudFunctionsBasePath       string
 	Cloudfunctions2BasePath      string
 	CloudIdentityBasePath        string
@@ -308,6 +309,7 @@ const BinaryAuthorizationBasePathKey = "BinaryAuthorization"
 const CertificateManagerBasePathKey = "CertificateManager"
 const CloudAssetBasePathKey = "CloudAsset"
 const CloudBuildBasePathKey = "CloudBuild"
+const CloudDeployBasePathKey = "CloudDeploy"
 const CloudFunctionsBasePathKey = "CloudFunctions"
 const Cloudfunctions2BasePathKey = "Cloudfunctions2"
 const CloudIdentityBasePathKey = "CloudIdentity"
@@ -417,6 +419,7 @@ var DefaultBasePaths = map[string]string{
 	CertificateManagerBasePathKey:   "https://certificatemanager.googleapis.com/v1/",
 	CloudAssetBasePathKey:           "https://cloudasset.googleapis.com/v1/",
 	CloudBuildBasePathKey:           "https://cloudbuild.googleapis.com/v1/",
+	CloudDeployBasePathKey:          "https://clouddeploy.googleapis.com/v1/",
 	CloudFunctionsBasePathKey:       "https://cloudfunctions.googleapis.com/v1/",
 	Cloudfunctions2BasePathKey:      "https://cloudfunctions.googleapis.com/v2beta/",
 	CloudIdentityBasePathKey:        "https://cloudidentity.googleapis.com/v1beta1/",
@@ -1302,6 +1305,7 @@ func ConfigureBasePaths(c *Config) {
 	c.CertificateManagerBasePath = DefaultBasePaths[CertificateManagerBasePathKey]
 	c.CloudAssetBasePath = DefaultBasePaths[CloudAssetBasePathKey]
 	c.CloudBuildBasePath = DefaultBasePaths[CloudBuildBasePathKey]
+	c.CloudDeployBasePath = DefaultBasePaths[CloudDeployBasePathKey]
 	c.CloudFunctionsBasePath = DefaultBasePaths[CloudFunctionsBasePathKey]
 	c.Cloudfunctions2BasePath = DefaultBasePaths[Cloudfunctions2BasePathKey]
 	c.CloudIdentityBasePath = DefaultBasePaths[CloudIdentityBasePathKey]
