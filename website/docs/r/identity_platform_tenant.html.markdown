@@ -45,6 +45,54 @@ resource "google_identity_platform_tenant" "tenant" {
   allow_password_signup = true
 }
 ```
+## Example Usage - Identity Platform Tenant Monitoring
+
+
+```hcl
+resource "google_project" "default" {
+  project_id = "tf-test%{random_suffix}"
+  name       = "tf-test%{random_suffix}"
+  org_id     = "123456789"
+  billing_account =  "000000-0000000-0000000-000000"
+  labels = {
+    firebase = "enabled"
+  }
+}
+
+resource "google_project_service" "identitytoolkit" {
+  project = google_project.default.project_id
+  service = "identitytoolkit.googleapis.com"
+}
+
+resource "google_identity_platform_config" "default" {
+  project = google_project.default.project_id
+
+  multi_tenant {
+    allow_tenants = true
+  }
+
+  depends_on = [
+    google_project_service.identitytoolkit
+  ]
+}
+
+resource "google_identity_platform_tenant" "tenant" {
+  project = google_project.default.project_id
+
+  display_name          = "tenant"
+  allow_password_signup = true
+
+  monitoring {
+    request_logging {
+      enabled = true
+    }
+  }
+
+  depends_on = [
+    google_identity_platform_config.default
+  ]
+}
+```
 
 ## Argument Reference
 
@@ -67,6 +115,11 @@ The following arguments are supported:
   (Optional)
   Whether to enable email link user authentication.
 
+* `monitoring` -
+  (Optional)
+  Configuration related to monitoring project activity.
+  Structure is [documented below](#nested_monitoring).
+
 * `disable_auth` -
   (Optional)
   Whether authentication is disabled for the tenant. If true, the users under
@@ -76,6 +129,20 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+
+<a name="nested_monitoring"></a>The `monitoring` block supports:
+
+* `request_logging` -
+  (Optional)
+  Configuration for logging requests made to this project to Stackdriver Logging.
+  Structure is [documented below](#nested_request_logging).
+
+
+<a name="nested_request_logging"></a>The `request_logging` block supports:
+
+* `enabled` -
+  (Optional)
+  Whether logging is enabled for this project or not.
 
 ## Attributes Reference
 

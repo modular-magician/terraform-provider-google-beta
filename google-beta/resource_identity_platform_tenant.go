@@ -64,6 +64,31 @@ are not able to manage its users.`,
 				Optional:    true,
 				Description: `Whether to enable email link user authentication.`,
 			},
+			"monitoring": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Configuration related to monitoring project activity.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"request_logging": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration for logging requests made to this project to Stackdriver Logging.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `Whether logging is enabled for this project or not.`,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -105,6 +130,12 @@ func resourceIdentityPlatformTenantCreate(d *schema.ResourceData, meta interface
 		return err
 	} else if v, ok := d.GetOkExists("enable_email_link_signin"); !isEmptyValue(reflect.ValueOf(enableEmailLinkSigninProp)) && (ok || !reflect.DeepEqual(v, enableEmailLinkSigninProp)) {
 		obj["enableEmailLinkSignin"] = enableEmailLinkSigninProp
+	}
+	monitoringProp, err := expandIdentityPlatformTenantMonitoring(d.Get("monitoring"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("monitoring"); !isEmptyValue(reflect.ValueOf(monitoringProp)) && (ok || !reflect.DeepEqual(v, monitoringProp)) {
+		obj["monitoring"] = monitoringProp
 	}
 	disableAuthProp, err := expandIdentityPlatformTenantDisableAuth(d.Get("disable_auth"), d, config)
 	if err != nil {
@@ -213,6 +244,9 @@ func resourceIdentityPlatformTenantRead(d *schema.ResourceData, meta interface{}
 	if err := d.Set("enable_email_link_signin", flattenIdentityPlatformTenantEnableEmailLinkSignin(res["enableEmailLinkSignin"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tenant: %s", err)
 	}
+	if err := d.Set("monitoring", flattenIdentityPlatformTenantMonitoring(res["monitoring"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Tenant: %s", err)
+	}
 	if err := d.Set("disable_auth", flattenIdentityPlatformTenantDisableAuth(res["disableAuth"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Tenant: %s", err)
 	}
@@ -254,6 +288,12 @@ func resourceIdentityPlatformTenantUpdate(d *schema.ResourceData, meta interface
 	} else if v, ok := d.GetOkExists("enable_email_link_signin"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enableEmailLinkSigninProp)) {
 		obj["enableEmailLinkSignin"] = enableEmailLinkSigninProp
 	}
+	monitoringProp, err := expandIdentityPlatformTenantMonitoring(d.Get("monitoring"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("monitoring"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, monitoringProp)) {
+		obj["monitoring"] = monitoringProp
+	}
 	disableAuthProp, err := expandIdentityPlatformTenantDisableAuth(d.Get("disable_auth"), d, config)
 	if err != nil {
 		return err
@@ -279,6 +319,10 @@ func resourceIdentityPlatformTenantUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("enable_email_link_signin") {
 		updateMask = append(updateMask, "enableEmailLinkSignin")
+	}
+
+	if d.HasChange("monitoring") {
+		updateMask = append(updateMask, "monitoring")
 	}
 
 	if d.HasChange("disable_auth") {
@@ -383,6 +427,36 @@ func flattenIdentityPlatformTenantEnableEmailLinkSignin(v interface{}, d *schema
 	return v
 }
 
+func flattenIdentityPlatformTenantMonitoring(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["request_logging"] =
+		flattenIdentityPlatformTenantMonitoringRequestLogging(original["requestLogging"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIdentityPlatformTenantMonitoringRequestLogging(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enabled"] =
+		flattenIdentityPlatformTenantMonitoringRequestLoggingEnabled(original["enabled"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIdentityPlatformTenantMonitoringRequestLoggingEnabled(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func flattenIdentityPlatformTenantDisableAuth(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
@@ -396,6 +470,48 @@ func expandIdentityPlatformTenantAllowPasswordSignup(v interface{}, d TerraformR
 }
 
 func expandIdentityPlatformTenantEnableEmailLinkSignin(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIdentityPlatformTenantMonitoring(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedRequestLogging, err := expandIdentityPlatformTenantMonitoringRequestLogging(original["request_logging"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRequestLogging); val.IsValid() && !isEmptyValue(val) {
+		transformed["requestLogging"] = transformedRequestLogging
+	}
+
+	return transformed, nil
+}
+
+func expandIdentityPlatformTenantMonitoringRequestLogging(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnabled, err := expandIdentityPlatformTenantMonitoringRequestLoggingEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	return transformed, nil
+}
+
+func expandIdentityPlatformTenantMonitoringRequestLoggingEnabled(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
