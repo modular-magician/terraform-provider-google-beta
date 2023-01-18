@@ -403,6 +403,247 @@ resource "google_datastream_stream" "default" {
 `, context)
 }
 
+func TestAccDatastreamStream_datastreamStreamPostgresqlExample(t *testing.T) {
+	skipIfVcr(t)
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"random": {},
+			"time":   {},
+		},
+		CheckDestroy: testAccCheckDatastreamStreamDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDatastreamStream_datastreamStreamPostgresqlExample(context),
+			},
+			{
+				ResourceName:            "google_datastream_stream.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"stream_id", "location"},
+			},
+		},
+	})
+}
+
+func testAccDatastreamStream_datastreamStreamPostgresqlExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_datastream_connection_profile" "source" {
+    display_name          = "Postgresql Source"
+    location              = "us-central1"
+    connection_profile_id = "tf-test-source-profile%{random_suffix}"
+
+    postgresql_profile {
+        hostname = "hostname"
+        port     = 3306
+        username = "user"
+        password = "pass"
+        database = "postgres"
+    }
+}
+
+resource "google_datastream_connection_profile" "destination" {
+    display_name          = "BigQuery Destination"
+    location              = "us-central1"
+    connection_profile_id = "tf-test-destination-profile%{random_suffix}"
+
+    bigquery_profile {}
+}
+
+resource "google_datastream_stream" "default"  {
+    display_name = "Postgres to BigQuery"
+    location     = "us-central1"
+    stream_id    = "tf-test-my-stream%{random_suffix}"
+    desired_state = "RUNNING"
+
+    source_config {
+        source_connection_profile = google_datastream_connection_profile.source.id
+        postgresql_source_config {
+            max_concurrent_backfill_tasks = 12
+            publication      = "publication"
+            replication_slot = "replication_slot"
+            include_objects {
+                postgresql_schemas {
+                    schema = "schema"
+                    postgresql_tables {
+                        table = "table"
+                        postgresql_columns {
+                            column = "column"
+                        }
+                    }
+                }
+            }
+            exclude_objects {
+                postgresql_schemas {
+                    schema = "schema"
+                    postgresql_tables {
+                        table = "table"
+                        postgresql_columns {
+                            column = "column"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    destination_config {
+        destination_connection_profile = google_datastream_connection_profile.destination.id
+        bigquery_destination_config {
+            data_freshness = "900s"
+            source_hierarchy_datasets {
+                dataset_template {
+                   location = "us-central1"
+                }
+            }
+        }
+    }
+
+    backfill_all {
+        postgresql_excluded_objects {
+            postgresql_schemas {
+                schema = "schema"
+                postgresql_tables {
+                    table = "table"
+                    postgresql_columns {
+                        column = "column"
+                    }
+                }
+            }
+        }
+    }
+}
+`, context)
+}
+
+func TestAccDatastreamStream_datastreamStreamOracleExample(t *testing.T) {
+	skipIfVcr(t)
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"random": {},
+			"time":   {},
+		},
+		CheckDestroy: testAccCheckDatastreamStreamDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDatastreamStream_datastreamStreamOracleExample(context),
+			},
+			{
+				ResourceName:            "google_datastream_stream.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"stream_id", "location"},
+			},
+		},
+	})
+}
+
+func testAccDatastreamStream_datastreamStreamOracleExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_datastream_connection_profile" "source" {
+    display_name          = "Oracle Source"
+    location              = "us-central1"
+    connection_profile_id = "tf-test-source-profile%{random_suffix}"
+
+    oracle_profile {
+        hostname = "hostname"
+        port     = 1521
+        username = "user"
+        password = "pass"
+        database_service = "ORCL"
+    }
+}
+
+resource "google_datastream_connection_profile" "destination" {
+    display_name          = "BigQuery Destination"
+    location              = "us-central1"
+    connection_profile_id = "tf-test-destination-profile%{random_suffix}"
+
+    bigquery_profile {}
+}
+
+resource "google_datastream_stream" "stream5" {
+    display_name = "Oracle to BigQuery"
+    location     = "us-central1"
+    stream_id    = "tf-test-my-stream%{random_suffix}"
+    desired_state = "RUNNING"
+
+    source_config {
+        source_connection_profile = google_datastream_connection_profile.source.id
+        oracle_source_config {
+            max_concurrent_cdc_tasks = 8
+            max_concurrent_backfill_tasks = 12
+            include_objects {
+                oracle_schemas {
+                    schema = "schema"
+                    oracle_tables {
+                        table = "table"
+                        oracle_columns {
+                            column = "column"
+                        }
+                    }
+                }
+            }
+            exclude_objects {
+                oracle_schemas {
+                    schema = "schema"
+                        oracle_tables {
+                            table = "table"
+                            oracle_columns {
+                                column = "column"
+                            }
+                        }
+                }
+            }
+            drop_large_objects {}
+		    }
+    }
+
+    destination_config {
+        destination_connection_profile = google_datastream_connection_profile.destination.id
+        bigquery_destination_config {
+            data_freshness = "900s"
+            source_hierarchy_datasets {
+                dataset_template {
+                    location = "us-central1"
+                }
+            }
+        }
+    }
+
+    backfill_all {
+        oracle_excluded_objects {
+            oracle_schemas {
+                schema = "schema"
+                    oracle_tables {
+                        table = "table"
+                        oracle_columns {
+                            column = "column"
+                        }
+                    }
+                }
+            }
+        }
+	  }
+}
+`, context)
+}
+
 func testAccCheckDatastreamStreamDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
