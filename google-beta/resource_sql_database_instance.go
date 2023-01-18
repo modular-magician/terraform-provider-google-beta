@@ -125,6 +125,7 @@ func resourceSqlDatabaseInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Default:     true,
 				Optional:    true,
+				Deprecated:  `Property deletion_protection is deprecated. Please use settings.deletion_protection_enabled property instead.`,
 				Description: `Used to block Terraform from deleting a SQL Instance. Defaults to true.`,
 			},
 			"settings": {
