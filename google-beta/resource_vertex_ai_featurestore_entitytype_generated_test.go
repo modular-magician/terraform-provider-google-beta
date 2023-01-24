@@ -160,6 +160,7 @@ resource "google_vertex_ai_featurestore_entitytype" "entity" {
       value = 0.3
     }
   }
+  offline_storage_ttl_days = 30
 }
 `, context)
 }
