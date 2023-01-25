@@ -510,13 +510,18 @@ The following arguments are supported:
 
 * `http_get` -
   (Optional)
-  HTTPGet specifies the http request to perform.
+  HTTPGet specifies the http request to perform. Exactly one of httpGet or grpc must be specified.
   Structure is [documented below](#nested_http_get).
 
 * `tcp_socket` -
   (Optional, Deprecated)
   TCPSocket specifies an action involving a TCP port. This field is not supported in liveness probe currently.
   Structure is [documented below](#nested_tcp_socket).
+
+* `grpc` -
+  (Optional)
+  GRPC specifies an action involving a gRPC port. Exactly one of httpGet or grpc must be specified.
+  Structure is [documented below](#nested_grpc).
 
 
 <a name="nested_http_get"></a>The `http_get` block supports:
@@ -545,7 +550,17 @@ The following arguments are supported:
 
 * `port` -
   (Optional)
-  Port number to access on the container. Must be in the range 1 to 65535. If not specified, defaults to 8080.
+  Port number to access on the container. Must be in the range 1 to 65535.
+
+<a name="nested_grpc"></a>The `grpc` block supports:
+
+* `port` -
+  (Optional)
+  Port number of the gRPC service. Must be in the range 1 to 65535.
+
+* `service` -
+  (Optional)
+  Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). If this is not specified, the default behavior is defined by gRPC.
 
 <a name="nested_startup_probe"></a>The `startup_probe` block supports:
 
@@ -567,13 +582,18 @@ The following arguments are supported:
 
 * `http_get` -
   (Optional)
-  HTTPGet specifies the http request to perform. Exactly one of HTTPGet or TCPSocket must be specified.
+  HTTPGet specifies the http request to perform. Exactly one of httpGet, tcpSocket, or grpc must be specified.
   Structure is [documented below](#nested_http_get).
 
 * `tcp_socket` -
   (Optional)
-  TCPSocket specifies an action involving a TCP port. Exactly one of HTTPGet or TCPSocket must be specified.
+  TCPSocket specifies an action involving a TCP port. Exactly one of httpGet, tcpSocket, or grpc must be specified.
   Structure is [documented below](#nested_tcp_socket).
+
+* `grpc` -
+  (Optional)
+  GRPC specifies an action involving a gRPC port. Exactly one of httpGet, tcpSocket, or grpc must be specified.
+  Structure is [documented below](#nested_grpc).
 
 
 <a name="nested_http_get"></a>The `http_get` block supports:
@@ -602,7 +622,17 @@ The following arguments are supported:
 
 * `port` -
   (Optional)
-  Port number to access on the container. Must be in the range 1 to 65535. If not specified, defaults to 8080.
+  Port number to access on the container. Must be in the range 1 to 65535.
+
+<a name="nested_grpc"></a>The `grpc` block supports:
+
+* `port` -
+  (Optional)
+  Port number of the gRPC service. Must be in the range 1 to 65535.
+
+* `service` -
+  (Optional)
+  Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). If this is not specified, the default behavior is defined by gRPC.
 
 <a name="nested_volumes"></a>The `volumes` block supports:
 

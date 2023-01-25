@@ -150,10 +150,31 @@ func resourceCloudRunV2Service() *schema.Resource {
 													Description: `Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.`,
 													Default:     3,
 												},
+												"grpc": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `GRPC specifies an action involving a gRPC port. Exactly one of httpGet or grpc must be specified.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"port": {
+																Type:        schema.TypeInt,
+																Computed:    true,
+																Optional:    true,
+																Description: `Port number of the gRPC service. Must be in the range 1 to 65535.`,
+															},
+															"service": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: `Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). If this is not specified, the default behavior is defined by gRPC.`,
+															},
+														},
+													},
+												},
 												"http_get": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													Description: `HTTPGet specifies the http request to perform.`,
+													Description: `HTTPGet specifies the http request to perform. Exactly one of httpGet or grpc must be specified.`,
 													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
@@ -209,7 +230,7 @@ func resourceCloudRunV2Service() *schema.Resource {
 															"port": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: `Port number to access on the container. Must be in the range 1 to 65535. If not specified, defaults to 8080.`,
+																Description: `Port number to access on the container. Must be in the range 1 to 65535.`,
 															},
 														},
 													},
@@ -288,10 +309,31 @@ If omitted, a port number will be chosen and passed to the container through the
 													Description: `Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3. Minimum value is 1.`,
 													Default:     3,
 												},
+												"grpc": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `GRPC specifies an action involving a gRPC port. Exactly one of httpGet, tcpSocket, or grpc must be specified.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"port": {
+																Type:        schema.TypeInt,
+																Computed:    true,
+																Optional:    true,
+																Description: `Port number of the gRPC service. Must be in the range 1 to 65535.`,
+															},
+															"service": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: `Service is the name of the service to place in the gRPC HealthCheckRequest (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md). If this is not specified, the default behavior is defined by gRPC.`,
+															},
+														},
+													},
+												},
 												"http_get": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													Description: `HTTPGet specifies the http request to perform. Exactly one of HTTPGet or TCPSocket must be specified.`,
+													Description: `HTTPGet specifies the http request to perform. Exactly one of httpGet, tcpSocket, or grpc must be specified.`,
 													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
@@ -339,7 +381,7 @@ If omitted, a port number will be chosen and passed to the container through the
 												"tcp_socket": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													Description: `TCPSocket specifies an action involving a TCP port. Exactly one of HTTPGet or TCPSocket must be specified.`,
+													Description: `TCPSocket specifies an action involving a TCP port. Exactly one of httpGet, tcpSocket, or grpc must be specified.`,
 													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
@@ -347,7 +389,7 @@ If omitted, a port number will be chosen and passed to the container through the
 																Type:        schema.TypeInt,
 																Computed:    true,
 																Optional:    true,
-																Description: `Port number to access on the container. Must be in the range 1 to 65535. If not specified, defaults to 8080.`,
+																Description: `Port number to access on the container. Must be in the range 1 to 65535.`,
 															},
 														},
 													},
@@ -1649,6 +1691,8 @@ func flattenCloudRunV2ServiceTemplateContainersLivenessProbe(v interface{}, d *s
 		flattenCloudRunV2ServiceTemplateContainersLivenessProbeHttpGet(original["httpGet"], d, config)
 	transformed["tcp_socket"] =
 		flattenCloudRunV2ServiceTemplateContainersLivenessProbeTcpSocket(original["tcpSocket"], d, config)
+	transformed["grpc"] =
+		flattenCloudRunV2ServiceTemplateContainersLivenessProbeGrpc(original["grpc"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudRunV2ServiceTemplateContainersLivenessProbeInitialDelaySeconds(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -1789,6 +1833,39 @@ func flattenCloudRunV2ServiceTemplateContainersLivenessProbeTcpSocketPort(v inte
 	return v // let terraform core handle it otherwise
 }
 
+func flattenCloudRunV2ServiceTemplateContainersLivenessProbeGrpc(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	transformed := make(map[string]interface{})
+	transformed["port"] =
+		flattenCloudRunV2ServiceTemplateContainersLivenessProbeGrpcPort(original["port"], d, config)
+	transformed["service"] =
+		flattenCloudRunV2ServiceTemplateContainersLivenessProbeGrpcService(original["service"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCloudRunV2ServiceTemplateContainersLivenessProbeGrpcPort(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := stringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenCloudRunV2ServiceTemplateContainersLivenessProbeGrpcService(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func flattenCloudRunV2ServiceTemplateContainersStartupProbe(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	if v == nil {
 		return nil
@@ -1810,6 +1887,8 @@ func flattenCloudRunV2ServiceTemplateContainersStartupProbe(v interface{}, d *sc
 		flattenCloudRunV2ServiceTemplateContainersStartupProbeHttpGet(original["httpGet"], d, config)
 	transformed["tcp_socket"] =
 		flattenCloudRunV2ServiceTemplateContainersStartupProbeTcpSocket(original["tcpSocket"], d, config)
+	transformed["grpc"] =
+		flattenCloudRunV2ServiceTemplateContainersStartupProbeGrpc(original["grpc"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudRunV2ServiceTemplateContainersStartupProbeInitialDelaySeconds(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -1948,6 +2027,39 @@ func flattenCloudRunV2ServiceTemplateContainersStartupProbeTcpSocketPort(v inter
 	}
 
 	return v // let terraform core handle it otherwise
+}
+
+func flattenCloudRunV2ServiceTemplateContainersStartupProbeGrpc(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	transformed := make(map[string]interface{})
+	transformed["port"] =
+		flattenCloudRunV2ServiceTemplateContainersStartupProbeGrpcPort(original["port"], d, config)
+	transformed["service"] =
+		flattenCloudRunV2ServiceTemplateContainersStartupProbeGrpcService(original["service"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCloudRunV2ServiceTemplateContainersStartupProbeGrpcPort(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := stringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenCloudRunV2ServiceTemplateContainersStartupProbeGrpcService(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
 }
 
 func flattenCloudRunV2ServiceTemplateVolumes(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -2993,6 +3105,13 @@ func expandCloudRunV2ServiceTemplateContainersLivenessProbe(v interface{}, d Ter
 		transformed["tcpSocket"] = transformedTcpSocket
 	}
 
+	transformedGrpc, err := expandCloudRunV2ServiceTemplateContainersLivenessProbeGrpc(original["grpc"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["grpc"] = transformedGrpc
+	}
+
 	return transformed, nil
 }
 
@@ -3112,6 +3231,45 @@ func expandCloudRunV2ServiceTemplateContainersLivenessProbeTcpSocketPort(v inter
 	return v, nil
 }
 
+func expandCloudRunV2ServiceTemplateContainersLivenessProbeGrpc(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPort, err := expandCloudRunV2ServiceTemplateContainersLivenessProbeGrpcPort(original["port"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !isEmptyValue(val) {
+		transformed["port"] = transformedPort
+	}
+
+	transformedService, err := expandCloudRunV2ServiceTemplateContainersLivenessProbeGrpcService(original["service"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedService); val.IsValid() && !isEmptyValue(val) {
+		transformed["service"] = transformedService
+	}
+
+	return transformed, nil
+}
+
+func expandCloudRunV2ServiceTemplateContainersLivenessProbeGrpcPort(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudRunV2ServiceTemplateContainersLivenessProbeGrpcService(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandCloudRunV2ServiceTemplateContainersStartupProbe(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
@@ -3161,6 +3319,13 @@ func expandCloudRunV2ServiceTemplateContainersStartupProbe(v interface{}, d Terr
 		return nil, err
 	} else {
 		transformed["tcpSocket"] = transformedTcpSocket
+	}
+
+	transformedGrpc, err := expandCloudRunV2ServiceTemplateContainersStartupProbeGrpc(original["grpc"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["grpc"] = transformedGrpc
 	}
 
 	return transformed, nil
@@ -3279,6 +3444,45 @@ func expandCloudRunV2ServiceTemplateContainersStartupProbeTcpSocket(v interface{
 }
 
 func expandCloudRunV2ServiceTemplateContainersStartupProbeTcpSocketPort(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudRunV2ServiceTemplateContainersStartupProbeGrpc(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPort, err := expandCloudRunV2ServiceTemplateContainersStartupProbeGrpcPort(original["port"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !isEmptyValue(val) {
+		transformed["port"] = transformedPort
+	}
+
+	transformedService, err := expandCloudRunV2ServiceTemplateContainersStartupProbeGrpcService(original["service"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedService); val.IsValid() && !isEmptyValue(val) {
+		transformed["service"] = transformedService
+	}
+
+	return transformed, nil
+}
+
+func expandCloudRunV2ServiceTemplateContainersStartupProbeGrpcPort(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudRunV2ServiceTemplateContainersStartupProbeGrpcService(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
