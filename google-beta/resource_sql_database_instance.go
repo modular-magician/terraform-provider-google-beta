@@ -1619,6 +1619,24 @@ func resourceSqlDatabaseInstanceUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
+	if promoteReadReplicaRequired {
+		err = retryTimeDuration(func() (rerr error) {
+			op, rerr = config.NewSqlAdminClient(userAgent).Instances.PromoteReplica(project, d.Get("name").(string)).Do()
+			return rerr
+		}, d.Timeout(schema.TimeoutUpdate), isSqlOperationInProgressError)
+		if err != nil {
+			return fmt.Errorf("Error, failed to promote read replica instance %s: %s", instance.Name, err)
+		}
+		err = sqlAdminOperationWaitTime(config, op, project, "Promote Instance", userAgent, d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return err
+		}
+		err = resourceSqlDatabaseInstanceRead(d, meta)
+		if err != nil {
+			return err
+		}
+	}
+
 	s := d.Get("settings")
 	instance = &sqladmin.DatabaseInstance{
 		Settings: expandSqlDatabaseInstanceSettings(desiredSetting.([]interface{})),
@@ -1640,24 +1658,6 @@ func resourceSqlDatabaseInstanceUpdate(d *schema.ResourceData, meta interface{})
 
 	if _, ok := d.GetOk("instance_type"); ok {
 		instance.InstanceType = d.Get("instance_type").(string)
-	}
-
-	if promoteReadReplicaRequired {
-		err = retryTimeDuration(func() (rerr error) {
-			op, rerr = config.NewSqlAdminClient(userAgent).Instances.PromoteReplica(project, d.Get("name").(string)).Do()
-			return rerr
-		}, d.Timeout(schema.TimeoutUpdate), isSqlOperationInProgressError)
-		if err != nil {
-			return fmt.Errorf("Error, failed to promote read replica instance %s: %s", instance.Name, err)
-		}
-		err = sqlAdminOperationWaitTime(config, op, project, "Promote Instance", userAgent, d.Timeout(schema.TimeoutUpdate))
-		if err != nil {
-			return err
-		}
-		err = resourceSqlDatabaseInstanceRead(d, meta)
-		if err != nil {
-			return err
-		}
 	}
 
 	err = retryTimeDuration(func() (rerr error) {
@@ -2151,7 +2151,8 @@ func checkPromoteConfigurations(d *schema.ResourceData) error {
 }
 
 func isMasterInstanceNameSet(_ context.Context, oldMasterInstanceName interface{}, newMasterInstanceName interface{}, _ interface{}) bool {
-	if oldMasterInstanceName == nil || oldMasterInstanceName == "" {
+	new := newMasterInstanceName.(string)
+	if new == "" {
 		return false
 	}
 
