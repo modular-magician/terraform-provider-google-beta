@@ -20,7 +20,6 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -303,6 +302,11 @@ func resourceComputeBackendBucketCreate(d *schema.ResourceData, meta interface{}
 		obj["name"] = nameProp
 	}
 
+	obj, err = resourceComputeBackendBucketEncoder(d, meta, obj)
+	if err != nil {
+		return err
+	}
+
 	url, err := replaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/backendBuckets")
 	if err != nil {
 		return err
@@ -342,26 +346,6 @@ func resourceComputeBackendBucketCreate(d *schema.ResourceData, meta interface{}
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create BackendBucket: %s", err)
-	}
-
-	// security_policy isn't set by Create / Update
-	if o, n := d.GetChange("edge_security_policy"); o.(string) != n.(string) {
-		pol, err := ParseSecurityPolicyFieldValue(n.(string), d, config)
-		if err != nil {
-			return errwrap.Wrapf("Error parsing Backend Service security policy: {{err}}", err)
-		}
-
-		spr := emptySecurityPolicyReference()
-		spr.SecurityPolicy = pol.RelativeLink()
-		op, err := config.NewComputeClient(userAgent).BackendBuckets.SetEdgeSecurityPolicy(project, obj["name"].(string), spr).Do()
-		if err != nil {
-			return errwrap.Wrapf("Error setting Backend Service security policy: {{err}}", err)
-		}
-		// This uses the create timeout for simplicity, though technically this code appears in both create and update
-		waitErr := computeOperationWaitTime(config, op, project, "Setting Backend Service Security Policy", userAgent, d.Timeout(schema.TimeoutCreate))
-		if waitErr != nil {
-			return waitErr
-		}
 	}
 
 	log.Printf("[DEBUG] Finished creating BackendBucket %q: %#v", d.Id(), res)
@@ -502,6 +486,11 @@ func resourceComputeBackendBucketUpdate(d *schema.ResourceData, meta interface{}
 		obj["name"] = nameProp
 	}
 
+	obj, err = resourceComputeBackendBucketEncoder(d, meta, obj)
+	if err != nil {
+		return err
+	}
+
 	url, err := replaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/backendBuckets/{{name}}")
 	if err != nil {
 		return err
@@ -530,25 +519,6 @@ func resourceComputeBackendBucketUpdate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	// security_policy isn't set by Create / Update
-	if o, n := d.GetChange("edge_security_policy"); o.(string) != n.(string) {
-		pol, err := ParseSecurityPolicyFieldValue(n.(string), d, config)
-		if err != nil {
-			return errwrap.Wrapf("Error parsing Backend Service security policy: {{err}}", err)
-		}
-
-		spr := emptySecurityPolicyReference()
-		spr.SecurityPolicy = pol.RelativeLink()
-		op, err := config.NewComputeClient(userAgent).BackendBuckets.SetEdgeSecurityPolicy(project, obj["name"].(string), spr).Do()
-		if err != nil {
-			return errwrap.Wrapf("Error setting Backend Service security policy: {{err}}", err)
-		}
-		// This uses the create timeout for simplicity, though technically this code appears in both create and update
-		waitErr := computeOperationWaitTime(config, op, project, "Setting Backend Service Security Policy", userAgent, d.Timeout(schema.TimeoutCreate))
-		if waitErr != nil {
-			return waitErr
-		}
-	}
 	return resourceComputeBackendBucketRead(d, meta)
 }
 
@@ -1121,4 +1091,42 @@ func expandComputeBackendBucketEnableCdn(v interface{}, d TerraformResourceData,
 
 func expandComputeBackendBucketName(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceComputeBackendBucketEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	c, cdnPolicyOk := d.GetOk("cdn_policy")
+
+	if !cdnPolicyOk {
+		return obj, nil
+	}
+
+	cdnPolicies := c.([]interface{})
+
+	if len(cdnPolicies) == 0 {
+		return obj, nil
+	}
+
+	cdnPolicy := cdnPolicies[0].(map[string]interface{})
+
+	cacheMode := cdnPolicy["cache_mode"].(string)
+	_, defaultTTLOk := cdnPolicy["default_ttl"]
+	_, clientTTLOk := cdnPolicy["client_ttl"]
+
+	if obj["cdnPolicy"] == nil {
+		obj["cdnPolicy"] = make(map[string]interface{})
+	}
+
+	encCDNPolicy := obj["cdnPolicy"].(map[string]interface{})
+
+	switch cacheMode {
+	case "USE_ORIGIN_HEADERS":
+		if _, ok := encCDNPolicy["defaultTtl"]; ok && defaultTTLOk {
+			delete(encCDNPolicy, "defaultTtl")
+		}
+		if _, ok := encCDNPolicy["clientTtl"]; ok && clientTTLOk {
+			delete(encCDNPolicy, "clientTtl")
+		}
+	}
+
+	return obj, nil
 }
