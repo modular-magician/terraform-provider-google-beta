@@ -58,7 +58,7 @@ func resourceComputeSecurityPolicy() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				Description:  `The type indicates the intended use of the security policy. CLOUD_ARMOR - Cloud Armor backend security policies can be configured to filter incoming HTTP requests targeting backend services. They filter requests before they hit the origin servers. CLOUD_ARMOR_EDGE - Cloud Armor edge security policies can be configured to filter incoming HTTP requests targeting backend services (including Cloud CDN-enabled) as well as backend buckets (Cloud Storage). They filter requests before the request is served from Google's cache.`,
-				ValidateFunc: validation.StringInSlice([]string{"CLOUD_ARMOR", "CLOUD_ARMOR_EDGE", "CLOUD_ARMOR_INTERNAL_SERVICE"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"CLOUD_ARMOR", "CLOUD_ARMOR_EDGE", "CLOUD_ARMOR_INTERNAL_SERVICE", "CLOUD_ARMOR_NETWORK"}, false),
 			},
 
 			"rule": {
@@ -386,6 +386,24 @@ func resourceComputeSecurityPolicy() *schema.Resource {
 				Description: `The URI of the created resource.`,
 			},
 
+			"ddos_protection_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Ddos Protection Config of this security policy.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ddos_protection": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "STANDARD",
+							ValidateFunc: validation.StringInSlice([]string{"STANDARD", "ADVANCED"}, false),
+							Description:  `DDOS protection. Supported values include: "STANDARD", "ADVANCED".`,
+						},
+					},
+				},
+			},
+
 			"advanced_options_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -577,6 +595,10 @@ func resourceComputeSecurityPolicyCreate(d *schema.ResourceData, meta interface{
 		securityPolicy.Rules = expandSecurityPolicyRules(v.(*schema.Set).List())
 	}
 
+	if v, ok := d.GetOk("ddos_protection_config"); ok {
+		securityPolicy.DdosProtectionConfig = expandSecurityPolicyDdosProtectionConfig(v.([]interface{}))
+	}
+
 	if v, ok := d.GetOk("advanced_options_config"); ok {
 		securityPolicy.AdvancedOptionsConfig = expandSecurityPolicyAdvancedOptionsConfig(v.([]interface{}))
 	}
@@ -655,6 +677,9 @@ func resourceComputeSecurityPolicyRead(d *schema.ResourceData, meta interface{})
 	if err := d.Set("self_link", ConvertSelfLinkToV1(securityPolicy.SelfLink)); err != nil {
 		return fmt.Errorf("Error setting self_link: %s", err)
 	}
+	if err := d.Set("ddos_protection_config", flattenSecurityPolicyDdosProtectionConfig(securityPolicy.DdosProtectionConfig)); err != nil {
+		return fmt.Errorf("Error setting ddos_protection_config: %s", err)
+	}
 	if err := d.Set("advanced_options_config", flattenSecurityPolicyAdvancedOptionsConfig(securityPolicy.AdvancedOptionsConfig)); err != nil {
 		return fmt.Errorf("Error setting advanced_options_config: %s", err)
 	}
@@ -696,6 +721,11 @@ func resourceComputeSecurityPolicyUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("description") {
 		securityPolicy.Description = d.Get("description").(string)
 		securityPolicy.ForceSendFields = append(securityPolicy.ForceSendFields, "Description")
+	}
+
+	if d.HasChange("ddos_protection_config") {
+		securityPolicy.DdosProtectionConfig = expandSecurityPolicyDdosProtectionConfig(d.Get("ddos_protection_config").([]interface{}))
+		securityPolicy.ForceSendFields = append(securityPolicy.ForceSendFields, "DdosProtectionConfig", "ddosProtectionConfig.jsonParsing", "ddosProtectionConfig.jsonCustomConfig", "ddosProtectionConfig.logLevel")
 	}
 
 	if d.HasChange("advanced_options_config") {
@@ -1036,6 +1066,29 @@ func flattenPreconfiguredWafConfigExclusionField(fieldParams []*compute.Security
 		fieldSchema = append(fieldSchema, data)
 	}
 	return fieldSchema
+}
+
+func expandSecurityPolicyDdosProtectionConfig(configured []interface{}) *compute.SecurityPolicyDdosProtectionConfig {
+	if len(configured) == 0 || configured[0] == nil {
+		return nil
+	}
+
+	data := configured[0].(map[string]interface{})
+	return &compute.SecurityPolicyDdosProtectionConfig{
+		DdosProtection: data["ddos_protection"].(string),
+	}
+}
+
+func flattenSecurityPolicyDdosProtectionConfig(conf *compute.SecurityPolicyDdosProtectionConfig) []map[string]interface{} {
+	if conf == nil {
+		return nil
+	}
+
+	data := map[string]interface{}{
+		"ddos_protection": conf.DdosProtection,
+	}
+
+	return []map[string]interface{}{data}
 }
 
 func expandSecurityPolicyAdvancedOptionsConfig(configured []interface{}) *compute.SecurityPolicyAdvancedOptionsConfig {
