@@ -313,7 +313,7 @@ func resourceComputeInstanceGroupManager() *schema.Resource {
 				Description: `When used with wait_for_instances specifies the status to wait for. When STABLE is specified this resource will wait until the instances are stable before returning. When UPDATED is set, it will wait for the version target to be reached and any per instance configs to be effective and all instances configs to be effective as well as all instances to be stable before returning.`,
 			},
 			"stateful_internal_ip": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: `External IPs considered stateful by the instance group. `,
 				Elem: &schema.Resource{
@@ -334,7 +334,7 @@ func resourceComputeInstanceGroupManager() *schema.Resource {
 				},
 			},
 			"stateful_external_ip": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: `External IPs considered stateful by the instance group. `,
 				Elem: &schema.Resource{
@@ -997,9 +997,9 @@ func expandStatefulPolicy(d *schema.ResourceData) *compute.StatefulPolicy {
 	preservedState.Disks = disks
 	if d.HasChange("stateful_internal_ip") {
 		oldInternalIps, newInternalIps := d.GetChange("stateful_internal_ip")
-		preservedState.InternalIPs = expandStatefulIps(newInternalIps.([]interface{}))
+		preservedState.InternalIPs = expandStatefulIps(newInternalIps.(*schema.Set).List())
 		// Remove Internal Ips
-		for _, raw := range oldInternalIps.([]interface{}) {
+		for _, raw := range oldInternalIps.(*schema.Set).List() {
 			data := raw.(map[string]interface{})
 			networkIp := data["interface_name"].(string)
 			if _, exist := preservedState.InternalIPs[networkIp]; !exist {
@@ -1007,13 +1007,12 @@ func expandStatefulPolicy(d *schema.ResourceData) *compute.StatefulPolicy {
 			}
 		}
 		preservedState.ForceSendFields = append(preservedState.ForceSendFields, "InternalIPs")
-
 	}
 	if d.HasChange("stateful_external_ip") {
 		oldExternalIps, newExternalIps := d.GetChange("stateful_external_ip")
-		preservedState.ExternalIPs = expandStatefulIps(newExternalIps.([]interface{}))
+		preservedState.ExternalIPs = expandStatefulIps(newExternalIps.(*schema.Set).List())
 		// Remove External Ips
-		for _, raw := range oldExternalIps.([]interface{}) {
+		for _, raw := range oldExternalIps.(*schema.Set).List() {
 			data := raw.(map[string]interface{})
 			networkIp := data["interface_name"].(string)
 			if _, exist := preservedState.ExternalIPs[networkIp]; !exist {
@@ -1021,9 +1020,7 @@ func expandStatefulPolicy(d *schema.ResourceData) *compute.StatefulPolicy {
 			}
 		}
 		preservedState.ForceSendFields = append(preservedState.ForceSendFields, "ExternalIPs")
-
 	}
-
 	statefulPolicy := &compute.StatefulPolicy{PreservedState: preservedState}
 	statefulPolicy.ForceSendFields = append(statefulPolicy.ForceSendFields, "PreservedState")
 
