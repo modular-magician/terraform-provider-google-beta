@@ -86,6 +86,71 @@ resource "google_data_loss_prevention_job_trigger" "basic" {
 `, context)
 }
 
+func TestAccDataLossPreventionJobTrigger_dlpJobTriggerBigqueryBasicExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"project":       getTestProjectFromEnv(),
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckDataLossPreventionJobTriggerDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDataLossPreventionJobTrigger_dlpJobTriggerBigqueryBasicExample(context),
+			},
+			{
+				ResourceName:            "google_data_loss_prevention_job_trigger.bigquery_basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"parent"},
+			},
+		},
+	})
+}
+
+func testAccDataLossPreventionJobTrigger_dlpJobTriggerBigqueryBasicExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_data_loss_prevention_job_trigger" "bigquery_basic" {
+	parent = "projects/%{project}"
+	description = "Description"
+	display_name = "Displayname"
+
+	triggers {
+		schedule {
+			recurrence_period_duration = "86400s"
+		}
+	}
+
+	inspect_job {
+		inspect_template_name = "fake"
+		actions {
+			save_findings {
+				output_config {
+					table {
+						project_id = "project"
+						dataset_id = "dataset"
+					}
+				}
+			}
+		}
+		storage_config {
+			big_query_options {
+				table_reference {
+				    project_id = "project"
+				    dataset_id = "dataset"
+				    table_id = "table_to_scan"
+				}
+			}
+		}
+	}
+}
+`, context)
+}
+
 func TestAccDataLossPreventionJobTrigger_dlpJobTriggerBigqueryRowLimitExample(t *testing.T) {
 	t.Parallel()
 
