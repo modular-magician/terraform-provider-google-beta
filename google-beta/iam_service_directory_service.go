@@ -45,7 +45,7 @@ func ServiceDirectoryServiceIamUpdaterProducer(d TerraformResourceData, config *
 	}
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/namespaces/(?P<namespace_id>[^/]+)/services/(?P<service_id>[^/]+)", "(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<namespace_id>[^/]+)/(?P<service_id>[^/]+)", "(?P<location>[^/]+)/(?P<namespace_id>[^/]+)/(?P<service_id>[^/]+)"}, d, config, d.Get("name").(string))
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/namespaces/(?P<namespace>[^/]+)/services/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<namespace>[^/]+)/(?P<name>[^/]+)", "(?P<location>[^/]+)/(?P<namespace>[^/]+)/(?P<name>[^/]+)"}, d, config, d.Get("name").(string))
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func ServiceDirectoryServiceIamUpdaterProducer(d TerraformResourceData, config *
 func ServiceDirectoryServiceIdParseFunc(d *schema.ResourceData, config *Config) error {
 	values := make(map[string]string)
 
-	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/namespaces/(?P<namespace_id>[^/]+)/services/(?P<service_id>[^/]+)", "(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<namespace_id>[^/]+)/(?P<service_id>[^/]+)", "(?P<location>[^/]+)/(?P<namespace_id>[^/]+)/(?P<service_id>[^/]+)"}, d, config, d.Id())
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/namespaces/(?P<namespace>[^/]+)/services/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<namespace>[^/]+)/(?P<name>[^/]+)", "(?P<location>[^/]+)/(?P<namespace>[^/]+)/(?P<name>[^/]+)"}, d, config, d.Id())
 	if err != nil {
 		return err
 	}

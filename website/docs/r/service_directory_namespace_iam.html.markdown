@@ -48,7 +48,7 @@ data "google_iam_policy" "admin" {
 
 resource "google_service_directory_namespace_iam_policy" "policy" {
   provider = google-beta
-  name = google_service_directory_namespace.example.name
+  namespace_id = google_service_directory_namespace.example.name
   policy_data = data.google_iam_policy.admin.policy_data
 }
 ```
@@ -58,7 +58,7 @@ resource "google_service_directory_namespace_iam_policy" "policy" {
 ```hcl
 resource "google_service_directory_namespace_iam_binding" "binding" {
   provider = google-beta
-  name = google_service_directory_namespace.example.name
+  namespace_id = google_service_directory_namespace.example.name
   role = "roles/viewer"
   members = [
     "user:jane@example.com",
@@ -71,7 +71,7 @@ resource "google_service_directory_namespace_iam_binding" "binding" {
 ```hcl
 resource "google_service_directory_namespace_iam_member" "member" {
   provider = google-beta
-  name = google_service_directory_namespace.example.name
+  namespace_id = google_service_directory_namespace.example.name
   role = "roles/viewer"
   member = "user:jane@example.com"
 }
@@ -81,7 +81,10 @@ resource "google_service_directory_namespace_iam_member" "member" {
 
 The following arguments are supported:
 
-* `name` - (Required) Used to find the parent resource to bind the IAM policy to
+* `namespace_id` - (Required) Used to find the parent resource to bind the IAM policy to
+
+* `project` - (Optional) The ID of the project in which the resource belongs.
+    If it is not provided, the project will be parsed from the identifier of the parent resource. If no project is provided in the parent identifier and no project is specified, the provider project is used.
 
 * `member/members` - (Required) Identities that will be granted the privilege in `role`.
   Each entry can have one of the following values:

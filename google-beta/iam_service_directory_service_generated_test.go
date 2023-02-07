@@ -15,6 +15,7 @@
 package google
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -36,8 +37,20 @@ func TestAccServiceDirectoryServiceIamBindingGenerated(t *testing.T) {
 				Config: testAccServiceDirectoryServiceIamBinding_basicGenerated(context),
 			},
 			{
+				ResourceName:      "google_service_directory_service_iam_binding.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s roles/viewer", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-example-namespace%s", context["random_suffix"]), fmt.Sprintf("tf-test-example-service%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				// Test Iam Binding update
 				Config: testAccServiceDirectoryServiceIamBinding_updateGenerated(context),
+			},
+			{
+				ResourceName:      "google_service_directory_service_iam_binding.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s roles/viewer", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-example-namespace%s", context["random_suffix"]), fmt.Sprintf("tf-test-example-service%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -59,6 +72,12 @@ func TestAccServiceDirectoryServiceIamMemberGenerated(t *testing.T) {
 				// Test Iam Member creation (no update for member, no need to test)
 				Config: testAccServiceDirectoryServiceIamMember_basicGenerated(context),
 			},
+			{
+				ResourceName:      "google_service_directory_service_iam_member.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s roles/viewer user:admin@hashicorptest.com", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-example-namespace%s", context["random_suffix"]), fmt.Sprintf("tf-test-example-service%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -79,7 +98,19 @@ func TestAccServiceDirectoryServiceIamPolicyGenerated(t *testing.T) {
 				Config: testAccServiceDirectoryServiceIamPolicy_basicGenerated(context),
 			},
 			{
+				ResourceName:      "google_service_directory_service_iam_policy.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-example-namespace%s", context["random_suffix"]), fmt.Sprintf("tf-test-example-service%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				Config: testAccServiceDirectoryServiceIamPolicy_emptyBinding(context),
+			},
+			{
+				ResourceName:      "google_service_directory_service_iam_policy.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/namespaces/%s/services/%s", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-example-namespace%s", context["random_suffix"]), fmt.Sprintf("tf-test-example-service%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

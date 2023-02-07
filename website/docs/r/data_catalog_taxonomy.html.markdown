@@ -110,6 +110,9 @@ This resource provides the following
 Taxonomy can be imported using any of these accepted formats:
 
 ```
+$ terraform import google_data_catalog_taxonomy.default projects/{{project}},/locations/{{location}}/taxonomies/{{taxonomy}}
+$ terraform import google_data_catalog_taxonomy.default {{project}}/{{location}}/{{taxonomy}}
+$ terraform import google_data_catalog_taxonomy.default {{location}}/{{taxonomy}}
 $ terraform import google_data_catalog_taxonomy.default {{name}}
 ```
 

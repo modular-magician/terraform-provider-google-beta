@@ -113,9 +113,9 @@ exported:
 
 For all import syntaxes, the "resource in question" can take any of the following forms:
 
-* projects/{{project}}/locations/{{location}}/namespaces/{{namespace_id}}/services/{{service_id}}
-* {{project}}/{{location}}/{{namespace_id}}/{{service_id}}
-* {{location}}/{{namespace_id}}/{{service_id}}
+* projects/{{project}}/locations/{{location}}/namespaces/{{namespace}}/services/{{name}}
+* {{project}}/{{location}}/{{namespace}}/{{name}}
+* {{location}}/{{namespace}}/{{name}}
 
 Any variables not passed in the import command will be taken from the provider configuration.
 
@@ -123,17 +123,17 @@ Service Directory service IAM resources can be imported using the resource ident
 
 IAM member imports use space-delimited identifiers: the resource in question, the role, and the member identity, e.g.
 ```
-$ terraform import google_service_directory_service_iam_member.editor "projects/{{project}}/locations/{{location}}/namespaces/{{namespace_id}}/services/{{service_id}} roles/viewer user:jane@example.com"
+$ terraform import google_service_directory_service_iam_member.editor "projects/{{project}}/locations/{{location}}/namespaces/{{namespace}}/services/{{service}} roles/viewer user:jane@example.com"
 ```
 
 IAM binding imports use space-delimited identifiers: the resource in question and the role, e.g.
 ```
-$ terraform import google_service_directory_service_iam_binding.editor "projects/{{project}}/locations/{{location}}/namespaces/{{namespace_id}}/services/{{service_id}} roles/viewer"
+$ terraform import google_service_directory_service_iam_binding.editor "projects/{{project}}/locations/{{location}}/namespaces/{{namespace}}/services/{{service}} roles/viewer"
 ```
 
 IAM policy imports use the identifier of the resource in question, e.g.
 ```
-$ terraform import google_service_directory_service_iam_policy.editor projects/{{project}}/locations/{{location}}/namespaces/{{namespace_id}}/services/{{service_id}}
+$ terraform import google_service_directory_service_iam_policy.editor projects/{{project}}/locations/{{location}}/namespaces/{{namespace}}/services/{{service}}
 ```
 
 -> **Custom Roles**: If you're importing a IAM resource with a custom role, make sure to use the

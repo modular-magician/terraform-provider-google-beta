@@ -15,6 +15,7 @@
 package google
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -36,8 +37,20 @@ func TestAccCloudbuildv2ConnectionIamBindingGenerated(t *testing.T) {
 				Config: testAccCloudbuildv2ConnectionIamBinding_basicGenerated(context),
 			},
 			{
+				ResourceName:      "google_cloudbuildv2_connection_iam_binding.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/connections/%s roles/cloudbuild.connectionViewer", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-connection%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				// Test Iam Binding update
 				Config: testAccCloudbuildv2ConnectionIamBinding_updateGenerated(context),
+			},
+			{
+				ResourceName:      "google_cloudbuildv2_connection_iam_binding.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/connections/%s roles/cloudbuild.connectionViewer", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-connection%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -59,6 +72,12 @@ func TestAccCloudbuildv2ConnectionIamMemberGenerated(t *testing.T) {
 				// Test Iam Member creation (no update for member, no need to test)
 				Config: testAccCloudbuildv2ConnectionIamMember_basicGenerated(context),
 			},
+			{
+				ResourceName:      "google_cloudbuildv2_connection_iam_member.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/connections/%s roles/cloudbuild.connectionViewer user:admin@hashicorptest.com", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-connection%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -79,7 +98,19 @@ func TestAccCloudbuildv2ConnectionIamPolicyGenerated(t *testing.T) {
 				Config: testAccCloudbuildv2ConnectionIamPolicy_basicGenerated(context),
 			},
 			{
+				ResourceName:      "google_cloudbuildv2_connection_iam_policy.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/connections/%s", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-connection%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				Config: testAccCloudbuildv2ConnectionIamPolicy_emptyBinding(context),
+			},
+			{
+				ResourceName:      "google_cloudbuildv2_connection_iam_policy.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/connections/%s", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-connection%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

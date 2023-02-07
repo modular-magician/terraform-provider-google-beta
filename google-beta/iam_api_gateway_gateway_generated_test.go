@@ -15,6 +15,7 @@
 package google
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -36,8 +37,20 @@ func TestAccApiGatewayGatewayIamBindingGenerated(t *testing.T) {
 				Config: testAccApiGatewayGatewayIamBinding_basicGenerated(context),
 			},
 			{
+				ResourceName:      "google_api_gateway_gateway_iam_binding.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/gateways/%s roles/apigateway.viewer", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-gateway-%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				// Test Iam Binding update
 				Config: testAccApiGatewayGatewayIamBinding_updateGenerated(context),
+			},
+			{
+				ResourceName:      "google_api_gateway_gateway_iam_binding.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/gateways/%s roles/apigateway.viewer", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-gateway-%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -59,6 +72,12 @@ func TestAccApiGatewayGatewayIamMemberGenerated(t *testing.T) {
 				// Test Iam Member creation (no update for member, no need to test)
 				Config: testAccApiGatewayGatewayIamMember_basicGenerated(context),
 			},
+			{
+				ResourceName:      "google_api_gateway_gateway_iam_member.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/gateways/%s roles/apigateway.viewer user:admin@hashicorptest.com", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-gateway-%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -79,7 +98,19 @@ func TestAccApiGatewayGatewayIamPolicyGenerated(t *testing.T) {
 				Config: testAccApiGatewayGatewayIamPolicy_basicGenerated(context),
 			},
 			{
+				ResourceName:      "google_api_gateway_gateway_iam_policy.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/gateways/%s", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-gateway-%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				Config: testAccApiGatewayGatewayIamPolicy_emptyBinding(context),
+			},
+			{
+				ResourceName:      "google_api_gateway_gateway_iam_policy.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/gateways/%s", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-gateway-%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -89,13 +120,13 @@ func testAccApiGatewayGatewayIamMember_basicGenerated(context map[string]interfa
 	return Nprintf(`
 resource "google_api_gateway_api" "api_gw" {
   provider = google-beta
-  api_id = "tf-test-api-gw%{random_suffix}"
+  api_id = "tf-test-api-%{random_suffix}"
 }
 
 resource "google_api_gateway_api_config" "api_gw" {
   provider = google-beta
   api = google_api_gateway_api.api_gw.api_id
-  api_config_id = "config%{random_suffix}"
+  api_config_id = "tf-test-config-%{random_suffix}"
 
   openapi_documents {
     document {
@@ -111,7 +142,7 @@ resource "google_api_gateway_api_config" "api_gw" {
 resource "google_api_gateway_gateway" "api_gw" {
   provider = google-beta
   api_config = google_api_gateway_api_config.api_gw.id
-  gateway_id = "tf-test-api-gw%{random_suffix}"
+  gateway_id = "tf-test-gateway-%{random_suffix}"
 }
 
 resource "google_api_gateway_gateway_iam_member" "foo" {
@@ -129,13 +160,13 @@ func testAccApiGatewayGatewayIamPolicy_basicGenerated(context map[string]interfa
 	return Nprintf(`
 resource "google_api_gateway_api" "api_gw" {
   provider = google-beta
-  api_id = "tf-test-api-gw%{random_suffix}"
+  api_id = "tf-test-api-%{random_suffix}"
 }
 
 resource "google_api_gateway_api_config" "api_gw" {
   provider = google-beta
   api = google_api_gateway_api.api_gw.api_id
-  api_config_id = "config%{random_suffix}"
+  api_config_id = "tf-test-config-%{random_suffix}"
 
   openapi_documents {
     document {
@@ -151,7 +182,7 @@ resource "google_api_gateway_api_config" "api_gw" {
 resource "google_api_gateway_gateway" "api_gw" {
   provider = google-beta
   api_config = google_api_gateway_api_config.api_gw.id
-  gateway_id = "tf-test-api-gw%{random_suffix}"
+  gateway_id = "tf-test-gateway-%{random_suffix}"
 }
 
 data "google_iam_policy" "foo" {
@@ -176,13 +207,13 @@ func testAccApiGatewayGatewayIamPolicy_emptyBinding(context map[string]interface
 	return Nprintf(`
 resource "google_api_gateway_api" "api_gw" {
   provider = google-beta
-  api_id = "tf-test-api-gw%{random_suffix}"
+  api_id = "tf-test-api-%{random_suffix}"
 }
 
 resource "google_api_gateway_api_config" "api_gw" {
   provider = google-beta
   api = google_api_gateway_api.api_gw.api_id
-  api_config_id = "config%{random_suffix}"
+  api_config_id = "tf-test-config-%{random_suffix}"
 
   openapi_documents {
     document {
@@ -198,7 +229,7 @@ resource "google_api_gateway_api_config" "api_gw" {
 resource "google_api_gateway_gateway" "api_gw" {
   provider = google-beta
   api_config = google_api_gateway_api_config.api_gw.id
-  gateway_id = "tf-test-api-gw%{random_suffix}"
+  gateway_id = "tf-test-gateway-%{random_suffix}"
 }
 
 data "google_iam_policy" "foo" {
@@ -219,13 +250,13 @@ func testAccApiGatewayGatewayIamBinding_basicGenerated(context map[string]interf
 	return Nprintf(`
 resource "google_api_gateway_api" "api_gw" {
   provider = google-beta
-  api_id = "tf-test-api-gw%{random_suffix}"
+  api_id = "tf-test-api-%{random_suffix}"
 }
 
 resource "google_api_gateway_api_config" "api_gw" {
   provider = google-beta
   api = google_api_gateway_api.api_gw.api_id
-  api_config_id = "config%{random_suffix}"
+  api_config_id = "tf-test-config-%{random_suffix}"
 
   openapi_documents {
     document {
@@ -241,7 +272,7 @@ resource "google_api_gateway_api_config" "api_gw" {
 resource "google_api_gateway_gateway" "api_gw" {
   provider = google-beta
   api_config = google_api_gateway_api_config.api_gw.id
-  gateway_id = "tf-test-api-gw%{random_suffix}"
+  gateway_id = "tf-test-gateway-%{random_suffix}"
 }
 
 resource "google_api_gateway_gateway_iam_binding" "foo" {
@@ -259,13 +290,13 @@ func testAccApiGatewayGatewayIamBinding_updateGenerated(context map[string]inter
 	return Nprintf(`
 resource "google_api_gateway_api" "api_gw" {
   provider = google-beta
-  api_id = "tf-test-api-gw%{random_suffix}"
+  api_id = "tf-test-api-%{random_suffix}"
 }
 
 resource "google_api_gateway_api_config" "api_gw" {
   provider = google-beta
   api = google_api_gateway_api.api_gw.api_id
-  api_config_id = "config%{random_suffix}"
+  api_config_id = "tf-test-config-%{random_suffix}"
 
   openapi_documents {
     document {
@@ -281,7 +312,7 @@ resource "google_api_gateway_api_config" "api_gw" {
 resource "google_api_gateway_gateway" "api_gw" {
   provider = google-beta
   api_config = google_api_gateway_api_config.api_gw.id
-  gateway_id = "tf-test-api-gw%{random_suffix}"
+  gateway_id = "tf-test-gateway-%{random_suffix}"
 }
 
 resource "google_api_gateway_gateway_iam_binding" "foo" {

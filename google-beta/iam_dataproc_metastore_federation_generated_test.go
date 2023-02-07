@@ -15,6 +15,7 @@
 package google
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -36,8 +37,20 @@ func TestAccDataprocMetastoreFederationIamBindingGenerated(t *testing.T) {
 				Config: testAccDataprocMetastoreFederationIamBinding_basicGenerated(context),
 			},
 			{
+				ResourceName:      "google_dataproc_metastore_federation_iam_binding.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/federations/%s roles/viewer", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-metastore-fed%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				// Test Iam Binding update
 				Config: testAccDataprocMetastoreFederationIamBinding_updateGenerated(context),
+			},
+			{
+				ResourceName:      "google_dataproc_metastore_federation_iam_binding.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/federations/%s roles/viewer", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-metastore-fed%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -59,6 +72,12 @@ func TestAccDataprocMetastoreFederationIamMemberGenerated(t *testing.T) {
 				// Test Iam Member creation (no update for member, no need to test)
 				Config: testAccDataprocMetastoreFederationIamMember_basicGenerated(context),
 			},
+			{
+				ResourceName:      "google_dataproc_metastore_federation_iam_member.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/federations/%s roles/viewer user:admin@hashicorptest.com", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-metastore-fed%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -79,7 +98,19 @@ func TestAccDataprocMetastoreFederationIamPolicyGenerated(t *testing.T) {
 				Config: testAccDataprocMetastoreFederationIamPolicy_basicGenerated(context),
 			},
 			{
+				ResourceName:      "google_dataproc_metastore_federation_iam_policy.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/federations/%s", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-metastore-fed%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				Config: testAccDataprocMetastoreFederationIamPolicy_emptyBinding(context),
+			},
+			{
+				ResourceName:      "google_dataproc_metastore_federation_iam_policy.foo",
+				ImportStateId:     fmt.Sprintf("projects/%s/locations/%s/federations/%s", getTestProjectFromEnv(), getTestRegionFromEnv(), fmt.Sprintf("tf-test-metastore-fed%s", context["random_suffix"])),
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -90,7 +121,7 @@ func testAccDataprocMetastoreFederationIamMember_basicGenerated(context map[stri
 resource "google_dataproc_metastore_federation" "default" {
   provider      = google-beta
   location      = "us-central1"
-  federation_id = "tf-test-fed-1%{random_suffix}"
+  federation_id = "tf-test-metastore-fed%{random_suffix}"
   version       = "3.1.2"
 
   backend_metastores {
@@ -102,7 +133,7 @@ resource "google_dataproc_metastore_federation" "default" {
 
 resource "google_dataproc_metastore_service" "default" {
   provider   = google-beta
-  service_id = "tf-test-fed-1%{random_suffix}"
+  service_id = "tf-test-metastore-service%{random_suffix}"
   location   = "us-central1"
   tier       = "DEVELOPER"
 
@@ -129,7 +160,7 @@ func testAccDataprocMetastoreFederationIamPolicy_basicGenerated(context map[stri
 resource "google_dataproc_metastore_federation" "default" {
   provider      = google-beta
   location      = "us-central1"
-  federation_id = "tf-test-fed-1%{random_suffix}"
+  federation_id = "tf-test-metastore-fed%{random_suffix}"
   version       = "3.1.2"
 
   backend_metastores {
@@ -141,7 +172,7 @@ resource "google_dataproc_metastore_federation" "default" {
 
 resource "google_dataproc_metastore_service" "default" {
   provider   = google-beta
-  service_id = "tf-test-fed-1%{random_suffix}"
+  service_id = "tf-test-metastore-service%{random_suffix}"
   location   = "us-central1"
   tier       = "DEVELOPER"
 
@@ -175,7 +206,7 @@ func testAccDataprocMetastoreFederationIamPolicy_emptyBinding(context map[string
 resource "google_dataproc_metastore_federation" "default" {
   provider      = google-beta
   location      = "us-central1"
-  federation_id = "tf-test-fed-1%{random_suffix}"
+  federation_id = "tf-test-metastore-fed%{random_suffix}"
   version       = "3.1.2"
 
   backend_metastores {
@@ -187,7 +218,7 @@ resource "google_dataproc_metastore_federation" "default" {
 
 resource "google_dataproc_metastore_service" "default" {
   provider   = google-beta
-  service_id = "tf-test-fed-1%{random_suffix}"
+  service_id = "tf-test-metastore-service%{random_suffix}"
   location   = "us-central1"
   tier       = "DEVELOPER"
 
@@ -217,7 +248,7 @@ func testAccDataprocMetastoreFederationIamBinding_basicGenerated(context map[str
 resource "google_dataproc_metastore_federation" "default" {
   provider      = google-beta
   location      = "us-central1"
-  federation_id = "tf-test-fed-1%{random_suffix}"
+  federation_id = "tf-test-metastore-fed%{random_suffix}"
   version       = "3.1.2"
 
   backend_metastores {
@@ -229,7 +260,7 @@ resource "google_dataproc_metastore_federation" "default" {
 
 resource "google_dataproc_metastore_service" "default" {
   provider   = google-beta
-  service_id = "tf-test-fed-1%{random_suffix}"
+  service_id = "tf-test-metastore-service%{random_suffix}"
   location   = "us-central1"
   tier       = "DEVELOPER"
 
@@ -256,7 +287,7 @@ func testAccDataprocMetastoreFederationIamBinding_updateGenerated(context map[st
 resource "google_dataproc_metastore_federation" "default" {
   provider      = google-beta
   location      = "us-central1"
-  federation_id = "tf-test-fed-1%{random_suffix}"
+  federation_id = "tf-test-metastore-fed%{random_suffix}"
   version       = "3.1.2"
 
   backend_metastores {
@@ -268,7 +299,7 @@ resource "google_dataproc_metastore_federation" "default" {
 
 resource "google_dataproc_metastore_service" "default" {
   provider   = google-beta
-  service_id = "tf-test-fed-1%{random_suffix}"
+  service_id = "tf-test-metastore-service%{random_suffix}"
   location   = "us-central1"
   tier       = "DEVELOPER"
 
