@@ -375,7 +375,7 @@ In addition to the arguments listed above, the following computed attributes are
 * `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/connections/{{connection_id}}`
 
 * `name` -
-  The resource name of the connection in the form of: 
+  The resource name of the connection in the form of:
   "projects/{project_id}/locations/{location_id}/connections/{connectionId}"
 
 * `has_credential` -
@@ -400,6 +400,7 @@ Connection can be imported using any of these accepted formats:
 $ terraform import google_bigquery_connection.default projects/{{project}}/locations/{{location}}/connections/{{connection_id}}
 $ terraform import google_bigquery_connection.default {{project}}/{{location}}/{{connection_id}}
 $ terraform import google_bigquery_connection.default {{location}}/{{connection_id}}
+$ terraform import google_bigquery_connection.default {{connection_id}}
 ```
 
 ## User Project Overrides

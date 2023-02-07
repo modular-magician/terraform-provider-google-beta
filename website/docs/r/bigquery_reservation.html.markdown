@@ -78,8 +78,7 @@ The following arguments are supported:
 
 * `multi_region_auxiliary` -
   (Optional)
-  Applicable only for reservations located within one of the BigQuery multi-regions (US or EU).
-  If set to true, this reservation is placed in the organization's secondary region which is designated for disaster recovery purposes. If false, this reservation is placed in the organization's default region.
+  Applicable only for reservations located within one of the BigQuery multi-regions (US or EU). If set to true, this reservation is placed in the organization's secondary region which is designated for disaster recovery purposes. If false, this reservation is placed in the organization's default region.
 
 * `location` -
   (Optional)

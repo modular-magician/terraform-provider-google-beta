@@ -77,10 +77,9 @@ Examples: US, EU, asia-northeast1. The default value is US.`,
 				Default: "US",
 			},
 			"multi_region_auxiliary": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Description: `Applicable only for reservations located within one of the BigQuery multi-regions (US or EU).
-If set to true, this reservation is placed in the organization's secondary region which is designated for disaster recovery purposes. If false, this reservation is placed in the organization's default region.`,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: `Applicable only for reservations located within one of the BigQuery multi-regions (US or EU). If set to true, this reservation is placed in the organization's secondary region which is designated for disaster recovery purposes. If false, this reservation is placed in the organization's default region.`,
 			},
 			"project": {
 				Type:     schema.TypeString,

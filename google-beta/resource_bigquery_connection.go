@@ -251,7 +251,7 @@ Azure allowed regions are azure-eastus2`,
 			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
-				Description: `The resource name of the connection in the form of: 
+				Description: `The resource name of the connection in the form of:
 "projects/{project_id}/locations/{location_id}/connections/{connectionId}"`,
 			},
 			"project": {
@@ -615,6 +615,7 @@ func resourceBigqueryConnectionConnectionImport(d *schema.ResourceData, meta int
 		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/connections/(?P<connection_id>[^/]+)",
 		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<connection_id>[^/]+)",
 		"(?P<location>[^/]+)/(?P<connection_id>[^/]+)",
+		"(?P<connection_id>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
