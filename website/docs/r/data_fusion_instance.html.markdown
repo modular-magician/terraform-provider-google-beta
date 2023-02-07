@@ -212,7 +212,7 @@ The following arguments are supported:
   - ENTERPRISE: Enterprise Data Fusion instance. In Enterprise type, the user will have more features
   available, such as support for streaming pipelines, higher number of concurrent pipelines, etc.
   - DEVELOPER: Developer Data Fusion instance. In Developer type, the user will have all features available but
-  with restrictive capabilities. This is to help enterprises design and develop their data ingestion and integration 
+  with restrictive capabilities. This is to help enterprises design and develop their data ingestion and integration
   pipelines at low cost.
   Possible values are `BASIC`, `ENTERPRISE`, and `DEVELOPER`.
 
