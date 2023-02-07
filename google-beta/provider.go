@@ -18,7 +18,7 @@ const TestEnvVar = "TF_ACC"
 // Global MutexKV
 var mutexKV = NewMutexKV()
 
-// Provider returns a *schema.Provider.
+// Provider returns a *schema.Provider
 func Provider() *schema.Provider {
 
 	// The mtls service client gives the type of endpoint (mtls/regular)
