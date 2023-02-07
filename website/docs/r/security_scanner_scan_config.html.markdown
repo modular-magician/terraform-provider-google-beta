@@ -108,7 +108,7 @@ The following arguments are supported:
   (Optional)
   Controls export of scan configurations and results to Cloud Security Command Center.
   Default value is `ENABLED`.
-  Possible values are `ENABLED` and `DISABLED`.
+  Possible values are `ENABLED`.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

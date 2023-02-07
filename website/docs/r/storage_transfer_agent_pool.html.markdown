@@ -89,7 +89,7 @@ The following arguments are supported:
 <a name="nested_bandwidth_limit"></a>The `bandwidth_limit` block supports:
 
 * `limit_mbps` -
-  (Required)
+  (Optional)
   Bandwidth rate in megabytes per second, distributed across all the agents in the pool.
 
 ## Attributes Reference

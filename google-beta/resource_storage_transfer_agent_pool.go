@@ -88,7 +88,7 @@ As expressed by the regular expression: ^(?!goog)[a-z]([a-z0-9-._~]*[a-z0-9])?$.
 					Schema: map[string]*schema.Schema{
 						"limit_mbps": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							Description: `Bandwidth rate in megabytes per second, distributed across all the agents in the pool.`,
 						},
 					},

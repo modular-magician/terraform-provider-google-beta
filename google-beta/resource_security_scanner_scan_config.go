@@ -132,8 +132,8 @@ https://cloud.google.com/security-scanner/docs/excluded-urls`,
 			"export_to_security_command_center": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateEnum([]string{"ENABLED", "DISABLED", ""}),
-				Description:  `Controls export of scan configurations and results to Cloud Security Command Center. Default value: "ENABLED" Possible values: ["ENABLED", "DISABLED"]`,
+				ValidateFunc: validateEnum([]string{"ENABLED", ""}),
+				Description:  `Controls export of scan configurations and results to Cloud Security Command Center. Default value: "ENABLED" Possible values: ["ENABLED"]`,
 				Default:      "ENABLED",
 			},
 			"max_qps": {

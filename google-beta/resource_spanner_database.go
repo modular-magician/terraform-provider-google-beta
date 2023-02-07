@@ -136,9 +136,9 @@ the instance is created. Values are of the form [a-z][-a-z0-9]*[a-z0-9].`,
 				Computed:     true,
 				Optional:     true,
 				ForceNew:     true,
-				ValidateFunc: validateEnum([]string{"GOOGLE_STANDARD_SQL", "POSTGRESQL", ""}),
+				ValidateFunc: validateEnum([]string{"GOOGLE_STANDARD_SQL", ""}),
 				Description: `The dialect of the Cloud Spanner Database.
-If it is not provided, "GOOGLE_STANDARD_SQL" will be used. Possible values: ["GOOGLE_STANDARD_SQL", "POSTGRESQL"]`,
+If it is not provided, "GOOGLE_STANDARD_SQL" will be used. Possible values: ["GOOGLE_STANDARD_SQL"]`,
 			},
 			"ddl": {
 				Type:     schema.TypeList,
