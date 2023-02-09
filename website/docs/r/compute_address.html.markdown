@@ -178,10 +178,7 @@ The following arguments are supported:
 
 * `address` -
   (Optional)
-  The static external IP address represented by this resource. Only
-  IPv4 is supported. An address may only be specified for INTERNAL
-  address types. The IP address must be inside the specified subnetwork,
-  if any. Set by the API if undefined.
+  Foobar
 
 * `address_type` -
   (Optional)

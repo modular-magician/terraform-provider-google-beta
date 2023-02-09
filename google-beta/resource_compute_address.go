@@ -54,14 +54,11 @@ following characters must be a dash, lowercase letter, or digit,
 except the last character, which cannot be a dash.`,
 			},
 			"address": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-				ForceNew: true,
-				Description: `The static external IP address represented by this resource. Only
-IPv4 is supported. An address may only be specified for INTERNAL
-address types. The IP address must be inside the specified subnetwork,
-if any. Set by the API if undefined.`,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Foobar`,
 			},
 			"address_type": {
 				Type:         schema.TypeString,
