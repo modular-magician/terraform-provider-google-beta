@@ -68,8 +68,8 @@ if any. Set by the API if undefined.`,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateEnum([]string{"INTERNAL", "EXTERNAL", ""}),
-				Description:  `The type of address to reserve. Default value: "EXTERNAL" Possible values: ["INTERNAL", "EXTERNAL"]`,
-				Default:      "EXTERNAL",
+				Description:  `The type of address to reserve. Default value: "INTERNAL" Possible values: ["INTERNAL", "EXTERNAL"]`,
+				Default:      "INTERNAL",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -567,7 +567,7 @@ func flattenComputeAddressAddress(v interface{}, d *schema.ResourceData, config 
 
 func flattenComputeAddressAddressType(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	if v == nil || isEmptyValue(reflect.ValueOf(v)) {
-		return "EXTERNAL"
+		return "INTERNAL"
 	}
 
 	return v
