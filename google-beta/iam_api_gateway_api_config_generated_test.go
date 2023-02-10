@@ -95,7 +95,7 @@ resource "google_api_gateway_api" "api_cfg" {
 resource "google_api_gateway_api_config" "api_cfg" {
   provider = google-beta
   api = google_api_gateway_api.api_cfg.api_id
-  api_config_id = "cfg%{random_suffix}"
+  api_config_id_prefix = "tf-test-cfg-%{random_suffix}"
 
   openapi_documents {
     document {
@@ -128,7 +128,7 @@ resource "google_api_gateway_api" "api_cfg" {
 resource "google_api_gateway_api_config" "api_cfg" {
   provider = google-beta
   api = google_api_gateway_api.api_cfg.api_id
-  api_config_id = "cfg%{random_suffix}"
+  api_config_id_prefix = "tf-test-cfg-%{random_suffix}"
 
   openapi_documents {
     document {
@@ -168,7 +168,7 @@ resource "google_api_gateway_api" "api_cfg" {
 resource "google_api_gateway_api_config" "api_cfg" {
   provider = google-beta
   api = google_api_gateway_api.api_cfg.api_id
-  api_config_id = "cfg%{random_suffix}"
+  api_config_id_prefix = "tf-test-cfg-%{random_suffix}"
 
   openapi_documents {
     document {
@@ -204,7 +204,7 @@ resource "google_api_gateway_api" "api_cfg" {
 resource "google_api_gateway_api_config" "api_cfg" {
   provider = google-beta
   api = google_api_gateway_api.api_cfg.api_id
-  api_config_id = "cfg%{random_suffix}"
+  api_config_id_prefix = "tf-test-cfg-%{random_suffix}"
 
   openapi_documents {
     document {
@@ -237,7 +237,7 @@ resource "google_api_gateway_api" "api_cfg" {
 resource "google_api_gateway_api_config" "api_cfg" {
   provider = google-beta
   api = google_api_gateway_api.api_cfg.api_id
-  api_config_id = "cfg%{random_suffix}"
+  api_config_id_prefix = "tf-test-cfg-%{random_suffix}"
 
   openapi_documents {
     document {
