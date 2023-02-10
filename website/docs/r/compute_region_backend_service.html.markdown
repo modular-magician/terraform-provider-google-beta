@@ -660,9 +660,8 @@ The following arguments are supported:
 <a name="nested_connect_timeout"></a>The `connect_timeout` block supports:
 
 * `seconds` -
-  (Required)
+  (Optional)
   Span of time at a resolution of a second.
-  Must be from 0 to 315,576,000,000 inclusive.
 
 * `nanos` -
   (Optional)

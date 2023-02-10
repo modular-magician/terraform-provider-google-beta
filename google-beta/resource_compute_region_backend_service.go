@@ -343,12 +343,6 @@ and the 'protocol' is set to HTTP, HTTPS, or HTTP2.`,
 							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"seconds": {
-										Type:     schema.TypeInt,
-										Required: true,
-										Description: `Span of time at a resolution of a second.
-Must be from 0 to 315,576,000,000 inclusive.`,
-									},
 									"nanos": {
 										Type:     schema.TypeInt,
 										Optional: true,
@@ -356,6 +350,11 @@ Must be from 0 to 315,576,000,000 inclusive.`,
 resolution. Durations less than one second are represented
 with a 0 seconds field and a positive nanos field. Must
 be from 0 to 999,999,999 inclusive.`,
+									},
+									"seconds": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Span of time at a resolution of a second.`,
 									},
 								},
 							},
