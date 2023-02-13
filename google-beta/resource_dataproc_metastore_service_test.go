@@ -16,7 +16,7 @@ func TestAccDataprocMetastoreService_updateAndImport(t *testing.T) {
 	vcrTest(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckBigqueryReservationReservationDestroyProducer(t),
+		CheckDestroy: testAccCheckDataprocMetastoreServiceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataprocMetastoreService_updateAndImport(name, tier[0]),
@@ -101,4 +101,57 @@ resource "google_dataproc_metastore_service" "default" {
   }
 }
 `, context)
+}
+
+func TestAccDataprocMetastoreService_protocol(t *testing.T) {
+	t.Parallel()
+
+	name := "tf-test-metastore-" + randString(t, 10)
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckDataprocMetastoreServiceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDataprocMetastoreService_endpointProtocol(name, "THRIFT"),
+			},
+			{
+				ResourceName:      "google_dataproc_metastore_service.my_metastore",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccDataprocMetastoreService_endpointProtocol(name, "GRPC"),
+			},
+			{
+				ResourceName:      "google_dataproc_metastore_service.my_metastore",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccDataprocMetastoreService_endpointProtocol(name, "THRIFT"),
+			},
+			{
+				ResourceName:      "google_dataproc_metastore_service.my_metastore",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccDataprocMetastoreService_endpointProtocol(name, protocol string) string {
+	return fmt.Sprintf(`
+
+resource "google_dataproc_metastore_service" "my_metastore" {
+	service_id = "%s"
+	location   = "us-central1"
+
+    hive_metastore_config {
+      version           = "3.1.2"
+      endpoint_protocol = "%s"
+    }
+}
+`, name, protocol)
 }

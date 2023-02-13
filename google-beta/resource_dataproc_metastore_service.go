@@ -130,7 +130,6 @@ The mappings override system defaults (some keys cannot be overridden)`,
 						"endpoint_protocol": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							ForceNew:     true,
 							ValidateFunc: validateEnum([]string{"THRIFT", "GRPC", ""}),
 							Description:  `The protocol to use for the metastore service endpoint. If unspecified, defaults to 'THRIFT'. Default value: "THRIFT" Possible values: ["THRIFT", "GRPC"]`,
 							Default:      "THRIFT",
