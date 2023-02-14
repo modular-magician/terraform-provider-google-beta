@@ -1329,7 +1329,7 @@ func (p *frameworkProvider) logGoogleIdentities(ctx context.Context, data Provid
 
 		p.client = oauth2.NewClient(ctx, tokenSource) // p.client isn't initialised fully when this code is called.
 
-		email := getCurrUserEmail(p, p.userAgent, diags)
+		email := getCurrUserEmail(ctx, p, p.userAgent, diags)
 		if diags.HasError() {
 			tflog.Info(ctx, "error retrieving userinfo for your provider credentials. have you enabled the 'https://www.googleapis.com/auth/userinfo.email' scope?")
 			return
@@ -1346,7 +1346,7 @@ func (p *frameworkProvider) logGoogleIdentities(ctx context.Context, data Provid
 	}
 
 	p.client = oauth2.NewClient(ctx, tokenSource) // p.client isn't initialised fully when this code is called.
-	email := getCurrUserEmail(p, p.userAgent, diags)
+	email := getCurrUserEmail(ctx, p, p.userAgent, diags)
 	if diags.HasError() {
 		tflog.Info(ctx, "error retrieving userinfo for your provider credentials. have you enabled the 'https://www.googleapis.com/auth/userinfo.email' scope?")
 		return
