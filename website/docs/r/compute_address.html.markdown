@@ -186,7 +186,7 @@ The following arguments are supported:
 * `address_type` -
   (Optional)
   The type of address to reserve.
-  Default value is `EXTERNAL`.
+  Default value is `INTERNAL`.
   Possible values are `INTERNAL` and `EXTERNAL`.
 
 * `description` -
