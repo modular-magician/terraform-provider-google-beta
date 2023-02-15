@@ -1005,6 +1005,38 @@ func resourceContainerCluster() *schema.Resource {
 				},
 			},
 
+			"protect_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: `The notification config for sending cluster upgrade notifications`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"workload_config": {
+							Type:        schema.TypeList,
+							Required:    true,
+							MaxItems:    1,
+							Description: `WorkloadConfig defines the flags to enable or disable the workload configurations for the cluster.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"audit_mode": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Mode defines how to audit the workload configs. Accepted values are MODE_UNSPECIFIED, DISABLED, BASIC.`,
+									},
+								},
+							},
+						},
+						"workload_vulnerability_mode": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `WorkloadVulnerabilityMode defines mode to perform vulnerability scanning. Accepted values are WORKLOAD_VULNERABILITY_MODE_UNSPECIFIED, DISABLED, BASIC.`,
+						},
+					},
+				},
+			},
+
 			"monitoring_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -1933,6 +1965,7 @@ func resourceContainerClusterCreate(d *schema.ResourceData, meta interface{}) er
 		ConfidentialNodes:    expandConfidentialNodes(d.Get("confidential_nodes")),
 		ResourceLabels:       expandStringMap(d, "resource_labels"),
 		NodePoolAutoConfig:   expandNodePoolAutoConfig(d.Get("node_pool_auto_config")),
+		ProtectConfig:        expandProtectConfig(d.Get("protect_config")),
 		CostManagementConfig: expandCostManagementConfig(d.Get("cost_management_config")),
 	}
 
@@ -2457,6 +2490,10 @@ func resourceContainerClusterRead(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	if err := d.Set("node_pool_defaults", flattenNodePoolDefaults(cluster.NodePoolDefaults)); err != nil {
+		return err
+	}
+
+	if err := d.Set("protect_config", flattenProtectConfig(cluster.ProtectConfig)); err != nil {
 		return err
 	}
 
@@ -3570,6 +3607,20 @@ func resourceContainerClusterUpdate(d *schema.ResourceData, meta interface{}) er
 		return err
 	}
 
+	if d.HasChange("protect_config") {
+		req := &container.UpdateClusterRequest{
+			Update: &container.ClusterUpdate{
+				DesiredProtectConfig: expandProtectConfig(d.Get("protect_config")),
+			},
+		}
+		updateF := updateFunc(req, "updating GKE cluster master protect_config")
+		if err := lockedCall(lockKey, updateF); err != nil {
+			return err
+		}
+
+		log.Printf("[INFO] GKE cluster %s Protect Config has been updated to %#v", d.Id(), req.Update.DesiredProtectConfig)
+	}
+
 	return resourceContainerClusterRead(d, meta)
 }
 
@@ -4129,6 +4180,56 @@ func expandAuthenticatorGroupsConfig(configured interface{}) *container.Authenti
 		result.SecurityGroup = securityGroup.(string)
 	}
 	return result
+}
+
+func expandProtectConfig(configured interface{}) *container.ProtectConfig {
+	l := configured.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return &container.ProtectConfig{}
+	}
+
+	pc := &container.ProtectConfig{}
+	protectConfig := l[0].(map[string]interface{})
+	pc.WorkloadConfig = expandProtectConfigWorkloadConfig(protectConfig["workload_config"])
+	if v, ok := protectConfig["workload_vulnerability_mode"]; ok {
+		pc.WorkloadVulnerabilityMode = v.(string)
+	}
+	return pc
+}
+
+func expandProtectConfigWorkloadConfig(configured interface{}) *container.WorkloadConfig {
+	l := configured.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return &container.WorkloadConfig{}
+	}
+	workloadConfig := l[0].(map[string]interface{})
+	return &container.WorkloadConfig{
+		AuditMode: workloadConfig["audit_mode"].(string),
+	}
+}
+
+func flattenProtectConfig(pc *container.ProtectConfig) []map[string]interface{} {
+	if pc == nil {
+		return nil
+	}
+
+	result := make(map[string]interface{})
+
+	result["workload_config"] = flattenProtectConfigWorkloadConfig(pc.WorkloadConfig)
+	result["workload_vulnerability_mode"] = pc.WorkloadVulnerabilityMode
+
+	return []map[string]interface{}{result}
+}
+
+func flattenProtectConfigWorkloadConfig(wc *container.WorkloadConfig) []map[string]interface{} {
+	if wc == nil {
+		return nil
+	}
+
+	result := make(map[string]interface{})
+	result["audit_mode"] = wc.AuditMode
+
+	return []map[string]interface{}{result}
 }
 
 func expandNotificationConfig(configured interface{}) *container.NotificationConfig {
