@@ -55,6 +55,7 @@ func testAccCloudIdentityGroup_cloudIdentityGroupsBasicExample(context map[strin
 resource "google_cloud_identity_group" "cloud_identity_group_basic" {
   display_name         = "tf-test-my-identity-group%{random_suffix}"
   initial_group_config = "WITH_INITIAL_OWNER"
+  description = "test"
 
   parent = "customers/%{cust_id}"
 

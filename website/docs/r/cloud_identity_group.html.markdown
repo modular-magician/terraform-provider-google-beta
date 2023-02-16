@@ -41,6 +41,7 @@ Your account must have the `serviceusage.services.use` permission on the
 resource "google_cloud_identity_group" "cloud_identity_group_basic" {
   display_name         = "my-identity-group"
   initial_group_config = "WITH_INITIAL_OWNER"
+  description = "test"
 
   parent = "customers/A01b123xz"
 
