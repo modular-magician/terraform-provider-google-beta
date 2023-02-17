@@ -49,6 +49,26 @@ func resourceKMSCryptoKeyVersion() *schema.Resource {
 				Description: `The name of the cryptoKey associated with the CryptoKeyVersions.
 Format: ''projects/{{project}}/locations/{{location}}/keyRings/{{keyring}}/cryptoKeys/{{cryptoKey}}''`,
 			},
+			"external_protection_level_options": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `ExternalProtectionLevelOptions stores a group of additional fields for configuring a CryptoKeyVersion that are specific to the EXTERNAL protection level and EXTERNAL_VPC protection levels.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ekm_connection_key_path": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `The path to the external key material on the EKM when using EkmConnection e.g., "v0/my/key". Set this field instead of externalKeyUri when using an EkmConnection.`,
+						},
+						"external_key_uri": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `The URI for an external resource that this CryptoKeyVersion represents.`,
+						},
+					},
+				},
+			},
 			"state": {
 				Type:         schema.TypeString,
 				Computed:     true,
@@ -160,6 +180,12 @@ func resourceKMSCryptoKeyVersionCreate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("state"); !isEmptyValue(reflect.ValueOf(stateProp)) && (ok || !reflect.DeepEqual(v, stateProp)) {
 		obj["state"] = stateProp
 	}
+	externalProtectionLevelOptionsProp, err := expandKMSCryptoKeyVersionExternalProtectionLevelOptions(d.Get("external_protection_level_options"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("external_protection_level_options"); !isEmptyValue(reflect.ValueOf(externalProtectionLevelOptionsProp)) && (ok || !reflect.DeepEqual(v, externalProtectionLevelOptionsProp)) {
+		obj["externalProtectionLevelOptions"] = externalProtectionLevelOptionsProp
+	}
 
 	url, err := replaceVars(d, config, "{{KMSBasePath}}{{crypto_key}}/cryptoKeyVersions")
 	if err != nil {
@@ -236,6 +262,9 @@ func resourceKMSCryptoKeyVersionRead(d *schema.ResourceData, meta interface{}) e
 	if err := d.Set("attestation", flattenKMSCryptoKeyVersionAttestation(res["attestation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading CryptoKeyVersion: %s", err)
 	}
+	if err := d.Set("external_protection_level_options", flattenKMSCryptoKeyVersionExternalProtectionLevelOptions(res["externalProtectionLevelOptions"], d, config)); err != nil {
+		return fmt.Errorf("Error reading CryptoKeyVersion: %s", err)
+	}
 
 	return nil
 }
@@ -256,6 +285,12 @@ func resourceKMSCryptoKeyVersionUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("state"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, stateProp)) {
 		obj["state"] = stateProp
 	}
+	externalProtectionLevelOptionsProp, err := expandKMSCryptoKeyVersionExternalProtectionLevelOptions(d.Get("external_protection_level_options"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("external_protection_level_options"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, externalProtectionLevelOptionsProp)) {
+		obj["externalProtectionLevelOptions"] = externalProtectionLevelOptionsProp
+	}
 
 	url, err := replaceVars(d, config, "{{KMSBasePath}}{{name}}")
 	if err != nil {
@@ -267,6 +302,10 @@ func resourceKMSCryptoKeyVersionUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("state") {
 		updateMask = append(updateMask, "state")
+	}
+
+	if d.HasChange("external_protection_level_options") {
+		updateMask = append(updateMask, "externalProtectionLevelOptions")
 	}
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
@@ -434,6 +473,63 @@ func flattenKMSCryptoKeyVersionAttestationExternalProtectionLevelOptionsEkmConne
 	return v
 }
 
+func flattenKMSCryptoKeyVersionExternalProtectionLevelOptions(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["external_key_uri"] =
+		flattenKMSCryptoKeyVersionExternalProtectionLevelOptionsExternalKeyUri(original["externalKeyUri"], d, config)
+	transformed["ekm_connection_key_path"] =
+		flattenKMSCryptoKeyVersionExternalProtectionLevelOptionsEkmConnectionKeyPath(original["ekmConnectionKeyPath"], d, config)
+	return []interface{}{transformed}
+}
+func flattenKMSCryptoKeyVersionExternalProtectionLevelOptionsExternalKeyUri(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenKMSCryptoKeyVersionExternalProtectionLevelOptionsEkmConnectionKeyPath(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func expandKMSCryptoKeyVersionState(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandKMSCryptoKeyVersionExternalProtectionLevelOptions(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedExternalKeyUri, err := expandKMSCryptoKeyVersionExternalProtectionLevelOptionsExternalKeyUri(original["external_key_uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExternalKeyUri); val.IsValid() && !isEmptyValue(val) {
+		transformed["externalKeyUri"] = transformedExternalKeyUri
+	}
+
+	transformedEkmConnectionKeyPath, err := expandKMSCryptoKeyVersionExternalProtectionLevelOptionsEkmConnectionKeyPath(original["ekm_connection_key_path"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEkmConnectionKeyPath); val.IsValid() && !isEmptyValue(val) {
+		transformed["ekmConnectionKeyPath"] = transformedEkmConnectionKeyPath
+	}
+
+	return transformed, nil
+}
+
+func expandKMSCryptoKeyVersionExternalProtectionLevelOptionsExternalKeyUri(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandKMSCryptoKeyVersionExternalProtectionLevelOptionsEkmConnectionKeyPath(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
