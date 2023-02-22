@@ -79,10 +79,36 @@ func validateResourceCloudFunctionsFunctionName(v interface{}, k string) (ws []s
 	return validateRegexp(re)(v, k)
 }
 
+func reverseArray(arr []string) []string {
+	for i, j := 0, len(arr)-1; i < j; i, j = i+1, j-1 {
+		arr[i], arr[j] = arr[j], arr[i]
+	}
+	return arr
+}
+
 // based on compareSelfLinkOrResourceName, but less reusable and allows multi-/
 // strings in the new state (config) part
 func compareSelfLinkOrResourceNameWithMultipleParts(_, old, new string, _ *schema.ResourceData) bool {
-	return strings.HasSuffix(old, new)
+	olist := reverseArray(strings.Split(old, "/"))
+	nlist := reverseArray(strings.Split(new, "/"))
+
+	olen := len(olist)
+	nlen := len(nlist)
+
+	min := olen
+	if min > nlen {
+		min = nlen
+	}
+
+	for i := 0; i < min; i++ {
+		if strings.Compare(olist[i], nlist[i]) != 0 {
+			if i == min-1 && (len(olist[i]) == 0 || len(nlist[i]) == 0) {
+				return true
+			}
+			return false
+		}
+	}
+	return true
 }
 
 func ResourceCloudFunctionsFunction() *schema.Resource {

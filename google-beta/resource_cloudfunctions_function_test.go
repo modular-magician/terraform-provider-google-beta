@@ -118,6 +118,65 @@ func TestValidLabelKeys(t *testing.T) {
 	}
 }
 
+func TestCompareSelfLinkOrResourceNameWithMultipleParts(t *testing.T) {
+	cases := map[string]struct {
+		Old, New           string
+		ExpectDiffSuppress bool
+	}{
+		"projects to no projects": {
+			Old:                "projects/../resouce-name",
+			New:                "resouce-name",
+			ExpectDiffSuppress: true,
+		},
+		"no projects to projects": {
+			Old:                "resouce-name",
+			New:                "projects/../resouce-name",
+			ExpectDiffSuppress: true,
+		},
+		"multi to multi": {
+			Old:                "projects/ci-test-project-188019/databases/(default)/documents/messages/{messageId}",
+			New:                "messages/{messageId}",
+			ExpectDiffSuppress: true,
+		},
+		"multi to multi2": {
+			Old:                "messages/{messageId}",
+			New:                "projects/ci-test-project-188019/databases/(default)/documents/messages/{messageId}",
+			ExpectDiffSuppress: true,
+		},
+		"multi to multi3": {
+			Old:                "projects/ci-test-project-188019/databases/(default)/documents/messages/{messageId}",
+			New:                "/messages/{messageId}",
+			ExpectDiffSuppress: true,
+		},
+		"multi to multi4": {
+			Old:                "/messages/{messageId}",
+			New:                "projects/ci-test-project-188019/databases/(default)/documents/messages/{messageId}",
+			ExpectDiffSuppress: true,
+		},
+		"unmacthed names 1": {
+			Old:                "projects/../resouce-name",
+			New:                "resouce-name-2",
+			ExpectDiffSuppress: false,
+		},
+		"unmacthed names 2": {
+			Old:                "resouce-name-2",
+			New:                "projects/../resouce-name",
+			ExpectDiffSuppress: false,
+		},
+		"unmatch multi to multi ": {
+			Old:                "//messages/{messageId}",
+			New:                "projects/ci-test-project-188019/databases/(default)/documents/messages/{messageId}",
+			ExpectDiffSuppress: false,
+		},
+	}
+
+	for tn, tc := range cases {
+		if compareSelfLinkOrResourceNameWithMultipleParts("resource", tc.Old, tc.New, nil) != tc.ExpectDiffSuppress {
+			t.Fatalf("bad: %s, '%s' => '%s' expect %t", tn, tc.Old, tc.New, tc.ExpectDiffSuppress)
+		}
+	}
+}
+
 func TestAccCloudFunctionsFunction_basic(t *testing.T) {
 	t.Parallel()
 
