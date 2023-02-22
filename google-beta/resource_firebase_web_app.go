@@ -24,6 +24,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+func deletePolicyVirtualUpdate(d *schema.ResourceData, resourceSchema map[string]*schema.Schema) bool {
+	// deletion_policy is the only virtual field
+	if d.HasChange("deletion_policy") {
+		for field := range resourceSchema {
+			if field == "deletion_policy" {
+				continue
+			}
+			if d.HasChange(field) {
+				return false
+			}
+		}
+		return true
+	}
+	return false
+}
+
 func ResourceFirebaseWebApp() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceFirebaseWebAppCreate,
@@ -256,6 +272,14 @@ func resourceFirebaseWebAppUpdate(d *schema.ResourceData, meta interface{}) erro
 	url, err = addQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
 	if err != nil {
 		return err
+	}
+	if deletePolicyVirtualUpdate(d, resourceFirebaseWebApp().Schema) {
+		if d.Get("deletion_policy") != nil {
+			if err := d.Set("deletion_policy", d.Get("deletion_policy")); err != nil {
+				return fmt.Errorf("Error reading Instance: %s", err)
+			}
+		}
+		return nil
 	}
 
 	// err == nil indicates that the billing_project value was found
