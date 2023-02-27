@@ -64,6 +64,58 @@ resource "google_compute_network" "default" {
 `, context)
 }
 
+func TestAccAlloydbCluster_alloydbClusterContBackupExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": randString(t, 10),
+	}
+
+	vcrTest(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProvidersOiCS,
+		CheckDestroy: testAccCheckAlloydbClusterDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAlloydbCluster_alloydbClusterContBackupExample(context),
+			},
+			{
+				ResourceName:            "google_alloydb_cluster.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"initial_user", "cluster_id", "location"},
+			},
+		},
+	})
+}
+
+func testAccAlloydbCluster_alloydbClusterContBackupExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_alloydb_cluster" "default" {
+  provider = google-beta
+
+  cluster_id = "tf-test-alloydb-cont%{random_suffix}"
+  location   = "us-central1"
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+
+  continuous_backup_config {
+    recovery_window_days = 7
+    enabled              = true
+  }
+}
+
+data "google_project" "project" {
+  provider = google-beta
+}
+
+resource "google_compute_network" "default" {
+  provider = google-beta
+
+  name = "tf-test-alloydb-cont%{random_suffix}"
+}
+`, context)
+}
+
 func TestAccAlloydbCluster_alloydbClusterFullExample(t *testing.T) {
 	t.Parallel()
 

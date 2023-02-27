@@ -176,6 +176,26 @@ A duration in seconds with up to nine fractional digits, terminated by 's'. Exam
 					},
 				},
 			},
+			"continuous_backup_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Continuous backup configuration for this cluster.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: `Whether automated backups are enabled.`,
+						},
+						"recovery_window_days": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `The number of days backups and logs will be retained, which determines the window of time that data is recoverable for. If not set, it defaults to 14 days.`,
+						},
+					},
+				},
+			},
 			"display_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -311,6 +331,12 @@ func resourceAlloydbClusterCreate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("initial_user"); !isEmptyValue(reflect.ValueOf(initialUserProp)) && (ok || !reflect.DeepEqual(v, initialUserProp)) {
 		obj["initialUser"] = initialUserProp
 	}
+	continuousBackupConfigProp, err := expandAlloydbClusterContinuousBackupConfig(d.Get("continuous_backup_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("continuous_backup_config"); !isEmptyValue(reflect.ValueOf(continuousBackupConfigProp)) && (ok || !reflect.DeepEqual(v, continuousBackupConfigProp)) {
+		obj["continuousBackupConfig"] = continuousBackupConfigProp
+	}
 	automatedBackupPolicyProp, err := expandAlloydbClusterAutomatedBackupPolicy(d.Get("automated_backup_policy"), d, config)
 	if err != nil {
 		return err
@@ -416,6 +442,9 @@ func resourceAlloydbClusterRead(d *schema.ResourceData, meta interface{}) error 
 	if err := d.Set("database_version", flattenAlloydbClusterDatabaseVersion(res["databaseVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+	if err := d.Set("continuous_backup_config", flattenAlloydbClusterContinuousBackupConfig(res["continuousBackupConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Cluster: %s", err)
+	}
 	if err := d.Set("automated_backup_policy", flattenAlloydbClusterAutomatedBackupPolicy(res["automatedBackupPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
@@ -463,6 +492,12 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+	continuousBackupConfigProp, err := expandAlloydbClusterContinuousBackupConfig(d.Get("continuous_backup_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("continuous_backup_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, continuousBackupConfigProp)) {
+		obj["continuousBackupConfig"] = continuousBackupConfigProp
+	}
 	automatedBackupPolicyProp, err := expandAlloydbClusterAutomatedBackupPolicy(d.Get("automated_backup_policy"), d, config)
 	if err != nil {
 		return err
@@ -488,6 +523,10 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 
 	if d.HasChange("display_name") {
 		updateMask = append(updateMask, "displayName")
+	}
+
+	if d.HasChange("continuous_backup_config") {
+		updateMask = append(updateMask, "continuousBackupConfig")
 	}
 
 	if d.HasChange("automated_backup_policy") {
@@ -611,6 +650,42 @@ func flattenAlloydbClusterDisplayName(v interface{}, d *schema.ResourceData, con
 }
 
 func flattenAlloydbClusterDatabaseVersion(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenAlloydbClusterContinuousBackupConfig(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["recovery_window_days"] =
+		flattenAlloydbClusterContinuousBackupConfigRecoveryWindowDays(original["recoveryWindowDays"], d, config)
+	transformed["enabled"] =
+		flattenAlloydbClusterContinuousBackupConfigEnabled(original["enabled"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbClusterContinuousBackupConfigRecoveryWindowDays(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := stringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbClusterContinuousBackupConfigEnabled(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -906,6 +981,40 @@ func expandAlloydbClusterInitialUserUser(v interface{}, d TerraformResourceData,
 }
 
 func expandAlloydbClusterInitialUserPassword(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterContinuousBackupConfig(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedRecoveryWindowDays, err := expandAlloydbClusterContinuousBackupConfigRecoveryWindowDays(original["recovery_window_days"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRecoveryWindowDays); val.IsValid() && !isEmptyValue(val) {
+		transformed["recoveryWindowDays"] = transformedRecoveryWindowDays
+	}
+
+	transformedEnabled, err := expandAlloydbClusterContinuousBackupConfigEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbClusterContinuousBackupConfigRecoveryWindowDays(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterContinuousBackupConfigEnabled(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

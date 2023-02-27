@@ -139,6 +139,11 @@ The following arguments are supported:
   Initial user to setup during cluster creation.
   Structure is [documented below](#nested_initial_user).
 
+* `continuous_backup_config` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Continuous backup configuration for this cluster.
+  Structure is [documented below](#nested_continuous_backup_config).
+
 * `automated_backup_policy` -
   (Optional)
   The automated backup policy for this cluster.
@@ -163,6 +168,16 @@ The following arguments are supported:
   (Required)
   The initial password for the user.
   **Note**: This property is sensitive and will not be displayed in the plan.
+
+<a name="nested_continuous_backup_config"></a>The `continuous_backup_config` block supports:
+
+* `recovery_window_days` -
+  (Optional)
+  The number of days backups and logs will be retained, which determines the window of time that data is recoverable for. If not set, it defaults to 14 days.
+
+* `enabled` -
+  (Optional)
+  Whether automated backups are enabled.
 
 <a name="nested_automated_backup_policy"></a>The `automated_backup_policy` block supports:
 
