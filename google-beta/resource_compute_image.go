@@ -210,6 +210,17 @@ In order to create an image, you must provide the full or partial URL of one of 
 * The rawDisk.source URL
 * The sourceDisk URL`,
 			},
+			"storage_locations": {
+				Type:     schema.TypeList,
+				Optional: true,
+				ForceNew: true,
+				Description: `Cloud Storage bucket storage location of the image 
+(regional or multi-regional). 
+Reference link: https://cloud.google.com/compute/docs/reference/rest/v1/images`,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"archive_size_bytes": {
 				Type:     schema.TypeInt,
 				Computed: true,
@@ -264,6 +275,12 @@ func resourceComputeImageCreate(d *schema.ResourceData, meta interface{}) error 
 	}
 
 	obj := make(map[string]interface{})
+	storageLocationsProp, err := expandComputeImageStorageLocations(d.Get("storage_locations"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("storage_locations"); !isEmptyValue(reflect.ValueOf(storageLocationsProp)) && (ok || !reflect.DeepEqual(v, storageLocationsProp)) {
+		obj["storageLocations"] = storageLocationsProp
+	}
 	descriptionProp, err := expandComputeImageDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
@@ -423,6 +440,9 @@ func resourceComputeImageRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Image: %s", err)
 	}
 
+	if err := d.Set("storage_locations", flattenComputeImageStorageLocations(res["storageLocations"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Image: %s", err)
+	}
 	if err := d.Set("archive_size_bytes", flattenComputeImageArchiveSizeBytes(res["archiveSizeBytes"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Image: %s", err)
 	}
@@ -600,6 +620,10 @@ func resourceComputeImageImport(d *schema.ResourceData, meta interface{}) ([]*sc
 	return []*schema.ResourceData{d}, nil
 }
 
+func flattenComputeImageStorageLocations(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func flattenComputeImageArchiveSizeBytes(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
@@ -733,6 +757,10 @@ func flattenComputeImageSourceSnapshot(v interface{}, d *schema.ResourceData, co
 		return v
 	}
 	return ConvertSelfLinkToV1(v.(string))
+}
+
+func expandComputeImageStorageLocations(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandComputeImageDescription(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
