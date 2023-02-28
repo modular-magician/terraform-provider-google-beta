@@ -1,26 +1,23 @@
 package google
 
 import (
-	"context"
 	"fmt"
-	"log"
-
-	"time"
-
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	compute "google.golang.org/api/compute/v0.beta"
+	"log"
+	"time"
 )
 
-func ResourceComputeSecurityPolicy() *schema.Resource {
+func ResourceComputeRegionSecurityPolicy() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceComputeSecurityPolicyCreate,
-		Read:   resourceComputeSecurityPolicyRead,
-		Update: resourceComputeSecurityPolicyUpdate,
-		Delete: resourceComputeSecurityPolicyDelete,
+		Create: resourceComputeRegionSecurityPoliciesCreate,
+		Read:   resourceComputeRegionSecurityPoliciesRead,
+		Update: resourceComputeRegionSecurityPoliciesUpdate,
+		Delete: resourceComputeRegionSecurityPoliciesDelete,
 		Importer: &schema.ResourceImporter{
-			State: resourceSecurityPolicyStateImporter,
+			State: resourceComputeRegionSecurityPoliciesImporter,
 		},
 		CustomizeDiff: rulesCustomizeDiff,
 
@@ -57,7 +54,7 @@ func ResourceComputeSecurityPolicy() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
-				Description:  `The type indicates the intended use of the security policy. CLOUD_ARMOR - Cloud Armor backend security policies can be configured to filter incoming HTTP requests targeting backend services. They filter requests before they hit the origin servers. CLOUD_ARMOR_EDGE - Cloud Armor edge security policies can be configured to filter incoming HTTP requests targeting backend services (including Cloud CDN-enabled) as well as backend buckets (Cloud Storage). They filter requests before the request is served from Google's cache. CLOUD_ARMOR_NETWORK - If it matches, the corresponding 'action' is enforced. The match criteria for a rule consists of built-in match fields and potentially multiple user-defined match fields.`,
+				Description:  `The type indicates the intended use of the security policy. CLOUD_ARMOR - Cloud Armor backend security policies can be configured to filter incoming HTTP requests targeting backend services. They filter requests before they hit the origin servers. CLOUD_ARMOR_EDGE - Cloud Armor edge security policies can be configured to filter incoming HTTP requests targeting backend services (including Cloud CDN-enabled) as well as backend buckets (Cloud Storage). They filter requests before the request is served from Google's cache.`,
 				ValidateFunc: validation.StringInSlice([]string{"CLOUD_ARMOR", "CLOUD_ARMOR_EDGE", "CLOUD_ARMOR_INTERNAL_SERVICE", "CLOUD_ARMOR_NETWORK"}, false),
 			},
 
@@ -132,10 +129,10 @@ func ResourceComputeSecurityPolicy() *schema.Resource {
 												// 	Type:     schema.TypeString,
 												// 	Optional: true,
 												// },
-												// "location": {
-												// 	Type:     schema.TypeString,
-												// 	Optional: true,
-												// },
+												//"location": {
+												//	Type:     schema.TypeString,
+												//	Optional: true,
+												//},
 											},
 										},
 										Description: `User defined CEVAL expression. A CEVAL expression is used to specify match criteria such as origin.ip, source.region_code and contents in the request header.`,
@@ -362,6 +359,7 @@ func ResourceComputeSecurityPolicy() *schema.Resource {
 							},
 							Description: `Parameters defining the redirect action. Cannot be specified for any other actions.`,
 						},
+
 						"header_action": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -547,52 +545,21 @@ func ResourceComputeSecurityPolicy() *schema.Resource {
 					},
 				},
 			},
+			"region": {
+				Type:             schema.TypeString,
+				Computed:         true,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
+				Description:      `URL of the region where the resource resides.`,
+			},
 		},
 
 		UseJSONNumber: true,
 	}
 }
 
-func resourceComputeSecurityPolicyRulePreconfiguredWafConfigExclusionFieldParamsSchema(description string) *schema.Schema {
-	return &schema.Schema{
-		Type:     schema.TypeList,
-		Optional: true,
-		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"operator": {
-					Type:         schema.TypeString,
-					Required:     true,
-					ValidateFunc: validation.StringInSlice([]string{"EQUALS", "STARTS_WITH", "ENDS_WITH", "CONTAINS", "EQUALS_ANY"}, false),
-					Description:  `You can specify an exact match or a partial match by using a field operator and a field value. Available options: EQUALS: The operator matches if the field value equals the specified value. STARTS_WITH: The operator matches if the field value starts with the specified value. ENDS_WITH: The operator matches if the field value ends with the specified value. CONTAINS: The operator matches if the field value contains the specified value. EQUALS_ANY: The operator matches if the field value is any value.`,
-				},
-				"value": {
-					Type:        schema.TypeString,
-					Optional:    true,
-					Description: `A request field matching the specified value will be excluded from inspection during preconfigured WAF evaluation. The field value must be given if the field operator is not EQUALS_ANY, and cannot be given if the field operator is EQUALS_ANY.`,
-				},
-			},
-		},
-		Description: description,
-	}
-}
-
-func rulesCustomizeDiff(_ context.Context, diff *schema.ResourceDiff, _ interface{}) error {
-	_, n := diff.GetChange("rule")
-	nSet := n.(*schema.Set)
-
-	nPriorities := map[int64]bool{}
-	for _, rule := range nSet.List() {
-		priority := int64(rule.(map[string]interface{})["priority"].(int))
-		if nPriorities[priority] {
-			return fmt.Errorf("Two rules have the same priority, please update one of the priorities to be different.")
-		}
-		nPriorities[priority] = true
-	}
-
-	return nil
-}
-
-func resourceComputeSecurityPolicyCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceComputeRegionSecurityPoliciesCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	userAgent, err := generateUserAgentString(d, config.userAgent)
 	if err != nil {
@@ -600,6 +567,11 @@ func resourceComputeSecurityPolicyCreate(d *schema.ResourceData, meta interface{
 	}
 
 	project, err := getProject(d, config)
+	if err != nil {
+		return err
+	}
+
+	region, err := getRegion(d, config)
 	if err != nil {
 		return err
 	}
@@ -612,6 +584,10 @@ func resourceComputeSecurityPolicyCreate(d *schema.ResourceData, meta interface{
 
 	if v, ok := d.GetOk("type"); ok {
 		securityPolicy.Type = v.(string)
+	}
+
+	if v, ok := d.GetOk("region"); ok {
+		securityPolicy.Region = v.(string)
 	}
 
 	if v, ok := d.GetOk("rule"); ok {
@@ -630,7 +606,7 @@ func resourceComputeSecurityPolicyCreate(d *schema.ResourceData, meta interface{
 		securityPolicy.AdaptiveProtectionConfig = expandSecurityPolicyAdaptiveProtectionConfig(v.([]interface{}))
 	}
 
-	log.Printf("[DEBUG] SecurityPolicy insert request: %#v", securityPolicy)
+	log.Printf("[DEBUG] RegionSecurityPolicies insert request: %#v", securityPolicy)
 
 	if v, ok := d.GetOk("recaptcha_options_config"); ok {
 		securityPolicy.RecaptchaOptionsConfig = expandSecurityPolicyRecaptchaOptionsConfig(v.([]interface{}), d)
@@ -638,27 +614,27 @@ func resourceComputeSecurityPolicyCreate(d *schema.ResourceData, meta interface{
 
 	client := config.NewComputeClient(userAgent)
 
-	op, err := client.SecurityPolicies.Insert(project, securityPolicy).Do()
+	op, err := client.RegionSecurityPolicies.Insert(project, region, securityPolicy).Do()
 
 	if err != nil {
-		return errwrap.Wrapf("Error creating SecurityPolicy: {{err}}", err)
+		return errwrap.Wrapf("Error creating RegionSecurityPolicies: {{err}}", err)
 	}
 
-	id, err := replaceVars(d, config, "projects/{{project}}/global/securityPolicies/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/securityPolicies/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
 
-	err = computeOperationWaitTime(config, op, project, fmt.Sprintf("Creating SecurityPolicy %q", sp), userAgent, d.Timeout(schema.TimeoutCreate))
+	err = computeOperationWaitTime(config, op, project, fmt.Sprintf("Creating RegionSecurityPolicies %q", sp), userAgent, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return err
 	}
 
-	return resourceComputeSecurityPolicyRead(d, meta)
+	return resourceComputeRegionSecurityPoliciesRead(d, meta)
 }
 
-func resourceComputeSecurityPolicyRead(d *schema.ResourceData, meta interface{}) error {
+func resourceComputeRegionSecurityPoliciesRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	userAgent, err := generateUserAgentString(d, config.userAgent)
 	if err != nil {
@@ -670,13 +646,18 @@ func resourceComputeSecurityPolicyRead(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
+	region, err := getRegion(d, config)
+	if err != nil {
+		return err
+	}
+
 	sp := d.Get("name").(string)
 
 	client := config.NewComputeClient(userAgent)
 
-	securityPolicy, err := client.SecurityPolicies.Get(project, sp).Do()
+	securityPolicy, err := client.RegionSecurityPolicies.Get(project, region, sp).Do()
 	if err != nil {
-		return handleNotFoundError(err, d, fmt.Sprintf("SecurityPolicy %q", d.Id()))
+		return handleNotFoundError(err, d, fmt.Sprintf("RegionSecurityPoliciesService %q", d.Id()))
 	}
 
 	if err := d.Set("name", securityPolicy.Name); err != nil {
@@ -684,6 +665,9 @@ func resourceComputeSecurityPolicyRead(d *schema.ResourceData, meta interface{})
 	}
 	if err := d.Set("description", securityPolicy.Description); err != nil {
 		return fmt.Errorf("Error setting description: %s", err)
+	}
+	if err := d.Set("region", securityPolicy.Region); err != nil {
+		return fmt.Errorf("Error setting region: %s", err)
 	}
 	if err := d.Set("type", securityPolicy.Type); err != nil {
 		return fmt.Errorf("Error setting type: %s", err)
@@ -706,11 +690,9 @@ func resourceComputeSecurityPolicyRead(d *schema.ResourceData, meta interface{})
 	if err := d.Set("advanced_options_config", flattenSecurityPolicyAdvancedOptionsConfig(securityPolicy.AdvancedOptionsConfig)); err != nil {
 		return fmt.Errorf("Error setting advanced_options_config: %s", err)
 	}
-
 	if err := d.Set("adaptive_protection_config", flattenSecurityPolicyAdaptiveProtectionConfig(securityPolicy.AdaptiveProtectionConfig)); err != nil {
 		return fmt.Errorf("Error setting adaptive_protection_config: %s", err)
 	}
-
 	if err := d.Set("recaptcha_options_config", flattenSecurityPolicyRecaptchaOptionConfig(securityPolicy.RecaptchaOptionsConfig)); err != nil {
 		return fmt.Errorf("Error setting recaptcha_options_config: %s", err)
 	}
@@ -718,7 +700,7 @@ func resourceComputeSecurityPolicyRead(d *schema.ResourceData, meta interface{})
 	return nil
 }
 
-func resourceComputeSecurityPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceComputeRegionSecurityPoliciesUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	userAgent, err := generateUserAgentString(d, config.userAgent)
 	if err != nil {
@@ -730,10 +712,20 @@ func resourceComputeSecurityPolicyUpdate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
+	region, err := getRegion(d, config)
+	if err != nil {
+		return err
+	}
+
 	sp := d.Get("name").(string)
 
 	securityPolicy := &compute.SecurityPolicy{
 		Fingerprint: d.Get("fingerprint").(string),
+	}
+
+	if d.HasChange("region") {
+		securityPolicy.Region = d.Get("region").(string)
+		securityPolicy.ForceSendFields = append(securityPolicy.ForceSendFields, "Region")
 	}
 
 	if d.HasChange("type") {
@@ -770,13 +762,13 @@ func resourceComputeSecurityPolicyUpdate(d *schema.ResourceData, meta interface{
 	if len(securityPolicy.ForceSendFields) > 0 {
 		client := config.NewComputeClient(userAgent)
 
-		op, err := client.SecurityPolicies.Patch(project, sp, securityPolicy).Do()
+		op, err := client.RegionSecurityPolicies.Patch(project, region, sp, securityPolicy).Do()
 
 		if err != nil {
-			return errwrap.Wrapf(fmt.Sprintf("Error updating SecurityPolicy %q: {{err}}", sp), err)
+			return errwrap.Wrapf(fmt.Sprintf("Error updating RegionSecurityPolicy %q: {{err}}", sp), err)
 		}
 
-		err = computeOperationWaitTime(config, op, project, fmt.Sprintf("Updating SecurityPolicy %q", sp), userAgent, d.Timeout(schema.TimeoutUpdate))
+		err = computeOperationWaitTime(config, op, project, fmt.Sprintf("Updating RegionSecurityPolicy %q", sp), userAgent, d.Timeout(schema.TimeoutUpdate))
 		if err != nil {
 			return err
 		}
@@ -847,10 +839,10 @@ func resourceComputeSecurityPolicyUpdate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	return resourceComputeSecurityPolicyRead(d, meta)
+	return resourceComputeRegionSecurityPoliciesRead(d, meta)
 }
 
-func resourceComputeSecurityPolicyDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceComputeRegionSecurityPoliciesDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
 	userAgent, err := generateUserAgentString(d, config.userAgent)
 	if err != nil {
@@ -862,15 +854,20 @@ func resourceComputeSecurityPolicyDelete(d *schema.ResourceData, meta interface{
 		return err
 	}
 
+	region, err := getRegion(d, config)
+	if err != nil {
+		return err
+	}
+
 	client := config.NewComputeClient(userAgent)
 
 	// Delete the SecurityPolicy
-	op, err := client.SecurityPolicies.Delete(project, d.Get("name").(string)).Do()
+	op, err := client.RegionSecurityPolicies.Delete(project, region, d.Get("name").(string)).Do()
 	if err != nil {
-		return errwrap.Wrapf("Error deleting SecurityPolicy: {{err}}", err)
+		return errwrap.Wrapf("Error deleting RegionSecurityPolicies: {{err}}", err)
 	}
 
-	err = computeOperationWaitTime(config, op, project, "Deleting SecurityPolicy", userAgent, d.Timeout(schema.TimeoutDelete))
+	err = computeOperationWaitTime(config, op, project, "Deleting RegionSecurityPolicies", userAgent, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return err
 	}
@@ -879,605 +876,19 @@ func resourceComputeSecurityPolicyDelete(d *schema.ResourceData, meta interface{
 	return nil
 }
 
-func expandSecurityPolicyRules(configured []interface{}) []*compute.SecurityPolicyRule {
-	rules := make([]*compute.SecurityPolicyRule, 0, len(configured))
-	for _, raw := range configured {
-		rules = append(rules, expandSecurityPolicyRule(raw))
-	}
-	return rules
-}
-
-func expandSecurityPolicyRule(raw interface{}) *compute.SecurityPolicyRule {
-	data := raw.(map[string]interface{})
-	return &compute.SecurityPolicyRule{
-		Description:            data["description"].(string),
-		Priority:               int64(data["priority"].(int)),
-		Action:                 data["action"].(string),
-		Preview:                data["preview"].(bool),
-		Match:                  expandSecurityPolicyMatch(data["match"].([]interface{})),
-		PreconfiguredWafConfig: expandSecurityPolicyPreconfiguredWafConfig(data["preconfigured_waf_config"].([]interface{})),
-		RateLimitOptions:       expandSecurityPolicyRuleRateLimitOptions(data["rate_limit_options"].([]interface{})),
-		RedirectOptions:        expandSecurityPolicyRuleRedirectOptions(data["redirect_options"].([]interface{})),
-		HeaderAction:           expandSecurityPolicyRuleHeaderAction(data["header_action"].([]interface{})),
-		ForceSendFields:        []string{"Description", "Preview"},
-	}
-}
-
-func expandSecurityPolicyMatch(configured []interface{}) *compute.SecurityPolicyRuleMatcher {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyRuleMatcher{
-		VersionedExpr: data["versioned_expr"].(string),
-		Config:        expandSecurityPolicyMatchConfig(data["config"].([]interface{})),
-		Expr:          expandSecurityPolicyMatchExpr(data["expr"].([]interface{})),
-	}
-}
-
-func expandSecurityPolicyMatchConfig(configured []interface{}) *compute.SecurityPolicyRuleMatcherConfig {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyRuleMatcherConfig{
-		SrcIpRanges: convertStringArr(data["src_ip_ranges"].(*schema.Set).List()),
-	}
-}
-
-func expandSecurityPolicyMatchExpr(expr []interface{}) *compute.Expr {
-	if len(expr) == 0 || expr[0] == nil {
-		return nil
-	}
-
-	data := expr[0].(map[string]interface{})
-	return &compute.Expr{
-		Expression: data["expression"].(string),
-		// These fields are not yet supported  (Issue hashicorp/terraform-provider-google#4497: mbang)
-		// Title:       data["title"].(string),
-		// Description: data["description"].(string),
-		// Location:    data["location"].(string),
-	}
-}
-
-func expandSecurityPolicyPreconfiguredWafConfig(configured []interface{}) *compute.SecurityPolicyRulePreconfiguredWafConfig {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyRulePreconfiguredWafConfig{
-		Exclusions: expandSecurityPolicyRulePreconfiguredWafConfigExclusions(data["exclusion"].([]interface{})),
-	}
-}
-
-func expandSecurityPolicyRulePreconfiguredWafConfigExclusions(configured []interface{}) []*compute.SecurityPolicyRulePreconfiguredWafConfigExclusion {
-	exclusions := make([]*compute.SecurityPolicyRulePreconfiguredWafConfigExclusion, 0, len(configured))
-	for _, raw := range configured {
-		exclusions = append(exclusions, expandSecurityPolicyRulePreconfiguredWafConfigExclusion(raw))
-	}
-	return exclusions
-}
-
-func expandSecurityPolicyRulePreconfiguredWafConfigExclusion(raw interface{}) *compute.SecurityPolicyRulePreconfiguredWafConfigExclusion {
-	data := raw.(map[string]interface{})
-	return &compute.SecurityPolicyRulePreconfiguredWafConfigExclusion{
-		RequestHeadersToExclude:     expandSecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams(data["request_header"].([]interface{})),
-		RequestCookiesToExclude:     expandSecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams(data["request_cookie"].([]interface{})),
-		RequestUrisToExclude:        expandSecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams(data["request_uri"].([]interface{})),
-		RequestQueryParamsToExclude: expandSecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams(data["request_query_param"].([]interface{})),
-		TargetRuleSet:               data["target_rule_set"].(string),
-		TargetRuleIds:               convertStringArr(data["target_rule_ids"].(*schema.Set).List()),
-	}
-}
-
-func expandSecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams(configured []interface{}) []*compute.SecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams {
-	params := make([]*compute.SecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams, 0, len(configured))
-	for _, raw := range configured {
-		params = append(params, expandSecurityPolicyRulePreconfiguredWafConfigExclusionFieldParam(raw))
-	}
-	return params
-}
-
-func expandSecurityPolicyRulePreconfiguredWafConfigExclusionFieldParam(raw interface{}) *compute.SecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams {
-	data := raw.(map[string]interface{})
-	return &compute.SecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams{
-		Op:  data["operator"].(string),
-		Val: data["value"].(string),
-	}
-}
-
-func flattenSecurityPolicyRules(rules []*compute.SecurityPolicyRule) []map[string]interface{} {
-	rulesSchema := make([]map[string]interface{}, 0, len(rules))
-	for _, rule := range rules {
-		data := map[string]interface{}{
-			"description":              rule.Description,
-			"priority":                 rule.Priority,
-			"action":                   rule.Action,
-			"preview":                  rule.Preview,
-			"match":                    flattenMatch(rule.Match),
-			"preconfigured_waf_config": flattenPreconfiguredWafConfig(rule.PreconfiguredWafConfig),
-			"rate_limit_options":       flattenSecurityPolicyRuleRateLimitOptions(rule.RateLimitOptions),
-			"redirect_options":         flattenSecurityPolicyRedirectOptions(rule.RedirectOptions),
-			"header_action":            flattenSecurityPolicyRuleHeaderAction(rule.HeaderAction),
-		}
-		rulesSchema = append(rulesSchema, data)
-	}
-	return rulesSchema
-}
-
-func flattenMatch(match *compute.SecurityPolicyRuleMatcher) []map[string]interface{} {
-	if match == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"versioned_expr": match.VersionedExpr,
-		"config":         flattenMatchConfig(match.Config),
-		"expr":           flattenMatchExpr(match),
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func flattenMatchConfig(conf *compute.SecurityPolicyRuleMatcherConfig) []map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"src_ip_ranges": schema.NewSet(schema.HashString, convertStringArrToInterface(conf.SrcIpRanges)),
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func flattenMatchExpr(match *compute.SecurityPolicyRuleMatcher) []map[string]interface{} {
-	if match.Expr == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"expression": match.Expr.Expression,
-		// These fields are not yet supported (Issue hashicorp/terraform-provider-google#4497: mbang)
-		// "title":       match.Expr.Title,
-		// "description": match.Expr.Description,
-		// "location":    match.Expr.Location,
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func flattenPreconfiguredWafConfig(config *compute.SecurityPolicyRulePreconfiguredWafConfig) []map[string]interface{} {
-	if config == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"exclusion": flattenPreconfiguredWafConfigExclusions(config.Exclusions),
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func flattenPreconfiguredWafConfigExclusions(exclusions []*compute.SecurityPolicyRulePreconfiguredWafConfigExclusion) []map[string]interface{} {
-	exclusionsSchema := make([]map[string]interface{}, 0, len(exclusions))
-	for _, exclusion := range exclusions {
-		data := map[string]interface{}{
-			"request_header":      flattenPreconfiguredWafConfigExclusionField(exclusion.RequestHeadersToExclude),
-			"request_cookie":      flattenPreconfiguredWafConfigExclusionField(exclusion.RequestCookiesToExclude),
-			"request_uri":         flattenPreconfiguredWafConfigExclusionField(exclusion.RequestUrisToExclude),
-			"request_query_param": flattenPreconfiguredWafConfigExclusionField(exclusion.RequestQueryParamsToExclude),
-			"target_rule_set":     exclusion.TargetRuleSet,
-			"target_rule_ids":     schema.NewSet(schema.HashString, convertStringArrToInterface(exclusion.TargetRuleIds)),
-		}
-
-		exclusionsSchema = append(exclusionsSchema, data)
-	}
-	return exclusionsSchema
-}
-
-func expandSecurityPolicyDdosProtectionConfig(configured []interface{}) *compute.SecurityPolicyDdosProtectionConfig {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyDdosProtectionConfig{
-		DdosProtection: data["ddos_protection"].(string),
-	}
-}
-
-func flattenSecurityPolicyDdosProtectionConfig(conf *compute.SecurityPolicyDdosProtectionConfig) []map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"ddos_protection": conf.DdosProtection,
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func flattenPreconfiguredWafConfigExclusionField(fieldParams []*compute.SecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams) []map[string]interface{} {
-	fieldSchema := make([]map[string]interface{}, 0, len(fieldParams))
-	for _, field := range fieldParams {
-		data := map[string]interface{}{
-			"operator": &field.Op,
-			"value":    &field.Val,
-		}
-		fieldSchema = append(fieldSchema, data)
-	}
-	return fieldSchema
-}
-
-func expandSecurityPolicyAdvancedOptionsConfig(configured []interface{}) *compute.SecurityPolicyAdvancedOptionsConfig {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyAdvancedOptionsConfig{
-		JsonParsing:      data["json_parsing"].(string),
-		JsonCustomConfig: expandSecurityPolicyAdvancedOptionsConfigJsonCustomConfig(data["json_custom_config"].([]interface{})),
-		LogLevel:         data["log_level"].(string),
-	}
-}
-
-func flattenSecurityPolicyAdvancedOptionsConfig(conf *compute.SecurityPolicyAdvancedOptionsConfig) []map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"json_parsing":       conf.JsonParsing,
-		"json_custom_config": flattenSecurityPolicyAdvancedOptionsConfigJsonCustomConfig(conf.JsonCustomConfig),
-		"log_level":          conf.LogLevel,
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func expandSecurityPolicyAdvancedOptionsConfigJsonCustomConfig(configured []interface{}) *compute.SecurityPolicyAdvancedOptionsConfigJsonCustomConfig {
-	if len(configured) == 0 || configured[0] == nil {
-		// If configuration is unset, return an empty JsonCustomConfig; this ensures the ContentTypes list can be cleared
-		return &compute.SecurityPolicyAdvancedOptionsConfigJsonCustomConfig{}
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyAdvancedOptionsConfigJsonCustomConfig{
-		ContentTypes: convertStringArr(data["content_types"].(*schema.Set).List()),
-	}
-}
-
-func flattenSecurityPolicyAdvancedOptionsConfigJsonCustomConfig(conf *compute.SecurityPolicyAdvancedOptionsConfigJsonCustomConfig) []map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"content_types": schema.NewSet(schema.HashString, convertStringArrToInterface(conf.ContentTypes)),
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func expandSecurityPolicyAdaptiveProtectionConfig(configured []interface{}) *compute.SecurityPolicyAdaptiveProtectionConfig {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyAdaptiveProtectionConfig{
-		Layer7DdosDefenseConfig: expandLayer7DdosDefenseConfig(data["layer_7_ddos_defense_config"].([]interface{})),
-		AutoDeployConfig:        expandAutoDeployConfig(data["auto_deploy_config"].([]interface{})),
-	}
-}
-
-func expandLayer7DdosDefenseConfig(configured []interface{}) *compute.SecurityPolicyAdaptiveProtectionConfigLayer7DdosDefenseConfig {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyAdaptiveProtectionConfigLayer7DdosDefenseConfig{
-		Enable:          data["enable"].(bool),
-		RuleVisibility:  data["rule_visibility"].(string),
-		ForceSendFields: []string{"Enable"},
-	}
-}
-
-func expandAutoDeployConfig(configured []interface{}) *compute.SecurityPolicyAdaptiveProtectionConfigAutoDeployConfig {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyAdaptiveProtectionConfigAutoDeployConfig{
-		LoadThreshold:             data["load_threshold"].(float64),
-		ConfidenceThreshold:       data["confidence_threshold"].(float64),
-		ImpactedBaselineThreshold: data["impacted_baseline_threshold"].(float64),
-		ExpirationSec:             int64(data["expiration_sec"].(int)),
-	}
-}
-
-func flattenSecurityPolicyAdaptiveProtectionConfig(conf *compute.SecurityPolicyAdaptiveProtectionConfig) []map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"layer_7_ddos_defense_config": flattenLayer7DdosDefenseConfig(conf.Layer7DdosDefenseConfig),
-		"auto_deploy_config":          flattenAutoDeployConfig(conf.AutoDeployConfig),
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func flattenLayer7DdosDefenseConfig(conf *compute.SecurityPolicyAdaptiveProtectionConfigLayer7DdosDefenseConfig) []map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"enable":          conf.Enable,
-		"rule_visibility": conf.RuleVisibility,
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func flattenAutoDeployConfig(conf *compute.SecurityPolicyAdaptiveProtectionConfigAutoDeployConfig) []map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"load_threshold":              conf.LoadThreshold,
-		"confidence_threshold":        conf.ConfidenceThreshold,
-		"impacted_baseline_threshold": conf.ImpactedBaselineThreshold,
-		"expiration_sec":              conf.ExpirationSec,
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func expandSecurityPolicyRuleRateLimitOptions(configured []interface{}) *compute.SecurityPolicyRuleRateLimitOptions {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyRuleRateLimitOptions{
-		BanThreshold:          expandThreshold(data["ban_threshold"].([]interface{})),
-		RateLimitThreshold:    expandThreshold(data["rate_limit_threshold"].([]interface{})),
-		ExceedAction:          data["exceed_action"].(string),
-		ConformAction:         data["conform_action"].(string),
-		EnforceOnKey:          data["enforce_on_key"].(string),
-		EnforceOnKeyName:      data["enforce_on_key_name"].(string),
-		EnforceOnKeyConfigs:   expandSecurityPolicyEnforceOnKeyConfigs(data["enforce_on_key_configs"].([]interface{})),
-		BanDurationSec:        int64(data["ban_duration_sec"].(int)),
-		ExceedRedirectOptions: expandSecurityPolicyRuleRedirectOptions(data["exceed_redirect_options"].([]interface{})),
-	}
-}
-
-func expandThreshold(configured []interface{}) *compute.SecurityPolicyRuleRateLimitOptionsThreshold {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyRuleRateLimitOptionsThreshold{
-		Count:       int64(data["count"].(int)),
-		IntervalSec: int64(data["interval_sec"].(int)),
-	}
-}
-
-func expandSecurityPolicyEnforceOnKeyConfigs(configured []interface{}) []*compute.SecurityPolicyRuleRateLimitOptionsEnforceOnKeyConfig {
-	params := make([]*compute.SecurityPolicyRuleRateLimitOptionsEnforceOnKeyConfig, 0, len(configured))
-
-	for _, raw := range configured {
-		params = append(params, expandSecurityPolicyEnforceOnKeyConfigsFields(raw))
-	}
-
-	return params
-}
-
-func expandSecurityPolicyEnforceOnKeyConfigsFields(raw interface{}) *compute.SecurityPolicyRuleRateLimitOptionsEnforceOnKeyConfig {
-	data := raw.(map[string]interface{})
-
-	return &compute.SecurityPolicyRuleRateLimitOptionsEnforceOnKeyConfig{
-		EnforceOnKeyType: data["enforce_on_key_type"].(string),
-		EnforceOnKeyName: data["enforce_on_key_name"].(string),
-	}
-}
-
-func flattenSecurityPolicyRuleRateLimitOptions(conf *compute.SecurityPolicyRuleRateLimitOptions) []map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"ban_threshold":          flattenThreshold(conf.BanThreshold),
-		"rate_limit_threshold":   flattenThreshold(conf.RateLimitThreshold),
-		"exceed_action":          conf.ExceedAction,
-		"conform_action":         conf.ConformAction,
-		"enforce_on_key":         conf.EnforceOnKey,
-		"enforce_on_key_name":    conf.EnforceOnKeyName,
-		"enforce_on_key_configs": flattenSecurityPolicyEnforceOnKeyConfigs(conf.EnforceOnKeyConfigs),
-
-		"ban_duration_sec":        conf.BanDurationSec,
-		"exceed_redirect_options": flattenSecurityPolicyRedirectOptions(conf.ExceedRedirectOptions),
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func flattenThreshold(conf *compute.SecurityPolicyRuleRateLimitOptionsThreshold) []map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"count":        conf.Count,
-		"interval_sec": conf.IntervalSec,
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func expandSecurityPolicyRuleRedirectOptions(configured []interface{}) *compute.SecurityPolicyRuleRedirectOptions {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-	return &compute.SecurityPolicyRuleRedirectOptions{
-		Type:   data["type"].(string),
-		Target: data["target"].(string),
-	}
-}
-
-func flattenSecurityPolicyEnforceOnKeyConfigs(conf []*compute.SecurityPolicyRuleRateLimitOptionsEnforceOnKeyConfig) []map[string]interface{} {
-	if conf == nil || len(conf) == 0 {
-		return nil
-	}
-
-	transformed := make([]map[string]interface{}, 0, len(conf))
-	for _, raw := range conf {
-		transformed = append(transformed, flattenSecurityPolicyEnforceOnKeyConfigsFields(raw))
-	}
-	return transformed
-}
-
-func flattenSecurityPolicyEnforceOnKeyConfigsFields(conf *compute.SecurityPolicyRuleRateLimitOptionsEnforceOnKeyConfig) map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	return map[string]interface{}{
-		"enforce_on_key_name": conf.EnforceOnKeyName,
-		"enforce_on_key_type": conf.EnforceOnKeyType,
-	}
-}
-
-func flattenSecurityPolicyRedirectOptions(conf *compute.SecurityPolicyRuleRedirectOptions) []map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"type":   conf.Type,
-		"target": conf.Target,
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func expandSecurityPolicyRecaptchaOptionsConfig(configured []interface{}, d *schema.ResourceData) *compute.SecurityPolicyRecaptchaOptionsConfig {
-	if len(configured) == 0 || configured[0] == nil {
-		return nil
-	}
-
-	data := configured[0].(map[string]interface{})
-
-	return &compute.SecurityPolicyRecaptchaOptionsConfig{
-		RedirectSiteKey: data["redirect_site_key"].(string),
-		ForceSendFields: []string{"RedirectSiteKey"},
-	}
-}
-
-func flattenSecurityPolicyRecaptchaOptionConfig(conf *compute.SecurityPolicyRecaptchaOptionsConfig) []map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	data := map[string]interface{}{
-		"redirect_site_key": conf.RedirectSiteKey,
-	}
-
-	return []map[string]interface{}{data}
-}
-
-func expandSecurityPolicyRuleHeaderAction(configured []interface{}) *compute.SecurityPolicyRuleHttpHeaderAction {
-	if len(configured) == 0 || configured[0] == nil {
-		// If header action is unset, return an empty object; this ensures the header action can be cleared
-		return &compute.SecurityPolicyRuleHttpHeaderAction{}
-	}
-
-	data := configured[0].(map[string]interface{})
-
-	return &compute.SecurityPolicyRuleHttpHeaderAction{
-		RequestHeadersToAdds: expandSecurityPolicyRequestHeadersToAdds(data["request_headers_to_adds"].([]interface{})),
-	}
-}
-
-func expandSecurityPolicyRequestHeadersToAdds(configured []interface{}) []*compute.SecurityPolicyRuleHttpHeaderActionHttpHeaderOption {
-	transformed := make([]*compute.SecurityPolicyRuleHttpHeaderActionHttpHeaderOption, 0, len(configured))
-
-	for _, raw := range configured {
-		transformed = append(transformed, expandSecurityPolicyRequestHeader(raw))
-	}
-
-	return transformed
-}
-
-func expandSecurityPolicyRequestHeader(configured interface{}) *compute.SecurityPolicyRuleHttpHeaderActionHttpHeaderOption {
-	data := configured.(map[string]interface{})
-
-	return &compute.SecurityPolicyRuleHttpHeaderActionHttpHeaderOption{
-		HeaderName:  data["header_name"].(string),
-		HeaderValue: data["header_value"].(string),
-	}
-}
-
-func flattenSecurityPolicyRuleHeaderAction(conf *compute.SecurityPolicyRuleHttpHeaderAction) []map[string]interface{} {
-	if conf == nil || conf.RequestHeadersToAdds == nil {
-		return nil
-	}
-
-	transformed := map[string]interface{}{
-		"request_headers_to_adds": flattenSecurityPolicyRequestHeadersToAdds(conf.RequestHeadersToAdds),
-	}
-
-	return []map[string]interface{}{transformed}
-}
-
-func flattenSecurityPolicyRequestHeadersToAdds(conf []*compute.SecurityPolicyRuleHttpHeaderActionHttpHeaderOption) []map[string]interface{} {
-	if conf == nil || len(conf) == 0 {
-		return nil
-	}
-
-	transformed := make([]map[string]interface{}, 0, len(conf))
-	for _, raw := range conf {
-		transformed = append(transformed, flattenSecurityPolicyRequestHeader(raw))
-	}
-
-	return transformed
-}
-
-func flattenSecurityPolicyRequestHeader(conf *compute.SecurityPolicyRuleHttpHeaderActionHttpHeaderOption) map[string]interface{} {
-	if conf == nil {
-		return nil
-	}
-
-	return map[string]interface{}{
-		"header_name":  conf.HeaderName,
-		"header_value": conf.HeaderValue,
-	}
-}
-
-func resourceSecurityPolicyStateImporter(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+func resourceComputeRegionSecurityPoliciesImporter(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
-	if err := parseImportId([]string{"projects/(?P<project>[^/]+)/global/securityPolicies/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
+
+	if err := parseImportId([]string{
+		"projects/(?P<project>[^/]+)/regions/(?P<region>[^/]+)/securityPolicies/(?P<name>[^/]+)",
+		"(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<name>[^/]+)",
+		"(?P<name>[^/]+)",
+	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "projects/{{project}}/global/securityPolicies/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/regions/{{region}}/securityPolicies/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
