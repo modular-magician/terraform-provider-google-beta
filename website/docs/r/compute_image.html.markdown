@@ -110,6 +110,12 @@ The following arguments are supported:
   An optional description of this resource. Provide this property when
   you create the resource.
 
+* `storage_locations` -
+  (Optional)
+  Cloud Storage bucket storage location of the image 
+  (regional or multi-regional). 
+  Reference link: https://cloud.google.com/compute/docs/reference/rest/v1/images
+
 * `disk_size_gb` -
   (Optional)
   Size of the image when restored onto a persistent disk (in GB).
