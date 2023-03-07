@@ -409,7 +409,6 @@ resource "google_kms_key_ring" "default" {
 resource "google_kms_crypto_key" "default" {
   name            = "tf-test-workstation-cluster%{random_suffix}"
   key_ring        = google_kms_key_ring.default.id
-  rotation_period = "100000s"
   provider        = google-beta
 }
 
