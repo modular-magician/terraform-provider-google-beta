@@ -900,14 +900,14 @@ func expandComputeBackendBucketCdnPolicy(v interface{}, d TerraformResourceData,
 	transformedSignedUrlCacheMaxAgeSec, err := expandComputeBackendBucketCdnPolicySignedUrlCacheMaxAgeSec(original["signed_url_cache_max_age_sec"], d, config)
 	if err != nil {
 		return nil, err
-	} else {
+	} else if val := reflect.ValueOf(transformedSignedUrlCacheMaxAgeSec); val.IsValid() && !isEmptyValue(val) {
 		transformed["signedUrlCacheMaxAgeSec"] = transformedSignedUrlCacheMaxAgeSec
 	}
 
 	transformedDefaultTtl, err := expandComputeBackendBucketCdnPolicyDefaultTtl(original["default_ttl"], d, config)
 	if err != nil {
 		return nil, err
-	} else {
+	} else if val := reflect.ValueOf(transformedDefaultTtl); val.IsValid() && !isEmptyValue(val) {
 		transformed["defaultTtl"] = transformedDefaultTtl
 	}
 
@@ -921,7 +921,7 @@ func expandComputeBackendBucketCdnPolicy(v interface{}, d TerraformResourceData,
 	transformedClientTtl, err := expandComputeBackendBucketCdnPolicyClientTtl(original["client_ttl"], d, config)
 	if err != nil {
 		return nil, err
-	} else {
+	} else if val := reflect.ValueOf(transformedClientTtl); val.IsValid() && !isEmptyValue(val) {
 		transformed["clientTtl"] = transformedClientTtl
 	}
 
@@ -1044,7 +1044,7 @@ func expandComputeBackendBucketCdnPolicyNegativeCachingPolicy(v interface{}, d T
 		transformedTtl, err := expandComputeBackendBucketCdnPolicyNegativeCachingPolicyTtl(original["ttl"], d, config)
 		if err != nil {
 			return nil, err
-		} else {
+		} else if val := reflect.ValueOf(transformedTtl); val.IsValid() && !isEmptyValue(val) {
 			transformed["ttl"] = transformedTtl
 		}
 
