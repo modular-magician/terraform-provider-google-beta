@@ -1317,6 +1317,12 @@ The following arguments are supported:
   (Optional)
   Service Directory service to register the forwarding rule under.
 
+* `service_directory_region` -
+  (Optional)
+  Service Directory region to register this global forwarding rule under. 
+  Default to "us-central1". Only used for PSC for Google APIs. 
+  All PSC for Google APIs Forwarding Rules on the same network should use the same Service Directory region.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
