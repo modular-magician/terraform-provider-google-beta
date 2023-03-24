@@ -40,7 +40,6 @@ To get more information about Job, see:
 resource "google_cloud_run_v2_job" "default" {
   name     = "cloudrun-job"
   location = "us-central1"
-  launch_stage = "BETA"
 
   template {
     template {
@@ -63,7 +62,6 @@ resource "google_cloud_run_v2_job" "default" {
 resource "google_cloud_run_v2_job" "default" {
   name     = "cloudrun-job"
   location = "us-central1"
-  launch_stage = "BETA"
   
   template {
     template{
@@ -144,7 +142,6 @@ resource "google_sql_database_instance" "instance" {
 resource "google_cloud_run_v2_job" "default" {
   name     = "cloudrun-job"
   location = "us-central1"
-  launch_stage = "BETA"
 
   template {
     template{
@@ -192,7 +189,6 @@ resource "google_compute_network" "custom_test" {
 resource "google_cloud_run_v2_job" "default" {
   name     = "cloudrun-job"
   location = "us-central1"
-  launch_stage = "BETA"
 
   template {
     template {
