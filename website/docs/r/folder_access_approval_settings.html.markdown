@@ -20,6 +20,7 @@ description: |-
 # google\_folder\_access\_approval\_settings
 
 Access Approval enables you to require your explicit approval whenever Google support and engineering need to access your customer content.
+Test
 
 
 To get more information about FolderSettings, see:
@@ -168,6 +169,13 @@ The following arguments are supported:
   Empty active_key_version indicates that a Google-managed key should be used for signing.
   This property will be ignored if set by an ancestor of the resource, and new non-empty values may not be set.
 
+* `invalid_key_version` -
+  (Optional)
+  If the field is true, that indicates that there is some configuration issue with the active_key_version
+  configured on this Folder (e.g. it doesn't exist or the Access Approval service account doesn't have the
+  correct permissions on it, etc.) This key version is not necessarily the effective key version at this level,
+  as key versions are inherited top-down.
+
 
 ## Attributes Reference
 
@@ -183,12 +191,6 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `ancestor_has_active_key_version` -
   If the field is true, that indicates that an ancestor of this Folder has set active_key_version.
-
-* `invalid_key_version` -
-  If the field is true, that indicates that there is some configuration issue with the active_key_version
-  configured on this Folder (e.g. it doesn't exist or the Access Approval service account doesn't have the
-  correct permissions on it, etc.) This key version is not necessarily the effective key version at this level,
-  as key versions are inherited top-down.
 
 
 ## Timeouts

@@ -91,6 +91,14 @@ A maximum of 10 enrolled services will be enforced, to be expanded as the set of
 Empty active_key_version indicates that a Google-managed key should be used for signing.
 This property will be ignored if set by an ancestor of the resource, and new non-empty values may not be set.`,
 			},
+			"invalid_key_version": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `If the field is true, that indicates that there is some configuration issue with the active_key_version
+configured on this Folder (e.g. it doesn't exist or the Access Approval service account doesn't have the
+correct permissions on it, etc.) This key version is not necessarily the effective key version at this level,
+as key versions are inherited top-down.`,
+			},
 			"notification_emails": {
 				Type:     schema.TypeSet,
 				Computed: true,
@@ -113,14 +121,6 @@ resources of that resource. A maximum of 50 email addresses are allowed.`,
 				Type:        schema.TypeBool,
 				Computed:    true,
 				Description: `If the field is true, that indicates that at least one service is enrolled for Access Approval in one or more ancestors of the Folder.`,
-			},
-			"invalid_key_version": {
-				Type:     schema.TypeBool,
-				Computed: true,
-				Description: `If the field is true, that indicates that there is some configuration issue with the active_key_version
-configured on this Folder (e.g. it doesn't exist or the Access Approval service account doesn't have the
-correct permissions on it, etc.) This key version is not necessarily the effective key version at this level,
-as key versions are inherited top-down.`,
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -200,6 +200,12 @@ func resourceAccessApprovalFolderSettingsCreate(d *schema.ResourceData, meta int
 	} else if v, ok := d.GetOkExists("active_key_version"); !isEmptyValue(reflect.ValueOf(activeKeyVersionProp)) && (ok || !reflect.DeepEqual(v, activeKeyVersionProp)) {
 		obj["activeKeyVersion"] = activeKeyVersionProp
 	}
+	invalidKeyVersionProp, err := expandAccessApprovalFolderSettingsInvalidKeyVersion(d.Get("invalid_key_version"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("invalid_key_version"); !isEmptyValue(reflect.ValueOf(invalidKeyVersionProp)) && (ok || !reflect.DeepEqual(v, invalidKeyVersionProp)) {
+		obj["invalidKeyVersion"] = invalidKeyVersionProp
+	}
 
 	url, err := replaceVars(d, config, "{{AccessApprovalBasePath}}folders/{{folder_id}}/accessApprovalSettings")
 	if err != nil {
@@ -226,6 +232,10 @@ func resourceAccessApprovalFolderSettingsCreate(d *schema.ResourceData, meta int
 
 	if d.HasChange("active_key_version") {
 		updateMask = append(updateMask, "activeKeyVersion")
+	}
+
+	if d.HasChange("invalid_key_version") {
+		updateMask = append(updateMask, "invalidKeyVersion")
 	}
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
@@ -330,6 +340,12 @@ func resourceAccessApprovalFolderSettingsUpdate(d *schema.ResourceData, meta int
 	} else if v, ok := d.GetOkExists("active_key_version"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, activeKeyVersionProp)) {
 		obj["activeKeyVersion"] = activeKeyVersionProp
 	}
+	invalidKeyVersionProp, err := expandAccessApprovalFolderSettingsInvalidKeyVersion(d.Get("invalid_key_version"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("invalid_key_version"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, invalidKeyVersionProp)) {
+		obj["invalidKeyVersion"] = invalidKeyVersionProp
+	}
 
 	url, err := replaceVars(d, config, "{{AccessApprovalBasePath}}folders/{{folder_id}}/accessApprovalSettings")
 	if err != nil {
@@ -349,6 +365,10 @@ func resourceAccessApprovalFolderSettingsUpdate(d *schema.ResourceData, meta int
 
 	if d.HasChange("active_key_version") {
 		updateMask = append(updateMask, "activeKeyVersion")
+	}
+
+	if d.HasChange("invalid_key_version") {
+		updateMask = append(updateMask, "invalidKeyVersion")
 	}
 	// updateMask is a URL parameter but not present in the schema, so replaceVars
 	// won't set it
@@ -532,5 +552,9 @@ func expandAccessApprovalFolderSettingsEnrolledServicesEnrollmentLevel(v interfa
 }
 
 func expandAccessApprovalFolderSettingsActiveKeyVersion(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAccessApprovalFolderSettingsInvalidKeyVersion(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
