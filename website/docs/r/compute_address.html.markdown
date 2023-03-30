@@ -14,12 +14,12 @@
 # ----------------------------------------------------------------------------
 subcategory: "Compute Engine"
 description: |-
-  Represents an Address resource.
+  An Address resource.
 ---
 
 # google\_compute\_address
 
-Represents an Address resource.
+An Address resource.
 
 Each virtual machine instance has an ephemeral internal IP address and,
 optionally, an external IP address. To communicate between instances on
