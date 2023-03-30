@@ -220,7 +220,7 @@ The following arguments are supported:
 
 * `subnetwork` -
   (Optional)
-  The URL of the subnetwork in which to reserve the address. If an IP
+  A URL of the subnetwork in which to reserve the address. If an IP
   address is specified, it must be within the subnetwork's IP range.
   This field can only be used with INTERNAL type with
   GCE_ENDPOINT/DNS_RESOLVER purposes.

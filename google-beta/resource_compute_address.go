@@ -150,7 +150,7 @@ If it is not provided, the provider region is used.`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: compareSelfLinkOrResourceName,
-				Description: `The URL of the subnetwork in which to reserve the address. If an IP
+				Description: `A URL of the subnetwork in which to reserve the address. If an IP
 address is specified, it must be within the subnetwork's IP range.
 This field can only be used with INTERNAL type with
 GCE_ENDPOINT/DNS_RESOLVER purposes.`,
