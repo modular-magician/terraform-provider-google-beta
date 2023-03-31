@@ -79,6 +79,47 @@ func getProjectFromFrameworkSchema(projectSchemaField string, rVal, pVal types.S
 	return types.String{}
 }
 
+func getRegionFramework(r ResourceFoobar, p ProviderFoobar, diags *diag.Diagnostics) types.String {
+	return getRegionFromFrameworkSchema("region", r, p, diags)
+}
+
+// Infers the region based on the following (in order of priority):
+// - `regionSchemaField` in resource schema
+// - region extracted from the `zoneSchemaField` in resource schema
+// - provider-level region
+// - region extracted from the provider-level zone
+func getRegionFromFrameworkSchema(regionSchemaField string, r ResourceFoobar, p ProviderFoobar, diags *diag.Diagnostics) types.String {
+
+	// Value search #1: use region value from resource/data source config
+	if !r.Region.IsNull() && r.Region.ValueString() != "" {
+		return r.Region
+	}
+
+	// Value search #2: extract rergion from zone value from resource/data source config
+	if !r.Zone.IsNull() && r.Zone.ValueString() != "" {
+		v := getRegionFromZone(r.Zone.ValueString())
+		if v != "" {
+			return types.StringValue(v)
+		}
+	}
+
+	// Value search #3: use region from provider config
+	if !p.Region.IsNull() && p.Region.ValueString() != "" {
+		return p.Region
+	}
+
+	// Value search #4: extract region from zone value in provider config
+	if !p.Zone.IsNull() && p.Zone.ValueString() != "" {
+		v := getRegionFromZone(p.Zone.ValueString())
+		if v != "" {
+			return types.StringValue(v)
+		}
+	}
+
+	diags.AddError("required field is not set", fmt.Sprintf("%s is not set", regionSchemaField))
+	return types.StringNull()
+}
+
 func handleDatasourceNotFoundError(ctx context.Context, err error, state *tfsdk.State, resource string, diags *diag.Diagnostics) {
 	if IsGoogleApiErrorWithCode(err, 404) {
 		tflog.Warn(ctx, fmt.Sprintf("Removing %s because it's gone", resource))

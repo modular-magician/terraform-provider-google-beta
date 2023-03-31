@@ -155,6 +155,15 @@ type frameworkProvider struct {
 	WorkstationsBasePath         string
 }
 
+// FallbackConfig returns config values from the framework provider that could be used as fallback values for resources/data sources
+func (p *frameworkProvider) FallbackConfig() ProviderFoobar {
+	return ProviderFoobar{
+		Project: p.project,
+		Region:  p.region,
+		Zone:    p.zone,
+	}
+}
+
 // Metadata returns the provider type name.
 func (p *frameworkProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
 	resp.TypeName = "google"
