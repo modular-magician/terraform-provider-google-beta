@@ -154,7 +154,6 @@ A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to n
 						"rotation_period": {
 							Type:     schema.TypeString,
 							Optional: true,
-							ForceNew: true,
 							Description: `The Duration between rotation notifications. Must be in seconds and at least 3600s (1h) and at most 3153600000s (100 years).
 If rotationPeriod is set, 'next_rotation_time' must be set. 'next_rotation_time' will be advanced by this period when the service automatically sends rotation notifications.`,
 						},
@@ -180,7 +179,6 @@ For publication to succeed, the Secret Manager Service Agent service account mus
 			"ttl": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
 				Description: `The TTL for the Secret.
 A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
 			},
@@ -383,6 +381,12 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("expire_time"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, expireTimeProp)) {
 		obj["expireTime"] = expireTimeProp
 	}
+	ttlProp, err := expandSecretManagerSecretTtl(d.Get("ttl"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("ttl"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, ttlProp)) {
+		obj["ttl"] = ttlProp
+	}
 	rotationProp, err := expandSecretManagerSecretRotation(d.Get("rotation"), d, config)
 	if err != nil {
 		return err
@@ -408,6 +412,10 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("expire_time") {
 		updateMask = append(updateMask, "expireTime")
+	}
+
+	if d.HasChange("ttl") {
+		updateMask = append(updateMask, "ttl")
 	}
 
 	if d.HasChange("rotation") {

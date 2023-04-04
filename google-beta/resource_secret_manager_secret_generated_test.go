@@ -71,6 +71,74 @@ resource "google_secret_manager_secret" "secret-basic" {
 `, context)
 }
 
+func TestAccSecretManagerSecret_secretConfigCmekExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"key_name_central": BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
+		"key_name_east":    BootstrapKMSKeyInLocation(t, "us-east1").CryptoKey.Name,
+		"pid":              GetTestProjectFromEnv(),
+		"random_suffix":    RandString(t, 10),
+	}
+
+	VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckSecretManagerSecretDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSecretManagerSecret_secretConfigCmekExample(context),
+			},
+			{
+				ResourceName:            "google_secret_manager_secret.cmek",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"ttl", "secret_id"},
+			},
+		},
+	})
+}
+
+func testAccSecretManagerSecret_secretConfigCmekExample(context map[string]interface{}) string {
+	return Nprintf(`
+data "google_project" "project" {
+  project_id = "%{pid}"
+}
+
+resource "google_project_iam_member" "kms-secret-binding" {
+  project = data.google_project.project.project_id
+  role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  member  = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-secretmanager.iam.gserviceaccount.com"
+}
+
+resource "google_secret_manager_secret" "cmek" {
+  secret_id = "tf-test-secret-cmek%{random_suffix}"
+  project = data.google_project.project.project_id
+  
+  labels = {
+    label = "my-label"
+  }
+  replication {
+    user_managed {
+      replicas {
+		location = "us-central1"
+		customer_managed_encryption {
+			kms_key_name = "%{key_name_central}"
+		}
+	  }
+	replicas {
+		location = "us-east1"
+		customer_managed_encryption {
+			kms_key_name = "%{key_name_east}"
+		}
+      }
+	  
+    }
+  }
+}
+`, context)
+}
+
 func testAccCheckSecretManagerSecretDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
