@@ -80,6 +80,10 @@ The following arguments are supported:
   (Optional)
   Set of label tags associated with the DNS Authorization resource.
 
+* `location` -
+  (Optional)
+  The Certificate Manager location. If not specified, "global" is used.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -88,7 +92,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/locations/global/dnsAuthorizations/{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/dnsAuthorizations/{{name}}`
 
 * `dns_resource_record` -
   The structure describing the DNS Resource Record that needs to be added
@@ -127,9 +131,9 @@ This resource provides the following
 DnsAuthorization can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_certificate_manager_dns_authorization.default projects/{{project}}/locations/global/dnsAuthorizations/{{name}}
-$ terraform import google_certificate_manager_dns_authorization.default {{project}}/{{name}}
-$ terraform import google_certificate_manager_dns_authorization.default {{name}}
+$ terraform import google_certificate_manager_dns_authorization.default projects/{{project}}/locations/{{location}}/dnsAuthorizations/{{name}}
+$ terraform import google_certificate_manager_dns_authorization.default {{project}}/{{location}}/{{name}}
+$ terraform import google_certificate_manager_dns_authorization.default {{location}}/{{name}}
 ```
 
 ## User Project Overrides

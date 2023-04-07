@@ -66,6 +66,10 @@ The following arguments are supported:
   (Optional)
   Set of labels associated with a Certificate Map resource.
 
+* `location` -
+  (Optional)
+  The Cloud location for the certificate map. If not specified, "global" is used.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -74,7 +78,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/locations/global/certificateMaps/{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/certificateMaps/{{name}}`
 
 * `create_time` -
   Creation timestamp of a Certificate Map. Timestamp is in RFC3339 UTC "Zulu" format,
@@ -136,9 +140,9 @@ This resource provides the following
 CertificateMap can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_certificate_manager_certificate_map.default projects/{{project}}/locations/global/certificateMaps/{{name}}
-$ terraform import google_certificate_manager_certificate_map.default {{project}}/{{name}}
-$ terraform import google_certificate_manager_certificate_map.default {{name}}
+$ terraform import google_certificate_manager_certificate_map.default projects/{{project}}/locations/{{location}}/certificateMaps/{{name}}
+$ terraform import google_certificate_manager_certificate_map.default {{project}}/{{location}}/{{name}}
+$ terraform import google_certificate_manager_certificate_map.default {{location}}/{{name}}
 ```
 
 ## User Project Overrides

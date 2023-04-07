@@ -130,6 +130,10 @@ The following arguments are supported:
   (Optional)
   A predefined matcher for particular cases, other than SNI selection
 
+* `location` -
+  (Optional)
+  The Cloud location for the certificate map entry. If not specified, "global" is used.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -138,7 +142,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/locations/global/certificateMaps/{{map}}/certificateMapEntries/{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/certificateMaps/{{map}}/certificateMapEntries/{{name}}`
 
 * `create_time` -
   Creation timestamp of a Certificate Map Entry. Timestamp in RFC3339 UTC "Zulu" format, 
@@ -169,9 +173,9 @@ This resource provides the following
 CertificateMapEntry can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_certificate_manager_certificate_map_entry.default projects/{{project}}/locations/global/certificateMaps/{{map}}/certificateMapEntries/{{name}}
-$ terraform import google_certificate_manager_certificate_map_entry.default {{project}}/{{map}}/{{name}}
-$ terraform import google_certificate_manager_certificate_map_entry.default {{map}}/{{name}}
+$ terraform import google_certificate_manager_certificate_map_entry.default projects/{{project}}/locations/{{location}}/certificateMaps/{{map}}/certificateMapEntries/{{name}}
+$ terraform import google_certificate_manager_certificate_map_entry.default {{project}}/{{location}}/{{map}}/{{name}}
+$ terraform import google_certificate_manager_certificate_map_entry.default {{location}}/{{map}}/{{name}}
 ```
 
 ## User Project Overrides

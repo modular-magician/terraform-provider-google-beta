@@ -42,7 +42,7 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"self_managed", "name"},
+				ImportStateVerifyIgnore: []string{"location", "self_managed", "name"},
 			},
 		},
 	})
@@ -81,7 +81,7 @@ resource "google_certificate_manager_dns_authorization" "instance2" {
 `, context)
 }
 
-func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateExample(t *testing.T) {
+func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateGlobalExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -94,24 +94,62 @@ func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertifica
 		CheckDestroy:             testAccCheckCertificateManagerCertificateDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateExample(context),
+				Config: testAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateGlobalExample(context),
 			},
 			{
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"self_managed", "name"},
+				ImportStateVerifyIgnore: []string{"location", "self_managed", "name"},
 			},
 		},
 	})
 }
 
-func testAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateExample(context map[string]interface{}) string {
+func testAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateGlobalExample(context map[string]interface{}) string {
 	return Nprintf(`
 resource "google_certificate_manager_certificate" "default" {
   name        = "tf-test-self-managed-cert%{random_suffix}"
-  description = "The default cert"
-  scope       = "EDGE_CACHE"
+  description = "Global cert"
+  self_managed {
+    pem_certificate = file("test-fixtures/certificatemanager/cert.pem")
+    pem_private_key = file("test-fixtures/certificatemanager/private-key.pem")
+  }
+}
+`, context)
+}
+
+func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateRegionalExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": RandString(t, 10),
+	}
+
+	VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckCertificateManagerCertificateDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateRegionalExample(context),
+			},
+			{
+				ResourceName:            "google_certificate_manager_certificate.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location", "self_managed", "name"},
+			},
+		},
+	})
+}
+
+func testAccCertificateManagerCertificate_certificateManagerSelfManagedCertificateRegionalExample(context map[string]interface{}) string {
+	return Nprintf(`
+resource "google_certificate_manager_certificate" "default" { #Make another file 
+  name        = "tf-test-self-managed-cert%{random_suffix}"
+  description = "Regional cert"
+  location    = "us-central1"
   self_managed {
     pem_certificate = file("test-fixtures/certificatemanager/cert.pem")
     pem_private_key = file("test-fixtures/certificatemanager/private-key.pem")
@@ -132,7 +170,7 @@ func testAccCheckCertificateManagerCertificateDestroyProducer(t *testing.T) func
 
 			config := GoogleProviderConfig(t)
 
-			url, err := replaceVarsForTest(config, rs, "{{CertificateManagerBasePath}}projects/{{project}}/locations/global/certificates/{{name}}")
+			url, err := replaceVarsForTest(config, rs, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates/{{name}}")
 			if err != nil {
 				return err
 			}

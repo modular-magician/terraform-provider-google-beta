@@ -42,7 +42,7 @@ func TestAccCertificateManagerCertificateMapEntry_certificateManagerCertificateM
 				ResourceName:            "google_certificate_manager_certificate_map_entry.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"map"},
+				ImportStateVerifyIgnore: []string{"location", "map"},
 			},
 		},
 	})
@@ -114,7 +114,7 @@ func testAccCheckCertificateManagerCertificateMapEntryDestroyProducer(t *testing
 
 			config := GoogleProviderConfig(t)
 
-			url, err := replaceVarsForTest(config, rs, "{{CertificateManagerBasePath}}projects/{{project}}/locations/global/certificateMaps/{{map}}/certificateMapEntries/{{name}}")
+			url, err := replaceVarsForTest(config, rs, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificateMaps/{{map}}/certificateMapEntries/{{name}}")
 			if err != nil {
 				return err
 			}

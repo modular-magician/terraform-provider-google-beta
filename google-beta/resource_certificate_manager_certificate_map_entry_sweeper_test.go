@@ -61,7 +61,7 @@ func testSweepCertificateManagerCertificateMapEntry(region string) error {
 		},
 	}
 
-	listTemplate := strings.Split("https://certificatemanager.googleapis.com/v1/projects/{{project}}/locations/global/certificateMaps/{{map}}/certificateMapEntries", "?")[0]
+	listTemplate := strings.Split("https://certificatemanager.googleapis.com/v1/projects/{{project}}/locations/{{location}}/certificateMaps/{{map}}/certificateMapEntries", "?")[0]
 	listUrl, err := replaceVars(d, config, listTemplate)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
@@ -99,7 +99,7 @@ func testSweepCertificateManagerCertificateMapEntry(region string) error {
 			continue
 		}
 
-		deleteTemplate := "https://certificatemanager.googleapis.com/v1/projects/{{project}}/locations/global/certificateMaps/{{map}}/certificateMapEntries/{{name}}"
+		deleteTemplate := "https://certificatemanager.googleapis.com/v1/projects/{{project}}/locations/{{location}}/certificateMaps/{{map}}/certificateMapEntries/{{name}}"
 		deleteUrl, err := replaceVars(d, config, deleteTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing delete url: %s", err)

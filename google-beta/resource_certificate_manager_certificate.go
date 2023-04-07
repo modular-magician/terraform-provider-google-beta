@@ -68,6 +68,12 @@ and all following characters must be a dash, underscore, letter or digit.`,
 				Description: `Set of label tags associated with the Certificate resource.`,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
+			"location": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `The Certificate Manager location. If not specified, "global" is used.`,
+				Default:     "global",
+			},
 			"managed": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -272,7 +278,7 @@ func resourceCertificateManagerCertificateCreate(d *schema.ResourceData, meta in
 		obj["managed"] = managedProp
 	}
 
-	url, err := replaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/global/certificates?certificateId={{name}}")
+	url, err := replaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates?certificateId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -297,7 +303,7 @@ func resourceCertificateManagerCertificateCreate(d *schema.ResourceData, meta in
 	}
 
 	// Store the ID now
-	id, err := replaceVars(d, config, "projects/{{project}}/locations/global/certificates/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{location}}/certificates/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -325,7 +331,7 @@ func resourceCertificateManagerCertificateRead(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	url, err := replaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/global/certificates/{{name}}")
+	url, err := replaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -397,7 +403,7 @@ func resourceCertificateManagerCertificateUpdate(d *schema.ResourceData, meta in
 		obj["labels"] = labelsProp
 	}
 
-	url, err := replaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/global/certificates/{{name}}")
+	url, err := replaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -458,7 +464,7 @@ func resourceCertificateManagerCertificateDelete(d *schema.ResourceData, meta in
 	}
 	billingProject = project
 
-	url, err := replaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/global/certificates/{{name}}")
+	url, err := replaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -491,15 +497,15 @@ func resourceCertificateManagerCertificateDelete(d *schema.ResourceData, meta in
 func resourceCertificateManagerCertificateImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*Config)
 	if err := parseImportId([]string{
-		"projects/(?P<project>[^/]+)/locations/global/certificates/(?P<name>[^/]+)",
-		"(?P<project>[^/]+)/(?P<name>[^/]+)",
-		"(?P<name>[^/]+)",
+		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/certificates/(?P<name>[^/]+)",
+		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)",
+		"(?P<location>[^/]+)/(?P<name>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := replaceVars(d, config, "projects/{{project}}/locations/global/certificates/{{name}}")
+	id, err := replaceVars(d, config, "projects/{{project}}/locations/{{location}}/certificates/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
