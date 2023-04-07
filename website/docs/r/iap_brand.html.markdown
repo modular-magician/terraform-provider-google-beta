@@ -41,8 +41,8 @@ To get more information about Brand, see:
 
 ```hcl
 resource "google_project" "project" {
-  project_id = "tf-test%{random_suffix}"
-  name       = "tf-test%{random_suffix}"
+  project_id = "tf-test"
+  name       = "tf-test"
   org_id     = "123456789"
 }
 

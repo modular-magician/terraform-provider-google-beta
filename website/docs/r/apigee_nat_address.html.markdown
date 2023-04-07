@@ -106,7 +106,7 @@ resource "google_apigee_instance" "apigee_instance" {
 }
 
 resource "google_apigee_nat_address" "apigee-nat" {
-  name        = "tf-test%{random_suffix}"
+  name        = "tf-test"
   instance_id = google_apigee_instance.apigee_instance.id
 }
 ```

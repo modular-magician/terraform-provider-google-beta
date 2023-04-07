@@ -60,7 +60,7 @@ resource "google_apigee_organization" "apigee_org" {
 }
 
 resource "google_apigee_envgroup" "env_grp" {
-  name      = "tf-test%{random_suffix}"
+  name      = "tf-test"
   hostnames = ["abc.foo.com"]
   org_id    = google_apigee_organization.apigee_org.id
 }
