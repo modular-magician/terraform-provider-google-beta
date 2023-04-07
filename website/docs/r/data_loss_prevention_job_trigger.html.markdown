@@ -403,7 +403,7 @@ The following arguments are supported:
   How to sample rows if not all rows are scanned. Meaningful only when used in conjunction with either 
   rowsLimit or rowsLimitPercent. If not specified, rows are scanned in the order BigQuery reads them.
   Default value is `TOP`.
-  Possible values are: `TOP`, `RANDOM_START`.
+  Possible values are: `TOP`, `RANDOM_START`, `SAMPLE_METHOD_UNSPECIFIED`.
 
 * `identifying_fields` -
   (Optional)

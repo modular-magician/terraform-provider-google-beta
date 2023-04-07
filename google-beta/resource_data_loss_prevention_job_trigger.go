@@ -277,9 +277,9 @@ rowsLimit and rowsLimitPercent can be specified. Cannot be used in conjunction w
 												"sample_method": {
 													Type:         schema.TypeString,
 													Optional:     true,
-													ValidateFunc: validateEnum([]string{"TOP", "RANDOM_START", ""}),
+													ValidateFunc: validateEnum([]string{"TOP", "RANDOM_START", "SAMPLE_METHOD_UNSPECIFIED", ""}),
 													Description: `How to sample rows if not all rows are scanned. Meaningful only when used in conjunction with either 
-rowsLimit or rowsLimitPercent. If not specified, rows are scanned in the order BigQuery reads them. Default value: "TOP" Possible values: ["TOP", "RANDOM_START"]`,
+rowsLimit or rowsLimitPercent. If not specified, rows are scanned in the order BigQuery reads them. Default value: "TOP" Possible values: ["TOP", "RANDOM_START", "SAMPLE_METHOD_UNSPECIFIED"]`,
 													Default: "TOP",
 												},
 											},
