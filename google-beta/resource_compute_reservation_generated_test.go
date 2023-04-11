@@ -42,7 +42,7 @@ func TestAccComputeReservation_reservationBasicExample(t *testing.T) {
 				ResourceName:            "google_compute_reservation.gce_reservation",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"share_settings", "zone"},
+				ImportStateVerifyIgnore: []string{"zone"},
 			},
 		},
 	})
@@ -66,7 +66,6 @@ resource "google_compute_reservation" "gce_reservation" {
 }
 
 func TestAccComputeReservation_sharedReservationBasicExample(t *testing.T) {
-	SkipIfVcr(t)
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -88,7 +87,7 @@ func TestAccComputeReservation_sharedReservationBasicExample(t *testing.T) {
 				ResourceName:            "google_compute_reservation.gce_reservation",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"share_settings", "zone"},
+				ImportStateVerifyIgnore: []string{"zone"},
 			},
 		},
 	})
@@ -141,8 +140,8 @@ resource "google_compute_reservation" "gce_reservation" {
   share_settings {
     share_type = "SPECIFIC_PROJECTS"
     project_map {
-      id = google_project.guest_project.project_id
-      project_id = google_project.guest_project.project_id
+      id = google_project.guest_project.number
+      project_id = google_project.guest_project.number
     }
   }
   depends_on = [google_organization_policy.shared_reservation_org_policy,google_project_service.compute]
