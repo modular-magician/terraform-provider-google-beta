@@ -47,6 +47,7 @@ resource "google_workflows_workflow" "example" {
   region        = "us-central1"
   description   = "Magic"
   service_account = google_service_account.test_account.id
+  crypto_key_name = "projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{cryptoKey}"
   source_contents = <<-EOF
   # This is a sample workflow, feel free to replace it with your source code
   #
@@ -107,6 +108,11 @@ The following arguments are supported:
 * `source_contents` -
   (Optional)
   Workflow code to be executed. The size limit is 32KB.
+
+* `crypto_key_name` -
+  (Optional)
+  The KMS key used to encrypt workflow and execution data.
+  Format: projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{cryptoKey}
 
 * `region` -
   (Optional)
