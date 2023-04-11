@@ -4,6 +4,7 @@ import (
 	"context"
 	"io/ioutil"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -630,6 +631,74 @@ func TestHandleSDKDefaults_RequestReason(t *testing.T) {
 
 			if v != tc.ExpectedValue {
 				t.Fatalf("unexpected value: wanted %v, got, %v", tc.ExpectedValue, v)
+			}
+		})
+	}
+}
+
+func TestConfigGetCredentials(t *testing.T) {
+	cases := map[string]struct {
+		EnvVariables        map[string]string
+		SetCredentials      bool
+		Credentials         string
+		ExpectError         bool
+		ErrorContainsString string
+	}{
+		"no error is returned if neither credentials nor access_token set in the provider config but GOOGLE_APPLICATION_CREDENTIALS is set": {
+			EnvVariables: map[string]string{
+				"GOOGLE_APPLICATION_CREDENTIALS": testFakeCredentialsPath,
+			},
+		},
+		"no error is returned if credentials is set as an empty string and GOOGLE_APPLICATION_CREDENTIALS is set": {
+			SetCredentials: true,
+			Credentials:    "",
+			EnvVariables: map[string]string{
+				"GOOGLE_APPLICATION_CREDENTIALS": testFakeCredentialsPath,
+			},
+		},
+		"error returned if credentials is set as an empty string and GOOGLE_APPLICATION_CREDENTIALS is unset": {
+			SetCredentials:      true,
+			Credentials:         "",
+			ExpectError:         true,
+			ErrorContainsString: "could not find default credentials",
+		},
+		"error returned if neither credentials nor access_token set in the provider config, and GOOGLE_APPLICATION_CREDENTIALS is unset": {
+			ExpectError:         true,
+			ErrorContainsString: "could not find default credentials",
+		},
+	}
+
+	for tn, tc := range cases {
+		t.Run(tn, func(t *testing.T) {
+
+			// Arrange
+
+			config := &Config{
+				Scopes: DefaultClientScopes,
+			}
+			if tc.SetCredentials {
+				config.Credentials = tc.Credentials
+			}
+			ConfigureBasePaths(config)
+
+			// Set ENVs
+			if len(tc.EnvVariables) > 0 {
+				for k, v := range tc.EnvVariables {
+					t.Setenv(k, v)
+				}
+			}
+
+			// Act
+			_, err := config.GetCredentials(config.Scopes, false)
+
+			// Assert
+			if err != nil && !tc.ExpectError {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if err != nil && tc.ExpectError {
+				if !strings.Contains(err.Error(), tc.ErrorContainsString) {
+					t.Fatalf("expected error to contain \"%s\", not found in: \"%s\"", tc.ErrorContainsString, err.Error())
+				}
 			}
 		})
 	}
