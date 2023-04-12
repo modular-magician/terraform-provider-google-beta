@@ -198,6 +198,7 @@ The following arguments are supported:
   (Optional)
   If true, CheckAndMutateRow and ReadModifyWriteRow requests are allowed by this app profile.
   It is unsafe to send these requests to the same table/row/column in multiple clusters.
+  This is to test CI change
 
 ## Attributes Reference
 
