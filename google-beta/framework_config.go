@@ -120,6 +120,7 @@ func (p *frameworkProvider) LoadAndValidateFramework(ctx context.Context, data P
 	p.GameServicesBasePath = data.GameServicesCustomEndpoint.ValueString()
 	p.GKEBackupBasePath = data.GKEBackupCustomEndpoint.ValueString()
 	p.GKEHubBasePath = data.GKEHubCustomEndpoint.ValueString()
+	p.GkeonpremBasePath = data.GkeonpremCustomEndpoint.ValueString()
 	p.HealthcareBasePath = data.HealthcareCustomEndpoint.ValueString()
 	p.IAM2BasePath = data.IAM2CustomEndpoint.ValueString()
 	p.IAMBetaBasePath = data.IAMBetaCustomEndpoint.ValueString()
@@ -745,6 +746,14 @@ func (p *frameworkProvider) HandleDefaults(ctx context.Context, data *ProviderMo
 		}, DefaultBasePaths[GKEHubBasePathKey])
 		if customEndpoint != nil {
 			data.GKEHubCustomEndpoint = types.StringValue(customEndpoint.(string))
+		}
+	}
+	if data.GkeonpremCustomEndpoint.IsNull() {
+		customEndpoint := MultiEnvDefault([]string{
+			"GOOGLE_GKEONPREM_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[GkeonpremBasePathKey])
+		if customEndpoint != nil {
+			data.GkeonpremCustomEndpoint = types.StringValue(customEndpoint.(string))
 		}
 	}
 	if data.HealthcareCustomEndpoint.IsNull() {
