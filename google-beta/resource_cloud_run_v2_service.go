@@ -490,6 +490,11 @@ If this is not specified, the default behavior is defined by gRPC.`,
 							Optional:    true,
 							Description: `Email address of the IAM service account associated with the revision of the service. The service account represents the identity of the running revision, and determines what permissions the revision has. If not provided, the revision will use the project's default service account.`,
 						},
+						"session_affinity": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: `Enables session affinity. For more information, go to https://cloud.google.com/run/docs/configuring/session-affinity`,
+						},
 						"timeout": {
 							Type:     schema.TypeString,
 							Computed: true,
@@ -1379,6 +1384,8 @@ func flattenCloudRunV2ServiceTemplate(v interface{}, d *schema.ResourceData, con
 		flattenCloudRunV2ServiceTemplateEncryptionKey(original["encryptionKey"], d, config)
 	transformed["max_instance_request_concurrency"] =
 		flattenCloudRunV2ServiceTemplateMaxInstanceRequestConcurrency(original["maxInstanceRequestConcurrency"], d, config)
+	transformed["session_affinity"] =
+		flattenCloudRunV2ServiceTemplateSessionAffinity(original["sessionAffinity"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudRunV2ServiceTemplateRevision(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -2216,6 +2223,10 @@ func flattenCloudRunV2ServiceTemplateMaxInstanceRequestConcurrency(v interface{}
 	return v // let terraform core handle it otherwise
 }
 
+func flattenCloudRunV2ServiceTemplateSessionAffinity(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
 func flattenCloudRunV2ServiceTraffic(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	if v == nil {
 		return v
@@ -2628,6 +2639,13 @@ func expandCloudRunV2ServiceTemplate(v interface{}, d TerraformResourceData, con
 		return nil, err
 	} else if val := reflect.ValueOf(transformedMaxInstanceRequestConcurrency); val.IsValid() && !isEmptyValue(val) {
 		transformed["maxInstanceRequestConcurrency"] = transformedMaxInstanceRequestConcurrency
+	}
+
+	transformedSessionAffinity, err := expandCloudRunV2ServiceTemplateSessionAffinity(original["session_affinity"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSessionAffinity); val.IsValid() && !isEmptyValue(val) {
+		transformed["sessionAffinity"] = transformedSessionAffinity
 	}
 
 	return transformed, nil
@@ -3652,6 +3670,10 @@ func expandCloudRunV2ServiceTemplateEncryptionKey(v interface{}, d TerraformReso
 }
 
 func expandCloudRunV2ServiceTemplateMaxInstanceRequestConcurrency(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudRunV2ServiceTemplateSessionAffinity(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
