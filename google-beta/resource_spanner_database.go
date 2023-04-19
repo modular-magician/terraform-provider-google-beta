@@ -309,7 +309,6 @@ func resourceSpannerDatabaseCreate(d *schema.ResourceData, meta interface{}) err
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
-
 		return fmt.Errorf("Error waiting to create Database: %s", err)
 	}
 

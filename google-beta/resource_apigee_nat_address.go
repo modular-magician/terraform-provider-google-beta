@@ -116,7 +116,6 @@ func resourceApigeeNatAddressCreate(d *schema.ResourceData, meta interface{}) er
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
-
 		return fmt.Errorf("Error waiting to create NatAddress: %s", err)
 	}
 

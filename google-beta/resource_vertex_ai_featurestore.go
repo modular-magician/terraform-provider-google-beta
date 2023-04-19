@@ -224,7 +224,6 @@ func resourceVertexAIFeaturestoreCreate(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
-
 		return fmt.Errorf("Error waiting to create Featurestore: %s", err)
 	}
 

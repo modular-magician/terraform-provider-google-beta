@@ -147,7 +147,7 @@ permission to Acknowledge() messages on this subscription.`,
 Format is 'projects/{project}/topics/{topic}'.
 
 The Cloud Pub/Sub service account associated with the enclosing subscription's
-parent project (i.e., 
+parent project (i.e.,
 service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com) must have
 permission to Publish() to this topic.
 
@@ -161,7 +161,7 @@ since messages published to a topic with no subscriptions are lost.`,
 							Description: `The maximum number of delivery attempts for any message. The value must be
 between 5 and 100.
 
-The number of delivery attempts is defined as 1 + (the sum of number of 
+The number of delivery attempts is defined as 1 + (the sum of number of
 NACKs and number of times the acknowledgement deadline has been exceeded for the message).
 
 A NACK is any call to ModifyAckDeadline with a 0 deadline. Note that
@@ -173,6 +173,14 @@ If this parameter is 0, a default value of 5 is used.`,
 						},
 					},
 				},
+			},
+			"detached": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `Indicates whether the subscription is detached from its topic.
+Detached subscriptions don't receive messages from their topic and don't retain any backlog.
+'subscriptions.pull' and 'StreamingPull' requests will return 'FAILED_PRECONDITION'.
+If the subscription is a push subscription, pushes to the endpoint will not be made.`,
 			},
 			"enable_exactly_once_delivery": {
 				Type:     schema.TypeBool,
@@ -226,9 +234,9 @@ Example - "3.5s".`,
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
-				Description: `The subscription only delivers the messages that match the filter. 
+				Description: `The subscription only delivers the messages that match the filter.
 Pub/Sub automatically acknowledges the messages that don't match the filter. You can filter messages
-by their attributes. The maximum length of a filter is 256 bytes. After creating the subscription, 
+by their attributes. The maximum length of a filter is 256 bytes. After creating the subscription,
 you can't modify the filter.`,
 			},
 			"labels": {
@@ -342,7 +350,7 @@ messageRetentionDuration window.`,
 				Optional: true,
 				Description: `A policy that specifies how Pub/Sub retries message delivery for this subscription.
 
-If not set, the default retry policy is applied. This generally implies that messages will be retried as soon as possible for healthy subscribers. 
+If not set, the default retry policy is applied. This generally implies that messages will be retried as soon as possible for healthy subscribers.
 RetryPolicy will be triggered on NACKs or acknowledgement deadline exceeded events for a given message`,
 				MaxItems: 1,
 				Elem: &schema.Resource{
@@ -352,7 +360,7 @@ RetryPolicy will be triggered on NACKs or acknowledgement deadline exceeded even
 							Computed:         true,
 							Optional:         true,
 							DiffSuppressFunc: DurationDiffSuppress,
-							Description: `The maximum delay between consecutive deliveries of a given message. Value should be between 0 and 600 seconds. Defaults to 600 seconds. 
+							Description: `The maximum delay between consecutive deliveries of a given message. Value should be between 0 and 600 seconds. Defaults to 600 seconds.
 A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
 						},
 						"minimum_backoff": {
@@ -468,6 +476,12 @@ func resourcePubsubSubscriptionCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	} else if v, ok := d.GetOkExists("enable_exactly_once_delivery"); !isEmptyValue(reflect.ValueOf(enableExactlyOnceDeliveryProp)) && (ok || !reflect.DeepEqual(v, enableExactlyOnceDeliveryProp)) {
 		obj["enableExactlyOnceDelivery"] = enableExactlyOnceDeliveryProp
+	}
+	detachedProp, err := expandPubsubSubscriptionDetached(d.Get("detached"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("detached"); !isEmptyValue(reflect.ValueOf(detachedProp)) && (ok || !reflect.DeepEqual(v, detachedProp)) {
+		obj["detached"] = detachedProp
 	}
 
 	obj, err = resourcePubsubSubscriptionEncoder(d, meta, obj)
@@ -627,6 +641,9 @@ func resourcePubsubSubscriptionRead(d *schema.ResourceData, meta interface{}) er
 	if err := d.Set("enable_exactly_once_delivery", flattenPubsubSubscriptionEnableExactlyOnceDelivery(res["enableExactlyOnceDelivery"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subscription: %s", err)
 	}
+	if err := d.Set("detached", flattenPubsubSubscriptionDetached(res["detached"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Subscription: %s", err)
+	}
 
 	return nil
 }
@@ -772,13 +789,54 @@ func resourcePubsubSubscriptionUpdate(d *schema.ResourceData, meta interface{}) 
 		billingProject = bp
 	}
 
-	res, err := SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
+	// if updateMask is empty we are not updating anything so skip the post
+	if len(updateMask) > 0 {
+		res, err := SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
-	if err != nil {
-		return fmt.Errorf("Error updating Subscription %q: %s", d.Id(), err)
-	} else {
-		log.Printf("[DEBUG] Finished updating Subscription %q: %#v", d.Id(), res)
+		if err != nil {
+			return fmt.Errorf("Error updating Subscription %q: %s", d.Id(), err)
+		} else {
+			log.Printf("[DEBUG] Finished updating Subscription %q: %#v", d.Id(), res)
+		}
+
 	}
+	d.Partial(true)
+
+	if d.HasChange("detached") {
+		obj := make(map[string]interface{})
+
+		detachedProp, err := expandPubsubSubscriptionDetached(d.Get("detached"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("detached"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, detachedProp)) {
+			obj["detached"] = detachedProp
+		}
+
+		obj, err = resourcePubsubSubscriptionUpdateEncoder(d, meta, obj)
+		if err != nil {
+			return err
+		}
+
+		url, err := ReplaceVars(d, config, "{{PubsubBasePath}}projects/{{project}}/subscriptions/{{name}}:detach")
+		if err != nil {
+			return err
+		}
+
+		// err == nil indicates that the billing_project value was found
+		if bp, err := getBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		res, err := SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return fmt.Errorf("Error updating Subscription %q: %s", d.Id(), err)
+		} else {
+			log.Printf("[DEBUG] Finished updating Subscription %q: %#v", d.Id(), res)
+		}
+
+	}
+
+	d.Partial(false)
 
 	return resourcePubsubSubscriptionRead(d, meta)
 }
@@ -1048,6 +1106,10 @@ func flattenPubsubSubscriptionEnableMessageOrdering(v interface{}, d *schema.Res
 }
 
 func flattenPubsubSubscriptionEnableExactlyOnceDelivery(v interface{}, d *schema.ResourceData, config *Config) interface{} {
+	return v
+}
+
+func flattenPubsubSubscriptionDetached(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -1346,6 +1408,10 @@ func expandPubsubSubscriptionEnableExactlyOnceDelivery(v interface{}, d Terrafor
 	return v, nil
 }
 
+func expandPubsubSubscriptionDetached(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
+	return v, nil
+}
+
 func resourcePubsubSubscriptionEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	delete(obj, "name")
 	return obj, nil
@@ -1353,6 +1419,10 @@ func resourcePubsubSubscriptionEncoder(d *schema.ResourceData, meta interface{},
 
 func resourcePubsubSubscriptionUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	newObj := make(map[string]interface{})
-	newObj["subscription"] = obj
+	if d.HasChange("detached") {
+		newObj = nil
+	} else {
+		newObj["subscription"] = obj
+	}
 	return newObj, nil
 }

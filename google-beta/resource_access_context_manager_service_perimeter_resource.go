@@ -124,7 +124,6 @@ func resourceAccessContextManagerServicePerimeterResourceCreate(d *schema.Resour
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
-
 		return fmt.Errorf("Error waiting to create ServicePerimeterResource: %s", err)
 	}
 

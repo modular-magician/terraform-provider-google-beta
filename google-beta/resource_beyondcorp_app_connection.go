@@ -230,7 +230,6 @@ func resourceBeyondcorpAppConnectionCreate(d *schema.ResourceData, meta interfac
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
-
 		return fmt.Errorf("Error waiting to create AppConnection: %s", err)
 	}
 
