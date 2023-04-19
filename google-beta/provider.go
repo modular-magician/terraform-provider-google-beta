@@ -643,6 +643,7 @@ func Provider() *schema.Provider {
 			"google_access_approval_organization_service_account": DataSourceAccessApprovalOrganizationServiceAccount(),
 			"google_access_approval_project_service_account":      DataSourceAccessApprovalProjectServiceAccount(),
 			"google_active_folder":                                DataSourceGoogleActiveFolder(),
+			"google_alloydb_locations":                            DataSourceAlloydbLocations(),
 			"google_artifact_registry_repository":                 DataSourceArtifactRegistryRepository(),
 			"google_app_engine_default_service_account":           DataSourceGoogleAppEngineDefaultServiceAccount(),
 			"google_beyondcorp_app_connection":                    DataSourceGoogleBeyondcorpAppConnection(),
@@ -789,8 +790,8 @@ func Provider() *schema.Provider {
 }
 
 // Generated resources: 324
-// Generated IAM resources: 213
-// Total generated resources: 537
+// Generated IAM resources: 219
+// Total generated resources: 543
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1334,8 +1335,14 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_vpc_access_connector":                                  ResourceVPCAccessConnector(),
 			"google_workflows_workflow":                                    ResourceWorkflowsWorkflow(),
 			"google_workstations_workstation":                              ResourceWorkstationsWorkstation(),
+			"google_workstations_workstation_iam_binding":                  ResourceIamBinding(WorkstationsWorkstationIamSchema, WorkstationsWorkstationIamUpdaterProducer, WorkstationsWorkstationIdParseFunc),
+			"google_workstations_workstation_iam_member":                   ResourceIamMember(WorkstationsWorkstationIamSchema, WorkstationsWorkstationIamUpdaterProducer, WorkstationsWorkstationIdParseFunc),
+			"google_workstations_workstation_iam_policy":                   ResourceIamPolicy(WorkstationsWorkstationIamSchema, WorkstationsWorkstationIamUpdaterProducer, WorkstationsWorkstationIdParseFunc),
 			"google_workstations_workstation_cluster":                      ResourceWorkstationsWorkstationCluster(),
 			"google_workstations_workstation_config":                       ResourceWorkstationsWorkstationConfig(),
+			"google_workstations_workstation_config_iam_binding":           ResourceIamBinding(WorkstationsWorkstationConfigIamSchema, WorkstationsWorkstationConfigIamUpdaterProducer, WorkstationsWorkstationConfigIdParseFunc),
+			"google_workstations_workstation_config_iam_member":            ResourceIamMember(WorkstationsWorkstationConfigIamSchema, WorkstationsWorkstationConfigIamUpdaterProducer, WorkstationsWorkstationConfigIdParseFunc),
+			"google_workstations_workstation_config_iam_policy":            ResourceIamPolicy(WorkstationsWorkstationConfigIamSchema, WorkstationsWorkstationConfigIamUpdaterProducer, WorkstationsWorkstationConfigIdParseFunc),
 		},
 		map[string]*schema.Resource{
 			// ####### START handwritten resources ###########
