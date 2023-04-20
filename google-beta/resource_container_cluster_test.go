@@ -4497,8 +4497,7 @@ func TestAccContainerCluster_withEnablePrivateEndpointToggle(t *testing.T) {
 
 func TestAccContainerCluster_failedCreation(t *testing.T) {
 	// Test that in a scenario where the cluster fails to create, a subsequent apply will delete the resource.
-	// Skip this test for now as we don't have a good way to force cluster creation to fail. https://github.com/hashicorp/terraform-provider-google/issues/13711
-	t.Skip()
+	SkipIfVcr(t)
 	t.Parallel()
 
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", RandString(t, 10))

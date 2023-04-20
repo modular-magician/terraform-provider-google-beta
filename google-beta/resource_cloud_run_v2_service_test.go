@@ -89,7 +89,6 @@ resource "google_cloud_run_v2_service" "default" {
       }
       resources {
         cpu_idle = true
-        startup_cpu_boost = true
         limits = {
           cpu = "4"
           memory = "2Gi"
@@ -158,7 +157,6 @@ resource "google_cloud_run_v2_service" "default" {
       }
       resources {
         cpu_idle = true
-        startup_cpu_boost = false
         limits = {
           cpu = "2"
           memory = "8Gi"
