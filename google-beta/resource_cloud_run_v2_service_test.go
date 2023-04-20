@@ -89,14 +89,12 @@ resource "google_cloud_run_v2_service" "default" {
       }
       resources {
         cpu_idle = true
-        startup_cpu_boost = true
         limits = {
           cpu = "4"
           memory = "2Gi"
         }
       }
     }
-    session_affinity = false
   }
 }
 
@@ -158,7 +156,6 @@ resource "google_cloud_run_v2_service" "default" {
       }
       resources {
         cpu_idle = true
-        startup_cpu_boost = false
         limits = {
           cpu = "2"
           memory = "8Gi"
@@ -169,7 +166,6 @@ resource "google_cloud_run_v2_service" "default" {
       connector = google_vpc_access_connector.connector.id
       egress = "ALL_TRAFFIC"
     }
-    session_affinity = true
   }
   traffic {
     type = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
@@ -403,7 +399,6 @@ resource "google_cloud_run_v2_service" "default" {
         failure_threshold = 2
         http_get {
           path = "/some-path"
-          port = 8080
           http_headers {
             name = "User-Agent"
             value = "magic-modules"
@@ -453,7 +448,6 @@ resource "google_cloud_run_v2_service" "default" {
         failure_threshold = 3
         http_get {
           path = "/some-path"
-          port = 8080
           http_headers {
             name = "User-Agent"
             value = "magic-modules"

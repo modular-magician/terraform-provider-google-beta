@@ -135,8 +135,15 @@ resource "google_cloud_run_service_iam_policy" "noauth" {
 
 ```hcl
 resource "google_cloud_run_service" "default" {
+  provider = google-beta
+
   name     = "cloudrun-srv"
   location = "us-central1"
+  metadata {
+    annotations = {
+      "run.googleapis.com/launch-stage" = "BETA"
+    }
+  }
 
   template {
     spec {
@@ -273,43 +280,10 @@ The following arguments are supported:
 * `annotations` -
   (Optional)
   Annotations is a key value map stored with a resource that
-  may be set by external tools to store and retrieve arbitrary metadata. More
-  info: http://kubernetes.io/docs/user-guide/annotations
+  may be set by external tools to store and retrieve arbitrary metadata.
   **Note**: The Cloud Run API may add additional annotations that were not provided in your config.
   If terraform plan shows a diff where a server-side annotation is added, you can add it to your config
   or apply the lifecycle.ignore_changes rule to the metadata.0.annotations field.
-  Annotations with `run.googleapis.com/` and `autoscaling.knative.dev` are restricted. Use the following annotation
-  keys to configure features on a Revision template:
-  - `autoscaling.knative.dev/maxScale` sets the [maximum number of container
-    instances](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--max-instances) of the Revision to run.
-  - `autoscaling.knative.dev/minScale` sets the [minimum number of container
-    instances](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--min-instances) of the Revision to run.
-  - `run.googleapis.com/client-name` sets the client name calling the Cloud Run API.
-  - `run.googleapis.com/cloudsql-instances` sets the [Cloud SQL
-    instances](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--add-cloudsql-instances) the Revision connects to.
-  - `run.googleapis.com/cpu-throttling` sets whether to throttle the CPU when the container is not actively serving
-    requests. See https://cloud.google.com/sdk/gcloud/reference/run/deploy#--[no-]cpu-throttling.
-  - `run.googleapis.com/encryption-key-shutdown-hours` sets the number of hours to wait before an automatic shutdown
-    server after CMEK key revocation is detected.
-  - `run.googleapis.com/encryption-key` sets the [CMEK key](https://cloud.google.com/run/docs/securing/using-cmek)
-    reference to encrypt the container with.
-  - `run.googleapis.com/execution-environment` sets the [execution
-    environment](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--execution-environment)
-    where the application will run.
-  - `run.googleapis.com/post-key-revocation-action-type` sets the
-    [action type](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--post-key-revocation-action-type)
-    after CMEK key revocation.
-  - `run.googleapis.com/secrets` sets a list of key-value pairs to set as
-    [secrets](https://cloud.google.com/run/docs/configuring/secrets#yaml).
-  - `run.googleapis.com/sessionAffinity` sets whether to enable
-    [session affinity](https://cloud.google.com/sdk/gcloud/reference/beta/run/deploy#--[no-]session-affinity)
-    for connections to the Revision.
-  - `run.googleapis.com/startup-cpu-boost` sets whether to allocate extra CPU to containers on startup.
-    See https://cloud.google.com/sdk/gcloud/reference/run/deploy#--[no-]cpu-boost.
-  - `run.googleapis.com/vpc-access-connector` sets a [VPC connector](https://cloud.google.com/run/docs/configuring/connecting-vpc#terraform_1)
-    for the Revision.
-  - `run.googleapis.com/vpc-access-egress` sets the outbound traffic to send through the VPC connector for this resource.
-    See https://cloud.google.com/sdk/gcloud/reference/run/deploy#--vpc-egress.
 
 * `name` -
   (Optional)
@@ -413,14 +387,14 @@ The following arguments are supported:
   Structure is [documented below](#nested_volume_mounts).
 
 * `startup_probe` -
-  (Optional)
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Startup probe of application within the container.
   All other probes are disabled if a startup probe is provided, until it
   succeeds. Container will not be added to service endpoints if the probe fails.
   Structure is [documented below](#nested_startup_probe).
 
 * `liveness_probe` -
-  (Optional)
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Periodic probe of container liveness. Container will be restarted if the probe fails.
   Structure is [documented below](#nested_liveness_probe).
 
@@ -603,18 +577,12 @@ The following arguments are supported:
 * `port` -
   (Optional)
   Port number to access on the container. Number must be in the range 1 to 65535.
-  If not specified, defaults to the same value as container.ports[0].containerPort.
 
 <a name="nested_http_get"></a>The `http_get` block supports:
 
 * `path` -
   (Optional)
   Path to access on the HTTP server. If set, it should not be empty string.
-
-* `port` -
-  (Optional)
-  Port number to access on the container. Number must be in the range 1 to 65535.
-  If not specified, defaults to the same value as container.ports[0].containerPort.
 
 * `http_headers` -
   (Optional)
@@ -637,7 +605,6 @@ The following arguments are supported:
 * `port` -
   (Optional)
   Port number to access on the container. Number must be in the range 1 to 65535.
-  If not specified, defaults to the same value as container.ports[0].containerPort.
 
 * `service` -
   (Optional)
@@ -686,11 +653,6 @@ The following arguments are supported:
   (Optional)
   Path to access on the HTTP server. If set, it should not be empty string.
 
-* `port` -
-  (Optional)
-  Port number to access on the container. Number must be in the range 1 to 65535.
-  If not specified, defaults to the same value as container.ports[0].containerPort.
-
 * `http_headers` -
   (Optional)
   Custom headers to set in the request. HTTP allows repeated headers.
@@ -712,7 +674,6 @@ The following arguments are supported:
 * `port` -
   (Optional)
   Port number to access on the container. Number must be in the range 1 to 65535.
-  If not specified, defaults to the same value as container.ports[0].containerPort.
 
 * `service` -
   (Optional)
@@ -866,18 +827,9 @@ this field is set to false, the revision name will still autogenerate.)
   **Note**: The Cloud Run API may add additional annotations that were not provided in your config.
   If terraform plan shows a diff where a server-side annotation is added, you can add it to your config
   or apply the lifecycle.ignore_changes rule to the metadata.0.annotations field.
-  Annotations with `run.googleapis.com/` and `autoscaling.knative.dev` are restricted. Use the following annotation
-  keys to configure features on a Service:
-  - `run.googleapis.com/binary-authorization-breakglass` sets the [Binary Authorization breakglass](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--breakglass).
-  - `run.googleapis.com/binary-authorization` sets the [Binary Authorization](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--binary-authorization).
-  - `run.googleapis.com/client-name` sets the client name calling the Cloud Run API.
-  - `run.googleapis.com/custom-audiences` sets the [custom audiences](https://cloud.google.com/sdk/gcloud/reference/alpha/run/deploy#--add-custom-audiences)
-    that can be used in the audience field of ID token for authenticated requests.
-  - `run.googleapis.com/description` sets a user defined description for the Service.
+  Cloud Run (fully managed) uses the following annotation keys to configure features on a Service:
   - `run.googleapis.com/ingress` sets the [ingress settings](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--ingress)
     for the Service. For example, `"run.googleapis.com/ingress" = "all"`.
-  - `run.googleapis.com/launch-stage` sets the [launch stage](https://cloud.google.com/run/docs/troubleshooting#launch-stage-validation)
-    when a preview feature is used. For example, `"run.googleapis.com/launch-stage": "BETA"`
 
 ## Attributes Reference
 

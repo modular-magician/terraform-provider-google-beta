@@ -466,15 +466,3 @@ func IamWithDeprecationMessage(message string) func(s *IamSettings) {
 func IamWithGAResourceDeprecation() func(s *IamSettings) {
 	return IamWithDeprecationMessage("")
 }
-
-// Util to deref and print auditConfigs
-func debugPrintAuditConfigs(bs []*cloudresourcemanager.AuditConfig) string {
-	v, _ := json.MarshalIndent(bs, "", "\t")
-	return string(v)
-}
-
-// Util to deref and print bindings
-func debugPrintBindings(bs []*cloudresourcemanager.Binding) string {
-	v, _ := json.MarshalIndent(bs, "", "\t")
-	return string(v)
-}

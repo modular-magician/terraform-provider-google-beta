@@ -48,12 +48,6 @@ func ResourceAlloydbCluster() *schema.Resource {
 				ForceNew:    true,
 				Description: `The ID of the alloydb cluster.`,
 			},
-			"location": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `The location where the alloydb cluster should reside.`,
-			},
 			"network": {
 				Type:             schema.TypeString,
 				Required:         true,
@@ -72,64 +66,6 @@ If no policy is provided then the default policy will be used. The default polic
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"backup_window": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Description: `The length of the time window during which a backup can be taken. If a backup does not succeed within this time window, it will be canceled and considered failed.
-
-The backup window must be at least 5 minutes long. There is no upper bound on the window. If not set, it will default to 1 hour.
-
-A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
-						},
-						"enabled": {
-							Type:        schema.TypeBool,
-							Optional:    true,
-							Description: `Whether automated backups are enabled.`,
-						},
-						"labels": {
-							Type:        schema.TypeMap,
-							Optional:    true,
-							Description: `Labels to apply to backups created using this configuration.`,
-							Elem:        &schema.Schema{Type: schema.TypeString},
-						},
-						"location": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: `The location where the backup will be stored. Currently, the only supported option is to store the backup in the same region as the cluster.`,
-						},
-						"quantity_based_retention": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Description: `Quantity-based Backup retention policy to retain recent backups. Conflicts with 'time_based_retention', both can't be set together.`,
-							MaxItems:    1,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"count": {
-										Type:        schema.TypeInt,
-										Optional:    true,
-										Description: `The number of backups to retain.`,
-									},
-								},
-							},
-							ConflictsWith: []string{"automated_backup_policy.0.time_based_retention"},
-						},
-						"time_based_retention": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Description: `Time-based Backup retention policy. Conflicts with 'quantity_based_retention', both can't be set together.`,
-							MaxItems:    1,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"retention_period": {
-										Type:     schema.TypeString,
-										Optional: true,
-										Description: `The retention period.
-A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
-									},
-								},
-							},
-							ConflictsWith: []string{"automated_backup_policy.0.quantity_based_retention"},
-						},
 						"weekly_schedule": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -180,6 +116,64 @@ A duration in seconds with up to nine fractional digits, terminated by 's'. Exam
 								},
 							},
 						},
+						"backup_window": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The length of the time window during which a backup can be taken. If a backup does not succeed within this time window, it will be canceled and considered failed.
+
+The backup window must be at least 5 minutes long. There is no upper bound on the window. If not set, it will default to 1 hour.
+
+A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
+						},
+						"enabled": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: `Whether automated backups are enabled.`,
+						},
+						"labels": {
+							Type:        schema.TypeMap,
+							Optional:    true,
+							Description: `Labels to apply to backups created using this configuration.`,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+						},
+						"location": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `The location where the backup will be stored. Currently, the only supported option is to store the backup in the same region as the cluster.`,
+						},
+						"quantity_based_retention": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Quantity-based Backup retention policy to retain recent backups.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"count": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `The number of backups to retain.`,
+									},
+								},
+							},
+							ConflictsWith: []string{"automated_backup_policy.0.time_based_retention"},
+						},
+						"time_based_retention": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Time-based Backup retention policy.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"retention_period": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Description: `The retention period.
+A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s".`,
+									},
+								},
+							},
+							ConflictsWith: []string{"automated_backup_policy.0.quantity_based_retention"},
+						},
 					},
 				},
 			},
@@ -214,6 +208,12 @@ A duration in seconds with up to nine fractional digits, terminated by 's'. Exam
 				Optional:    true,
 				Description: `User-defined labels for the alloydb cluster.`,
 				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"location": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `The location where the alloydb cluster should reside.`,
 			},
 			"backup_source": {
 				Type:        schema.TypeList,

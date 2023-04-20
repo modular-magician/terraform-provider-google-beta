@@ -149,78 +149,6 @@ resource "google_data_loss_prevention_job_trigger" "bigquery_row_limit_percentag
 	}
 }
 ```
-## Example Usage - Dlp Job Trigger Job Notification Emails
-
-
-```hcl
-resource "google_data_loss_prevention_job_trigger" "job_notification_emails" {
-  parent       = "projects/my-project-name"
-  description  = "Description for the job_trigger created by terraform"
-  display_name = "TerraformDisplayName"
-  
-  triggers {
-    schedule {
-      recurrence_period_duration = "86400s"
-    }
-  }
-  
-  inspect_job {
-    inspect_template_name = "sample-inspect-template"
-    actions {
-      job_notification_emails {}
-    }
-    storage_config {
-      cloud_storage_options {
-        file_set {
-          url = "gs://mybucket/directory/"
-        }
-      }
-    }
-  }
-}
-```
-## Example Usage - Dlp Job Trigger Hybrid
-
-
-```hcl
-resource "google_data_loss_prevention_job_trigger" "hybrid_trigger" {
-  parent = "projects/my-project-name"
-
-  triggers {
-    manual {}
-  }
-
-  inspect_job {
-    inspect_template_name = "fake"
-    actions {
-      save_findings {
-        output_config {
-          table {
-            project_id = "project"
-            dataset_id = "dataset"
-          }
-        }
-      }
-    }
-    storage_config {
-      hybrid_options {
-        description = "Hybrid job trigger for data from the comments field of a table that contains customer appointment bookings"
-        required_finding_label_keys = [
-          "appointment-bookings-comments"
-        ]
-        labels = {
-          env = "prod"
-        }
-        table_options {
-          identifying_fields {
-            name = "booking_id"
-          }
-        }
-      }
-    }
-  }
-}
-```
 
 ## Argument Reference
 
@@ -244,10 +172,6 @@ The following arguments are supported:
   (Optional)
   Schedule for triggered jobs
   Structure is [documented below](#nested_schedule).
-
-* `manual` -
-  (Optional)
-  For use with hybrid jobs. Jobs must be manually created and finished.
 
 
 <a name="nested_schedule"></a>The `schedule` block supports:
@@ -320,11 +244,6 @@ The following arguments are supported:
   (Optional)
   Options defining BigQuery table and row identifiers.
   Structure is [documented below](#nested_big_query_options).
-
-* `hybrid_options` -
-  (Optional)
-  Configuration to control jobs where the content being inspected is outside of Google Cloud Platform.
-  Structure is [documented below](#nested_hybrid_options).
 
 
 <a name="nested_timespan_config"></a>The `timespan_config` block supports:
@@ -513,51 +432,6 @@ The following arguments are supported:
   (Required)
   Name of a BigQuery field to be returned with the findings.
 
-<a name="nested_hybrid_options"></a>The `hybrid_options` block supports:
-
-* `description` -
-  (Optional)
-  A short description of where the data is coming from. Will be stored once in the job. 256 max length.
-
-* `required_finding_label_keys` -
-  (Optional)
-  These are labels that each inspection request must include within their 'finding_labels' map. Request
-  may contain others, but any missing one of these will be rejected.
-  Label keys must be between 1 and 63 characters long and must conform to the following regular expression: `[a-z]([-a-z0-9]*[a-z0-9])?`.
-  No more than 10 keys can be required.
-
-* `table_options` -
-  (Optional)
-  If the container is a table, additional information to make findings meaningful such as the columns that are primary keys.
-  Structure is [documented below](#nested_table_options).
-
-* `labels` -
-  (Optional)
-  To organize findings, these labels will be added to each finding.
-  Label keys must be between 1 and 63 characters long and must conform to the following regular expression: `[a-z]([-a-z0-9]*[a-z0-9])?`.
-  Label values must be between 0 and 63 characters long and must conform to the regular expression `([a-z]([-a-z0-9]*[a-z0-9])?)?`.
-  No more than 10 labels can be associated with a given finding.
-  Examples:
-  * `"environment" : "production"`
-  * `"pipeline" : "etl"`
-
-
-<a name="nested_table_options"></a>The `table_options` block supports:
-
-* `identifying_fields` -
-  (Optional)
-  The columns that are the primary keys for table objects included in ContentItem. A copy of this
-  cell's value will stored alongside alongside each finding so that the finding can be traced to
-  the specific row it came from. No more than 3 may be provided.
-  Structure is [documented below](#nested_identifying_fields).
-
-
-<a name="nested_identifying_fields"></a>The `identifying_fields` block supports:
-
-* `name` -
-  (Required)
-  Name describing the field.
-
 <a name="nested_actions"></a>The `actions` block supports:
 
 * `save_findings` -
@@ -577,15 +451,6 @@ The following arguments are supported:
 * `publish_findings_to_cloud_data_catalog` -
   (Optional)
   Publish findings of a DlpJob to Data Catalog.
-
-* `job_notification_emails` -
-  (Optional)
-  Sends an email when the job completes. The email goes to IAM project owners and technical Essential Contacts.
-
-* `deidentify` -
-  (Optional)
-  Create a de-identified copy of the requested table or files.
-  Structure is [documented below](#nested_deidentify).
 
 
 <a name="nested_save_findings"></a>The `save_findings` block supports:
@@ -635,72 +500,6 @@ The following arguments are supported:
 * `topic` -
   (Required)
   Cloud Pub/Sub topic to send notifications to.
-
-<a name="nested_deidentify"></a>The `deidentify` block supports:
-
-* `cloud_storage_output` -
-  (Required)
-  User settable Cloud Storage bucket and folders to store de-identified files.
-  This field must be set for cloud storage deidentification.
-  The output Cloud Storage bucket must be different from the input bucket.
-  De-identified files will overwrite files in the output path.
-  Form of: gs://bucket/folder/ or gs://bucket
-
-* `file_types_to_transform` -
-  (Optional)
-  List of user-specified file type groups to transform. If specified, only the files with these filetypes will be transformed.
-  If empty, all supported files will be transformed. Supported types may be automatically added over time. 
-  If a file type is set in this field that isn't supported by the Deidentify action then the job will fail and will not be successfully created/started.
-  Each value may be one of: `IMAGE`, `TEXT_FILE`, `CSV`, `TSV`.
-
-* `transformation_config` -
-  (Optional)
-  User specified deidentify templates and configs for structured, unstructured, and image files.
-  Structure is [documented below](#nested_transformation_config).
-
-* `transformation_details_storage_config` -
-  (Optional)
-  Config for storing transformation details.
-  Structure is [documented below](#nested_transformation_details_storage_config).
-
-
-<a name="nested_transformation_config"></a>The `transformation_config` block supports:
-
-* `deidentify_template` -
-  (Optional)
-  If this template is specified, it will serve as the default de-identify template.
-
-* `structured_deidentify_template` -
-  (Optional)
-  If this template is specified, it will serve as the de-identify template for structured content such as delimited files and tables.
-
-* `image_redact_template` -
-  (Optional)
-  If this template is specified, it will serve as the de-identify template for images.
-
-<a name="nested_transformation_details_storage_config"></a>The `transformation_details_storage_config` block supports:
-
-* `table` -
-  (Required)
-  The BigQuery table in which to store the output.
-  Structure is [documented below](#nested_table).
-
-
-<a name="nested_table"></a>The `table` block supports:
-
-* `dataset_id` -
-  (Required)
-  The ID of the dataset containing this table.
-
-* `project_id` -
-  (Required)
-  The ID of the project containing this table.
-
-* `table_id` -
-  (Optional)
-  The ID of the table. The ID must contain only letters (a-z,
-  A-Z), numbers (0-9), or underscores (_). The maximum length
-  is 1,024 characters.
 
 ## Attributes Reference
 

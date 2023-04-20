@@ -437,6 +437,7 @@ resource "google_cloud_run_service" "default" {
     namespace = "%s"
     annotations = {
       generated-by = "magic-modules"
+      "run.googleapis.com/launch-stage" = "BETA"
     }
   }
 
@@ -476,6 +477,7 @@ resource "google_cloud_run_service" "default" {
     namespace = "%s"
     annotations = {
       generated-by = "magic-modules"
+      "run.googleapis.com/launch-stage" = "BETA"
     }
   }
 
@@ -502,7 +504,6 @@ resource "google_cloud_run_service" "default" {
           failure_threshold = %s
           http_get {
             path = "/some-path"
-            port = 8080
             http_headers {
               name = "User-Agent"
               value = "magic-modules"
@@ -535,6 +536,7 @@ resource "google_cloud_run_service" "default" {
     namespace = "%s"
     annotations = {
       generated-by = "magic-modules"
+      "run.googleapis.com/launch-stage" = "BETA"
     }
   }
 
@@ -568,6 +570,7 @@ resource "google_cloud_run_service" "default" {
     namespace = "%s"
     annotations = {
       generated-by = "magic-modules"
+      "run.googleapis.com/launch-stage" = "BETA"
     }
   }
 
@@ -578,7 +581,6 @@ resource "google_cloud_run_service" "default" {
         startup_probe {
           http_get {
             path = "/some-path"
-            port = 8080
             http_headers {
               name = "User-Agent"
               value = "magic-modules"
@@ -611,6 +613,7 @@ resource "google_cloud_run_service" "default" {
     namespace = "%s"
     annotations = {
       generated-by = "magic-modules"
+      "run.googleapis.com/launch-stage" = "BETA"
     }
   }
 
@@ -644,6 +647,7 @@ resource "google_cloud_run_service" "default" {
     namespace = "%s"
     annotations = {
       generated-by = "magic-modules"
+      "run.googleapis.com/launch-stage" = "BETA"
     }
   }
 

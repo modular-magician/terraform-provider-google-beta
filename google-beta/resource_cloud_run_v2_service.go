@@ -159,11 +159,10 @@ func ResourceCloudRunV2Service() *schema.Resource {
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"port": {
-																Type:     schema.TypeInt,
-																Computed: true,
-																Optional: true,
-																Description: `Port number to access on the container. Number must be in the range 1 to 65535.
-If not specified, defaults to the same value as container.ports[0].containerPort.`,
+																Type:        schema.TypeInt,
+																Computed:    true,
+																Optional:    true,
+																Description: `Port number to access on the container. Number must be in the range 1 to 65535. If not specified, defaults to the same value as container.ports[0].containerPort.`,
 															},
 															"service": {
 																Type:     schema.TypeString,
@@ -207,13 +206,6 @@ If this is not specified, the default behavior is defined by gRPC.`,
 																Optional:    true,
 																Description: `Path to access on the HTTP server. Defaults to '/'.`,
 																Default:     "/",
-															},
-															"port": {
-																Type:     schema.TypeInt,
-																Computed: true,
-																Optional: true,
-																Description: `Port number to access on the container. Number must be in the range 1 to 65535.
-If not specified, defaults to the same value as container.ports[0].containerPort.`,
 															},
 														},
 													},
@@ -303,11 +295,6 @@ If omitted, a port number will be chosen and passed to the container through the
 													Description: `Only memory and CPU are supported. Note: The only supported values for CPU are '1', '2', '4', and '8'. Setting 4 CPU requires at least 2Gi of memory. The values of the map is string form of the 'quantity' k8s type: https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/apimachinery/pkg/api/resource/quantity.go`,
 													Elem:        &schema.Schema{Type: schema.TypeString},
 												},
-												"startup_cpu_boost": {
-													Type:        schema.TypeBool,
-													Optional:    true,
-													Description: `Determines whether CPU should be boosted on startup of a new container instance above the requested CPU threshold, this can help reduce cold-start latency.`,
-												},
 											},
 										},
 									},
@@ -333,11 +320,10 @@ If omitted, a port number will be chosen and passed to the container through the
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"port": {
-																Type:     schema.TypeInt,
-																Computed: true,
-																Optional: true,
-																Description: `Port number to access on the container. Number must be in the range 1 to 65535.
-If not specified, defaults to the same value as container.ports[0].containerPort.`,
+																Type:        schema.TypeInt,
+																Computed:    true,
+																Optional:    true,
+																Description: `Port number to access on the container. Number must be in the range 1 to 65535. If not specified, defaults to the same value as container.ports[0].containerPort.`,
 															},
 															"service": {
 																Type:     schema.TypeString,
@@ -382,13 +368,6 @@ If this is not specified, the default behavior is defined by gRPC.`,
 																Description: `Path to access on the HTTP server. Defaults to '/'.`,
 																Default:     "/",
 															},
-															"port": {
-																Type:     schema.TypeInt,
-																Computed: true,
-																Optional: true,
-																Description: `Port number to access on the container. Must be in the range 1 to 65535.
-If not specified, defaults to the same value as container.ports[0].containerPort.`,
-															},
 														},
 													},
 												},
@@ -412,11 +391,10 @@ If not specified, defaults to the same value as container.ports[0].containerPort
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"port": {
-																Type:     schema.TypeInt,
-																Computed: true,
-																Optional: true,
-																Description: `Port number to access on the container. Must be in the range 1 to 65535.
-If not specified, defaults to the same value as container.ports[0].containerPort.`,
+																Type:        schema.TypeInt,
+																Computed:    true,
+																Optional:    true,
+																Description: `Port number to access on the container. Must be in the range 1 to 65535. If not specified, defaults to 8080.`,
 															},
 														},
 													},
@@ -511,11 +489,6 @@ If not specified, defaults to the same value as container.ports[0].containerPort
 							Computed:    true,
 							Optional:    true,
 							Description: `Email address of the IAM service account associated with the revision of the service. The service account represents the identity of the running revision, and determines what permissions the revision has. If not provided, the revision will use the project's default service account.`,
-						},
-						"session_affinity": {
-							Type:        schema.TypeBool,
-							Optional:    true,
-							Description: `Enables session affinity. For more information, go to https://cloud.google.com/run/docs/configuring/session-affinity`,
 						},
 						"timeout": {
 							Type:     schema.TypeString,
@@ -1406,8 +1379,6 @@ func flattenCloudRunV2ServiceTemplate(v interface{}, d *schema.ResourceData, con
 		flattenCloudRunV2ServiceTemplateEncryptionKey(original["encryptionKey"], d, config)
 	transformed["max_instance_request_concurrency"] =
 		flattenCloudRunV2ServiceTemplateMaxInstanceRequestConcurrency(original["maxInstanceRequestConcurrency"], d, config)
-	transformed["session_affinity"] =
-		flattenCloudRunV2ServiceTemplateSessionAffinity(original["sessionAffinity"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudRunV2ServiceTemplateRevision(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -1623,8 +1594,6 @@ func flattenCloudRunV2ServiceTemplateContainersResources(v interface{}, d *schem
 		flattenCloudRunV2ServiceTemplateContainersResourcesLimits(original["limits"], d, config)
 	transformed["cpu_idle"] =
 		flattenCloudRunV2ServiceTemplateContainersResourcesCpuIdle(original["cpuIdle"], d, config)
-	transformed["startup_cpu_boost"] =
-		flattenCloudRunV2ServiceTemplateContainersResourcesStartupCpuBoost(original["startupCpuBoost"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudRunV2ServiceTemplateContainersResourcesLimits(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -1632,10 +1601,6 @@ func flattenCloudRunV2ServiceTemplateContainersResourcesLimits(v interface{}, d 
 }
 
 func flattenCloudRunV2ServiceTemplateContainersResourcesCpuIdle(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	return v
-}
-
-func flattenCloudRunV2ServiceTemplateContainersResourcesStartupCpuBoost(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
 }
 
@@ -1811,31 +1776,12 @@ func flattenCloudRunV2ServiceTemplateContainersLivenessProbeHttpGet(v interface{
 	transformed := make(map[string]interface{})
 	transformed["path"] =
 		flattenCloudRunV2ServiceTemplateContainersLivenessProbeHttpGetPath(original["path"], d, config)
-	transformed["port"] =
-		flattenCloudRunV2ServiceTemplateContainersLivenessProbeHttpGetPort(original["port"], d, config)
 	transformed["http_headers"] =
 		flattenCloudRunV2ServiceTemplateContainersLivenessProbeHttpGetHttpHeaders(original["httpHeaders"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudRunV2ServiceTemplateContainersLivenessProbeHttpGetPath(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
-}
-
-func flattenCloudRunV2ServiceTemplateContainersLivenessProbeHttpGetPort(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
 }
 
 func flattenCloudRunV2ServiceTemplateContainersLivenessProbeHttpGetHttpHeaders(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -2026,31 +1972,12 @@ func flattenCloudRunV2ServiceTemplateContainersStartupProbeHttpGet(v interface{}
 	transformed := make(map[string]interface{})
 	transformed["path"] =
 		flattenCloudRunV2ServiceTemplateContainersStartupProbeHttpGetPath(original["path"], d, config)
-	transformed["port"] =
-		flattenCloudRunV2ServiceTemplateContainersStartupProbeHttpGetPort(original["port"], d, config)
 	transformed["http_headers"] =
 		flattenCloudRunV2ServiceTemplateContainersStartupProbeHttpGetHttpHeaders(original["httpHeaders"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudRunV2ServiceTemplateContainersStartupProbeHttpGetPath(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
-}
-
-func flattenCloudRunV2ServiceTemplateContainersStartupProbeHttpGetPort(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
 }
 
 func flattenCloudRunV2ServiceTemplateContainersStartupProbeHttpGetHttpHeaders(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -2287,10 +2214,6 @@ func flattenCloudRunV2ServiceTemplateMaxInstanceRequestConcurrency(v interface{}
 	}
 
 	return v // let terraform core handle it otherwise
-}
-
-func flattenCloudRunV2ServiceTemplateSessionAffinity(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	return v
 }
 
 func flattenCloudRunV2ServiceTraffic(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -2707,13 +2630,6 @@ func expandCloudRunV2ServiceTemplate(v interface{}, d TerraformResourceData, con
 		transformed["maxInstanceRequestConcurrency"] = transformedMaxInstanceRequestConcurrency
 	}
 
-	transformedSessionAffinity, err := expandCloudRunV2ServiceTemplateSessionAffinity(original["session_affinity"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSessionAffinity); val.IsValid() && !isEmptyValue(val) {
-		transformed["sessionAffinity"] = transformedSessionAffinity
-	}
-
 	return transformed, nil
 }
 
@@ -3047,13 +2963,6 @@ func expandCloudRunV2ServiceTemplateContainersResources(v interface{}, d Terrafo
 		transformed["cpuIdle"] = transformedCpuIdle
 	}
 
-	transformedStartupCpuBoost, err := expandCloudRunV2ServiceTemplateContainersResourcesStartupCpuBoost(original["startup_cpu_boost"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedStartupCpuBoost); val.IsValid() && !isEmptyValue(val) {
-		transformed["startupCpuBoost"] = transformedStartupCpuBoost
-	}
-
 	return transformed, nil
 }
 
@@ -3069,10 +2978,6 @@ func expandCloudRunV2ServiceTemplateContainersResourcesLimits(v interface{}, d T
 }
 
 func expandCloudRunV2ServiceTemplateContainersResourcesCpuIdle(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudRunV2ServiceTemplateContainersResourcesStartupCpuBoost(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -3252,13 +3157,6 @@ func expandCloudRunV2ServiceTemplateContainersLivenessProbeHttpGet(v interface{}
 		transformed["path"] = transformedPath
 	}
 
-	transformedPort, err := expandCloudRunV2ServiceTemplateContainersLivenessProbeHttpGetPort(original["port"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !isEmptyValue(val) {
-		transformed["port"] = transformedPort
-	}
-
 	transformedHttpHeaders, err := expandCloudRunV2ServiceTemplateContainersLivenessProbeHttpGetHttpHeaders(original["http_headers"], d, config)
 	if err != nil {
 		return nil, err
@@ -3270,10 +3168,6 @@ func expandCloudRunV2ServiceTemplateContainersLivenessProbeHttpGet(v interface{}
 }
 
 func expandCloudRunV2ServiceTemplateContainersLivenessProbeHttpGetPath(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudRunV2ServiceTemplateContainersLivenessProbeHttpGetPort(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -3479,13 +3373,6 @@ func expandCloudRunV2ServiceTemplateContainersStartupProbeHttpGet(v interface{},
 		transformed["path"] = transformedPath
 	}
 
-	transformedPort, err := expandCloudRunV2ServiceTemplateContainersStartupProbeHttpGetPort(original["port"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !isEmptyValue(val) {
-		transformed["port"] = transformedPort
-	}
-
 	transformedHttpHeaders, err := expandCloudRunV2ServiceTemplateContainersStartupProbeHttpGetHttpHeaders(original["http_headers"], d, config)
 	if err != nil {
 		return nil, err
@@ -3497,10 +3384,6 @@ func expandCloudRunV2ServiceTemplateContainersStartupProbeHttpGet(v interface{},
 }
 
 func expandCloudRunV2ServiceTemplateContainersStartupProbeHttpGetPath(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudRunV2ServiceTemplateContainersStartupProbeHttpGetPort(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -3769,10 +3652,6 @@ func expandCloudRunV2ServiceTemplateEncryptionKey(v interface{}, d TerraformReso
 }
 
 func expandCloudRunV2ServiceTemplateMaxInstanceRequestConcurrency(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudRunV2ServiceTemplateSessionAffinity(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

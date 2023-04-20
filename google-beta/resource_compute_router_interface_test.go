@@ -11,36 +11,24 @@ import (
 func TestAccComputeRouterInterface_basic(t *testing.T) {
 	t.Parallel()
 
-	name := fmt.Sprintf("tf-test-router-%s", RandString(t, 10))
-	context := map[string]interface{}{
-		"name":   name,
-		"region": "us-central1",
-	}
-	importIdFourPart := fmt.Sprintf("%s/%s/%s/%s", GetTestProjectFromEnv(), context["region"], context["name"], context["name"]) // name reused in config
-
+	routerName := fmt.Sprintf("tf-test-router-%s", RandString(t, 10))
 	VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeRouterInterfaceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccComputeRouterInterfaceBasic(context),
+				Config: testAccComputeRouterInterfaceBasic(routerName),
 				Check: testAccCheckComputeRouterInterfaceExists(
 					t, "google_compute_router_interface.foobar"),
 			},
 			{
 				ResourceName:      "google_compute_router_interface.foobar",
-				ImportState:       true, // Will use the 3 part {{region}}/{{router}}/{{name}} import id by default as it's the id in state
-				ImportStateVerify: true,
-			},
-			{
-				ResourceName:      "google_compute_router_interface.foobar",
 				ImportState:       true,
-				ImportStateId:     importIdFourPart, // Make test step use 4 part {{project}}/{{region}}/{{router}}/{{name}} import id
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccComputeRouterInterfaceKeepRouter(name),
+				Config: testAccComputeRouterInterfaceKeepRouter(routerName),
 				Check: testAccCheckComputeRouterInterfaceDelete(
 					t, "google_compute_router_interface.foobar"),
 			},
@@ -239,32 +227,32 @@ func testAccCheckComputeRouterInterfaceExists(t *testing.T, n string) resource.T
 	}
 }
 
-func testAccComputeRouterInterfaceBasic(context map[string]interface{}) string {
-	return Nprintf(`
+func testAccComputeRouterInterfaceBasic(routerName string) string {
+	return fmt.Sprintf(`
 resource "google_compute_network" "foobar" {
-  name = "%{name}-net"
+  name = "%s-net"
 }
 
 resource "google_compute_subnetwork" "foobar" {
-  name          = "%{name}-subnet"
+  name          = "%s-subnet"
   network       = google_compute_network.foobar.self_link
   ip_cidr_range = "10.0.0.0/16"
-  region        = "%{region}"
+  region        = "us-central1"
 }
 
 resource "google_compute_address" "foobar" {
-  name   = "%{name}-addr"
+  name   = "%s-addr"
   region = google_compute_subnetwork.foobar.region
 }
 
 resource "google_compute_vpn_gateway" "foobar" {
-  name    = "%{name}-gateway"
+  name    = "%s-gateway"
   network = google_compute_network.foobar.self_link
   region  = google_compute_subnetwork.foobar.region
 }
 
 resource "google_compute_forwarding_rule" "foobar_esp" {
-  name        = "%{name}-fr1"
+  name        = "%s-fr1"
   region      = google_compute_vpn_gateway.foobar.region
   ip_protocol = "ESP"
   ip_address  = google_compute_address.foobar.address
@@ -272,7 +260,7 @@ resource "google_compute_forwarding_rule" "foobar_esp" {
 }
 
 resource "google_compute_forwarding_rule" "foobar_udp500" {
-  name        = "%{name}-fr2"
+  name        = "%s-fr2"
   region      = google_compute_forwarding_rule.foobar_esp.region
   ip_protocol = "UDP"
   port_range  = "500-500"
@@ -281,7 +269,7 @@ resource "google_compute_forwarding_rule" "foobar_udp500" {
 }
 
 resource "google_compute_forwarding_rule" "foobar_udp4500" {
-  name        = "%{name}-fr3"
+  name        = "%s-fr3"
   region      = google_compute_forwarding_rule.foobar_udp500.region
   ip_protocol = "UDP"
   port_range  = "4500-4500"
@@ -290,7 +278,7 @@ resource "google_compute_forwarding_rule" "foobar_udp4500" {
 }
 
 resource "google_compute_router" "foobar" {
-  name    = "%{name}"
+  name    = "%s"
   region  = google_compute_forwarding_rule.foobar_udp500.region
   network = google_compute_network.foobar.self_link
   bgp {
@@ -299,12 +287,12 @@ resource "google_compute_router" "foobar" {
 }
 
 resource "google_compute_router_interface" "foobar" {
-  name     = "%{name}"
+  name     = "%s"
   router   = google_compute_router.foobar.name
   region   = google_compute_router.foobar.region
   ip_range = "169.254.3.1/30"
 }
-`, context)
+`, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName)
 }
 
 func testAccComputeRouterInterfaceRedundant(routerName string) string {

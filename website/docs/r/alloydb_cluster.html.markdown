@@ -123,10 +123,6 @@ The following arguments are supported:
   (Required)
   The ID of the alloydb cluster.
 
-* `location` -
-  (Required)
-  The location where the alloydb cluster should reside.
-
 
 - - -
 
@@ -149,6 +145,10 @@ The following arguments are supported:
   The automated backup policy for this cluster.
   If no policy is provided then the default policy will be used. The default policy takes one backup a day, has a backup window of 1 hour, and retains backups for 14 days.
   Structure is [documented below](#nested_automated_backup_policy).
+
+* `location` -
+  (Optional)
+  The location where the alloydb cluster should reside.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -182,18 +182,18 @@ The following arguments are supported:
   Labels to apply to backups created using this configuration.
 
 * `weekly_schedule` -
-  (Optional)
+  (Required)
   Weekly schedule for the Backup.
   Structure is [documented below](#nested_weekly_schedule).
 
 * `time_based_retention` -
   (Optional)
-  Time-based Backup retention policy. Conflicts with 'quantity_based_retention', both can't be set together.
+  Time-based Backup retention policy.
   Structure is [documented below](#nested_time_based_retention).
 
 * `quantity_based_retention` -
   (Optional)
-  Quantity-based Backup retention policy to retain recent backups. Conflicts with 'time_based_retention', both can't be set together.
+  Quantity-based Backup retention policy to retain recent backups.
   Structure is [documented below](#nested_quantity_based_retention).
 
 * `enabled` -

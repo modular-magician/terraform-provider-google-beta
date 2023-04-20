@@ -349,10 +349,6 @@ The following arguments are supported:
   (Optional)
   Sets the maximum number of requests that each serving instance can receive.
 
-* `session_affinity` -
-  (Optional)
-  Enables session affinity. For more information, go to https://cloud.google.com/run/docs/configuring/session-affinity
-
 
 <a name="nested_scaling"></a>The `scaling` block supports:
 
@@ -473,10 +469,6 @@ The following arguments are supported:
   (Optional)
   Determines whether CPU should be throttled or not outside of requests.
 
-* `startup_cpu_boost` -
-  (Optional)
-  Determines whether CPU should be boosted on startup of a new container instance above the requested CPU threshold, this can help reduce cold-start latency.
-
 <a name="nested_ports"></a>The `ports` block supports:
 
 * `name` -
@@ -537,11 +529,6 @@ The following arguments are supported:
   (Optional)
   Path to access on the HTTP server. Defaults to '/'.
 
-* `port` -
-  (Optional)
-  Port number to access on the container. Number must be in the range 1 to 65535.
-  If not specified, defaults to the same value as container.ports[0].containerPort.
-
 * `http_headers` -
   (Optional)
   Custom headers to set in the request. HTTP allows repeated headers.
@@ -568,8 +555,7 @@ The following arguments are supported:
 
 * `port` -
   (Optional)
-  Port number to access on the container. Number must be in the range 1 to 65535.
-  If not specified, defaults to the same value as container.ports[0].containerPort.
+  Port number to access on the container. Number must be in the range 1 to 65535. If not specified, defaults to the same value as container.ports[0].containerPort.
 
 * `service` -
   (Optional)
@@ -617,11 +603,6 @@ The following arguments are supported:
   (Optional)
   Path to access on the HTTP server. Defaults to '/'.
 
-* `port` -
-  (Optional)
-  Port number to access on the container. Must be in the range 1 to 65535.
-  If not specified, defaults to the same value as container.ports[0].containerPort.
-
 * `http_headers` -
   (Optional)
   Custom headers to set in the request. HTTP allows repeated headers.
@@ -642,15 +623,13 @@ The following arguments are supported:
 
 * `port` -
   (Optional)
-  Port number to access on the container. Must be in the range 1 to 65535.
-  If not specified, defaults to the same value as container.ports[0].containerPort.
+  Port number to access on the container. Must be in the range 1 to 65535. If not specified, defaults to 8080.
 
 <a name="nested_grpc"></a>The `grpc` block supports:
 
 * `port` -
   (Optional)
-  Port number to access on the container. Number must be in the range 1 to 65535.
-  If not specified, defaults to the same value as container.ports[0].containerPort.
+  Port number to access on the container. Number must be in the range 1 to 65535. If not specified, defaults to the same value as container.ports[0].containerPort.
 
 * `service` -
   (Optional)

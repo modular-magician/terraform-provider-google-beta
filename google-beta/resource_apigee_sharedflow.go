@@ -105,7 +105,7 @@ func ResourceApigeeSharedFlow() *schema.Resource {
 			"config_bundle": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: `Path to the config zip bundle`,
+				Description: `A path to the config bundle zip you want to upload. Must be defined if content is not.`,
 			},
 			"md5hash": {
 				Type:        schema.TypeString,

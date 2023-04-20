@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -506,7 +505,7 @@ var DefaultBasePaths = map[string]string{
 	TPUBasePathKey:                  "https://tpu.googleapis.com/v1/",
 	VertexAIBasePathKey:             "https://{{region}}-aiplatform.googleapis.com/v1beta1/",
 	VPCAccessBasePathKey:            "https://vpcaccess.googleapis.com/v1beta1/",
-	WorkflowsBasePathKey:            "https://workflows.googleapis.com/v1/",
+	WorkflowsBasePathKey:            "https://workflows.googleapis.com/v1beta/",
 	WorkstationsBasePathKey:         "https://workstations.googleapis.com/v1beta/",
 	CloudBillingBasePathKey:         "https://cloudbilling.googleapis.com/v1/",
 	ComposerBasePathKey:             "https://composer.googleapis.com/v1beta1/",
@@ -2056,32 +2055,4 @@ func ConfigureBasePaths(c *Config) {
 	c.BigQueryBasePath = DefaultBasePaths[BigQueryBasePathKey]
 	c.BigtableAdminBasePath = DefaultBasePaths[BigtableAdminBasePathKey]
 	c.TagsLocationBasePath = DefaultBasePaths[TagsLocationBasePathKey]
-}
-
-func GetCurrentUserEmail(config *Config, userAgent string) (string, error) {
-	// When environment variables UserProjectOverride and BillingProject are set for the provider,
-	// the header X-Goog-User-Project is set for the API requests.
-	// But it causes an error when calling GetCurrentUserEmail. Set the project to be "NO_BILLING_PROJECT_OVERRIDE".
-	// And then it triggers the header X-Goog-User-Project to be set to empty string.
-
-	// See https://github.com/golang/oauth2/issues/306 for a recommendation to do this from a Go maintainer
-	// URL retrieved from https://accounts.google.com/.well-known/openid-configuration
-	res, err := SendRequest(config, "GET", "NO_BILLING_PROJECT_OVERRIDE", "https://openidconnect.googleapis.com/v1/userinfo", userAgent, nil)
-
-	if err != nil {
-		return "", fmt.Errorf("error retrieving userinfo for your provider credentials. have you enabled the 'https://www.googleapis.com/auth/userinfo.email' scope? error: %s", err)
-	}
-	if res["email"] == nil {
-		return "", fmt.Errorf("error retrieving email from userinfo. email was nil in the response.")
-	}
-	return res["email"].(string), nil
-}
-
-func MultiEnvSearch(ks []string) string {
-	for _, k := range ks {
-		if v := os.Getenv(k); v != "" {
-			return v
-		}
-	}
-	return ""
 }

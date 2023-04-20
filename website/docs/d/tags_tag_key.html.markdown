@@ -1,24 +1,18 @@
 ---
 subcategory: "Tags"
 description: |-
-  Get a tag key within a GCP organization or project.
+  Get a tag key within a GCP organization.
 ---
 
 # google\_tags\_tag\_key
 
-Get a tag key by org or project `parent` and `short_name`.
+Get a tag key within a GCP org by `parent` and `short_name`.
 
 ## Example Usage
 
 ```tf
 data "google_tags_tag_key" "environment_tag_key"{
   parent = "organizations/12345"
-  short_name = "environment"
-}
-```
-```tf
-data "google_tags_tag_key" "environment_tag_key"{
-  parent = "projects/abc"
   short_name = "environment"
 }
 ```
@@ -29,7 +23,7 @@ The following arguments are supported:
 
 * `short_name` - (Required) The tag key's short_name.
 
-* `parent` - (Required) The resource name of the parent organization or project. It can be in format `organizations/{org_id}` or `projects/{project_id_or_number}`.
+* `parent` - (Required) The resource name of the parent organization in format `organizations/{org_id}`.
 
 ## Attributes Reference
 
@@ -41,7 +35,7 @@ In addition to the arguments listed above, the following attributes are exported
   The generated numeric id for the TagKey.
 
 * `namespaced_name` -
-  Namespaced name of the TagKey which is in the format `{parentNamespace}/{shortName}`.
+  Namespaced name of the TagKey.
 
 * `create_time` -
   Creation time.

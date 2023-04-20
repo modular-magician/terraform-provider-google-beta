@@ -290,11 +290,10 @@ having succeeded. Defaults to 3. Minimum value is 1.`,
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"port": {
-																			Type:     schema.TypeInt,
-																			Computed: true,
-																			Optional: true,
-																			Description: `Port number to access on the container. Number must be in the range 1 to 65535.
-If not specified, defaults to the same value as container.ports[0].containerPort.`,
+																			Type:        schema.TypeInt,
+																			Computed:    true,
+																			Optional:    true,
+																			Description: `Port number to access on the container. Number must be in the range 1 to 65535.`,
 																		},
 																		"service": {
 																			Type:     schema.TypeString,
@@ -339,13 +338,6 @@ If this is not specified, the default behavior is defined by gRPC.`,
 																			Optional:    true,
 																			Description: `Path to access on the HTTP server. If set, it should not be empty string.`,
 																			Default:     "/",
-																		},
-																		"port": {
-																			Type:     schema.TypeInt,
-																			Computed: true,
-																			Optional: true,
-																			Description: `Port number to access on the container. Number must be in the range 1 to 65535.
-If not specified, defaults to the same value as container.ports[0].containerPort.`,
 																		},
 																	},
 																},
@@ -458,11 +450,10 @@ having succeeded. Defaults to 3. Minimum value is 1.`,
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"port": {
-																			Type:     schema.TypeInt,
-																			Computed: true,
-																			Optional: true,
-																			Description: `Port number to access on the container. Number must be in the range 1 to 65535.
-If not specified, defaults to the same value as container.ports[0].containerPort.`,
+																			Type:        schema.TypeInt,
+																			Computed:    true,
+																			Optional:    true,
+																			Description: `Port number to access on the container. Number must be in the range 1 to 65535.`,
 																		},
 																		"service": {
 																			Type:     schema.TypeString,
@@ -508,13 +499,6 @@ If this is not specified, the default behavior is defined by gRPC.`,
 																			Description: `Path to access on the HTTP server. If set, it should not be empty string.`,
 																			Default:     "/",
 																		},
-																		"port": {
-																			Type:     schema.TypeInt,
-																			Computed: true,
-																			Optional: true,
-																			Description: `Port number to access on the container. Number must be in the range 1 to 65535.
-If not specified, defaults to the same value as container.ports[0].containerPort.`,
-																		},
 																	},
 																},
 																ExactlyOneOf: []string{},
@@ -542,11 +526,10 @@ Default to 10 seconds. Minimum value is 1. Maximum value is 240.`,
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"port": {
-																			Type:     schema.TypeInt,
-																			Computed: true,
-																			Optional: true,
-																			Description: `Port number to access on the container. Number must be in the range 1 to 65535.
-If not specified, defaults to the same value as container.ports[0].containerPort.`,
+																			Type:        schema.TypeInt,
+																			Computed:    true,
+																			Optional:    true,
+																			Description: `Port number to access on the container. Number must be in the range 1 to 65535.`,
 																		},
 																	},
 																},
@@ -736,46 +719,11 @@ annotation key.`,
 										Optional:         true,
 										DiffSuppressFunc: cloudrunTemplateAnnotationDiffSuppress,
 										Description: `Annotations is a key value map stored with a resource that
-may be set by external tools to store and retrieve arbitrary metadata. More
-info: http://kubernetes.io/docs/user-guide/annotations
+may be set by external tools to store and retrieve arbitrary metadata.
 
 **Note**: The Cloud Run API may add additional annotations that were not provided in your config.
 If terraform plan shows a diff where a server-side annotation is added, you can add it to your config
-or apply the lifecycle.ignore_changes rule to the metadata.0.annotations field.
-
-Annotations with 'run.googleapis.com/' and 'autoscaling.knative.dev' are restricted. Use the following annotation
-keys to configure features on a Revision template:
-
-- 'autoscaling.knative.dev/maxScale' sets the [maximum number of container
-  instances](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--max-instances) of the Revision to run.
-- 'autoscaling.knative.dev/minScale' sets the [minimum number of container
-  instances](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--min-instances) of the Revision to run.
-- 'run.googleapis.com/client-name' sets the client name calling the Cloud Run API.
-- 'run.googleapis.com/cloudsql-instances' sets the [Cloud SQL
-  instances](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--add-cloudsql-instances) the Revision connects to.
-- 'run.googleapis.com/cpu-throttling' sets whether to throttle the CPU when the container is not actively serving
-  requests. See https://cloud.google.com/sdk/gcloud/reference/run/deploy#--[no-]cpu-throttling.
-- 'run.googleapis.com/encryption-key-shutdown-hours' sets the number of hours to wait before an automatic shutdown
-  server after CMEK key revocation is detected.
-- 'run.googleapis.com/encryption-key' sets the [CMEK key](https://cloud.google.com/run/docs/securing/using-cmek)
-  reference to encrypt the container with.
-- 'run.googleapis.com/execution-environment' sets the [execution
-  environment](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--execution-environment)
-  where the application will run.
-- 'run.googleapis.com/post-key-revocation-action-type' sets the
-  [action type](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--post-key-revocation-action-type)
-  after CMEK key revocation.
-- 'run.googleapis.com/secrets' sets a list of key-value pairs to set as
-  [secrets](https://cloud.google.com/run/docs/configuring/secrets#yaml).
-- 'run.googleapis.com/sessionAffinity' sets whether to enable
-  [session affinity](https://cloud.google.com/sdk/gcloud/reference/beta/run/deploy#--[no-]session-affinity)
-  for connections to the Revision.
-- 'run.googleapis.com/startup-cpu-boost' sets whether to allocate extra CPU to containers on startup.
-  See https://cloud.google.com/sdk/gcloud/reference/run/deploy#--[no-]cpu-boost.
-- 'run.googleapis.com/vpc-access-connector' sets a [VPC connector](https://cloud.google.com/run/docs/configuring/connecting-vpc#terraform_1)
-  for the Revision.
-- 'run.googleapis.com/vpc-access-egress' sets the outbound traffic to send through the VPC connector for this resource.
-  See https://cloud.google.com/sdk/gcloud/reference/run/deploy#--vpc-egress.`,
+or apply the lifecycle.ignore_changes rule to the metadata.0.annotations field.`,
 										Elem: &schema.Schema{Type: schema.TypeString},
 									},
 									"labels": {
@@ -895,19 +843,10 @@ info: http://kubernetes.io/docs/user-guide/annotations
 If terraform plan shows a diff where a server-side annotation is added, you can add it to your config
 or apply the lifecycle.ignore_changes rule to the metadata.0.annotations field.
 
-Annotations with 'run.googleapis.com/' and 'autoscaling.knative.dev' are restricted. Use the following annotation
-keys to configure features on a Service:
+Cloud Run (fully managed) uses the following annotation keys to configure features on a Service:
 
-- 'run.googleapis.com/binary-authorization-breakglass' sets the [Binary Authorization breakglass](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--breakglass).
-- 'run.googleapis.com/binary-authorization' sets the [Binary Authorization](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--binary-authorization).
-- 'run.googleapis.com/client-name' sets the client name calling the Cloud Run API.
-- 'run.googleapis.com/custom-audiences' sets the [custom audiences](https://cloud.google.com/sdk/gcloud/reference/alpha/run/deploy#--add-custom-audiences)
-  that can be used in the audience field of ID token for authenticated requests.
-- 'run.googleapis.com/description' sets a user defined description for the Service.
 - 'run.googleapis.com/ingress' sets the [ingress settings](https://cloud.google.com/sdk/gcloud/reference/run/deploy#--ingress)
-  for the Service. For example, '"run.googleapis.com/ingress" = "all"'.
-- 'run.googleapis.com/launch-stage' sets the [launch stage](https://cloud.google.com/run/docs/troubleshooting#launch-stage-validation)
-  when a preview feature is used. For example, '"run.googleapis.com/launch-stage": "BETA"'`,
+  for the Service. For example, '"run.googleapis.com/ingress" = "all"'.`,
 							Elem: &schema.Schema{Type: schema.TypeString},
 						},
 						"labels": {
@@ -2014,31 +1953,12 @@ func flattenCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGet(v inter
 	transformed := make(map[string]interface{})
 	transformed["path"] =
 		flattenCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGetPath(original["path"], d, config)
-	transformed["port"] =
-		flattenCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGetPort(original["port"], d, config)
 	transformed["http_headers"] =
 		flattenCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGetHttpHeaders(original["httpHeaders"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGetPath(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
-}
-
-func flattenCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGetPort(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
 }
 
 func flattenCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGetHttpHeaders(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -2200,31 +2120,12 @@ func flattenCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGet(v inte
 	transformed := make(map[string]interface{})
 	transformed["path"] =
 		flattenCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGetPath(original["path"], d, config)
-	transformed["port"] =
-		flattenCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGetPort(original["port"], d, config)
 	transformed["http_headers"] =
 		flattenCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGetHttpHeaders(original["httpHeaders"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGetPath(v interface{}, d *schema.ResourceData, config *Config) interface{} {
 	return v
-}
-
-func flattenCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGetPort(v interface{}, d *schema.ResourceData, config *Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
 }
 
 func flattenCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGetHttpHeaders(v interface{}, d *schema.ResourceData, config *Config) interface{} {
@@ -3492,13 +3393,6 @@ func expandCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGet(v interf
 		transformed["path"] = transformedPath
 	}
 
-	transformedPort, err := expandCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGetPort(original["port"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !isEmptyValue(val) {
-		transformed["port"] = transformedPort
-	}
-
 	transformedHttpHeaders, err := expandCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGetHttpHeaders(original["http_headers"], d, config)
 	if err != nil {
 		return nil, err
@@ -3510,10 +3404,6 @@ func expandCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGet(v interf
 }
 
 func expandCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGetPath(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudRunServiceSpecTemplateSpecContainersStartupProbeHttpGetPort(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -3684,13 +3574,6 @@ func expandCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGet(v inter
 		transformed["path"] = transformedPath
 	}
 
-	transformedPort, err := expandCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGetPort(original["port"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !isEmptyValue(val) {
-		transformed["port"] = transformedPort
-	}
-
 	transformedHttpHeaders, err := expandCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGetHttpHeaders(original["http_headers"], d, config)
 	if err != nil {
 		return nil, err
@@ -3702,10 +3585,6 @@ func expandCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGet(v inter
 }
 
 func expandCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGetPath(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudRunServiceSpecTemplateSpecContainersLivenessProbeHttpGetPort(v interface{}, d TerraformResourceData, config *Config) (interface{}, error) {
 	return v, nil
 }
 

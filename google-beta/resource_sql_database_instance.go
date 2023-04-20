@@ -964,12 +964,10 @@ func resourceSqlDatabaseInstanceCreate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	databaseVersion := d.Get("database_version").(string)
-
 	instance := &sqladmin.DatabaseInstance{
 		Name:                 name,
 		Region:               region,
-		DatabaseVersion:      databaseVersion,
+		DatabaseVersion:      d.Get("database_version").(string),
 		MasterInstanceName:   d.Get("master_instance_name").(string),
 		ReplicaConfiguration: expandReplicaConfiguration(d.Get("replica_configuration").([]interface{})),
 	}
@@ -977,7 +975,7 @@ func resourceSqlDatabaseInstanceCreate(d *schema.ResourceData, meta interface{})
 	cloneContext, cloneSource := expandCloneContext(d.Get("clone").([]interface{}))
 
 	s, ok := d.GetOk("settings")
-	desiredSettings := expandSqlDatabaseInstanceSettings(s.([]interface{}), databaseVersion)
+	desiredSettings := expandSqlDatabaseInstanceSettings(s.([]interface{}))
 	if ok {
 		instance.Settings = desiredSettings
 	}
@@ -1010,7 +1008,7 @@ func resourceSqlDatabaseInstanceCreate(d *schema.ResourceData, meta interface{})
 
 	// BinaryLogging can be enabled on replica instances but only after creation.
 	if instance.MasterInstanceName != "" && instance.Settings != nil && instance.Settings.BackupConfiguration != nil && instance.Settings.BackupConfiguration.BinaryLogEnabled {
-		settingsCopy := expandSqlDatabaseInstanceSettings(s.([]interface{}), databaseVersion)
+		settingsCopy := expandSqlDatabaseInstanceSettings(s.([]interface{}))
 		bc := settingsCopy.BackupConfiguration
 		patchData = &sqladmin.DatabaseInstance{Settings: &sqladmin.Settings{BackupConfiguration: bc}}
 
@@ -1135,8 +1133,7 @@ func resourceSqlDatabaseInstanceCreate(d *schema.ResourceData, meta interface{})
 	return nil
 }
 
-// Available fields for settings vary between database versions.
-func expandSqlDatabaseInstanceSettings(configured []interface{}, databaseVersion string) *sqladmin.Settings {
+func expandSqlDatabaseInstanceSettings(configured []interface{}) *sqladmin.Settings {
 	if len(configured) == 0 || configured[0] == nil {
 		return nil
 	}
@@ -1162,7 +1159,7 @@ func expandSqlDatabaseInstanceSettings(configured []interface{}, databaseVersion
 		UserLabels:                convertStringMap(_settings["user_labels"].(map[string]interface{})),
 		BackupConfiguration:       expandBackupConfiguration(_settings["backup_configuration"].([]interface{})),
 		DatabaseFlags:             expandDatabaseFlags(_settings["database_flags"].([]interface{})),
-		IpConfiguration:           expandIpConfiguration(_settings["ip_configuration"].([]interface{}), databaseVersion),
+		IpConfiguration:           expandIpConfiguration(_settings["ip_configuration"].([]interface{})),
 		LocationPreference:        expandLocationPreference(_settings["location_preference"].([]interface{})),
 		MaintenanceWindow:         expandMaintenanceWindow(_settings["maintenance_window"].([]interface{})),
 		InsightsConfig:            expandInsightsConfig(_settings["insights_config"].([]interface{})),
@@ -1249,18 +1246,12 @@ func expandLocationPreference(configured []interface{}) *sqladmin.LocationPrefer
 	}
 }
 
-func expandIpConfiguration(configured []interface{}, databaseVersion string) *sqladmin.IpConfiguration {
+func expandIpConfiguration(configured []interface{}) *sqladmin.IpConfiguration {
 	if len(configured) == 0 || configured[0] == nil {
 		return nil
 	}
 
 	_ipConfiguration := configured[0].(map[string]interface{})
-
-	forceSendFields := []string{"Ipv4Enabled", "RequireSsl"}
-
-	if !strings.HasPrefix(databaseVersion, "SQLSERVER") {
-		forceSendFields = append(forceSendFields, "EnablePrivatePathForGoogleCloudServices")
-	}
 
 	return &sqladmin.IpConfiguration{
 		Ipv4Enabled:                             _ipConfiguration["ipv4_enabled"].(bool),
@@ -1269,7 +1260,7 @@ func expandIpConfiguration(configured []interface{}, databaseVersion string) *sq
 		AllocatedIpRange:                        _ipConfiguration["allocated_ip_range"].(string),
 		AuthorizedNetworks:                      expandAuthorizedNetworks(_ipConfiguration["authorized_networks"].(*schema.Set).List()),
 		EnablePrivatePathForGoogleCloudServices: _ipConfiguration["enable_private_path_for_google_cloud_services"].(bool),
-		ForceSendFields:                         forceSendFields,
+		ForceSendFields:                         []string{"Ipv4Enabled", "RequireSsl"},
 	}
 }
 
@@ -1549,7 +1540,7 @@ func resourceSqlDatabaseInstanceUpdate(d *schema.ResourceData, meta interface{})
 	var op *sqladmin.Operation
 	var instance *sqladmin.DatabaseInstance
 
-	databaseVersion := d.Get("database_version").(string)
+	desiredDatabaseVersion := d.Get("database_version")
 
 	// Check if the activation policy is being updated. If it is being changed to ALWAYS this should be done first.
 	if d.HasChange("settings.0.activation_policy") && d.Get("settings.0.activation_policy").(string) == "ALWAYS" {
@@ -1574,7 +1565,7 @@ func resourceSqlDatabaseInstanceUpdate(d *schema.ResourceData, meta interface{})
 	// Check if the database version is being updated, because patching database version is an atomic operation and can not be
 	// performed with other fields, we first patch database version before updating the rest of the fields.
 	if d.HasChange("database_version") {
-		instance = &sqladmin.DatabaseInstance{DatabaseVersion: databaseVersion}
+		instance = &sqladmin.DatabaseInstance{DatabaseVersion: desiredDatabaseVersion.(string)}
 		err = RetryTimeDuration(func() (rerr error) {
 			op, rerr = config.NewSqlAdminClient(userAgent).Instances.Patch(project, d.Get("name").(string), instance).Do()
 			return rerr
@@ -1694,7 +1685,7 @@ func resourceSqlDatabaseInstanceUpdate(d *schema.ResourceData, meta interface{})
 
 	s := d.Get("settings")
 	instance = &sqladmin.DatabaseInstance{
-		Settings: expandSqlDatabaseInstanceSettings(desiredSetting.([]interface{}), databaseVersion),
+		Settings: expandSqlDatabaseInstanceSettings(desiredSetting.([]interface{})),
 	}
 	_settings := s.([]interface{})[0].(map[string]interface{})
 	// Instance.Patch operation on completion updates the settings proto version by +8. As terraform does not know this it tries

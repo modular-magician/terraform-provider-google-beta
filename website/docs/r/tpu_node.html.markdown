@@ -89,7 +89,7 @@ data "google_compute_network" "network" {
 }
 
 resource "google_compute_global_address" "service_range" {
-  name          = "my-global-address"
+  name          = "tf-test%{random_suffix}"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16

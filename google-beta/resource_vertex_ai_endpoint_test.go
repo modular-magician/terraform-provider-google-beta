@@ -45,7 +45,7 @@ func TestAccVertexAIEndpoint_vertexAiEndpointNetwork(t *testing.T) {
 				ResourceName:            "google_vertex_ai_endpoint.endpoint",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"etag", "location", "region"},
+				ImportStateVerifyIgnore: []string{"etag", "location"},
 			},
 			{
 				Config: testAccVertexAIEndpoint_vertexAiEndpointNetworkUpdate(context),
@@ -54,7 +54,7 @@ func TestAccVertexAIEndpoint_vertexAiEndpointNetwork(t *testing.T) {
 				ResourceName:            "google_vertex_ai_endpoint.endpoint",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"etag", "location", "region"},
+				ImportStateVerifyIgnore: []string{"etag", "location"},
 			},
 		},
 	})
@@ -67,7 +67,6 @@ resource "google_vertex_ai_endpoint" "endpoint" {
   display_name = "sample-endpoint"
   description  = "A sample vertex endpoint"
   location     = "us-central1"
-  region       = "us-central1"
   labels       = {
     label-one = "value-one"
   }
@@ -115,7 +114,6 @@ resource "google_vertex_ai_endpoint" "endpoint" {
   display_name = "new-sample-endpoint"
   description  = "An updated sample vertex endpoint"
   location     = "us-central1"
-  region       = "us-central1"
   labels       = {
     label-two = "value-two"
   }

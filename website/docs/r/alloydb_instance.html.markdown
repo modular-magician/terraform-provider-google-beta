@@ -87,7 +87,7 @@ The following arguments are supported:
 
 * `instance_type` -
   (Required)
-  The type of the instance. If the instance type is READ_POOL, provide the associated PRIMARY instance in the `depends_on` meta-data attribute.
+  The type of the instance.
   Possible values are: `PRIMARY`, `READ_POOL`.
 
 * `cluster` -
