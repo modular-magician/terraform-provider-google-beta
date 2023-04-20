@@ -122,9 +122,9 @@ Format: accessPolicies/{policy_id}/accessLevels/{access_level_name}`,
 						"egress_policies": {
 							Type:     schema.TypeList,
 							Optional: true,
-							Description: `List of EgressPolicies to apply to the perimeter. A perimeter may 
+							Description: `List of EgressPolicies to apply to the perimeter. A perimeter may
 have multiple EgressPolicies, each of which is evaluated separately.
-Access is granted if any EgressPolicy grants it. Must be empty for 
+Access is granted if any EgressPolicy grants it. Must be empty for
 a perimeter bridge.`,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -138,8 +138,8 @@ a perimeter bridge.`,
 												"identities": {
 													Type:     schema.TypeList,
 													Optional: true,
-													Description: `A list of identities that are allowed access through this 'EgressPolicy'. 
-Should be in the format of email address. The email address should 
+													Description: `A list of identities that are allowed access through this 'EgressPolicy'.
+Should be in the format of email address. The email address should
 represent individual user or service account only.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -149,8 +149,8 @@ represent individual user or service account only.`,
 													Type:         schema.TypeString,
 													Optional:     true,
 													ValidateFunc: validateEnum([]string{"IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT", ""}),
-													Description: `Specifies the type of identities that are allowed access to outside the 
-perimeter. If left unspecified, then members of 'identities' field will 
+													Description: `Specifies the type of identities that are allowed access to outside the
+perimeter. If left unspecified, then members of 'identities' field will
 be allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT"]`,
 												},
 											},
@@ -159,7 +159,7 @@ be allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY"
 									"egress_to": {
 										Type:     schema.TypeList,
 										Optional: true,
-										Description: `Defines the conditions on the 'ApiOperation' and destination resources that 
+										Description: `Defines the conditions on the 'ApiOperation' and destination resources that
 cause this 'EgressPolicy' to apply.`,
 										MaxItems: 1,
 										Elem: &schema.Resource{
@@ -177,30 +177,30 @@ s3://bucket/path). Currently '*' is not allowed.`,
 												"operations": {
 													Type:     schema.TypeList,
 													Optional: true,
-													Description: `A list of 'ApiOperations' that this egress rule applies to. A request matches 
+													Description: `A list of 'ApiOperations' that this egress rule applies to. A request matches
 if it contains an operation/service in this list.`,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"method_selectors": {
 																Type:     schema.TypeList,
 																Optional: true,
-																Description: `API methods or permissions to allow. Method or permission must belong 
-to the service specified by 'serviceName' field. A single MethodSelector 
-entry with '*' specified for the 'method' field will allow all methods 
+																Description: `API methods or permissions to allow. Method or permission must belong
+to the service specified by 'serviceName' field. A single MethodSelector
+entry with '*' specified for the 'method' field will allow all methods
 AND permissions for the service specified in 'serviceName'.`,
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"method": {
 																			Type:     schema.TypeString,
 																			Optional: true,
-																			Description: `Value for 'method' should be a valid method name for the corresponding 
-'serviceName' in 'ApiOperation'. If '*' used as value for method, 
+																			Description: `Value for 'method' should be a valid method name for the corresponding
+'serviceName' in 'ApiOperation'. If '*' used as value for method,
 then ALL methods and permissions are allowed.`,
 																		},
 																		"permission": {
 																			Type:     schema.TypeString,
 																			Optional: true,
-																			Description: `Value for permission should be a valid Cloud IAM permission for the 
+																			Description: `Value for permission should be a valid Cloud IAM permission for the
 corresponding 'serviceName' in 'ApiOperation'.`,
 																		},
 																	},
@@ -209,8 +209,8 @@ corresponding 'serviceName' in 'ApiOperation'.`,
 															"service_name": {
 																Type:     schema.TypeString,
 																Optional: true,
-																Description: `The name of the API whose methods or permissions the 'IngressPolicy' or 
-'EgressPolicy' want to allow. A single 'ApiOperation' with serviceName 
+																Description: `The name of the API whose methods or permissions the 'IngressPolicy' or
+'EgressPolicy' want to allow. A single 'ApiOperation' with serviceName
 field set to '*' will allow all methods AND permissions for all services.`,
 															},
 														},
@@ -219,10 +219,10 @@ field set to '*' will allow all methods AND permissions for all services.`,
 												"resources": {
 													Type:     schema.TypeList,
 													Optional: true,
-													Description: `A list of resources, currently only projects in the form 
-'projects/<projectnumber>', that match this to stanza. A request matches 
-if it contains a resource in this list. If * is specified for resources, 
-then this 'EgressTo' rule will authorize access to all resources outside 
+													Description: `A list of resources, currently only projects in the form
+'projects/<projectnumber>', that match this to stanza. A request matches
+if it contains a resource in this list. If * is specified for resources,
+then this 'EgressTo' rule will authorize access to all resources outside
 the perimeter.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -255,7 +255,7 @@ to apply.`,
 													Type:     schema.TypeList,
 													Optional: true,
 													Description: `A list of identities that are allowed access through this ingress policy.
-Should be in the format of email address. The email address should represent 
+Should be in the format of email address. The email address should represent
 individual user or service account only.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -265,8 +265,8 @@ individual user or service account only.`,
 													Type:         schema.TypeString,
 													Optional:     true,
 													ValidateFunc: validateEnum([]string{"IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT", ""}),
-													Description: `Specifies the type of identities that are allowed access from outside the 
-perimeter. If left unspecified, then members of 'identities' field will be 
+													Description: `Specifies the type of identities that are allowed access from outside the
+perimeter. If left unspecified, then members of 'identities' field will be
 allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT"]`,
 												},
 												"sources": {
@@ -278,23 +278,23 @@ allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "
 															"access_level": {
 																Type:     schema.TypeString,
 																Optional: true,
-																Description: `An 'AccessLevel' resource name that allow resources within the 
-'ServicePerimeters' to be accessed from the internet. 'AccessLevels' listed 
+																Description: `An 'AccessLevel' resource name that allow resources within the
+'ServicePerimeters' to be accessed from the internet. 'AccessLevels' listed
 must be in the same policy as this 'ServicePerimeter'. Referencing a nonexistent
-'AccessLevel' will cause an error. If no 'AccessLevel' names are listed, 
-resources within the perimeter can only be accessed via Google Cloud calls 
-with request origins within the perimeter. 
-Example 'accessPolicies/MY_POLICY/accessLevels/MY_LEVEL.' 
+'AccessLevel' will cause an error. If no 'AccessLevel' names are listed,
+resources within the perimeter can only be accessed via Google Cloud calls
+with request origins within the perimeter.
+Example 'accessPolicies/MY_POLICY/accessLevels/MY_LEVEL.'
 If * is specified, then all IngressSources will be allowed.`,
 															},
 															"resource": {
 																Type:     schema.TypeString,
 																Optional: true,
-																Description: `A Google Cloud resource that is allowed to ingress the perimeter. 
-Requests from these resources will be allowed to access perimeter data. 
-Currently only projects are allowed. Format 'projects/{project_number}' 
-The project may be in any Google Cloud organization, not just the 
-organization that the perimeter is defined in. '*' is not allowed, the case 
+																Description: `A Google Cloud resource that is allowed to ingress the perimeter.
+Requests from these resources will be allowed to access perimeter data.
+Currently only projects are allowed. Format 'projects/{project_number}'
+The project may be in any Google Cloud organization, not just the
+organization that the perimeter is defined in. '*' is not allowed, the case
 of allowing all Google Cloud resources only is not supported.`,
 															},
 														},
@@ -314,30 +314,30 @@ this 'IngressPolicy' to apply.`,
 												"operations": {
 													Type:     schema.TypeList,
 													Optional: true,
-													Description: `A list of 'ApiOperations' the sources specified in corresponding 'IngressFrom' 
+													Description: `A list of 'ApiOperations' the sources specified in corresponding 'IngressFrom'
 are allowed to perform in this 'ServicePerimeter'.`,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"method_selectors": {
 																Type:     schema.TypeList,
 																Optional: true,
-																Description: `API methods or permissions to allow. Method or permission must belong to 
-the service specified by serviceName field. A single 'MethodSelector' entry 
-with '*' specified for the method field will allow all methods AND 
+																Description: `API methods or permissions to allow. Method or permission must belong to
+the service specified by serviceName field. A single 'MethodSelector' entry
+with '*' specified for the method field will allow all methods AND
 permissions for the service specified in 'serviceName'.`,
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"method": {
 																			Type:     schema.TypeString,
 																			Optional: true,
-																			Description: `Value for method should be a valid method name for the corresponding 
-serviceName in 'ApiOperation'. If '*' used as value for 'method', then 
+																			Description: `Value for method should be a valid method name for the corresponding
+serviceName in 'ApiOperation'. If '*' used as value for 'method', then
 ALL methods and permissions are allowed.`,
 																		},
 																		"permission": {
 																			Type:     schema.TypeString,
 																			Optional: true,
-																			Description: `Value for permission should be a valid Cloud IAM permission for the 
+																			Description: `Value for permission should be a valid Cloud IAM permission for the
 corresponding 'serviceName' in 'ApiOperation'.`,
 																		},
 																	},
@@ -346,8 +346,8 @@ corresponding 'serviceName' in 'ApiOperation'.`,
 															"service_name": {
 																Type:     schema.TypeString,
 																Optional: true,
-																Description: `The name of the API whose methods or permissions the 'IngressPolicy' or 
-'EgressPolicy' want to allow. A single 'ApiOperation' with 'serviceName' 
+																Description: `The name of the API whose methods or permissions the 'IngressPolicy' or
+'EgressPolicy' want to allow. A single 'ApiOperation' with 'serviceName'
 field set to '*' will allow all methods AND permissions for all services.`,
 															},
 														},
@@ -356,12 +356,12 @@ field set to '*' will allow all methods AND permissions for all services.`,
 												"resources": {
 													Type:     schema.TypeList,
 													Optional: true,
-													Description: `A list of resources, currently only projects in the form 
+													Description: `A list of resources, currently only projects in the form
 'projects/<projectnumber>', protected by this 'ServicePerimeter'
 that are allowed to be accessed by sources defined in the
 corresponding 'IngressFrom'. A request matches if it contains
 a resource in this list. If '*' is specified for resources,
-then this 'IngressTo' rule will authorize access to all 
+then this 'IngressTo' rule will authorize access to all
 resources inside the perimeter, provided that the request
 also matches the 'operations' field.`,
 													Elem: &schema.Schema{
@@ -457,9 +457,9 @@ Format: accessPolicies/{policy_id}/accessLevels/{access_level_name}`,
 						"egress_policies": {
 							Type:     schema.TypeList,
 							Optional: true,
-							Description: `List of EgressPolicies to apply to the perimeter. A perimeter may 
+							Description: `List of EgressPolicies to apply to the perimeter. A perimeter may
 have multiple EgressPolicies, each of which is evaluated separately.
-Access is granted if any EgressPolicy grants it. Must be empty for 
+Access is granted if any EgressPolicy grants it. Must be empty for
 a perimeter bridge.`,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -473,8 +473,8 @@ a perimeter bridge.`,
 												"identities": {
 													Type:     schema.TypeList,
 													Optional: true,
-													Description: `A list of identities that are allowed access through this 'EgressPolicy'. 
-Should be in the format of email address. The email address should 
+													Description: `A list of identities that are allowed access through this 'EgressPolicy'.
+Should be in the format of email address. The email address should
 represent individual user or service account only.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -484,8 +484,8 @@ represent individual user or service account only.`,
 													Type:         schema.TypeString,
 													Optional:     true,
 													ValidateFunc: validateEnum([]string{"IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT", ""}),
-													Description: `Specifies the type of identities that are allowed access to outside the 
-perimeter. If left unspecified, then members of 'identities' field will 
+													Description: `Specifies the type of identities that are allowed access to outside the
+perimeter. If left unspecified, then members of 'identities' field will
 be allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT"]`,
 												},
 											},
@@ -494,7 +494,7 @@ be allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY"
 									"egress_to": {
 										Type:     schema.TypeList,
 										Optional: true,
-										Description: `Defines the conditions on the 'ApiOperation' and destination resources that 
+										Description: `Defines the conditions on the 'ApiOperation' and destination resources that
 cause this 'EgressPolicy' to apply.`,
 										MaxItems: 1,
 										Elem: &schema.Resource{
@@ -512,30 +512,30 @@ s3://bucket/path). Currently '*' is not allowed.`,
 												"operations": {
 													Type:     schema.TypeList,
 													Optional: true,
-													Description: `A list of 'ApiOperations' that this egress rule applies to. A request matches 
+													Description: `A list of 'ApiOperations' that this egress rule applies to. A request matches
 if it contains an operation/service in this list.`,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"method_selectors": {
 																Type:     schema.TypeList,
 																Optional: true,
-																Description: `API methods or permissions to allow. Method or permission must belong 
-to the service specified by 'serviceName' field. A single MethodSelector 
-entry with '*' specified for the 'method' field will allow all methods 
+																Description: `API methods or permissions to allow. Method or permission must belong
+to the service specified by 'serviceName' field. A single MethodSelector
+entry with '*' specified for the 'method' field will allow all methods
 AND permissions for the service specified in 'serviceName'.`,
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"method": {
 																			Type:     schema.TypeString,
 																			Optional: true,
-																			Description: `Value for 'method' should be a valid method name for the corresponding 
-'serviceName' in 'ApiOperation'. If '*' used as value for method, 
+																			Description: `Value for 'method' should be a valid method name for the corresponding
+'serviceName' in 'ApiOperation'. If '*' used as value for method,
 then ALL methods and permissions are allowed.`,
 																		},
 																		"permission": {
 																			Type:     schema.TypeString,
 																			Optional: true,
-																			Description: `Value for permission should be a valid Cloud IAM permission for the 
+																			Description: `Value for permission should be a valid Cloud IAM permission for the
 corresponding 'serviceName' in 'ApiOperation'.`,
 																		},
 																	},
@@ -544,8 +544,8 @@ corresponding 'serviceName' in 'ApiOperation'.`,
 															"service_name": {
 																Type:     schema.TypeString,
 																Optional: true,
-																Description: `The name of the API whose methods or permissions the 'IngressPolicy' or 
-'EgressPolicy' want to allow. A single 'ApiOperation' with serviceName 
+																Description: `The name of the API whose methods or permissions the 'IngressPolicy' or
+'EgressPolicy' want to allow. A single 'ApiOperation' with serviceName
 field set to '*' will allow all methods AND permissions for all services.`,
 															},
 														},
@@ -554,10 +554,10 @@ field set to '*' will allow all methods AND permissions for all services.`,
 												"resources": {
 													Type:     schema.TypeList,
 													Optional: true,
-													Description: `A list of resources, currently only projects in the form 
-'projects/<projectnumber>', that match this to stanza. A request matches 
-if it contains a resource in this list. If * is specified for resources, 
-then this 'EgressTo' rule will authorize access to all resources outside 
+													Description: `A list of resources, currently only projects in the form
+'projects/<projectnumber>', that match this to stanza. A request matches
+if it contains a resource in this list. If * is specified for resources,
+then this 'EgressTo' rule will authorize access to all resources outside
 the perimeter.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -590,7 +590,7 @@ to apply.`,
 													Type:     schema.TypeList,
 													Optional: true,
 													Description: `A list of identities that are allowed access through this ingress policy.
-Should be in the format of email address. The email address should represent 
+Should be in the format of email address. The email address should represent
 individual user or service account only.`,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -600,8 +600,8 @@ individual user or service account only.`,
 													Type:         schema.TypeString,
 													Optional:     true,
 													ValidateFunc: validateEnum([]string{"IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT", ""}),
-													Description: `Specifies the type of identities that are allowed access from outside the 
-perimeter. If left unspecified, then members of 'identities' field will be 
+													Description: `Specifies the type of identities that are allowed access from outside the
+perimeter. If left unspecified, then members of 'identities' field will be
 allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "ANY_USER_ACCOUNT", "ANY_SERVICE_ACCOUNT"]`,
 												},
 												"sources": {
@@ -613,23 +613,23 @@ allowed access. Possible values: ["IDENTITY_TYPE_UNSPECIFIED", "ANY_IDENTITY", "
 															"access_level": {
 																Type:     schema.TypeString,
 																Optional: true,
-																Description: `An 'AccessLevel' resource name that allow resources within the 
-'ServicePerimeters' to be accessed from the internet. 'AccessLevels' listed 
+																Description: `An 'AccessLevel' resource name that allow resources within the
+'ServicePerimeters' to be accessed from the internet. 'AccessLevels' listed
 must be in the same policy as this 'ServicePerimeter'. Referencing a nonexistent
-'AccessLevel' will cause an error. If no 'AccessLevel' names are listed, 
-resources within the perimeter can only be accessed via Google Cloud calls 
-with request origins within the perimeter. 
-Example 'accessPolicies/MY_POLICY/accessLevels/MY_LEVEL.' 
+'AccessLevel' will cause an error. If no 'AccessLevel' names are listed,
+resources within the perimeter can only be accessed via Google Cloud calls
+with request origins within the perimeter.
+Example 'accessPolicies/MY_POLICY/accessLevels/MY_LEVEL.'
 If * is specified, then all IngressSources will be allowed.`,
 															},
 															"resource": {
 																Type:     schema.TypeString,
 																Optional: true,
-																Description: `A Google Cloud resource that is allowed to ingress the perimeter. 
-Requests from these resources will be allowed to access perimeter data. 
-Currently only projects are allowed. Format 'projects/{project_number}' 
-The project may be in any Google Cloud organization, not just the 
-organization that the perimeter is defined in. '*' is not allowed, the case 
+																Description: `A Google Cloud resource that is allowed to ingress the perimeter.
+Requests from these resources will be allowed to access perimeter data.
+Currently only projects are allowed. Format 'projects/{project_number}'
+The project may be in any Google Cloud organization, not just the
+organization that the perimeter is defined in. '*' is not allowed, the case
 of allowing all Google Cloud resources only is not supported.`,
 															},
 														},
@@ -649,30 +649,30 @@ this 'IngressPolicy' to apply.`,
 												"operations": {
 													Type:     schema.TypeList,
 													Optional: true,
-													Description: `A list of 'ApiOperations' the sources specified in corresponding 'IngressFrom' 
+													Description: `A list of 'ApiOperations' the sources specified in corresponding 'IngressFrom'
 are allowed to perform in this 'ServicePerimeter'.`,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"method_selectors": {
 																Type:     schema.TypeList,
 																Optional: true,
-																Description: `API methods or permissions to allow. Method or permission must belong to 
-the service specified by serviceName field. A single 'MethodSelector' entry 
-with '*' specified for the method field will allow all methods AND 
+																Description: `API methods or permissions to allow. Method or permission must belong to
+the service specified by serviceName field. A single 'MethodSelector' entry
+with '*' specified for the method field will allow all methods AND
 permissions for the service specified in 'serviceName'.`,
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"method": {
 																			Type:     schema.TypeString,
 																			Optional: true,
-																			Description: `Value for method should be a valid method name for the corresponding 
-serviceName in 'ApiOperation'. If '*' used as value for 'method', then 
+																			Description: `Value for method should be a valid method name for the corresponding
+serviceName in 'ApiOperation'. If '*' used as value for 'method', then
 ALL methods and permissions are allowed.`,
 																		},
 																		"permission": {
 																			Type:     schema.TypeString,
 																			Optional: true,
-																			Description: `Value for permission should be a valid Cloud IAM permission for the 
+																			Description: `Value for permission should be a valid Cloud IAM permission for the
 corresponding 'serviceName' in 'ApiOperation'.`,
 																		},
 																	},
@@ -681,8 +681,8 @@ corresponding 'serviceName' in 'ApiOperation'.`,
 															"service_name": {
 																Type:     schema.TypeString,
 																Optional: true,
-																Description: `The name of the API whose methods or permissions the 'IngressPolicy' or 
-'EgressPolicy' want to allow. A single 'ApiOperation' with 'serviceName' 
+																Description: `The name of the API whose methods or permissions the 'IngressPolicy' or
+'EgressPolicy' want to allow. A single 'ApiOperation' with 'serviceName'
 field set to '*' will allow all methods AND permissions for all services.`,
 															},
 														},
@@ -691,12 +691,12 @@ field set to '*' will allow all methods AND permissions for all services.`,
 												"resources": {
 													Type:     schema.TypeList,
 													Optional: true,
-													Description: `A list of resources, currently only projects in the form 
+													Description: `A list of resources, currently only projects in the form
 'projects/<projectnumber>', protected by this 'ServicePerimeter'
 that are allowed to be accessed by sources defined in the
 corresponding 'IngressFrom'. A request matches if it contains
 a resource in this list. If '*' is specified for resources,
-then this 'IngressTo' rule will authorize access to all 
+then this 'IngressTo' rule will authorize access to all
 resources inside the perimeter, provided that the request
 also matches the 'operations' field.`,
 													Elem: &schema.Schema{

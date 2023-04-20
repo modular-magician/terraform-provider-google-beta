@@ -179,6 +179,94 @@ resource "google_data_loss_prevention_job_trigger" "job_notification_emails" {
   }
 }
 ```
+## Example Usage - Dlp Job Trigger Deidentify
+
+
+```hcl
+resource "google_data_loss_prevention_job_trigger" "deidentify" {
+  parent       = "projects/my-project-name"
+  description  = "Description for the job_trigger created by terraform"
+  display_name = "TerraformDisplayName"
+  
+  triggers {
+    schedule {
+      recurrence_period_duration = "86400s"
+    }
+  }
+  
+  inspect_job {
+    inspect_template_name = "sample-inspect-template"
+    actions {
+      deidentify {
+        cloud_storage_output    = "gs://samplebucket/dir/"
+        file_types_to_transform = ["CSV", "TSV"]
+        transformation_details_storage_config {
+          table {
+            project_id = "my-project-name"
+            dataset_id = google_bigquery_dataset.default.dataset_id
+            table_id   = google_bigquery_table.default.table_id
+          }
+        }
+        transformation_config {
+          deidentify_template            = "sample-deidentify-template"
+          image_redact_template          = "sample-image-redact-template"
+          structured_deidentify_template = "sample-structured-deidentify-template"
+        }
+      }
+    }
+    storage_config {
+      cloud_storage_options {
+        file_set {
+          url = "gs://mybucket/directory/"
+        }
+      }
+    }
+  }
+}
+  
+resource "google_bigquery_dataset" "default" {
+  dataset_id                  = "tf_test"
+  friendly_name               = "terraform-test"
+  description                 = "Description for the dataset created by terraform"
+  location                    = "US"
+  default_table_expiration_ms = 3600000
+  
+  labels = {
+    env = "default"
+  }
+}
+  
+resource "google_bigquery_table" "default" {
+  dataset_id          = google_bigquery_dataset.default.dataset_id
+  table_id            = "tf_test"
+  deletion_protection = false
+  
+  time_partitioning {
+    type = "DAY"
+  }
+  
+  labels = {
+    env = "default"
+  }
+  
+  schema = <<EOF
+    [
+    {
+      "name": "quantity",
+      "type": "NUMERIC",
+      "mode": "NULLABLE",
+      "description": "The quantity"
+    },
+    {
+      "name": "name",
+      "type": "STRING",
+      "mode": "NULLABLE",
+      "description": "Name of the object"
+    }
+    ]
+  EOF
+}
+```
 ## Example Usage - Dlp Job Trigger Hybrid
 
 
@@ -469,19 +557,19 @@ The following arguments are supported:
 
 * `rows_limit` -
   (Optional)
-  Max number of rows to scan. If the table has more rows than this value, the rest of the rows are omitted. 
-  If not set, or if set to 0, all rows will be scanned. Only one of rowsLimit and rowsLimitPercent can be 
+  Max number of rows to scan. If the table has more rows than this value, the rest of the rows are omitted.
+  If not set, or if set to 0, all rows will be scanned. Only one of rowsLimit and rowsLimitPercent can be
   specified. Cannot be used in conjunction with TimespanConfig.
 
 * `rows_limit_percent` -
   (Optional)
-  Max percentage of rows to scan. The rest are omitted. The number of rows scanned is rounded down. 
-  Must be between 0 and 100, inclusively. Both 0 and 100 means no limit. Defaults to 0. Only one of 
+  Max percentage of rows to scan. The rest are omitted. The number of rows scanned is rounded down.
+  Must be between 0 and 100, inclusively. Both 0 and 100 means no limit. Defaults to 0. Only one of
   rowsLimit and rowsLimitPercent can be specified. Cannot be used in conjunction with TimespanConfig.
 
 * `sample_method` -
   (Optional)
-  How to sample rows if not all rows are scanned. Meaningful only when used in conjunction with either 
+  How to sample rows if not all rows are scanned. Meaningful only when used in conjunction with either
   rowsLimit or rowsLimitPercent. If not specified, rows are scanned in the order BigQuery reads them.
   Default value is `TOP`.
   Possible values are: `TOP`, `RANDOM_START`.
@@ -649,7 +737,7 @@ The following arguments are supported:
 * `file_types_to_transform` -
   (Optional)
   List of user-specified file type groups to transform. If specified, only the files with these filetypes will be transformed.
-  If empty, all supported files will be transformed. Supported types may be automatically added over time. 
+  If empty, all supported files will be transformed. Supported types may be automatically added over time.
   If a file type is set in this field that isn't supported by the Deidentify action then the job will fail and will not be successfully created/started.
   Each value may be one of: `IMAGE`, `TEXT_FILE`, `CSV`, `TSV`.
 
