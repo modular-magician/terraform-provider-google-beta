@@ -25,7 +25,7 @@ The BigqueryReservation Assignment resource
 ## Example Usage - basic
 ```hcl
 resource "google_bigquery_reservation" "basic" {
-  name  = "tf-test-my-reservation%{random_suffix}"
+  name  = "tf-test-my-reservation"
   project = "my-project-name"
   location = "us-central1"
   slot_capacity = 0
