@@ -53,7 +53,7 @@ func testAccCertificateManagerDnsAuthorization_certificateManagerDnsAuthorizatio
 resource "google_certificate_manager_dns_authorization" "default" {
   name        = "tf-test-dns-auth%{random_suffix}"
   description = "The default dnss"
-  domain      = "%{random_suffix}.hashicorptest.com"
+  domain      = "tf%{random_suffix}.hashicorptest.com"
 }
 
 output "record_name_to_insert" {

@@ -36,13 +36,13 @@ To get more information about OrganizationSecurityPolicyAssociation, see:
 ```hcl
 resource "google_folder" "security_policy_target" {
   provider     = google-beta
-  display_name = "tf-test-secpol-%{random_suffix}"
+  display_name = folder-name
   parent       = "organizations/123456789"
 }
 
 resource "google_compute_organization_security_policy" "policy" {
   provider = google-beta
-  display_name = "tf-test%{random_suffix}"
+  display_name = policy-name
   parent       = google_folder.security_policy_target.name
 }
 
@@ -70,7 +70,7 @@ resource "google_compute_organization_security_policy_rule" "policy" {
 
 resource "google_compute_organization_security_policy_association" "policy" {
   provider = google-beta
-  name          = "tf-test%{random_suffix}"
+  name          = asso-name
   attachment_id = google_compute_organization_security_policy.policy.parent
   policy_id     = google_compute_organization_security_policy.policy.id
 }

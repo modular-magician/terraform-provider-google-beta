@@ -53,7 +53,7 @@ func testAccComputeOrganizationSecurityPolicyRule_organizationSecurityPolicyRule
 	return Nprintf(`
 resource "google_compute_organization_security_policy" "policy" {
   provider = google-beta
-  display_name = "tf-test%{random_suffix}"
+  display_name = tf_test_my_display_name%{random_suffix}
   parent       = "organizations/%{org_id}"
 }
 

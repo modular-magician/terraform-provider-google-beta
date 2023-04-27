@@ -53,13 +53,13 @@ func testAccComputeOrganizationSecurityPolicyAssociation_organizationSecurityPol
 	return Nprintf(`
 resource "google_folder" "security_policy_target" {
   provider     = google-beta
-  display_name = "tf-test-secpol-%{random_suffix}"
+  display_name = tf-test-folder-name%{random_suffix}
   parent       = "organizations/%{org_id}"
 }
 
 resource "google_compute_organization_security_policy" "policy" {
   provider = google-beta
-  display_name = "tf-test%{random_suffix}"
+  display_name = tf-test-policy-name%{random_suffix}
   parent       = google_folder.security_policy_target.name
 }
 
@@ -87,7 +87,7 @@ resource "google_compute_organization_security_policy_rule" "policy" {
 
 resource "google_compute_organization_security_policy_association" "policy" {
   provider = google-beta
-  name          = "tf-test%{random_suffix}"
+  name          = tf-test-asso-name%{random_suffix}
   attachment_id = google_compute_organization_security_policy.policy.parent
   policy_id     = google_compute_organization_security_policy.policy.id
 }

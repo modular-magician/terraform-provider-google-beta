@@ -197,11 +197,11 @@ data "google_project" "project" {
 }
 
 resource "google_compute_network" "default" {
-  name = "tf-test-alloydb-cp%{random_suffix}"
+  name = "tf-test-alloydb-cp"
 }
 
 resource "google_compute_global_address" "private_ip_alloc" {
-  name          =  "private-ip-alloc%{random_suffix}"
+  name          =  "private-ip-alloc"
   address_type  = "INTERNAL"
   purpose       = "VPC_PEERING"
   prefix_length = 16
@@ -227,11 +227,11 @@ resource "google_database_migration_service_connection_profile" "alloydbprofile"
     foo = "bar" 
   }
   alloydb {
-    cluster_id = "dbmsalloycluster%{random_suffix}"
+    cluster_id = "dbmsalloycluster"
     settings {
       initial_user {
-        user = "alloyuser%{random_suffix}"
-        password = "alloypass%{random_suffix}"
+        user = "alloyuser"
+        password = "alloypass"
       }
       vpc_network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
       labels  = { 
