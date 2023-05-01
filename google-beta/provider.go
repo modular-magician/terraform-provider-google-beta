@@ -1424,6 +1424,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_logging_project_exclusion":              ResourceLoggingExclusion(ProjectLoggingExclusionSchema, NewProjectLoggingExclusionUpdater, ProjectLoggingExclusionIdParseFunc),
 			"google_logging_project_bucket_config":          ResourceLoggingProjectBucketConfig(),
 			"google_monitoring_dashboard":                   ResourceMonitoringDashboard(),
+			"google_monitoring_monitored_project":           ResourceMonitoringMonitoredProject(),
 			"google_project_service_identity":               ResourceProjectServiceIdentity(),
 			"google_service_networking_connection":          ResourceServiceNetworkingConnection(),
 			"google_sql_database_instance":                  ResourceSqlDatabaseInstance(),
