@@ -399,8 +399,7 @@ rowsLimit and rowsLimitPercent can be specified. Cannot be used in conjunction w
 													Optional:     true,
 													ValidateFunc: verify.ValidateEnum([]string{"TOP", "RANDOM_START", ""}),
 													Description: `How to sample rows if not all rows are scanned. Meaningful only when used in conjunction with either
-rowsLimit or rowsLimitPercent. If not specified, rows are scanned in the order BigQuery reads them. Default value: "TOP" Possible values: ["TOP", "RANDOM_START"]`,
-													Default: "TOP",
+rowsLimit or rowsLimitPercent. If not specified, rows are scanned in the order BigQuery reads them. Possible values: ["TOP", "RANDOM_START"]`,
 												},
 											},
 										},
