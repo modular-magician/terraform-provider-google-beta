@@ -700,7 +700,7 @@ given pathMatcher, only one of pathRules or routeRules must be set.`,
 										Required: true,
 										Description: `The list of path patterns to match. Each must start with / and the only place a
 \* is allowed is at the end following a /. The string fed to the path matcher
-does not include any text after the first ? or #, and those chars are not
+does not include any text after the first ? or  #, and those chars are not
 allowed here.`,
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
