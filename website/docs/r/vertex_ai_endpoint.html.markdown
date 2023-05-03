@@ -68,12 +68,6 @@ data "google_compute_network" "vertex_network" {
   name       = "network-name"
 }
 
-resource "google_kms_crypto_key_iam_member" "crypto_key" {
-  crypto_key_id = "kms-name"
-  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  member        = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform.iam.gserviceaccount.com"
-}
-
 data "google_project" "project" {}
 ```
 
