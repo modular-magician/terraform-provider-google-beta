@@ -744,6 +744,32 @@ name is limited to 512 Unicode characters.`,
 							Optional:    true,
 							Description: `If an alert policy that was active has no data for this long, any open incidents will close.`,
 						},
+						"notification_channel_strategy": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `Control over how the notification channels in 'notification_channels'
+are notified when this alert fires, on a per-channel basis.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"notification_channel_names": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `The notification channels that these settings apply to. Each of these
+correspond to the name field in one of the NotificationChannel objects
+referenced in the notification_channels field of this AlertPolicy. The format is
+'projects/[PROJECT_ID_OR_NUMBER]/notificationChannels/[CHANNEL_ID]'`,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"renotify_interval": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The frequency at which to send reminder notifications for open incidents.`,
+									},
+								},
+							},
+						},
 						"notification_rate_limit": {
 							Type:     schema.TypeList,
 							Optional: true,
@@ -1681,6 +1707,8 @@ func flattenMonitoringAlertPolicyAlertStrategy(v interface{}, d *schema.Resource
 		flattenMonitoringAlertPolicyAlertStrategyNotificationRateLimit(original["notificationRateLimit"], d, config)
 	transformed["auto_close"] =
 		flattenMonitoringAlertPolicyAlertStrategyAutoClose(original["autoClose"], d, config)
+	transformed["notification_channel_strategy"] =
+		flattenMonitoringAlertPolicyAlertStrategyNotificationChannelStrategy(original["notificationChannelStrategy"], d, config)
 	return []interface{}{transformed}
 }
 func flattenMonitoringAlertPolicyAlertStrategyNotificationRateLimit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1701,6 +1729,33 @@ func flattenMonitoringAlertPolicyAlertStrategyNotificationRateLimitPeriod(v inte
 }
 
 func flattenMonitoringAlertPolicyAlertStrategyAutoClose(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenMonitoringAlertPolicyAlertStrategyNotificationChannelStrategy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"notification_channel_names": flattenMonitoringAlertPolicyAlertStrategyNotificationChannelStrategyNotificationChannelNames(original["notificationChannelNames"], d, config),
+			"renotify_interval":          flattenMonitoringAlertPolicyAlertStrategyNotificationChannelStrategyRenotifyInterval(original["renotifyInterval"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenMonitoringAlertPolicyAlertStrategyNotificationChannelStrategyNotificationChannelNames(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenMonitoringAlertPolicyAlertStrategyNotificationChannelStrategyRenotifyInterval(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2354,6 +2409,13 @@ func expandMonitoringAlertPolicyAlertStrategy(v interface{}, d TerraformResource
 		transformed["autoClose"] = transformedAutoClose
 	}
 
+	transformedNotificationChannelStrategy, err := expandMonitoringAlertPolicyAlertStrategyNotificationChannelStrategy(original["notification_channel_strategy"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedNotificationChannelStrategy); val.IsValid() && !isEmptyValue(val) {
+		transformed["notificationChannelStrategy"] = transformedNotificationChannelStrategy
+	}
+
 	return transformed, nil
 }
 
@@ -2381,6 +2443,43 @@ func expandMonitoringAlertPolicyAlertStrategyNotificationRateLimitPeriod(v inter
 }
 
 func expandMonitoringAlertPolicyAlertStrategyAutoClose(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandMonitoringAlertPolicyAlertStrategyNotificationChannelStrategy(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedNotificationChannelNames, err := expandMonitoringAlertPolicyAlertStrategyNotificationChannelStrategyNotificationChannelNames(original["notification_channel_names"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedNotificationChannelNames); val.IsValid() && !isEmptyValue(val) {
+			transformed["notificationChannelNames"] = transformedNotificationChannelNames
+		}
+
+		transformedRenotifyInterval, err := expandMonitoringAlertPolicyAlertStrategyNotificationChannelStrategyRenotifyInterval(original["renotify_interval"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedRenotifyInterval); val.IsValid() && !isEmptyValue(val) {
+			transformed["renotifyInterval"] = transformedRenotifyInterval
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandMonitoringAlertPolicyAlertStrategyNotificationChannelStrategyNotificationChannelNames(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandMonitoringAlertPolicyAlertStrategyNotificationChannelStrategyRenotifyInterval(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
