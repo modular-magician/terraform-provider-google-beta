@@ -62,6 +62,11 @@ gatewaySecurityPolicy should match the pattern:(^a-z?$).`,
 The default value is 'global'.`,
 				Default: "global",
 			},
+			"tls_inspection_policy": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `Name of a TlsInspectionPolicy resource that defines how TLS inspection is performed for any rule that enables it.`,
+			},
 			"create_time": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -105,6 +110,12 @@ func resourceNetworkSecurityGatewaySecurityPolicyCreate(d *schema.ResourceData, 
 		return err
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
+	}
+	tlsInspectionPolicyProp, err := expandNetworkSecurityGatewaySecurityPolicyTlsInspectionPolicy(d.Get("tls_inspection_policy"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tls_inspection_policy"); !isEmptyValue(reflect.ValueOf(tlsInspectionPolicyProp)) && (ok || !reflect.DeepEqual(v, tlsInspectionPolicyProp)) {
+		obj["tlsInspectionPolicy"] = tlsInspectionPolicyProp
 	}
 
 	url, err := ReplaceVars(d, config, "{{NetworkSecurityBasePath}}projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies?gatewaySecurityPolicyId={{name}}")
@@ -225,6 +236,12 @@ func resourceNetworkSecurityGatewaySecurityPolicyUpdate(d *schema.ResourceData, 
 	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+	tlsInspectionPolicyProp, err := expandNetworkSecurityGatewaySecurityPolicyTlsInspectionPolicy(d.Get("tls_inspection_policy"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tls_inspection_policy"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, tlsInspectionPolicyProp)) {
+		obj["tlsInspectionPolicy"] = tlsInspectionPolicyProp
+	}
 
 	url, err := ReplaceVars(d, config, "{{NetworkSecurityBasePath}}projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{name}}")
 	if err != nil {
@@ -236,6 +253,10 @@ func resourceNetworkSecurityGatewaySecurityPolicyUpdate(d *schema.ResourceData, 
 
 	if d.HasChange("description") {
 		updateMask = append(updateMask, "description")
+	}
+
+	if d.HasChange("tls_inspection_policy") {
+		updateMask = append(updateMask, "tlsInspectionPolicy")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -350,5 +371,9 @@ func flattenNetworkSecurityGatewaySecurityPolicyDescription(v interface{}, d *sc
 }
 
 func expandNetworkSecurityGatewaySecurityPolicyDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNetworkSecurityGatewaySecurityPolicyTlsInspectionPolicy(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
