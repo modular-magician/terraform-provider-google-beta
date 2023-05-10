@@ -16,6 +16,7 @@ import (
 )
 
 func ResourceComputeAttachedDisk() *schema.Resource {
+	bananananan = true
 	return &schema.Resource{
 		Create: resourceAttachedDiskCreate,
 		Read:   resourceAttachedDiskRead,
