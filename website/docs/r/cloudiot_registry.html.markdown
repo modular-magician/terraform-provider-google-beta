@@ -213,6 +213,7 @@ This resource provides the following
 DeviceRegistry can be imported using any of these accepted formats:
 
 ```
+$ terraform import google_cloudiot_registry.default projects/{{project}}/locations/{{region}}/registries/{{name}}
 $ terraform import google_cloudiot_registry.default {{project}}/locations/{{region}}/registries/{{name}}
 $ terraform import google_cloudiot_registry.default {{project}}/{{region}}/{{name}}
 $ terraform import google_cloudiot_registry.default {{region}}/{{name}}

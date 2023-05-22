@@ -698,10 +698,11 @@ func resourceCloudIotDeviceRegistryDelete(d *schema.ResourceData, meta interface
 func resourceCloudIotDeviceRegistryImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
 	if err := tpgresource.ParseImportId([]string{
-		"(?P<project>[^/]+)/locations/(?P<region>[^/]+)/registries/(?P<name>[^/]+)",
-		"(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<name>[^/]+)",
-		"(?P<region>[^/]+)/(?P<name>[^/]+)",
-		"(?P<name>[^/]+)",
+		"projects/(?P<project>.+)/locations/(?P<region>.+)/registries/(?P<name>.+)",
+		"(?P<project>.+)/locations/(?P<region>.+)/registries/(?P<name>.+)",
+		"(?P<project>.+)/(?P<region>.+)/(?P<name>.+)",
+		"(?P<region>.+)/(?P<name>.+)",
+		"(?P<name>.+)",
 	}, d, config); err != nil {
 		return nil, err
 	}

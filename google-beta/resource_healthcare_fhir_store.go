@@ -586,20 +586,20 @@ func resourceHealthcareFhirStoreDelete(d *schema.ResourceData, meta interface{})
 }
 
 func resourceHealthcareFhirStoreImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-
 	config := meta.(*transport_tpg.Config)
-
-	fhirStoreId, err := ParseHealthcareFhirStoreId(d.Id(), config)
-	if err != nil {
+	if err := tpgresource.ParseImportId([]string{
+		"(?P<dataset>.+)/fhirStores/(?P<name>.+)",
+		"(?P<dataset>.+)/(?P<name>.+)",
+	}, d, config); err != nil {
 		return nil, err
 	}
 
-	if err := d.Set("dataset", fhirStoreId.DatasetId.DatasetId()); err != nil {
-		return nil, fmt.Errorf("Error setting dataset: %s", err)
+	// Replace import id for the resource id
+	id, err := tpgresource.ReplaceVars(d, config, "{{dataset}}/fhirStores/{{name}}")
+	if err != nil {
+		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
-	if err := d.Set("name", fhirStoreId.Name); err != nil {
-		return nil, fmt.Errorf("Error setting name: %s", err)
-	}
+	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
 }

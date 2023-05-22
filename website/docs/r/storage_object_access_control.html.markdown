@@ -152,5 +152,5 @@ This resource provides the following
 ObjectAccessControl can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_storage_object_access_control.default {{bucket}}/{{object}}/{{entity}}
+$ terraform import google_storage_object_access_control.default {{&bucket}}/{{object}}/{{&entity}}
 ```
