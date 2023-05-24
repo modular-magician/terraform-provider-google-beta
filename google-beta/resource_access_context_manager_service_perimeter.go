@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -121,7 +124,7 @@ Format: accessPolicies/{policy_id}/accessLevels/{access_level_name}`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							AtLeastOneOf: []string{"status.0.resources", "status.0.access_levels", "status.0.restricted_services"},
+							AtLeastOneOf: []string{"spec.0.resources", "spec.0.access_levels", "spec.0.restricted_services"},
 						},
 						"egress_policies": {
 							Type:     schema.TypeList,
@@ -387,7 +390,7 @@ Format: projects/{project_number}`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							AtLeastOneOf: []string{"status.0.resources", "status.0.access_levels", "status.0.restricted_services"},
+							AtLeastOneOf: []string{"spec.0.resources", "spec.0.access_levels", "spec.0.restricted_services"},
 						},
 						"restricted_services": {
 							Type:     schema.TypeList,
@@ -400,7 +403,7 @@ restrictions.`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							AtLeastOneOf: []string{"status.0.resources", "status.0.access_levels", "status.0.restricted_services"},
+							AtLeastOneOf: []string{"spec.0.resources", "spec.0.access_levels", "spec.0.restricted_services"},
 						},
 						"vpc_accessible_services": {
 							Type:     schema.TypeList,
