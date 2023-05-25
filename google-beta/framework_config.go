@@ -116,6 +116,7 @@ func (p *frameworkProvider) LoadAndValidateFramework(ctx context.Context, data P
 	p.DialogflowCXBasePath = data.DialogflowCXCustomEndpoint.ValueString()
 	p.DNSBasePath = data.DNSCustomEndpoint.ValueString()
 	p.DocumentAIBasePath = data.DocumentAICustomEndpoint.ValueString()
+	p.EdgecontainerBasePath = data.EdgecontainerCustomEndpoint.ValueString()
 	p.EssentialContactsBasePath = data.EssentialContactsCustomEndpoint.ValueString()
 	p.FilestoreBasePath = data.FilestoreCustomEndpoint.ValueString()
 	p.FirebaseBasePath = data.FirebaseCustomEndpoint.ValueString()
@@ -680,6 +681,14 @@ func (p *frameworkProvider) HandleDefaults(ctx context.Context, data *ProviderMo
 		}, transport_tpg.DefaultBasePaths[transport_tpg.DocumentAIBasePathKey])
 		if customEndpoint != nil {
 			data.DocumentAICustomEndpoint = types.StringValue(customEndpoint.(string))
+		}
+	}
+	if data.EdgecontainerCustomEndpoint.IsNull() {
+		customEndpoint := transport_tpg.MultiEnvDefault([]string{
+			"GOOGLE_EDGECONTAINER_CUSTOM_ENDPOINT",
+		}, transport_tpg.DefaultBasePaths[transport_tpg.EdgecontainerBasePathKey])
+		if customEndpoint != nil {
+			data.EdgecontainerCustomEndpoint = types.StringValue(customEndpoint.(string))
 		}
 	}
 	if data.EssentialContactsCustomEndpoint.IsNull() {
