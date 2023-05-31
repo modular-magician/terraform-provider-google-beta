@@ -618,6 +618,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
+			"vmwareengine_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
 			"vpc_access_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -819,6 +824,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		"google_vpc_access_connector":                         DataSourceVPCAccessConnector(),
 		"google_redis_instance":                               DataSourceGoogleRedisInstance(),
 		"google_vertex_ai_index":                              dataSourceVertexAIIndex(),
+		"google_vmwareengine_private_cloud":                   DataSourceVmwareenginePrivateCloud(),
+		"google_vmwareengine_network":                         DataSourceVmwareengineNetwork(),
+		"google_vmwareengine_cluster":                         DataSourceVmwareengineCluster(),
 		// ####### END datasources ###########
 		// ####### END handwritten datasources ###########
 	},
@@ -925,9 +933,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		})
 }
 
-// Generated resources: 340
+// Generated resources: 342
 // Generated IAM resources: 222
-// Total generated resources: 562
+// Total generated resources: 564
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1487,6 +1495,8 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_vertex_ai_index":                                       ResourceVertexAIIndex(),
 			"google_vertex_ai_metadata_store":                              ResourceVertexAIMetadataStore(),
 			"google_vertex_ai_tensorboard":                                 ResourceVertexAITensorboard(),
+			"google_vmwareengine_cluster":                                  ResourceVmwareengineCluster(),
+			"google_vmwareengine_network":                                  ResourceVmwareengineNetwork(),
 			"google_vpc_access_connector":                                  ResourceVPCAccessConnector(),
 			"google_workflows_workflow":                                    ResourceWorkflowsWorkflow(),
 			"google_workstations_workstation":                              ResourceWorkstationsWorkstation(),
@@ -1585,6 +1595,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_storage_notification":                   ResourceStorageNotification(),
 			"google_storage_transfer_job":                   ResourceStorageTransferJob(),
 			"google_tags_location_tag_binding":              ResourceTagsLocationTagBinding(),
+			"google_vmwareengine_private_cloud":             ResourceVmwareenginePrivateCloud(),
 			// ####### END handwritten resources ###########
 		},
 		map[string]*schema.Resource{
@@ -1840,6 +1851,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.TagsBasePath = d.Get("tags_custom_endpoint").(string)
 	config.TPUBasePath = d.Get("tpu_custom_endpoint").(string)
 	config.VertexAIBasePath = d.Get("vertex_ai_custom_endpoint").(string)
+	config.VmwareengineBasePath = d.Get("vmwareengine_custom_endpoint").(string)
 	config.VPCAccessBasePath = d.Get("vpc_access_custom_endpoint").(string)
 	config.WorkflowsBasePath = d.Get("workflows_custom_endpoint").(string)
 	config.WorkstationsBasePath = d.Get("workstations_custom_endpoint").(string)
