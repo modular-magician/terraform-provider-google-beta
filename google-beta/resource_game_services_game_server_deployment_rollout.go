@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"log"
 	"reflect"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -117,21 +116,8 @@ eg: 'projects/my-project/locations/global/gameServerDeployments/my-deployment/ro
 
 func resourceGameServicesGameServerDeploymentRolloutCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/gameServerDeployments/{{deployment_id}}/rollout")
-	if err != nil {
-		return fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
-
-	log.Printf("[DEBUG] Creating GameServerDeploymentRollout %q: ", d.Id())
-
-	err = resourceGameServicesGameServerDeploymentRolloutUpdate(d, meta)
-	if err != nil {
-		d.SetId("")
-		return fmt.Errorf("Error trying to create GameServerDeploymentRollout: %s", err)
-	}
-
+	fmt.Println("This code is added by custom_create")
+	fmt.Printf("Print config to avoid build error %#v", config)
 	return nil
 }
 
@@ -190,85 +176,9 @@ func resourceGameServicesGameServerDeploymentRolloutRead(d *schema.ResourceData,
 
 func resourceGameServicesGameServerDeploymentRolloutUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	billingProject := ""
-
-	project, err := tpgresource.GetProject(d, config)
-	if err != nil {
-		return fmt.Errorf("Error fetching project for GameServerDeploymentRollout: %s", err)
-	}
-	billingProject = project
-
-	obj := make(map[string]interface{})
-	defaultGameServerConfigProp, err := expandGameServicesGameServerDeploymentRolloutDefaultGameServerConfig(d.Get("default_game_server_config"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("default_game_server_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, defaultGameServerConfigProp)) {
-		obj["defaultGameServerConfig"] = defaultGameServerConfigProp
-	}
-	gameServerConfigOverridesProp, err := expandGameServicesGameServerDeploymentRolloutGameServerConfigOverrides(d.Get("game_server_config_overrides"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("game_server_config_overrides"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, gameServerConfigOverridesProp)) {
-		obj["gameServerConfigOverrides"] = gameServerConfigOverridesProp
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{GameServicesBasePath}}projects/{{project}}/locations/global/gameServerDeployments/{{deployment_id}}/rollout")
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Updating GameServerDeploymentRollout %q: %#v", d.Id(), obj)
-	updateMask := []string{}
-
-	if d.HasChange("default_game_server_config") {
-		updateMask = append(updateMask, "defaultGameServerConfig")
-	}
-
-	if d.HasChange("game_server_config_overrides") {
-		updateMask = append(updateMask, "gameServerConfigOverrides")
-	}
-	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
-	// won't set it
-	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
-	if err != nil {
-		return err
-	}
-
-	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
-	}
-
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
-
-	if err != nil {
-		return fmt.Errorf("Error updating GameServerDeploymentRollout %q: %s", d.Id(), err)
-	} else {
-		log.Printf("[DEBUG] Finished updating GameServerDeploymentRollout %q: %#v", d.Id(), res)
-	}
-
-	err = GameServicesOperationWaitTime(
-		config, res, project, "Updating GameServerDeploymentRollout", userAgent,
-		d.Timeout(schema.TimeoutUpdate))
-
-	if err != nil {
-		return err
-	}
-
-	return resourceGameServicesGameServerDeploymentRolloutRead(d, meta)
+	fmt.Println("This code is added by custom_update")
+	fmt.Printf("Print config to avoid build error %#v", config)
+	return nil
 }
 
 func resourceGameServicesGameServerDeploymentRolloutDelete(d *schema.ResourceData, meta interface{}) error {
