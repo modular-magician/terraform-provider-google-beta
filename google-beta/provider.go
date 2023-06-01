@@ -925,9 +925,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		})
 }
 
-// Generated resources: 340
+// Generated resources: 339
 // Generated IAM resources: 222
-// Total generated resources: 562
+// Total generated resources: 561
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1405,7 +1405,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_privateca_certificate_template_iam_binding":            tpgiamresource.ResourceIamBinding(PrivatecaCertificateTemplateIamSchema, PrivatecaCertificateTemplateIamUpdaterProducer, PrivatecaCertificateTemplateIdParseFunc),
 			"google_privateca_certificate_template_iam_member":             tpgiamresource.ResourceIamMember(PrivatecaCertificateTemplateIamSchema, PrivatecaCertificateTemplateIamUpdaterProducer, PrivatecaCertificateTemplateIdParseFunc),
 			"google_privateca_certificate_template_iam_policy":             tpgiamresource.ResourceIamPolicy(PrivatecaCertificateTemplateIamSchema, PrivatecaCertificateTemplateIamUpdaterProducer, PrivatecaCertificateTemplateIdParseFunc),
-			"google_pubsub_schema":                                         ResourcePubsubSchema(),
 			"google_pubsub_subscription":                                   ResourcePubsubSubscription(),
 			"google_pubsub_topic":                                          ResourcePubsubTopic(),
 			"google_pubsub_topic_iam_binding":                              tpgiamresource.ResourceIamBinding(PubsubTopicIamSchema, PubsubTopicIamUpdaterProducer, PubsubTopicIdParseFunc),
@@ -1572,6 +1571,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_project_iam_custom_role":                ResourceGoogleProjectIamCustomRole(),
 			"google_project_organization_policy":            ResourceGoogleProjectOrganizationPolicy(),
 			"google_project_usage_export_bucket":            ResourceProjectUsageBucket(),
+			"google_pubsub_schema":                          ResourcePubsubSchema(),
 			"google_runtimeconfig_config":                   runtimeconfig.ResourceRuntimeconfigConfig(),
 			"google_runtimeconfig_variable":                 runtimeconfig.ResourceRuntimeconfigVariable(),
 			"google_service_account":                        ResourceGoogleServiceAccount(),
