@@ -402,36 +402,6 @@ resource "google_data_loss_prevention_job_trigger" "inspect" {
   }
 }
 ```
-## Example Usage - Dlp Job Trigger Publish To Stackdriver
-
-
-```hcl
-resource "google_data_loss_prevention_job_trigger" "publish_to_stackdriver" {
-  parent       = "projects/my-project-name"
-  description  = "Description for the job_trigger created by terraform"
-  display_name = "TerraformDisplayName"
-
-  triggers {
-    schedule {
-      recurrence_period_duration = "86400s"
-    }
-  }
-
-  inspect_job {
-    inspect_template_name = "sample-inspect-template"
-    actions {
-      publish_to_stackdriver {}
-    }
-    storage_config {
-      cloud_storage_options {
-        file_set {
-          url = "gs://mybucket/directory/"
-        }
-      }
-    }
-  }
-}
-```
 
 ## Argument Reference
 
@@ -510,7 +480,7 @@ The following arguments are supported:
   Structure is [documented below](#nested_storage_config).
 
 * `actions` -
-  (Optional)
+  (Required)
   A task to execute on the completion of a job.
   Structure is [documented below](#nested_actions).
 
@@ -1122,17 +1092,6 @@ The following arguments are supported:
   If not specified, no identifying fields will be returned for findings.
   Structure is [documented below](#nested_identifying_fields).
 
-* `included_fields` -
-  (Optional)
-  Limit scanning only to these fields.
-  Structure is [documented below](#nested_included_fields).
-
-* `excluded_fields` -
-  (Optional)
-  References to fields excluded from scanning.
-  This allows you to skip inspection of entire columns which you know have no findings.
-  Structure is [documented below](#nested_excluded_fields).
-
 
 <a name="nested_table_reference"></a>The `table_reference` block supports:
 
@@ -1153,18 +1112,6 @@ The following arguments are supported:
 * `name` -
   (Required)
   Name of a BigQuery field to be returned with the findings.
-
-<a name="nested_included_fields"></a>The `included_fields` block supports:
-
-* `name` -
-  (Required)
-  Name describing the field to which scanning is limited.
-
-<a name="nested_excluded_fields"></a>The `excluded_fields` block supports:
-
-* `name` -
-  (Required)
-  Name describing the field excluded from scanning.
 
 <a name="nested_hybrid_options"></a>The `hybrid_options` block supports:
 
@@ -1239,10 +1186,6 @@ The following arguments are supported:
   (Optional)
   Create a de-identified copy of the requested table or files.
   Structure is [documented below](#nested_deidentify).
-
-* `publish_to_stackdriver` -
-  (Optional)
-  Enable Stackdriver metric dlp.googleapis.com/findingCount.
 
 
 <a name="nested_save_findings"></a>The `save_findings` block supports:

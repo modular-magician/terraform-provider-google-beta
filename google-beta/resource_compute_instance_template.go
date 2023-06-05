@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -281,7 +279,7 @@ Google Cloud KMS.`,
 										Type:             schema.TypeString,
 										Required:         true,
 										ForceNew:         true,
-										DiffSuppressFunc: tpgresource.CompareSelfLinkRelativePaths,
+										DiffSuppressFunc: compareSelfLinkRelativePaths,
 										Description:      `The self link of the encryption key that is stored in Google Cloud KMS.`,
 									},
 								},
@@ -296,7 +294,7 @@ Google Cloud KMS.`,
 							Description: `A list (short name or id) of resource policies to attach to this disk. Currently a max of 1 resource policy is supported.`,
 							Elem: &schema.Schema{
 								Type:             schema.TypeString,
-								DiffSuppressFunc: tpgresource.CompareResourceNames,
+								DiffSuppressFunc: compareResourceNames,
 							},
 						},
 					},
@@ -388,7 +386,7 @@ Google Cloud KMS.`,
 							Optional:         true,
 							ForceNew:         true,
 							Computed:         true,
-							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+							DiffSuppressFunc: compareSelfLinkOrResourceName,
 							Description:      `The name or self_link of the network to attach this interface to. Use network attribute for Legacy or Auto subnetted networks and subnetwork for custom subnetted networks.`,
 						},
 
@@ -397,7 +395,7 @@ Google Cloud KMS.`,
 							Optional:         true,
 							ForceNew:         true,
 							Computed:         true,
-							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+							DiffSuppressFunc: compareSelfLinkOrResourceName,
 							Description:      `The name of the subnetwork to attach this interface to. The subnetwork must exist in the same region this instance will be created in. Either network or subnetwork must be provided.`,
 						},
 
@@ -692,10 +690,10 @@ be from 0 to 999,999,999 inclusive.`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 								StateFunc: func(v interface{}) string {
-									return tpgresource.CanonicalizeServiceScope(v.(string))
+									return canonicalizeServiceScope(v.(string))
 								},
 							},
-							Set: tpgresource.StringScopeHashcode,
+							Set: stringScopeHashcode,
 						},
 					},
 				},
@@ -808,7 +806,7 @@ be from 0 to 999,999,999 inclusive.`,
 							Type:             schema.TypeString,
 							Required:         true,
 							ForceNew:         true,
-							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+							DiffSuppressFunc: compareSelfLinkOrResourceName,
 							Description:      `The accelerator type resource to expose to this instance. E.g. nvidia-tesla-k80.`,
 						},
 					},
@@ -854,7 +852,7 @@ be from 0 to 999,999,999 inclusive.`,
 				Description: `A list of self_links of resource policies to attach to the instance. Currently a max of 1 resource policy is supported.`,
 				Elem: &schema.Schema{
 					Type:             schema.TypeString,
-					DiffSuppressFunc: tpgresource.CompareResourceNames,
+					DiffSuppressFunc: compareResourceNames,
 				},
 			},
 
@@ -922,7 +920,7 @@ func resourceComputeInstanceTemplateSourceImageCustomizeDiff(_ context.Context, 
 			// project must be retrieved once we know there is a diff to resolve, otherwise it will
 			// attempt to retrieve project during `plan` before all calculated fields are ready
 			// see https://github.com/hashicorp/terraform-provider-google/issues/2878
-			project, err := tpgresource.GetProjectFromDiff(diff, config)
+			project, err := getProjectFromDiff(diff, config)
 			if err != nil {
 				return err
 			}
@@ -959,7 +957,7 @@ func resourceComputeInstanceTemplateScratchDiskCustomizeDiff(_ context.Context, 
 	return resourceComputeInstanceTemplateScratchDiskCustomizeDiffFunc(diff)
 }
 
-func resourceComputeInstanceTemplateScratchDiskCustomizeDiffFunc(diff tpgresource.TerraformResourceDiff) error {
+func resourceComputeInstanceTemplateScratchDiskCustomizeDiffFunc(diff TerraformResourceDiff) error {
 	numDisks := diff.Get("disk.#").(int)
 	for i := 0; i < numDisks; i++ {
 		// misspelled on purpose, type is a special symbol
@@ -1002,12 +1000,12 @@ func resourceComputeInstanceTemplateBootDiskCustomizeDiff(_ context.Context, dif
 }
 
 func buildDisks(d *schema.ResourceData, config *transport_tpg.Config) ([]*compute.AttachedDisk, error) {
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return nil, err
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
@@ -1063,7 +1061,7 @@ func buildDisks(d *schema.ResourceData, config *transport_tpg.Config) ([]*comput
 				disk.InitializeParams.DiskType = v.(string)
 			}
 
-			disk.InitializeParams.Labels = tpgresource.ExpandStringMap(d, prefix+".labels")
+			disk.InitializeParams.Labels = expandStringMap(d, prefix+".labels")
 
 			if v, ok := d.GetOk(prefix + ".source_image"); ok {
 				imageName := v.(string)
@@ -1133,7 +1131,7 @@ func buildDisks(d *schema.ResourceData, config *transport_tpg.Config) ([]*comput
 // 'zones/us-east1-b/acceleratorTypes/nvidia-tesla-k80'.
 // Accelerator type 'zones/us-east1-b/acceleratorTypes/nvidia-tesla-k80'
 // must be a valid resource name (not an url).
-func expandInstanceTemplateGuestAccelerators(d tpgresource.TerraformResourceData, config *transport_tpg.Config) []*compute.AcceleratorConfig {
+func expandInstanceTemplateGuestAccelerators(d TerraformResourceData, config *transport_tpg.Config) []*compute.AcceleratorConfig {
 	configs, ok := d.GetOk("guest_accelerator")
 	if !ok {
 		return nil
@@ -1156,18 +1154,18 @@ func expandInstanceTemplateGuestAccelerators(d tpgresource.TerraformResourceData
 	return guestAccelerators
 }
 
-func expandInstanceTemplateResourcePolicies(d tpgresource.TerraformResourceData, dataKey string) []string {
-	return convertAndMapStringArr(d.Get(dataKey).([]interface{}), tpgresource.GetResourceNameFromSelfLink)
+func expandInstanceTemplateResourcePolicies(d TerraformResourceData, dataKey string) []string {
+	return convertAndMapStringArr(d.Get(dataKey).([]interface{}), GetResourceNameFromSelfLink)
 }
 
 func resourceComputeInstanceTemplateCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -1223,7 +1221,7 @@ func resourceComputeInstanceTemplateCreate(d *schema.ResourceData, meta interfac
 	}
 
 	if _, ok := d.GetOk("labels"); ok {
-		instanceProperties.Labels = tpgresource.ExpandLabels(d)
+		instanceProperties.Labels = expandLabels(d)
 	}
 
 	var itName string
@@ -1338,7 +1336,7 @@ func flattenDisk(disk *compute.AttachedDisk, configDisk map[string]any, defaultP
 	diskMap["boot"] = disk.Boot
 	diskMap["device_name"] = disk.DeviceName
 	diskMap["interface"] = disk.Interface
-	diskMap["source"] = tpgresource.ConvertSelfLinkToV1(disk.Source)
+	diskMap["source"] = ConvertSelfLinkToV1(disk.Source)
 	diskMap["mode"] = disk.Mode
 	diskMap["type"] = disk.Type
 
@@ -1480,12 +1478,12 @@ func flattenDisks(disks []*compute.AttachedDisk, d *schema.ResourceData, default
 
 func resourceComputeInstanceTemplateRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -1658,12 +1656,12 @@ func resourceComputeInstanceTemplateRead(d *schema.ResourceData, meta interface{
 
 func resourceComputeInstanceTemplateDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -1710,12 +1708,12 @@ func expandResourceComputeInstanceTemplateScheduling(d *schema.ResourceData, met
 
 func resourceComputeInstanceTemplateImportState(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{"projects/(?P<project>[^/]+)/global/instanceTemplates/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
+	if err := ParseImportId([]string{"projects/(?P<project>[^/]+)/global/instanceTemplates/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/global/instanceTemplates/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/global/instanceTemplates/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

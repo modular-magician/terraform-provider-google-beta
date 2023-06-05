@@ -1,12 +1,9 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	sqladmin "google.golang.org/api/sqladmin/v1beta4"
 )
@@ -60,11 +57,11 @@ func DataSourceSqlBackupRun() *schema.Resource {
 
 func dataSourceSqlBackupRunRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -107,7 +104,7 @@ func dataSourceSqlBackupRunRead(d *schema.ResourceData, meta interface{}) error 
 		return fmt.Errorf("Error setting status: %s", err)
 	}
 
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/instances/{{instance}}/backupRuns/{{backup_id}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/instances/{{instance}}/backupRuns/{{backup_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}

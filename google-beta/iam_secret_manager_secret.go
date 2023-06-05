@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -24,8 +21,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/cloudresourcemanager/v1"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -47,11 +42,11 @@ var SecretManagerSecretIamSchema = map[string]*schema.Schema{
 type SecretManagerSecretIamUpdater struct {
 	project  string
 	secretId string
-	d        tpgresource.TerraformResourceData
+	d        TerraformResourceData
 	Config   *transport_tpg.Config
 }
 
-func SecretManagerSecretIamUpdaterProducer(d tpgresource.TerraformResourceData, config *transport_tpg.Config) (tpgiamresource.ResourceIamUpdater, error) {
+func SecretManagerSecretIamUpdaterProducer(d TerraformResourceData, config *transport_tpg.Config) (ResourceIamUpdater, error) {
 	values := make(map[string]string)
 
 	project, _ := getProject(d, config)
@@ -66,7 +61,7 @@ func SecretManagerSecretIamUpdaterProducer(d tpgresource.TerraformResourceData, 
 	}
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
-	m, err := tpgresource.GetImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/secrets/(?P<secret_id>[^/]+)", "(?P<project>[^/]+)/(?P<secret_id>[^/]+)", "(?P<secret_id>[^/]+)"}, d, config, d.Get("secret_id").(string))
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/secrets/(?P<secret_id>[^/]+)", "(?P<project>[^/]+)/(?P<secret_id>[^/]+)", "(?P<secret_id>[^/]+)"}, d, config, d.Get("secret_id").(string))
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +95,7 @@ func SecretManagerSecretIdParseFunc(d *schema.ResourceData, config *transport_tp
 		values["project"] = project
 	}
 
-	m, err := tpgresource.GetImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/secrets/(?P<secret_id>[^/]+)", "(?P<project>[^/]+)/(?P<secret_id>[^/]+)", "(?P<secret_id>[^/]+)"}, d, config, d.Id())
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/secrets/(?P<secret_id>[^/]+)", "(?P<project>[^/]+)/(?P<secret_id>[^/]+)", "(?P<secret_id>[^/]+)"}, d, config, d.Id())
 	if err != nil {
 		return err
 	}
@@ -128,31 +123,24 @@ func (u *SecretManagerSecretIamUpdater) GetResourceIamPolicy() (*cloudresourcema
 		return nil, err
 	}
 
-	project, err := tpgresource.GetProject(u.d, u.Config)
+	project, err := getProject(u.d, u.Config)
 	if err != nil {
 		return nil, err
 	}
 	var obj map[string]interface{}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
 
-	policy, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    u.Config,
-		Method:    "GET",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-	})
+	policy, err := transport_tpg.SendRequest(u.Config, "GET", project, url, userAgent, obj)
 	if err != nil {
 		return nil, errwrap.Wrapf(fmt.Sprintf("Error retrieving IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
 
 	out := &cloudresourcemanager.Policy{}
-	err = tpgresource.Convert(policy, out)
+	err = Convert(policy, out)
 	if err != nil {
 		return nil, errwrap.Wrapf("Cannot convert a policy to a resource manager policy: {{err}}", err)
 	}
@@ -161,7 +149,7 @@ func (u *SecretManagerSecretIamUpdater) GetResourceIamPolicy() (*cloudresourcema
 }
 
 func (u *SecretManagerSecretIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanager.Policy) error {
-	json, err := tpgresource.ConvertToMap(policy)
+	json, err := ConvertToMap(policy)
 	if err != nil {
 		return err
 	}
@@ -173,25 +161,17 @@ func (u *SecretManagerSecretIamUpdater) SetResourceIamPolicy(policy *cloudresour
 	if err != nil {
 		return err
 	}
-	project, err := tpgresource.GetProject(u.d, u.Config)
+	project, err := getProject(u.d, u.Config)
 	if err != nil {
 		return err
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    u.Config,
-		Method:    "POST",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   u.d.Timeout(schema.TimeoutCreate),
-	})
+	_, err = transport_tpg.SendRequestWithTimeout(u.Config, "POST", project, url, userAgent, obj, u.d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return errwrap.Wrapf(fmt.Sprintf("Error setting IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
@@ -201,7 +181,7 @@ func (u *SecretManagerSecretIamUpdater) SetResourceIamPolicy(policy *cloudresour
 
 func (u *SecretManagerSecretIamUpdater) qualifySecretUrl(methodIdentifier string) (string, error) {
 	urlTemplate := fmt.Sprintf("{{SecretManagerBasePath}}%s:%s", fmt.Sprintf("projects/%s/secrets/%s", u.project, u.secretId), methodIdentifier)
-	url, err := tpgresource.ReplaceVars(u.d, u.Config, urlTemplate)
+	url, err := ReplaceVars(u.d, u.Config, urlTemplate)
 	if err != nil {
 		return "", err
 	}

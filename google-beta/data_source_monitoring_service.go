@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,7 +5,6 @@ import (
 	neturl "net/url"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -23,11 +20,11 @@ func dataSourceMonitoringServiceType(
 	typeStateSetter monitoringServiceTypeStateSetter) *schema.Resource {
 
 	// Convert monitoring schema to ds schema
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceMonitoringService().Schema)
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceMonitoringService().Schema)
+	addOptionalFieldsToSchema(dsSchema, "project")
 
 	// Add schema specific to the service type
-	dsSchema = tpgresource.MergeSchemas(typeSchema, dsSchema)
+	dsSchema = mergeSchemas(typeSchema, dsSchema)
 
 	return &schema.Resource{
 		Read:   dataSourceMonitoringServiceTypeReadFromList(listFilter, typeStateSetter),
@@ -41,35 +38,28 @@ func dataSourceMonitoringServiceType(
 func dataSourceMonitoringServiceTypeReadFromList(listFilter string, typeStateSetter monitoringServiceTypeStateSetter) schema.ReadFunc {
 	return func(d *schema.ResourceData, meta interface{}) error {
 		config := meta.(*transport_tpg.Config)
-		userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+		userAgent, err := generateUserAgentString(d, config.UserAgent)
 		if err != nil {
 			return err
 		}
 
-		project, err := tpgresource.GetProject(d, config)
+		project, err := getProject(d, config)
 		if err != nil {
 			return err
 		}
 
-		filters, err := tpgresource.ReplaceVars(d, config, listFilter)
+		filters, err := ReplaceVars(d, config, listFilter)
 		if err != nil {
 			return err
 		}
 
 		listUrlTmpl := "{{MonitoringBasePath}}v3/projects/{{project}}/services?filter=" + neturl.QueryEscape(filters)
-		url, err := tpgresource.ReplaceVars(d, config, listUrlTmpl)
+		url, err := ReplaceVars(d, config, listUrlTmpl)
 		if err != nil {
 			return err
 		}
 
-		resp, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:               config,
-			Method:               "GET",
-			Project:              project,
-			RawURL:               url,
-			UserAgent:            userAgent,
-			ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsMonitoringConcurrentEditError},
-		})
+		resp, err := transport_tpg.SendRequest(config, "GET", project, url, userAgent, nil, transport_tpg.IsMonitoringConcurrentEditError)
 		if err != nil {
 			return fmt.Errorf("unable to list Monitoring Service for data source: %v", err)
 		}

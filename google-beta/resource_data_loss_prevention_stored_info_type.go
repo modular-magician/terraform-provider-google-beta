@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -26,27 +23,25 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 // This customizeDiff allows updating the dictionary, regex, and large_custom_dictionary fields, but
 // it recreates the resource if changing between these fields. e.g., updating the regex field should
 // be allowed, while changing from regex to dictionary should trigger the recreation of the resource.
-func storedInfoTypeCustomizeDiffFunc(diff tpgresource.TerraformResourceDiff) error {
+func storedInfoTypeCustomizeDiffFunc(diff TerraformResourceDiff) error {
 	oldDict, newDict := diff.GetChange("dictionary")
 	oldRegex, newRegex := diff.GetChange("regex")
 	oldLargeCD, newLargeCD := diff.GetChange("large_custom_dictionary")
-	if !tpgresource.IsEmptyValue(reflect.ValueOf(oldDict)) && tpgresource.IsEmptyValue(reflect.ValueOf(newDict)) {
+	if !isEmptyValue(reflect.ValueOf(oldDict)) && isEmptyValue(reflect.ValueOf(newDict)) {
 		diff.ForceNew("dictionary")
 		return nil
 	}
-	if !tpgresource.IsEmptyValue(reflect.ValueOf(oldRegex)) && tpgresource.IsEmptyValue(reflect.ValueOf(newRegex)) {
+	if !isEmptyValue(reflect.ValueOf(oldRegex)) && isEmptyValue(reflect.ValueOf(newRegex)) {
 		diff.ForceNew("regex")
 		return nil
 	}
-	if !tpgresource.IsEmptyValue(reflect.ValueOf(oldLargeCD)) && tpgresource.IsEmptyValue(reflect.ValueOf(newLargeCD)) {
+	if !isEmptyValue(reflect.ValueOf(oldLargeCD)) && isEmptyValue(reflect.ValueOf(newLargeCD)) {
 		diff.ForceNew("large_custom_dictionary")
 		return nil
 	}
@@ -264,15 +259,6 @@ Its syntax (https://github.com/google/re2/wiki/Syntax) can be found under the go
 				},
 				ExactlyOneOf: []string{"dictionary", "regex", "large_custom_dictionary"},
 			},
-			"stored_info_type_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-				ForceNew: true,
-				Description: `The storedInfoType ID can contain uppercase and lowercase letters, numbers, and hyphens;
-that is, it must match the regular expression: [a-zA-Z\d-_]+. The maximum length is 100
-characters. Can be empty to allow the system to generate one.`,
-			},
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -285,7 +271,7 @@ characters. Can be empty to allow the system to generate one.`,
 
 func resourceDataLossPreventionStoredInfoTypeCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -294,31 +280,31 @@ func resourceDataLossPreventionStoredInfoTypeCreate(d *schema.ResourceData, meta
 	descriptionProp, err := expandDataLossPreventionStoredInfoTypeDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	displayNameProp, err := expandDataLossPreventionStoredInfoTypeDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	regexProp, err := expandDataLossPreventionStoredInfoTypeRegex(d.Get("regex"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("regex"); !tpgresource.IsEmptyValue(reflect.ValueOf(regexProp)) && (ok || !reflect.DeepEqual(v, regexProp)) {
+	} else if v, ok := d.GetOkExists("regex"); !isEmptyValue(reflect.ValueOf(regexProp)) && (ok || !reflect.DeepEqual(v, regexProp)) {
 		obj["regex"] = regexProp
 	}
 	dictionaryProp, err := expandDataLossPreventionStoredInfoTypeDictionary(d.Get("dictionary"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("dictionary"); !tpgresource.IsEmptyValue(reflect.ValueOf(dictionaryProp)) && (ok || !reflect.DeepEqual(v, dictionaryProp)) {
+	} else if v, ok := d.GetOkExists("dictionary"); !isEmptyValue(reflect.ValueOf(dictionaryProp)) && (ok || !reflect.DeepEqual(v, dictionaryProp)) {
 		obj["dictionary"] = dictionaryProp
 	}
 	largeCustomDictionaryProp, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionary(d.Get("large_custom_dictionary"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("large_custom_dictionary"); !tpgresource.IsEmptyValue(reflect.ValueOf(largeCustomDictionaryProp)) && (ok || !reflect.DeepEqual(v, largeCustomDictionaryProp)) {
+	} else if v, ok := d.GetOkExists("large_custom_dictionary"); !isEmptyValue(reflect.ValueOf(largeCustomDictionaryProp)) && (ok || !reflect.DeepEqual(v, largeCustomDictionaryProp)) {
 		obj["largeCustomDictionary"] = largeCustomDictionaryProp
 	}
 
@@ -327,7 +313,7 @@ func resourceDataLossPreventionStoredInfoTypeCreate(d *schema.ResourceData, meta
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/storedInfoTypes")
+	url, err := ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/storedInfoTypes")
 	if err != nil {
 		return err
 	}
@@ -336,19 +322,11 @@ func resourceDataLossPreventionStoredInfoTypeCreate(d *schema.ResourceData, meta
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating StoredInfoType: %s", err)
 	}
@@ -357,7 +335,7 @@ func resourceDataLossPreventionStoredInfoTypeCreate(d *schema.ResourceData, meta
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/storedInfoTypes/{{name}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/storedInfoTypes/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -373,11 +351,11 @@ func resourceDataLossPreventionStoredInfoTypeCreate(d *schema.ResourceData, meta
 	return resourceDataLossPreventionStoredInfoTypeRead(d, meta)
 }
 
-func resourceDataLossPreventionStoredInfoTypePollRead(d *schema.ResourceData, meta interface{}) transport_tpg.PollReadFunc {
+func resourceDataLossPreventionStoredInfoTypePollRead(d *schema.ResourceData, meta interface{}) PollReadFunc {
 	return func() (map[string]interface{}, error) {
 		config := meta.(*transport_tpg.Config)
 
-		url, err := tpgresource.ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/storedInfoTypes/{{name}}")
+		url, err := ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/storedInfoTypes/{{name}}")
 		if err != nil {
 			return nil, err
 		}
@@ -385,22 +363,16 @@ func resourceDataLossPreventionStoredInfoTypePollRead(d *schema.ResourceData, me
 		billingProject := ""
 
 		// err == nil indicates that the billing_project value was found
-		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+		if bp, err := getBillingProject(d, config); err == nil {
 			billingProject = bp
 		}
 
-		userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+		userAgent, err := generateUserAgentString(d, config.UserAgent)
 		if err != nil {
 			return nil, err
 		}
 
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "GET",
-			Project:   billingProject,
-			RawURL:    url,
-			UserAgent: userAgent,
-		})
+		res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 		if err != nil {
 			return res, err
 		}
@@ -418,12 +390,12 @@ func resourceDataLossPreventionStoredInfoTypePollRead(d *schema.ResourceData, me
 
 func resourceDataLossPreventionStoredInfoTypeRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/storedInfoTypes/{{name}}")
+	url, err := ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/storedInfoTypes/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -431,17 +403,11 @@ func resourceDataLossPreventionStoredInfoTypeRead(d *schema.ResourceData, meta i
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("DataLossPreventionStoredInfoType %q", d.Id()))
 	}
@@ -482,7 +448,7 @@ func resourceDataLossPreventionStoredInfoTypeRead(d *schema.ResourceData, meta i
 
 func resourceDataLossPreventionStoredInfoTypeUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -493,40 +459,40 @@ func resourceDataLossPreventionStoredInfoTypeUpdate(d *schema.ResourceData, meta
 	descriptionProp, err := expandDataLossPreventionStoredInfoTypeDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	displayNameProp, err := expandDataLossPreventionStoredInfoTypeDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	regexProp, err := expandDataLossPreventionStoredInfoTypeRegex(d.Get("regex"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("regex"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, regexProp)) {
+	} else if v, ok := d.GetOkExists("regex"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, regexProp)) {
 		obj["regex"] = regexProp
 	}
 	dictionaryProp, err := expandDataLossPreventionStoredInfoTypeDictionary(d.Get("dictionary"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("dictionary"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, dictionaryProp)) {
+	} else if v, ok := d.GetOkExists("dictionary"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, dictionaryProp)) {
 		obj["dictionary"] = dictionaryProp
 	}
 	largeCustomDictionaryProp, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionary(d.Get("large_custom_dictionary"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("large_custom_dictionary"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, largeCustomDictionaryProp)) {
+	} else if v, ok := d.GetOkExists("large_custom_dictionary"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, largeCustomDictionaryProp)) {
 		obj["largeCustomDictionary"] = largeCustomDictionaryProp
 	}
 
-	obj, err = resourceDataLossPreventionStoredInfoTypeUpdateEncoder(d, meta, obj)
+	obj, err = resourceDataLossPreventionStoredInfoTypeEncoder(d, meta, obj)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/storedInfoTypes/{{name}}")
+	url, err := ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/storedInfoTypes/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -561,19 +527,11 @@ func resourceDataLossPreventionStoredInfoTypeUpdate(d *schema.ResourceData, meta
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating StoredInfoType %q: %s", d.Id(), err)
@@ -586,14 +544,14 @@ func resourceDataLossPreventionStoredInfoTypeUpdate(d *schema.ResourceData, meta
 
 func resourceDataLossPreventionStoredInfoTypeDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/storedInfoTypes/{{name}}")
+	url, err := ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/storedInfoTypes/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -602,19 +560,11 @@ func resourceDataLossPreventionStoredInfoTypeDelete(d *schema.ResourceData, meta
 	log.Printf("[DEBUG] Deleting StoredInfoType %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "StoredInfoType")
 	}
@@ -627,7 +577,7 @@ func resourceDataLossPreventionStoredInfoTypeImport(d *schema.ResourceData, meta
 	config := meta.(*transport_tpg.Config)
 
 	// Custom import to handle parent possibilities
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
+	if err := ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
 		return nil, err
 	}
 	parts := strings.Split(d.Get("name").(string), "/")
@@ -649,7 +599,7 @@ func resourceDataLossPreventionStoredInfoTypeImport(d *schema.ResourceData, meta
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/storedInfoTypes/{{name}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/storedInfoTypes/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -662,7 +612,7 @@ func flattenDataLossPreventionStoredInfoTypeName(v interface{}, d *schema.Resour
 	if v == nil {
 		return v
 	}
-	return tpgresource.NameFromSelfLinkStateFunc(v)
+	return NameFromSelfLinkStateFunc(v)
 }
 
 func flattenDataLossPreventionStoredInfoTypeDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -857,15 +807,15 @@ func flattenDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldFi
 	return v
 }
 
-func expandDataLossPreventionStoredInfoTypeDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeDisplayName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeRegex(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -877,29 +827,29 @@ func expandDataLossPreventionStoredInfoTypeRegex(v interface{}, d tpgresource.Te
 	transformedPattern, err := expandDataLossPreventionStoredInfoTypeRegexPattern(original["pattern"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPattern); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPattern); val.IsValid() && !isEmptyValue(val) {
 		transformed["pattern"] = transformedPattern
 	}
 
 	transformedGroupIndexes, err := expandDataLossPreventionStoredInfoTypeRegexGroupIndexes(original["group_indexes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGroupIndexes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGroupIndexes); val.IsValid() && !isEmptyValue(val) {
 		transformed["groupIndexes"] = transformedGroupIndexes
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeRegexPattern(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeRegexPattern(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeRegexGroupIndexes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeRegexGroupIndexes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeDictionary(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeDictionary(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -911,21 +861,21 @@ func expandDataLossPreventionStoredInfoTypeDictionary(v interface{}, d tpgresour
 	transformedWordList, err := expandDataLossPreventionStoredInfoTypeDictionaryWordList(original["word_list"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWordList); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWordList); val.IsValid() && !isEmptyValue(val) {
 		transformed["wordList"] = transformedWordList
 	}
 
 	transformedCloudStoragePath, err := expandDataLossPreventionStoredInfoTypeDictionaryCloudStoragePath(original["cloud_storage_path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCloudStoragePath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCloudStoragePath); val.IsValid() && !isEmptyValue(val) {
 		transformed["cloudStoragePath"] = transformedCloudStoragePath
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeDictionaryWordList(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeDictionaryWordList(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -937,18 +887,18 @@ func expandDataLossPreventionStoredInfoTypeDictionaryWordList(v interface{}, d t
 	transformedWords, err := expandDataLossPreventionStoredInfoTypeDictionaryWordListWords(original["words"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWords); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWords); val.IsValid() && !isEmptyValue(val) {
 		transformed["words"] = transformedWords
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeDictionaryWordListWords(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeDictionaryWordListWords(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeDictionaryCloudStoragePath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeDictionaryCloudStoragePath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -960,18 +910,18 @@ func expandDataLossPreventionStoredInfoTypeDictionaryCloudStoragePath(v interfac
 	transformedPath, err := expandDataLossPreventionStoredInfoTypeDictionaryCloudStoragePathPath(original["path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["path"] = transformedPath
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeDictionaryCloudStoragePathPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeDictionaryCloudStoragePathPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionary(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionary(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -983,28 +933,28 @@ func expandDataLossPreventionStoredInfoTypeLargeCustomDictionary(v interface{}, 
 	transformedOutputPath, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryOutputPath(original["output_path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedOutputPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedOutputPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["outputPath"] = transformedOutputPath
 	}
 
 	transformedCloudStorageFileSet, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryCloudStorageFileSet(original["cloud_storage_file_set"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCloudStorageFileSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCloudStorageFileSet); val.IsValid() && !isEmptyValue(val) {
 		transformed["cloudStorageFileSet"] = transformedCloudStorageFileSet
 	}
 
 	transformedBigQueryField, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryField(original["big_query_field"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBigQueryField); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBigQueryField); val.IsValid() && !isEmptyValue(val) {
 		transformed["bigQueryField"] = transformedBigQueryField
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryOutputPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryOutputPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1016,18 +966,18 @@ func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryOutputPath(v int
 	transformedPath, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryOutputPathPath(original["path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["path"] = transformedPath
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryOutputPathPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryOutputPathPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryCloudStorageFileSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryCloudStorageFileSet(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1039,18 +989,18 @@ func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryCloudStorageFile
 	transformedUrl, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryCloudStorageFileSetUrl(original["url"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedUrl); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedUrl); val.IsValid() && !isEmptyValue(val) {
 		transformed["url"] = transformedUrl
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryCloudStorageFileSetUrl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryCloudStorageFileSetUrl(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryField(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryField(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1062,21 +1012,21 @@ func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryField(v 
 	transformedTable, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTable(original["table"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTable); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTable); val.IsValid() && !isEmptyValue(val) {
 		transformed["table"] = transformedTable
 	}
 
 	transformedField, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldField(original["field"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedField); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedField); val.IsValid() && !isEmptyValue(val) {
 		transformed["field"] = transformedField
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTable(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1088,40 +1038,40 @@ func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTab
 	transformedProjectId, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTableProjectId(original["project_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !isEmptyValue(val) {
 		transformed["projectId"] = transformedProjectId
 	}
 
 	transformedDatasetId, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTableDatasetId(original["dataset_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDatasetId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDatasetId); val.IsValid() && !isEmptyValue(val) {
 		transformed["datasetId"] = transformedDatasetId
 	}
 
 	transformedTableId, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTableTableId(original["table_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTableId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTableId); val.IsValid() && !isEmptyValue(val) {
 		transformed["tableId"] = transformedTableId
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTableProjectId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTableProjectId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTableDatasetId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTableDatasetId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTableTableId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldTableTableId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldField(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldField(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1133,28 +1083,18 @@ func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldFie
 	transformedName, err := expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldFieldName(original["name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 		transformed["name"] = transformedName
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldFieldName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionStoredInfoTypeLargeCustomDictionaryBigQueryFieldFieldName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func resourceDataLossPreventionStoredInfoTypeEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
-	newObj := make(map[string]interface{})
-	newObj["config"] = obj
-	storedInfoTypeIdProp, ok := d.GetOk("stored_info_type_id")
-	if ok && storedInfoTypeIdProp != nil {
-		newObj["storedInfoTypeId"] = storedInfoTypeIdProp
-	}
-	return newObj, nil
-}
-
-func resourceDataLossPreventionStoredInfoTypeUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	newObj := make(map[string]interface{})
 	newObj["config"] = obj
 	return newObj, nil
@@ -1178,11 +1118,6 @@ func resourceDataLossPreventionStoredInfoTypeDecoder(d *schema.ResourceData, met
 	config := configRaw.(map[string]interface{})
 	// Name comes back on the top level, so set here
 	config["name"] = name
-
-	configMeta := meta.(*transport_tpg.Config)
-	if err := d.Set("stored_info_type_id", flattenDataLossPreventionStoredInfoTypeName(res["name"], d, configMeta)); err != nil {
-		return nil, fmt.Errorf("Error reading StoredInfoType: %s", err)
-	}
 
 	return config, nil
 }

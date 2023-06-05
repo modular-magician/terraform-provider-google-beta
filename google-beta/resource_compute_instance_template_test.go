@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -213,7 +211,7 @@ func TestComputeInstanceTemplate_scratchDiskSizeCustomizeDiff(t *testing.T) {
 	}
 
 	for tn, tc := range cases {
-		d := &tpgresource.ResourceDiffMock{
+		d := &ResourceDiffMock{
 			After: map[string]interface{}{
 				"disk.#":              1,
 				"disk.0.type":         tc.Typee,
@@ -1274,8 +1272,8 @@ func TestAccComputeInstanceTemplate_sourceSnapshotEncryptionKey(t *testing.T) {
 	kmsKey := BootstrapKMSKeyInLocation(t, "us-central1")
 
 	context := map[string]interface{}{
-		"kms_ring_name": tpgresource.GetResourceNameFromSelfLink(kmsKey.KeyRing.Name),
-		"kms_key_name":  tpgresource.GetResourceNameFromSelfLink(kmsKey.CryptoKey.Name),
+		"kms_ring_name": GetResourceNameFromSelfLink(kmsKey.KeyRing.Name),
+		"kms_key_name":  GetResourceNameFromSelfLink(kmsKey.CryptoKey.Name),
 		"random_suffix": RandString(t, 10),
 	}
 
@@ -1308,8 +1306,8 @@ func TestAccComputeInstanceTemplate_sourceImageEncryptionKey(t *testing.T) {
 	kmsKey := BootstrapKMSKeyInLocation(t, "us-central1")
 
 	context := map[string]interface{}{
-		"kms_ring_name": tpgresource.GetResourceNameFromSelfLink(kmsKey.KeyRing.Name),
-		"kms_key_name":  tpgresource.GetResourceNameFromSelfLink(kmsKey.CryptoKey.Name),
+		"kms_ring_name": GetResourceNameFromSelfLink(kmsKey.KeyRing.Name),
+		"kms_key_name":  GetResourceNameFromSelfLink(kmsKey.CryptoKey.Name),
 		"random_suffix": RandString(t, 10),
 	}
 

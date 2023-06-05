@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -26,7 +23,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -123,60 +119,6 @@ resource "google_compute_disk" "secondary" {
 `, context)
 }
 
-func TestAccComputeDisk_diskFeaturesExample(t *testing.T) {
-	t.Parallel()
-
-	context := map[string]interface{}{
-		"random_suffix": RandString(t, 10),
-	}
-
-	VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckComputeDiskDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccComputeDisk_diskFeaturesExample(context),
-			},
-			{
-				ResourceName:            "google_compute_disk.default",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"interface", "type", "zone", "snapshot"},
-			},
-		},
-	})
-}
-
-func testAccComputeDisk_diskFeaturesExample(context map[string]interface{}) string {
-	return Nprintf(`
-resource "google_compute_disk" "default" {
-  name  = "tf-test-test-disk-features%{random_suffix}"
-  type  = "pd-ssd"
-  zone  = "us-central1-a"
-  labels = {
-    environment = "dev"
-  }
-
-  guest_os_features {
-    type = "SECURE_BOOT"
-  }
-
-  guest_os_features {
-    type = "MULTI_IP_SUBNET"
-  }
-
-  guest_os_features {
-    type = "WINDOWS"
-  }
-
-  licenses = ["https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-core"]
-
-  physical_block_size_bytes = 4096
-}
-`, context)
-}
-
 func testAccCheckComputeDiskDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
@@ -189,7 +131,7 @@ func testAccCheckComputeDiskDestroyProducer(t *testing.T) func(s *terraform.Stat
 
 			config := GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/disks/{{name}}")
+			url, err := acctest.ReplaceVarsForTest(config, rs, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/disks/{{name}}")
 			if err != nil {
 				return err
 			}
@@ -200,13 +142,7 @@ func testAccCheckComputeDiskDestroyProducer(t *testing.T) func(s *terraform.Stat
 				billingProject = config.BillingProject
 			}
 
-			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "GET",
-				Project:   billingProject,
-				RawURL:    url,
-				UserAgent: config.UserAgent,
-			})
+			_, err = transport_tpg.SendRequest(config, "GET", billingProject, url, config.UserAgent, nil)
 			if err == nil {
 				return fmt.Errorf("ComputeDisk still exists at %s", url)
 			}

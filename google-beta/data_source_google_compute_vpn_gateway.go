@@ -1,12 +1,9 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	compute "google.golang.org/api/compute/v0.beta"
 )
@@ -53,17 +50,17 @@ func DataSourceGoogleComputeVpnGateway() *schema.Resource {
 
 func dataSourceGoogleComputeVpnGatewayRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	region, err := tpgresource.GetRegion(d, config)
+	region, err := getRegion(d, config)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -76,7 +73,7 @@ func dataSourceGoogleComputeVpnGatewayRead(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("VPN Gateway Not Found : %s", name))
 	}
-	if err := d.Set("network", tpgresource.ConvertSelfLinkToV1(gateway.Network)); err != nil {
+	if err := d.Set("network", ConvertSelfLinkToV1(gateway.Network)); err != nil {
 		return fmt.Errorf("Error setting network: %s", err)
 	}
 	if err := d.Set("region", gateway.Region); err != nil {

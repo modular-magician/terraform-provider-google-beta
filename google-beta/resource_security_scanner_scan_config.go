@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -26,8 +23,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -208,7 +203,7 @@ which means the scan will be scheduled to start immediately.`,
 
 func resourceSecurityScannerScanConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -217,59 +212,59 @@ func resourceSecurityScannerScanConfigCreate(d *schema.ResourceData, meta interf
 	displayNameProp, err := expandSecurityScannerScanConfigDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	maxQpsProp, err := expandSecurityScannerScanConfigMaxQps(d.Get("max_qps"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("max_qps"); !tpgresource.IsEmptyValue(reflect.ValueOf(maxQpsProp)) && (ok || !reflect.DeepEqual(v, maxQpsProp)) {
+	} else if v, ok := d.GetOkExists("max_qps"); !isEmptyValue(reflect.ValueOf(maxQpsProp)) && (ok || !reflect.DeepEqual(v, maxQpsProp)) {
 		obj["maxQps"] = maxQpsProp
 	}
 	startingUrlsProp, err := expandSecurityScannerScanConfigStartingUrls(d.Get("starting_urls"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("starting_urls"); !tpgresource.IsEmptyValue(reflect.ValueOf(startingUrlsProp)) && (ok || !reflect.DeepEqual(v, startingUrlsProp)) {
+	} else if v, ok := d.GetOkExists("starting_urls"); !isEmptyValue(reflect.ValueOf(startingUrlsProp)) && (ok || !reflect.DeepEqual(v, startingUrlsProp)) {
 		obj["startingUrls"] = startingUrlsProp
 	}
 	authenticationProp, err := expandSecurityScannerScanConfigAuthentication(d.Get("authentication"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("authentication"); !tpgresource.IsEmptyValue(reflect.ValueOf(authenticationProp)) && (ok || !reflect.DeepEqual(v, authenticationProp)) {
+	} else if v, ok := d.GetOkExists("authentication"); !isEmptyValue(reflect.ValueOf(authenticationProp)) && (ok || !reflect.DeepEqual(v, authenticationProp)) {
 		obj["authentication"] = authenticationProp
 	}
 	userAgentProp, err := expandSecurityScannerScanConfigUserAgent(d.Get("user_agent"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("user_agent"); !tpgresource.IsEmptyValue(reflect.ValueOf(userAgentProp)) && (ok || !reflect.DeepEqual(v, userAgentProp)) {
+	} else if v, ok := d.GetOkExists("user_agent"); !isEmptyValue(reflect.ValueOf(userAgentProp)) && (ok || !reflect.DeepEqual(v, userAgentProp)) {
 		obj["userAgent"] = userAgentProp
 	}
 	blacklistPatternsProp, err := expandSecurityScannerScanConfigBlacklistPatterns(d.Get("blacklist_patterns"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("blacklist_patterns"); !tpgresource.IsEmptyValue(reflect.ValueOf(blacklistPatternsProp)) && (ok || !reflect.DeepEqual(v, blacklistPatternsProp)) {
+	} else if v, ok := d.GetOkExists("blacklist_patterns"); !isEmptyValue(reflect.ValueOf(blacklistPatternsProp)) && (ok || !reflect.DeepEqual(v, blacklistPatternsProp)) {
 		obj["blacklistPatterns"] = blacklistPatternsProp
 	}
 	scheduleProp, err := expandSecurityScannerScanConfigSchedule(d.Get("schedule"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("schedule"); !tpgresource.IsEmptyValue(reflect.ValueOf(scheduleProp)) && (ok || !reflect.DeepEqual(v, scheduleProp)) {
+	} else if v, ok := d.GetOkExists("schedule"); !isEmptyValue(reflect.ValueOf(scheduleProp)) && (ok || !reflect.DeepEqual(v, scheduleProp)) {
 		obj["schedule"] = scheduleProp
 	}
 	targetPlatformsProp, err := expandSecurityScannerScanConfigTargetPlatforms(d.Get("target_platforms"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("target_platforms"); !tpgresource.IsEmptyValue(reflect.ValueOf(targetPlatformsProp)) && (ok || !reflect.DeepEqual(v, targetPlatformsProp)) {
+	} else if v, ok := d.GetOkExists("target_platforms"); !isEmptyValue(reflect.ValueOf(targetPlatformsProp)) && (ok || !reflect.DeepEqual(v, targetPlatformsProp)) {
 		obj["targetPlatforms"] = targetPlatformsProp
 	}
 	exportToSecurityCommandCenterProp, err := expandSecurityScannerScanConfigExportToSecurityCommandCenter(d.Get("export_to_security_command_center"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("export_to_security_command_center"); !tpgresource.IsEmptyValue(reflect.ValueOf(exportToSecurityCommandCenterProp)) && (ok || !reflect.DeepEqual(v, exportToSecurityCommandCenterProp)) {
+	} else if v, ok := d.GetOkExists("export_to_security_command_center"); !isEmptyValue(reflect.ValueOf(exportToSecurityCommandCenterProp)) && (ok || !reflect.DeepEqual(v, exportToSecurityCommandCenterProp)) {
 		obj["exportToSecurityCommandCenter"] = exportToSecurityCommandCenterProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityScannerBasePath}}projects/{{project}}/scanConfigs")
+	url, err := ReplaceVars(d, config, "{{SecurityScannerBasePath}}projects/{{project}}/scanConfigs")
 	if err != nil {
 		return err
 	}
@@ -277,26 +272,18 @@ func resourceSecurityScannerScanConfigCreate(d *schema.ResourceData, meta interf
 	log.Printf("[DEBUG] Creating new ScanConfig: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ScanConfig: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating ScanConfig: %s", err)
 	}
@@ -305,7 +292,7 @@ func resourceSecurityScannerScanConfigCreate(d *schema.ResourceData, meta interf
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{name}}")
+	id, err := ReplaceVars(d, config, "{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -336,36 +323,30 @@ func resourceSecurityScannerScanConfigCreate(d *schema.ResourceData, meta interf
 
 func resourceSecurityScannerScanConfigRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityScannerBasePath}}{{name}}")
+	url, err := ReplaceVars(d, config, "{{SecurityScannerBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ScanConfig: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("SecurityScannerScanConfig %q", d.Id()))
 	}
@@ -410,14 +391,14 @@ func resourceSecurityScannerScanConfigRead(d *schema.ResourceData, meta interfac
 
 func resourceSecurityScannerScanConfigUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ScanConfig: %s", err)
 	}
@@ -427,59 +408,59 @@ func resourceSecurityScannerScanConfigUpdate(d *schema.ResourceData, meta interf
 	displayNameProp, err := expandSecurityScannerScanConfigDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	maxQpsProp, err := expandSecurityScannerScanConfigMaxQps(d.Get("max_qps"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("max_qps"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, maxQpsProp)) {
+	} else if v, ok := d.GetOkExists("max_qps"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, maxQpsProp)) {
 		obj["maxQps"] = maxQpsProp
 	}
 	startingUrlsProp, err := expandSecurityScannerScanConfigStartingUrls(d.Get("starting_urls"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("starting_urls"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, startingUrlsProp)) {
+	} else if v, ok := d.GetOkExists("starting_urls"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, startingUrlsProp)) {
 		obj["startingUrls"] = startingUrlsProp
 	}
 	authenticationProp, err := expandSecurityScannerScanConfigAuthentication(d.Get("authentication"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("authentication"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, authenticationProp)) {
+	} else if v, ok := d.GetOkExists("authentication"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, authenticationProp)) {
 		obj["authentication"] = authenticationProp
 	}
 	userAgentProp, err := expandSecurityScannerScanConfigUserAgent(d.Get("user_agent"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("user_agent"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, userAgentProp)) {
+	} else if v, ok := d.GetOkExists("user_agent"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, userAgentProp)) {
 		obj["userAgent"] = userAgentProp
 	}
 	blacklistPatternsProp, err := expandSecurityScannerScanConfigBlacklistPatterns(d.Get("blacklist_patterns"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("blacklist_patterns"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, blacklistPatternsProp)) {
+	} else if v, ok := d.GetOkExists("blacklist_patterns"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, blacklistPatternsProp)) {
 		obj["blacklistPatterns"] = blacklistPatternsProp
 	}
 	scheduleProp, err := expandSecurityScannerScanConfigSchedule(d.Get("schedule"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("schedule"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, scheduleProp)) {
+	} else if v, ok := d.GetOkExists("schedule"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, scheduleProp)) {
 		obj["schedule"] = scheduleProp
 	}
 	targetPlatformsProp, err := expandSecurityScannerScanConfigTargetPlatforms(d.Get("target_platforms"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("target_platforms"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, targetPlatformsProp)) {
+	} else if v, ok := d.GetOkExists("target_platforms"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, targetPlatformsProp)) {
 		obj["targetPlatforms"] = targetPlatformsProp
 	}
 	exportToSecurityCommandCenterProp, err := expandSecurityScannerScanConfigExportToSecurityCommandCenter(d.Get("export_to_security_command_center"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("export_to_security_command_center"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, exportToSecurityCommandCenterProp)) {
+	} else if v, ok := d.GetOkExists("export_to_security_command_center"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, exportToSecurityCommandCenterProp)) {
 		obj["exportToSecurityCommandCenter"] = exportToSecurityCommandCenterProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityScannerBasePath}}{{name}}")
+	url, err := ReplaceVars(d, config, "{{SecurityScannerBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -530,19 +511,11 @@ func resourceSecurityScannerScanConfigUpdate(d *schema.ResourceData, meta interf
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating ScanConfig %q: %s", d.Id(), err)
@@ -555,20 +528,20 @@ func resourceSecurityScannerScanConfigUpdate(d *schema.ResourceData, meta interf
 
 func resourceSecurityScannerScanConfigDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ScanConfig: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityScannerBasePath}}{{name}}")
+	url, err := ReplaceVars(d, config, "{{SecurityScannerBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -577,19 +550,11 @@ func resourceSecurityScannerScanConfigDelete(d *schema.ResourceData, meta interf
 	log.Printf("[DEBUG] Deleting ScanConfig %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "ScanConfig")
 	}
@@ -603,7 +568,7 @@ func resourceSecurityScannerScanConfigImport(d *schema.ResourceData, meta interf
 	config := meta.(*transport_tpg.Config)
 
 	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
+	if err := ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
 		return nil, err
 	}
 
@@ -758,19 +723,19 @@ func flattenSecurityScannerScanConfigExportToSecurityCommandCenter(v interface{}
 	return v
 }
 
-func expandSecurityScannerScanConfigDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigDisplayName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigMaxQps(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigMaxQps(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigStartingUrls(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigStartingUrls(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigAuthentication(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigAuthentication(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -782,21 +747,21 @@ func expandSecurityScannerScanConfigAuthentication(v interface{}, d tpgresource.
 	transformedGoogleAccount, err := expandSecurityScannerScanConfigAuthenticationGoogleAccount(original["google_account"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGoogleAccount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGoogleAccount); val.IsValid() && !isEmptyValue(val) {
 		transformed["googleAccount"] = transformedGoogleAccount
 	}
 
 	transformedCustomAccount, err := expandSecurityScannerScanConfigAuthenticationCustomAccount(original["custom_account"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCustomAccount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCustomAccount); val.IsValid() && !isEmptyValue(val) {
 		transformed["customAccount"] = transformedCustomAccount
 	}
 
 	return transformed, nil
 }
 
-func expandSecurityScannerScanConfigAuthenticationGoogleAccount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigAuthenticationGoogleAccount(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -808,29 +773,29 @@ func expandSecurityScannerScanConfigAuthenticationGoogleAccount(v interface{}, d
 	transformedUsername, err := expandSecurityScannerScanConfigAuthenticationGoogleAccountUsername(original["username"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !isEmptyValue(val) {
 		transformed["username"] = transformedUsername
 	}
 
 	transformedPassword, err := expandSecurityScannerScanConfigAuthenticationGoogleAccountPassword(original["password"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !isEmptyValue(val) {
 		transformed["password"] = transformedPassword
 	}
 
 	return transformed, nil
 }
 
-func expandSecurityScannerScanConfigAuthenticationGoogleAccountUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigAuthenticationGoogleAccountUsername(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigAuthenticationGoogleAccountPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigAuthenticationGoogleAccountPassword(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigAuthenticationCustomAccount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigAuthenticationCustomAccount(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -842,48 +807,48 @@ func expandSecurityScannerScanConfigAuthenticationCustomAccount(v interface{}, d
 	transformedUsername, err := expandSecurityScannerScanConfigAuthenticationCustomAccountUsername(original["username"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !isEmptyValue(val) {
 		transformed["username"] = transformedUsername
 	}
 
 	transformedPassword, err := expandSecurityScannerScanConfigAuthenticationCustomAccountPassword(original["password"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !isEmptyValue(val) {
 		transformed["password"] = transformedPassword
 	}
 
 	transformedLoginUrl, err := expandSecurityScannerScanConfigAuthenticationCustomAccountLoginUrl(original["login_url"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLoginUrl); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLoginUrl); val.IsValid() && !isEmptyValue(val) {
 		transformed["loginUrl"] = transformedLoginUrl
 	}
 
 	return transformed, nil
 }
 
-func expandSecurityScannerScanConfigAuthenticationCustomAccountUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigAuthenticationCustomAccountUsername(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigAuthenticationCustomAccountPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigAuthenticationCustomAccountPassword(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigAuthenticationCustomAccountLoginUrl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigAuthenticationCustomAccountLoginUrl(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigUserAgent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigUserAgent(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigBlacklistPatterns(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigBlacklistPatterns(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigSchedule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigSchedule(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -895,32 +860,32 @@ func expandSecurityScannerScanConfigSchedule(v interface{}, d tpgresource.Terraf
 	transformedScheduleTime, err := expandSecurityScannerScanConfigScheduleScheduleTime(original["schedule_time"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedScheduleTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedScheduleTime); val.IsValid() && !isEmptyValue(val) {
 		transformed["scheduleTime"] = transformedScheduleTime
 	}
 
 	transformedIntervalDurationDays, err := expandSecurityScannerScanConfigScheduleIntervalDurationDays(original["interval_duration_days"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIntervalDurationDays); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIntervalDurationDays); val.IsValid() && !isEmptyValue(val) {
 		transformed["intervalDurationDays"] = transformedIntervalDurationDays
 	}
 
 	return transformed, nil
 }
 
-func expandSecurityScannerScanConfigScheduleScheduleTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigScheduleScheduleTime(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigScheduleIntervalDurationDays(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigScheduleIntervalDurationDays(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigTargetPlatforms(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigTargetPlatforms(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityScannerScanConfigExportToSecurityCommandCenter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityScannerScanConfigExportToSecurityCommandCenter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

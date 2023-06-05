@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: DCL     ***
@@ -29,7 +26,6 @@ import (
 	dcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/dcl"
 	containerazure "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/containerazure/beta"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -324,7 +320,7 @@ func resourceContainerAzureNodePoolCreate(d *schema.ResourceData, meta interface
 		Name:                  dcl.String(d.Get("name").(string)),
 		SubnetId:              dcl.String(d.Get("subnet_id").(string)),
 		Version:               dcl.String(d.Get("version").(string)),
-		Annotations:           tpgresource.CheckStringMap(d.Get("annotations")),
+		Annotations:           checkStringMap(d.Get("annotations")),
 		AzureAvailabilityZone: dcl.StringOrNil(d.Get("azure_availability_zone").(string)),
 		Project:               dcl.String(project),
 	}
@@ -335,17 +331,17 @@ func resourceContainerAzureNodePoolCreate(d *schema.ResourceData, meta interface
 	}
 	d.SetId(id)
 	directive := CreateDirective
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 	billingProject := project
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 	client := transport_tpg.NewDCLContainerAzureClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutCreate))
-	if bp, err := tpgresource.ReplaceVars(d, config, client.Config.BasePath); err != nil {
+	if bp, err := ReplaceVars(d, config, client.Config.BasePath); err != nil {
 		d.SetId("")
 		return fmt.Errorf("Could not format %q: %w", client.Config.BasePath, err)
 	} else {
@@ -382,22 +378,22 @@ func resourceContainerAzureNodePoolRead(d *schema.ResourceData, meta interface{}
 		Name:                  dcl.String(d.Get("name").(string)),
 		SubnetId:              dcl.String(d.Get("subnet_id").(string)),
 		Version:               dcl.String(d.Get("version").(string)),
-		Annotations:           tpgresource.CheckStringMap(d.Get("annotations")),
+		Annotations:           checkStringMap(d.Get("annotations")),
 		AzureAvailabilityZone: dcl.StringOrNil(d.Get("azure_availability_zone").(string)),
 		Project:               dcl.String(project),
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 	billingProject := project
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 	client := transport_tpg.NewDCLContainerAzureClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutRead))
-	if bp, err := tpgresource.ReplaceVars(d, config, client.Config.BasePath); err != nil {
+	if bp, err := ReplaceVars(d, config, client.Config.BasePath); err != nil {
 		d.SetId("")
 		return fmt.Errorf("Could not format %q: %w", client.Config.BasePath, err)
 	} else {
@@ -479,23 +475,23 @@ func resourceContainerAzureNodePoolUpdate(d *schema.ResourceData, meta interface
 		Name:                  dcl.String(d.Get("name").(string)),
 		SubnetId:              dcl.String(d.Get("subnet_id").(string)),
 		Version:               dcl.String(d.Get("version").(string)),
-		Annotations:           tpgresource.CheckStringMap(d.Get("annotations")),
+		Annotations:           checkStringMap(d.Get("annotations")),
 		AzureAvailabilityZone: dcl.StringOrNil(d.Get("azure_availability_zone").(string)),
 		Project:               dcl.String(project),
 	}
 	directive := UpdateDirective
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 	client := transport_tpg.NewDCLContainerAzureClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutUpdate))
-	if bp, err := tpgresource.ReplaceVars(d, config, client.Config.BasePath); err != nil {
+	if bp, err := ReplaceVars(d, config, client.Config.BasePath); err != nil {
 		d.SetId("")
 		return fmt.Errorf("Could not format %q: %w", client.Config.BasePath, err)
 	} else {
@@ -532,23 +528,23 @@ func resourceContainerAzureNodePoolDelete(d *schema.ResourceData, meta interface
 		Name:                  dcl.String(d.Get("name").(string)),
 		SubnetId:              dcl.String(d.Get("subnet_id").(string)),
 		Version:               dcl.String(d.Get("version").(string)),
-		Annotations:           tpgresource.CheckStringMap(d.Get("annotations")),
+		Annotations:           checkStringMap(d.Get("annotations")),
 		AzureAvailabilityZone: dcl.StringOrNil(d.Get("azure_availability_zone").(string)),
 		Project:               dcl.String(project),
 	}
 
 	log.Printf("[DEBUG] Deleting NodePool %q", d.Id())
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 	billingProject := project
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 	client := transport_tpg.NewDCLContainerAzureClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutDelete))
-	if bp, err := tpgresource.ReplaceVars(d, config, client.Config.BasePath); err != nil {
+	if bp, err := ReplaceVars(d, config, client.Config.BasePath); err != nil {
 		d.SetId("")
 		return fmt.Errorf("Could not format %q: %w", client.Config.BasePath, err)
 	} else {
@@ -565,7 +561,7 @@ func resourceContainerAzureNodePoolDelete(d *schema.ResourceData, meta interface
 func resourceContainerAzureNodePoolImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
 
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/azureClusters/(?P<cluster>[^/]+)/azureNodePools/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<cluster>[^/]+)/(?P<name>[^/]+)",
 		"(?P<location>[^/]+)/(?P<cluster>[^/]+)/(?P<name>[^/]+)",
@@ -574,7 +570,7 @@ func resourceContainerAzureNodePoolImport(d *schema.ResourceData, meta interface
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVarsForId(d, config, "projects/{{project}}/locations/{{location}}/azureClusters/{{cluster}}/azureNodePools/{{name}}")
+	id, err := replaceVarsForId(d, config, "projects/{{project}}/locations/{{location}}/azureClusters/{{cluster}}/azureNodePools/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -625,7 +621,7 @@ func expandContainerAzureNodePoolConfig(o interface{}) *containerazure.NodePoolC
 		ImageType:   dcl.StringOrNil(obj["image_type"].(string)),
 		ProxyConfig: expandContainerAzureNodePoolConfigProxyConfig(obj["proxy_config"]),
 		RootVolume:  expandContainerAzureNodePoolConfigRootVolume(obj["root_volume"]),
-		Tags:        tpgresource.CheckStringMap(obj["tags"]),
+		Tags:        checkStringMap(obj["tags"]),
 		VmSize:      dcl.StringOrNil(obj["vm_size"].(string)),
 	}
 }

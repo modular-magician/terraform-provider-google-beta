@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -12,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -45,12 +42,7 @@ func testSweepAccessContextManagerPolicies(region string) error {
 	parent := neturl.QueryEscape(fmt.Sprintf("organizations/%s", testOrg))
 	listUrl := fmt.Sprintf("%saccessPolicies?parent=%s", config.AccessContextManagerBasePath, parent)
 
-	resp, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		RawURL:    listUrl,
-		UserAgent: config.UserAgent,
-	})
+	resp, err := transport_tpg.SendRequest(config, "GET", "", listUrl, config.UserAgent, nil)
 	if err != nil && !transport_tpg.IsGoogleApiErrorWithCode(err, 404) {
 		log.Printf("unable to list AccessPolicies for organization %q: %v", testOrg, err)
 		return nil
@@ -75,12 +67,7 @@ func testSweepAccessContextManagerPolicies(region string) error {
 	log.Printf("[DEBUG] Deleting test Access Policies %q", policy["name"])
 
 	policyUrl := config.AccessContextManagerBasePath + policy["name"].(string)
-	if _, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		RawURL:    policyUrl,
-		UserAgent: config.UserAgent,
-	}); err != nil && !transport_tpg.IsGoogleApiErrorWithCode(err, 404) {
+	if _, err := transport_tpg.SendRequest(config, "DELETE", "", policyUrl, config.UserAgent, nil); err != nil && !transport_tpg.IsGoogleApiErrorWithCode(err, 404) {
 		log.Printf("unable to delete access policy %q", policy["name"].(string))
 		return nil
 	}
@@ -158,17 +145,12 @@ func testAccCheckAccessContextManagerAccessPolicyDestroyProducer(t *testing.T) f
 
 			config := GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{AccessContextManagerBasePath}}accessPolicies/{{name}}")
+			url, err := acctest.ReplaceVarsForTest(config, rs, "{{AccessContextManagerBasePath}}accessPolicies/{{name}}")
 			if err != nil {
 				return err
 			}
 
-			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "GET",
-				RawURL:    url,
-				UserAgent: config.UserAgent,
-			})
+			_, err = transport_tpg.SendRequest(config, "GET", "", url, config.UserAgent, nil)
 			if err == nil {
 				return fmt.Errorf("AccessPolicy still exists at %s", url)
 			}

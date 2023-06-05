@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -112,6 +107,220 @@ A duration in seconds with up to nine fractional digits, terminated by 's'. Exam
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"actions": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: `A task to execute on the completion of a job.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"deidentify": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Create a de-identified copy of the requested table or files.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"cloud_storage_output": {
+													Type:     schema.TypeString,
+													Required: true,
+													Description: `User settable Cloud Storage bucket and folders to store de-identified files.
+
+This field must be set for cloud storage deidentification.
+
+The output Cloud Storage bucket must be different from the input bucket.
+
+De-identified files will overwrite files in the output path.
+
+Form of: gs://bucket/folder/ or gs://bucket`,
+												},
+												"file_types_to_transform": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Description: `List of user-specified file type groups to transform. If specified, only the files with these filetypes will be transformed.
+
+If empty, all supported files will be transformed. Supported types may be automatically added over time.
+
+If a file type is set in this field that isn't supported by the Deidentify action then the job will fail and will not be successfully created/started. Possible values: ["IMAGE", "TEXT_FILE", "CSV", "TSV"]`,
+													Elem: &schema.Schema{
+														Type:         schema.TypeString,
+														ValidateFunc: verify.ValidateEnum([]string{"IMAGE", "TEXT_FILE", "CSV", "TSV"}),
+													},
+												},
+												"transformation_config": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `User specified deidentify templates and configs for structured, unstructured, and image files.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"deidentify_template": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: `If this template is specified, it will serve as the default de-identify template.`,
+															},
+															"image_redact_template": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: `If this template is specified, it will serve as the de-identify template for images.`,
+															},
+															"structured_deidentify_template": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: `If this template is specified, it will serve as the de-identify template for structured content such as delimited files and tables.`,
+															},
+														},
+													},
+												},
+												"transformation_details_storage_config": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `Config for storing transformation details.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"table": {
+																Type:        schema.TypeList,
+																Required:    true,
+																Description: `The BigQuery table in which to store the output.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"dataset_id": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: `The ID of the dataset containing this table.`,
+																		},
+																		"project_id": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: `The ID of the project containing this table.`,
+																		},
+																		"table_id": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `The ID of the table. The ID must contain only letters (a-z,
+A-Z), numbers (0-9), or underscores (_). The maximum length
+is 1,024 characters.`,
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+										ExactlyOneOf: []string{},
+									},
+									"job_notification_emails": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Sends an email when the job completes. The email goes to IAM project owners and technical Essential Contacts.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{},
+										},
+										ExactlyOneOf: []string{},
+									},
+									"pub_sub": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Publish a message into a given Pub/Sub topic when the job completes.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"topic": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Cloud Pub/Sub topic to send notifications to.`,
+												},
+											},
+										},
+										ExactlyOneOf: []string{},
+									},
+									"publish_findings_to_cloud_data_catalog": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Publish findings of a DlpJob to Data Catalog.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{},
+										},
+										ExactlyOneOf: []string{},
+									},
+									"publish_summary_to_cscc": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Publish the result summary of a DlpJob to the Cloud Security Command Center.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{},
+										},
+										ExactlyOneOf: []string{},
+									},
+									"save_findings": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `If set, the detailed findings will be persisted to the specified OutputStorageConfig. Only a single instance of this action can be specified. Compatible with: Inspect, Risk`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"output_config": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `Information on where to store output`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"table": {
+																Type:        schema.TypeList,
+																Required:    true,
+																Description: `Information on the location of the target BigQuery Table.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"dataset_id": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: `Dataset ID of the table.`,
+																		},
+																		"project_id": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: `The Google Cloud Platform project ID of the project containing the table.`,
+																		},
+																		"table_id": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `Name of the table. If is not set a new one will be generated for you with the following format:
+'dlp_googleapis_yyyy_mm_dd_[dlp_job_id]'. Pacific timezone will be used for generating the date details.`,
+																		},
+																	},
+																},
+															},
+															"output_schema": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																ValidateFunc: verify.ValidateEnum([]string{"BASIC_COLUMNS", "GCS_COLUMNS", "DATASTORE_COLUMNS", "BIG_QUERY_COLUMNS", "ALL_COLUMNS", ""}),
+																Description: `Schema used for writing the findings for Inspect jobs. This field is only used for
+Inspect and must be unspecified for Risk jobs. Columns are derived from the Finding
+object. If appending to an existing table, any columns from the predefined schema
+that are missing will be added. No columns in the existing table will be deleted.
+
+If unspecified, then all available columns will be used for a new table or an (existing)
+table with no schema, and no changes will be made to an existing table that has a schema.
+Only for use with external storage. Possible values: ["BASIC_COLUMNS", "GCS_COLUMNS", "DATASTORE_COLUMNS", "BIG_QUERY_COLUMNS", "ALL_COLUMNS"]`,
+															},
+														},
+													},
+												},
+											},
+										},
+										ExactlyOneOf: []string{},
+									},
+								},
+							},
+						},
 						"inspect_template_name": {
 							Type:        schema.TypeString,
 							Required:    true,
@@ -156,21 +365,6 @@ A duration in seconds with up to nine fractional digits, terminated by 's'. Exam
 														},
 													},
 												},
-												"excluded_fields": {
-													Type:     schema.TypeList,
-													Optional: true,
-													Description: `References to fields excluded from scanning.
-This allows you to skip inspection of entire columns which you know have no findings.`,
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"name": {
-																Type:        schema.TypeString,
-																Required:    true,
-																Description: `Name describing the field excluded from scanning.`,
-															},
-														},
-													},
-												},
 												"identifying_fields": {
 													Type:     schema.TypeList,
 													Optional: true,
@@ -182,20 +376,6 @@ If not specified, no identifying fields will be returned for findings.`,
 																Type:        schema.TypeString,
 																Required:    true,
 																Description: `Name of a BigQuery field to be returned with the findings.`,
-															},
-														},
-													},
-												},
-												"included_fields": {
-													Type:        schema.TypeList,
-													Optional:    true,
-													Description: `Limit scanning only to these fields.`,
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"name": {
-																Type:        schema.TypeString,
-																Required:    true,
-																Description: `Name describing the field to which scanning is limited.`,
 															},
 														},
 													},
@@ -494,230 +674,6 @@ be based on the time of the execution of the last run of the JobTrigger.`,
 												},
 											},
 										},
-									},
-								},
-							},
-						},
-						"actions": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Description: `A task to execute on the completion of a job.`,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"deidentify": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: `Create a de-identified copy of the requested table or files.`,
-										MaxItems:    1,
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"cloud_storage_output": {
-													Type:     schema.TypeString,
-													Required: true,
-													Description: `User settable Cloud Storage bucket and folders to store de-identified files.
-
-This field must be set for cloud storage deidentification.
-
-The output Cloud Storage bucket must be different from the input bucket.
-
-De-identified files will overwrite files in the output path.
-
-Form of: gs://bucket/folder/ or gs://bucket`,
-												},
-												"file_types_to_transform": {
-													Type:     schema.TypeList,
-													Optional: true,
-													Description: `List of user-specified file type groups to transform. If specified, only the files with these filetypes will be transformed.
-
-If empty, all supported files will be transformed. Supported types may be automatically added over time.
-
-If a file type is set in this field that isn't supported by the Deidentify action then the job will fail and will not be successfully created/started. Possible values: ["IMAGE", "TEXT_FILE", "CSV", "TSV"]`,
-													Elem: &schema.Schema{
-														Type:         schema.TypeString,
-														ValidateFunc: verify.ValidateEnum([]string{"IMAGE", "TEXT_FILE", "CSV", "TSV"}),
-													},
-												},
-												"transformation_config": {
-													Type:        schema.TypeList,
-													Optional:    true,
-													Description: `User specified deidentify templates and configs for structured, unstructured, and image files.`,
-													MaxItems:    1,
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"deidentify_template": {
-																Type:        schema.TypeString,
-																Optional:    true,
-																Description: `If this template is specified, it will serve as the default de-identify template.`,
-															},
-															"image_redact_template": {
-																Type:        schema.TypeString,
-																Optional:    true,
-																Description: `If this template is specified, it will serve as the de-identify template for images.`,
-															},
-															"structured_deidentify_template": {
-																Type:        schema.TypeString,
-																Optional:    true,
-																Description: `If this template is specified, it will serve as the de-identify template for structured content such as delimited files and tables.`,
-															},
-														},
-													},
-												},
-												"transformation_details_storage_config": {
-													Type:        schema.TypeList,
-													Optional:    true,
-													Description: `Config for storing transformation details.`,
-													MaxItems:    1,
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"table": {
-																Type:        schema.TypeList,
-																Required:    true,
-																Description: `The BigQuery table in which to store the output.`,
-																MaxItems:    1,
-																Elem: &schema.Resource{
-																	Schema: map[string]*schema.Schema{
-																		"dataset_id": {
-																			Type:        schema.TypeString,
-																			Required:    true,
-																			Description: `The ID of the dataset containing this table.`,
-																		},
-																		"project_id": {
-																			Type:        schema.TypeString,
-																			Required:    true,
-																			Description: `The ID of the project containing this table.`,
-																		},
-																		"table_id": {
-																			Type:     schema.TypeString,
-																			Optional: true,
-																			Description: `The ID of the table. The ID must contain only letters (a-z,
-A-Z), numbers (0-9), or underscores (_). The maximum length
-is 1,024 characters.`,
-																		},
-																	},
-																},
-															},
-														},
-													},
-												},
-											},
-										},
-										ExactlyOneOf: []string{},
-									},
-									"job_notification_emails": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: `Sends an email when the job completes. The email goes to IAM project owners and technical Essential Contacts.`,
-										MaxItems:    1,
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{},
-										},
-										ExactlyOneOf: []string{},
-									},
-									"pub_sub": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: `Publish a message into a given Pub/Sub topic when the job completes.`,
-										MaxItems:    1,
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"topic": {
-													Type:        schema.TypeString,
-													Required:    true,
-													Description: `Cloud Pub/Sub topic to send notifications to.`,
-												},
-											},
-										},
-										ExactlyOneOf: []string{},
-									},
-									"publish_findings_to_cloud_data_catalog": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: `Publish findings of a DlpJob to Data Catalog.`,
-										MaxItems:    1,
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{},
-										},
-										ExactlyOneOf: []string{},
-									},
-									"publish_summary_to_cscc": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: `Publish the result summary of a DlpJob to the Cloud Security Command Center.`,
-										MaxItems:    1,
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{},
-										},
-										ExactlyOneOf: []string{},
-									},
-									"publish_to_stackdriver": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: `Enable Stackdriver metric dlp.googleapis.com/findingCount.`,
-										MaxItems:    1,
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{},
-										},
-										ExactlyOneOf: []string{},
-									},
-									"save_findings": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: `If set, the detailed findings will be persisted to the specified OutputStorageConfig. Only a single instance of this action can be specified. Compatible with: Inspect, Risk`,
-										MaxItems:    1,
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"output_config": {
-													Type:        schema.TypeList,
-													Required:    true,
-													Description: `Information on where to store output`,
-													MaxItems:    1,
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"table": {
-																Type:        schema.TypeList,
-																Required:    true,
-																Description: `Information on the location of the target BigQuery Table.`,
-																MaxItems:    1,
-																Elem: &schema.Resource{
-																	Schema: map[string]*schema.Schema{
-																		"dataset_id": {
-																			Type:        schema.TypeString,
-																			Required:    true,
-																			Description: `Dataset ID of the table.`,
-																		},
-																		"project_id": {
-																			Type:        schema.TypeString,
-																			Required:    true,
-																			Description: `The Google Cloud Platform project ID of the project containing the table.`,
-																		},
-																		"table_id": {
-																			Type:     schema.TypeString,
-																			Optional: true,
-																			Description: `Name of the table. If is not set a new one will be generated for you with the following format:
-'dlp_googleapis_yyyy_mm_dd_[dlp_job_id]'. Pacific timezone will be used for generating the date details.`,
-																		},
-																	},
-																},
-															},
-															"output_schema": {
-																Type:         schema.TypeString,
-																Optional:     true,
-																ValidateFunc: verify.ValidateEnum([]string{"BASIC_COLUMNS", "GCS_COLUMNS", "DATASTORE_COLUMNS", "BIG_QUERY_COLUMNS", "ALL_COLUMNS", ""}),
-																Description: `Schema used for writing the findings for Inspect jobs. This field is only used for
-Inspect and must be unspecified for Risk jobs. Columns are derived from the Finding
-object. If appending to an existing table, any columns from the predefined schema
-that are missing will be added. No columns in the existing table will be deleted.
-
-If unspecified, then all available columns will be used for a new table or an (existing)
-table with no schema, and no changes will be made to an existing table that has a schema.
-Only for use with external storage. Possible values: ["BASIC_COLUMNS", "GCS_COLUMNS", "DATASTORE_COLUMNS", "BIG_QUERY_COLUMNS", "ALL_COLUMNS"]`,
-															},
-														},
-													},
-												},
-											},
-										},
-										ExactlyOneOf: []string{},
 									},
 								},
 							},
@@ -1312,7 +1268,7 @@ at https://cloud.google.com/dlp/docs/infotypes-reference when specifying a built
 
 func resourceDataLossPreventionJobTriggerCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -1321,31 +1277,31 @@ func resourceDataLossPreventionJobTriggerCreate(d *schema.ResourceData, meta int
 	descriptionProp, err := expandDataLossPreventionJobTriggerDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	displayNameProp, err := expandDataLossPreventionJobTriggerDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	statusProp, err := expandDataLossPreventionJobTriggerStatus(d.Get("status"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("status"); !tpgresource.IsEmptyValue(reflect.ValueOf(statusProp)) && (ok || !reflect.DeepEqual(v, statusProp)) {
+	} else if v, ok := d.GetOkExists("status"); !isEmptyValue(reflect.ValueOf(statusProp)) && (ok || !reflect.DeepEqual(v, statusProp)) {
 		obj["status"] = statusProp
 	}
 	triggersProp, err := expandDataLossPreventionJobTriggerTriggers(d.Get("triggers"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("triggers"); !tpgresource.IsEmptyValue(reflect.ValueOf(triggersProp)) && (ok || !reflect.DeepEqual(v, triggersProp)) {
+	} else if v, ok := d.GetOkExists("triggers"); !isEmptyValue(reflect.ValueOf(triggersProp)) && (ok || !reflect.DeepEqual(v, triggersProp)) {
 		obj["triggers"] = triggersProp
 	}
 	inspectJobProp, err := expandDataLossPreventionJobTriggerInspectJob(d.Get("inspect_job"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("inspect_job"); !tpgresource.IsEmptyValue(reflect.ValueOf(inspectJobProp)) && (ok || !reflect.DeepEqual(v, inspectJobProp)) {
+	} else if v, ok := d.GetOkExists("inspect_job"); !isEmptyValue(reflect.ValueOf(inspectJobProp)) && (ok || !reflect.DeepEqual(v, inspectJobProp)) {
 		obj["inspectJob"] = inspectJobProp
 	}
 
@@ -1354,7 +1310,7 @@ func resourceDataLossPreventionJobTriggerCreate(d *schema.ResourceData, meta int
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/jobTriggers")
+	url, err := ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/jobTriggers")
 	if err != nil {
 		return err
 	}
@@ -1363,19 +1319,11 @@ func resourceDataLossPreventionJobTriggerCreate(d *schema.ResourceData, meta int
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating JobTrigger: %s", err)
 	}
@@ -1384,7 +1332,7 @@ func resourceDataLossPreventionJobTriggerCreate(d *schema.ResourceData, meta int
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/jobTriggers/{{name}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/jobTriggers/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -1397,12 +1345,12 @@ func resourceDataLossPreventionJobTriggerCreate(d *schema.ResourceData, meta int
 
 func resourceDataLossPreventionJobTriggerRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/jobTriggers/{{name}}")
+	url, err := ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/jobTriggers/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -1410,17 +1358,11 @@ func resourceDataLossPreventionJobTriggerRead(d *schema.ResourceData, meta inter
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("DataLossPreventionJobTrigger %q", d.Id()))
 	}
@@ -1458,7 +1400,7 @@ func resourceDataLossPreventionJobTriggerRead(d *schema.ResourceData, meta inter
 
 func resourceDataLossPreventionJobTriggerUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -1469,31 +1411,31 @@ func resourceDataLossPreventionJobTriggerUpdate(d *schema.ResourceData, meta int
 	descriptionProp, err := expandDataLossPreventionJobTriggerDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	displayNameProp, err := expandDataLossPreventionJobTriggerDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	statusProp, err := expandDataLossPreventionJobTriggerStatus(d.Get("status"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("status"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, statusProp)) {
+	} else if v, ok := d.GetOkExists("status"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, statusProp)) {
 		obj["status"] = statusProp
 	}
 	triggersProp, err := expandDataLossPreventionJobTriggerTriggers(d.Get("triggers"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("triggers"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, triggersProp)) {
+	} else if v, ok := d.GetOkExists("triggers"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, triggersProp)) {
 		obj["triggers"] = triggersProp
 	}
 	inspectJobProp, err := expandDataLossPreventionJobTriggerInspectJob(d.Get("inspect_job"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("inspect_job"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, inspectJobProp)) {
+	} else if v, ok := d.GetOkExists("inspect_job"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, inspectJobProp)) {
 		obj["inspectJob"] = inspectJobProp
 	}
 
@@ -1502,7 +1444,7 @@ func resourceDataLossPreventionJobTriggerUpdate(d *schema.ResourceData, meta int
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/jobTriggers/{{name}}")
+	url, err := ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/jobTriggers/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -1537,19 +1479,11 @@ func resourceDataLossPreventionJobTriggerUpdate(d *schema.ResourceData, meta int
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating JobTrigger %q: %s", d.Id(), err)
@@ -1562,14 +1496,14 @@ func resourceDataLossPreventionJobTriggerUpdate(d *schema.ResourceData, meta int
 
 func resourceDataLossPreventionJobTriggerDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/jobTriggers/{{name}}")
+	url, err := ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/jobTriggers/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -1578,19 +1512,11 @@ func resourceDataLossPreventionJobTriggerDelete(d *schema.ResourceData, meta int
 	log.Printf("[DEBUG] Deleting JobTrigger %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "JobTrigger")
 	}
@@ -1603,7 +1529,7 @@ func resourceDataLossPreventionJobTriggerImport(d *schema.ResourceData, meta int
 	config := meta.(*transport_tpg.Config)
 
 	// Custom import to handle parent possibilities
-	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
+	if err := ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
 		return nil, err
 	}
 	parts := strings.Split(d.Get("name").(string), "/")
@@ -1625,7 +1551,7 @@ func resourceDataLossPreventionJobTriggerImport(d *schema.ResourceData, meta int
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/jobTriggers/{{name}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/jobTriggers/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -1638,7 +1564,7 @@ func flattenDataLossPreventionJobTriggerName(v interface{}, d *schema.ResourceDa
 	if v == nil {
 		return v
 	}
-	return tpgresource.NameFromSelfLinkStateFunc(v)
+	return NameFromSelfLinkStateFunc(v)
 }
 
 func flattenDataLossPreventionJobTriggerCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2751,10 +2677,6 @@ func flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptions(v
 		flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsSampleMethod(original["sampleMethod"], d, config)
 	transformed["identifying_fields"] =
 		flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIdentifyingFields(original["identifyingFields"], d, config)
-	transformed["included_fields"] =
-		flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIncludedFields(original["includedFields"], d, config)
-	transformed["excluded_fields"] =
-		flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsExcludedFields(original["excludedFields"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReference(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2846,50 +2768,6 @@ func flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsId
 	return v
 }
 
-func flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIncludedFields(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	l := v.([]interface{})
-	transformed := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		original := raw.(map[string]interface{})
-		if len(original) < 1 {
-			// Do not include empty json objects coming back from the api
-			continue
-		}
-		transformed = append(transformed, map[string]interface{}{
-			"name": flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIncludedFieldsName(original["name"], d, config),
-		})
-	}
-	return transformed
-}
-func flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIncludedFieldsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsExcludedFields(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	l := v.([]interface{})
-	transformed := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		original := raw.(map[string]interface{})
-		if len(original) < 1 {
-			// Do not include empty json objects coming back from the api
-			continue
-		}
-		transformed = append(transformed, map[string]interface{}{
-			"name": flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsExcludedFieldsName(original["name"], d, config),
-		})
-	}
-	return transformed
-}
-func flattenDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsExcludedFieldsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
 func flattenDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -2972,7 +2850,6 @@ func flattenDataLossPreventionJobTriggerInspectJobActions(v interface{}, d *sche
 			"publish_findings_to_cloud_data_catalog": flattenDataLossPreventionJobTriggerInspectJobActionsPublishFindingsToCloudDataCatalog(original["publishFindingsToCloudDataCatalog"], d, config),
 			"job_notification_emails":                flattenDataLossPreventionJobTriggerInspectJobActionsJobNotificationEmails(original["jobNotificationEmails"], d, config),
 			"deidentify":                             flattenDataLossPreventionJobTriggerInspectJobActionsDeidentify(original["deidentify"], d, config),
-			"publish_to_stackdriver":                 flattenDataLossPreventionJobTriggerInspectJobActionsPublishToStackdriver(original["publishToStackdriver"], d, config),
 		})
 	}
 	return transformed
@@ -3177,27 +3054,19 @@ func flattenDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformatio
 	return v
 }
 
-func flattenDataLossPreventionJobTriggerInspectJobActionsPublishToStackdriver(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	return []interface{}{transformed}
-}
-
-func expandDataLossPreventionJobTriggerDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerDisplayName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerStatus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerStatus(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerTriggers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerTriggers(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3210,7 +3079,7 @@ func expandDataLossPreventionJobTriggerTriggers(v interface{}, d tpgresource.Ter
 		transformedSchedule, err := expandDataLossPreventionJobTriggerTriggersSchedule(original["schedule"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedSchedule); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedSchedule); val.IsValid() && !isEmptyValue(val) {
 			transformed["schedule"] = transformedSchedule
 		}
 
@@ -3226,7 +3095,7 @@ func expandDataLossPreventionJobTriggerTriggers(v interface{}, d tpgresource.Ter
 	return req, nil
 }
 
-func expandDataLossPreventionJobTriggerTriggersSchedule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerTriggersSchedule(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3238,18 +3107,18 @@ func expandDataLossPreventionJobTriggerTriggersSchedule(v interface{}, d tpgreso
 	transformedRecurrencePeriodDuration, err := expandDataLossPreventionJobTriggerTriggersScheduleRecurrencePeriodDuration(original["recurrence_period_duration"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRecurrencePeriodDuration); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRecurrencePeriodDuration); val.IsValid() && !isEmptyValue(val) {
 		transformed["recurrencePeriodDuration"] = transformedRecurrencePeriodDuration
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerTriggersScheduleRecurrencePeriodDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerTriggersScheduleRecurrencePeriodDuration(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerTriggersManual(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerTriggersManual(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -3264,7 +3133,7 @@ func expandDataLossPreventionJobTriggerTriggersManual(v interface{}, d tpgresour
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJob(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJob(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3276,39 +3145,39 @@ func expandDataLossPreventionJobTriggerInspectJob(v interface{}, d tpgresource.T
 	transformedInspectTemplateName, err := expandDataLossPreventionJobTriggerInspectJobInspectTemplateName(original["inspect_template_name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedInspectTemplateName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedInspectTemplateName); val.IsValid() && !isEmptyValue(val) {
 		transformed["inspectTemplateName"] = transformedInspectTemplateName
 	}
 
 	transformedInspectConfig, err := expandDataLossPreventionJobTriggerInspectJobInspectConfig(original["inspect_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedInspectConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedInspectConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["inspectConfig"] = transformedInspectConfig
 	}
 
 	transformedStorageConfig, err := expandDataLossPreventionJobTriggerInspectJobStorageConfig(original["storage_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedStorageConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedStorageConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["storageConfig"] = transformedStorageConfig
 	}
 
 	transformedActions, err := expandDataLossPreventionJobTriggerInspectJobActions(original["actions"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedActions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedActions); val.IsValid() && !isEmptyValue(val) {
 		transformed["actions"] = transformedActions
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectTemplateName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectTemplateName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3320,68 +3189,68 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfig(v interface{}, d 
 	transformedExcludeInfoTypes, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigExcludeInfoTypes(original["exclude_info_types"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExcludeInfoTypes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExcludeInfoTypes); val.IsValid() && !isEmptyValue(val) {
 		transformed["excludeInfoTypes"] = transformedExcludeInfoTypes
 	}
 
 	transformedIncludeQuote, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigIncludeQuote(original["include_quote"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIncludeQuote); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIncludeQuote); val.IsValid() && !isEmptyValue(val) {
 		transformed["includeQuote"] = transformedIncludeQuote
 	}
 
 	transformedMinLikelihood, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigMinLikelihood(original["min_likelihood"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMinLikelihood); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMinLikelihood); val.IsValid() && !isEmptyValue(val) {
 		transformed["minLikelihood"] = transformedMinLikelihood
 	}
 
 	transformedLimits, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigLimits(original["limits"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLimits); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLimits); val.IsValid() && !isEmptyValue(val) {
 		transformed["limits"] = transformedLimits
 	}
 
 	transformedInfoTypes, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypes(original["info_types"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedInfoTypes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedInfoTypes); val.IsValid() && !isEmptyValue(val) {
 		transformed["infoTypes"] = transformedInfoTypes
 	}
 
 	transformedRuleSet, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSet(original["rule_set"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRuleSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRuleSet); val.IsValid() && !isEmptyValue(val) {
 		transformed["ruleSet"] = transformedRuleSet
 	}
 
 	transformedCustomInfoTypes, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypes(original["custom_info_types"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCustomInfoTypes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCustomInfoTypes); val.IsValid() && !isEmptyValue(val) {
 		transformed["customInfoTypes"] = transformedCustomInfoTypes
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigExcludeInfoTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigExcludeInfoTypes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigIncludeQuote(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigIncludeQuote(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigMinLikelihood(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigMinLikelihood(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimits(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimits(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3393,36 +3262,36 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimits(v interface
 	transformedMaxFindingsPerItem, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerItem(original["max_findings_per_item"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMaxFindingsPerItem); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMaxFindingsPerItem); val.IsValid() && !isEmptyValue(val) {
 		transformed["maxFindingsPerItem"] = transformedMaxFindingsPerItem
 	}
 
 	transformedMaxFindingsPerRequest, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerRequest(original["max_findings_per_request"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMaxFindingsPerRequest); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMaxFindingsPerRequest); val.IsValid() && !isEmptyValue(val) {
 		transformed["maxFindingsPerRequest"] = transformedMaxFindingsPerRequest
 	}
 
 	transformedMaxFindingsPerInfoType, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoType(original["max_findings_per_info_type"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMaxFindingsPerInfoType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMaxFindingsPerInfoType); val.IsValid() && !isEmptyValue(val) {
 		transformed["maxFindingsPerInfoType"] = transformedMaxFindingsPerInfoType
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerItem(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerItem(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerRequest(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerRequest(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3435,14 +3304,14 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsP
 		transformedInfoType, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeInfoType(original["info_type"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedInfoType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedInfoType); val.IsValid() && !isEmptyValue(val) {
 			transformed["infoType"] = transformedInfoType
 		}
 
 		transformedMaxFindings, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeMaxFindings(original["max_findings"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedMaxFindings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedMaxFindings); val.IsValid() && !isEmptyValue(val) {
 			transformed["maxFindings"] = transformedMaxFindings
 		}
 
@@ -3451,7 +3320,7 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsP
 	return req, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeInfoType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeInfoType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3463,33 +3332,33 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsP
 	transformedName, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeInfoTypeName(original["name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 		transformed["name"] = transformedName
 	}
 
 	transformedVersion, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeInfoTypeVersion(original["version"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !isEmptyValue(val) {
 		transformed["version"] = transformedVersion
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeInfoTypeName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeInfoTypeName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeInfoTypeVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeInfoTypeVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeMaxFindings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeMaxFindings(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3502,14 +3371,14 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypes(v interf
 		transformedName, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypesName(original["name"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 			transformed["name"] = transformedName
 		}
 
 		transformedVersion, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypesVersion(original["version"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !isEmptyValue(val) {
 			transformed["version"] = transformedVersion
 		}
 
@@ -3518,15 +3387,15 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypes(v interf
 	return req, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypesName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypesName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypesVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypesVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSet(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3539,14 +3408,14 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSet(v interfac
 		transformedInfoTypes, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypes(original["info_types"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedInfoTypes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedInfoTypes); val.IsValid() && !isEmptyValue(val) {
 			transformed["infoTypes"] = transformedInfoTypes
 		}
 
 		transformedRules, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRules(original["rules"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedRules); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedRules); val.IsValid() && !isEmptyValue(val) {
 			transformed["rules"] = transformedRules
 		}
 
@@ -3555,7 +3424,7 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSet(v interfac
 	return req, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3568,14 +3437,14 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypes(v
 		transformedName, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypesName(original["name"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 			transformed["name"] = transformedName
 		}
 
 		transformedVersion, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypesVersion(original["version"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !isEmptyValue(val) {
 			transformed["version"] = transformedVersion
 		}
 
@@ -3584,15 +3453,15 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypes(v
 	return req, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypesName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypesName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypesVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypesVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRules(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3605,14 +3474,14 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRules(v int
 		transformedHotwordRule, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRule(original["hotword_rule"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedHotwordRule); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedHotwordRule); val.IsValid() && !isEmptyValue(val) {
 			transformed["hotwordRule"] = transformedHotwordRule
 		}
 
 		transformedExclusionRule, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRule(original["exclusion_rule"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedExclusionRule); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedExclusionRule); val.IsValid() && !isEmptyValue(val) {
 			transformed["exclusionRule"] = transformedExclusionRule
 		}
 
@@ -3621,7 +3490,7 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRules(v int
 	return req, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRule(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3633,28 +3502,28 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwor
 	transformedHotwordRegex, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleHotwordRegex(original["hotword_regex"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedHotwordRegex); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedHotwordRegex); val.IsValid() && !isEmptyValue(val) {
 		transformed["hotwordRegex"] = transformedHotwordRegex
 	}
 
 	transformedProximity, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleProximity(original["proximity"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedProximity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedProximity); val.IsValid() && !isEmptyValue(val) {
 		transformed["proximity"] = transformedProximity
 	}
 
 	transformedLikelihoodAdjustment, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleLikelihoodAdjustment(original["likelihood_adjustment"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLikelihoodAdjustment); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLikelihoodAdjustment); val.IsValid() && !isEmptyValue(val) {
 		transformed["likelihoodAdjustment"] = transformedLikelihoodAdjustment
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleHotwordRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleHotwordRegex(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3666,29 +3535,29 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwor
 	transformedPattern, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleHotwordRegexPattern(original["pattern"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPattern); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPattern); val.IsValid() && !isEmptyValue(val) {
 		transformed["pattern"] = transformedPattern
 	}
 
 	transformedGroupIndexes, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleHotwordRegexGroupIndexes(original["group_indexes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGroupIndexes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGroupIndexes); val.IsValid() && !isEmptyValue(val) {
 		transformed["groupIndexes"] = transformedGroupIndexes
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleHotwordRegexPattern(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleHotwordRegexPattern(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleHotwordRegexGroupIndexes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleHotwordRegexGroupIndexes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleProximity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleProximity(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3700,29 +3569,29 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwor
 	transformedWindowBefore, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleProximityWindowBefore(original["window_before"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWindowBefore); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWindowBefore); val.IsValid() && !isEmptyValue(val) {
 		transformed["windowBefore"] = transformedWindowBefore
 	}
 
 	transformedWindowAfter, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleProximityWindowAfter(original["window_after"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWindowAfter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWindowAfter); val.IsValid() && !isEmptyValue(val) {
 		transformed["windowAfter"] = transformedWindowAfter
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleProximityWindowBefore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleProximityWindowBefore(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleProximityWindowAfter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleProximityWindowAfter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleLikelihoodAdjustment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleLikelihoodAdjustment(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3734,29 +3603,29 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwor
 	transformedFixedLikelihood, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleLikelihoodAdjustmentFixedLikelihood(original["fixed_likelihood"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedFixedLikelihood); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedFixedLikelihood); val.IsValid() && !isEmptyValue(val) {
 		transformed["fixedLikelihood"] = transformedFixedLikelihood
 	}
 
 	transformedRelativeLikelihood, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleLikelihoodAdjustmentRelativeLikelihood(original["relative_likelihood"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRelativeLikelihood); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRelativeLikelihood); val.IsValid() && !isEmptyValue(val) {
 		transformed["relativeLikelihood"] = transformedRelativeLikelihood
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleLikelihoodAdjustmentFixedLikelihood(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleLikelihoodAdjustmentFixedLikelihood(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleLikelihoodAdjustmentRelativeLikelihood(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleLikelihoodAdjustmentRelativeLikelihood(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRule(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3768,46 +3637,46 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 	transformedMatchingType, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleMatchingType(original["matching_type"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMatchingType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMatchingType); val.IsValid() && !isEmptyValue(val) {
 		transformed["matchingType"] = transformedMatchingType
 	}
 
 	transformedDictionary, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionary(original["dictionary"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDictionary); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDictionary); val.IsValid() && !isEmptyValue(val) {
 		transformed["dictionary"] = transformedDictionary
 	}
 
 	transformedRegex, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleRegex(original["regex"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRegex); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRegex); val.IsValid() && !isEmptyValue(val) {
 		transformed["regex"] = transformedRegex
 	}
 
 	transformedExcludeInfoTypes, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypes(original["exclude_info_types"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExcludeInfoTypes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExcludeInfoTypes); val.IsValid() && !isEmptyValue(val) {
 		transformed["excludeInfoTypes"] = transformedExcludeInfoTypes
 	}
 
 	transformedExcludeByHotword, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotword(original["exclude_by_hotword"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExcludeByHotword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExcludeByHotword); val.IsValid() && !isEmptyValue(val) {
 		transformed["excludeByHotword"] = transformedExcludeByHotword
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleMatchingType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleMatchingType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionary(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionary(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3819,21 +3688,21 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 	transformedWordList, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryWordList(original["word_list"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWordList); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWordList); val.IsValid() && !isEmptyValue(val) {
 		transformed["wordList"] = transformedWordList
 	}
 
 	transformedCloudStoragePath, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryCloudStoragePath(original["cloud_storage_path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCloudStoragePath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCloudStoragePath); val.IsValid() && !isEmptyValue(val) {
 		transformed["cloudStoragePath"] = transformedCloudStoragePath
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryWordList(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryWordList(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3845,18 +3714,18 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 	transformedWords, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryWordListWords(original["words"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWords); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWords); val.IsValid() && !isEmptyValue(val) {
 		transformed["words"] = transformedWords
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryWordListWords(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryWordListWords(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryCloudStoragePath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryCloudStoragePath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3868,18 +3737,18 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 	transformedPath, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryCloudStoragePathPath(original["path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["path"] = transformedPath
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryCloudStoragePathPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryCloudStoragePathPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleRegex(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3891,29 +3760,29 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 	transformedPattern, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleRegexPattern(original["pattern"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPattern); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPattern); val.IsValid() && !isEmptyValue(val) {
 		transformed["pattern"] = transformedPattern
 	}
 
 	transformedGroupIndexes, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleRegexGroupIndexes(original["group_indexes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGroupIndexes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGroupIndexes); val.IsValid() && !isEmptyValue(val) {
 		transformed["groupIndexes"] = transformedGroupIndexes
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleRegexPattern(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleRegexPattern(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleRegexGroupIndexes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleRegexGroupIndexes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3925,14 +3794,14 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 	transformedInfoTypes, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypesInfoTypes(original["info_types"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedInfoTypes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedInfoTypes); val.IsValid() && !isEmptyValue(val) {
 		transformed["infoTypes"] = transformedInfoTypes
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypesInfoTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypesInfoTypes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3945,14 +3814,14 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 		transformedName, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypesInfoTypesName(original["name"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 			transformed["name"] = transformedName
 		}
 
 		transformedVersion, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypesInfoTypesVersion(original["version"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !isEmptyValue(val) {
 			transformed["version"] = transformedVersion
 		}
 
@@ -3961,15 +3830,15 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 	return req, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypesInfoTypesName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypesInfoTypesName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypesInfoTypesVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypesInfoTypesVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotword(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3981,21 +3850,21 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 	transformedHotwordRegex, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordHotwordRegex(original["hotword_regex"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedHotwordRegex); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedHotwordRegex); val.IsValid() && !isEmptyValue(val) {
 		transformed["hotwordRegex"] = transformedHotwordRegex
 	}
 
 	transformedProximity, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordProximity(original["proximity"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedProximity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedProximity); val.IsValid() && !isEmptyValue(val) {
 		transformed["proximity"] = transformedProximity
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordHotwordRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordHotwordRegex(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4007,29 +3876,29 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 	transformedPattern, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordHotwordRegexPattern(original["pattern"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPattern); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPattern); val.IsValid() && !isEmptyValue(val) {
 		transformed["pattern"] = transformedPattern
 	}
 
 	transformedGroupIndexes, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordHotwordRegexGroupIndexes(original["group_indexes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGroupIndexes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGroupIndexes); val.IsValid() && !isEmptyValue(val) {
 		transformed["groupIndexes"] = transformedGroupIndexes
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordHotwordRegexPattern(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordHotwordRegexPattern(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordHotwordRegexGroupIndexes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordHotwordRegexGroupIndexes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordProximity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordProximity(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4041,29 +3910,29 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 	transformedWindowBefore, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordProximityWindowBefore(original["window_before"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWindowBefore); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWindowBefore); val.IsValid() && !isEmptyValue(val) {
 		transformed["windowBefore"] = transformedWindowBefore
 	}
 
 	transformedWindowAfter, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordProximityWindowAfter(original["window_after"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWindowAfter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWindowAfter); val.IsValid() && !isEmptyValue(val) {
 		transformed["windowAfter"] = transformedWindowAfter
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordProximityWindowBefore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordProximityWindowBefore(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordProximityWindowAfter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordProximityWindowAfter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -4076,42 +3945,42 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypes(v 
 		transformedInfoType, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInfoType(original["info_type"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedInfoType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedInfoType); val.IsValid() && !isEmptyValue(val) {
 			transformed["infoType"] = transformedInfoType
 		}
 
 		transformedLikelihood, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesLikelihood(original["likelihood"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedLikelihood); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedLikelihood); val.IsValid() && !isEmptyValue(val) {
 			transformed["likelihood"] = transformedLikelihood
 		}
 
 		transformedExclusionType, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesExclusionType(original["exclusion_type"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedExclusionType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedExclusionType); val.IsValid() && !isEmptyValue(val) {
 			transformed["exclusionType"] = transformedExclusionType
 		}
 
 		transformedRegex, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesRegex(original["regex"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedRegex); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedRegex); val.IsValid() && !isEmptyValue(val) {
 			transformed["regex"] = transformedRegex
 		}
 
 		transformedDictionary, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionary(original["dictionary"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedDictionary); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedDictionary); val.IsValid() && !isEmptyValue(val) {
 			transformed["dictionary"] = transformedDictionary
 		}
 
 		transformedStoredType, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredType(original["stored_type"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedStoredType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedStoredType); val.IsValid() && !isEmptyValue(val) {
 			transformed["storedType"] = transformedStoredType
 		}
 
@@ -4127,7 +3996,7 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypes(v 
 	return req, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInfoType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInfoType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4139,37 +4008,37 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInf
 	transformedName, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInfoTypeName(original["name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 		transformed["name"] = transformedName
 	}
 
 	transformedVersion, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInfoTypeVersion(original["version"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !isEmptyValue(val) {
 		transformed["version"] = transformedVersion
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInfoTypeName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInfoTypeName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInfoTypeVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInfoTypeVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesLikelihood(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesLikelihood(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesExclusionType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesExclusionType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesRegex(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4181,29 +4050,29 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesReg
 	transformedPattern, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesRegexPattern(original["pattern"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPattern); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPattern); val.IsValid() && !isEmptyValue(val) {
 		transformed["pattern"] = transformedPattern
 	}
 
 	transformedGroupIndexes, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesRegexGroupIndexes(original["group_indexes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGroupIndexes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGroupIndexes); val.IsValid() && !isEmptyValue(val) {
 		transformed["groupIndexes"] = transformedGroupIndexes
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesRegexPattern(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesRegexPattern(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesRegexGroupIndexes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesRegexGroupIndexes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionary(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionary(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4215,21 +4084,21 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDic
 	transformedWordList, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryWordList(original["word_list"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWordList); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWordList); val.IsValid() && !isEmptyValue(val) {
 		transformed["wordList"] = transformedWordList
 	}
 
 	transformedCloudStoragePath, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryCloudStoragePath(original["cloud_storage_path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCloudStoragePath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCloudStoragePath); val.IsValid() && !isEmptyValue(val) {
 		transformed["cloudStoragePath"] = transformedCloudStoragePath
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryWordList(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryWordList(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4241,18 +4110,18 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDic
 	transformedWords, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryWordListWords(original["words"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWords); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWords); val.IsValid() && !isEmptyValue(val) {
 		transformed["words"] = transformedWords
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryWordListWords(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryWordListWords(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryCloudStoragePath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryCloudStoragePath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4264,18 +4133,18 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDic
 	transformedPath, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryCloudStoragePathPath(original["path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["path"] = transformedPath
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryCloudStoragePathPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryCloudStoragePathPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4287,29 +4156,29 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesSto
 	transformedName, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredTypeName(original["name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 		transformed["name"] = transformedName
 	}
 
 	transformedCreateTime, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredTypeCreateTime(original["create_time"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCreateTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCreateTime); val.IsValid() && !isEmptyValue(val) {
 		transformed["createTime"] = transformedCreateTime
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredTypeName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredTypeName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredTypeCreateTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredTypeCreateTime(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesSurrogateType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesSurrogateType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -4324,7 +4193,7 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesSur
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4336,28 +4205,28 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfig(v interface{}, d 
 	transformedTimespanConfig, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfig(original["timespan_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTimespanConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTimespanConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["timespanConfig"] = transformedTimespanConfig
 	}
 
 	transformedDatastoreOptions, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptions(original["datastore_options"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDatastoreOptions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDatastoreOptions); val.IsValid() && !isEmptyValue(val) {
 		transformed["datastoreOptions"] = transformedDatastoreOptions
 	}
 
 	transformedCloudStorageOptions, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptions(original["cloud_storage_options"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCloudStorageOptions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCloudStorageOptions); val.IsValid() && !isEmptyValue(val) {
 		transformed["cloudStorageOptions"] = transformedCloudStorageOptions
 	}
 
 	transformedBigQueryOptions, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptions(original["big_query_options"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBigQueryOptions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBigQueryOptions); val.IsValid() && !isEmptyValue(val) {
 		transformed["bigQueryOptions"] = transformedBigQueryOptions
 	}
 
@@ -4371,7 +4240,7 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfig(v interface{}, d 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4383,47 +4252,47 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfig(v i
 	transformedStartTime, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigStartTime(original["start_time"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedStartTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedStartTime); val.IsValid() && !isEmptyValue(val) {
 		transformed["startTime"] = transformedStartTime
 	}
 
 	transformedEndTime, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigEndTime(original["end_time"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEndTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEndTime); val.IsValid() && !isEmptyValue(val) {
 		transformed["endTime"] = transformedEndTime
 	}
 
 	transformedEnableAutoPopulationOfTimespanConfig, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigEnableAutoPopulationOfTimespanConfig(original["enable_auto_population_of_timespan_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnableAutoPopulationOfTimespanConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnableAutoPopulationOfTimespanConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["enableAutoPopulationOfTimespanConfig"] = transformedEnableAutoPopulationOfTimespanConfig
 	}
 
 	transformedTimestampField, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigTimestampField(original["timestamp_field"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTimestampField); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTimestampField); val.IsValid() && !isEmptyValue(val) {
 		transformed["timestampField"] = transformedTimestampField
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigStartTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigStartTime(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigEndTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigEndTime(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigEnableAutoPopulationOfTimespanConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigEnableAutoPopulationOfTimespanConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigTimestampField(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigTimestampField(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4435,18 +4304,18 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigTime
 	transformedName, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigTimestampFieldName(original["name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 		transformed["name"] = transformedName
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigTimestampFieldName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigTimestampFieldName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptions(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4458,21 +4327,21 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptions(v
 	transformedPartitionId, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPartitionId(original["partition_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPartitionId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPartitionId); val.IsValid() && !isEmptyValue(val) {
 		transformed["partitionId"] = transformedPartitionId
 	}
 
 	transformedKind, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsKind(original["kind"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedKind); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedKind); val.IsValid() && !isEmptyValue(val) {
 		transformed["kind"] = transformedKind
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPartitionId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPartitionId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4484,29 +4353,29 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPa
 	transformedProjectId, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPartitionIdProjectId(original["project_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !isEmptyValue(val) {
 		transformed["projectId"] = transformedProjectId
 	}
 
 	transformedNamespaceId, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPartitionIdNamespaceId(original["namespace_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNamespaceId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNamespaceId); val.IsValid() && !isEmptyValue(val) {
 		transformed["namespaceId"] = transformedNamespaceId
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPartitionIdProjectId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPartitionIdProjectId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPartitionIdNamespaceId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPartitionIdNamespaceId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsKind(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsKind(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4518,18 +4387,18 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsKi
 	transformedName, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsKindName(original["name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 		transformed["name"] = transformedName
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsKindName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsKindName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptions(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4541,49 +4410,49 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOption
 	transformedFileSet, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSet(original["file_set"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedFileSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedFileSet); val.IsValid() && !isEmptyValue(val) {
 		transformed["fileSet"] = transformedFileSet
 	}
 
 	transformedBytesLimitPerFile, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsBytesLimitPerFile(original["bytes_limit_per_file"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBytesLimitPerFile); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBytesLimitPerFile); val.IsValid() && !isEmptyValue(val) {
 		transformed["bytesLimitPerFile"] = transformedBytesLimitPerFile
 	}
 
 	transformedBytesLimitPerFilePercent, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsBytesLimitPerFilePercent(original["bytes_limit_per_file_percent"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBytesLimitPerFilePercent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBytesLimitPerFilePercent); val.IsValid() && !isEmptyValue(val) {
 		transformed["bytesLimitPerFilePercent"] = transformedBytesLimitPerFilePercent
 	}
 
 	transformedFilesLimitPercent, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFilesLimitPercent(original["files_limit_percent"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedFilesLimitPercent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedFilesLimitPercent); val.IsValid() && !isEmptyValue(val) {
 		transformed["filesLimitPercent"] = transformedFilesLimitPercent
 	}
 
 	transformedFileTypes, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileTypes(original["file_types"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedFileTypes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedFileTypes); val.IsValid() && !isEmptyValue(val) {
 		transformed["fileTypes"] = transformedFileTypes
 	}
 
 	transformedSampleMethod, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsSampleMethod(original["sample_method"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSampleMethod); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSampleMethod); val.IsValid() && !isEmptyValue(val) {
 		transformed["sampleMethod"] = transformedSampleMethod
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSet(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4595,25 +4464,25 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOption
 	transformedUrl, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetUrl(original["url"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedUrl); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedUrl); val.IsValid() && !isEmptyValue(val) {
 		transformed["url"] = transformedUrl
 	}
 
 	transformedRegexFileSet, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSet(original["regex_file_set"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRegexFileSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRegexFileSet); val.IsValid() && !isEmptyValue(val) {
 		transformed["regexFileSet"] = transformedRegexFileSet
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetUrl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetUrl(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSet(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4625,60 +4494,60 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOption
 	transformedBucketName, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSetBucketName(original["bucket_name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBucketName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBucketName); val.IsValid() && !isEmptyValue(val) {
 		transformed["bucketName"] = transformedBucketName
 	}
 
 	transformedIncludeRegex, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSetIncludeRegex(original["include_regex"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIncludeRegex); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIncludeRegex); val.IsValid() && !isEmptyValue(val) {
 		transformed["includeRegex"] = transformedIncludeRegex
 	}
 
 	transformedExcludeRegex, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSetExcludeRegex(original["exclude_regex"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExcludeRegex); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExcludeRegex); val.IsValid() && !isEmptyValue(val) {
 		transformed["excludeRegex"] = transformedExcludeRegex
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSetBucketName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSetBucketName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSetIncludeRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSetIncludeRegex(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSetExcludeRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSetExcludeRegex(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsBytesLimitPerFile(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsBytesLimitPerFile(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsBytesLimitPerFilePercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsBytesLimitPerFilePercent(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFilesLimitPercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFilesLimitPercent(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileTypes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsSampleMethod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsSampleMethod(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptions(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4690,56 +4559,42 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptions(v 
 	transformedTableReference, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReference(original["table_reference"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTableReference); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTableReference); val.IsValid() && !isEmptyValue(val) {
 		transformed["tableReference"] = transformedTableReference
 	}
 
 	transformedRowsLimit, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsRowsLimit(original["rows_limit"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRowsLimit); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRowsLimit); val.IsValid() && !isEmptyValue(val) {
 		transformed["rowsLimit"] = transformedRowsLimit
 	}
 
 	transformedRowsLimitPercent, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsRowsLimitPercent(original["rows_limit_percent"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRowsLimitPercent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRowsLimitPercent); val.IsValid() && !isEmptyValue(val) {
 		transformed["rowsLimitPercent"] = transformedRowsLimitPercent
 	}
 
 	transformedSampleMethod, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsSampleMethod(original["sample_method"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSampleMethod); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSampleMethod); val.IsValid() && !isEmptyValue(val) {
 		transformed["sampleMethod"] = transformedSampleMethod
 	}
 
 	transformedIdentifyingFields, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIdentifyingFields(original["identifying_fields"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIdentifyingFields); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIdentifyingFields); val.IsValid() && !isEmptyValue(val) {
 		transformed["identifyingFields"] = transformedIdentifyingFields
-	}
-
-	transformedIncludedFields, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIncludedFields(original["included_fields"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedIncludedFields); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["includedFields"] = transformedIncludedFields
-	}
-
-	transformedExcludedFields, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsExcludedFields(original["excluded_fields"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedExcludedFields); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["excludedFields"] = transformedExcludedFields
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReference(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReference(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4751,52 +4606,52 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTab
 	transformedProjectId, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReferenceProjectId(original["project_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !isEmptyValue(val) {
 		transformed["projectId"] = transformedProjectId
 	}
 
 	transformedDatasetId, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReferenceDatasetId(original["dataset_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDatasetId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDatasetId); val.IsValid() && !isEmptyValue(val) {
 		transformed["datasetId"] = transformedDatasetId
 	}
 
 	transformedTableId, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReferenceTableId(original["table_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTableId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTableId); val.IsValid() && !isEmptyValue(val) {
 		transformed["tableId"] = transformedTableId
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReferenceProjectId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReferenceProjectId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReferenceDatasetId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReferenceDatasetId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReferenceTableId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReferenceTableId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsRowsLimit(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsRowsLimit(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsRowsLimitPercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsRowsLimitPercent(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsSampleMethod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsSampleMethod(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIdentifyingFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIdentifyingFields(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -4809,7 +4664,7 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIde
 		transformedName, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIdentifyingFieldsName(original["name"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 			transformed["name"] = transformedName
 		}
 
@@ -4818,63 +4673,11 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIde
 	return req, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIdentifyingFieldsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIdentifyingFieldsName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIncludedFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	req := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		if raw == nil {
-			continue
-		}
-		original := raw.(map[string]interface{})
-		transformed := make(map[string]interface{})
-
-		transformedName, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIncludedFieldsName(original["name"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["name"] = transformedName
-		}
-
-		req = append(req, transformed)
-	}
-	return req, nil
-}
-
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIncludedFieldsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsExcludedFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	req := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		if raw == nil {
-			continue
-		}
-		original := raw.(map[string]interface{})
-		transformed := make(map[string]interface{})
-
-		transformedName, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsExcludedFieldsName(original["name"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["name"] = transformedName
-		}
-
-		req = append(req, transformed)
-	}
-	return req, nil
-}
-
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsExcludedFieldsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptions(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -4891,43 +4694,43 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptions(v in
 	transformedDescription, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsDescription(original["description"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !isEmptyValue(val) {
 		transformed["description"] = transformedDescription
 	}
 
 	transformedRequiredFindingLabelKeys, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsRequiredFindingLabelKeys(original["required_finding_label_keys"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRequiredFindingLabelKeys); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRequiredFindingLabelKeys); val.IsValid() && !isEmptyValue(val) {
 		transformed["requiredFindingLabelKeys"] = transformedRequiredFindingLabelKeys
 	}
 
 	transformedTableOptions, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTableOptions(original["table_options"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTableOptions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTableOptions); val.IsValid() && !isEmptyValue(val) {
 		transformed["tableOptions"] = transformedTableOptions
 	}
 
 	transformedLabels, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsLabels(original["labels"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !isEmptyValue(val) {
 		transformed["labels"] = transformedLabels
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsRequiredFindingLabelKeys(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsRequiredFindingLabelKeys(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTableOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTableOptions(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4939,14 +4742,14 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTable
 	transformedIdentifyingFields, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTableOptionsIdentifyingFields(original["identifying_fields"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIdentifyingFields); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIdentifyingFields); val.IsValid() && !isEmptyValue(val) {
 		transformed["identifyingFields"] = transformedIdentifyingFields
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTableOptionsIdentifyingFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTableOptionsIdentifyingFields(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -4959,7 +4762,7 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTable
 		transformedName, err := expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTableOptionsIdentifyingFieldsName(original["name"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 			transformed["name"] = transformedName
 		}
 
@@ -4968,11 +4771,11 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTable
 	return req, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTableOptionsIdentifyingFieldsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTableOptionsIdentifyingFieldsName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -4983,7 +4786,7 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsLabel
 	return m, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActions(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -4996,14 +4799,14 @@ func expandDataLossPreventionJobTriggerInspectJobActions(v interface{}, d tpgres
 		transformedSaveFindings, err := expandDataLossPreventionJobTriggerInspectJobActionsSaveFindings(original["save_findings"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedSaveFindings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedSaveFindings); val.IsValid() && !isEmptyValue(val) {
 			transformed["saveFindings"] = transformedSaveFindings
 		}
 
 		transformedPubSub, err := expandDataLossPreventionJobTriggerInspectJobActionsPubSub(original["pub_sub"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedPubSub); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedPubSub); val.IsValid() && !isEmptyValue(val) {
 			transformed["pubSub"] = transformedPubSub
 		}
 
@@ -5031,15 +4834,8 @@ func expandDataLossPreventionJobTriggerInspectJobActions(v interface{}, d tpgres
 		transformedDeidentify, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentify(original["deidentify"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedDeidentify); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedDeidentify); val.IsValid() && !isEmptyValue(val) {
 			transformed["deidentify"] = transformedDeidentify
-		}
-
-		transformedPublishToStackdriver, err := expandDataLossPreventionJobTriggerInspectJobActionsPublishToStackdriver(original["publish_to_stackdriver"], d, config)
-		if err != nil {
-			return nil, err
-		} else {
-			transformed["publishToStackdriver"] = transformedPublishToStackdriver
 		}
 
 		req = append(req, transformed)
@@ -5047,7 +4843,7 @@ func expandDataLossPreventionJobTriggerInspectJobActions(v interface{}, d tpgres
 	return req, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindings(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5059,14 +4855,14 @@ func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindings(v interface
 	transformedOutputConfig, err := expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfig(original["output_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedOutputConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedOutputConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["outputConfig"] = transformedOutputConfig
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5078,21 +4874,21 @@ func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfig
 	transformedTable, err := expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTable(original["table"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTable); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTable); val.IsValid() && !isEmptyValue(val) {
 		transformed["table"] = transformedTable
 	}
 
 	transformedOutputSchema, err := expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigOutputSchema(original["output_schema"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedOutputSchema); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedOutputSchema); val.IsValid() && !isEmptyValue(val) {
 		transformed["outputSchema"] = transformedOutputSchema
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTable(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5104,44 +4900,44 @@ func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfig
 	transformedProjectId, err := expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTableProjectId(original["project_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !isEmptyValue(val) {
 		transformed["projectId"] = transformedProjectId
 	}
 
 	transformedDatasetId, err := expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTableDatasetId(original["dataset_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDatasetId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDatasetId); val.IsValid() && !isEmptyValue(val) {
 		transformed["datasetId"] = transformedDatasetId
 	}
 
 	transformedTableId, err := expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTableTableId(original["table_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTableId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTableId); val.IsValid() && !isEmptyValue(val) {
 		transformed["tableId"] = transformedTableId
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTableProjectId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTableProjectId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTableDatasetId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTableDatasetId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTableTableId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTableTableId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigOutputSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigOutputSchema(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsPubSub(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsPubSub(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5153,18 +4949,18 @@ func expandDataLossPreventionJobTriggerInspectJobActionsPubSub(v interface{}, d 
 	transformedTopic, err := expandDataLossPreventionJobTriggerInspectJobActionsPubSubTopic(original["topic"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTopic); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTopic); val.IsValid() && !isEmptyValue(val) {
 		transformed["topic"] = transformedTopic
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsPubSubTopic(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsPubSubTopic(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsPublishSummaryToCscc(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsPublishSummaryToCscc(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -5179,7 +4975,7 @@ func expandDataLossPreventionJobTriggerInspectJobActionsPublishSummaryToCscc(v i
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsPublishFindingsToCloudDataCatalog(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsPublishFindingsToCloudDataCatalog(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -5194,7 +4990,7 @@ func expandDataLossPreventionJobTriggerInspectJobActionsPublishFindingsToCloudDa
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsJobNotificationEmails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsJobNotificationEmails(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -5209,7 +5005,7 @@ func expandDataLossPreventionJobTriggerInspectJobActionsJobNotificationEmails(v 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentify(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentify(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5221,43 +5017,43 @@ func expandDataLossPreventionJobTriggerInspectJobActionsDeidentify(v interface{}
 	transformedCloudStorageOutput, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyCloudStorageOutput(original["cloud_storage_output"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCloudStorageOutput); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCloudStorageOutput); val.IsValid() && !isEmptyValue(val) {
 		transformed["cloudStorageOutput"] = transformedCloudStorageOutput
 	}
 
 	transformedFileTypesToTransform, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyFileTypesToTransform(original["file_types_to_transform"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedFileTypesToTransform); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedFileTypesToTransform); val.IsValid() && !isEmptyValue(val) {
 		transformed["fileTypesToTransform"] = transformedFileTypesToTransform
 	}
 
 	transformedTransformationConfig, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfig(original["transformation_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTransformationConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTransformationConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["transformationConfig"] = transformedTransformationConfig
 	}
 
 	transformedTransformationDetailsStorageConfig, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfig(original["transformation_details_storage_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTransformationDetailsStorageConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTransformationDetailsStorageConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["transformationDetailsStorageConfig"] = transformedTransformationDetailsStorageConfig
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyCloudStorageOutput(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyCloudStorageOutput(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyFileTypesToTransform(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyFileTypesToTransform(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5269,40 +5065,40 @@ func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformation
 	transformedDeidentifyTemplate, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfigDeidentifyTemplate(original["deidentify_template"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDeidentifyTemplate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDeidentifyTemplate); val.IsValid() && !isEmptyValue(val) {
 		transformed["deidentifyTemplate"] = transformedDeidentifyTemplate
 	}
 
 	transformedStructuredDeidentifyTemplate, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfigStructuredDeidentifyTemplate(original["structured_deidentify_template"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedStructuredDeidentifyTemplate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedStructuredDeidentifyTemplate); val.IsValid() && !isEmptyValue(val) {
 		transformed["structuredDeidentifyTemplate"] = transformedStructuredDeidentifyTemplate
 	}
 
 	transformedImageRedactTemplate, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfigImageRedactTemplate(original["image_redact_template"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedImageRedactTemplate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedImageRedactTemplate); val.IsValid() && !isEmptyValue(val) {
 		transformed["imageRedactTemplate"] = transformedImageRedactTemplate
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfigDeidentifyTemplate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfigDeidentifyTemplate(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfigStructuredDeidentifyTemplate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfigStructuredDeidentifyTemplate(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfigImageRedactTemplate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfigImageRedactTemplate(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5314,14 +5110,14 @@ func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformation
 	transformedTable, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTable(original["table"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTable); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTable); val.IsValid() && !isEmptyValue(val) {
 		transformed["table"] = transformedTable
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTable(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5333,52 +5129,37 @@ func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformation
 	transformedDatasetId, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTableDatasetId(original["dataset_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDatasetId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDatasetId); val.IsValid() && !isEmptyValue(val) {
 		transformed["datasetId"] = transformedDatasetId
 	}
 
 	transformedProjectId, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTableProjectId(original["project_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !isEmptyValue(val) {
 		transformed["projectId"] = transformedProjectId
 	}
 
 	transformedTableId, err := expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTableTableId(original["table_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTableId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTableId); val.IsValid() && !isEmptyValue(val) {
 		transformed["tableId"] = transformedTableId
 	}
 
 	return transformed, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTableDatasetId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTableDatasetId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTableProjectId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTableProjectId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTableTableId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTableTableId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func expandDataLossPreventionJobTriggerInspectJobActionsPublishToStackdriver(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 {
-		return nil, nil
-	}
-
-	if l[0] == nil {
-		transformed := make(map[string]interface{})
-		return transformed, nil
-	}
-	transformed := make(map[string]interface{})
-
-	return transformed, nil
 }
 
 func resourceDataLossPreventionJobTriggerEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {

@@ -1,11 +1,8 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"testing"
 
@@ -593,16 +590,16 @@ func TestDnsManagedZoneImport_parseImportId(t *testing.T) {
 	}
 
 	for tn, tc := range cases {
-		d := &tpgresource.ResourceDataMock{
+		d := &ResourceDataMock{
 			FieldsInSchema: make(map[string]interface{}),
+			id:             tc.ImportId,
 		}
-		d.SetId(tc.ImportId)
 		config := tc.Config
 		if config == nil {
 			config = &transport_tpg.Config{}
 		}
 		//
-		if err := tpgresource.ParseImportId(tc.IdRegexes, d, config); err == nil {
+		if err := ParseImportId(tc.IdRegexes, d, config); err == nil {
 			for k, expectedValue := range tc.ExpectedSchemaValues {
 				if v, ok := d.GetOk(k); ok {
 					if v != expectedValue {

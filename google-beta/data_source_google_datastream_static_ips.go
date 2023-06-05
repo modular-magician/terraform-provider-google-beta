@@ -1,11 +1,8 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -37,17 +34,17 @@ func DataSourceGoogleDatastreamStaticIps() *schema.Resource {
 
 func dataSourceGoogleDatastreamStaticIpsRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DatastreamBasePath}}projects/{{project}}/locations/{{location}}:fetchStaticIps")
+	url, err := ReplaceVars(d, config, "{{DatastreamBasePath}}projects/{{project}}/locations/{{location}}:fetchStaticIps")
 	if err != nil {
 		return err
 	}
@@ -62,7 +59,7 @@ func dataSourceGoogleDatastreamStaticIpsRead(d *schema.ResourceData, meta interf
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}:fetchStaticIps")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}:fetchStaticIps")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}

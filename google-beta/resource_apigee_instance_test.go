@@ -1,11 +1,7 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"testing"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 func TestUnitApigeeInstance_projectListDiffSuppress(t *testing.T) {
@@ -69,7 +65,7 @@ var apigeeInstanceDiffSuppressTestCases = []ApigeeInstanceDiffSuppressTestCase{
 }
 
 func (tc *ApigeeInstanceDiffSuppressTestCase) Test(t *testing.T) {
-	mockResourceDiff := &tpgresource.ResourceDiffMock{
+	mockResourceDiff := &ResourceDiffMock{
 		Before: tc.Before,
 		After:  tc.After,
 	}

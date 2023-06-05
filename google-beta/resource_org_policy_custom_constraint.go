@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -24,8 +21,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -112,7 +107,7 @@ func ResourceOrgPolicyCustomConstraint() *schema.Resource {
 
 func resourceOrgPolicyCustomConstraintCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -121,47 +116,47 @@ func resourceOrgPolicyCustomConstraintCreate(d *schema.ResourceData, meta interf
 	nameProp, err := expandOrgPolicyCustomConstraintName(d.Get("name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
 	displayNameProp, err := expandOrgPolicyCustomConstraintDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	descriptionProp, err := expandOrgPolicyCustomConstraintDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	conditionProp, err := expandOrgPolicyCustomConstraintCondition(d.Get("condition"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("condition"); !tpgresource.IsEmptyValue(reflect.ValueOf(conditionProp)) && (ok || !reflect.DeepEqual(v, conditionProp)) {
+	} else if v, ok := d.GetOkExists("condition"); !isEmptyValue(reflect.ValueOf(conditionProp)) && (ok || !reflect.DeepEqual(v, conditionProp)) {
 		obj["condition"] = conditionProp
 	}
 	actionTypeProp, err := expandOrgPolicyCustomConstraintActionType(d.Get("action_type"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("action_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(actionTypeProp)) && (ok || !reflect.DeepEqual(v, actionTypeProp)) {
+	} else if v, ok := d.GetOkExists("action_type"); !isEmptyValue(reflect.ValueOf(actionTypeProp)) && (ok || !reflect.DeepEqual(v, actionTypeProp)) {
 		obj["actionType"] = actionTypeProp
 	}
 	methodTypesProp, err := expandOrgPolicyCustomConstraintMethodTypes(d.Get("method_types"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("method_types"); !tpgresource.IsEmptyValue(reflect.ValueOf(methodTypesProp)) && (ok || !reflect.DeepEqual(v, methodTypesProp)) {
+	} else if v, ok := d.GetOkExists("method_types"); !isEmptyValue(reflect.ValueOf(methodTypesProp)) && (ok || !reflect.DeepEqual(v, methodTypesProp)) {
 		obj["methodTypes"] = methodTypesProp
 	}
 	resourceTypesProp, err := expandOrgPolicyCustomConstraintResourceTypes(d.Get("resource_types"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("resource_types"); !tpgresource.IsEmptyValue(reflect.ValueOf(resourceTypesProp)) && (ok || !reflect.DeepEqual(v, resourceTypesProp)) {
+	} else if v, ok := d.GetOkExists("resource_types"); !isEmptyValue(reflect.ValueOf(resourceTypesProp)) && (ok || !reflect.DeepEqual(v, resourceTypesProp)) {
 		obj["resourceTypes"] = resourceTypesProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{OrgPolicyBasePath}}{{parent}}/customConstraints")
+	url, err := ReplaceVars(d, config, "{{OrgPolicyBasePath}}{{parent}}/customConstraints")
 	if err != nil {
 		return err
 	}
@@ -170,25 +165,17 @@ func resourceOrgPolicyCustomConstraintCreate(d *schema.ResourceData, meta interf
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating CustomConstraint: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/customConstraints/{{name}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/customConstraints/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -201,12 +188,12 @@ func resourceOrgPolicyCustomConstraintCreate(d *schema.ResourceData, meta interf
 
 func resourceOrgPolicyCustomConstraintRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{OrgPolicyBasePath}}{{parent}}/customConstraints/{{name}}")
+	url, err := ReplaceVars(d, config, "{{OrgPolicyBasePath}}{{parent}}/customConstraints/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -214,17 +201,11 @@ func resourceOrgPolicyCustomConstraintRead(d *schema.ResourceData, meta interfac
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("OrgPolicyCustomConstraint %q", d.Id()))
 	}
@@ -259,7 +240,7 @@ func resourceOrgPolicyCustomConstraintRead(d *schema.ResourceData, meta interfac
 
 func resourceOrgPolicyCustomConstraintUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -270,31 +251,31 @@ func resourceOrgPolicyCustomConstraintUpdate(d *schema.ResourceData, meta interf
 	displayNameProp, err := expandOrgPolicyCustomConstraintDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	descriptionProp, err := expandOrgPolicyCustomConstraintDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	conditionProp, err := expandOrgPolicyCustomConstraintCondition(d.Get("condition"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("condition"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, conditionProp)) {
+	} else if v, ok := d.GetOkExists("condition"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, conditionProp)) {
 		obj["condition"] = conditionProp
 	}
 	actionTypeProp, err := expandOrgPolicyCustomConstraintActionType(d.Get("action_type"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("action_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, actionTypeProp)) {
+	} else if v, ok := d.GetOkExists("action_type"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, actionTypeProp)) {
 		obj["actionType"] = actionTypeProp
 	}
 	methodTypesProp, err := expandOrgPolicyCustomConstraintMethodTypes(d.Get("method_types"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("method_types"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, methodTypesProp)) {
+	} else if v, ok := d.GetOkExists("method_types"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, methodTypesProp)) {
 		obj["methodTypes"] = methodTypesProp
 	}
 
@@ -303,7 +284,7 @@ func resourceOrgPolicyCustomConstraintUpdate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{OrgPolicyBasePath}}{{parent}}/customConstraints/{{name}}")
+	url, err := ReplaceVars(d, config, "{{OrgPolicyBasePath}}{{parent}}/customConstraints/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -311,19 +292,11 @@ func resourceOrgPolicyCustomConstraintUpdate(d *schema.ResourceData, meta interf
 	log.Printf("[DEBUG] Updating CustomConstraint %q: %#v", d.Id(), obj)
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating CustomConstraint %q: %s", d.Id(), err)
@@ -336,14 +309,14 @@ func resourceOrgPolicyCustomConstraintUpdate(d *schema.ResourceData, meta interf
 
 func resourceOrgPolicyCustomConstraintDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{OrgPolicyBasePath}}{{parent}}/customConstraints/{{name}}")
+	url, err := ReplaceVars(d, config, "{{OrgPolicyBasePath}}{{parent}}/customConstraints/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -352,19 +325,11 @@ func resourceOrgPolicyCustomConstraintDelete(d *schema.ResourceData, meta interf
 	log.Printf("[DEBUG] Deleting CustomConstraint %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "CustomConstraint")
 	}
@@ -375,14 +340,14 @@ func resourceOrgPolicyCustomConstraintDelete(d *schema.ResourceData, meta interf
 
 func resourceOrgPolicyCustomConstraintImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"(?P<parent>.+)/customConstraints/(?P<name>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/customConstraints/{{name}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/customConstraints/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -395,7 +360,7 @@ func flattenOrgPolicyCustomConstraintName(v interface{}, d *schema.ResourceData,
 	if v == nil {
 		return v
 	}
-	return tpgresource.NameFromSelfLinkStateFunc(v)
+	return NameFromSelfLinkStateFunc(v)
 }
 
 func flattenOrgPolicyCustomConstraintDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -426,38 +391,38 @@ func flattenOrgPolicyCustomConstraintUpdateTime(v interface{}, d *schema.Resourc
 	return v
 }
 
-func expandOrgPolicyCustomConstraintName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return tpgresource.ReplaceVars(d, config, "{{parent}}/customConstraints/{{name}}")
+func expandOrgPolicyCustomConstraintName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return ReplaceVars(d, config, "{{parent}}/customConstraints/{{name}}")
 }
 
-func expandOrgPolicyCustomConstraintDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOrgPolicyCustomConstraintDisplayName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOrgPolicyCustomConstraintDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOrgPolicyCustomConstraintDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOrgPolicyCustomConstraintCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOrgPolicyCustomConstraintCondition(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOrgPolicyCustomConstraintActionType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOrgPolicyCustomConstraintActionType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOrgPolicyCustomConstraintMethodTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOrgPolicyCustomConstraintMethodTypes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOrgPolicyCustomConstraintResourceTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOrgPolicyCustomConstraintResourceTypes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func resourceOrgPolicyCustomConstraintUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	// need to send resource_types in all PATCH requests
 	resourceTypesProp := d.Get("resource_types")
-	if v, ok := d.GetOkExists("resource_types"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, resourceTypesProp)) {
+	if v, ok := d.GetOkExists("resource_types"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, resourceTypesProp)) {
 		obj["resourceTypes"] = resourceTypesProp
 	}
 

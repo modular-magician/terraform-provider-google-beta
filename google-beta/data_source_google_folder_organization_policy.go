@@ -1,20 +1,17 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 func DataSourceGoogleFolderOrganizationPolicy() *schema.Resource {
 	// Generate datasource schema from resource
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceGoogleFolderOrganizationPolicy().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceGoogleFolderOrganizationPolicy().Schema)
 
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "folder")
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "constraint")
+	addRequiredFieldsToSchema(dsSchema, "folder")
+	addRequiredFieldsToSchema(dsSchema, "constraint")
 
 	return &schema.Resource{
 		Read:   datasourceGoogleFolderOrganizationPolicyRead,

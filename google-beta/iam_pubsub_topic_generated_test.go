@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -101,7 +98,6 @@ func TestAccPubsubTopicIamPolicyGenerated(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPubsubTopicIamPolicy_basicGenerated(context),
-				Check:  resource.TestCheckResourceAttrSet("data.google_pubsub_topic_iam_policy.foo", "policy_data"),
 			},
 			{
 				ResourceName:      "google_pubsub_topic_iam_policy.foo",
@@ -166,14 +162,6 @@ resource "google_pubsub_topic_iam_policy" "foo" {
   project = google_pubsub_topic.example.project
   topic = google_pubsub_topic.example.name
   policy_data = data.google_iam_policy.foo.policy_data
-}
-
-data "google_pubsub_topic_iam_policy" "foo" {
-  project = google_pubsub_topic.example.project
-  topic = google_pubsub_topic.example.name
-  depends_on = [
-    google_pubsub_topic_iam_policy.foo
-  ]
 }
 `, context)
 }

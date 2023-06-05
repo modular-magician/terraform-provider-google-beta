@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -212,7 +210,7 @@ func TestComputeRegionInstanceTemplate_scratchDiskSizeCustomizeDiff(t *testing.T
 	}
 
 	for tn, tc := range cases {
-		d := &tpgresource.ResourceDiffMock{
+		d := &ResourceDiffMock{
 			After: map[string]interface{}{
 				"disk.#":              1,
 				"disk.0.type":         tc.Typee,
@@ -1227,8 +1225,8 @@ func TestAccComputeRegionInstanceTemplate_sourceSnapshotEncryptionKey(t *testing
 	kmsKey := BootstrapKMSKeyInLocation(t, "us-central1")
 
 	context := map[string]interface{}{
-		"kms_ring_name": tpgresource.GetResourceNameFromSelfLink(kmsKey.KeyRing.Name),
-		"kms_key_name":  tpgresource.GetResourceNameFromSelfLink(kmsKey.CryptoKey.Name),
+		"kms_ring_name": GetResourceNameFromSelfLink(kmsKey.KeyRing.Name),
+		"kms_key_name":  GetResourceNameFromSelfLink(kmsKey.CryptoKey.Name),
 		"random_suffix": RandString(t, 10),
 	}
 
@@ -1261,8 +1259,8 @@ func TestAccComputeRegionInstanceTemplate_sourceImageEncryptionKey(t *testing.T)
 	kmsKey := BootstrapKMSKeyInLocation(t, "us-central1")
 
 	context := map[string]interface{}{
-		"kms_ring_name": tpgresource.GetResourceNameFromSelfLink(kmsKey.KeyRing.Name),
-		"kms_key_name":  tpgresource.GetResourceNameFromSelfLink(kmsKey.CryptoKey.Name),
+		"kms_ring_name": GetResourceNameFromSelfLink(kmsKey.KeyRing.Name),
+		"kms_key_name":  GetResourceNameFromSelfLink(kmsKey.CryptoKey.Name),
 		"random_suffix": RandString(t, 10),
 	}
 
@@ -1300,7 +1298,7 @@ func testAccCheckComputeRegionInstanceTemplateDestroyProducer(t *testing.T) func
 			splits := strings.Split(rs.Primary.ID, "/")
 			name := splits[len(splits)-1]
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceTemplates/"+name)
+			url, err := acctest.ReplaceVarsForTest(config, rs, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceTemplates/"+name)
 			if err != nil {
 				return err
 			}
@@ -1311,13 +1309,7 @@ func testAccCheckComputeRegionInstanceTemplateDestroyProducer(t *testing.T) func
 				billingProject = config.BillingProject
 			}
 
-			instanceTemplate, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "GET",
-				Project:   billingProject,
-				RawURL:    url,
-				UserAgent: config.UserAgent,
-			})
+			instanceTemplate, err := transport_tpg.SendRequest(config, "GET", billingProject, url, config.UserAgent, nil)
 			_ = instanceTemplate
 			if err == nil {
 				return fmt.Errorf("Instance template still exists")
@@ -1352,7 +1344,7 @@ func testAccCheckComputeRegionInstanceTemplateExistsInProject(t *testing.T, n, p
 		splits := strings.Split(rs.Primary.ID, "/")
 		templateName := splits[len(splits)-1]
 
-		url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceTemplates/"+templateName)
+		url, err := acctest.ReplaceVarsForTest(config, rs, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceTemplates/"+templateName)
 
 		billingProject := ""
 
@@ -1360,13 +1352,7 @@ func testAccCheckComputeRegionInstanceTemplateExistsInProject(t *testing.T, n, p
 			billingProject = config.BillingProject
 		}
 
-		found, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "GET",
-			Project:   billingProject,
-			RawURL:    url,
-			UserAgent: config.UserAgent,
-		})
+		found, err := transport_tpg.SendRequest(config, "GET", billingProject, url, config.UserAgent, nil)
 		if err != nil {
 			return err
 		}

@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -82,7 +79,6 @@ func TestAccServiceDirectoryNamespaceIamPolicyGenerated(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccServiceDirectoryNamespaceIamPolicy_basicGenerated(context),
-				Check:  resource.TestCheckResourceAttrSet("data.google_service_directory_namespace_iam_policy.foo", "policy_data"),
 			},
 			{
 				Config: testAccServiceDirectoryNamespaceIamPolicy_emptyBinding(context),
@@ -138,14 +134,6 @@ resource "google_service_directory_namespace_iam_policy" "foo" {
   provider = google-beta
   name = google_service_directory_namespace.example.name
   policy_data = data.google_iam_policy.foo.policy_data
-}
-
-data "google_service_directory_namespace_iam_policy" "foo" {
-  provider = google-beta
-  name = google_service_directory_namespace.example.name
-  depends_on = [
-    google_service_directory_namespace_iam_policy.foo
-  ]
 }
 `, context)
 }

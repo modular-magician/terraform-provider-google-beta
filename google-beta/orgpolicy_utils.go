@@ -1,12 +1,9 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -14,7 +11,7 @@ import (
 // to represent the type of parent (e.g. projects/{project_id}).
 func resourceOrgPolicyPolicyCustomImport(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"^(?P<parent>[^/]+/?[^/]*)/policies/(?P<name>[^/]+)",
 		"^(?P<parent>[^/]+/?[^/]*)/(?P<name>[^/]+)",
 	}, d, config); err != nil {
@@ -22,7 +19,7 @@ func resourceOrgPolicyPolicyCustomImport(d *schema.ResourceData, meta interface{
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVarsRecursive(d, config, "{{parent}}/policies/{{name}}", false, 0)
+	id, err := replaceVarsRecursive(d, config, "{{parent}}/policies/{{name}}", false, 0)
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}

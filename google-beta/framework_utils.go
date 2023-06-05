@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -13,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -63,7 +60,7 @@ func generateFrameworkUserAgentString(metaData *ProviderMetaModel, currUserAgent
 	return currUserAgent
 }
 
-// GetProject reads the "project" field from the given resource and falls
+// getProject reads the "project" field from the given resource and falls
 // back to the provider's value if not given. If the provider's value is not
 // given, an error is returned.
 func getProjectFramework(rVal, pVal types.String, diags *diag.Diagnostics) types.String {
@@ -97,22 +94,22 @@ func handleDatasourceNotFoundError(ctx context.Context, err error, state *tfsdk.
 
 // Parses a project field with the following formats:
 // - projects/{my_projects}/{resource_type}/{resource_name}
-func parseProjectFieldValueFramework(resourceType, fieldValue, projectSchemaField string, rVal, pVal types.String, isEmptyValid bool, diags *diag.Diagnostics) *tpgresource.ProjectFieldValue {
+func parseProjectFieldValueFramework(resourceType, fieldValue, projectSchemaField string, rVal, pVal types.String, isEmptyValid bool, diags *diag.Diagnostics) *ProjectFieldValue {
 	if len(fieldValue) == 0 {
 		if isEmptyValid {
-			return &tpgresource.ProjectFieldValue{ResourceType: resourceType}
+			return &ProjectFieldValue{resourceType: resourceType}
 		}
 		diags.AddError("field can not be empty", fmt.Sprintf("The project field for resource %s cannot be empty", resourceType))
 		return nil
 	}
 
-	r := regexp.MustCompile(fmt.Sprintf(tpgresource.ProjectBasePattern, resourceType))
+	r := regexp.MustCompile(fmt.Sprintf(projectBasePattern, resourceType))
 	if parts := r.FindStringSubmatch(fieldValue); parts != nil {
-		return &tpgresource.ProjectFieldValue{
+		return &ProjectFieldValue{
 			Project: parts[1],
 			Name:    parts[2],
 
-			ResourceType: resourceType,
+			resourceType: resourceType,
 		}
 	}
 
@@ -121,10 +118,10 @@ func parseProjectFieldValueFramework(resourceType, fieldValue, projectSchemaFiel
 		return nil
 	}
 
-	return &tpgresource.ProjectFieldValue{
+	return &ProjectFieldValue{
 		Project: project.ValueString(),
-		Name:    tpgresource.GetResourceNameFromSelfLink(fieldValue),
+		Name:    GetResourceNameFromSelfLink(fieldValue),
 
-		ResourceType: resourceType,
+		resourceType: resourceType,
 	}
 }

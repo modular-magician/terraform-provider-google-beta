@@ -24,22 +24,30 @@ description: |-
 
 For more information, see:
 * [Get started with Firebase Security Rules](https://firebase.google.com/docs/rules/get-started)
-## Example Usage - firestore_release
-Creates a Firebase Rules Release to Cloud Firestore
+## Example Usage - basic_release
+Creates a basic Firebase Rules Release
 ```hcl
 resource "google_firebaserules_release" "primary" {
-  name         = "cloud.firestore"
-  ruleset_name = "projects/my-project-name/rulesets/${google_firebaserules_ruleset.firestore.name}"
+  name         = "release"
+  ruleset_name = "projects/my-project-name/rulesets/${google_firebaserules_ruleset.basic.name}"
   project      = "my-project-name"
-
-  lifecycle {
-    replace_triggered_by = [
-      google_firebaserules_ruleset.firestore
-    ]
-  }
 }
 
-resource "google_firebaserules_ruleset" "firestore" {
+resource "google_firebaserules_ruleset" "basic" {
+  source {
+    files {
+      content     = "service cloud.firestore {match /databases/{database}/documents { match /{document=**} { allow read, write: if false; } } }"
+      name        = "firestore.rules"
+      fingerprint = ""
+    }
+
+    language = ""
+  }
+
+  project = "my-project-name"
+}
+
+resource "google_firebaserules_ruleset" "minimal" {
   source {
     files {
       content = "service cloud.firestore {match /databases/{database}/documents { match /{document=**} { allow read, write: if false; } } }"
@@ -50,53 +58,28 @@ resource "google_firebaserules_ruleset" "firestore" {
   project = "my-project-name"
 }
 
+
 ```
-## Example Usage - storage_release
-Creates a Firebase Rules Release for a Storage bucket
+## Example Usage - minimal_release
+Creates a minimal Firebase Rules Release
 ```hcl
 resource "google_firebaserules_release" "primary" {
-  provider     = google-beta
-  name         = "firebase.storage/${google_storage_bucket.bucket.name}"
-  ruleset_name = "projects/my-project-name/rulesets/${google_firebaserules_ruleset.storage.name}"
+  name         = "prod/release"
+  ruleset_name = "projects/my-project-name/rulesets/${google_firebaserules_ruleset.minimal.name}"
   project      = "my-project-name"
-
-  lifecycle {
-    replace_triggered_by = [
-      google_firebaserules_ruleset.storage
-    ]
-  }
 }
 
-# Provision a non-default Cloud Storage bucket.
-resource "google_storage_bucket" "bucket" {
-  provider = google-beta
-  project  = "my-project-name"
-  name     = "bucket"
-  location = "us-west1"
-}
-
-# Make the Storage bucket accessible for Firebase SDKs, authentication, and Firebase Security Rules.
-resource "google_firebase_storage_bucket" "bucket" {
-  provider  = google-beta
-  project   = "my-project-name"
-  bucket_id = google_storage_bucket.bucket.name
-}
-
-# Create a ruleset of Firebase Security Rules from a local file.
-resource "google_firebaserules_ruleset" "storage" {
-  provider = google-beta
-  project  = "my-project-name"
+resource "google_firebaserules_ruleset" "minimal" {
   source {
     files {
-      name    = "storage.rules"
-      content = "service firebase.storage {match /b/{bucket}/o {match /{allPaths=**} {allow read, write: if request.auth != null;}}}"
+      content = "service cloud.firestore {match /databases/{database}/documents { match /{document=**} { allow read, write: if false; } } }"
+      name    = "firestore.rules"
     }
   }
 
-  depends_on = [
-    google_firebase_storage_bucket.bucket
-  ]
+  project = "my-project-name"
 }
+
 
 ```
 

@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,8 +5,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 
@@ -36,12 +32,12 @@ var IamSpannerInstanceSchema = map[string]*schema.Schema{
 type SpannerInstanceIamUpdater struct {
 	project  string
 	instance string
-	d        tpgresource.TerraformResourceData
+	d        TerraformResourceData
 	Config   *transport_tpg.Config
 }
 
-func NewSpannerInstanceIamUpdater(d tpgresource.TerraformResourceData, config *transport_tpg.Config) (tpgiamresource.ResourceIamUpdater, error) {
-	project, err := tpgresource.GetProject(d, config)
+func NewSpannerInstanceIamUpdater(d TerraformResourceData, config *transport_tpg.Config) (ResourceIamUpdater, error) {
+	project, err := getProject(d, config)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +68,7 @@ func SpannerInstanceIdParseFunc(d *schema.ResourceData, config *transport_tpg.Co
 }
 
 func (u *SpannerInstanceIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +77,7 @@ func (u *SpannerInstanceIamUpdater) GetResourceIamPolicy() (*cloudresourcemanage
 		Project:  u.project,
 		Instance: u.instance,
 	}.instanceUri(), &spanner.GetIamPolicyRequest{
-		Options: &spanner.GetPolicyOptions{RequestedPolicyVersion: tpgiamresource.IamPolicyVersion},
+		Options: &spanner.GetPolicyOptions{RequestedPolicyVersion: IamPolicyVersion},
 	}).Do()
 
 	if err != nil {
@@ -94,7 +90,7 @@ func (u *SpannerInstanceIamUpdater) GetResourceIamPolicy() (*cloudresourcemanage
 		return nil, errwrap.Wrapf(fmt.Sprintf("Invalid IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
 
-	cloudResourcePolicy.Version = tpgiamresource.IamPolicyVersion
+	cloudResourcePolicy.Version = IamPolicyVersion
 
 	return cloudResourcePolicy, nil
 }
@@ -106,9 +102,9 @@ func (u *SpannerInstanceIamUpdater) SetResourceIamPolicy(policy *cloudresourcema
 		return errwrap.Wrapf(fmt.Sprintf("Invalid IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
 
-	spannerPolicy.Version = tpgiamresource.IamPolicyVersion
+	spannerPolicy.Version = IamPolicyVersion
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return err
 	}

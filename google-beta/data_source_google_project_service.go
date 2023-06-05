@@ -1,20 +1,17 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func DataSourceGoogleProjectService() *schema.Resource {
 
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceGoogleProjectService().Schema)
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "service")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceGoogleProjectService().Schema)
+	addRequiredFieldsToSchema(dsSchema, "service")
+	addOptionalFieldsToSchema(dsSchema, "project")
 
 	return &schema.Resource{
 		Read:   dataSourceGoogleProjectServiceRead,
@@ -25,7 +22,7 @@ func DataSourceGoogleProjectService() *schema.Resource {
 func dataSourceGoogleProjectServiceRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 
-	id, err := tpgresource.ReplaceVars(d, config, "{{project}}/{{service}}")
+	id, err := ReplaceVars(d, config, "{{project}}/{{service}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}

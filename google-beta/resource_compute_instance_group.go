@@ -1,15 +1,11 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
+	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"log"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
-	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"google.golang.org/api/googleapi"
 
@@ -65,7 +61,7 @@ func ResourceComputeInstanceGroup() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Set:         tpgresource.SelfLinkRelativePathHash,
+				Set:         selfLinkRelativePathHash,
 				Description: `The list of instances in the group, in self_link format. When adding instances they must all be in the same network and zone as the instance group.`,
 			},
 
@@ -94,7 +90,7 @@ func ResourceComputeInstanceGroup() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				Computed:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
 				ForceNew:         true,
 				Description:      `The URL of the network the instance group is in. If this is different from the network where the instances are in, the creation fails. Defaults to the network where the instances are in (if neither network nor instances is specified, this field will be blank).`,
 			},
@@ -143,17 +139,17 @@ func validInstanceURLs(instanceUrls []string) bool {
 
 func resourceComputeInstanceGroupCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	zone, err := tpgresource.GetZone(d, config)
+	zone, err := getZone(d, config)
 	if err != nil {
 		return err
 	}
@@ -195,14 +191,14 @@ func resourceComputeInstanceGroupCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	if v, ok := d.GetOk("instances"); ok {
-		tmpUrls := tpgresource.ConvertStringArr(v.(*schema.Set).List())
+		tmpUrls := convertStringArr(v.(*schema.Set).List())
 
 		var instanceUrls []string
 		for _, v := range tmpUrls {
 			if strings.HasPrefix(v, "https://") {
 				instanceUrls = append(instanceUrls, v)
 			} else {
-				url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}"+v)
+				url, err := ReplaceVars(d, config, "{{ComputeBasePath}}"+v)
 				if err != nil {
 					return err
 				}
@@ -233,17 +229,17 @@ func resourceComputeInstanceGroupCreate(d *schema.ResourceData, meta interface{}
 
 func resourceComputeInstanceGroupRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	zone, err := tpgresource.GetZone(d, config)
+	zone, err := getZone(d, config)
 	if err != nil {
 		return err
 	}
@@ -310,17 +306,17 @@ func resourceComputeInstanceGroupRead(d *schema.ResourceData, meta interface{}) 
 }
 func resourceComputeInstanceGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	zone, err := tpgresource.GetZone(d, config)
+	zone, err := getZone(d, config)
 	if err != nil {
 		return err
 	}
@@ -332,8 +328,8 @@ func resourceComputeInstanceGroupUpdate(d *schema.ResourceData, meta interface{}
 		// to-do check for no instances
 		from_, to_ := d.GetChange("instances")
 
-		from := tpgresource.ConvertStringArr(from_.(*schema.Set).List())
-		to := tpgresource.ConvertStringArr(to_.(*schema.Set).List())
+		from := convertStringArr(from_.(*schema.Set).List())
+		to := convertStringArr(to_.(*schema.Set).List())
 
 		if !validInstanceURLs(from) {
 			return fmt.Errorf("Error invalid instance URLs: %v", from)
@@ -342,7 +338,7 @@ func resourceComputeInstanceGroupUpdate(d *schema.ResourceData, meta interface{}
 			return fmt.Errorf("Error invalid instance URLs: %v", to)
 		}
 
-		add, remove := tpgresource.CalcAddRemove(from, to)
+		add, remove := calcAddRemove(from, to)
 
 		if len(remove) > 0 {
 			removeReq := &compute.InstanceGroupsRemoveInstancesRequest{
@@ -415,17 +411,17 @@ func resourceComputeInstanceGroupUpdate(d *schema.ResourceData, meta interface{}
 
 func resourceComputeInstanceGroupDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	zone, err := tpgresource.GetZone(d, config)
+	zone, err := getZone(d, config)
 	if err != nil {
 		return err
 	}
@@ -446,14 +442,14 @@ func resourceComputeInstanceGroupDelete(d *schema.ResourceData, meta interface{}
 
 func resourceComputeInstanceGroupImportState(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/instanceGroups/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<name>[^/]+)",
 		"(?P<zone>[^/]+)/(?P<name>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instanceGroups/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instanceGroups/{{name}}")
 	if err != nil {
 		return nil, err
 	}

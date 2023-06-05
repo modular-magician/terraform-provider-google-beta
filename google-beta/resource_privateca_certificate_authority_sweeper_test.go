@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -10,7 +8,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -39,25 +36,19 @@ func testSweepCertificateAuthority(region string) error {
 	}
 
 	// Setup variables to replace in list template
-	d := &tpgresource.ResourceDataMock{
+	d := &ResourceDataMock{
 		FieldsInSchema: map[string]interface{}{
 			"project":  config.Project,
 			"location": region,
 		},
 	}
 
-	caPoolsUrl, err := tpgresource.ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools")
+	caPoolsUrl, err := ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools")
 	if err != nil {
 		return err
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   config.Project,
-		RawURL:    caPoolsUrl,
-		UserAgent: config.UserAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", config.Project, caPoolsUrl, config.UserAgent, nil)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] Error in response from request %s: %s", caPoolsUrl, err)
 		return nil
@@ -81,13 +72,7 @@ func testSweepCertificateAuthority(region string) error {
 
 		caListUrl := config.PrivatecaBasePath + poolName + "/certificateAuthorities"
 
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "GET",
-			Project:   config.Project,
-			RawURL:    caListUrl,
-			UserAgent: config.UserAgent,
-		})
+		res, err := transport_tpg.SendRequest(config, "GET", config.Project, caListUrl, config.UserAgent, nil)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] Error in response from request %s: %s", caPoolsUrl, err)
 			return nil
@@ -118,13 +103,7 @@ func testSweepCertificateAuthority(region string) error {
 
 			if obj["state"] == "ENABLED" {
 				disableUrl := fmt.Sprintf("%s%s:disable", config.PrivatecaBasePath, caName)
-				_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-					Config:    config,
-					Method:    "POST",
-					Project:   config.Project,
-					RawURL:    disableUrl,
-					UserAgent: config.UserAgent,
-				})
+				_, err = transport_tpg.SendRequest(config, "POST", config.Project, disableUrl, config.UserAgent, nil)
 				if err != nil {
 					log.Printf("[INFO][SWEEPER_LOG] Error disabling for url %s : %s", disableUrl, err)
 				} else {
@@ -133,13 +112,7 @@ func testSweepCertificateAuthority(region string) error {
 			}
 
 			deleteUrl := config.PrivatecaBasePath + caName
-			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "DELETE",
-				Project:   config.Project,
-				RawURL:    deleteUrl,
-				UserAgent: config.UserAgent,
-			})
+			_, err = transport_tpg.SendRequest(config, "DELETE", config.Project, deleteUrl, config.UserAgent, nil)
 			if err != nil {
 				log.Printf("[INFO][SWEEPER_LOG] Error deleting for url %s : %s", deleteUrl, err)
 			} else {

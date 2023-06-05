@@ -1,21 +1,18 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func DataSourceGoogleComputeInstance() *schema.Resource {
 	// Generate datasource schema from resource
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceComputeInstance().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceComputeInstance().Schema)
 
 	// Set 'Optional' schema elements
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "name", "self_link", "project", "zone")
+	addOptionalFieldsToSchema(dsSchema, "name", "self_link", "project", "zone")
 
 	return &schema.Resource{
 		Read:   dataSourceGoogleComputeInstanceRead,
@@ -25,12 +22,12 @@ func DataSourceGoogleComputeInstance() *schema.Resource {
 
 func dataSourceGoogleComputeInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, zone, name, err := tpgresource.GetZonalResourcePropertiesFromSelfLinkOrSchema(d, config)
+	project, zone, name, err := GetZonalResourcePropertiesFromSelfLinkOrSchema(d, config)
 	if err != nil {
 		return err
 	}
@@ -48,7 +45,7 @@ func dataSourceGoogleComputeInstanceRead(d *schema.ResourceData, meta interface{
 	if err := d.Set("can_ip_forward", instance.CanIpForward); err != nil {
 		return fmt.Errorf("Error setting can_ip_forward: %s", err)
 	}
-	if err := d.Set("machine_type", tpgresource.GetResourceNameFromSelfLink(instance.MachineType)); err != nil {
+	if err := d.Set("machine_type", GetResourceNameFromSelfLink(instance.MachineType)); err != nil {
 		return fmt.Errorf("Error setting machine_type: %s", err)
 	}
 
@@ -88,7 +85,7 @@ func dataSourceGoogleComputeInstanceRead(d *schema.ResourceData, meta interface{
 		if err := d.Set("tags_fingerprint", instance.Tags.Fingerprint); err != nil {
 			return fmt.Errorf("Error setting tags_fingerprint: %s", err)
 		}
-		if err := d.Set("tags", tpgresource.ConvertStringArrToInterface(instance.Tags.Items)); err != nil {
+		if err := d.Set("tags", convertStringArrToInterface(instance.Tags.Items)); err != nil {
 			return fmt.Errorf("Error setting tags: %s", err)
 		}
 	}
@@ -115,7 +112,7 @@ func dataSourceGoogleComputeInstanceRead(d *schema.ResourceData, meta interface{
 			scratchDisks = append(scratchDisks, flattenScratchDisk(disk))
 		} else {
 			di := map[string]interface{}{
-				"source":      tpgresource.ConvertSelfLinkToV1(disk.Source),
+				"source":      ConvertSelfLinkToV1(disk.Source),
 				"device_name": disk.DeviceName,
 				"mode":        disk.Mode,
 			}
@@ -177,7 +174,7 @@ func dataSourceGoogleComputeInstanceRead(d *schema.ResourceData, meta interface{
 	if err := d.Set("deletion_protection", instance.DeletionProtection); err != nil {
 		return fmt.Errorf("Error setting deletion_protection: %s", err)
 	}
-	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(instance.SelfLink)); err != nil {
+	if err := d.Set("self_link", ConvertSelfLinkToV1(instance.SelfLink)); err != nil {
 		return fmt.Errorf("Error setting self_link: %s", err)
 	}
 	if err := d.Set("instance_id", fmt.Sprintf("%d", instance.Id)); err != nil {
@@ -186,7 +183,7 @@ func dataSourceGoogleComputeInstanceRead(d *schema.ResourceData, meta interface{
 	if err := d.Set("project", project); err != nil {
 		return fmt.Errorf("Error setting project: %s", err)
 	}
-	if err := d.Set("zone", tpgresource.GetResourceNameFromSelfLink(instance.Zone)); err != nil {
+	if err := d.Set("zone", GetResourceNameFromSelfLink(instance.Zone)); err != nil {
 		return fmt.Errorf("Error setting zone: %s", err)
 	}
 	if err := d.Set("current_status", instance.Status); err != nil {
@@ -195,6 +192,6 @@ func dataSourceGoogleComputeInstanceRead(d *schema.ResourceData, meta interface{
 	if err := d.Set("name", instance.Name); err != nil {
 		return fmt.Errorf("Error setting name: %s", err)
 	}
-	d.SetId(fmt.Sprintf("projects/%s/zones/%s/instances/%s", project, tpgresource.GetResourceNameFromSelfLink(instance.Zone), instance.Name))
+	d.SetId(fmt.Sprintf("projects/%s/zones/%s/instances/%s", project, GetResourceNameFromSelfLink(instance.Zone), instance.Name))
 	return nil
 }

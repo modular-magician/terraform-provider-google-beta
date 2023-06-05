@@ -1,21 +1,17 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
+	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"io/ioutil"
 	"regexp"
 	"testing"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
-	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 )
 
 func TestProvider(t *testing.T) {
@@ -30,13 +26,6 @@ func TestProvider_impl(t *testing.T) {
 
 func TestProvider_noDuplicatesInResourceMap(t *testing.T) {
 	_, err := ResourceMapWithErrors()
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func TestProvider_noDuplicatesInDatasourceMap(t *testing.T) {
-	_, err := DatasourceMapWithErrors()
 	if err != nil {
 		t.Error(err)
 	}
@@ -112,32 +101,44 @@ func TestProvider_validateCredentials(t *testing.T) {
 	}
 }
 
-// Used to create populated schema.ResourceData structs in tests.
-// Pass in a schema and a config map containing the fields and values you wish to set
-// The returned schema.ResourceData can represent a configured resource, data source or provider.
-func setupTestResourceDataFromConfigMap(t *testing.T, s map[string]*schema.Schema, configValues map[string]interface{}) *schema.ResourceData {
-	return tpgresource.SetupTestResourceDataFromConfigMap(t, s, configValues)
-}
+// Used for testing the `providerConfigure` function
+func setupSDKProviderConfigTest(t *testing.T, configValues map[string]interface{},
+	envValues map[string]string) (context.Context, *schema.Provider, *schema.ResourceData) {
 
-// unsetProviderConfigEnvs unsets any ENVs in the test environment that
-// configure the provider.
-// The testing package will restore the original values after the test
-func unsetTestProviderConfigEnvs(t *testing.T) {
-	envs := providerConfigEnvNames()
+	ctx := context.Background()
+	p := Provider()
+
+	// Create empty schema.ResourceData using the SDK Provider schema
+	emptyConfigMap := map[string]interface{}{}
+	d := schema.TestResourceDataRaw(t, p.Schema, emptyConfigMap)
+
+	// Load Terraform config data
+	if len(configValues) > 0 {
+		for k, v := range configValues {
+			err := d.Set(k, v)
+			if err != nil {
+				t.Fatalf("error during test setup: %v", err)
+			}
+		}
+	}
+
+	// Unset any ENVs in the test environment here
+	// The testing package restores the original values afterwards
+	envs := acctest.ProviderConfigEnvNames()
 	if len(envs) > 0 {
 		for _, k := range envs {
 			t.Setenv(k, "")
 		}
 	}
-}
 
-func setupTestEnvs(t *testing.T, envValues map[string]string) {
-	// Set ENVs
+	// Set ENVs for the test case
 	if len(envValues) > 0 {
 		for k, v := range envValues {
 			t.Setenv(k, v)
 		}
 	}
+
+	return ctx, p, d
 }
 
 // Returns a fake credentials JSON string with the client_email set to a test-specific value
@@ -257,11 +258,7 @@ func TestProvider_providerConfigure_credentials(t *testing.T) {
 		t.Run(tn, func(t *testing.T) {
 
 			// Arrange
-			ctx := context.Background()
-			unsetTestProviderConfigEnvs(t)
-			setupTestEnvs(t, tc.EnvVariables)
-			p := Provider()
-			d := tpgresource.SetupTestResourceDataFromConfigMap(t, p.Schema, tc.ConfigValues)
+			ctx, p, d := setupSDKProviderConfigTest(t, tc.ConfigValues, tc.EnvVariables)
 
 			// Act
 			c, diags := providerConfigure(ctx, d, p)
@@ -353,11 +350,7 @@ func TestProvider_providerConfigure_accessToken(t *testing.T) {
 		t.Run(tn, func(t *testing.T) {
 
 			// Arrange
-			ctx := context.Background()
-			unsetTestProviderConfigEnvs(t)
-			setupTestEnvs(t, tc.EnvVariables)
-			p := Provider()
-			d := tpgresource.SetupTestResourceDataFromConfigMap(t, p.Schema, tc.ConfigValues)
+			ctx, p, d := setupSDKProviderConfigTest(t, tc.ConfigValues, tc.EnvVariables)
 
 			// Act
 			c, diags := providerConfigure(ctx, d, p)
@@ -438,11 +431,7 @@ func TestProvider_providerConfigure_impersonateServiceAccount(t *testing.T) {
 		t.Run(tn, func(t *testing.T) {
 
 			// Arrange
-			ctx := context.Background()
-			unsetTestProviderConfigEnvs(t)
-			setupTestEnvs(t, tc.EnvVariables)
-			p := Provider()
-			d := tpgresource.SetupTestResourceDataFromConfigMap(t, p.Schema, tc.ConfigValues)
+			ctx, p, d := setupSDKProviderConfigTest(t, tc.ConfigValues, tc.EnvVariables)
 
 			// Act
 			c, diags := providerConfigure(ctx, d, p)
@@ -512,11 +501,7 @@ func TestProvider_providerConfigure_impersonateServiceAccountDelegates(t *testin
 		t.Run(tn, func(t *testing.T) {
 
 			// Arrange
-			ctx := context.Background()
-			unsetTestProviderConfigEnvs(t)
-			setupTestEnvs(t, tc.EnvVariables)
-			p := Provider()
-			d := tpgresource.SetupTestResourceDataFromConfigMap(t, p.Schema, tc.ConfigValues)
+			ctx, p, d := setupSDKProviderConfigTest(t, tc.ConfigValues, tc.EnvVariables)
 
 			// Act
 			c, diags := providerConfigure(ctx, d, p)
@@ -655,11 +640,7 @@ func TestProvider_providerConfigure_project(t *testing.T) {
 		t.Run(tn, func(t *testing.T) {
 
 			// Arrange
-			ctx := context.Background()
-			unsetTestProviderConfigEnvs(t)
-			setupTestEnvs(t, tc.EnvVariables)
-			p := Provider()
-			d := tpgresource.SetupTestResourceDataFromConfigMap(t, p.Schema, tc.ConfigValues)
+			ctx, p, d := setupSDKProviderConfigTest(t, tc.ConfigValues, tc.EnvVariables)
 
 			// Act
 			c, diags := providerConfigure(ctx, d, p)

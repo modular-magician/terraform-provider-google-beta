@@ -1,12 +1,8 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"google.golang.org/api/bigtableadmin/v2"
 
@@ -32,12 +28,12 @@ var IamBigtableInstanceSchema = map[string]*schema.Schema{
 type BigtableInstanceIamUpdater struct {
 	project  string
 	instance string
-	d        tpgresource.TerraformResourceData
+	d        TerraformResourceData
 	Config   *transport_tpg.Config
 }
 
-func NewBigtableInstanceUpdater(d tpgresource.TerraformResourceData, config *transport_tpg.Config) (tpgiamresource.ResourceIamUpdater, error) {
-	project, err := tpgresource.GetProject(d, config)
+func NewBigtableInstanceUpdater(d TerraformResourceData, config *transport_tpg.Config) (ResourceIamUpdater, error) {
+	project, err := getProject(d, config)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +51,7 @@ func NewBigtableInstanceUpdater(d tpgresource.TerraformResourceData, config *tra
 }
 
 func BigtableInstanceIdParseFunc(d *schema.ResourceData, config *transport_tpg.Config) error {
-	fv, err := tpgresource.ParseProjectFieldValue("instances", d.Id(), "project", d, config, false)
+	fv, err := parseProjectFieldValue("instances", d.Id(), "project", d, config, false)
 	if err != nil {
 		return err
 	}
@@ -75,7 +71,7 @@ func BigtableInstanceIdParseFunc(d *schema.ResourceData, config *transport_tpg.C
 func (u *BigtableInstanceIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
 	req := &bigtableadmin.GetIamPolicyRequest{}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +97,7 @@ func (u *BigtableInstanceIamUpdater) SetResourceIamPolicy(policy *cloudresourcem
 
 	req := &bigtableadmin.SetIamPolicyRequest{Policy: bigtablePolicy}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -128,7 +124,7 @@ func (u *BigtableInstanceIamUpdater) DescribeResource() string {
 
 func resourceManagerToBigtablePolicy(p *cloudresourcemanager.Policy) (*bigtableadmin.Policy, error) {
 	out := &bigtableadmin.Policy{}
-	err := tpgresource.Convert(p, out)
+	err := Convert(p, out)
 	if err != nil {
 		return nil, errwrap.Wrapf("Cannot convert a bigtable policy to a cloudresourcemanager policy: {{err}}", err)
 	}
@@ -137,7 +133,7 @@ func resourceManagerToBigtablePolicy(p *cloudresourcemanager.Policy) (*bigtablea
 
 func bigtableToResourceManagerPolicy(p *bigtableadmin.Policy) (*cloudresourcemanager.Policy, error) {
 	out := &cloudresourcemanager.Policy{}
-	err := tpgresource.Convert(p, out)
+	err := Convert(p, out)
 	if err != nil {
 		return nil, errwrap.Wrapf("Cannot convert a cloudresourcemanager policy to a bigtable policy: {{err}}", err)
 	}

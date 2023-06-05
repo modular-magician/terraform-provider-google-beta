@@ -35,7 +35,7 @@ DnsAuthorization represents a HTTP-reachable backend for a DnsAuthorization.
 resource "google_certificate_manager_dns_authorization" "default" {
   name        = "dns-auth"
   description = "The default dnss"
-  domain      = "subdomain.hashicorptest.com"
+  domain      = "%{random_suffix}.hashicorptest.com"
 }
 
 output "record_name_to_insert" {

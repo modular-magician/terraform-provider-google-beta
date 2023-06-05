@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -24,26 +22,6 @@ func TestAccDataSourceGoogleClientConfig_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceName, "project"),
 					resource.TestCheckResourceAttrSet(resourceName, "region"),
 					resource.TestCheckResourceAttrSet(resourceName, "zone"),
-					resource.TestCheckResourceAttrSet(resourceName, "access_token"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccDataSourceGoogleClientConfig_omitLocation(t *testing.T) {
-	t.Setenv("GOOGLE_REGION", "")
-	t.Setenv("GOOGLE_ZONE", "")
-
-	resourceName := "data.google_client_config.current"
-
-	VcrTest(t, resource.TestCase{
-		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccCheckGoogleClientConfig_basic,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceName, "project"),
 					resource.TestCheckResourceAttrSet(resourceName, "access_token"),
 				),
 			},

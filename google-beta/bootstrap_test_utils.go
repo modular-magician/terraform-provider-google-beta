@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -12,9 +10,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/sql"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"google.golang.org/api/cloudbilling/v1"
@@ -236,14 +231,7 @@ func BootstrapSharedTestADDomain(t *testing.T, testId string, networkName string
 
 	log.Printf("[DEBUG] Getting shared test active directory domain %q", adDomainName)
 	getURL := fmt.Sprintf("%s%s", config.ActiveDirectoryBasePath, adDomainName)
-	_, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   project,
-		RawURL:    getURL,
-		UserAgent: config.UserAgent,
-		Timeout:   4 * time.Minute,
-	})
+	_, err := transport_tpg.SendRequestWithTimeout(config, "GET", project, getURL, config.UserAgent, nil, 4*time.Minute)
 	if err != nil && transport_tpg.IsGoogleApiErrorWithCode(err, 404) {
 		log.Printf("[DEBUG] AD domain %q not found, bootstrapping", sharedADDomain)
 		postURL := fmt.Sprintf("%sprojects/%s/locations/global/domains?domainName=%s", config.ActiveDirectoryBasePath, project, sharedADDomain)
@@ -253,15 +241,7 @@ func BootstrapSharedTestADDomain(t *testing.T, testId string, networkName string
 			"authorizedNetworks": []string{fmt.Sprintf("projects/%s/global/networks/%s", project, networkName)},
 		}
 
-		_, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "POST",
-			Project:   project,
-			RawURL:    postURL,
-			UserAgent: config.UserAgent,
-			Body:      domainObj,
-			Timeout:   60 * time.Minute,
-		})
+		_, err := transport_tpg.SendRequestWithTimeout(config, "POST", project, postURL, config.UserAgent, domainObj, 60*time.Minute)
 		if err != nil {
 			t.Fatalf("Error bootstrapping shared active directory domain %q: %s", adDomainName, err)
 		}
@@ -269,14 +249,7 @@ func BootstrapSharedTestADDomain(t *testing.T, testId string, networkName string
 		log.Printf("[DEBUG] Waiting for active directory domain creation to finish")
 	}
 
-	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   project,
-		RawURL:    getURL,
-		UserAgent: config.UserAgent,
-		Timeout:   4 * time.Minute,
-	})
+	_, err = transport_tpg.SendRequestWithTimeout(config, "GET", project, getURL, config.UserAgent, nil, 4*time.Minute)
 
 	if err != nil {
 		t.Fatalf("Error getting shared active directory domain %q: %s", adDomainName, err)
@@ -323,15 +296,7 @@ func BootstrapSharedTestNetwork(t *testing.T, testId string) string {
 			"autoCreateSubnetworks": false,
 		}
 
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "POST",
-			Project:   project,
-			RawURL:    url,
-			UserAgent: config.UserAgent,
-			Body:      netObj,
-			Timeout:   4 * time.Minute,
-		})
+		res, err := transport_tpg.SendRequestWithTimeout(config, "POST", project, url, config.UserAgent, netObj, 4*time.Minute)
 		if err != nil {
 			t.Fatalf("Error bootstrapping shared test network %q: %s", networkName, err)
 		}
@@ -388,7 +353,7 @@ func BootstrapServicePerimeterProjects(t *testing.T, desiredProjects int) []*clo
 			t.Fatalf("Error bootstrapping shared test project: %s", err)
 		}
 
-		opAsMap, err := tpgresource.ConvertToMap(op)
+		opAsMap, err := ConvertToMap(op)
 		if err != nil {
 			t.Fatalf("Error bootstrapping shared test project: %s", err)
 		}
@@ -503,7 +468,7 @@ func BootstrapProject(t *testing.T, projectIDPrefix, billingAccount string, serv
 			t.Fatalf("Error creating bootstrapped test project: %s", err)
 		}
 
-		opAsMap, err := tpgresource.ConvertToMap(op)
+		opAsMap, err := ConvertToMap(op)
 		if err != nil {
 			t.Fatalf("Error converting create project operation to map: %s", err)
 		}
@@ -530,26 +495,20 @@ func BootstrapProject(t *testing.T, projectIDPrefix, billingAccount string, serv
 	if billingAccount != "" {
 		billingClient := config.NewBillingClient(config.UserAgent)
 		var pbi *cloudbilling.ProjectBillingInfo
-		err = transport_tpg.Retry(transport_tpg.RetryOptions{
-			RetryFunc: func() error {
-				var reqErr error
-				pbi, reqErr = billingClient.Projects.GetBillingInfo(PrefixedProject(projectID)).Do()
-				return reqErr
-			},
-			Timeout: 30 * time.Second,
-		})
+		err = transport_tpg.RetryTimeDuration(func() error {
+			var reqErr error
+			pbi, reqErr = billingClient.Projects.GetBillingInfo(PrefixedProject(projectID)).Do()
+			return reqErr
+		}, 30*time.Second)
 		if err != nil {
 			t.Fatalf("Error getting billing info for project %q: %v", projectID, err)
 		}
 		if strings.TrimPrefix(pbi.BillingAccountName, "billingAccounts/") != billingAccount {
 			pbi.BillingAccountName = "billingAccounts/" + billingAccount
-			err := transport_tpg.Retry(transport_tpg.RetryOptions{
-				RetryFunc: func() error {
-					_, err := config.NewBillingClient(config.UserAgent).Projects.UpdateBillingInfo(PrefixedProject(projectID), pbi).Do()
-					return err
-				},
-				Timeout: 2 * time.Minute,
-			})
+			err := transport_tpg.RetryTimeDuration(func() error {
+				_, err := config.NewBillingClient(config.UserAgent).Projects.UpdateBillingInfo(PrefixedProject(projectID), pbi).Do()
+				return err
+			}, 2*time.Minute)
 			if err != nil {
 				t.Fatalf("Error setting billing account for project %q to %q: %s", projectID, billingAccount, err)
 			}
@@ -652,18 +611,14 @@ func BootstrapSharedSQLInstanceBackupRun(t *testing.T) string {
 		}
 
 		var op *sqladmin.Operation
-		err = transport_tpg.Retry(transport_tpg.RetryOptions{
-			RetryFunc: func() (operr error) {
-				op, operr = config.NewSqlAdminClient(config.UserAgent).Instances.Insert(project, bootstrapInstance).Do()
-				return operr
-			},
-			Timeout:              20 * time.Minute,
-			ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsSqlOperationInProgressError},
-		})
+		err = transport_tpg.RetryTimeDuration(func() (operr error) {
+			op, operr = config.NewSqlAdminClient(config.UserAgent).Instances.Insert(project, bootstrapInstance).Do()
+			return operr
+		}, time.Duration(20)*time.Minute, transport_tpg.IsSqlOperationInProgressError)
 		if err != nil {
 			t.Fatalf("Error, failed to create instance %s: %s", bootstrapInstance.Name, err)
 		}
-		err = sql.SqlAdminOperationWaitTime(config, op, project, "Create Instance", config.UserAgent, 40*time.Minute)
+		err = SqlAdminOperationWaitTime(config, op, project, "Create Instance", config.UserAgent, time.Duration(40)*time.Minute)
 		if err != nil {
 			t.Fatalf("Error, failed to create instance %s: %s", bootstrapInstance.Name, err)
 		}
@@ -682,18 +637,14 @@ func BootstrapSharedSQLInstanceBackupRun(t *testing.T) string {
 		}
 
 		var op *sqladmin.Operation
-		err = transport_tpg.Retry(transport_tpg.RetryOptions{
-			RetryFunc: func() (operr error) {
-				op, operr = config.NewSqlAdminClient(config.UserAgent).BackupRuns.Insert(project, bootstrapInstance.Name, backupRun).Do()
-				return operr
-			},
-			Timeout:              20 * time.Minute,
-			ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsSqlOperationInProgressError},
-		})
+		err = transport_tpg.RetryTimeDuration(func() (operr error) {
+			op, operr = config.NewSqlAdminClient(config.UserAgent).BackupRuns.Insert(project, bootstrapInstance.Name, backupRun).Do()
+			return operr
+		}, time.Duration(20)*time.Minute, transport_tpg.IsSqlOperationInProgressError)
 		if err != nil {
 			t.Fatalf("Error, failed to create instance backup: %s", err)
 		}
-		err = sql.SqlAdminOperationWaitTime(config, op, project, "Backup Instance", config.UserAgent, 20*time.Minute)
+		err = SqlAdminOperationWaitTime(config, op, project, "Backup Instance", config.UserAgent, time.Duration(20)*time.Minute)
 		if err != nil {
 			t.Fatalf("Error, failed to create instance backup: %s", err)
 		}
@@ -713,28 +664,14 @@ func BootstrapSharedCaPoolInLocation(t *testing.T, location string) string {
 
 	log.Printf("[DEBUG] Getting shared CA pool %q", poolName)
 	url := fmt.Sprintf("%sprojects/%s/locations/%s/caPools/%s", config.PrivatecaBasePath, project, location, poolName)
-	_, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: config.UserAgent,
-	})
+	_, err := transport_tpg.SendRequest(config, "GET", project, url, config.UserAgent, nil)
 	if err != nil {
 		log.Printf("[DEBUG] CA pool %q not found, bootstrapping", poolName)
 		poolObj := map[string]interface{}{
 			"tier": "ENTERPRISE",
 		}
 		createUrl := fmt.Sprintf("%sprojects/%s/locations/%s/caPools?caPoolId=%s", config.PrivatecaBasePath, project, location, poolName)
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "POST",
-			Project:   project,
-			RawURL:    createUrl,
-			UserAgent: config.UserAgent,
-			Body:      poolObj,
-			Timeout:   4 * time.Minute,
-		})
+		res, err := transport_tpg.SendRequestWithTimeout(config, "POST", project, createUrl, config.UserAgent, poolObj, 4*time.Minute)
 		if err != nil {
 			t.Fatalf("Error bootstrapping shared CA pool %q: %s", poolName, err)
 		}
@@ -747,13 +684,7 @@ func BootstrapSharedCaPoolInLocation(t *testing.T, location string) string {
 		if err != nil {
 			t.Errorf("Error getting shared CA pool %q: %s", poolName, err)
 		}
-		_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "GET",
-			Project:   project,
-			RawURL:    url,
-			UserAgent: config.UserAgent,
-		})
+		_, err = transport_tpg.SendRequest(config, "GET", project, url, config.UserAgent, nil)
 		if err != nil {
 			t.Errorf("Error getting shared CA pool %q: %s", poolName, err)
 		}
@@ -775,19 +706,16 @@ func setupProjectsAndGetAccessToken(org, billing, pid, service string, config *t
 	}
 
 	var op *cloudresourcemanager.Operation
-	err := transport_tpg.Retry(transport_tpg.RetryOptions{
-		RetryFunc: func() (reqErr error) {
-			op, reqErr = rmService.Projects.Create(project).Do()
-			return reqErr
-		},
-		Timeout: 5 * time.Minute,
-	})
+	err := transport_tpg.RetryTimeDuration(func() (reqErr error) {
+		op, reqErr = rmService.Projects.Create(project).Do()
+		return reqErr
+	}, 5*time.Minute)
 	if err != nil {
 		return "", err
 	}
 
 	// Wait for the operation to complete
-	opAsMap, err := tpgresource.ConvertToMap(op)
+	opAsMap, err := ConvertToMap(op)
 	if err != nil {
 		return "", err
 	}
@@ -809,19 +737,16 @@ func setupProjectsAndGetAccessToken(org, billing, pid, service string, config *t
 	project.ProjectId = p2
 	project.Name = fmt.Sprintf("%s-2", pid)
 
-	err = transport_tpg.Retry(transport_tpg.RetryOptions{
-		RetryFunc: func() (reqErr error) {
-			op, reqErr = rmService.Projects.Create(project).Do()
-			return reqErr
-		},
-		Timeout: 5 * time.Minute,
-	})
+	err = transport_tpg.RetryTimeDuration(func() (reqErr error) {
+		op, reqErr = rmService.Projects.Create(project).Do()
+		return reqErr
+	}, 5*time.Minute)
 	if err != nil {
 		return "", err
 	}
 
 	// Wait for the operation to complete
-	opAsMap, err = tpgresource.ConvertToMap(op)
+	opAsMap, err = ConvertToMap(op)
 	if err != nil {
 		return "", err
 	}
@@ -865,19 +790,19 @@ func setupProjectsAndGetAccessToken(org, billing, pid, service string, config *t
 		Role:    "roles/iam.serviceAccountCreator",
 	}
 
-	bindings := tpgiamresource.MergeBindings([]*cloudresourcemanager.Binding{proj1SATokenCreator, proj1SACreator})
+	bindings := MergeBindings([]*cloudresourcemanager.Binding{proj1SATokenCreator, proj1SACreator})
 
 	p, err := rmService.Projects.GetIamPolicy(pid,
 		&cloudresourcemanager.GetIamPolicyRequest{
 			Options: &cloudresourcemanager.GetPolicyOptions{
-				RequestedPolicyVersion: tpgiamresource.IamPolicyVersion,
+				RequestedPolicyVersion: IamPolicyVersion,
 			},
 		}).Do()
 	if err != nil {
 		return "", err
 	}
 
-	p.Bindings = tpgiamresource.MergeBindings(append(p.Bindings, bindings...))
+	p.Bindings = MergeBindings(append(p.Bindings, bindings...))
 	_, err = config.NewResourceManagerClient(config.UserAgent).Projects.SetIamPolicy(pid,
 		&cloudresourcemanager.SetIamPolicyRequest{
 			Policy:     p,
@@ -907,7 +832,7 @@ func setupProjectsAndGetAccessToken(org, billing, pid, service string, config *t
 		Role:    fmt.Sprintf("roles/%s.admin", service),
 	}
 
-	bindings = tpgiamresource.MergeBindings([]*cloudresourcemanager.Binding{proj2ServiceUsageBinding, proj2ServiceAdminBinding})
+	bindings = MergeBindings([]*cloudresourcemanager.Binding{proj2ServiceUsageBinding, proj2ServiceAdminBinding})
 
 	// For KMS test only
 	if service == "cloudkms" {
@@ -916,20 +841,20 @@ func setupProjectsAndGetAccessToken(org, billing, pid, service string, config *t
 			Role:    "roles/cloudkms.cryptoKeyEncrypter",
 		}
 
-		bindings = tpgiamresource.MergeBindings(append(bindings, proj2CryptoKeyBinding))
+		bindings = MergeBindings(append(bindings, proj2CryptoKeyBinding))
 	}
 
 	p, err = rmService.Projects.GetIamPolicy(p2,
 		&cloudresourcemanager.GetIamPolicyRequest{
 			Options: &cloudresourcemanager.GetPolicyOptions{
-				RequestedPolicyVersion: tpgiamresource.IamPolicyVersion,
+				RequestedPolicyVersion: IamPolicyVersion,
 			},
 		}).Do()
 	if err != nil {
 		return "", err
 	}
 
-	p.Bindings = tpgiamresource.MergeBindings(append(p.Bindings, bindings...))
+	p.Bindings = MergeBindings(append(p.Bindings, bindings...))
 	_, err = config.NewResourceManagerClient(config.UserAgent).Projects.SetIamPolicy(p2,
 		&cloudresourcemanager.SetIamPolicyRequest{
 			Policy:     p,

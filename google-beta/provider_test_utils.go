@@ -1,17 +1,14 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"context"
-	"testing"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 )
 
 const TestEnvVar = acctest.TestEnvVar
@@ -93,12 +90,12 @@ func AccTestPreCheck(t *testing.T) {
 	acctest.AccTestPreCheck(t)
 }
 
-// GetTestRegion has the same logic as the provider's GetRegion, to be used in tests.
+// GetTestRegion has the same logic as the provider's getRegion, to be used in tests.
 func GetTestRegion(is *terraform.InstanceState, config *transport_tpg.Config) (string, error) {
 	return acctest.GetTestRegion(is, config)
 }
 
-// GetTestProject has the same logic as the provider's GetProject, to be used in tests.
+// GetTestProject has the same logic as the provider's getProject, to be used in tests.
 func GetTestProject(is *terraform.InstanceState, config *transport_tpg.Config) (string, error) {
 	return acctest.GetTestProject(is, config)
 }

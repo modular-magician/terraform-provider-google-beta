@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -24,8 +21,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/cloudresourcemanager/v1"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -40,11 +35,11 @@ var DataCatalogPolicyTagIamSchema = map[string]*schema.Schema{
 
 type DataCatalogPolicyTagIamUpdater struct {
 	policyTag string
-	d         tpgresource.TerraformResourceData
+	d         TerraformResourceData
 	Config    *transport_tpg.Config
 }
 
-func DataCatalogPolicyTagIamUpdaterProducer(d tpgresource.TerraformResourceData, config *transport_tpg.Config) (tpgiamresource.ResourceIamUpdater, error) {
+func DataCatalogPolicyTagIamUpdaterProducer(d TerraformResourceData, config *transport_tpg.Config) (ResourceIamUpdater, error) {
 	values := make(map[string]string)
 
 	if v, ok := d.GetOk("policy_tag"); ok {
@@ -52,7 +47,7 @@ func DataCatalogPolicyTagIamUpdaterProducer(d tpgresource.TerraformResourceData,
 	}
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
-	m, err := tpgresource.GetImportIdQualifiers([]string{"(?P<policy_tag>.+)"}, d, config, d.Get("policy_tag").(string))
+	m, err := getImportIdQualifiers([]string{"(?P<policy_tag>.+)"}, d, config, d.Get("policy_tag").(string))
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +72,7 @@ func DataCatalogPolicyTagIamUpdaterProducer(d tpgresource.TerraformResourceData,
 func DataCatalogPolicyTagIdParseFunc(d *schema.ResourceData, config *transport_tpg.Config) error {
 	values := make(map[string]string)
 
-	m, err := tpgresource.GetImportIdQualifiers([]string{"(?P<policy_tag>.+)"}, d, config, d.Id())
+	m, err := getImportIdQualifiers([]string{"(?P<policy_tag>.+)"}, d, config, d.Id())
 	if err != nil {
 		return err
 	}
@@ -106,24 +101,18 @@ func (u *DataCatalogPolicyTagIamUpdater) GetResourceIamPolicy() (*cloudresourcem
 
 	var obj map[string]interface{}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
 
-	policy, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    u.Config,
-		Method:    "POST",
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-	})
+	policy, err := transport_tpg.SendRequest(u.Config, "POST", "", url, userAgent, obj)
 	if err != nil {
 		return nil, errwrap.Wrapf(fmt.Sprintf("Error retrieving IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
 
 	out := &cloudresourcemanager.Policy{}
-	err = tpgresource.Convert(policy, out)
+	err = Convert(policy, out)
 	if err != nil {
 		return nil, errwrap.Wrapf("Cannot convert a policy to a resource manager policy: {{err}}", err)
 	}
@@ -132,7 +121,7 @@ func (u *DataCatalogPolicyTagIamUpdater) GetResourceIamPolicy() (*cloudresourcem
 }
 
 func (u *DataCatalogPolicyTagIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanager.Policy) error {
-	json, err := tpgresource.ConvertToMap(policy)
+	json, err := ConvertToMap(policy)
 	if err != nil {
 		return err
 	}
@@ -145,19 +134,12 @@ func (u *DataCatalogPolicyTagIamUpdater) SetResourceIamPolicy(policy *cloudresou
 		return err
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    u.Config,
-		Method:    "POST",
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   u.d.Timeout(schema.TimeoutCreate),
-	})
+	_, err = transport_tpg.SendRequestWithTimeout(u.Config, "POST", "", url, userAgent, obj, u.d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return errwrap.Wrapf(fmt.Sprintf("Error setting IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
@@ -167,7 +149,7 @@ func (u *DataCatalogPolicyTagIamUpdater) SetResourceIamPolicy(policy *cloudresou
 
 func (u *DataCatalogPolicyTagIamUpdater) qualifyPolicyTagUrl(methodIdentifier string) (string, error) {
 	urlTemplate := fmt.Sprintf("{{DataCatalogBasePath}}%s:%s", fmt.Sprintf("%s", u.policyTag), methodIdentifier)
-	url, err := tpgresource.ReplaceVars(u.d, u.Config, urlTemplate)
+	url, err := ReplaceVars(u.d, u.Config, urlTemplate)
 	if err != nil {
 		return "", err
 	}

@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -9,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 func TestAccLoggingProjectSink_basic(t *testing.T) {
@@ -262,7 +259,7 @@ func TestLoggingProjectSink_bigqueryOptionCustomizedDiff(t *testing.T) {
 	}
 
 	for tn, tc := range cases {
-		d := &tpgresource.ResourceDiffMock{
+		d := &ResourceDiffMock{
 			After: map[string]interface{}{
 				"bigquery_options.#":     tc.After.BigqueryOptions,
 				"unique_writer_identity": tc.After.UniqueWriterIdentity,

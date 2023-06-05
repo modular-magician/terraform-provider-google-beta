@@ -1,12 +1,9 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -45,19 +42,19 @@ func DataSourceGoogleAppEngineDefaultServiceAccount() *schema.Resource {
 
 func dataSourceGoogleAppEngineDefaultServiceAccountRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
 	serviceAccountEmail := fmt.Sprintf("%s@appspot.gserviceaccount.com", project)
 
-	serviceAccountName, err := tpgresource.ServiceAccountFQN(serviceAccountEmail, d, config)
+	serviceAccountName, err := serviceAccountFQN(serviceAccountEmail, d, config)
 	if err != nil {
 		return err
 	}

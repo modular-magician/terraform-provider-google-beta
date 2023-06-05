@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -101,7 +98,6 @@ func TestAccHealthcareConsentStoreIamPolicyGenerated(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccHealthcareConsentStoreIamPolicy_basicGenerated(context),
-				Check:  resource.TestCheckResourceAttrSet("data.google_healthcare_consent_store_iam_policy.foo", "policy_data"),
 			},
 			{
 				ResourceName:      "google_healthcare_consent_store_iam_policy.foo",
@@ -166,14 +162,6 @@ resource "google_healthcare_consent_store_iam_policy" "foo" {
   dataset = google_healthcare_consent_store.my-consent.dataset
   consent_store_id = google_healthcare_consent_store.my-consent.name
   policy_data = data.google_iam_policy.foo.policy_data
-}
-
-data "google_healthcare_consent_store_iam_policy" "foo" {
-  dataset = google_healthcare_consent_store.my-consent.dataset
-  consent_store_id = google_healthcare_consent_store.my-consent.name
-  depends_on = [
-    google_healthcare_consent_store_iam_policy.foo
-  ]
 }
 `, context)
 }

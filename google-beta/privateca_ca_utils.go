@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -9,7 +7,6 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,20 +15,14 @@ import (
 // CA related utilities.
 
 func enableCA(config *transport_tpg.Config, d *schema.ResourceData, project string, billingProject string, userAgent string) error {
-	enableUrl, err := tpgresource.ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools/{{pool}}/certificateAuthorities/{{certificate_authority_id}}:enable")
+	enableUrl, err := ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools/{{pool}}/certificateAuthorities/{{certificate_authority_id}}:enable")
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[DEBUG] Enabling CertificateAuthority")
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    enableUrl,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "POST", billingProject, enableUrl, userAgent, nil)
 	if err != nil {
 		return fmt.Errorf("Error enabling CertificateAuthority: %s", err)
 	}
@@ -47,20 +38,14 @@ func enableCA(config *transport_tpg.Config, d *schema.ResourceData, project stri
 }
 
 func disableCA(config *transport_tpg.Config, d *schema.ResourceData, project string, billingProject string, userAgent string) error {
-	disableUrl, err := tpgresource.ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools/{{pool}}/certificateAuthorities/{{certificate_authority_id}}:disable")
+	disableUrl, err := ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools/{{pool}}/certificateAuthorities/{{certificate_authority_id}}:disable")
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[DEBUG] Disabling CA")
 
-	dRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    disableUrl,
-		UserAgent: userAgent,
-	})
+	dRes, err := transport_tpg.SendRequest(config, "POST", billingProject, disableUrl, userAgent, nil)
 	if err != nil {
 		return fmt.Errorf("Error disabling CA: %s", err)
 	}
@@ -108,20 +93,13 @@ func activateSubCAWithThirdPartyIssuer(config *transport_tpg.Config, d *schema.R
 	activateObj["subordinateConfig"].(map[string]interface{})["pemIssuerChain"] = make(map[string]interface{})
 	activateObj["subordinateConfig"].(map[string]interface{})["pemIssuerChain"].(map[string]interface{})["pemCertificates"] = pemIssuerChain
 
-	activateUrl, err := tpgresource.ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools/{{pool}}/certificateAuthorities/{{certificate_authority_id}}:activate")
+	activateUrl, err := ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools/{{pool}}/certificateAuthorities/{{certificate_authority_id}}:activate")
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[DEBUG] Activating CertificateAuthority: %#v", activateObj)
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    activateUrl,
-		UserAgent: userAgent,
-		Body:      activateObj,
-	})
+	res, err := transport_tpg.SendRequest(config, "POST", billingProject, activateUrl, userAgent, activateObj)
 	if err != nil {
 		return fmt.Errorf("Error enabling CertificateAuthority: %s", err)
 	}
@@ -153,17 +131,11 @@ func activateSubCAWithFirstPartyIssuer(config *transport_tpg.Config, d *schema.R
 	issuer := ca.(string)
 
 	// 2. fetch CSR
-	fetchCSRUrl, err := tpgresource.ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools/{{pool}}/certificateAuthorities/{{certificate_authority_id}}:fetch")
+	fetchCSRUrl, err := ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools/{{pool}}/certificateAuthorities/{{certificate_authority_id}}:fetch")
 	if err != nil {
 		return err
 	}
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    fetchCSRUrl,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, fetchCSRUrl, userAgent, nil)
 	if err != nil {
 		return fmt.Errorf("failed to fetch CSR: %v", err)
 	}
@@ -206,7 +178,7 @@ func activateSubCAWithFirstPartyIssuer(config *transport_tpg.Config, d *schema.R
 		return err
 	}
 
-	PrivatecaBasePath, err := tpgresource.ReplaceVars(d, config, "{{PrivatecaBasePath}}")
+	PrivatecaBasePath, err := ReplaceVars(d, config, "{{PrivatecaBasePath}}")
 	if err != nil {
 		return err
 	}
@@ -217,15 +189,7 @@ func activateSubCAWithFirstPartyIssuer(config *transport_tpg.Config, d *schema.R
 	}
 
 	log.Printf("[DEBUG] Signing CA Certificate: %#v", obj)
-	res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    signUrl,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err = transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, signUrl, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating Certificate: %s", err)
 	}
@@ -237,20 +201,13 @@ func activateSubCAWithFirstPartyIssuer(config *transport_tpg.Config, d *schema.R
 	activateObj["subordinateConfig"] = make(map[string]interface{})
 	activateObj["subordinateConfig"].(map[string]interface{})["certificateAuthority"] = issuer
 
-	activateUrl, err := tpgresource.ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools/{{pool}}/certificateAuthorities/{{certificate_authority_id}}:activate")
+	activateUrl, err := ReplaceVars(d, config, "{{PrivatecaBasePath}}projects/{{project}}/locations/{{location}}/caPools/{{pool}}/certificateAuthorities/{{certificate_authority_id}}:activate")
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[DEBUG] Activating CertificateAuthority: %#v", activateObj)
-	res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    activateUrl,
-		UserAgent: userAgent,
-		Body:      activateObj,
-	})
+	res, err = transport_tpg.SendRequest(config, "POST", billingProject, activateUrl, userAgent, activateObj)
 	if err != nil {
 		return fmt.Errorf("Error enabling CertificateAuthority: %s", err)
 	}

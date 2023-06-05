@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -22,7 +19,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -30,7 +26,7 @@ type FirestoreOperationWaiter struct {
 	Config    *transport_tpg.Config
 	UserAgent string
 	Project   string
-	tpgresource.CommonOperationWaiter
+	CommonOperationWaiter
 }
 
 func (w *FirestoreOperationWaiter) QueryOp() (interface{}, error) {
@@ -40,13 +36,7 @@ func (w *FirestoreOperationWaiter) QueryOp() (interface{}, error) {
 	// Returns the proper get.
 	url := fmt.Sprintf("%s%s", w.Config.FirestoreBasePath, w.CommonOperationWaiter.Op.Name)
 
-	return transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    w.Config,
-		Method:    "GET",
-		Project:   w.Project,
-		RawURL:    url,
-		UserAgent: w.UserAgent,
-	})
+	return transport_tpg.SendRequest(w.Config, "GET", w.Project, url, w.UserAgent, nil)
 }
 
 func createFirestoreWaiter(config *transport_tpg.Config, op map[string]interface{}, project, activity, userAgent string) (*FirestoreOperationWaiter, error) {
@@ -67,7 +57,7 @@ func FirestoreOperationWaitTimeWithResponse(config *transport_tpg.Config, op map
 	if err != nil {
 		return err
 	}
-	if err := tpgresource.OperationWait(w, activity, timeout, config.PollInterval); err != nil {
+	if err := OperationWait(w, activity, timeout, config.PollInterval); err != nil {
 		return err
 	}
 	return json.Unmarshal([]byte(w.CommonOperationWaiter.Op.Response), response)
@@ -83,5 +73,5 @@ func FirestoreOperationWaitTime(config *transport_tpg.Config, op map[string]inte
 		// If w is nil, the op was synchronous.
 		return err
 	}
-	return tpgresource.OperationWait(w, activity, timeout, config.PollInterval)
+	return OperationWait(w, activity, timeout, config.PollInterval)
 }

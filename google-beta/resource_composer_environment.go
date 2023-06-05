@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -13,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 
@@ -199,7 +196,7 @@ func ResourceComposerEnvironment() *schema.Resource {
 										Optional:         true,
 										Computed:         true,
 										ForceNew:         true,
-										DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+										DiffSuppressFunc: compareSelfLinkOrResourceName,
 										Description:      `The Compute Engine zone in which to deploy the VMs running the Apache Airflow software, specified as the zone name or relative resource name (e.g. "projects/{project}/zones/{zone}"). Must belong to the enclosing environment's project and region. This field is supported for Cloud Composer environments in versions composer-1.*.*-airflow-*.*.*.`,
 									},
 									"machine_type": {
@@ -207,7 +204,7 @@ func ResourceComposerEnvironment() *schema.Resource {
 										Computed:         true,
 										Optional:         true,
 										ForceNew:         true,
-										DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+										DiffSuppressFunc: compareSelfLinkOrResourceName,
 										Description:      `The Compute Engine machine type used for cluster instances, specified as a name or relative resource name. For example: "projects/{project}/zones/{zone}/machineTypes/{machineType}". Must belong to the enclosing environment's project and region/zone. This field is supported for Cloud Composer environments in versions composer-1.*.*-airflow-*.*.*.`,
 									},
 									"network": {
@@ -215,14 +212,14 @@ func ResourceComposerEnvironment() *schema.Resource {
 										Computed:         true,
 										Optional:         true,
 										ForceNew:         true,
-										DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+										DiffSuppressFunc: compareSelfLinkOrResourceName,
 										Description:      `The Compute Engine machine type used for cluster instances, specified as a name or relative resource name. For example: "projects/{project}/zones/{zone}/machineTypes/{machineType}". Must belong to the enclosing environment's project and region/zone. The network must belong to the environment's project. If unspecified, the "default" network ID in the environment's project is used. If a Custom Subnet Network is provided, subnetwork must also be provided.`,
 									},
 									"subnetwork": {
 										Type:             schema.TypeString,
 										Optional:         true,
 										ForceNew:         true,
-										DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+										DiffSuppressFunc: compareSelfLinkOrResourceName,
 										Description:      `The Compute Engine subnetwork to be used for machine communications, , specified as a self-link, relative resource name (e.g. "projects/{project}/regions/{region}/subnetworks/{subnetwork}"), or by name. If subnetwork is provided, network must also be provided and the subnetwork must belong to the enclosing environment's project and region.`,
 									},
 									"disk_size_gb": {
@@ -517,7 +514,7 @@ func ResourceComposerEnvironment() *schema.Resource {
 										Computed:         true,
 										AtLeastOneOf:     composerPrivateEnvironmentConfig,
 										ForceNew:         true,
-										DiffSuppressFunc: tpgresource.CompareSelfLinkRelativePaths,
+										DiffSuppressFunc: compareSelfLinkRelativePaths,
 										Description:      `When specified, the environment will use Private Service Connect instead of VPC peerings to connect to Cloud SQL in the Tenant Project, and the PSC endpoint in the Customer Project will use an IP address from this subnetwork. This field is supported for Cloud Composer environments in versions composer-2.*.*-airflow-*.*.* and newer.`,
 									},
 								},
@@ -847,7 +844,7 @@ func ResourceComposerEnvironment() *schema.Resource {
 
 func resourceComposerEnvironmentCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -864,7 +861,7 @@ func resourceComposerEnvironmentCreate(d *schema.ResourceData, meta interface{})
 
 	env := &composer.Environment{
 		Name:   envName.resourceName(),
-		Labels: tpgresource.ExpandLabels(d),
+		Labels: expandLabels(d),
 		Config: transformedConfig,
 	}
 
@@ -878,7 +875,7 @@ func resourceComposerEnvironmentCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/environments/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/environments/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -913,7 +910,7 @@ func resourceComposerEnvironmentCreate(d *schema.ResourceData, meta interface{})
 
 func resourceComposerEnvironmentRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -928,15 +925,15 @@ func resourceComposerEnvironmentRead(d *schema.ResourceData, meta interface{}) e
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ComposerEnvironment %q", d.Id()))
 	}
 
-	// Set from GetProject(d)
+	// Set from getProject(d)
 	if err := d.Set("project", envName.Project); err != nil {
 		return fmt.Errorf("Error setting Environment: %s", err)
 	}
-	// Set from GetRegion(d)
+	// Set from getRegion(d)
 	if err := d.Set("region", envName.Region); err != nil {
 		return fmt.Errorf("Error setting Environment: %s", err)
 	}
-	if err := d.Set("name", tpgresource.GetResourceNameFromSelfLink(res.Name)); err != nil {
+	if err := d.Set("name", GetResourceNameFromSelfLink(res.Name)); err != nil {
 		return fmt.Errorf("Error setting Environment: %s", err)
 	}
 	if err := d.Set("config", flattenComposerEnvironmentConfig(res.Config)); err != nil {
@@ -950,7 +947,7 @@ func resourceComposerEnvironmentRead(d *schema.ResourceData, meta interface{}) e
 
 func resourceComposerEnvironmentUpdate(d *schema.ResourceData, meta interface{}) error {
 	tfConfig := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, tfConfig.UserAgent)
+	userAgent, err := generateUserAgentString(d, tfConfig.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -1169,7 +1166,7 @@ func resourceComposerEnvironmentUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	if d.HasChange("labels") {
-		patchEnv := &composer.Environment{Labels: tpgresource.ExpandLabels(d)}
+		patchEnv := &composer.Environment{Labels: expandLabels(d)}
 		err := resourceComposerEnvironmentPatchField("labels", userAgent, patchEnv, d, tfConfig)
 		if err != nil {
 			return err
@@ -1227,7 +1224,7 @@ func resourceComposerEnvironmentPatchField(updateMask, userAgent string, env *co
 
 func resourceComposerEnvironmentDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -1256,12 +1253,12 @@ func resourceComposerEnvironmentDelete(d *schema.ResourceData, meta interface{})
 
 func resourceComposerEnvironmentImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{"projects/(?P<project>[^/]+)/locations/(?P<region>[^/]+)/environments/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
+	if err := ParseImportId([]string{"projects/(?P<project>[^/]+)/locations/(?P<region>[^/]+)/environments/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/environments/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/environments/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -1500,14 +1497,14 @@ func flattenComposerEnvironmentConfigNodeConfigOauthScopes(v interface{}) interf
 	if v == nil {
 		return v
 	}
-	return schema.NewSet(schema.HashString, tpgresource.ConvertStringArrToInterface(v.([]string)))
+	return schema.NewSet(schema.HashString, convertStringArrToInterface(v.([]string)))
 }
 
 func flattenComposerEnvironmentConfigNodeConfigTags(v interface{}) interface{} {
 	if v == nil {
 		return v
 	}
-	return schema.NewSet(schema.HashString, tpgresource.ConvertStringArrToInterface(v.([]string)))
+	return schema.NewSet(schema.HashString, convertStringArrToInterface(v.([]string)))
 }
 
 func flattenComposerEnvironmentConfigSoftwareConfig(softwareCfg *composer.SoftwareConfig) interface{} {
@@ -2029,7 +2026,7 @@ func expandComposerEnvironmentServiceAccount(v interface{}, d *schema.ResourceDa
 		return "", nil
 	}
 
-	return tpgresource.GetResourceNameFromSelfLink(serviceAccount), nil
+	return GetResourceNameFromSelfLink(serviceAccount), nil
 }
 
 func expandComposerEnvironmentZone(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) (string, error) {
@@ -2038,34 +2035,34 @@ func expandComposerEnvironmentZone(v interface{}, d *schema.ResourceData, config
 		return zone, nil
 	}
 	if !strings.Contains(zone, "/") {
-		project, err := tpgresource.GetProject(d, config)
+		project, err := getProject(d, config)
 		if err != nil {
 			return "", err
 		}
 		return fmt.Sprintf("projects/%s/zones/%s", project, zone), nil
 	}
 
-	return tpgresource.GetRelativePath(zone)
+	return getRelativePath(zone)
 }
 
 func expandComposerEnvironmentMachineType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config, nodeCfgZone string) (string, error) {
 	machineType := v.(string)
-	requiredZone := tpgresource.GetResourceNameFromSelfLink(nodeCfgZone)
+	requiredZone := GetResourceNameFromSelfLink(nodeCfgZone)
 
-	fv, err := tpgresource.ParseMachineTypesFieldValue(v.(string), d, config)
+	fv, err := ParseMachineTypesFieldValue(v.(string), d, config)
 	if err != nil {
 
 		// Try to construct machine type with zone/project given in config.
-		project, err := tpgresource.GetProject(d, config)
+		project, err := getProject(d, config)
 		if err != nil {
 			return "", err
 		}
 
-		fv = &tpgresource.ZonalFieldValue{
+		fv = &ZonalFieldValue{
 			Project:      project,
 			Zone:         requiredZone,
-			Name:         tpgresource.GetResourceNameFromSelfLink(machineType),
-			ResourceType: "machineTypes",
+			Name:         GetResourceNameFromSelfLink(machineType),
+			resourceType: "machineTypes",
 		}
 	}
 
@@ -2078,7 +2075,7 @@ func expandComposerEnvironmentMachineType(v interface{}, d *schema.ResourceData,
 }
 
 func expandComposerEnvironmentNetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) (string, error) {
-	fv, err := tpgresource.ParseNetworkFieldValue(v.(string), d, config)
+	fv, err := ParseNetworkFieldValue(v.(string), d, config)
 	if err != nil {
 		return "", err
 	}
@@ -2086,7 +2083,7 @@ func expandComposerEnvironmentNetwork(v interface{}, d *schema.ResourceData, con
 }
 
 func expandComposerEnvironmentSubnetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) (string, error) {
-	fv, err := tpgresource.ParseSubnetworkFieldValue(v.(string), d, config)
+	fv, err := ParseSubnetworkFieldValue(v.(string), d, config)
 	if err != nil {
 		return "", err
 	}
@@ -2097,7 +2094,7 @@ func expandComposerEnvironmentSetList(v interface{}, d *schema.ResourceData, con
 	if v == nil {
 		return nil, nil
 	}
-	return tpgresource.ConvertStringArr(v.(*schema.Set).List()), nil
+	return convertStringArr(v.(*schema.Set).List()), nil
 }
 
 func expandComposerEnvironmentConfigSoftwareConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) (*composer.SoftwareConfig, error) {
@@ -2187,7 +2184,7 @@ func validateComposerEnvironmentEnvVariables(v interface{}, k string) (ws []stri
 }
 
 func handleComposerEnvironmentCreationOpFailure(id string, envName *composerEnvironmentName, d *schema.ResourceData, config *transport_tpg.Config) error {
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -2246,12 +2243,12 @@ func getComposerEnvironmentPostCreateUpdateObj(env *composer.Environment) (updat
 }
 
 func resourceComposerEnvironmentName(d *schema.ResourceData, config *transport_tpg.Config) (*composerEnvironmentName, error) {
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return nil, err
 	}
 
-	region, err := tpgresource.GetRegion(d, config)
+	region, err := getRegion(d, config)
 	if err != nil {
 		return nil, err
 	}
@@ -2282,9 +2279,9 @@ func (n *composerEnvironmentName) parentName() string {
 func compareServiceAccountEmailToLink(_, old, new string, _ *schema.ResourceData) bool {
 	// old is the service account email returned from the server.
 	if !strings.HasPrefix("projects/", old) {
-		return old == tpgresource.GetResourceNameFromSelfLink(new)
+		return old == GetResourceNameFromSelfLink(new)
 	}
-	return tpgresource.CompareSelfLinkRelativePaths("", old, new, nil)
+	return compareSelfLinkRelativePaths("", old, new, nil)
 }
 
 func validateServiceAccountRelativeNameOrEmail(v interface{}, k string) (ws []string, errors []error) {

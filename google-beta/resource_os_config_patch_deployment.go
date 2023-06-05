@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -949,7 +944,7 @@ A timestamp in RFC3339 UTC "Zulu" format, accurate to nanoseconds. Example: "201
 
 func resourceOSConfigPatchDeploymentCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -958,43 +953,43 @@ func resourceOSConfigPatchDeploymentCreate(d *schema.ResourceData, meta interfac
 	descriptionProp, err := expandOSConfigPatchDeploymentDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	instanceFilterProp, err := expandOSConfigPatchDeploymentInstanceFilter(d.Get("instance_filter"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("instance_filter"); !tpgresource.IsEmptyValue(reflect.ValueOf(instanceFilterProp)) && (ok || !reflect.DeepEqual(v, instanceFilterProp)) {
+	} else if v, ok := d.GetOkExists("instance_filter"); !isEmptyValue(reflect.ValueOf(instanceFilterProp)) && (ok || !reflect.DeepEqual(v, instanceFilterProp)) {
 		obj["instanceFilter"] = instanceFilterProp
 	}
 	patchConfigProp, err := expandOSConfigPatchDeploymentPatchConfig(d.Get("patch_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("patch_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(patchConfigProp)) && (ok || !reflect.DeepEqual(v, patchConfigProp)) {
+	} else if v, ok := d.GetOkExists("patch_config"); !isEmptyValue(reflect.ValueOf(patchConfigProp)) && (ok || !reflect.DeepEqual(v, patchConfigProp)) {
 		obj["patchConfig"] = patchConfigProp
 	}
 	durationProp, err := expandOSConfigPatchDeploymentDuration(d.Get("duration"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("duration"); !tpgresource.IsEmptyValue(reflect.ValueOf(durationProp)) && (ok || !reflect.DeepEqual(v, durationProp)) {
+	} else if v, ok := d.GetOkExists("duration"); !isEmptyValue(reflect.ValueOf(durationProp)) && (ok || !reflect.DeepEqual(v, durationProp)) {
 		obj["duration"] = durationProp
 	}
 	oneTimeScheduleProp, err := expandOSConfigPatchDeploymentOneTimeSchedule(d.Get("one_time_schedule"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("one_time_schedule"); !tpgresource.IsEmptyValue(reflect.ValueOf(oneTimeScheduleProp)) && (ok || !reflect.DeepEqual(v, oneTimeScheduleProp)) {
+	} else if v, ok := d.GetOkExists("one_time_schedule"); !isEmptyValue(reflect.ValueOf(oneTimeScheduleProp)) && (ok || !reflect.DeepEqual(v, oneTimeScheduleProp)) {
 		obj["oneTimeSchedule"] = oneTimeScheduleProp
 	}
 	recurringScheduleProp, err := expandOSConfigPatchDeploymentRecurringSchedule(d.Get("recurring_schedule"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("recurring_schedule"); !tpgresource.IsEmptyValue(reflect.ValueOf(recurringScheduleProp)) && (ok || !reflect.DeepEqual(v, recurringScheduleProp)) {
+	} else if v, ok := d.GetOkExists("recurring_schedule"); !isEmptyValue(reflect.ValueOf(recurringScheduleProp)) && (ok || !reflect.DeepEqual(v, recurringScheduleProp)) {
 		obj["recurringSchedule"] = recurringScheduleProp
 	}
 	rolloutProp, err := expandOSConfigPatchDeploymentRollout(d.Get("rollout"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("rollout"); !tpgresource.IsEmptyValue(reflect.ValueOf(rolloutProp)) && (ok || !reflect.DeepEqual(v, rolloutProp)) {
+	} else if v, ok := d.GetOkExists("rollout"); !isEmptyValue(reflect.ValueOf(rolloutProp)) && (ok || !reflect.DeepEqual(v, rolloutProp)) {
 		obj["rollout"] = rolloutProp
 	}
 
@@ -1003,7 +998,7 @@ func resourceOSConfigPatchDeploymentCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{OSConfigBasePath}}projects/{{project}}/patchDeployments?patchDeploymentId={{patch_deployment_id}}")
+	url, err := ReplaceVars(d, config, "{{OSConfigBasePath}}projects/{{project}}/patchDeployments?patchDeploymentId={{patch_deployment_id}}")
 	if err != nil {
 		return err
 	}
@@ -1011,26 +1006,18 @@ func resourceOSConfigPatchDeploymentCreate(d *schema.ResourceData, meta interfac
 	log.Printf("[DEBUG] Creating new PatchDeployment: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for PatchDeployment: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating PatchDeployment: %s", err)
 	}
@@ -1039,7 +1026,7 @@ func resourceOSConfigPatchDeploymentCreate(d *schema.ResourceData, meta interfac
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{name}}")
+	id, err := ReplaceVars(d, config, "{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -1070,36 +1057,30 @@ func resourceOSConfigPatchDeploymentCreate(d *schema.ResourceData, meta interfac
 
 func resourceOSConfigPatchDeploymentRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{OSConfigBasePath}}{{name}}")
+	url, err := ReplaceVars(d, config, "{{OSConfigBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for PatchDeployment: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("OSConfigPatchDeployment %q", d.Id()))
 	}
@@ -1159,20 +1140,20 @@ func resourceOSConfigPatchDeploymentRead(d *schema.ResourceData, meta interface{
 
 func resourceOSConfigPatchDeploymentDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for PatchDeployment: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{OSConfigBasePath}}{{name}}")
+	url, err := ReplaceVars(d, config, "{{OSConfigBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -1181,19 +1162,11 @@ func resourceOSConfigPatchDeploymentDelete(d *schema.ResourceData, meta interfac
 	log.Printf("[DEBUG] Deleting PatchDeployment %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "PatchDeployment")
 	}
@@ -1207,7 +1180,7 @@ func resourceOSConfigPatchDeploymentImport(d *schema.ResourceData, meta interfac
 	config := meta.(*transport_tpg.Config)
 
 	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
+	if err := ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
 		return nil, err
 	}
 
@@ -2082,11 +2055,11 @@ func flattenOSConfigPatchDeploymentRolloutDisruptionBudgetPercentage(v interface
 	return v // let terraform core handle it otherwise
 }
 
-func expandOSConfigPatchDeploymentDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentInstanceFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentInstanceFilter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2098,46 +2071,46 @@ func expandOSConfigPatchDeploymentInstanceFilter(v interface{}, d tpgresource.Te
 	transformedAll, err := expandOSConfigPatchDeploymentInstanceFilterAll(original["all"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAll); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAll); val.IsValid() && !isEmptyValue(val) {
 		transformed["all"] = transformedAll
 	}
 
 	transformedGroupLabels, err := expandOSConfigPatchDeploymentInstanceFilterGroupLabels(original["group_labels"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGroupLabels); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGroupLabels); val.IsValid() && !isEmptyValue(val) {
 		transformed["groupLabels"] = transformedGroupLabels
 	}
 
 	transformedZones, err := expandOSConfigPatchDeploymentInstanceFilterZones(original["zones"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedZones); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedZones); val.IsValid() && !isEmptyValue(val) {
 		transformed["zones"] = transformedZones
 	}
 
 	transformedInstances, err := expandOSConfigPatchDeploymentInstanceFilterInstances(original["instances"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedInstances); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedInstances); val.IsValid() && !isEmptyValue(val) {
 		transformed["instances"] = transformedInstances
 	}
 
 	transformedInstanceNamePrefixes, err := expandOSConfigPatchDeploymentInstanceFilterInstanceNamePrefixes(original["instance_name_prefixes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedInstanceNamePrefixes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedInstanceNamePrefixes); val.IsValid() && !isEmptyValue(val) {
 		transformed["instanceNamePrefixes"] = transformedInstanceNamePrefixes
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentInstanceFilterAll(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentInstanceFilterAll(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentInstanceFilterGroupLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentInstanceFilterGroupLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -2150,7 +2123,7 @@ func expandOSConfigPatchDeploymentInstanceFilterGroupLabels(v interface{}, d tpg
 		transformedLabels, err := expandOSConfigPatchDeploymentInstanceFilterGroupLabelsLabels(original["labels"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !isEmptyValue(val) {
 			transformed["labels"] = transformedLabels
 		}
 
@@ -2159,7 +2132,7 @@ func expandOSConfigPatchDeploymentInstanceFilterGroupLabels(v interface{}, d tpg
 	return req, nil
 }
 
-func expandOSConfigPatchDeploymentInstanceFilterGroupLabelsLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandOSConfigPatchDeploymentInstanceFilterGroupLabelsLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -2170,19 +2143,19 @@ func expandOSConfigPatchDeploymentInstanceFilterGroupLabelsLabels(v interface{},
 	return m, nil
 }
 
-func expandOSConfigPatchDeploymentInstanceFilterZones(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentInstanceFilterZones(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentInstanceFilterInstances(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentInstanceFilterInstances(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentInstanceFilterInstanceNamePrefixes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentInstanceFilterInstanceNamePrefixes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2194,78 +2167,78 @@ func expandOSConfigPatchDeploymentPatchConfig(v interface{}, d tpgresource.Terra
 	transformedMigInstancesAllowed, err := expandOSConfigPatchDeploymentPatchConfigMigInstancesAllowed(original["mig_instances_allowed"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMigInstancesAllowed); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMigInstancesAllowed); val.IsValid() && !isEmptyValue(val) {
 		transformed["migInstancesAllowed"] = transformedMigInstancesAllowed
 	}
 
 	transformedRebootConfig, err := expandOSConfigPatchDeploymentPatchConfigRebootConfig(original["reboot_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRebootConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRebootConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["rebootConfig"] = transformedRebootConfig
 	}
 
 	transformedApt, err := expandOSConfigPatchDeploymentPatchConfigApt(original["apt"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedApt); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedApt); val.IsValid() && !isEmptyValue(val) {
 		transformed["apt"] = transformedApt
 	}
 
 	transformedYum, err := expandOSConfigPatchDeploymentPatchConfigYum(original["yum"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedYum); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedYum); val.IsValid() && !isEmptyValue(val) {
 		transformed["yum"] = transformedYum
 	}
 
 	transformedGoo, err := expandOSConfigPatchDeploymentPatchConfigGoo(original["goo"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGoo); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGoo); val.IsValid() && !isEmptyValue(val) {
 		transformed["goo"] = transformedGoo
 	}
 
 	transformedZypper, err := expandOSConfigPatchDeploymentPatchConfigZypper(original["zypper"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedZypper); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedZypper); val.IsValid() && !isEmptyValue(val) {
 		transformed["zypper"] = transformedZypper
 	}
 
 	transformedWindowsUpdate, err := expandOSConfigPatchDeploymentPatchConfigWindowsUpdate(original["windows_update"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWindowsUpdate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWindowsUpdate); val.IsValid() && !isEmptyValue(val) {
 		transformed["windowsUpdate"] = transformedWindowsUpdate
 	}
 
 	transformedPreStep, err := expandOSConfigPatchDeploymentPatchConfigPreStep(original["pre_step"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPreStep); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPreStep); val.IsValid() && !isEmptyValue(val) {
 		transformed["preStep"] = transformedPreStep
 	}
 
 	transformedPostStep, err := expandOSConfigPatchDeploymentPatchConfigPostStep(original["post_step"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPostStep); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPostStep); val.IsValid() && !isEmptyValue(val) {
 		transformed["postStep"] = transformedPostStep
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigMigInstancesAllowed(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigMigInstancesAllowed(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigRebootConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigRebootConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigApt(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigApt(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2277,40 +2250,40 @@ func expandOSConfigPatchDeploymentPatchConfigApt(v interface{}, d tpgresource.Te
 	transformedType, err := expandOSConfigPatchDeploymentPatchConfigAptType(original["type"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedType); val.IsValid() && !isEmptyValue(val) {
 		transformed["type"] = transformedType
 	}
 
 	transformedExcludes, err := expandOSConfigPatchDeploymentPatchConfigAptExcludes(original["excludes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExcludes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExcludes); val.IsValid() && !isEmptyValue(val) {
 		transformed["excludes"] = transformedExcludes
 	}
 
 	transformedExclusivePackages, err := expandOSConfigPatchDeploymentPatchConfigAptExclusivePackages(original["exclusive_packages"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExclusivePackages); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExclusivePackages); val.IsValid() && !isEmptyValue(val) {
 		transformed["exclusivePackages"] = transformedExclusivePackages
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigAptType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigAptType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigAptExcludes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigAptExcludes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigAptExclusivePackages(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigAptExclusivePackages(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigYum(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigYum(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2322,51 +2295,51 @@ func expandOSConfigPatchDeploymentPatchConfigYum(v interface{}, d tpgresource.Te
 	transformedSecurity, err := expandOSConfigPatchDeploymentPatchConfigYumSecurity(original["security"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSecurity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSecurity); val.IsValid() && !isEmptyValue(val) {
 		transformed["security"] = transformedSecurity
 	}
 
 	transformedMinimal, err := expandOSConfigPatchDeploymentPatchConfigYumMinimal(original["minimal"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMinimal); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMinimal); val.IsValid() && !isEmptyValue(val) {
 		transformed["minimal"] = transformedMinimal
 	}
 
 	transformedExcludes, err := expandOSConfigPatchDeploymentPatchConfigYumExcludes(original["excludes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExcludes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExcludes); val.IsValid() && !isEmptyValue(val) {
 		transformed["excludes"] = transformedExcludes
 	}
 
 	transformedExclusivePackages, err := expandOSConfigPatchDeploymentPatchConfigYumExclusivePackages(original["exclusive_packages"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExclusivePackages); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExclusivePackages); val.IsValid() && !isEmptyValue(val) {
 		transformed["exclusivePackages"] = transformedExclusivePackages
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigYumSecurity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigYumSecurity(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigYumMinimal(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigYumMinimal(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigYumExcludes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigYumExcludes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigYumExclusivePackages(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigYumExclusivePackages(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigGoo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigGoo(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2378,18 +2351,18 @@ func expandOSConfigPatchDeploymentPatchConfigGoo(v interface{}, d tpgresource.Te
 	transformedEnabled, err := expandOSConfigPatchDeploymentPatchConfigGooEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigGooEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigGooEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigZypper(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigZypper(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2401,73 +2374,73 @@ func expandOSConfigPatchDeploymentPatchConfigZypper(v interface{}, d tpgresource
 	transformedWithOptional, err := expandOSConfigPatchDeploymentPatchConfigZypperWithOptional(original["with_optional"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWithOptional); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWithOptional); val.IsValid() && !isEmptyValue(val) {
 		transformed["withOptional"] = transformedWithOptional
 	}
 
 	transformedWithUpdate, err := expandOSConfigPatchDeploymentPatchConfigZypperWithUpdate(original["with_update"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWithUpdate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWithUpdate); val.IsValid() && !isEmptyValue(val) {
 		transformed["withUpdate"] = transformedWithUpdate
 	}
 
 	transformedCategories, err := expandOSConfigPatchDeploymentPatchConfigZypperCategories(original["categories"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCategories); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCategories); val.IsValid() && !isEmptyValue(val) {
 		transformed["categories"] = transformedCategories
 	}
 
 	transformedSeverities, err := expandOSConfigPatchDeploymentPatchConfigZypperSeverities(original["severities"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSeverities); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSeverities); val.IsValid() && !isEmptyValue(val) {
 		transformed["severities"] = transformedSeverities
 	}
 
 	transformedExcludes, err := expandOSConfigPatchDeploymentPatchConfigZypperExcludes(original["excludes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExcludes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExcludes); val.IsValid() && !isEmptyValue(val) {
 		transformed["excludes"] = transformedExcludes
 	}
 
 	transformedExclusivePatches, err := expandOSConfigPatchDeploymentPatchConfigZypperExclusivePatches(original["exclusive_patches"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExclusivePatches); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExclusivePatches); val.IsValid() && !isEmptyValue(val) {
 		transformed["exclusivePatches"] = transformedExclusivePatches
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigZypperWithOptional(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigZypperWithOptional(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigZypperWithUpdate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigZypperWithUpdate(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigZypperCategories(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigZypperCategories(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigZypperSeverities(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigZypperSeverities(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigZypperExcludes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigZypperExcludes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigZypperExclusivePatches(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigZypperExclusivePatches(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigWindowsUpdate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigWindowsUpdate(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2479,40 +2452,40 @@ func expandOSConfigPatchDeploymentPatchConfigWindowsUpdate(v interface{}, d tpgr
 	transformedClassifications, err := expandOSConfigPatchDeploymentPatchConfigWindowsUpdateClassifications(original["classifications"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedClassifications); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedClassifications); val.IsValid() && !isEmptyValue(val) {
 		transformed["classifications"] = transformedClassifications
 	}
 
 	transformedExcludes, err := expandOSConfigPatchDeploymentPatchConfigWindowsUpdateExcludes(original["excludes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExcludes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExcludes); val.IsValid() && !isEmptyValue(val) {
 		transformed["excludes"] = transformedExcludes
 	}
 
 	transformedExclusivePatches, err := expandOSConfigPatchDeploymentPatchConfigWindowsUpdateExclusivePatches(original["exclusive_patches"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExclusivePatches); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExclusivePatches); val.IsValid() && !isEmptyValue(val) {
 		transformed["exclusivePatches"] = transformedExclusivePatches
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigWindowsUpdateClassifications(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigWindowsUpdateClassifications(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigWindowsUpdateExcludes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigWindowsUpdateExcludes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigWindowsUpdateExclusivePatches(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigWindowsUpdateExclusivePatches(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStep(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStep(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2524,21 +2497,21 @@ func expandOSConfigPatchDeploymentPatchConfigPreStep(v interface{}, d tpgresourc
 	transformedLinuxExecStepConfig, err := expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfig(original["linux_exec_step_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLinuxExecStepConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLinuxExecStepConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["linuxExecStepConfig"] = transformedLinuxExecStepConfig
 	}
 
 	transformedWindowsExecStepConfig, err := expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfig(original["windows_exec_step_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWindowsExecStepConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWindowsExecStepConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["windowsExecStepConfig"] = transformedWindowsExecStepConfig
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2550,47 +2523,47 @@ func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfig(v interf
 	transformedAllowedSuccessCodes, err := expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigAllowedSuccessCodes(original["allowed_success_codes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAllowedSuccessCodes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAllowedSuccessCodes); val.IsValid() && !isEmptyValue(val) {
 		transformed["allowedSuccessCodes"] = transformedAllowedSuccessCodes
 	}
 
 	transformedInterpreter, err := expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigInterpreter(original["interpreter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedInterpreter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedInterpreter); val.IsValid() && !isEmptyValue(val) {
 		transformed["interpreter"] = transformedInterpreter
 	}
 
 	transformedLocalPath, err := expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigLocalPath(original["local_path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLocalPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLocalPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["localPath"] = transformedLocalPath
 	}
 
 	transformedGcsObject, err := expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObject(original["gcs_object"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGcsObject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGcsObject); val.IsValid() && !isEmptyValue(val) {
 		transformed["gcsObject"] = transformedGcsObject
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigAllowedSuccessCodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigAllowedSuccessCodes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigInterpreter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigInterpreter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigLocalPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigLocalPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObject(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2602,40 +2575,40 @@ func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObject
 	transformedBucket, err := expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObjectBucket(original["bucket"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBucket); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBucket); val.IsValid() && !isEmptyValue(val) {
 		transformed["bucket"] = transformedBucket
 	}
 
 	transformedObject, err := expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObjectObject(original["object"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedObject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedObject); val.IsValid() && !isEmptyValue(val) {
 		transformed["object"] = transformedObject
 	}
 
 	transformedGenerationNumber, err := expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObjectGenerationNumber(original["generation_number"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGenerationNumber); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGenerationNumber); val.IsValid() && !isEmptyValue(val) {
 		transformed["generationNumber"] = transformedGenerationNumber
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObjectBucket(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObjectBucket(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObjectObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObjectObject(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObjectGenerationNumber(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObjectGenerationNumber(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2647,47 +2620,47 @@ func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfig(v inte
 	transformedAllowedSuccessCodes, err := expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigAllowedSuccessCodes(original["allowed_success_codes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAllowedSuccessCodes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAllowedSuccessCodes); val.IsValid() && !isEmptyValue(val) {
 		transformed["allowedSuccessCodes"] = transformedAllowedSuccessCodes
 	}
 
 	transformedInterpreter, err := expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigInterpreter(original["interpreter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedInterpreter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedInterpreter); val.IsValid() && !isEmptyValue(val) {
 		transformed["interpreter"] = transformedInterpreter
 	}
 
 	transformedLocalPath, err := expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigLocalPath(original["local_path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLocalPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLocalPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["localPath"] = transformedLocalPath
 	}
 
 	transformedGcsObject, err := expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObject(original["gcs_object"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGcsObject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGcsObject); val.IsValid() && !isEmptyValue(val) {
 		transformed["gcsObject"] = transformedGcsObject
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigAllowedSuccessCodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigAllowedSuccessCodes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigInterpreter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigInterpreter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigLocalPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigLocalPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObject(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2699,40 +2672,40 @@ func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObje
 	transformedBucket, err := expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObjectBucket(original["bucket"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBucket); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBucket); val.IsValid() && !isEmptyValue(val) {
 		transformed["bucket"] = transformedBucket
 	}
 
 	transformedObject, err := expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObjectObject(original["object"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedObject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedObject); val.IsValid() && !isEmptyValue(val) {
 		transformed["object"] = transformedObject
 	}
 
 	transformedGenerationNumber, err := expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObjectGenerationNumber(original["generation_number"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGenerationNumber); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGenerationNumber); val.IsValid() && !isEmptyValue(val) {
 		transformed["generationNumber"] = transformedGenerationNumber
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObjectBucket(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObjectBucket(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObjectObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObjectObject(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObjectGenerationNumber(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObjectGenerationNumber(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStep(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStep(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2744,21 +2717,21 @@ func expandOSConfigPatchDeploymentPatchConfigPostStep(v interface{}, d tpgresour
 	transformedLinuxExecStepConfig, err := expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfig(original["linux_exec_step_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLinuxExecStepConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLinuxExecStepConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["linuxExecStepConfig"] = transformedLinuxExecStepConfig
 	}
 
 	transformedWindowsExecStepConfig, err := expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfig(original["windows_exec_step_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWindowsExecStepConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWindowsExecStepConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["windowsExecStepConfig"] = transformedWindowsExecStepConfig
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2770,47 +2743,47 @@ func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfig(v inter
 	transformedAllowedSuccessCodes, err := expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigAllowedSuccessCodes(original["allowed_success_codes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAllowedSuccessCodes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAllowedSuccessCodes); val.IsValid() && !isEmptyValue(val) {
 		transformed["allowedSuccessCodes"] = transformedAllowedSuccessCodes
 	}
 
 	transformedInterpreter, err := expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigInterpreter(original["interpreter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedInterpreter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedInterpreter); val.IsValid() && !isEmptyValue(val) {
 		transformed["interpreter"] = transformedInterpreter
 	}
 
 	transformedLocalPath, err := expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigLocalPath(original["local_path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLocalPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLocalPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["localPath"] = transformedLocalPath
 	}
 
 	transformedGcsObject, err := expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObject(original["gcs_object"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGcsObject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGcsObject); val.IsValid() && !isEmptyValue(val) {
 		transformed["gcsObject"] = transformedGcsObject
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigAllowedSuccessCodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigAllowedSuccessCodes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigInterpreter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigInterpreter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigLocalPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigLocalPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObject(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2822,40 +2795,40 @@ func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObjec
 	transformedBucket, err := expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObjectBucket(original["bucket"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBucket); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBucket); val.IsValid() && !isEmptyValue(val) {
 		transformed["bucket"] = transformedBucket
 	}
 
 	transformedObject, err := expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObjectObject(original["object"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedObject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedObject); val.IsValid() && !isEmptyValue(val) {
 		transformed["object"] = transformedObject
 	}
 
 	transformedGenerationNumber, err := expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObjectGenerationNumber(original["generation_number"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGenerationNumber); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGenerationNumber); val.IsValid() && !isEmptyValue(val) {
 		transformed["generationNumber"] = transformedGenerationNumber
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObjectBucket(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObjectBucket(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObjectObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObjectObject(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObjectGenerationNumber(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObjectGenerationNumber(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2867,47 +2840,47 @@ func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfig(v int
 	transformedAllowedSuccessCodes, err := expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigAllowedSuccessCodes(original["allowed_success_codes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAllowedSuccessCodes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAllowedSuccessCodes); val.IsValid() && !isEmptyValue(val) {
 		transformed["allowedSuccessCodes"] = transformedAllowedSuccessCodes
 	}
 
 	transformedInterpreter, err := expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigInterpreter(original["interpreter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedInterpreter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedInterpreter); val.IsValid() && !isEmptyValue(val) {
 		transformed["interpreter"] = transformedInterpreter
 	}
 
 	transformedLocalPath, err := expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigLocalPath(original["local_path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLocalPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLocalPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["localPath"] = transformedLocalPath
 	}
 
 	transformedGcsObject, err := expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObject(original["gcs_object"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGcsObject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGcsObject); val.IsValid() && !isEmptyValue(val) {
 		transformed["gcsObject"] = transformedGcsObject
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigAllowedSuccessCodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigAllowedSuccessCodes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigInterpreter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigInterpreter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigLocalPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigLocalPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObject(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2919,44 +2892,44 @@ func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObj
 	transformedBucket, err := expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObjectBucket(original["bucket"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBucket); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBucket); val.IsValid() && !isEmptyValue(val) {
 		transformed["bucket"] = transformedBucket
 	}
 
 	transformedObject, err := expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObjectObject(original["object"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedObject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedObject); val.IsValid() && !isEmptyValue(val) {
 		transformed["object"] = transformedObject
 	}
 
 	transformedGenerationNumber, err := expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObjectGenerationNumber(original["generation_number"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGenerationNumber); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGenerationNumber); val.IsValid() && !isEmptyValue(val) {
 		transformed["generationNumber"] = transformedGenerationNumber
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObjectBucket(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObjectBucket(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObjectObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObjectObject(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObjectGenerationNumber(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObjectGenerationNumber(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentDuration(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentOneTimeSchedule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentOneTimeSchedule(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2968,18 +2941,18 @@ func expandOSConfigPatchDeploymentOneTimeSchedule(v interface{}, d tpgresource.T
 	transformedExecuteTime, err := expandOSConfigPatchDeploymentOneTimeScheduleExecuteTime(original["execute_time"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExecuteTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExecuteTime); val.IsValid() && !isEmptyValue(val) {
 		transformed["executeTime"] = transformedExecuteTime
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentOneTimeScheduleExecuteTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentOneTimeScheduleExecuteTime(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringSchedule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringSchedule(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2991,21 +2964,21 @@ func expandOSConfigPatchDeploymentRecurringSchedule(v interface{}, d tpgresource
 	transformedTimeZone, err := expandOSConfigPatchDeploymentRecurringScheduleTimeZone(original["time_zone"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTimeZone); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTimeZone); val.IsValid() && !isEmptyValue(val) {
 		transformed["timeZone"] = transformedTimeZone
 	}
 
 	transformedStartTime, err := expandOSConfigPatchDeploymentRecurringScheduleStartTime(original["start_time"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedStartTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedStartTime); val.IsValid() && !isEmptyValue(val) {
 		transformed["startTime"] = transformedStartTime
 	}
 
 	transformedEndTime, err := expandOSConfigPatchDeploymentRecurringScheduleEndTime(original["end_time"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEndTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEndTime); val.IsValid() && !isEmptyValue(val) {
 		transformed["endTime"] = transformedEndTime
 	}
 
@@ -3019,35 +2992,35 @@ func expandOSConfigPatchDeploymentRecurringSchedule(v interface{}, d tpgresource
 	transformedLastExecuteTime, err := expandOSConfigPatchDeploymentRecurringScheduleLastExecuteTime(original["last_execute_time"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLastExecuteTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLastExecuteTime); val.IsValid() && !isEmptyValue(val) {
 		transformed["lastExecuteTime"] = transformedLastExecuteTime
 	}
 
 	transformedNextExecuteTime, err := expandOSConfigPatchDeploymentRecurringScheduleNextExecuteTime(original["next_execute_time"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNextExecuteTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNextExecuteTime); val.IsValid() && !isEmptyValue(val) {
 		transformed["nextExecuteTime"] = transformedNextExecuteTime
 	}
 
 	transformedWeekly, err := expandOSConfigPatchDeploymentRecurringScheduleWeekly(original["weekly"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWeekly); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWeekly); val.IsValid() && !isEmptyValue(val) {
 		transformed["weekly"] = transformedWeekly
 	}
 
 	transformedMonthly, err := expandOSConfigPatchDeploymentRecurringScheduleMonthly(original["monthly"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMonthly); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMonthly); val.IsValid() && !isEmptyValue(val) {
 		transformed["monthly"] = transformedMonthly
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleTimeZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleTimeZone(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3059,37 +3032,37 @@ func expandOSConfigPatchDeploymentRecurringScheduleTimeZone(v interface{}, d tpg
 	transformedId, err := expandOSConfigPatchDeploymentRecurringScheduleTimeZoneId(original["id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedId); val.IsValid() && !isEmptyValue(val) {
 		transformed["id"] = transformedId
 	}
 
 	transformedVersion, err := expandOSConfigPatchDeploymentRecurringScheduleTimeZoneVersion(original["version"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !isEmptyValue(val) {
 		transformed["version"] = transformedVersion
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleTimeZoneId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleTimeZoneId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleTimeZoneVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleTimeZoneVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleStartTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleStartTime(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleEndTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleEndTime(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDay(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDay(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3101,59 +3074,59 @@ func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDay(v interface{}, d tp
 	transformedHours, err := expandOSConfigPatchDeploymentRecurringScheduleTimeOfDayHours(original["hours"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedHours); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedHours); val.IsValid() && !isEmptyValue(val) {
 		transformed["hours"] = transformedHours
 	}
 
 	transformedMinutes, err := expandOSConfigPatchDeploymentRecurringScheduleTimeOfDayMinutes(original["minutes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMinutes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMinutes); val.IsValid() && !isEmptyValue(val) {
 		transformed["minutes"] = transformedMinutes
 	}
 
 	transformedSeconds, err := expandOSConfigPatchDeploymentRecurringScheduleTimeOfDaySeconds(original["seconds"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSeconds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSeconds); val.IsValid() && !isEmptyValue(val) {
 		transformed["seconds"] = transformedSeconds
 	}
 
 	transformedNanos, err := expandOSConfigPatchDeploymentRecurringScheduleTimeOfDayNanos(original["nanos"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNanos); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNanos); val.IsValid() && !isEmptyValue(val) {
 		transformed["nanos"] = transformedNanos
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDayHours(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDayHours(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDayMinutes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDayMinutes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDaySeconds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDaySeconds(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDayNanos(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDayNanos(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleLastExecuteTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleLastExecuteTime(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleNextExecuteTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleNextExecuteTime(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleWeekly(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleWeekly(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3165,18 +3138,18 @@ func expandOSConfigPatchDeploymentRecurringScheduleWeekly(v interface{}, d tpgre
 	transformedDayOfWeek, err := expandOSConfigPatchDeploymentRecurringScheduleWeeklyDayOfWeek(original["day_of_week"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDayOfWeek); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDayOfWeek); val.IsValid() && !isEmptyValue(val) {
 		transformed["dayOfWeek"] = transformedDayOfWeek
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleWeeklyDayOfWeek(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleWeeklyDayOfWeek(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleMonthly(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleMonthly(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3188,21 +3161,21 @@ func expandOSConfigPatchDeploymentRecurringScheduleMonthly(v interface{}, d tpgr
 	transformedWeekDayOfMonth, err := expandOSConfigPatchDeploymentRecurringScheduleMonthlyWeekDayOfMonth(original["week_day_of_month"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWeekDayOfMonth); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWeekDayOfMonth); val.IsValid() && !isEmptyValue(val) {
 		transformed["weekDayOfMonth"] = transformedWeekDayOfMonth
 	}
 
 	transformedMonthDay, err := expandOSConfigPatchDeploymentRecurringScheduleMonthlyMonthDay(original["month_day"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMonthDay); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMonthDay); val.IsValid() && !isEmptyValue(val) {
 		transformed["monthDay"] = transformedMonthDay
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleMonthlyWeekDayOfMonth(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleMonthlyWeekDayOfMonth(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3214,33 +3187,33 @@ func expandOSConfigPatchDeploymentRecurringScheduleMonthlyWeekDayOfMonth(v inter
 	transformedWeekOrdinal, err := expandOSConfigPatchDeploymentRecurringScheduleMonthlyWeekDayOfMonthWeekOrdinal(original["week_ordinal"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWeekOrdinal); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWeekOrdinal); val.IsValid() && !isEmptyValue(val) {
 		transformed["weekOrdinal"] = transformedWeekOrdinal
 	}
 
 	transformedDayOfWeek, err := expandOSConfigPatchDeploymentRecurringScheduleMonthlyWeekDayOfMonthDayOfWeek(original["day_of_week"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDayOfWeek); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDayOfWeek); val.IsValid() && !isEmptyValue(val) {
 		transformed["dayOfWeek"] = transformedDayOfWeek
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleMonthlyWeekDayOfMonthWeekOrdinal(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleMonthlyWeekDayOfMonthWeekOrdinal(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleMonthlyWeekDayOfMonthDayOfWeek(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleMonthlyWeekDayOfMonthDayOfWeek(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRecurringScheduleMonthlyMonthDay(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRecurringScheduleMonthlyMonthDay(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRollout(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRollout(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3252,25 +3225,25 @@ func expandOSConfigPatchDeploymentRollout(v interface{}, d tpgresource.Terraform
 	transformedMode, err := expandOSConfigPatchDeploymentRolloutMode(original["mode"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMode); val.IsValid() && !isEmptyValue(val) {
 		transformed["mode"] = transformedMode
 	}
 
 	transformedDisruptionBudget, err := expandOSConfigPatchDeploymentRolloutDisruptionBudget(original["disruption_budget"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDisruptionBudget); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDisruptionBudget); val.IsValid() && !isEmptyValue(val) {
 		transformed["disruptionBudget"] = transformedDisruptionBudget
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentRolloutMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRolloutMode(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRolloutDisruptionBudget(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRolloutDisruptionBudget(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3282,25 +3255,25 @@ func expandOSConfigPatchDeploymentRolloutDisruptionBudget(v interface{}, d tpgre
 	transformedFixed, err := expandOSConfigPatchDeploymentRolloutDisruptionBudgetFixed(original["fixed"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedFixed); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedFixed); val.IsValid() && !isEmptyValue(val) {
 		transformed["fixed"] = transformedFixed
 	}
 
 	transformedPercentage, err := expandOSConfigPatchDeploymentRolloutDisruptionBudgetPercentage(original["percentage"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPercentage); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPercentage); val.IsValid() && !isEmptyValue(val) {
 		transformed["percent"] = transformedPercentage
 	}
 
 	return transformed, nil
 }
 
-func expandOSConfigPatchDeploymentRolloutDisruptionBudgetFixed(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRolloutDisruptionBudgetFixed(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandOSConfigPatchDeploymentRolloutDisruptionBudgetPercentage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandOSConfigPatchDeploymentRolloutDisruptionBudgetPercentage(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

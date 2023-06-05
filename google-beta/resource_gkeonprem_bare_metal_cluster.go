@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -1160,7 +1155,7 @@ indicate real problems requiring user intervention.`,
 
 func resourceGkeonpremBareMetalClusterCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -1169,95 +1164,95 @@ func resourceGkeonpremBareMetalClusterCreate(d *schema.ResourceData, meta interf
 	adminClusterMembershipProp, err := expandGkeonpremBareMetalClusterAdminClusterMembership(d.Get("admin_cluster_membership"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("admin_cluster_membership"); !tpgresource.IsEmptyValue(reflect.ValueOf(adminClusterMembershipProp)) && (ok || !reflect.DeepEqual(v, adminClusterMembershipProp)) {
+	} else if v, ok := d.GetOkExists("admin_cluster_membership"); !isEmptyValue(reflect.ValueOf(adminClusterMembershipProp)) && (ok || !reflect.DeepEqual(v, adminClusterMembershipProp)) {
 		obj["adminClusterMembership"] = adminClusterMembershipProp
 	}
 	descriptionProp, err := expandGkeonpremBareMetalClusterDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	bareMetalVersionProp, err := expandGkeonpremBareMetalClusterBareMetalVersion(d.Get("bare_metal_version"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("bare_metal_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(bareMetalVersionProp)) && (ok || !reflect.DeepEqual(v, bareMetalVersionProp)) {
+	} else if v, ok := d.GetOkExists("bare_metal_version"); !isEmptyValue(reflect.ValueOf(bareMetalVersionProp)) && (ok || !reflect.DeepEqual(v, bareMetalVersionProp)) {
 		obj["bareMetalVersion"] = bareMetalVersionProp
 	}
 	annotationsProp, err := expandGkeonpremBareMetalClusterAnnotations(d.Get("annotations"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(annotationsProp)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
+	} else if v, ok := d.GetOkExists("annotations"); !isEmptyValue(reflect.ValueOf(annotationsProp)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
 		obj["annotations"] = annotationsProp
 	}
 	networkConfigProp, err := expandGkeonpremBareMetalClusterNetworkConfig(d.Get("network_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("network_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(networkConfigProp)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
+	} else if v, ok := d.GetOkExists("network_config"); !isEmptyValue(reflect.ValueOf(networkConfigProp)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
 		obj["networkConfig"] = networkConfigProp
 	}
 	controlPlaneProp, err := expandGkeonpremBareMetalClusterControlPlane(d.Get("control_plane"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("control_plane"); !tpgresource.IsEmptyValue(reflect.ValueOf(controlPlaneProp)) && (ok || !reflect.DeepEqual(v, controlPlaneProp)) {
+	} else if v, ok := d.GetOkExists("control_plane"); !isEmptyValue(reflect.ValueOf(controlPlaneProp)) && (ok || !reflect.DeepEqual(v, controlPlaneProp)) {
 		obj["controlPlane"] = controlPlaneProp
 	}
 	loadBalancerProp, err := expandGkeonpremBareMetalClusterLoadBalancer(d.Get("load_balancer"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("load_balancer"); !tpgresource.IsEmptyValue(reflect.ValueOf(loadBalancerProp)) && (ok || !reflect.DeepEqual(v, loadBalancerProp)) {
+	} else if v, ok := d.GetOkExists("load_balancer"); !isEmptyValue(reflect.ValueOf(loadBalancerProp)) && (ok || !reflect.DeepEqual(v, loadBalancerProp)) {
 		obj["loadBalancer"] = loadBalancerProp
 	}
 	storageProp, err := expandGkeonpremBareMetalClusterStorage(d.Get("storage"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("storage"); !tpgresource.IsEmptyValue(reflect.ValueOf(storageProp)) && (ok || !reflect.DeepEqual(v, storageProp)) {
+	} else if v, ok := d.GetOkExists("storage"); !isEmptyValue(reflect.ValueOf(storageProp)) && (ok || !reflect.DeepEqual(v, storageProp)) {
 		obj["storage"] = storageProp
 	}
 	proxyProp, err := expandGkeonpremBareMetalClusterProxy(d.Get("proxy"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("proxy"); !tpgresource.IsEmptyValue(reflect.ValueOf(proxyProp)) && (ok || !reflect.DeepEqual(v, proxyProp)) {
+	} else if v, ok := d.GetOkExists("proxy"); !isEmptyValue(reflect.ValueOf(proxyProp)) && (ok || !reflect.DeepEqual(v, proxyProp)) {
 		obj["proxy"] = proxyProp
 	}
 	clusterOperationsProp, err := expandGkeonpremBareMetalClusterClusterOperations(d.Get("cluster_operations"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("cluster_operations"); !tpgresource.IsEmptyValue(reflect.ValueOf(clusterOperationsProp)) && (ok || !reflect.DeepEqual(v, clusterOperationsProp)) {
+	} else if v, ok := d.GetOkExists("cluster_operations"); !isEmptyValue(reflect.ValueOf(clusterOperationsProp)) && (ok || !reflect.DeepEqual(v, clusterOperationsProp)) {
 		obj["clusterOperations"] = clusterOperationsProp
 	}
 	maintenanceConfigProp, err := expandGkeonpremBareMetalClusterMaintenanceConfig(d.Get("maintenance_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("maintenance_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(maintenanceConfigProp)) && (ok || !reflect.DeepEqual(v, maintenanceConfigProp)) {
+	} else if v, ok := d.GetOkExists("maintenance_config"); !isEmptyValue(reflect.ValueOf(maintenanceConfigProp)) && (ok || !reflect.DeepEqual(v, maintenanceConfigProp)) {
 		obj["maintenanceConfig"] = maintenanceConfigProp
 	}
 	nodeConfigProp, err := expandGkeonpremBareMetalClusterNodeConfig(d.Get("node_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("node_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(nodeConfigProp)) && (ok || !reflect.DeepEqual(v, nodeConfigProp)) {
+	} else if v, ok := d.GetOkExists("node_config"); !isEmptyValue(reflect.ValueOf(nodeConfigProp)) && (ok || !reflect.DeepEqual(v, nodeConfigProp)) {
 		obj["nodeConfig"] = nodeConfigProp
 	}
 	nodeAccessConfigProp, err := expandGkeonpremBareMetalClusterNodeAccessConfig(d.Get("node_access_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("node_access_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(nodeAccessConfigProp)) && (ok || !reflect.DeepEqual(v, nodeAccessConfigProp)) {
+	} else if v, ok := d.GetOkExists("node_access_config"); !isEmptyValue(reflect.ValueOf(nodeAccessConfigProp)) && (ok || !reflect.DeepEqual(v, nodeAccessConfigProp)) {
 		obj["nodeAccessConfig"] = nodeAccessConfigProp
 	}
 	osEnvironmentConfigProp, err := expandGkeonpremBareMetalClusterOsEnvironmentConfig(d.Get("os_environment_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("os_environment_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(osEnvironmentConfigProp)) && (ok || !reflect.DeepEqual(v, osEnvironmentConfigProp)) {
+	} else if v, ok := d.GetOkExists("os_environment_config"); !isEmptyValue(reflect.ValueOf(osEnvironmentConfigProp)) && (ok || !reflect.DeepEqual(v, osEnvironmentConfigProp)) {
 		obj["osEnvironmentConfig"] = osEnvironmentConfigProp
 	}
 	securityConfigProp, err := expandGkeonpremBareMetalClusterSecurityConfig(d.Get("security_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("security_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(securityConfigProp)) && (ok || !reflect.DeepEqual(v, securityConfigProp)) {
+	} else if v, ok := d.GetOkExists("security_config"); !isEmptyValue(reflect.ValueOf(securityConfigProp)) && (ok || !reflect.DeepEqual(v, securityConfigProp)) {
 		obj["securityConfig"] = securityConfigProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/bareMetalClusters?bare_metal_cluster_id={{name}}")
+	url, err := ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/bareMetalClusters?bare_metal_cluster_id={{name}}")
 	if err != nil {
 		return err
 	}
@@ -1265,32 +1260,24 @@ func resourceGkeonpremBareMetalClusterCreate(d *schema.ResourceData, meta interf
 	log.Printf("[DEBUG] Creating new BareMetalCluster: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for BareMetalCluster: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating BareMetalCluster: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -1308,7 +1295,7 @@ func resourceGkeonpremBareMetalClusterCreate(d *schema.ResourceData, meta interf
 	}
 
 	// This may have caused the ID to update - update it if so.
-	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}")
+	id, err = ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -1321,36 +1308,30 @@ func resourceGkeonpremBareMetalClusterCreate(d *schema.ResourceData, meta interf
 
 func resourceGkeonpremBareMetalClusterRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}")
+	url, err := ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for BareMetalCluster: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("GkeonpremBareMetalCluster %q", d.Id()))
 	}
@@ -1446,14 +1427,14 @@ func resourceGkeonpremBareMetalClusterRead(d *schema.ResourceData, meta interfac
 
 func resourceGkeonpremBareMetalClusterUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for BareMetalCluster: %s", err)
 	}
@@ -1463,89 +1444,89 @@ func resourceGkeonpremBareMetalClusterUpdate(d *schema.ResourceData, meta interf
 	descriptionProp, err := expandGkeonpremBareMetalClusterDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	bareMetalVersionProp, err := expandGkeonpremBareMetalClusterBareMetalVersion(d.Get("bare_metal_version"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("bare_metal_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, bareMetalVersionProp)) {
+	} else if v, ok := d.GetOkExists("bare_metal_version"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, bareMetalVersionProp)) {
 		obj["bareMetalVersion"] = bareMetalVersionProp
 	}
 	annotationsProp, err := expandGkeonpremBareMetalClusterAnnotations(d.Get("annotations"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
+	} else if v, ok := d.GetOkExists("annotations"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
 		obj["annotations"] = annotationsProp
 	}
 	networkConfigProp, err := expandGkeonpremBareMetalClusterNetworkConfig(d.Get("network_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("network_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
+	} else if v, ok := d.GetOkExists("network_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
 		obj["networkConfig"] = networkConfigProp
 	}
 	controlPlaneProp, err := expandGkeonpremBareMetalClusterControlPlane(d.Get("control_plane"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("control_plane"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, controlPlaneProp)) {
+	} else if v, ok := d.GetOkExists("control_plane"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, controlPlaneProp)) {
 		obj["controlPlane"] = controlPlaneProp
 	}
 	loadBalancerProp, err := expandGkeonpremBareMetalClusterLoadBalancer(d.Get("load_balancer"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("load_balancer"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, loadBalancerProp)) {
+	} else if v, ok := d.GetOkExists("load_balancer"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, loadBalancerProp)) {
 		obj["loadBalancer"] = loadBalancerProp
 	}
 	storageProp, err := expandGkeonpremBareMetalClusterStorage(d.Get("storage"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("storage"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, storageProp)) {
+	} else if v, ok := d.GetOkExists("storage"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, storageProp)) {
 		obj["storage"] = storageProp
 	}
 	proxyProp, err := expandGkeonpremBareMetalClusterProxy(d.Get("proxy"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("proxy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, proxyProp)) {
+	} else if v, ok := d.GetOkExists("proxy"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, proxyProp)) {
 		obj["proxy"] = proxyProp
 	}
 	clusterOperationsProp, err := expandGkeonpremBareMetalClusterClusterOperations(d.Get("cluster_operations"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("cluster_operations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, clusterOperationsProp)) {
+	} else if v, ok := d.GetOkExists("cluster_operations"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, clusterOperationsProp)) {
 		obj["clusterOperations"] = clusterOperationsProp
 	}
 	maintenanceConfigProp, err := expandGkeonpremBareMetalClusterMaintenanceConfig(d.Get("maintenance_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("maintenance_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, maintenanceConfigProp)) {
+	} else if v, ok := d.GetOkExists("maintenance_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, maintenanceConfigProp)) {
 		obj["maintenanceConfig"] = maintenanceConfigProp
 	}
 	nodeConfigProp, err := expandGkeonpremBareMetalClusterNodeConfig(d.Get("node_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("node_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nodeConfigProp)) {
+	} else if v, ok := d.GetOkExists("node_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nodeConfigProp)) {
 		obj["nodeConfig"] = nodeConfigProp
 	}
 	nodeAccessConfigProp, err := expandGkeonpremBareMetalClusterNodeAccessConfig(d.Get("node_access_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("node_access_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nodeAccessConfigProp)) {
+	} else if v, ok := d.GetOkExists("node_access_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nodeAccessConfigProp)) {
 		obj["nodeAccessConfig"] = nodeAccessConfigProp
 	}
 	osEnvironmentConfigProp, err := expandGkeonpremBareMetalClusterOsEnvironmentConfig(d.Get("os_environment_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("os_environment_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, osEnvironmentConfigProp)) {
+	} else if v, ok := d.GetOkExists("os_environment_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, osEnvironmentConfigProp)) {
 		obj["osEnvironmentConfig"] = osEnvironmentConfigProp
 	}
 	securityConfigProp, err := expandGkeonpremBareMetalClusterSecurityConfig(d.Get("security_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("security_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, securityConfigProp)) {
+	} else if v, ok := d.GetOkExists("security_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, securityConfigProp)) {
 		obj["securityConfig"] = securityConfigProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}")
+	url, err := ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -1616,19 +1597,11 @@ func resourceGkeonpremBareMetalClusterUpdate(d *schema.ResourceData, meta interf
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating BareMetalCluster %q: %s", d.Id(), err)
@@ -1649,20 +1622,20 @@ func resourceGkeonpremBareMetalClusterUpdate(d *schema.ResourceData, meta interf
 
 func resourceGkeonpremBareMetalClusterDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for BareMetalCluster: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}?force=true")
+	url, err := ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}?force=true")
 	if err != nil {
 		return err
 	}
@@ -1671,19 +1644,11 @@ func resourceGkeonpremBareMetalClusterDelete(d *schema.ResourceData, meta interf
 	log.Printf("[DEBUG] Deleting BareMetalCluster %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "BareMetalCluster")
 	}
@@ -1702,7 +1667,7 @@ func resourceGkeonpremBareMetalClusterDelete(d *schema.ResourceData, meta interf
 
 func resourceGkeonpremBareMetalClusterImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/bareMetalClusters/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)",
 		"(?P<location>[^/]+)/(?P<name>[^/]+)",
@@ -1711,7 +1676,7 @@ func resourceGkeonpremBareMetalClusterImport(d *schema.ResourceData, meta interf
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bareMetalClusters/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -2935,19 +2900,19 @@ func flattenGkeonpremBareMetalClusterValidationCheckScenario(v interface{}, d *s
 	return v
 }
 
-func expandGkeonpremBareMetalClusterAdminClusterMembership(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterAdminClusterMembership(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterBareMetalVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterBareMetalVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterAnnotations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandGkeonpremBareMetalClusterAnnotations(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -2958,7 +2923,7 @@ func expandGkeonpremBareMetalClusterAnnotations(v interface{}, d tpgresource.Ter
 	return m, nil
 }
 
-func expandGkeonpremBareMetalClusterNetworkConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNetworkConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2970,35 +2935,35 @@ func expandGkeonpremBareMetalClusterNetworkConfig(v interface{}, d tpgresource.T
 	transformedIslandModeCidr, err := expandGkeonpremBareMetalClusterNetworkConfigIslandModeCidr(original["island_mode_cidr"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIslandModeCidr); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIslandModeCidr); val.IsValid() && !isEmptyValue(val) {
 		transformed["islandModeCidr"] = transformedIslandModeCidr
 	}
 
 	transformedAdvancedNetworking, err := expandGkeonpremBareMetalClusterNetworkConfigAdvancedNetworking(original["advanced_networking"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAdvancedNetworking); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAdvancedNetworking); val.IsValid() && !isEmptyValue(val) {
 		transformed["advancedNetworking"] = transformedAdvancedNetworking
 	}
 
 	transformedMultipleNetworkInterfacesConfig, err := expandGkeonpremBareMetalClusterNetworkConfigMultipleNetworkInterfacesConfig(original["multiple_network_interfaces_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMultipleNetworkInterfacesConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMultipleNetworkInterfacesConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["multipleNetworkInterfacesConfig"] = transformedMultipleNetworkInterfacesConfig
 	}
 
 	transformedSrIovConfig, err := expandGkeonpremBareMetalClusterNetworkConfigSrIovConfig(original["sr_iov_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSrIovConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSrIovConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["srIovConfig"] = transformedSrIovConfig
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterNetworkConfigIslandModeCidr(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNetworkConfigIslandModeCidr(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3010,33 +2975,33 @@ func expandGkeonpremBareMetalClusterNetworkConfigIslandModeCidr(v interface{}, d
 	transformedServiceAddressCidrBlocks, err := expandGkeonpremBareMetalClusterNetworkConfigIslandModeCidrServiceAddressCidrBlocks(original["service_address_cidr_blocks"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedServiceAddressCidrBlocks); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedServiceAddressCidrBlocks); val.IsValid() && !isEmptyValue(val) {
 		transformed["serviceAddressCidrBlocks"] = transformedServiceAddressCidrBlocks
 	}
 
 	transformedPodAddressCidrBlocks, err := expandGkeonpremBareMetalClusterNetworkConfigIslandModeCidrPodAddressCidrBlocks(original["pod_address_cidr_blocks"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPodAddressCidrBlocks); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPodAddressCidrBlocks); val.IsValid() && !isEmptyValue(val) {
 		transformed["podAddressCidrBlocks"] = transformedPodAddressCidrBlocks
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterNetworkConfigIslandModeCidrServiceAddressCidrBlocks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNetworkConfigIslandModeCidrServiceAddressCidrBlocks(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterNetworkConfigIslandModeCidrPodAddressCidrBlocks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNetworkConfigIslandModeCidrPodAddressCidrBlocks(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterNetworkConfigAdvancedNetworking(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNetworkConfigAdvancedNetworking(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterNetworkConfigMultipleNetworkInterfacesConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNetworkConfigMultipleNetworkInterfacesConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3048,18 +3013,18 @@ func expandGkeonpremBareMetalClusterNetworkConfigMultipleNetworkInterfacesConfig
 	transformedEnabled, err := expandGkeonpremBareMetalClusterNetworkConfigMultipleNetworkInterfacesConfigEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterNetworkConfigMultipleNetworkInterfacesConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNetworkConfigMultipleNetworkInterfacesConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterNetworkConfigSrIovConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNetworkConfigSrIovConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3071,18 +3036,18 @@ func expandGkeonpremBareMetalClusterNetworkConfigSrIovConfig(v interface{}, d tp
 	transformedEnabled, err := expandGkeonpremBareMetalClusterNetworkConfigSrIovConfigEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterNetworkConfigSrIovConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNetworkConfigSrIovConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlane(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlane(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3094,21 +3059,21 @@ func expandGkeonpremBareMetalClusterControlPlane(v interface{}, d tpgresource.Te
 	transformedControlPlaneNodePoolConfig, err := expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfig(original["control_plane_node_pool_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedControlPlaneNodePoolConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedControlPlaneNodePoolConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["controlPlaneNodePoolConfig"] = transformedControlPlaneNodePoolConfig
 	}
 
 	transformedApiServerArgs, err := expandGkeonpremBareMetalClusterControlPlaneApiServerArgs(original["api_server_args"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedApiServerArgs); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedApiServerArgs); val.IsValid() && !isEmptyValue(val) {
 		transformed["apiServerArgs"] = transformedApiServerArgs
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3120,14 +3085,14 @@ func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfig(v int
 	transformedNodePoolConfig, err := expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfig(original["node_pool_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNodePoolConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNodePoolConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["nodePoolConfig"] = transformedNodePoolConfig
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3139,35 +3104,35 @@ func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePo
 	transformedNodeConfigs, err := expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigNodeConfigs(original["node_configs"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNodeConfigs); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNodeConfigs); val.IsValid() && !isEmptyValue(val) {
 		transformed["nodeConfigs"] = transformedNodeConfigs
 	}
 
 	transformedOperatingSystem, err := expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigOperatingSystem(original["operating_system"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedOperatingSystem); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedOperatingSystem); val.IsValid() && !isEmptyValue(val) {
 		transformed["operatingSystem"] = transformedOperatingSystem
 	}
 
 	transformedTaints, err := expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaints(original["taints"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTaints); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTaints); val.IsValid() && !isEmptyValue(val) {
 		transformed["taints"] = transformedTaints
 	}
 
 	transformedLabels, err := expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigLabels(original["labels"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !isEmptyValue(val) {
 		transformed["labels"] = transformedLabels
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigNodeConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigNodeConfigs(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3180,14 +3145,14 @@ func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePo
 		transformedNodeIp, err := expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigNodeConfigsNodeIp(original["node_ip"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedNodeIp); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedNodeIp); val.IsValid() && !isEmptyValue(val) {
 			transformed["nodeIp"] = transformedNodeIp
 		}
 
 		transformedLabels, err := expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigNodeConfigsLabels(original["labels"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !isEmptyValue(val) {
 			transformed["labels"] = transformedLabels
 		}
 
@@ -3196,11 +3161,11 @@ func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePo
 	return req, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigNodeConfigsNodeIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigNodeConfigsNodeIp(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigNodeConfigsLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigNodeConfigsLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -3211,11 +3176,11 @@ func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePo
 	return m, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigOperatingSystem(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigOperatingSystem(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaints(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaints(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3228,21 +3193,21 @@ func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePo
 		transformedKey, err := expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaintsKey(original["key"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedKey); val.IsValid() && !isEmptyValue(val) {
 			transformed["key"] = transformedKey
 		}
 
 		transformedValue, err := expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaintsValue(original["value"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedValue); val.IsValid() && !isEmptyValue(val) {
 			transformed["value"] = transformedValue
 		}
 
 		transformedEffect, err := expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaintsEffect(original["effect"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedEffect); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedEffect); val.IsValid() && !isEmptyValue(val) {
 			transformed["effect"] = transformedEffect
 		}
 
@@ -3251,19 +3216,19 @@ func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePo
 	return req, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaintsKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaintsKey(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaintsValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaintsValue(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaintsEffect(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigTaintsEffect(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePoolConfigLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -3274,7 +3239,7 @@ func expandGkeonpremBareMetalClusterControlPlaneControlPlaneNodePoolConfigNodePo
 	return m, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneApiServerArgs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneApiServerArgs(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3287,14 +3252,14 @@ func expandGkeonpremBareMetalClusterControlPlaneApiServerArgs(v interface{}, d t
 		transformedArgument, err := expandGkeonpremBareMetalClusterControlPlaneApiServerArgsArgument(original["argument"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedArgument); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedArgument); val.IsValid() && !isEmptyValue(val) {
 			transformed["argument"] = transformedArgument
 		}
 
 		transformedValue, err := expandGkeonpremBareMetalClusterControlPlaneApiServerArgsValue(original["value"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedValue); val.IsValid() && !isEmptyValue(val) {
 			transformed["value"] = transformedValue
 		}
 
@@ -3303,15 +3268,15 @@ func expandGkeonpremBareMetalClusterControlPlaneApiServerArgs(v interface{}, d t
 	return req, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneApiServerArgsArgument(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneApiServerArgsArgument(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterControlPlaneApiServerArgsValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterControlPlaneApiServerArgsValue(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancer(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancer(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3323,42 +3288,42 @@ func expandGkeonpremBareMetalClusterLoadBalancer(v interface{}, d tpgresource.Te
 	transformedVipConfig, err := expandGkeonpremBareMetalClusterLoadBalancerVipConfig(original["vip_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedVipConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedVipConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["vipConfig"] = transformedVipConfig
 	}
 
 	transformedPortConfig, err := expandGkeonpremBareMetalClusterLoadBalancerPortConfig(original["port_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPortConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPortConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["portConfig"] = transformedPortConfig
 	}
 
 	transformedMetalLbConfig, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfig(original["metal_lb_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMetalLbConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMetalLbConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["metalLbConfig"] = transformedMetalLbConfig
 	}
 
 	transformedManualLbConfig, err := expandGkeonpremBareMetalClusterLoadBalancerManualLbConfig(original["manual_lb_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedManualLbConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedManualLbConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["manualLbConfig"] = transformedManualLbConfig
 	}
 
 	transformedBgpLbConfig, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfig(original["bgp_lb_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBgpLbConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBgpLbConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["bgpLbConfig"] = transformedBgpLbConfig
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerVipConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerVipConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3370,29 +3335,29 @@ func expandGkeonpremBareMetalClusterLoadBalancerVipConfig(v interface{}, d tpgre
 	transformedControlPlaneVip, err := expandGkeonpremBareMetalClusterLoadBalancerVipConfigControlPlaneVip(original["control_plane_vip"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedControlPlaneVip); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedControlPlaneVip); val.IsValid() && !isEmptyValue(val) {
 		transformed["controlPlaneVip"] = transformedControlPlaneVip
 	}
 
 	transformedIngressVip, err := expandGkeonpremBareMetalClusterLoadBalancerVipConfigIngressVip(original["ingress_vip"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIngressVip); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIngressVip); val.IsValid() && !isEmptyValue(val) {
 		transformed["ingressVip"] = transformedIngressVip
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerVipConfigControlPlaneVip(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerVipConfigControlPlaneVip(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerVipConfigIngressVip(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerVipConfigIngressVip(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerPortConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerPortConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3404,18 +3369,18 @@ func expandGkeonpremBareMetalClusterLoadBalancerPortConfig(v interface{}, d tpgr
 	transformedControlPlaneLoadBalancerPort, err := expandGkeonpremBareMetalClusterLoadBalancerPortConfigControlPlaneLoadBalancerPort(original["control_plane_load_balancer_port"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedControlPlaneLoadBalancerPort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedControlPlaneLoadBalancerPort); val.IsValid() && !isEmptyValue(val) {
 		transformed["controlPlaneLoadBalancerPort"] = transformedControlPlaneLoadBalancerPort
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerPortConfigControlPlaneLoadBalancerPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerPortConfigControlPlaneLoadBalancerPort(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3427,21 +3392,21 @@ func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfig(v interface{}, d t
 	transformedAddressPools, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPools(original["address_pools"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAddressPools); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAddressPools); val.IsValid() && !isEmptyValue(val) {
 		transformed["addressPools"] = transformedAddressPools
 	}
 
 	transformedLoadBalancerNodePoolConfig, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfig(original["load_balancer_node_pool_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLoadBalancerNodePoolConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLoadBalancerNodePoolConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["loadBalancerNodePoolConfig"] = transformedLoadBalancerNodePoolConfig
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPools(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPools(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3454,28 +3419,28 @@ func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPools(v inte
 		transformedPool, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsPool(original["pool"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedPool); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedPool); val.IsValid() && !isEmptyValue(val) {
 			transformed["pool"] = transformedPool
 		}
 
 		transformedAddresses, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsAddresses(original["addresses"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedAddresses); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedAddresses); val.IsValid() && !isEmptyValue(val) {
 			transformed["addresses"] = transformedAddresses
 		}
 
 		transformedAvoidBuggyIps, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsAvoidBuggyIps(original["avoid_buggy_ips"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedAvoidBuggyIps); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedAvoidBuggyIps); val.IsValid() && !isEmptyValue(val) {
 			transformed["avoidBuggyIps"] = transformedAvoidBuggyIps
 		}
 
 		transformedManualAssign, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsManualAssign(original["manual_assign"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedManualAssign); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedManualAssign); val.IsValid() && !isEmptyValue(val) {
 			transformed["manualAssign"] = transformedManualAssign
 		}
 
@@ -3484,23 +3449,23 @@ func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPools(v inte
 	return req, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsPool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsPool(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsAddresses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsAddresses(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsAvoidBuggyIps(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsAvoidBuggyIps(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsManualAssign(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigAddressPoolsManualAssign(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3512,14 +3477,14 @@ func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoo
 	transformedNodePoolConfig, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfig(original["node_pool_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNodePoolConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNodePoolConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["nodePoolConfig"] = transformedNodePoolConfig
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3531,35 +3496,35 @@ func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoo
 	transformedNodeConfigs, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigs(original["node_configs"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNodeConfigs); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNodeConfigs); val.IsValid() && !isEmptyValue(val) {
 		transformed["nodeConfigs"] = transformedNodeConfigs
 	}
 
 	transformedOperatingSystem, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigOperatingSystem(original["operating_system"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedOperatingSystem); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedOperatingSystem); val.IsValid() && !isEmptyValue(val) {
 		transformed["operatingSystem"] = transformedOperatingSystem
 	}
 
 	transformedTaints, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaints(original["taints"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTaints); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTaints); val.IsValid() && !isEmptyValue(val) {
 		transformed["taints"] = transformedTaints
 	}
 
 	transformedLabels, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigLabels(original["labels"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !isEmptyValue(val) {
 		transformed["labels"] = transformedLabels
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigs(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3572,14 +3537,14 @@ func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoo
 		transformedNodeIp, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsNodeIp(original["node_ip"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedNodeIp); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedNodeIp); val.IsValid() && !isEmptyValue(val) {
 			transformed["nodeIp"] = transformedNodeIp
 		}
 
 		transformedLabels, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsLabels(original["labels"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !isEmptyValue(val) {
 			transformed["labels"] = transformedLabels
 		}
 
@@ -3588,11 +3553,11 @@ func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoo
 	return req, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsNodeIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsNodeIp(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -3603,11 +3568,11 @@ func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoo
 	return m, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigOperatingSystem(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigOperatingSystem(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaints(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaints(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3620,21 +3585,21 @@ func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoo
 		transformedKey, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsKey(original["key"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedKey); val.IsValid() && !isEmptyValue(val) {
 			transformed["key"] = transformedKey
 		}
 
 		transformedValue, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsValue(original["value"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedValue); val.IsValid() && !isEmptyValue(val) {
 			transformed["value"] = transformedValue
 		}
 
 		transformedEffect, err := expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsEffect(original["effect"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedEffect); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedEffect); val.IsValid() && !isEmptyValue(val) {
 			transformed["effect"] = transformedEffect
 		}
 
@@ -3643,19 +3608,19 @@ func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoo
 	return req, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsKey(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsValue(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsEffect(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsEffect(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoolConfigNodePoolConfigLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -3666,7 +3631,7 @@ func expandGkeonpremBareMetalClusterLoadBalancerMetalLbConfigLoadBalancerNodePoo
 	return m, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerManualLbConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerManualLbConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3678,18 +3643,18 @@ func expandGkeonpremBareMetalClusterLoadBalancerManualLbConfig(v interface{}, d 
 	transformedEnabled, err := expandGkeonpremBareMetalClusterLoadBalancerManualLbConfigEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerManualLbConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerManualLbConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3701,39 +3666,39 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfig(v interface{}, d tpg
 	transformedAsn, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAsn(original["asn"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAsn); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAsn); val.IsValid() && !isEmptyValue(val) {
 		transformed["asn"] = transformedAsn
 	}
 
 	transformedBgpPeerConfigs, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigs(original["bgp_peer_configs"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBgpPeerConfigs); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBgpPeerConfigs); val.IsValid() && !isEmptyValue(val) {
 		transformed["bgpPeerConfigs"] = transformedBgpPeerConfigs
 	}
 
 	transformedAddressPools, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPools(original["address_pools"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAddressPools); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAddressPools); val.IsValid() && !isEmptyValue(val) {
 		transformed["addressPools"] = transformedAddressPools
 	}
 
 	transformedLoadBalancerNodePoolConfig, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfig(original["load_balancer_node_pool_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLoadBalancerNodePoolConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLoadBalancerNodePoolConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["loadBalancerNodePoolConfig"] = transformedLoadBalancerNodePoolConfig
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAsn(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAsn(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigs(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3746,21 +3711,21 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigs(v inte
 		transformedAsn, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigsAsn(original["asn"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedAsn); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedAsn); val.IsValid() && !isEmptyValue(val) {
 			transformed["asn"] = transformedAsn
 		}
 
 		transformedIpAddress, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigsIpAddress(original["ip_address"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedIpAddress); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedIpAddress); val.IsValid() && !isEmptyValue(val) {
 			transformed["ipAddress"] = transformedIpAddress
 		}
 
 		transformedControlPlaneNodes, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigsControlPlaneNodes(original["control_plane_nodes"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedControlPlaneNodes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedControlPlaneNodes); val.IsValid() && !isEmptyValue(val) {
 			transformed["controlPlaneNodes"] = transformedControlPlaneNodes
 		}
 
@@ -3769,19 +3734,19 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigs(v inte
 	return req, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigsAsn(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigsAsn(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigsIpAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigsIpAddress(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigsControlPlaneNodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigBgpPeerConfigsControlPlaneNodes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPools(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPools(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3794,28 +3759,28 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPools(v interf
 		transformedPool, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsPool(original["pool"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedPool); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedPool); val.IsValid() && !isEmptyValue(val) {
 			transformed["pool"] = transformedPool
 		}
 
 		transformedAddresses, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsAddresses(original["addresses"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedAddresses); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedAddresses); val.IsValid() && !isEmptyValue(val) {
 			transformed["addresses"] = transformedAddresses
 		}
 
 		transformedAvoidBuggyIps, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsAvoidBuggyIps(original["avoid_buggy_ips"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedAvoidBuggyIps); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedAvoidBuggyIps); val.IsValid() && !isEmptyValue(val) {
 			transformed["avoidBuggyIps"] = transformedAvoidBuggyIps
 		}
 
 		transformedManualAssign, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsManualAssign(original["manual_assign"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedManualAssign); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedManualAssign); val.IsValid() && !isEmptyValue(val) {
 			transformed["manualAssign"] = transformedManualAssign
 		}
 
@@ -3824,23 +3789,23 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPools(v interf
 	return req, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsPool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsPool(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsAddresses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsAddresses(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsAvoidBuggyIps(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsAvoidBuggyIps(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsManualAssign(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigAddressPoolsManualAssign(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3852,14 +3817,14 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolC
 	transformedNodePoolConfig, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfig(original["node_pool_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNodePoolConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNodePoolConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["nodePoolConfig"] = transformedNodePoolConfig
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3871,42 +3836,42 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolC
 	transformedNodeConfigs, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigs(original["node_configs"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNodeConfigs); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNodeConfigs); val.IsValid() && !isEmptyValue(val) {
 		transformed["nodeConfigs"] = transformedNodeConfigs
 	}
 
 	transformedOperatingSystem, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigOperatingSystem(original["operating_system"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedOperatingSystem); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedOperatingSystem); val.IsValid() && !isEmptyValue(val) {
 		transformed["operatingSystem"] = transformedOperatingSystem
 	}
 
 	transformedTaints, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaints(original["taints"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTaints); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTaints); val.IsValid() && !isEmptyValue(val) {
 		transformed["taints"] = transformedTaints
 	}
 
 	transformedLabels, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigLabels(original["labels"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !isEmptyValue(val) {
 		transformed["labels"] = transformedLabels
 	}
 
 	transformedKubeletConfig, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfig(original["kubelet_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedKubeletConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedKubeletConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["kubeletConfig"] = transformedKubeletConfig
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigs(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3919,14 +3884,14 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolC
 		transformedNodeIp, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsNodeIp(original["node_ip"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedNodeIp); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedNodeIp); val.IsValid() && !isEmptyValue(val) {
 			transformed["nodeIp"] = transformedNodeIp
 		}
 
 		transformedLabels, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsLabels(original["labels"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedLabels); val.IsValid() && !isEmptyValue(val) {
 			transformed["labels"] = transformedLabels
 		}
 
@@ -3935,11 +3900,11 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolC
 	return req, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsNodeIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsNodeIp(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigNodeConfigsLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -3950,11 +3915,11 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolC
 	return m, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigOperatingSystem(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigOperatingSystem(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaints(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaints(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3967,21 +3932,21 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolC
 		transformedKey, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsKey(original["key"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedKey); val.IsValid() && !isEmptyValue(val) {
 			transformed["key"] = transformedKey
 		}
 
 		transformedValue, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsValue(original["value"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedValue); val.IsValid() && !isEmptyValue(val) {
 			transformed["value"] = transformedValue
 		}
 
 		transformedEffect, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsEffect(original["effect"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedEffect); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedEffect); val.IsValid() && !isEmptyValue(val) {
 			transformed["effect"] = transformedEffect
 		}
 
@@ -3990,19 +3955,19 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolC
 	return req, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsKey(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsValue(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsEffect(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigTaintsEffect(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -4013,7 +3978,7 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolC
 	return m, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4025,40 +3990,40 @@ func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolC
 	transformedRegistryPullQps, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfigRegistryPullQps(original["registry_pull_qps"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRegistryPullQps); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRegistryPullQps); val.IsValid() && !isEmptyValue(val) {
 		transformed["registryPullQps"] = transformedRegistryPullQps
 	}
 
 	transformedRegistryBurst, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfigRegistryBurst(original["registry_burst"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRegistryBurst); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRegistryBurst); val.IsValid() && !isEmptyValue(val) {
 		transformed["registryBurst"] = transformedRegistryBurst
 	}
 
 	transformedSerializeImagePullsDisabled, err := expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfigSerializeImagePullsDisabled(original["serialize_image_pulls_disabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSerializeImagePullsDisabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSerializeImagePullsDisabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["serializeImagePullsDisabled"] = transformedSerializeImagePullsDisabled
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfigRegistryPullQps(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfigRegistryPullQps(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfigRegistryBurst(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfigRegistryBurst(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfigSerializeImagePullsDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterLoadBalancerBgpLbConfigLoadBalancerNodePoolConfigNodePoolConfigKubeletConfigSerializeImagePullsDisabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterStorage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterStorage(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4070,21 +4035,21 @@ func expandGkeonpremBareMetalClusterStorage(v interface{}, d tpgresource.Terrafo
 	transformedLvpShareConfig, err := expandGkeonpremBareMetalClusterStorageLvpShareConfig(original["lvp_share_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLvpShareConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLvpShareConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["lvpShareConfig"] = transformedLvpShareConfig
 	}
 
 	transformedLvpNodeMountsConfig, err := expandGkeonpremBareMetalClusterStorageLvpNodeMountsConfig(original["lvp_node_mounts_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLvpNodeMountsConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLvpNodeMountsConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["lvpNodeMountsConfig"] = transformedLvpNodeMountsConfig
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterStorageLvpShareConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterStorageLvpShareConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4096,21 +4061,21 @@ func expandGkeonpremBareMetalClusterStorageLvpShareConfig(v interface{}, d tpgre
 	transformedLvpConfig, err := expandGkeonpremBareMetalClusterStorageLvpShareConfigLvpConfig(original["lvp_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLvpConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLvpConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["lvpConfig"] = transformedLvpConfig
 	}
 
 	transformedSharedPathPvCount, err := expandGkeonpremBareMetalClusterStorageLvpShareConfigSharedPathPvCount(original["shared_path_pv_count"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSharedPathPvCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSharedPathPvCount); val.IsValid() && !isEmptyValue(val) {
 		transformed["sharedPathPvCount"] = transformedSharedPathPvCount
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterStorageLvpShareConfigLvpConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterStorageLvpShareConfigLvpConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4122,33 +4087,33 @@ func expandGkeonpremBareMetalClusterStorageLvpShareConfigLvpConfig(v interface{}
 	transformedPath, err := expandGkeonpremBareMetalClusterStorageLvpShareConfigLvpConfigPath(original["path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["path"] = transformedPath
 	}
 
 	transformedStorageClass, err := expandGkeonpremBareMetalClusterStorageLvpShareConfigLvpConfigStorageClass(original["storage_class"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedStorageClass); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedStorageClass); val.IsValid() && !isEmptyValue(val) {
 		transformed["storageClass"] = transformedStorageClass
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterStorageLvpShareConfigLvpConfigPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterStorageLvpShareConfigLvpConfigPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterStorageLvpShareConfigLvpConfigStorageClass(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterStorageLvpShareConfigLvpConfigStorageClass(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterStorageLvpShareConfigSharedPathPvCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterStorageLvpShareConfigSharedPathPvCount(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterStorageLvpNodeMountsConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterStorageLvpNodeMountsConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4160,29 +4125,29 @@ func expandGkeonpremBareMetalClusterStorageLvpNodeMountsConfig(v interface{}, d 
 	transformedPath, err := expandGkeonpremBareMetalClusterStorageLvpNodeMountsConfigPath(original["path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["path"] = transformedPath
 	}
 
 	transformedStorageClass, err := expandGkeonpremBareMetalClusterStorageLvpNodeMountsConfigStorageClass(original["storage_class"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedStorageClass); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedStorageClass); val.IsValid() && !isEmptyValue(val) {
 		transformed["storageClass"] = transformedStorageClass
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterStorageLvpNodeMountsConfigPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterStorageLvpNodeMountsConfigPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterStorageLvpNodeMountsConfigStorageClass(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterStorageLvpNodeMountsConfigStorageClass(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterProxy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterProxy(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4194,29 +4159,29 @@ func expandGkeonpremBareMetalClusterProxy(v interface{}, d tpgresource.Terraform
 	transformedUri, err := expandGkeonpremBareMetalClusterProxyUri(original["uri"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !isEmptyValue(val) {
 		transformed["uri"] = transformedUri
 	}
 
 	transformedNoProxy, err := expandGkeonpremBareMetalClusterProxyNoProxy(original["no_proxy"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNoProxy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNoProxy); val.IsValid() && !isEmptyValue(val) {
 		transformed["noProxy"] = transformedNoProxy
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterProxyUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterProxyUri(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterProxyNoProxy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterProxyNoProxy(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterClusterOperations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterClusterOperations(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4228,18 +4193,18 @@ func expandGkeonpremBareMetalClusterClusterOperations(v interface{}, d tpgresour
 	transformedEnableApplicationLogs, err := expandGkeonpremBareMetalClusterClusterOperationsEnableApplicationLogs(original["enable_application_logs"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnableApplicationLogs); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnableApplicationLogs); val.IsValid() && !isEmptyValue(val) {
 		transformed["enableApplicationLogs"] = transformedEnableApplicationLogs
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterClusterOperationsEnableApplicationLogs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterClusterOperationsEnableApplicationLogs(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterMaintenanceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterMaintenanceConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4251,18 +4216,18 @@ func expandGkeonpremBareMetalClusterMaintenanceConfig(v interface{}, d tpgresour
 	transformedMaintenanceAddressCidrBlocks, err := expandGkeonpremBareMetalClusterMaintenanceConfigMaintenanceAddressCidrBlocks(original["maintenance_address_cidr_blocks"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMaintenanceAddressCidrBlocks); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMaintenanceAddressCidrBlocks); val.IsValid() && !isEmptyValue(val) {
 		transformed["maintenanceAddressCidrBlocks"] = transformedMaintenanceAddressCidrBlocks
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterMaintenanceConfigMaintenanceAddressCidrBlocks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterMaintenanceConfigMaintenanceAddressCidrBlocks(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterNodeConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNodeConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4274,29 +4239,29 @@ func expandGkeonpremBareMetalClusterNodeConfig(v interface{}, d tpgresource.Terr
 	transformedMaxPodsPerNode, err := expandGkeonpremBareMetalClusterNodeConfigMaxPodsPerNode(original["max_pods_per_node"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMaxPodsPerNode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMaxPodsPerNode); val.IsValid() && !isEmptyValue(val) {
 		transformed["maxPodsPerNode"] = transformedMaxPodsPerNode
 	}
 
 	transformedContainerRuntime, err := expandGkeonpremBareMetalClusterNodeConfigContainerRuntime(original["container_runtime"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedContainerRuntime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedContainerRuntime); val.IsValid() && !isEmptyValue(val) {
 		transformed["containerRuntime"] = transformedContainerRuntime
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterNodeConfigMaxPodsPerNode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNodeConfigMaxPodsPerNode(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterNodeConfigContainerRuntime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNodeConfigContainerRuntime(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterNodeAccessConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNodeAccessConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4308,18 +4273,18 @@ func expandGkeonpremBareMetalClusterNodeAccessConfig(v interface{}, d tpgresourc
 	transformedLoginUser, err := expandGkeonpremBareMetalClusterNodeAccessConfigLoginUser(original["login_user"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLoginUser); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLoginUser); val.IsValid() && !isEmptyValue(val) {
 		transformed["loginUser"] = transformedLoginUser
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterNodeAccessConfigLoginUser(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterNodeAccessConfigLoginUser(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterOsEnvironmentConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterOsEnvironmentConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4331,18 +4296,18 @@ func expandGkeonpremBareMetalClusterOsEnvironmentConfig(v interface{}, d tpgreso
 	transformedPackageRepoExcluded, err := expandGkeonpremBareMetalClusterOsEnvironmentConfigPackageRepoExcluded(original["package_repo_excluded"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPackageRepoExcluded); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPackageRepoExcluded); val.IsValid() && !isEmptyValue(val) {
 		transformed["packageRepoExcluded"] = transformedPackageRepoExcluded
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterOsEnvironmentConfigPackageRepoExcluded(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterOsEnvironmentConfigPackageRepoExcluded(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremBareMetalClusterSecurityConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterSecurityConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4354,14 +4319,14 @@ func expandGkeonpremBareMetalClusterSecurityConfig(v interface{}, d tpgresource.
 	transformedAuthorization, err := expandGkeonpremBareMetalClusterSecurityConfigAuthorization(original["authorization"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAuthorization); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAuthorization); val.IsValid() && !isEmptyValue(val) {
 		transformed["authorization"] = transformedAuthorization
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterSecurityConfigAuthorization(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterSecurityConfigAuthorization(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4373,14 +4338,14 @@ func expandGkeonpremBareMetalClusterSecurityConfigAuthorization(v interface{}, d
 	transformedAdminUsers, err := expandGkeonpremBareMetalClusterSecurityConfigAuthorizationAdminUsers(original["admin_users"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAdminUsers); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAdminUsers); val.IsValid() && !isEmptyValue(val) {
 		transformed["adminUsers"] = transformedAdminUsers
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremBareMetalClusterSecurityConfigAuthorizationAdminUsers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterSecurityConfigAuthorizationAdminUsers(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -4393,7 +4358,7 @@ func expandGkeonpremBareMetalClusterSecurityConfigAuthorizationAdminUsers(v inte
 		transformedUsername, err := expandGkeonpremBareMetalClusterSecurityConfigAuthorizationAdminUsersUsername(original["username"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !isEmptyValue(val) {
 			transformed["username"] = transformedUsername
 		}
 
@@ -4402,6 +4367,6 @@ func expandGkeonpremBareMetalClusterSecurityConfigAuthorizationAdminUsers(v inte
 	return req, nil
 }
 
-func expandGkeonpremBareMetalClusterSecurityConfigAuthorizationAdminUsersUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremBareMetalClusterSecurityConfigAuthorizationAdminUsersUsername(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

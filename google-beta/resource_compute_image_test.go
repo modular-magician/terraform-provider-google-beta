@@ -1,13 +1,9 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
-	"testing"
-
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
+	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -220,8 +216,8 @@ func TestAccComputeImage_imageEncryptionKey(t *testing.T) {
 	t.Parallel()
 
 	kmsKey := BootstrapKMSKeyInLocation(t, "us-central1")
-	kmsKeyName := tpgresource.GetResourceNameFromSelfLink(kmsKey.CryptoKey.Name)
-	kmsRingName := tpgresource.GetResourceNameFromSelfLink(kmsKey.KeyRing.Name)
+	kmsKeyName := GetResourceNameFromSelfLink(kmsKey.CryptoKey.Name)
+	kmsRingName := GetResourceNameFromSelfLink(kmsKey.KeyRing.Name)
 
 	VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },

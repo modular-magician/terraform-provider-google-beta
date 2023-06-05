@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -24,8 +21,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/cloudresourcemanager/v1"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -60,11 +55,11 @@ type WorkstationsWorkstationConfigIamUpdater struct {
 	location             string
 	workstationClusterId string
 	workstationConfigId  string
-	d                    tpgresource.TerraformResourceData
+	d                    TerraformResourceData
 	Config               *transport_tpg.Config
 }
 
-func WorkstationsWorkstationConfigIamUpdaterProducer(d tpgresource.TerraformResourceData, config *transport_tpg.Config) (tpgiamresource.ResourceIamUpdater, error) {
+func WorkstationsWorkstationConfigIamUpdaterProducer(d TerraformResourceData, config *transport_tpg.Config) (ResourceIamUpdater, error) {
 	values := make(map[string]string)
 
 	project, _ := getProject(d, config)
@@ -90,7 +85,7 @@ func WorkstationsWorkstationConfigIamUpdaterProducer(d tpgresource.TerraformReso
 	}
 
 	// We may have gotten either a long or short name, so attempt to parse long name if possible
-	m, err := tpgresource.GetImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/workstationClusters/(?P<workstation_cluster_id>[^/]+)/workstationConfigs/(?P<workstation_config_id>[^/]+)", "(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<workstation_cluster_id>[^/]+)/(?P<workstation_config_id>[^/]+)", "(?P<location>[^/]+)/(?P<workstation_cluster_id>[^/]+)/(?P<workstation_config_id>[^/]+)", "(?P<workstation_config_id>[^/]+)"}, d, config, d.Get("workstation_config_id").(string))
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/workstationClusters/(?P<workstation_cluster_id>[^/]+)/workstationConfigs/(?P<workstation_config_id>[^/]+)", "(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<workstation_cluster_id>[^/]+)/(?P<workstation_config_id>[^/]+)", "(?P<location>[^/]+)/(?P<workstation_cluster_id>[^/]+)/(?P<workstation_config_id>[^/]+)", "(?P<workstation_config_id>[^/]+)"}, d, config, d.Get("workstation_config_id").(string))
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +132,7 @@ func WorkstationsWorkstationConfigIdParseFunc(d *schema.ResourceData, config *tr
 		values["location"] = location
 	}
 
-	m, err := tpgresource.GetImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/workstationClusters/(?P<workstation_cluster_id>[^/]+)/workstationConfigs/(?P<workstation_config_id>[^/]+)", "(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<workstation_cluster_id>[^/]+)/(?P<workstation_config_id>[^/]+)", "(?P<location>[^/]+)/(?P<workstation_cluster_id>[^/]+)/(?P<workstation_config_id>[^/]+)", "(?P<workstation_config_id>[^/]+)"}, d, config, d.Id())
+	m, err := getImportIdQualifiers([]string{"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/workstationClusters/(?P<workstation_cluster_id>[^/]+)/workstationConfigs/(?P<workstation_config_id>[^/]+)", "(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<workstation_cluster_id>[^/]+)/(?P<workstation_config_id>[^/]+)", "(?P<location>[^/]+)/(?P<workstation_cluster_id>[^/]+)/(?P<workstation_config_id>[^/]+)", "(?P<workstation_config_id>[^/]+)"}, d, config, d.Id())
 	if err != nil {
 		return err
 	}
@@ -167,31 +162,24 @@ func (u *WorkstationsWorkstationConfigIamUpdater) GetResourceIamPolicy() (*cloud
 		return nil, err
 	}
 
-	project, err := tpgresource.GetProject(u.d, u.Config)
+	project, err := getProject(u.d, u.Config)
 	if err != nil {
 		return nil, err
 	}
 	var obj map[string]interface{}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
 
-	policy, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    u.Config,
-		Method:    "GET",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-	})
+	policy, err := transport_tpg.SendRequest(u.Config, "GET", project, url, userAgent, obj)
 	if err != nil {
 		return nil, errwrap.Wrapf(fmt.Sprintf("Error retrieving IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
 
 	out := &cloudresourcemanager.Policy{}
-	err = tpgresource.Convert(policy, out)
+	err = Convert(policy, out)
 	if err != nil {
 		return nil, errwrap.Wrapf("Cannot convert a policy to a resource manager policy: {{err}}", err)
 	}
@@ -200,7 +188,7 @@ func (u *WorkstationsWorkstationConfigIamUpdater) GetResourceIamPolicy() (*cloud
 }
 
 func (u *WorkstationsWorkstationConfigIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanager.Policy) error {
-	json, err := tpgresource.ConvertToMap(policy)
+	json, err := ConvertToMap(policy)
 	if err != nil {
 		return err
 	}
@@ -212,25 +200,17 @@ func (u *WorkstationsWorkstationConfigIamUpdater) SetResourceIamPolicy(policy *c
 	if err != nil {
 		return err
 	}
-	project, err := tpgresource.GetProject(u.d, u.Config)
+	project, err := getProject(u.d, u.Config)
 	if err != nil {
 		return err
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    u.Config,
-		Method:    "POST",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   u.d.Timeout(schema.TimeoutCreate),
-	})
+	_, err = transport_tpg.SendRequestWithTimeout(u.Config, "POST", project, url, userAgent, obj, u.d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return errwrap.Wrapf(fmt.Sprintf("Error setting IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
@@ -240,7 +220,7 @@ func (u *WorkstationsWorkstationConfigIamUpdater) SetResourceIamPolicy(policy *c
 
 func (u *WorkstationsWorkstationConfigIamUpdater) qualifyWorkstationConfigUrl(methodIdentifier string) (string, error) {
 	urlTemplate := fmt.Sprintf("{{WorkstationsBasePath}}%s:%s", fmt.Sprintf("projects/%s/locations/%s/workstationClusters/%s/workstationConfigs/%s", u.project, u.location, u.workstationClusterId, u.workstationConfigId), methodIdentifier)
-	url, err := tpgresource.ReplaceVars(u.d, u.Config, urlTemplate)
+	url, err := ReplaceVars(u.d, u.Config, urlTemplate)
 	if err != nil {
 		return "", err
 	}

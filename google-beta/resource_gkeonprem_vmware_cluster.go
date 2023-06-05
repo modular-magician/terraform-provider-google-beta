@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,7 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
@@ -548,16 +544,15 @@ used for VMware user clusters.`,
 													Description: `The node's network configurations used by the VMware User Cluster.`,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
+															"hostname": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: `Hostname of the machine. VM's name will be used if this field is empty.`,
+															},
 															"ip": {
 																Type:        schema.TypeString,
 																Required:    true,
 																Description: `IP could be an IP address (like 1.2.3.4) or a CIDR (like 1.2.3.0/24).`,
-															},
-															"hostname": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Optional:    true,
-																Description: `Hostname of the machine. VM's name will be used if this field is empty.`,
 															},
 														},
 													},
@@ -853,7 +848,7 @@ Inherited from the admin cluster.`,
 
 func resourceGkeonpremVmwareClusterCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -862,89 +857,89 @@ func resourceGkeonpremVmwareClusterCreate(d *schema.ResourceData, meta interface
 	adminClusterMembershipProp, err := expandGkeonpremVmwareClusterAdminClusterMembership(d.Get("admin_cluster_membership"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("admin_cluster_membership"); !tpgresource.IsEmptyValue(reflect.ValueOf(adminClusterMembershipProp)) && (ok || !reflect.DeepEqual(v, adminClusterMembershipProp)) {
+	} else if v, ok := d.GetOkExists("admin_cluster_membership"); !isEmptyValue(reflect.ValueOf(adminClusterMembershipProp)) && (ok || !reflect.DeepEqual(v, adminClusterMembershipProp)) {
 		obj["adminClusterMembership"] = adminClusterMembershipProp
 	}
 	descriptionProp, err := expandGkeonpremVmwareClusterDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	onPremVersionProp, err := expandGkeonpremVmwareClusterOnPremVersion(d.Get("on_prem_version"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("on_prem_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(onPremVersionProp)) && (ok || !reflect.DeepEqual(v, onPremVersionProp)) {
+	} else if v, ok := d.GetOkExists("on_prem_version"); !isEmptyValue(reflect.ValueOf(onPremVersionProp)) && (ok || !reflect.DeepEqual(v, onPremVersionProp)) {
 		obj["onPremVersion"] = onPremVersionProp
 	}
 	annotationsProp, err := expandGkeonpremVmwareClusterAnnotations(d.Get("annotations"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(annotationsProp)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
+	} else if v, ok := d.GetOkExists("annotations"); !isEmptyValue(reflect.ValueOf(annotationsProp)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
 		obj["annotations"] = annotationsProp
 	}
 	controlPlaneNodeProp, err := expandGkeonpremVmwareClusterControlPlaneNode(d.Get("control_plane_node"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("control_plane_node"); !tpgresource.IsEmptyValue(reflect.ValueOf(controlPlaneNodeProp)) && (ok || !reflect.DeepEqual(v, controlPlaneNodeProp)) {
+	} else if v, ok := d.GetOkExists("control_plane_node"); !isEmptyValue(reflect.ValueOf(controlPlaneNodeProp)) && (ok || !reflect.DeepEqual(v, controlPlaneNodeProp)) {
 		obj["controlPlaneNode"] = controlPlaneNodeProp
 	}
 	antiAffinityGroupsProp, err := expandGkeonpremVmwareClusterAntiAffinityGroups(d.Get("anti_affinity_groups"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("anti_affinity_groups"); !tpgresource.IsEmptyValue(reflect.ValueOf(antiAffinityGroupsProp)) && (ok || !reflect.DeepEqual(v, antiAffinityGroupsProp)) {
+	} else if v, ok := d.GetOkExists("anti_affinity_groups"); !isEmptyValue(reflect.ValueOf(antiAffinityGroupsProp)) && (ok || !reflect.DeepEqual(v, antiAffinityGroupsProp)) {
 		obj["antiAffinityGroups"] = antiAffinityGroupsProp
 	}
 	storageProp, err := expandGkeonpremVmwareClusterStorage(d.Get("storage"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("storage"); !tpgresource.IsEmptyValue(reflect.ValueOf(storageProp)) && (ok || !reflect.DeepEqual(v, storageProp)) {
+	} else if v, ok := d.GetOkExists("storage"); !isEmptyValue(reflect.ValueOf(storageProp)) && (ok || !reflect.DeepEqual(v, storageProp)) {
 		obj["storage"] = storageProp
 	}
 	networkConfigProp, err := expandGkeonpremVmwareClusterNetworkConfig(d.Get("network_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("network_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(networkConfigProp)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
+	} else if v, ok := d.GetOkExists("network_config"); !isEmptyValue(reflect.ValueOf(networkConfigProp)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
 		obj["networkConfig"] = networkConfigProp
 	}
 	loadBalancerProp, err := expandGkeonpremVmwareClusterLoadBalancer(d.Get("load_balancer"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("load_balancer"); !tpgresource.IsEmptyValue(reflect.ValueOf(loadBalancerProp)) && (ok || !reflect.DeepEqual(v, loadBalancerProp)) {
+	} else if v, ok := d.GetOkExists("load_balancer"); !isEmptyValue(reflect.ValueOf(loadBalancerProp)) && (ok || !reflect.DeepEqual(v, loadBalancerProp)) {
 		obj["loadBalancer"] = loadBalancerProp
 	}
 	dataplaneV2Prop, err := expandGkeonpremVmwareClusterDataplaneV2(d.Get("dataplane_v2"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("dataplane_v2"); !tpgresource.IsEmptyValue(reflect.ValueOf(dataplaneV2Prop)) && (ok || !reflect.DeepEqual(v, dataplaneV2Prop)) {
+	} else if v, ok := d.GetOkExists("dataplane_v2"); !isEmptyValue(reflect.ValueOf(dataplaneV2Prop)) && (ok || !reflect.DeepEqual(v, dataplaneV2Prop)) {
 		obj["dataplaneV2"] = dataplaneV2Prop
 	}
 	vmTrackingEnabledProp, err := expandGkeonpremVmwareClusterVmTrackingEnabled(d.Get("vm_tracking_enabled"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("vm_tracking_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(vmTrackingEnabledProp)) && (ok || !reflect.DeepEqual(v, vmTrackingEnabledProp)) {
+	} else if v, ok := d.GetOkExists("vm_tracking_enabled"); !isEmptyValue(reflect.ValueOf(vmTrackingEnabledProp)) && (ok || !reflect.DeepEqual(v, vmTrackingEnabledProp)) {
 		obj["vmTrackingEnabled"] = vmTrackingEnabledProp
 	}
 	autoRepairConfigProp, err := expandGkeonpremVmwareClusterAutoRepairConfig(d.Get("auto_repair_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("auto_repair_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(autoRepairConfigProp)) && (ok || !reflect.DeepEqual(v, autoRepairConfigProp)) {
+	} else if v, ok := d.GetOkExists("auto_repair_config"); !isEmptyValue(reflect.ValueOf(autoRepairConfigProp)) && (ok || !reflect.DeepEqual(v, autoRepairConfigProp)) {
 		obj["autoRepairConfig"] = autoRepairConfigProp
 	}
 	authorizationProp, err := expandGkeonpremVmwareClusterAuthorization(d.Get("authorization"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("authorization"); !tpgresource.IsEmptyValue(reflect.ValueOf(authorizationProp)) && (ok || !reflect.DeepEqual(v, authorizationProp)) {
+	} else if v, ok := d.GetOkExists("authorization"); !isEmptyValue(reflect.ValueOf(authorizationProp)) && (ok || !reflect.DeepEqual(v, authorizationProp)) {
 		obj["authorization"] = authorizationProp
 	}
 	enableControlPlaneV2Prop, err := expandGkeonpremVmwareClusterEnableControlPlaneV2(d.Get("enable_control_plane_v2"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("enable_control_plane_v2"); !tpgresource.IsEmptyValue(reflect.ValueOf(enableControlPlaneV2Prop)) && (ok || !reflect.DeepEqual(v, enableControlPlaneV2Prop)) {
+	} else if v, ok := d.GetOkExists("enable_control_plane_v2"); !isEmptyValue(reflect.ValueOf(enableControlPlaneV2Prop)) && (ok || !reflect.DeepEqual(v, enableControlPlaneV2Prop)) {
 		obj["enableControlPlaneV2"] = enableControlPlaneV2Prop
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareClusters?vmware_cluster_id={{name}}")
+	url, err := ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareClusters?vmware_cluster_id={{name}}")
 	if err != nil {
 		return err
 	}
@@ -952,32 +947,24 @@ func resourceGkeonpremVmwareClusterCreate(d *schema.ResourceData, meta interface
 	log.Printf("[DEBUG] Creating new VmwareCluster: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for VmwareCluster: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating VmwareCluster: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -995,7 +982,7 @@ func resourceGkeonpremVmwareClusterCreate(d *schema.ResourceData, meta interface
 	}
 
 	// This may have caused the ID to update - update it if so.
-	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}")
+	id, err = ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -1008,36 +995,30 @@ func resourceGkeonpremVmwareClusterCreate(d *schema.ResourceData, meta interface
 
 func resourceGkeonpremVmwareClusterRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}")
+	url, err := ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for VmwareCluster: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("GkeonpremVmwareCluster %q", d.Id()))
 	}
@@ -1133,14 +1114,14 @@ func resourceGkeonpremVmwareClusterRead(d *schema.ResourceData, meta interface{}
 
 func resourceGkeonpremVmwareClusterUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for VmwareCluster: %s", err)
 	}
@@ -1150,83 +1131,83 @@ func resourceGkeonpremVmwareClusterUpdate(d *schema.ResourceData, meta interface
 	descriptionProp, err := expandGkeonpremVmwareClusterDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	onPremVersionProp, err := expandGkeonpremVmwareClusterOnPremVersion(d.Get("on_prem_version"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("on_prem_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, onPremVersionProp)) {
+	} else if v, ok := d.GetOkExists("on_prem_version"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, onPremVersionProp)) {
 		obj["onPremVersion"] = onPremVersionProp
 	}
 	annotationsProp, err := expandGkeonpremVmwareClusterAnnotations(d.Get("annotations"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
+	} else if v, ok := d.GetOkExists("annotations"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
 		obj["annotations"] = annotationsProp
 	}
 	controlPlaneNodeProp, err := expandGkeonpremVmwareClusterControlPlaneNode(d.Get("control_plane_node"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("control_plane_node"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, controlPlaneNodeProp)) {
+	} else if v, ok := d.GetOkExists("control_plane_node"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, controlPlaneNodeProp)) {
 		obj["controlPlaneNode"] = controlPlaneNodeProp
 	}
 	antiAffinityGroupsProp, err := expandGkeonpremVmwareClusterAntiAffinityGroups(d.Get("anti_affinity_groups"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("anti_affinity_groups"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, antiAffinityGroupsProp)) {
+	} else if v, ok := d.GetOkExists("anti_affinity_groups"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, antiAffinityGroupsProp)) {
 		obj["antiAffinityGroups"] = antiAffinityGroupsProp
 	}
 	storageProp, err := expandGkeonpremVmwareClusterStorage(d.Get("storage"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("storage"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, storageProp)) {
+	} else if v, ok := d.GetOkExists("storage"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, storageProp)) {
 		obj["storage"] = storageProp
 	}
 	networkConfigProp, err := expandGkeonpremVmwareClusterNetworkConfig(d.Get("network_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("network_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
+	} else if v, ok := d.GetOkExists("network_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
 		obj["networkConfig"] = networkConfigProp
 	}
 	loadBalancerProp, err := expandGkeonpremVmwareClusterLoadBalancer(d.Get("load_balancer"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("load_balancer"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, loadBalancerProp)) {
+	} else if v, ok := d.GetOkExists("load_balancer"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, loadBalancerProp)) {
 		obj["loadBalancer"] = loadBalancerProp
 	}
 	dataplaneV2Prop, err := expandGkeonpremVmwareClusterDataplaneV2(d.Get("dataplane_v2"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("dataplane_v2"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, dataplaneV2Prop)) {
+	} else if v, ok := d.GetOkExists("dataplane_v2"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, dataplaneV2Prop)) {
 		obj["dataplaneV2"] = dataplaneV2Prop
 	}
 	vmTrackingEnabledProp, err := expandGkeonpremVmwareClusterVmTrackingEnabled(d.Get("vm_tracking_enabled"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("vm_tracking_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, vmTrackingEnabledProp)) {
+	} else if v, ok := d.GetOkExists("vm_tracking_enabled"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, vmTrackingEnabledProp)) {
 		obj["vmTrackingEnabled"] = vmTrackingEnabledProp
 	}
 	autoRepairConfigProp, err := expandGkeonpremVmwareClusterAutoRepairConfig(d.Get("auto_repair_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("auto_repair_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, autoRepairConfigProp)) {
+	} else if v, ok := d.GetOkExists("auto_repair_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, autoRepairConfigProp)) {
 		obj["autoRepairConfig"] = autoRepairConfigProp
 	}
 	authorizationProp, err := expandGkeonpremVmwareClusterAuthorization(d.Get("authorization"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("authorization"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, authorizationProp)) {
+	} else if v, ok := d.GetOkExists("authorization"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, authorizationProp)) {
 		obj["authorization"] = authorizationProp
 	}
 	enableControlPlaneV2Prop, err := expandGkeonpremVmwareClusterEnableControlPlaneV2(d.Get("enable_control_plane_v2"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("enable_control_plane_v2"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enableControlPlaneV2Prop)) {
+	} else if v, ok := d.GetOkExists("enable_control_plane_v2"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enableControlPlaneV2Prop)) {
 		obj["enableControlPlaneV2"] = enableControlPlaneV2Prop
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}")
+	url, err := ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -1293,19 +1274,11 @@ func resourceGkeonpremVmwareClusterUpdate(d *schema.ResourceData, meta interface
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating VmwareCluster %q: %s", d.Id(), err)
@@ -1326,20 +1299,20 @@ func resourceGkeonpremVmwareClusterUpdate(d *schema.ResourceData, meta interface
 
 func resourceGkeonpremVmwareClusterDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for VmwareCluster: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}?force=true")
+	url, err := ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}?force=true")
 	if err != nil {
 		return err
 	}
@@ -1348,19 +1321,11 @@ func resourceGkeonpremVmwareClusterDelete(d *schema.ResourceData, meta interface
 	log.Printf("[DEBUG] Deleting VmwareCluster %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "VmwareCluster")
 	}
@@ -1379,7 +1344,7 @@ func resourceGkeonpremVmwareClusterDelete(d *schema.ResourceData, meta interface
 
 func resourceGkeonpremVmwareClusterImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/vmwareClusters/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)",
 		"(?P<location>[^/]+)/(?P<name>[^/]+)",
@@ -1388,7 +1353,7 @@ func resourceGkeonpremVmwareClusterImport(d *schema.ResourceData, meta interface
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vmwareClusters/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -2313,19 +2278,19 @@ func flattenGkeonpremVmwareClusterStatusConditionsState(v interface{}, d *schema
 	return v
 }
 
-func expandGkeonpremVmwareClusterAdminClusterMembership(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterAdminClusterMembership(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterOnPremVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterOnPremVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterAnnotations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandGkeonpremVmwareClusterAnnotations(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -2336,7 +2301,7 @@ func expandGkeonpremVmwareClusterAnnotations(v interface{}, d tpgresource.Terraf
 	return m, nil
 }
 
-func expandGkeonpremVmwareClusterControlPlaneNode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterControlPlaneNode(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2348,54 +2313,54 @@ func expandGkeonpremVmwareClusterControlPlaneNode(v interface{}, d tpgresource.T
 	transformedCpus, err := expandGkeonpremVmwareClusterControlPlaneNodeCpus(original["cpus"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCpus); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCpus); val.IsValid() && !isEmptyValue(val) {
 		transformed["cpus"] = transformedCpus
 	}
 
 	transformedMemory, err := expandGkeonpremVmwareClusterControlPlaneNodeMemory(original["memory"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMemory); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMemory); val.IsValid() && !isEmptyValue(val) {
 		transformed["memory"] = transformedMemory
 	}
 
 	transformedReplicas, err := expandGkeonpremVmwareClusterControlPlaneNodeReplicas(original["replicas"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedReplicas); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedReplicas); val.IsValid() && !isEmptyValue(val) {
 		transformed["replicas"] = transformedReplicas
 	}
 
 	transformedAutoResizeConfig, err := expandGkeonpremVmwareClusterControlPlaneNodeAutoResizeConfig(original["auto_resize_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAutoResizeConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAutoResizeConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["autoResizeConfig"] = transformedAutoResizeConfig
 	}
 
 	transformedVsphereConfig, err := expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfig(original["vsphere_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedVsphereConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedVsphereConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["vsphereConfig"] = transformedVsphereConfig
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterControlPlaneNodeCpus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterControlPlaneNodeCpus(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterControlPlaneNodeMemory(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterControlPlaneNodeMemory(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterControlPlaneNodeReplicas(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterControlPlaneNodeReplicas(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterControlPlaneNodeAutoResizeConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterControlPlaneNodeAutoResizeConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2407,18 +2372,18 @@ func expandGkeonpremVmwareClusterControlPlaneNodeAutoResizeConfig(v interface{},
 	transformedEnabled, err := expandGkeonpremVmwareClusterControlPlaneNodeAutoResizeConfigEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterControlPlaneNodeAutoResizeConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterControlPlaneNodeAutoResizeConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2430,18 +2395,18 @@ func expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfig(v interface{}, d 
 	transformedDatastore, err := expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfigDatastore(original["datastore"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDatastore); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDatastore); val.IsValid() && !isEmptyValue(val) {
 		transformed["datastore"] = transformedDatastore
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfigDatastore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfigDatastore(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterAntiAffinityGroups(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterAntiAffinityGroups(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2453,18 +2418,18 @@ func expandGkeonpremVmwareClusterAntiAffinityGroups(v interface{}, d tpgresource
 	transformedAagConfigDisabled, err := expandGkeonpremVmwareClusterAntiAffinityGroupsAagConfigDisabled(original["aag_config_disabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAagConfigDisabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAagConfigDisabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["aagConfigDisabled"] = transformedAagConfigDisabled
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterAntiAffinityGroupsAagConfigDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterAntiAffinityGroupsAagConfigDisabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterStorage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterStorage(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2476,18 +2441,18 @@ func expandGkeonpremVmwareClusterStorage(v interface{}, d tpgresource.TerraformR
 	transformedVsphereCsiDisabled, err := expandGkeonpremVmwareClusterStorageVsphereCsiDisabled(original["vsphere_csi_disabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedVsphereCsiDisabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedVsphereCsiDisabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["vsphereCsiDisabled"] = transformedVsphereCsiDisabled
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterStorageVsphereCsiDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterStorageVsphereCsiDisabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2499,64 +2464,64 @@ func expandGkeonpremVmwareClusterNetworkConfig(v interface{}, d tpgresource.Terr
 	transformedServiceAddressCidrBlocks, err := expandGkeonpremVmwareClusterNetworkConfigServiceAddressCidrBlocks(original["service_address_cidr_blocks"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedServiceAddressCidrBlocks); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedServiceAddressCidrBlocks); val.IsValid() && !isEmptyValue(val) {
 		transformed["serviceAddressCidrBlocks"] = transformedServiceAddressCidrBlocks
 	}
 
 	transformedPodAddressCidrBlocks, err := expandGkeonpremVmwareClusterNetworkConfigPodAddressCidrBlocks(original["pod_address_cidr_blocks"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPodAddressCidrBlocks); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPodAddressCidrBlocks); val.IsValid() && !isEmptyValue(val) {
 		transformed["podAddressCidrBlocks"] = transformedPodAddressCidrBlocks
 	}
 
 	transformedStaticIpConfig, err := expandGkeonpremVmwareClusterNetworkConfigStaticIpConfig(original["static_ip_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedStaticIpConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedStaticIpConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["staticIpConfig"] = transformedStaticIpConfig
 	}
 
 	transformedDhcpIpConfig, err := expandGkeonpremVmwareClusterNetworkConfigDhcpIpConfig(original["dhcp_ip_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDhcpIpConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDhcpIpConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["dhcpIpConfig"] = transformedDhcpIpConfig
 	}
 
 	transformedVcenterNetwork, err := expandGkeonpremVmwareClusterNetworkConfigVcenterNetwork(original["vcenter_network"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedVcenterNetwork); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedVcenterNetwork); val.IsValid() && !isEmptyValue(val) {
 		transformed["vcenterNetwork"] = transformedVcenterNetwork
 	}
 
 	transformedHostConfig, err := expandGkeonpremVmwareClusterNetworkConfigHostConfig(original["host_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedHostConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedHostConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["hostConfig"] = transformedHostConfig
 	}
 
 	transformedControlPlaneV2Config, err := expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2Config(original["control_plane_v2_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedControlPlaneV2Config); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedControlPlaneV2Config); val.IsValid() && !isEmptyValue(val) {
 		transformed["controlPlaneV2Config"] = transformedControlPlaneV2Config
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigServiceAddressCidrBlocks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigServiceAddressCidrBlocks(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigPodAddressCidrBlocks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigPodAddressCidrBlocks(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2568,14 +2533,14 @@ func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfig(v interface{}, d tp
 	transformedIpBlocks, err := expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocks(original["ip_blocks"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIpBlocks); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIpBlocks); val.IsValid() && !isEmptyValue(val) {
 		transformed["ipBlocks"] = transformedIpBlocks
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocks(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -2588,21 +2553,21 @@ func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocks(v interface
 		transformedNetmask, err := expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksNetmask(original["netmask"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedNetmask); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedNetmask); val.IsValid() && !isEmptyValue(val) {
 			transformed["netmask"] = transformedNetmask
 		}
 
 		transformedGateway, err := expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksGateway(original["gateway"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedGateway); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedGateway); val.IsValid() && !isEmptyValue(val) {
 			transformed["gateway"] = transformedGateway
 		}
 
 		transformedIps, err := expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIps(original["ips"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedIps); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedIps); val.IsValid() && !isEmptyValue(val) {
 			transformed["ips"] = transformedIps
 		}
 
@@ -2611,15 +2576,15 @@ func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocks(v interface
 	return req, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksNetmask(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksNetmask(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksGateway(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksGateway(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIps(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIps(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -2632,14 +2597,14 @@ func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIps(v interf
 		transformedIp, err := expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIpsIp(original["ip"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedIp); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedIp); val.IsValid() && !isEmptyValue(val) {
 			transformed["ip"] = transformedIp
 		}
 
 		transformedHostname, err := expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIpsHostname(original["hostname"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedHostname); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedHostname); val.IsValid() && !isEmptyValue(val) {
 			transformed["hostname"] = transformedHostname
 		}
 
@@ -2648,15 +2613,15 @@ func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIps(v interf
 	return req, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIpsIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIpsIp(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIpsHostname(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIpsHostname(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigDhcpIpConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigDhcpIpConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2668,22 +2633,22 @@ func expandGkeonpremVmwareClusterNetworkConfigDhcpIpConfig(v interface{}, d tpgr
 	transformedEnabled, err := expandGkeonpremVmwareClusterNetworkConfigDhcpIpConfigEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigDhcpIpConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigDhcpIpConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigVcenterNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigVcenterNetwork(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigHostConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigHostConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2695,40 +2660,40 @@ func expandGkeonpremVmwareClusterNetworkConfigHostConfig(v interface{}, d tpgres
 	transformedDnsServers, err := expandGkeonpremVmwareClusterNetworkConfigHostConfigDnsServers(original["dns_servers"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDnsServers); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDnsServers); val.IsValid() && !isEmptyValue(val) {
 		transformed["dnsServers"] = transformedDnsServers
 	}
 
 	transformedNtpServers, err := expandGkeonpremVmwareClusterNetworkConfigHostConfigNtpServers(original["ntp_servers"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNtpServers); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNtpServers); val.IsValid() && !isEmptyValue(val) {
 		transformed["ntpServers"] = transformedNtpServers
 	}
 
 	transformedDnsSearchDomains, err := expandGkeonpremVmwareClusterNetworkConfigHostConfigDnsSearchDomains(original["dns_search_domains"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDnsSearchDomains); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDnsSearchDomains); val.IsValid() && !isEmptyValue(val) {
 		transformed["dnsSearchDomains"] = transformedDnsSearchDomains
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigHostConfigDnsServers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigHostConfigDnsServers(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigHostConfigNtpServers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigHostConfigNtpServers(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigHostConfigDnsSearchDomains(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigHostConfigDnsSearchDomains(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2Config(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2Config(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2740,14 +2705,14 @@ func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2Config(v interface{}
 	transformedControlPlaneIpBlock, err := expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlock(original["control_plane_ip_block"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedControlPlaneIpBlock); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedControlPlaneIpBlock); val.IsValid() && !isEmptyValue(val) {
 		transformed["controlPlaneIpBlock"] = transformedControlPlaneIpBlock
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlock(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlock(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2759,36 +2724,36 @@ func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIp
 	transformedNetmask, err := expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockNetmask(original["netmask"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedNetmask); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedNetmask); val.IsValid() && !isEmptyValue(val) {
 		transformed["netmask"] = transformedNetmask
 	}
 
 	transformedGateway, err := expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockGateway(original["gateway"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGateway); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGateway); val.IsValid() && !isEmptyValue(val) {
 		transformed["gateway"] = transformedGateway
 	}
 
 	transformedIps, err := expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockIps(original["ips"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIps); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIps); val.IsValid() && !isEmptyValue(val) {
 		transformed["ips"] = transformedIps
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockNetmask(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockNetmask(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockGateway(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockGateway(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockIps(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockIps(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -2801,14 +2766,14 @@ func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIp
 		transformedIp, err := expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockIpsIp(original["ip"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedIp); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedIp); val.IsValid() && !isEmptyValue(val) {
 			transformed["ip"] = transformedIp
 		}
 
 		transformedHostname, err := expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockIpsHostname(original["hostname"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedHostname); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedHostname); val.IsValid() && !isEmptyValue(val) {
 			transformed["hostname"] = transformedHostname
 		}
 
@@ -2817,15 +2782,15 @@ func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIp
 	return req, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockIpsIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockIpsIp(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockIpsHostname(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockIpsHostname(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancer(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancer(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2837,35 +2802,35 @@ func expandGkeonpremVmwareClusterLoadBalancer(v interface{}, d tpgresource.Terra
 	transformedVipConfig, err := expandGkeonpremVmwareClusterLoadBalancerVipConfig(original["vip_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedVipConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedVipConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["vipConfig"] = transformedVipConfig
 	}
 
 	transformedF5Config, err := expandGkeonpremVmwareClusterLoadBalancerF5Config(original["f5_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedF5Config); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedF5Config); val.IsValid() && !isEmptyValue(val) {
 		transformed["f5Config"] = transformedF5Config
 	}
 
 	transformedManualLbConfig, err := expandGkeonpremVmwareClusterLoadBalancerManualLbConfig(original["manual_lb_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedManualLbConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedManualLbConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["manualLbConfig"] = transformedManualLbConfig
 	}
 
 	transformedMetalLbConfig, err := expandGkeonpremVmwareClusterLoadBalancerMetalLbConfig(original["metal_lb_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMetalLbConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMetalLbConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["metalLbConfig"] = transformedMetalLbConfig
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerVipConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerVipConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2877,29 +2842,29 @@ func expandGkeonpremVmwareClusterLoadBalancerVipConfig(v interface{}, d tpgresou
 	transformedControlPlaneVip, err := expandGkeonpremVmwareClusterLoadBalancerVipConfigControlPlaneVip(original["control_plane_vip"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedControlPlaneVip); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedControlPlaneVip); val.IsValid() && !isEmptyValue(val) {
 		transformed["controlPlaneVip"] = transformedControlPlaneVip
 	}
 
 	transformedIngressVip, err := expandGkeonpremVmwareClusterLoadBalancerVipConfigIngressVip(original["ingress_vip"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIngressVip); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIngressVip); val.IsValid() && !isEmptyValue(val) {
 		transformed["ingressVip"] = transformedIngressVip
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerVipConfigControlPlaneVip(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerVipConfigControlPlaneVip(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerVipConfigIngressVip(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerVipConfigIngressVip(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerF5Config(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerF5Config(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2911,40 +2876,40 @@ func expandGkeonpremVmwareClusterLoadBalancerF5Config(v interface{}, d tpgresour
 	transformedAddress, err := expandGkeonpremVmwareClusterLoadBalancerF5ConfigAddress(original["address"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAddress); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAddress); val.IsValid() && !isEmptyValue(val) {
 		transformed["address"] = transformedAddress
 	}
 
 	transformedPartition, err := expandGkeonpremVmwareClusterLoadBalancerF5ConfigPartition(original["partition"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPartition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPartition); val.IsValid() && !isEmptyValue(val) {
 		transformed["partition"] = transformedPartition
 	}
 
 	transformedSnatPool, err := expandGkeonpremVmwareClusterLoadBalancerF5ConfigSnatPool(original["snat_pool"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSnatPool); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSnatPool); val.IsValid() && !isEmptyValue(val) {
 		transformed["snatPool"] = transformedSnatPool
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerF5ConfigAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerF5ConfigAddress(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerF5ConfigPartition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerF5ConfigPartition(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerF5ConfigSnatPool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerF5ConfigSnatPool(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerManualLbConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerManualLbConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2956,51 +2921,51 @@ func expandGkeonpremVmwareClusterLoadBalancerManualLbConfig(v interface{}, d tpg
 	transformedIngressHttpNodePort, err := expandGkeonpremVmwareClusterLoadBalancerManualLbConfigIngressHttpNodePort(original["ingress_http_node_port"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIngressHttpNodePort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIngressHttpNodePort); val.IsValid() && !isEmptyValue(val) {
 		transformed["ingressHttpNodePort"] = transformedIngressHttpNodePort
 	}
 
 	transformedIngressHttpsNodePort, err := expandGkeonpremVmwareClusterLoadBalancerManualLbConfigIngressHttpsNodePort(original["ingress_https_node_port"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIngressHttpsNodePort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIngressHttpsNodePort); val.IsValid() && !isEmptyValue(val) {
 		transformed["ingressHttpsNodePort"] = transformedIngressHttpsNodePort
 	}
 
 	transformedControlPlaneNodePort, err := expandGkeonpremVmwareClusterLoadBalancerManualLbConfigControlPlaneNodePort(original["control_plane_node_port"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedControlPlaneNodePort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedControlPlaneNodePort); val.IsValid() && !isEmptyValue(val) {
 		transformed["controlPlaneNodePort"] = transformedControlPlaneNodePort
 	}
 
 	transformedKonnectivityServerNodePort, err := expandGkeonpremVmwareClusterLoadBalancerManualLbConfigKonnectivityServerNodePort(original["konnectivity_server_node_port"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedKonnectivityServerNodePort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedKonnectivityServerNodePort); val.IsValid() && !isEmptyValue(val) {
 		transformed["konnectivityServerNodePort"] = transformedKonnectivityServerNodePort
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerManualLbConfigIngressHttpNodePort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerManualLbConfigIngressHttpNodePort(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerManualLbConfigIngressHttpsNodePort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerManualLbConfigIngressHttpsNodePort(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerManualLbConfigControlPlaneNodePort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerManualLbConfigControlPlaneNodePort(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerManualLbConfigKonnectivityServerNodePort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerManualLbConfigKonnectivityServerNodePort(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3012,14 +2977,14 @@ func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfig(v interface{}, d tpgr
 	transformedAddressPools, err := expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPools(original["address_pools"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAddressPools); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAddressPools); val.IsValid() && !isEmptyValue(val) {
 		transformed["addressPools"] = transformedAddressPools
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPools(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPools(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3032,28 +2997,28 @@ func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPools(v interfa
 		transformedPool, err := expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsPool(original["pool"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedPool); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedPool); val.IsValid() && !isEmptyValue(val) {
 			transformed["pool"] = transformedPool
 		}
 
 		transformedAddresses, err := expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsAddresses(original["addresses"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedAddresses); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedAddresses); val.IsValid() && !isEmptyValue(val) {
 			transformed["addresses"] = transformedAddresses
 		}
 
 		transformedAvoidBuggyIps, err := expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsAvoidBuggyIps(original["avoid_buggy_ips"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedAvoidBuggyIps); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedAvoidBuggyIps); val.IsValid() && !isEmptyValue(val) {
 			transformed["avoidBuggyIps"] = transformedAvoidBuggyIps
 		}
 
 		transformedManualAssign, err := expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsManualAssign(original["manual_assign"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedManualAssign); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedManualAssign); val.IsValid() && !isEmptyValue(val) {
 			transformed["manualAssign"] = transformedManualAssign
 		}
 
@@ -3062,23 +3027,23 @@ func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPools(v interfa
 	return req, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsPool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsPool(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsAddresses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsAddresses(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsAvoidBuggyIps(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsAvoidBuggyIps(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsManualAssign(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPoolsManualAssign(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterDataplaneV2(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterDataplaneV2(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3090,44 +3055,44 @@ func expandGkeonpremVmwareClusterDataplaneV2(v interface{}, d tpgresource.Terraf
 	transformedDataplaneV2Enabled, err := expandGkeonpremVmwareClusterDataplaneV2DataplaneV2Enabled(original["dataplane_v2_enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDataplaneV2Enabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDataplaneV2Enabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["dataplaneV2Enabled"] = transformedDataplaneV2Enabled
 	}
 
 	transformedWindowsDataplaneV2Enabled, err := expandGkeonpremVmwareClusterDataplaneV2WindowsDataplaneV2Enabled(original["windows_dataplane_v2_enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWindowsDataplaneV2Enabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWindowsDataplaneV2Enabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["windowsDataplaneV2Enabled"] = transformedWindowsDataplaneV2Enabled
 	}
 
 	transformedAdvancedNetworking, err := expandGkeonpremVmwareClusterDataplaneV2AdvancedNetworking(original["advanced_networking"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAdvancedNetworking); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAdvancedNetworking); val.IsValid() && !isEmptyValue(val) {
 		transformed["advancedNetworking"] = transformedAdvancedNetworking
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterDataplaneV2DataplaneV2Enabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterDataplaneV2DataplaneV2Enabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterDataplaneV2WindowsDataplaneV2Enabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterDataplaneV2WindowsDataplaneV2Enabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterDataplaneV2AdvancedNetworking(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterDataplaneV2AdvancedNetworking(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterVmTrackingEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterVmTrackingEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterAutoRepairConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterAutoRepairConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3139,18 +3104,18 @@ func expandGkeonpremVmwareClusterAutoRepairConfig(v interface{}, d tpgresource.T
 	transformedEnabled, err := expandGkeonpremVmwareClusterAutoRepairConfigEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterAutoRepairConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterAutoRepairConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterAuthorization(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterAuthorization(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3162,14 +3127,14 @@ func expandGkeonpremVmwareClusterAuthorization(v interface{}, d tpgresource.Terr
 	transformedAdminUsers, err := expandGkeonpremVmwareClusterAuthorizationAdminUsers(original["admin_users"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAdminUsers); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAdminUsers); val.IsValid() && !isEmptyValue(val) {
 		transformed["adminUsers"] = transformedAdminUsers
 	}
 
 	return transformed, nil
 }
 
-func expandGkeonpremVmwareClusterAuthorizationAdminUsers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterAuthorizationAdminUsers(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3182,7 +3147,7 @@ func expandGkeonpremVmwareClusterAuthorizationAdminUsers(v interface{}, d tpgres
 		transformedUsername, err := expandGkeonpremVmwareClusterAuthorizationAdminUsersUsername(original["username"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !isEmptyValue(val) {
 			transformed["username"] = transformedUsername
 		}
 
@@ -3191,10 +3156,10 @@ func expandGkeonpremVmwareClusterAuthorizationAdminUsers(v interface{}, d tpgres
 	return req, nil
 }
 
-func expandGkeonpremVmwareClusterAuthorizationAdminUsersUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterAuthorizationAdminUsersUsername(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandGkeonpremVmwareClusterEnableControlPlaneV2(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandGkeonpremVmwareClusterEnableControlPlaneV2(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

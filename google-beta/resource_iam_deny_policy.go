@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -24,8 +21,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -169,7 +164,7 @@ For example, you could add a Google group to the deniedPrincipals, then exclude 
 
 func resourceIAM2DenyPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -178,23 +173,23 @@ func resourceIAM2DenyPolicyCreate(d *schema.ResourceData, meta interface{}) erro
 	displayNameProp, err := expandIAM2DenyPolicyDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	etagProp, err := expandIAM2DenyPolicyEtag(d.Get("etag"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("etag"); !tpgresource.IsEmptyValue(reflect.ValueOf(etagProp)) && (ok || !reflect.DeepEqual(v, etagProp)) {
+	} else if v, ok := d.GetOkExists("etag"); !isEmptyValue(reflect.ValueOf(etagProp)) && (ok || !reflect.DeepEqual(v, etagProp)) {
 		obj["etag"] = etagProp
 	}
 	rulesProp, err := expandIAM2DenyPolicyRules(d.Get("rules"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("rules"); !tpgresource.IsEmptyValue(reflect.ValueOf(rulesProp)) && (ok || !reflect.DeepEqual(v, rulesProp)) {
+	} else if v, ok := d.GetOkExists("rules"); !isEmptyValue(reflect.ValueOf(rulesProp)) && (ok || !reflect.DeepEqual(v, rulesProp)) {
 		obj["rules"] = rulesProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/denypolicies?policyId={{name}}")
+	url, err := ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/denypolicies?policyId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -203,25 +198,17 @@ func resourceIAM2DenyPolicyCreate(d *schema.ResourceData, meta interface{}) erro
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating DenyPolicy: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/{{name}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -244,12 +231,12 @@ func resourceIAM2DenyPolicyCreate(d *schema.ResourceData, meta interface{}) erro
 
 func resourceIAM2DenyPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/denypolicies/{{name}}")
+	url, err := ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/denypolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -257,17 +244,11 @@ func resourceIAM2DenyPolicyRead(d *schema.ResourceData, meta interface{}) error 
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("IAM2DenyPolicy %q", d.Id()))
 	}
@@ -287,7 +268,7 @@ func resourceIAM2DenyPolicyRead(d *schema.ResourceData, meta interface{}) error 
 
 func resourceIAM2DenyPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -298,23 +279,23 @@ func resourceIAM2DenyPolicyUpdate(d *schema.ResourceData, meta interface{}) erro
 	displayNameProp, err := expandIAM2DenyPolicyDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	etagProp, err := expandIAM2DenyPolicyEtag(d.Get("etag"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("etag"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, etagProp)) {
+	} else if v, ok := d.GetOkExists("etag"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, etagProp)) {
 		obj["etag"] = etagProp
 	}
 	rulesProp, err := expandIAM2DenyPolicyRules(d.Get("rules"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("rules"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, rulesProp)) {
+	} else if v, ok := d.GetOkExists("rules"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, rulesProp)) {
 		obj["rules"] = rulesProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/denypolicies/{{name}}")
+	url, err := ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/denypolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -322,19 +303,11 @@ func resourceIAM2DenyPolicyUpdate(d *schema.ResourceData, meta interface{}) erro
 	log.Printf("[DEBUG] Updating DenyPolicy %q: %#v", d.Id(), obj)
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PUT",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PUT", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating DenyPolicy %q: %s", d.Id(), err)
@@ -355,14 +328,14 @@ func resourceIAM2DenyPolicyUpdate(d *schema.ResourceData, meta interface{}) erro
 
 func resourceIAM2DenyPolicyDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/denypolicies/{{name}}")
+	url, err := ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/denypolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -371,19 +344,11 @@ func resourceIAM2DenyPolicyDelete(d *schema.ResourceData, meta interface{}) erro
 	log.Printf("[DEBUG] Deleting DenyPolicy %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "DenyPolicy")
 	}
@@ -402,14 +367,14 @@ func resourceIAM2DenyPolicyDelete(d *schema.ResourceData, meta interface{}) erro
 
 func resourceIAM2DenyPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"(?P<parent>[^/]+)/(?P<name>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/{{name}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -521,15 +486,15 @@ func flattenIAM2DenyPolicyRulesDenyRuleDenialConditionLocation(v interface{}, d 
 	return v
 }
 
-func expandIAM2DenyPolicyDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyDisplayName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2DenyPolicyEtag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyEtag(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2DenyPolicyRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRules(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -542,14 +507,14 @@ func expandIAM2DenyPolicyRules(v interface{}, d tpgresource.TerraformResourceDat
 		transformedDescription, err := expandIAM2DenyPolicyRulesDescription(original["description"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !isEmptyValue(val) {
 			transformed["description"] = transformedDescription
 		}
 
 		transformedDenyRule, err := expandIAM2DenyPolicyRulesDenyRule(original["deny_rule"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedDenyRule); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedDenyRule); val.IsValid() && !isEmptyValue(val) {
 			transformed["denyRule"] = transformedDenyRule
 		}
 
@@ -558,11 +523,11 @@ func expandIAM2DenyPolicyRules(v interface{}, d tpgresource.TerraformResourceDat
 	return req, nil
 }
 
-func expandIAM2DenyPolicyRulesDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRulesDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2DenyPolicyRulesDenyRule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRulesDenyRule(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -574,58 +539,58 @@ func expandIAM2DenyPolicyRulesDenyRule(v interface{}, d tpgresource.TerraformRes
 	transformedDeniedPrincipals, err := expandIAM2DenyPolicyRulesDenyRuleDeniedPrincipals(original["denied_principals"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDeniedPrincipals); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDeniedPrincipals); val.IsValid() && !isEmptyValue(val) {
 		transformed["deniedPrincipals"] = transformedDeniedPrincipals
 	}
 
 	transformedExceptionPrincipals, err := expandIAM2DenyPolicyRulesDenyRuleExceptionPrincipals(original["exception_principals"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExceptionPrincipals); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExceptionPrincipals); val.IsValid() && !isEmptyValue(val) {
 		transformed["exceptionPrincipals"] = transformedExceptionPrincipals
 	}
 
 	transformedDeniedPermissions, err := expandIAM2DenyPolicyRulesDenyRuleDeniedPermissions(original["denied_permissions"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDeniedPermissions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDeniedPermissions); val.IsValid() && !isEmptyValue(val) {
 		transformed["deniedPermissions"] = transformedDeniedPermissions
 	}
 
 	transformedExceptionPermissions, err := expandIAM2DenyPolicyRulesDenyRuleExceptionPermissions(original["exception_permissions"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExceptionPermissions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExceptionPermissions); val.IsValid() && !isEmptyValue(val) {
 		transformed["exceptionPermissions"] = transformedExceptionPermissions
 	}
 
 	transformedDenialCondition, err := expandIAM2DenyPolicyRulesDenyRuleDenialCondition(original["denial_condition"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDenialCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDenialCondition); val.IsValid() && !isEmptyValue(val) {
 		transformed["denialCondition"] = transformedDenialCondition
 	}
 
 	return transformed, nil
 }
 
-func expandIAM2DenyPolicyRulesDenyRuleDeniedPrincipals(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRulesDenyRuleDeniedPrincipals(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2DenyPolicyRulesDenyRuleExceptionPrincipals(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRulesDenyRuleExceptionPrincipals(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2DenyPolicyRulesDenyRuleDeniedPermissions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRulesDenyRuleDeniedPermissions(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2DenyPolicyRulesDenyRuleExceptionPermissions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRulesDenyRuleExceptionPermissions(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2DenyPolicyRulesDenyRuleDenialCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRulesDenyRuleDenialCondition(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -637,46 +602,46 @@ func expandIAM2DenyPolicyRulesDenyRuleDenialCondition(v interface{}, d tpgresour
 	transformedExpression, err := expandIAM2DenyPolicyRulesDenyRuleDenialConditionExpression(original["expression"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExpression); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExpression); val.IsValid() && !isEmptyValue(val) {
 		transformed["expression"] = transformedExpression
 	}
 
 	transformedTitle, err := expandIAM2DenyPolicyRulesDenyRuleDenialConditionTitle(original["title"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTitle); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTitle); val.IsValid() && !isEmptyValue(val) {
 		transformed["title"] = transformedTitle
 	}
 
 	transformedDescription, err := expandIAM2DenyPolicyRulesDenyRuleDenialConditionDescription(original["description"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !isEmptyValue(val) {
 		transformed["description"] = transformedDescription
 	}
 
 	transformedLocation, err := expandIAM2DenyPolicyRulesDenyRuleDenialConditionLocation(original["location"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !isEmptyValue(val) {
 		transformed["location"] = transformedLocation
 	}
 
 	return transformed, nil
 }
 
-func expandIAM2DenyPolicyRulesDenyRuleDenialConditionExpression(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRulesDenyRuleDenialConditionExpression(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2DenyPolicyRulesDenyRuleDenialConditionTitle(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRulesDenyRuleDenialConditionTitle(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2DenyPolicyRulesDenyRuleDenialConditionDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRulesDenyRuleDenialConditionDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2DenyPolicyRulesDenyRuleDenialConditionLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2DenyPolicyRulesDenyRuleDenialConditionLocation(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

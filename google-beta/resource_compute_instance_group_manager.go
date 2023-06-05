@@ -1,11 +1,8 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 	"log"
-	"regexp"
 	"strings"
 	"time"
 
@@ -160,7 +157,7 @@ func ResourceComputeInstanceGroupManager() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Set:         tpgresource.SelfLinkRelativePathHash,
+				Set:         selfLinkRelativePathHash,
 				Description: `The full URL of all target pools to which new instances in the group are added. Updating the target pools attribute does not affect existing instances.`,
 			},
 
@@ -189,7 +186,7 @@ func ResourceComputeInstanceGroupManager() *schema.Resource {
 						"health_check": {
 							Type:             schema.TypeString,
 							Required:         true,
-							DiffSuppressFunc: tpgresource.CompareSelfLinkRelativePaths,
+							DiffSuppressFunc: compareSelfLinkRelativePaths,
 							Description:      `The health check resource that signals autohealing.`,
 						},
 
@@ -496,7 +493,7 @@ func compareSelfLinkRelativePathsIgnoreParams(_unused1, old, new string, _unused
 	if oldUniqueId != "" && newUniqueId != "" && oldUniqueId != newUniqueId {
 		return false
 	}
-	return tpgresource.CompareSelfLinkRelativePaths(_unused1, oldName, newName, _unused2)
+	return compareSelfLinkRelativePaths(_unused1, oldName, newName, _unused2)
 }
 
 func ConvertToUniqueIdWhenPresent(s string) string {
@@ -537,17 +534,17 @@ func getNamedPortsBeta(nps []interface{}) []*compute.NamedPort {
 
 func resourceComputeInstanceGroupManagerCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	zone, err := tpgresource.GetZone(d, config)
+	zone, err := getZone(d, config)
 	if err != nil {
 		return err
 	}
@@ -581,7 +578,7 @@ func resourceComputeInstanceGroupManagerCreate(d *schema.ResourceData, meta inte
 	}
 
 	// It probably maybe worked, so store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -634,7 +631,7 @@ func flattenVersions(versions []*compute.InstanceGroupManagerVersion) []map[stri
 	for _, version := range versions {
 		versionMap := make(map[string]interface{})
 		versionMap["name"] = version.Name
-		versionMap["instance_template"] = tpgresource.ConvertSelfLinkToV1(version.InstanceTemplate)
+		versionMap["instance_template"] = ConvertSelfLinkToV1(version.InstanceTemplate)
 		versionMap["target_size"] = flattenFixedOrPercent(version.TargetSize)
 		result = append(result, versionMap)
 	}
@@ -657,17 +654,17 @@ func flattenFixedOrPercent(fixedOrPercent *compute.FixedOrPercent) []map[string]
 func getManager(d *schema.ResourceData, meta interface{}) (*compute.InstanceGroupManager, error) {
 	config := meta.(*transport_tpg.Config)
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return nil, err
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
 
-	zone, _ := tpgresource.GetZone(d, config)
+	zone, _ := getZone(d, config)
 	name := d.Get("name").(string)
 
 	manager, err := config.NewComputeClient(userAgent).InstanceGroupManagers.Get(project, zone, name).Do()
@@ -688,12 +685,12 @@ func getManager(d *schema.ResourceData, meta interface{}) (*compute.InstanceGrou
 
 func resourceComputeInstanceGroupManagerRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -701,7 +698,7 @@ func resourceComputeInstanceGroupManagerRead(d *schema.ResourceData, meta interf
 	operation := d.Get("operation").(string)
 	if operation != "" {
 		log.Printf("[DEBUG] in progress operation detected at %v, attempting to resume", operation)
-		zone, _ := tpgresource.GetZone(d, config)
+		zone, _ := getZone(d, config)
 		op := &compute.Operation{
 			Name: operation,
 			Zone: zone,
@@ -734,7 +731,7 @@ func resourceComputeInstanceGroupManagerRead(d *schema.ResourceData, meta interf
 	if err := d.Set("name", manager.Name); err != nil {
 		return fmt.Errorf("Error setting name: %s", err)
 	}
-	if err := d.Set("zone", tpgresource.GetResourceNameFromSelfLink(manager.Zone)); err != nil {
+	if err := d.Set("zone", GetResourceNameFromSelfLink(manager.Zone)); err != nil {
 		return fmt.Errorf("Error setting zone: %s", err)
 	}
 	if err := d.Set("description", manager.Description); err != nil {
@@ -749,7 +746,7 @@ func resourceComputeInstanceGroupManagerRead(d *schema.ResourceData, meta interf
 	if err := d.Set("list_managed_instances_results", manager.ListManagedInstancesResults); err != nil {
 		return fmt.Errorf("Error setting list_managed_instances_results: %s", err)
 	}
-	if err = d.Set("target_pools", mapStringArr(manager.TargetPools, tpgresource.ConvertSelfLinkToV1)); err != nil {
+	if err = d.Set("target_pools", mapStringArr(manager.TargetPools, ConvertSelfLinkToV1)); err != nil {
 		return fmt.Errorf("Error setting target_pools in state: %s", err.Error())
 	}
 	if err = d.Set("named_port", flattenNamedPortsBeta(manager.NamedPorts)); err != nil {
@@ -767,10 +764,10 @@ func resourceComputeInstanceGroupManagerRead(d *schema.ResourceData, meta interf
 	if err := d.Set("fingerprint", manager.Fingerprint); err != nil {
 		return fmt.Errorf("Error setting fingerprint: %s", err)
 	}
-	if err := d.Set("instance_group", tpgresource.ConvertSelfLinkToV1(manager.InstanceGroup)); err != nil {
+	if err := d.Set("instance_group", ConvertSelfLinkToV1(manager.InstanceGroup)); err != nil {
 		return fmt.Errorf("Error setting instance_group: %s", err)
 	}
-	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(manager.SelfLink)); err != nil {
+	if err := d.Set("self_link", ConvertSelfLinkToV1(manager.SelfLink)); err != nil {
 		return fmt.Errorf("Error setting self_link: %s", err)
 	}
 
@@ -808,17 +805,17 @@ func resourceComputeInstanceGroupManagerRead(d *schema.ResourceData, meta interf
 func resourceComputeInstanceGroupManagerUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	zone, err := tpgresource.GetZone(d, config)
+	zone, err := getZone(d, config)
 	if err != nil {
 		return err
 	}
@@ -956,29 +953,21 @@ func resourceComputeInstanceGroupManagerDelete(d *schema.ResourceData, meta inte
 	if d.Get("wait_for_instances").(bool) {
 		err := computeIGMWaitForInstanceStatus(d, meta)
 		if err != nil {
-			notFound, reErr := regexp.MatchString(`not found`, err.Error())
-			if reErr != nil {
-				return reErr
-			}
-			if notFound {
-				// manager was not found, we can exit gracefully
-				return nil
-			}
 			return err
 		}
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	zone, _ := tpgresource.GetZone(d, config)
+	zone, _ := getZone(d, config)
 	name := d.Get("name").(string)
 
 	op, err := config.NewComputeClient(userAgent).InstanceGroupManagers.Delete(project, zone, name).Do()
@@ -1448,12 +1437,12 @@ func resourceInstanceGroupManagerStateImporter(d *schema.ResourceData, meta inte
 		return nil, fmt.Errorf("Error setting wait_for_instances_status: %s", err)
 	}
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{"projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/instanceGroupManagers/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
+	if err := ParseImportId([]string{"projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/instanceGroupManagers/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

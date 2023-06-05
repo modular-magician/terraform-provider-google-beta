@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -101,7 +98,6 @@ func TestAccGKEHubMembershipIamPolicyGenerated(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGKEHubMembershipIamPolicy_basicGenerated(context),
-				Check:  resource.TestCheckResourceAttrSet("data.google_gke_hub_membership_iam_policy.foo", "policy_data"),
 			},
 			{
 				ResourceName:      "google_gke_hub_membership_iam_policy.foo",
@@ -176,14 +172,6 @@ resource "google_gke_hub_membership_iam_policy" "foo" {
   project = google_gke_hub_membership.membership.project
   membership_id = google_gke_hub_membership.membership.membership_id
   policy_data = data.google_iam_policy.foo.policy_data
-}
-
-data "google_gke_hub_membership_iam_policy" "foo" {
-  project = google_gke_hub_membership.membership.project
-  membership_id = google_gke_hub_membership.membership.membership_id
-  depends_on = [
-    google_gke_hub_membership_iam_policy.foo
-  ]
 }
 `, context)
 }

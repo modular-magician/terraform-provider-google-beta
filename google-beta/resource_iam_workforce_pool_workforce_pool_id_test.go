@@ -1,16 +1,12 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"strings"
 	"testing"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
 
 func TestValidateIAMWorkforcePoolWorkforcePoolId(t *testing.T) {
-	x := []verify.StringValidationTestCase{
+	x := []StringValidationTestCase{
 		// No errors
 		{TestName: "with numbers", Value: "foobar123"},
 		{TestName: "short", Value: "foobar"},
@@ -29,7 +25,7 @@ func TestValidateIAMWorkforcePoolWorkforcePoolId(t *testing.T) {
 		{TestName: "ends with a hyphen", Value: "foobar-", ExpectError: true},
 	}
 
-	es := verify.TestStringValidationCases(x, ValidateWorkforcePoolId)
+	es := testStringValidationCases(x, ValidateWorkforcePoolId)
 	if len(es) > 0 {
 		t.Errorf("Failed to validate WorkforcePool names: %v", es)
 	}

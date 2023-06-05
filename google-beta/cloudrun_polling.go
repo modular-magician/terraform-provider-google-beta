@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,8 +5,6 @@ import (
 	"log"
 
 	"github.com/hashicorp/errwrap"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
-	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 const readyStatusType string = "Ready"
@@ -51,13 +47,13 @@ func getGeneration(res map[string]interface{}) (int, error) {
 	return int(gen.(float64)), nil
 }
 
-func PollCheckKnativeStatusFunc(knativeRestResponse map[string]interface{}) func(resp map[string]interface{}, respErr error) transport_tpg.PollResult {
-	return func(resp map[string]interface{}, respErr error) transport_tpg.PollResult {
+func PollCheckKnativeStatusFunc(knativeRestResponse map[string]interface{}) func(resp map[string]interface{}, respErr error) PollResult {
+	return func(resp map[string]interface{}, respErr error) PollResult {
 		if respErr != nil {
 			return ErrorPollResult(respErr)
 		}
 		s := KnativeStatus{}
-		if err := tpgresource.Convert(resp, &s); err != nil {
+		if err := Convert(resp, &s); err != nil {
 			return ErrorPollResult(errwrap.Wrapf("unable to get KnativeStatus: {{err}}", err))
 		}
 

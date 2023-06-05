@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package transport
 
 import (
@@ -18,61 +16,53 @@ import (
 
 var DefaultRequestTimeout = 5 * time.Minute
 
-type SendRequestOptions struct {
-	Config               *Config
-	Method               string
-	Project              string
-	RawURL               string
-	UserAgent            string
-	Body                 map[string]any
-	Timeout              time.Duration
-	ErrorRetryPredicates []RetryErrorPredicateFunc
-	ErrorAbortPredicates []RetryErrorPredicateFunc
+func SendRequest(config *Config, method, project, rawurl, userAgent string, body map[string]interface{}, errorRetryPredicates ...RetryErrorPredicateFunc) (map[string]interface{}, error) {
+	return SendRequestWithTimeout(config, method, project, rawurl, userAgent, body, DefaultRequestTimeout, errorRetryPredicates...)
 }
 
-func SendRequest(opt SendRequestOptions) (map[string]interface{}, error) {
+func SendRequestWithTimeout(config *Config, method, project, rawurl, userAgent string, body map[string]interface{}, timeout time.Duration, errorRetryPredicates ...RetryErrorPredicateFunc) (map[string]interface{}, error) {
 	reqHeaders := make(http.Header)
-	reqHeaders.Set("User-Agent", opt.UserAgent)
+	reqHeaders.Set("User-Agent", userAgent)
 	reqHeaders.Set("Content-Type", "application/json")
 
-	if opt.Config.UserProjectOverride && opt.Project != "" {
-		// When opt.Project is "NO_BILLING_PROJECT_OVERRIDE" in the function GetCurrentUserEmail,
+	if config.UserProjectOverride && project != "" {
+		// When project is "NO_BILLING_PROJECT_OVERRIDE" in the function GetCurrentUserEmail,
 		// set the header X-Goog-User-Project to be empty string.
-		if opt.Project == "NO_BILLING_PROJECT_OVERRIDE" {
+		if project == "NO_BILLING_PROJECT_OVERRIDE" {
 			reqHeaders.Set("X-Goog-User-Project", "")
 		} else {
 			// Pass the project into this fn instead of parsing it from the URL because
 			// both project names and URLs can have colons in them.
-			reqHeaders.Set("X-Goog-User-Project", opt.Project)
+			reqHeaders.Set("X-Goog-User-Project", project)
 		}
 	}
 
-	if opt.Timeout == 0 {
-		opt.Timeout = DefaultRequestTimeout
+	if timeout == 0 {
+		timeout = time.Duration(1) * time.Hour
 	}
 
 	var res *http.Response
-	err := Retry(RetryOptions{
-		RetryFunc: func() error {
+	err := RetryTimeDuration(
+		func() error {
 			var buf bytes.Buffer
-			if opt.Body != nil {
-				err := json.NewEncoder(&buf).Encode(opt.Body)
+			if body != nil {
+				err := json.NewEncoder(&buf).Encode(body)
 				if err != nil {
 					return err
 				}
 			}
 
-			u, err := AddQueryParams(opt.RawURL, map[string]string{"alt": "json"})
+			u, err := AddQueryParams(rawurl, map[string]string{"alt": "json"})
 			if err != nil {
 				return err
 			}
-			req, err := http.NewRequest(opt.Method, u, &buf)
+			req, err := http.NewRequest(method, u, &buf)
 			if err != nil {
 				return err
 			}
 
 			req.Header = reqHeaders
-			res, err = opt.Config.Client.Do(req)
+			res, err = config.Client.Do(req)
 			if err != nil {
 				return err
 			}
@@ -84,10 +74,9 @@ func SendRequest(opt SendRequestOptions) (map[string]interface{}, error) {
 
 			return nil
 		},
-		Timeout:              opt.Timeout,
-		ErrorRetryPredicates: opt.ErrorRetryPredicates,
-		ErrorAbortPredicates: opt.ErrorAbortPredicates,
-	})
+		timeout,
+		errorRetryPredicates...,
+	)
 	if err != nil {
 		return nil, err
 	}

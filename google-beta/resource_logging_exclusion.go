@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,8 +5,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -39,7 +35,7 @@ var LoggingExclusionBaseSchema = map[string]*schema.Schema{
 	},
 }
 
-func ResourceLoggingExclusion(parentSpecificSchema map[string]*schema.Schema, newUpdaterFunc newResourceLoggingExclusionUpdaterFunc, resourceIdParser tpgiamresource.ResourceIdParserFunc) *schema.Resource {
+func ResourceLoggingExclusion(parentSpecificSchema map[string]*schema.Schema, newUpdaterFunc newResourceLoggingExclusionUpdaterFunc, resourceIdParser resourceIdParserFunc) *schema.Resource {
 	return &schema.Resource{
 		Create: resourceLoggingExclusionCreate(newUpdaterFunc),
 		Read:   resourceLoggingExclusionRead(newUpdaterFunc),
@@ -50,7 +46,7 @@ func ResourceLoggingExclusion(parentSpecificSchema map[string]*schema.Schema, ne
 			State: resourceLoggingExclusionImportState(resourceIdParser),
 		},
 
-		Schema:        tpgresource.MergeSchemas(LoggingExclusionBaseSchema, parentSpecificSchema),
+		Schema:        mergeSchemas(LoggingExclusionBaseSchema, parentSpecificSchema),
 		UseJSONNumber: true,
 	}
 }
@@ -67,8 +63,8 @@ func resourceLoggingExclusionCreate(newUpdaterFunc newResourceLoggingExclusionUp
 
 		// Logging exclusions don't seem to be able to be mutated in parallel, see
 		// https://github.com/hashicorp/terraform-provider-google/issues/4796
-		transport_tpg.MutexStore.Lock(id.parent())
-		defer transport_tpg.MutexStore.Unlock(id.parent())
+		mutexKV.Lock(id.parent())
+		defer mutexKV.Unlock(id.parent())
 
 		err = updater.CreateLoggingExclusion(id.parent(), exclusion)
 		if err != nil {
@@ -122,8 +118,8 @@ func resourceLoggingExclusionUpdate(newUpdaterFunc newResourceLoggingExclusionUp
 
 		// Logging exclusions don't seem to be able to be mutated in parallel, see
 		// https://github.com/hashicorp/terraform-provider-google/issues/4796
-		transport_tpg.MutexStore.Lock(id.parent())
-		defer transport_tpg.MutexStore.Unlock(id.parent())
+		mutexKV.Lock(id.parent())
+		defer mutexKV.Unlock(id.parent())
 
 		err = updater.UpdateLoggingExclusion(d.Id(), exclusion, updateMask)
 		if err != nil {
@@ -145,8 +141,8 @@ func resourceLoggingExclusionDelete(newUpdaterFunc newResourceLoggingExclusionUp
 		id, _ := expandResourceLoggingExclusion(d, updater.GetResourceType(), updater.GetResourceId())
 		// Logging exclusions don't seem to be able to be mutated in parallel, see
 		// https://github.com/hashicorp/terraform-provider-google/issues/4796
-		transport_tpg.MutexStore.Lock(id.parent())
-		defer transport_tpg.MutexStore.Unlock(id.parent())
+		mutexKV.Lock(id.parent())
+		defer mutexKV.Unlock(id.parent())
 
 		err = updater.DeleteLoggingExclusion(d.Id())
 		if err != nil {
@@ -158,7 +154,7 @@ func resourceLoggingExclusionDelete(newUpdaterFunc newResourceLoggingExclusionUp
 	}
 }
 
-func resourceLoggingExclusionImportState(resourceIdParser tpgiamresource.ResourceIdParserFunc) schema.StateFunc {
+func resourceLoggingExclusionImportState(resourceIdParser resourceIdParserFunc) schema.StateFunc {
 	return func(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 		config := meta.(*transport_tpg.Config)
 		err := resourceIdParser(d, config)
