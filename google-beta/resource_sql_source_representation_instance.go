@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -27,8 +24,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 
@@ -139,7 +134,7 @@ If it is not provided, the provider region is used.`,
 
 func resourceSQLSourceRepresentationInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -148,25 +143,25 @@ func resourceSQLSourceRepresentationInstanceCreate(d *schema.ResourceData, meta 
 	nameProp, err := expandSQLSourceRepresentationInstanceName(d.Get("name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
 	regionProp, err := expandSQLSourceRepresentationInstanceRegion(d.Get("region"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("region"); !tpgresource.IsEmptyValue(reflect.ValueOf(regionProp)) && (ok || !reflect.DeepEqual(v, regionProp)) {
+	} else if v, ok := d.GetOkExists("region"); !isEmptyValue(reflect.ValueOf(regionProp)) && (ok || !reflect.DeepEqual(v, regionProp)) {
 		obj["region"] = regionProp
 	}
 	databaseVersionProp, err := expandSQLSourceRepresentationInstanceDatabaseVersion(d.Get("database_version"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("database_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(databaseVersionProp)) && (ok || !reflect.DeepEqual(v, databaseVersionProp)) {
+	} else if v, ok := d.GetOkExists("database_version"); !isEmptyValue(reflect.ValueOf(databaseVersionProp)) && (ok || !reflect.DeepEqual(v, databaseVersionProp)) {
 		obj["databaseVersion"] = databaseVersionProp
 	}
 	onPremisesConfigurationProp, err := expandSQLSourceRepresentationInstanceOnPremisesConfiguration(nil, d, config)
 	if err != nil {
 		return err
-	} else if !tpgresource.IsEmptyValue(reflect.ValueOf(onPremisesConfigurationProp)) {
+	} else if !isEmptyValue(reflect.ValueOf(onPremisesConfigurationProp)) {
 		obj["onPremisesConfiguration"] = onPremisesConfigurationProp
 	}
 
@@ -175,7 +170,7 @@ func resourceSQLSourceRepresentationInstanceCreate(d *schema.ResourceData, meta 
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{SQLBasePath}}projects/{{project}}/instances")
+	url, err := ReplaceVars(d, config, "{{SQLBasePath}}projects/{{project}}/instances")
 	if err != nil {
 		return err
 	}
@@ -183,32 +178,24 @@ func resourceSQLSourceRepresentationInstanceCreate(d *schema.ResourceData, meta 
 	log.Printf("[DEBUG] Creating new SourceRepresentationInstance: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for SourceRepresentationInstance: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating SourceRepresentationInstance: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/instances/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/instances/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -231,36 +218,30 @@ func resourceSQLSourceRepresentationInstanceCreate(d *schema.ResourceData, meta 
 
 func resourceSQLSourceRepresentationInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{SQLBasePath}}projects/{{project}}/instances/{{name}}")
+	url, err := ReplaceVars(d, config, "{{SQLBasePath}}projects/{{project}}/instances/{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for SourceRepresentationInstance: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("SQLSourceRepresentationInstance %q", d.Id()))
 	}
@@ -311,20 +292,20 @@ func resourceSQLSourceRepresentationInstanceRead(d *schema.ResourceData, meta in
 
 func resourceSQLSourceRepresentationInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for SourceRepresentationInstance: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{SQLBasePath}}projects/{{project}}/instances/{{name}}")
+	url, err := ReplaceVars(d, config, "{{SQLBasePath}}projects/{{project}}/instances/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -333,19 +314,11 @@ func resourceSQLSourceRepresentationInstanceDelete(d *schema.ResourceData, meta 
 	log.Printf("[DEBUG] Deleting SourceRepresentationInstance %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "SourceRepresentationInstance")
 	}
@@ -364,7 +337,7 @@ func resourceSQLSourceRepresentationInstanceDelete(d *schema.ResourceData, meta 
 
 func resourceSQLSourceRepresentationInstanceImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/instances/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<name>[^/]+)",
 		"(?P<name>[^/]+)",
@@ -373,7 +346,7 @@ func resourceSQLSourceRepresentationInstanceImport(d *schema.ResourceData, meta 
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/instances/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/instances/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -466,108 +439,108 @@ func flattenSQLSourceRepresentationInstanceOnPremisesConfigurationClientKey(v in
 	return v
 }
 
-func expandSQLSourceRepresentationInstanceName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSQLSourceRepresentationInstanceRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceRegion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSQLSourceRepresentationInstanceDatabaseVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceDatabaseVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSQLSourceRepresentationInstanceOnPremisesConfiguration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceOnPremisesConfiguration(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	transformed := make(map[string]interface{})
 	transformedHost, err := expandSQLSourceRepresentationInstanceOnPremisesConfigurationHost(d.Get("host"), d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedHost); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedHost); val.IsValid() && !isEmptyValue(val) {
 		transformed["host"] = transformedHost
 	}
 
 	transformedPort, err := expandSQLSourceRepresentationInstanceOnPremisesConfigurationPort(d.Get("port"), d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !isEmptyValue(val) {
 		transformed["port"] = transformedPort
 	}
 
 	transformedUsername, err := expandSQLSourceRepresentationInstanceOnPremisesConfigurationUsername(d.Get("username"), d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !isEmptyValue(val) {
 		transformed["username"] = transformedUsername
 	}
 
 	transformedPassword, err := expandSQLSourceRepresentationInstanceOnPremisesConfigurationPassword(d.Get("password"), d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !isEmptyValue(val) {
 		transformed["password"] = transformedPassword
 	}
 
 	transformedDumpFilePath, err := expandSQLSourceRepresentationInstanceOnPremisesConfigurationDumpFilePath(d.Get("dump_file_path"), d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDumpFilePath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDumpFilePath); val.IsValid() && !isEmptyValue(val) {
 		transformed["dumpFilePath"] = transformedDumpFilePath
 	}
 
 	transformedCaCertificate, err := expandSQLSourceRepresentationInstanceOnPremisesConfigurationCaCertificate(d.Get("ca_certificate"), d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCaCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCaCertificate); val.IsValid() && !isEmptyValue(val) {
 		transformed["caCertificate"] = transformedCaCertificate
 	}
 
 	transformedClientCertificate, err := expandSQLSourceRepresentationInstanceOnPremisesConfigurationClientCertificate(d.Get("client_certificate"), d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedClientCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedClientCertificate); val.IsValid() && !isEmptyValue(val) {
 		transformed["clientCertificate"] = transformedClientCertificate
 	}
 
 	transformedClientKey, err := expandSQLSourceRepresentationInstanceOnPremisesConfigurationClientKey(d.Get("client_key"), d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedClientKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedClientKey); val.IsValid() && !isEmptyValue(val) {
 		transformed["clientKey"] = transformedClientKey
 	}
 
 	return transformed, nil
 }
 
-func expandSQLSourceRepresentationInstanceOnPremisesConfigurationHost(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceOnPremisesConfigurationHost(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSQLSourceRepresentationInstanceOnPremisesConfigurationPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceOnPremisesConfigurationPort(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSQLSourceRepresentationInstanceOnPremisesConfigurationUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceOnPremisesConfigurationUsername(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSQLSourceRepresentationInstanceOnPremisesConfigurationPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceOnPremisesConfigurationPassword(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSQLSourceRepresentationInstanceOnPremisesConfigurationDumpFilePath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceOnPremisesConfigurationDumpFilePath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSQLSourceRepresentationInstanceOnPremisesConfigurationCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceOnPremisesConfigurationCaCertificate(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSQLSourceRepresentationInstanceOnPremisesConfigurationClientCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceOnPremisesConfigurationClientCertificate(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSQLSourceRepresentationInstanceOnPremisesConfigurationClientKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSQLSourceRepresentationInstanceOnPremisesConfigurationClientKey(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -26,8 +23,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -173,7 +168,7 @@ This can be used e.g. in UIs which allow to enter the expression.`,
 
 func resourceCloudAssetOrganizationFeedCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -182,31 +177,31 @@ func resourceCloudAssetOrganizationFeedCreate(d *schema.ResourceData, meta inter
 	assetNamesProp, err := expandCloudAssetOrganizationFeedAssetNames(d.Get("asset_names"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("asset_names"); !tpgresource.IsEmptyValue(reflect.ValueOf(assetNamesProp)) && (ok || !reflect.DeepEqual(v, assetNamesProp)) {
+	} else if v, ok := d.GetOkExists("asset_names"); !isEmptyValue(reflect.ValueOf(assetNamesProp)) && (ok || !reflect.DeepEqual(v, assetNamesProp)) {
 		obj["assetNames"] = assetNamesProp
 	}
 	assetTypesProp, err := expandCloudAssetOrganizationFeedAssetTypes(d.Get("asset_types"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("asset_types"); !tpgresource.IsEmptyValue(reflect.ValueOf(assetTypesProp)) && (ok || !reflect.DeepEqual(v, assetTypesProp)) {
+	} else if v, ok := d.GetOkExists("asset_types"); !isEmptyValue(reflect.ValueOf(assetTypesProp)) && (ok || !reflect.DeepEqual(v, assetTypesProp)) {
 		obj["assetTypes"] = assetTypesProp
 	}
 	contentTypeProp, err := expandCloudAssetOrganizationFeedContentType(d.Get("content_type"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("content_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(contentTypeProp)) && (ok || !reflect.DeepEqual(v, contentTypeProp)) {
+	} else if v, ok := d.GetOkExists("content_type"); !isEmptyValue(reflect.ValueOf(contentTypeProp)) && (ok || !reflect.DeepEqual(v, contentTypeProp)) {
 		obj["contentType"] = contentTypeProp
 	}
 	feedOutputConfigProp, err := expandCloudAssetOrganizationFeedFeedOutputConfig(d.Get("feed_output_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("feed_output_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(feedOutputConfigProp)) && (ok || !reflect.DeepEqual(v, feedOutputConfigProp)) {
+	} else if v, ok := d.GetOkExists("feed_output_config"); !isEmptyValue(reflect.ValueOf(feedOutputConfigProp)) && (ok || !reflect.DeepEqual(v, feedOutputConfigProp)) {
 		obj["feedOutputConfig"] = feedOutputConfigProp
 	}
 	conditionProp, err := expandCloudAssetOrganizationFeedCondition(d.Get("condition"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("condition"); !tpgresource.IsEmptyValue(reflect.ValueOf(conditionProp)) && (ok || !reflect.DeepEqual(v, conditionProp)) {
+	} else if v, ok := d.GetOkExists("condition"); !isEmptyValue(reflect.ValueOf(conditionProp)) && (ok || !reflect.DeepEqual(v, conditionProp)) {
 		obj["condition"] = conditionProp
 	}
 
@@ -215,7 +210,7 @@ func resourceCloudAssetOrganizationFeedCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CloudAssetBasePath}}organizations/{{org_id}}/feeds?feedId={{feed_id}}")
+	url, err := ReplaceVars(d, config, "{{CloudAssetBasePath}}organizations/{{org_id}}/feeds?feedId={{feed_id}}")
 	if err != nil {
 		return err
 	}
@@ -228,22 +223,14 @@ func resourceCloudAssetOrganizationFeedCreate(d *schema.ResourceData, meta inter
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
 	// Send the project ID in the X-Goog-User-Project header.
 	origUserProjectOverride := config.UserProjectOverride
 	config.UserProjectOverride = true
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating OrganizationFeed: %s", err)
 	}
@@ -252,7 +239,7 @@ func resourceCloudAssetOrganizationFeedCreate(d *schema.ResourceData, meta inter
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{name}}")
+	id, err := ReplaceVars(d, config, "{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -268,12 +255,12 @@ func resourceCloudAssetOrganizationFeedCreate(d *schema.ResourceData, meta inter
 
 func resourceCloudAssetOrganizationFeedRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CloudAssetBasePath}}{{name}}")
+	url, err := ReplaceVars(d, config, "{{CloudAssetBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -285,17 +272,11 @@ func resourceCloudAssetOrganizationFeedRead(d *schema.ResourceData, meta interfa
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("CloudAssetOrganizationFeed %q", d.Id()))
 	}
@@ -324,7 +305,7 @@ func resourceCloudAssetOrganizationFeedRead(d *schema.ResourceData, meta interfa
 
 func resourceCloudAssetOrganizationFeedUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -335,31 +316,31 @@ func resourceCloudAssetOrganizationFeedUpdate(d *schema.ResourceData, meta inter
 	assetNamesProp, err := expandCloudAssetOrganizationFeedAssetNames(d.Get("asset_names"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("asset_names"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, assetNamesProp)) {
+	} else if v, ok := d.GetOkExists("asset_names"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, assetNamesProp)) {
 		obj["assetNames"] = assetNamesProp
 	}
 	assetTypesProp, err := expandCloudAssetOrganizationFeedAssetTypes(d.Get("asset_types"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("asset_types"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, assetTypesProp)) {
+	} else if v, ok := d.GetOkExists("asset_types"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, assetTypesProp)) {
 		obj["assetTypes"] = assetTypesProp
 	}
 	contentTypeProp, err := expandCloudAssetOrganizationFeedContentType(d.Get("content_type"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("content_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, contentTypeProp)) {
+	} else if v, ok := d.GetOkExists("content_type"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, contentTypeProp)) {
 		obj["contentType"] = contentTypeProp
 	}
 	feedOutputConfigProp, err := expandCloudAssetOrganizationFeedFeedOutputConfig(d.Get("feed_output_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("feed_output_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, feedOutputConfigProp)) {
+	} else if v, ok := d.GetOkExists("feed_output_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, feedOutputConfigProp)) {
 		obj["feedOutputConfig"] = feedOutputConfigProp
 	}
 	conditionProp, err := expandCloudAssetOrganizationFeedCondition(d.Get("condition"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("condition"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, conditionProp)) {
+	} else if v, ok := d.GetOkExists("condition"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, conditionProp)) {
 		obj["condition"] = conditionProp
 	}
 
@@ -368,7 +349,7 @@ func resourceCloudAssetOrganizationFeedUpdate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CloudAssetBasePath}}{{name}}")
+	url, err := ReplaceVars(d, config, "{{CloudAssetBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -406,19 +387,11 @@ func resourceCloudAssetOrganizationFeedUpdate(d *schema.ResourceData, meta inter
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating OrganizationFeed %q: %s", d.Id(), err)
@@ -431,14 +404,14 @@ func resourceCloudAssetOrganizationFeedUpdate(d *schema.ResourceData, meta inter
 
 func resourceCloudAssetOrganizationFeedDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CloudAssetBasePath}}{{name}}")
+	url, err := ReplaceVars(d, config, "{{CloudAssetBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -452,19 +425,11 @@ func resourceCloudAssetOrganizationFeedDelete(d *schema.ResourceData, meta inter
 	log.Printf("[DEBUG] Deleting OrganizationFeed %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "OrganizationFeed")
 	}
@@ -561,19 +526,19 @@ func flattenCloudAssetOrganizationFeedConditionLocation(v interface{}, d *schema
 	return v
 }
 
-func expandCloudAssetOrganizationFeedAssetNames(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudAssetOrganizationFeedAssetNames(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudAssetOrganizationFeedAssetTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudAssetOrganizationFeedAssetTypes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudAssetOrganizationFeedContentType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudAssetOrganizationFeedContentType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudAssetOrganizationFeedFeedOutputConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudAssetOrganizationFeedFeedOutputConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -585,14 +550,14 @@ func expandCloudAssetOrganizationFeedFeedOutputConfig(v interface{}, d tpgresour
 	transformedPubsubDestination, err := expandCloudAssetOrganizationFeedFeedOutputConfigPubsubDestination(original["pubsub_destination"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPubsubDestination); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPubsubDestination); val.IsValid() && !isEmptyValue(val) {
 		transformed["pubsubDestination"] = transformedPubsubDestination
 	}
 
 	return transformed, nil
 }
 
-func expandCloudAssetOrganizationFeedFeedOutputConfigPubsubDestination(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudAssetOrganizationFeedFeedOutputConfigPubsubDestination(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -604,18 +569,18 @@ func expandCloudAssetOrganizationFeedFeedOutputConfigPubsubDestination(v interfa
 	transformedTopic, err := expandCloudAssetOrganizationFeedFeedOutputConfigPubsubDestinationTopic(original["topic"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTopic); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTopic); val.IsValid() && !isEmptyValue(val) {
 		transformed["topic"] = transformedTopic
 	}
 
 	return transformed, nil
 }
 
-func expandCloudAssetOrganizationFeedFeedOutputConfigPubsubDestinationTopic(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudAssetOrganizationFeedFeedOutputConfigPubsubDestinationTopic(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudAssetOrganizationFeedCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudAssetOrganizationFeedCondition(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -627,47 +592,47 @@ func expandCloudAssetOrganizationFeedCondition(v interface{}, d tpgresource.Terr
 	transformedExpression, err := expandCloudAssetOrganizationFeedConditionExpression(original["expression"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExpression); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExpression); val.IsValid() && !isEmptyValue(val) {
 		transformed["expression"] = transformedExpression
 	}
 
 	transformedTitle, err := expandCloudAssetOrganizationFeedConditionTitle(original["title"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTitle); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTitle); val.IsValid() && !isEmptyValue(val) {
 		transformed["title"] = transformedTitle
 	}
 
 	transformedDescription, err := expandCloudAssetOrganizationFeedConditionDescription(original["description"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !isEmptyValue(val) {
 		transformed["description"] = transformedDescription
 	}
 
 	transformedLocation, err := expandCloudAssetOrganizationFeedConditionLocation(original["location"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !isEmptyValue(val) {
 		transformed["location"] = transformedLocation
 	}
 
 	return transformed, nil
 }
 
-func expandCloudAssetOrganizationFeedConditionExpression(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudAssetOrganizationFeedConditionExpression(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudAssetOrganizationFeedConditionTitle(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudAssetOrganizationFeedConditionTitle(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudAssetOrganizationFeedConditionDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudAssetOrganizationFeedConditionDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudAssetOrganizationFeedConditionLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudAssetOrganizationFeedConditionLocation(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

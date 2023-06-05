@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -117,7 +114,6 @@ func TestAccIapWebBackendServiceIamPolicyGenerated(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIapWebBackendServiceIamPolicy_basicGenerated(context),
-				Check:  resource.TestCheckResourceAttrSet("data.google_iap_web_backend_service_iam_policy.foo", "policy_data"),
 			},
 			{
 				ResourceName:      "google_iap_web_backend_service_iam_policy.foo",
@@ -374,14 +370,6 @@ resource "google_iap_web_backend_service_iam_policy" "foo" {
   project = google_compute_backend_service.default.project
   web_backend_service = google_compute_backend_service.default.name
   policy_data = data.google_iam_policy.foo.policy_data
-}
-
-data "google_iap_web_backend_service_iam_policy" "foo" {
-  project = google_compute_backend_service.default.project
-  web_backend_service = google_compute_backend_service.default.name
-  depends_on = [
-    google_iap_web_backend_service_iam_policy.foo
-  ]
 }
 `, context)
 }

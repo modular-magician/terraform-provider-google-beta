@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,7 +5,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -27,14 +24,14 @@ func BatchRequestEnableService(service string, project string, d *schema.Resourc
 		return tryEnableRenamedService(service, altName, project, d, config)
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := project
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
@@ -54,7 +51,7 @@ func BatchRequestEnableService(service string, project string, d *schema.Resourc
 }
 
 func tryEnableRenamedService(service, altName string, project string, d *schema.ResourceData, config *transport_tpg.Config) error {
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -64,7 +61,7 @@ func tryEnableRenamedService(service, altName string, project string, d *schema.
 
 	billingProject := project
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
@@ -81,14 +78,14 @@ func tryEnableRenamedService(service, altName string, project string, d *schema.
 }
 
 func BatchRequestReadServices(project string, d *schema.ResourceData, config *transport_tpg.Config) (interface{}, error) {
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
 
 	billingProject := project
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 

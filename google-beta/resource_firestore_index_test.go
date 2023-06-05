@@ -1,12 +1,8 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 	"testing"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 func TestUnitFirestoreIndex_firestoreIFieldsDiffSuppress(t *testing.T) {
@@ -94,7 +90,7 @@ var firestoreIndexDiffSuppressTestCases = []FirestoreIndexDiffSuppressTestCase{
 }
 
 func (tc *FirestoreIndexDiffSuppressTestCase) Test(t *testing.T) {
-	mockResourceDiff := &tpgresource.ResourceDiffMock{
+	mockResourceDiff := &ResourceDiffMock{
 		Before: tc.Before,
 		After:  tc.After,
 	}

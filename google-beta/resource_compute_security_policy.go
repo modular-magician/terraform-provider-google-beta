@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -13,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 
@@ -32,9 +29,9 @@ func ResourceComputeSecurityPolicy() *schema.Resource {
 		CustomizeDiff: rulesCustomizeDiff,
 
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(8 * time.Minute),
-			Update: schema.DefaultTimeout(8 * time.Minute),
-			Delete: schema.DefaultTimeout(8 * time.Minute),
+			Create: schema.DefaultTimeout(4 * time.Minute),
+			Update: schema.DefaultTimeout(4 * time.Minute),
+			Delete: schema.DefaultTimeout(4 * time.Minute),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -582,12 +579,12 @@ func rulesCustomizeDiff(_ context.Context, diff *schema.ResourceDiff, _ interfac
 
 func resourceComputeSecurityPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -628,7 +625,7 @@ func resourceComputeSecurityPolicyCreate(d *schema.ResourceData, meta interface{
 		return errwrap.Wrapf("Error creating SecurityPolicy: {{err}}", err)
 	}
 
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/global/securityPolicies/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/global/securityPolicies/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -644,12 +641,12 @@ func resourceComputeSecurityPolicyCreate(d *schema.ResourceData, meta interface{
 
 func resourceComputeSecurityPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -681,7 +678,7 @@ func resourceComputeSecurityPolicyRead(d *schema.ResourceData, meta interface{})
 	if err := d.Set("project", project); err != nil {
 		return fmt.Errorf("Error setting project: %s", err)
 	}
-	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(securityPolicy.SelfLink)); err != nil {
+	if err := d.Set("self_link", ConvertSelfLinkToV1(securityPolicy.SelfLink)); err != nil {
 		return fmt.Errorf("Error setting self_link: %s", err)
 	}
 	if err := d.Set("advanced_options_config", flattenSecurityPolicyAdvancedOptionsConfig(securityPolicy.AdvancedOptionsConfig)); err != nil {
@@ -701,12 +698,12 @@ func resourceComputeSecurityPolicyRead(d *schema.ResourceData, meta interface{})
 
 func resourceComputeSecurityPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -828,12 +825,12 @@ func resourceComputeSecurityPolicyUpdate(d *schema.ResourceData, meta interface{
 
 func resourceComputeSecurityPolicyDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -899,7 +896,7 @@ func expandSecurityPolicyMatchConfig(configured []interface{}) *compute.Security
 
 	data := configured[0].(map[string]interface{})
 	return &compute.SecurityPolicyRuleMatcherConfig{
-		SrcIpRanges: tpgresource.ConvertStringArr(data["src_ip_ranges"].(*schema.Set).List()),
+		SrcIpRanges: convertStringArr(data["src_ip_ranges"].(*schema.Set).List()),
 	}
 }
 
@@ -945,7 +942,7 @@ func expandSecurityPolicyRulePreconfiguredWafConfigExclusion(raw interface{}) *c
 		RequestUrisToExclude:        expandSecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams(data["request_uri"].([]interface{})),
 		RequestQueryParamsToExclude: expandSecurityPolicyRulePreconfiguredWafConfigExclusionFieldParams(data["request_query_param"].([]interface{})),
 		TargetRuleSet:               data["target_rule_set"].(string),
-		TargetRuleIds:               tpgresource.ConvertStringArr(data["target_rule_ids"].(*schema.Set).List()),
+		TargetRuleIds:               convertStringArr(data["target_rule_ids"].(*schema.Set).List()),
 	}
 }
 
@@ -1004,7 +1001,7 @@ func flattenMatchConfig(conf *compute.SecurityPolicyRuleMatcherConfig) []map[str
 	}
 
 	data := map[string]interface{}{
-		"src_ip_ranges": schema.NewSet(schema.HashString, tpgresource.ConvertStringArrToInterface(conf.SrcIpRanges)),
+		"src_ip_ranges": schema.NewSet(schema.HashString, convertStringArrToInterface(conf.SrcIpRanges)),
 	}
 
 	return []map[string]interface{}{data}
@@ -1047,7 +1044,7 @@ func flattenPreconfiguredWafConfigExclusions(exclusions []*compute.SecurityPolic
 			"request_uri":         flattenPreconfiguredWafConfigExclusionField(exclusion.RequestUrisToExclude),
 			"request_query_param": flattenPreconfiguredWafConfigExclusionField(exclusion.RequestQueryParamsToExclude),
 			"target_rule_set":     exclusion.TargetRuleSet,
-			"target_rule_ids":     schema.NewSet(schema.HashString, tpgresource.ConvertStringArrToInterface(exclusion.TargetRuleIds)),
+			"target_rule_ids":     schema.NewSet(schema.HashString, convertStringArrToInterface(exclusion.TargetRuleIds)),
 		}
 
 		exclusionsSchema = append(exclusionsSchema, data)
@@ -1102,7 +1099,7 @@ func expandSecurityPolicyAdvancedOptionsConfigJsonCustomConfig(configured []inte
 
 	data := configured[0].(map[string]interface{})
 	return &compute.SecurityPolicyAdvancedOptionsConfigJsonCustomConfig{
-		ContentTypes: tpgresource.ConvertStringArr(data["content_types"].(*schema.Set).List()),
+		ContentTypes: convertStringArr(data["content_types"].(*schema.Set).List()),
 	}
 }
 
@@ -1112,7 +1109,7 @@ func flattenSecurityPolicyAdvancedOptionsConfigJsonCustomConfig(conf *compute.Se
 	}
 
 	data := map[string]interface{}{
-		"content_types": schema.NewSet(schema.HashString, tpgresource.ConvertStringArrToInterface(conf.ContentTypes)),
+		"content_types": schema.NewSet(schema.HashString, convertStringArrToInterface(conf.ContentTypes)),
 	}
 
 	return []map[string]interface{}{data}
@@ -1425,12 +1422,12 @@ func flattenSecurityPolicyRequestHeader(conf *compute.SecurityPolicyRuleHttpHead
 
 func resourceSecurityPolicyStateImporter(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{"projects/(?P<project>[^/]+)/global/securityPolicies/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
+	if err := ParseImportId([]string{"projects/(?P<project>[^/]+)/global/securityPolicies/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<name>[^/]+)", "(?P<name>[^/]+)"}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/global/securityPolicies/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/global/securityPolicies/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

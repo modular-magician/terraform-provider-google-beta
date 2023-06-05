@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,19 +5,18 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func DataSourceMonitoringNotificationChannel() *schema.Resource {
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceMonitoringNotificationChannel().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceMonitoringNotificationChannel().Schema)
 
 	// Set 'Optional' schema elements
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "display_name")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "type")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "labels")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "user_labels")
+	addOptionalFieldsToSchema(dsSchema, "display_name")
+	addOptionalFieldsToSchema(dsSchema, "project")
+	addOptionalFieldsToSchema(dsSchema, "type")
+	addOptionalFieldsToSchema(dsSchema, "labels")
+	addOptionalFieldsToSchema(dsSchema, "user_labels")
 
 	return &schema.Resource{
 		Read:   dataSourceMonitoringNotificationChannelRead,
@@ -29,12 +26,12 @@ func DataSourceMonitoringNotificationChannel() *schema.Resource {
 
 func dataSourceMonitoringNotificationChannelRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{MonitoringBasePath}}v3/projects/{{project}}/notificationChannels")
+	url, err := ReplaceVars(d, config, "{{MonitoringBasePath}}v3/projects/{{project}}/notificationChannels")
 	if err != nil {
 		return err
 	}
@@ -83,18 +80,12 @@ func dataSourceMonitoringNotificationChannelRead(d *schema.ResourceData, meta in
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	response, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	response, err := transport_tpg.SendRequest(config, "GET", project, url, userAgent, nil)
 	if err != nil {
 		return fmt.Errorf("Error retrieving NotificationChannels: %s", err)
 	}

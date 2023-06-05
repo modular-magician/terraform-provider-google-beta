@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,8 +5,6 @@ import (
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"google.golang.org/api/cloudresourcemanager/v1"
 )
@@ -24,11 +20,11 @@ var IamProjectSchema = map[string]*schema.Schema{
 
 type ProjectIamUpdater struct {
 	resourceId string
-	d          tpgresource.TerraformResourceData
+	d          TerraformResourceData
 	Config     *transport_tpg.Config
 }
 
-func NewProjectIamUpdater(d tpgresource.TerraformResourceData, config *transport_tpg.Config) (tpgiamresource.ResourceIamUpdater, error) {
+func NewProjectIamUpdater(d TerraformResourceData, config *transport_tpg.Config) (ResourceIamUpdater, error) {
 	return &ProjectIamUpdater{
 		resourceId: d.Get("project").(string),
 		d:          d,
@@ -44,9 +40,9 @@ func ProjectIdParseFunc(d *schema.ResourceData, _ *transport_tpg.Config) error {
 }
 
 func (u *ProjectIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
-	projectId := tpgresource.GetResourceNameFromSelfLink(u.resourceId)
+	projectId := GetResourceNameFromSelfLink(u.resourceId)
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +50,7 @@ func (u *ProjectIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy
 	p, err := u.Config.NewResourceManagerClient(userAgent).Projects.GetIamPolicy(projectId,
 		&cloudresourcemanager.GetIamPolicyRequest{
 			Options: &cloudresourcemanager.GetPolicyOptions{
-				RequestedPolicyVersion: tpgiamresource.IamPolicyVersion,
+				RequestedPolicyVersion: IamPolicyVersion,
 			},
 		}).Do()
 
@@ -66,9 +62,9 @@ func (u *ProjectIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy
 }
 
 func (u *ProjectIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanager.Policy) error {
-	projectId := tpgresource.GetResourceNameFromSelfLink(u.resourceId)
+	projectId := GetResourceNameFromSelfLink(u.resourceId)
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -100,7 +96,7 @@ func (u *ProjectIamUpdater) DescribeResource() string {
 
 func compareProjectName(_, old, new string, _ *schema.ResourceData) bool {
 	// We can either get "projects/project-id" or "project-id", so strip any prefixes
-	return tpgresource.GetResourceNameFromSelfLink(old) == tpgresource.GetResourceNameFromSelfLink(new)
+	return GetResourceNameFromSelfLink(old) == GetResourceNameFromSelfLink(new)
 }
 
 func getProjectIamPolicyMutexKey(pid string) string {

@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -159,7 +154,7 @@ and accept an authentication assertion issued by a SAML identity provider.`,
 
 func resourceIdentityPlatformTenantInboundSamlConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -168,35 +163,35 @@ func resourceIdentityPlatformTenantInboundSamlConfigCreate(d *schema.ResourceDat
 	nameProp, err := expandIdentityPlatformTenantInboundSamlConfigName(d.Get("name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
 	displayNameProp, err := expandIdentityPlatformTenantInboundSamlConfigDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	enabledProp, err := expandIdentityPlatformTenantInboundSamlConfigEnabled(d.Get("enabled"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(enabledProp)) && (ok || !reflect.DeepEqual(v, enabledProp)) {
+	} else if v, ok := d.GetOkExists("enabled"); !isEmptyValue(reflect.ValueOf(enabledProp)) && (ok || !reflect.DeepEqual(v, enabledProp)) {
 		obj["enabled"] = enabledProp
 	}
 	idpConfigProp, err := expandIdentityPlatformTenantInboundSamlConfigIdpConfig(d.Get("idp_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("idp_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(idpConfigProp)) && (ok || !reflect.DeepEqual(v, idpConfigProp)) {
+	} else if v, ok := d.GetOkExists("idp_config"); !isEmptyValue(reflect.ValueOf(idpConfigProp)) && (ok || !reflect.DeepEqual(v, idpConfigProp)) {
 		obj["idpConfig"] = idpConfigProp
 	}
 	spConfigProp, err := expandIdentityPlatformTenantInboundSamlConfigSpConfig(d.Get("sp_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("sp_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(spConfigProp)) && (ok || !reflect.DeepEqual(v, spConfigProp)) {
+	} else if v, ok := d.GetOkExists("sp_config"); !isEmptyValue(reflect.ValueOf(spConfigProp)) && (ok || !reflect.DeepEqual(v, spConfigProp)) {
 		obj["spConfig"] = spConfigProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IdentityPlatformBasePath}}projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs?inboundSamlConfigId={{name}}")
+	url, err := ReplaceVars(d, config, "{{IdentityPlatformBasePath}}projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs?inboundSamlConfigId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -204,32 +199,24 @@ func resourceIdentityPlatformTenantInboundSamlConfigCreate(d *schema.ResourceDat
 	log.Printf("[DEBUG] Creating new TenantInboundSamlConfig: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for TenantInboundSamlConfig: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating TenantInboundSamlConfig: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -242,36 +229,30 @@ func resourceIdentityPlatformTenantInboundSamlConfigCreate(d *schema.ResourceDat
 
 func resourceIdentityPlatformTenantInboundSamlConfigRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IdentityPlatformBasePath}}projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs/{{name}}")
+	url, err := ReplaceVars(d, config, "{{IdentityPlatformBasePath}}projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs/{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for TenantInboundSamlConfig: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("IdentityPlatformTenantInboundSamlConfig %q", d.Id()))
 	}
@@ -301,14 +282,14 @@ func resourceIdentityPlatformTenantInboundSamlConfigRead(d *schema.ResourceData,
 
 func resourceIdentityPlatformTenantInboundSamlConfigUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for TenantInboundSamlConfig: %s", err)
 	}
@@ -318,29 +299,29 @@ func resourceIdentityPlatformTenantInboundSamlConfigUpdate(d *schema.ResourceDat
 	displayNameProp, err := expandIdentityPlatformTenantInboundSamlConfigDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	enabledProp, err := expandIdentityPlatformTenantInboundSamlConfigEnabled(d.Get("enabled"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enabledProp)) {
+	} else if v, ok := d.GetOkExists("enabled"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enabledProp)) {
 		obj["enabled"] = enabledProp
 	}
 	idpConfigProp, err := expandIdentityPlatformTenantInboundSamlConfigIdpConfig(d.Get("idp_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("idp_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, idpConfigProp)) {
+	} else if v, ok := d.GetOkExists("idp_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, idpConfigProp)) {
 		obj["idpConfig"] = idpConfigProp
 	}
 	spConfigProp, err := expandIdentityPlatformTenantInboundSamlConfigSpConfig(d.Get("sp_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("sp_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, spConfigProp)) {
+	} else if v, ok := d.GetOkExists("sp_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, spConfigProp)) {
 		obj["spConfig"] = spConfigProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IdentityPlatformBasePath}}projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs/{{name}}")
+	url, err := ReplaceVars(d, config, "{{IdentityPlatformBasePath}}projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -371,19 +352,11 @@ func resourceIdentityPlatformTenantInboundSamlConfigUpdate(d *schema.ResourceDat
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating TenantInboundSamlConfig %q: %s", d.Id(), err)
@@ -396,20 +369,20 @@ func resourceIdentityPlatformTenantInboundSamlConfigUpdate(d *schema.ResourceDat
 
 func resourceIdentityPlatformTenantInboundSamlConfigDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for TenantInboundSamlConfig: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IdentityPlatformBasePath}}projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs/{{name}}")
+	url, err := ReplaceVars(d, config, "{{IdentityPlatformBasePath}}projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -418,19 +391,11 @@ func resourceIdentityPlatformTenantInboundSamlConfigDelete(d *schema.ResourceDat
 	log.Printf("[DEBUG] Deleting TenantInboundSamlConfig %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "TenantInboundSamlConfig")
 	}
@@ -441,7 +406,7 @@ func resourceIdentityPlatformTenantInboundSamlConfigDelete(d *schema.ResourceDat
 
 func resourceIdentityPlatformTenantInboundSamlConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/tenants/(?P<tenant>[^/]+)/inboundSamlConfigs/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<tenant>[^/]+)/(?P<name>[^/]+)",
 		"(?P<tenant>[^/]+)/(?P<name>[^/]+)",
@@ -450,7 +415,7 @@ func resourceIdentityPlatformTenantInboundSamlConfigImport(d *schema.ResourceDat
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/tenants/{{tenant}}/inboundSamlConfigs/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -463,7 +428,7 @@ func flattenIdentityPlatformTenantInboundSamlConfigName(v interface{}, d *schema
 	if v == nil {
 		return v
 	}
-	return tpgresource.NameFromSelfLinkStateFunc(v)
+	return NameFromSelfLinkStateFunc(v)
 }
 
 func flattenIdentityPlatformTenantInboundSamlConfigDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -574,19 +539,19 @@ func flattenIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificatesX509Cer
 	return v
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigDisplayName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigIdpConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigIdpConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -598,47 +563,47 @@ func expandIdentityPlatformTenantInboundSamlConfigIdpConfig(v interface{}, d tpg
 	transformedIdpEntityId, err := expandIdentityPlatformTenantInboundSamlConfigIdpConfigIdpEntityId(original["idp_entity_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIdpEntityId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIdpEntityId); val.IsValid() && !isEmptyValue(val) {
 		transformed["idpEntityId"] = transformedIdpEntityId
 	}
 
 	transformedSsoUrl, err := expandIdentityPlatformTenantInboundSamlConfigIdpConfigSsoUrl(original["sso_url"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSsoUrl); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSsoUrl); val.IsValid() && !isEmptyValue(val) {
 		transformed["ssoUrl"] = transformedSsoUrl
 	}
 
 	transformedSignRequest, err := expandIdentityPlatformTenantInboundSamlConfigIdpConfigSignRequest(original["sign_request"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSignRequest); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSignRequest); val.IsValid() && !isEmptyValue(val) {
 		transformed["signRequest"] = transformedSignRequest
 	}
 
 	transformedIdpCertificates, err := expandIdentityPlatformTenantInboundSamlConfigIdpConfigIdpCertificates(original["idp_certificates"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIdpCertificates); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIdpCertificates); val.IsValid() && !isEmptyValue(val) {
 		transformed["idpCertificates"] = transformedIdpCertificates
 	}
 
 	return transformed, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigIdpConfigIdpEntityId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigIdpConfigIdpEntityId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigIdpConfigSsoUrl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigIdpConfigSsoUrl(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigIdpConfigSignRequest(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigIdpConfigSignRequest(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigIdpConfigIdpCertificates(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigIdpConfigIdpCertificates(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -651,7 +616,7 @@ func expandIdentityPlatformTenantInboundSamlConfigIdpConfigIdpCertificates(v int
 		transformedX509Certificate, err := expandIdentityPlatformTenantInboundSamlConfigIdpConfigIdpCertificatesX509Certificate(original["x509_certificate"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedX509Certificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedX509Certificate); val.IsValid() && !isEmptyValue(val) {
 			transformed["x509Certificate"] = transformedX509Certificate
 		}
 
@@ -660,11 +625,11 @@ func expandIdentityPlatformTenantInboundSamlConfigIdpConfigIdpCertificates(v int
 	return req, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigIdpConfigIdpCertificatesX509Certificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigIdpConfigIdpCertificatesX509Certificate(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigSpConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigSpConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -676,36 +641,36 @@ func expandIdentityPlatformTenantInboundSamlConfigSpConfig(v interface{}, d tpgr
 	transformedSpEntityId, err := expandIdentityPlatformTenantInboundSamlConfigSpConfigSpEntityId(original["sp_entity_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSpEntityId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSpEntityId); val.IsValid() && !isEmptyValue(val) {
 		transformed["spEntityId"] = transformedSpEntityId
 	}
 
 	transformedCallbackUri, err := expandIdentityPlatformTenantInboundSamlConfigSpConfigCallbackUri(original["callback_uri"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCallbackUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCallbackUri); val.IsValid() && !isEmptyValue(val) {
 		transformed["callbackUri"] = transformedCallbackUri
 	}
 
 	transformedSpCertificates, err := expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificates(original["sp_certificates"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSpCertificates); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSpCertificates); val.IsValid() && !isEmptyValue(val) {
 		transformed["spCertificates"] = transformedSpCertificates
 	}
 
 	return transformed, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigSpConfigSpEntityId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigSpConfigSpEntityId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigSpConfigCallbackUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigSpConfigCallbackUri(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificates(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificates(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -718,7 +683,7 @@ func expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificates(v inter
 		transformedX509Certificate, err := expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificatesX509Certificate(original["x509_certificate"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedX509Certificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedX509Certificate); val.IsValid() && !isEmptyValue(val) {
 			transformed["x509Certificate"] = transformedX509Certificate
 		}
 
@@ -727,6 +692,6 @@ func expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificates(v inter
 	return req, nil
 }
 
-func expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificatesX509Certificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificatesX509Certificate(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

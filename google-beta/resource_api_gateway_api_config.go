@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -26,8 +23,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -251,7 +246,7 @@ If multiple files are specified, the files are merged with the following rules: 
 
 func resourceApiGatewayApiConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -260,37 +255,37 @@ func resourceApiGatewayApiConfigCreate(d *schema.ResourceData, meta interface{})
 	displayNameProp, err := expandApiGatewayApiConfigDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	labelsProp, err := expandApiGatewayApiConfigLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 	gatewayConfigProp, err := expandApiGatewayApiConfigGatewayConfig(d.Get("gateway_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("gateway_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(gatewayConfigProp)) && (ok || !reflect.DeepEqual(v, gatewayConfigProp)) {
+	} else if v, ok := d.GetOkExists("gateway_config"); !isEmptyValue(reflect.ValueOf(gatewayConfigProp)) && (ok || !reflect.DeepEqual(v, gatewayConfigProp)) {
 		obj["gatewayConfig"] = gatewayConfigProp
 	}
 	openapiDocumentsProp, err := expandApiGatewayApiConfigOpenapiDocuments(d.Get("openapi_documents"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("openapi_documents"); !tpgresource.IsEmptyValue(reflect.ValueOf(openapiDocumentsProp)) && (ok || !reflect.DeepEqual(v, openapiDocumentsProp)) {
+	} else if v, ok := d.GetOkExists("openapi_documents"); !isEmptyValue(reflect.ValueOf(openapiDocumentsProp)) && (ok || !reflect.DeepEqual(v, openapiDocumentsProp)) {
 		obj["openapiDocuments"] = openapiDocumentsProp
 	}
 	grpcServicesProp, err := expandApiGatewayApiConfigGrpcServices(d.Get("grpc_services"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("grpc_services"); !tpgresource.IsEmptyValue(reflect.ValueOf(grpcServicesProp)) && (ok || !reflect.DeepEqual(v, grpcServicesProp)) {
+	} else if v, ok := d.GetOkExists("grpc_services"); !isEmptyValue(reflect.ValueOf(grpcServicesProp)) && (ok || !reflect.DeepEqual(v, grpcServicesProp)) {
 		obj["grpcServices"] = grpcServicesProp
 	}
 	managedServiceConfigsProp, err := expandApiGatewayApiConfigManagedServiceConfigs(d.Get("managed_service_configs"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("managed_service_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(managedServiceConfigsProp)) && (ok || !reflect.DeepEqual(v, managedServiceConfigsProp)) {
+	} else if v, ok := d.GetOkExists("managed_service_configs"); !isEmptyValue(reflect.ValueOf(managedServiceConfigsProp)) && (ok || !reflect.DeepEqual(v, managedServiceConfigsProp)) {
 		obj["managedServiceConfigs"] = managedServiceConfigsProp
 	}
 
@@ -299,7 +294,7 @@ func resourceApiGatewayApiConfigCreate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApiGatewayBasePath}}projects/{{project}}/locations/global/apis/{{api}}/configs?apiConfigId={{api_config_id}}")
+	url, err := ReplaceVars(d, config, "{{ApiGatewayBasePath}}projects/{{project}}/locations/global/apis/{{api}}/configs?apiConfigId={{api_config_id}}")
 	if err != nil {
 		return err
 	}
@@ -307,32 +302,24 @@ func resourceApiGatewayApiConfigCreate(d *schema.ResourceData, meta interface{})
 	log.Printf("[DEBUG] Creating new ApiConfig: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ApiConfig: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating ApiConfig: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -352,7 +339,7 @@ func resourceApiGatewayApiConfigCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	// This may have caused the ID to update - update it if so.
-	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}")
+	id, err = ReplaceVars(d, config, "projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -365,36 +352,30 @@ func resourceApiGatewayApiConfigCreate(d *schema.ResourceData, meta interface{})
 
 func resourceApiGatewayApiConfigRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApiGatewayBasePath}}projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}?view=FULL")
+	url, err := ReplaceVars(d, config, "{{ApiGatewayBasePath}}projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}?view=FULL")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ApiConfig: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ApiGatewayApiConfig %q", d.Id()))
 	}
@@ -427,14 +408,14 @@ func resourceApiGatewayApiConfigRead(d *schema.ResourceData, meta interface{}) e
 
 func resourceApiGatewayApiConfigUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ApiConfig: %s", err)
 	}
@@ -444,31 +425,31 @@ func resourceApiGatewayApiConfigUpdate(d *schema.ResourceData, meta interface{})
 	displayNameProp, err := expandApiGatewayApiConfigDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	labelsProp, err := expandApiGatewayApiConfigLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 	openapiDocumentsProp, err := expandApiGatewayApiConfigOpenapiDocuments(d.Get("openapi_documents"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("openapi_documents"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, openapiDocumentsProp)) {
+	} else if v, ok := d.GetOkExists("openapi_documents"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, openapiDocumentsProp)) {
 		obj["openapiDocuments"] = openapiDocumentsProp
 	}
 	grpcServicesProp, err := expandApiGatewayApiConfigGrpcServices(d.Get("grpc_services"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("grpc_services"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, grpcServicesProp)) {
+	} else if v, ok := d.GetOkExists("grpc_services"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, grpcServicesProp)) {
 		obj["grpcServices"] = grpcServicesProp
 	}
 	managedServiceConfigsProp, err := expandApiGatewayApiConfigManagedServiceConfigs(d.Get("managed_service_configs"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("managed_service_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, managedServiceConfigsProp)) {
+	} else if v, ok := d.GetOkExists("managed_service_configs"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, managedServiceConfigsProp)) {
 		obj["managedServiceConfigs"] = managedServiceConfigsProp
 	}
 
@@ -477,7 +458,7 @@ func resourceApiGatewayApiConfigUpdate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApiGatewayBasePath}}projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}")
+	url, err := ReplaceVars(d, config, "{{ApiGatewayBasePath}}projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}")
 	if err != nil {
 		return err
 	}
@@ -512,19 +493,11 @@ func resourceApiGatewayApiConfigUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating ApiConfig %q: %s", d.Id(), err)
@@ -545,20 +518,20 @@ func resourceApiGatewayApiConfigUpdate(d *schema.ResourceData, meta interface{})
 
 func resourceApiGatewayApiConfigDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ApiConfig: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApiGatewayBasePath}}projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}")
+	url, err := ReplaceVars(d, config, "{{ApiGatewayBasePath}}projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}")
 	if err != nil {
 		return err
 	}
@@ -567,19 +540,11 @@ func resourceApiGatewayApiConfigDelete(d *schema.ResourceData, meta interface{})
 	log.Printf("[DEBUG] Deleting ApiConfig %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "ApiConfig")
 	}
@@ -598,7 +563,7 @@ func resourceApiGatewayApiConfigDelete(d *schema.ResourceData, meta interface{})
 
 func resourceApiGatewayApiConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/global/apis/(?P<api>[^/]+)/configs/(?P<api_config_id>[^/]+)",
 		"(?P<project>[^/]+)/(?P<api>[^/]+)/(?P<api_config_id>[^/]+)",
 		"(?P<api>[^/]+)/(?P<api_config_id>[^/]+)",
@@ -607,7 +572,7 @@ func resourceApiGatewayApiConfigImport(d *schema.ResourceData, meta interface{})
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/global/apis/{{api}}/configs/{{api_config_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -700,11 +665,11 @@ func flattenApiGatewayApiConfigManagedServiceConfigsContents(v interface{}, d *s
 	return v
 }
 
-func expandApiGatewayApiConfigDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigDisplayName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApiGatewayApiConfigLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandApiGatewayApiConfigLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -715,7 +680,7 @@ func expandApiGatewayApiConfigLabels(v interface{}, d tpgresource.TerraformResou
 	return m, nil
 }
 
-func expandApiGatewayApiConfigGatewayConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigGatewayConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -727,14 +692,14 @@ func expandApiGatewayApiConfigGatewayConfig(v interface{}, d tpgresource.Terrafo
 	transformedBackendConfig, err := expandApiGatewayApiConfigGatewayConfigBackendConfig(original["backend_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBackendConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBackendConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["backendConfig"] = transformedBackendConfig
 	}
 
 	return transformed, nil
 }
 
-func expandApiGatewayApiConfigGatewayConfigBackendConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigGatewayConfigBackendConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -746,18 +711,18 @@ func expandApiGatewayApiConfigGatewayConfigBackendConfig(v interface{}, d tpgres
 	transformedGoogleServiceAccount, err := expandApiGatewayApiConfigGatewayConfigBackendConfigGoogleServiceAccount(original["google_service_account"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGoogleServiceAccount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGoogleServiceAccount); val.IsValid() && !isEmptyValue(val) {
 		transformed["googleServiceAccount"] = transformedGoogleServiceAccount
 	}
 
 	return transformed, nil
 }
 
-func expandApiGatewayApiConfigGatewayConfigBackendConfigGoogleServiceAccount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigGatewayConfigBackendConfigGoogleServiceAccount(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApiGatewayApiConfigOpenapiDocuments(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigOpenapiDocuments(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -770,7 +735,7 @@ func expandApiGatewayApiConfigOpenapiDocuments(v interface{}, d tpgresource.Terr
 		transformedDocument, err := expandApiGatewayApiConfigOpenapiDocumentsDocument(original["document"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedDocument); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedDocument); val.IsValid() && !isEmptyValue(val) {
 			transformed["document"] = transformedDocument
 		}
 
@@ -779,7 +744,7 @@ func expandApiGatewayApiConfigOpenapiDocuments(v interface{}, d tpgresource.Terr
 	return req, nil
 }
 
-func expandApiGatewayApiConfigOpenapiDocumentsDocument(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigOpenapiDocumentsDocument(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -791,29 +756,29 @@ func expandApiGatewayApiConfigOpenapiDocumentsDocument(v interface{}, d tpgresou
 	transformedPath, err := expandApiGatewayApiConfigOpenapiDocumentsDocumentPath(original["path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["path"] = transformedPath
 	}
 
 	transformedContents, err := expandApiGatewayApiConfigOpenapiDocumentsDocumentContents(original["contents"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedContents); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedContents); val.IsValid() && !isEmptyValue(val) {
 		transformed["contents"] = transformedContents
 	}
 
 	return transformed, nil
 }
 
-func expandApiGatewayApiConfigOpenapiDocumentsDocumentPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigOpenapiDocumentsDocumentPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApiGatewayApiConfigOpenapiDocumentsDocumentContents(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigOpenapiDocumentsDocumentContents(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApiGatewayApiConfigGrpcServices(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigGrpcServices(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -826,14 +791,14 @@ func expandApiGatewayApiConfigGrpcServices(v interface{}, d tpgresource.Terrafor
 		transformedFileDescriptorSet, err := expandApiGatewayApiConfigGrpcServicesFileDescriptorSet(original["file_descriptor_set"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedFileDescriptorSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedFileDescriptorSet); val.IsValid() && !isEmptyValue(val) {
 			transformed["fileDescriptorSet"] = transformedFileDescriptorSet
 		}
 
 		transformedSource, err := expandApiGatewayApiConfigGrpcServicesSource(original["source"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedSource); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedSource); val.IsValid() && !isEmptyValue(val) {
 			transformed["source"] = transformedSource
 		}
 
@@ -842,7 +807,7 @@ func expandApiGatewayApiConfigGrpcServices(v interface{}, d tpgresource.Terrafor
 	return req, nil
 }
 
-func expandApiGatewayApiConfigGrpcServicesFileDescriptorSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigGrpcServicesFileDescriptorSet(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -854,29 +819,29 @@ func expandApiGatewayApiConfigGrpcServicesFileDescriptorSet(v interface{}, d tpg
 	transformedPath, err := expandApiGatewayApiConfigGrpcServicesFileDescriptorSetPath(original["path"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !isEmptyValue(val) {
 		transformed["path"] = transformedPath
 	}
 
 	transformedContents, err := expandApiGatewayApiConfigGrpcServicesFileDescriptorSetContents(original["contents"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedContents); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedContents); val.IsValid() && !isEmptyValue(val) {
 		transformed["contents"] = transformedContents
 	}
 
 	return transformed, nil
 }
 
-func expandApiGatewayApiConfigGrpcServicesFileDescriptorSetPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigGrpcServicesFileDescriptorSetPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApiGatewayApiConfigGrpcServicesFileDescriptorSetContents(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigGrpcServicesFileDescriptorSetContents(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApiGatewayApiConfigGrpcServicesSource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigGrpcServicesSource(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -889,14 +854,14 @@ func expandApiGatewayApiConfigGrpcServicesSource(v interface{}, d tpgresource.Te
 		transformedPath, err := expandApiGatewayApiConfigGrpcServicesSourcePath(original["path"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !isEmptyValue(val) {
 			transformed["path"] = transformedPath
 		}
 
 		transformedContents, err := expandApiGatewayApiConfigGrpcServicesSourceContents(original["contents"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedContents); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedContents); val.IsValid() && !isEmptyValue(val) {
 			transformed["contents"] = transformedContents
 		}
 
@@ -905,15 +870,15 @@ func expandApiGatewayApiConfigGrpcServicesSource(v interface{}, d tpgresource.Te
 	return req, nil
 }
 
-func expandApiGatewayApiConfigGrpcServicesSourcePath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigGrpcServicesSourcePath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApiGatewayApiConfigGrpcServicesSourceContents(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigGrpcServicesSourceContents(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApiGatewayApiConfigManagedServiceConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigManagedServiceConfigs(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -926,14 +891,14 @@ func expandApiGatewayApiConfigManagedServiceConfigs(v interface{}, d tpgresource
 		transformedPath, err := expandApiGatewayApiConfigManagedServiceConfigsPath(original["path"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !isEmptyValue(val) {
 			transformed["path"] = transformedPath
 		}
 
 		transformedContents, err := expandApiGatewayApiConfigManagedServiceConfigsContents(original["contents"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedContents); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedContents); val.IsValid() && !isEmptyValue(val) {
 			transformed["contents"] = transformedContents
 		}
 
@@ -942,11 +907,11 @@ func expandApiGatewayApiConfigManagedServiceConfigs(v interface{}, d tpgresource
 	return req, nil
 }
 
-func expandApiGatewayApiConfigManagedServiceConfigsPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigManagedServiceConfigsPath(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApiGatewayApiConfigManagedServiceConfigsContents(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApiGatewayApiConfigManagedServiceConfigsContents(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -9,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 
@@ -445,11 +442,6 @@ func awsS3DataSchema() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: `S3 Bucket name.`,
 			},
-			"path": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: `S3 Bucket path in bucket to transfer.`,
-			},
 			"aws_access_key": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -552,12 +544,12 @@ func diffSuppressEmptyStartTimeOfDay(k, old, new string, d *schema.ResourceData)
 
 func resourceStorageTransferJobCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -573,11 +565,9 @@ func resourceStorageTransferJobCreate(d *schema.ResourceData, meta interface{}) 
 
 	var res *storagetransfer.TransferJob
 
-	err = transport_tpg.Retry(transport_tpg.RetryOptions{
-		RetryFunc: func() error {
-			res, err = config.NewStorageTransferClient(userAgent).TransferJobs.Create(transferJob).Do()
-			return err
-		},
+	err = transport_tpg.Retry(func() error {
+		res, err = config.NewStorageTransferClient(userAgent).TransferJobs.Create(transferJob).Do()
+		return err
 	})
 
 	if err != nil {
@@ -589,7 +579,7 @@ func resourceStorageTransferJobCreate(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error setting name: %s", err)
 	}
 
-	name := tpgresource.GetResourceNameFromSelfLink(res.Name)
+	name := GetResourceNameFromSelfLink(res.Name)
 	d.SetId(fmt.Sprintf("%s/%s", project, name))
 
 	return resourceStorageTransferJobRead(d, meta)
@@ -597,12 +587,12 @@ func resourceStorageTransferJobCreate(d *schema.ResourceData, meta interface{}) 
 
 func resourceStorageTransferJobRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -657,12 +647,12 @@ func resourceStorageTransferJobRead(d *schema.ResourceData, meta interface{}) er
 
 func resourceStorageTransferJobUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -729,12 +719,12 @@ func resourceStorageTransferJobUpdate(d *schema.ResourceData, meta interface{}) 
 
 func resourceStorageTransferJobDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -953,14 +943,12 @@ func expandAwsS3Data(awsS3Datas []interface{}) *storagetransfer.AwsS3Data {
 		BucketName:   awsS3Data["bucket_name"].(string),
 		AwsAccessKey: expandAwsAccessKeys(awsS3Data["aws_access_key"].([]interface{})),
 		RoleArn:      awsS3Data["role_arn"].(string),
-		Path:         awsS3Data["path"].(string),
 	}
 }
 
 func flattenAwsS3Data(awsS3Data *storagetransfer.AwsS3Data, d *schema.ResourceData) []map[string]interface{} {
 	data := map[string]interface{}{
 		"bucket_name": awsS3Data.BucketName,
-		"path":        awsS3Data.Path,
 		"role_arn":    awsS3Data.RoleArn,
 	}
 	if awsS3Data.AwsAccessKey != nil {
@@ -1060,8 +1048,8 @@ func expandObjectConditions(conditions []interface{}) *storagetransfer.ObjectCon
 
 	condition := conditions[0].(map[string]interface{})
 	return &storagetransfer.ObjectConditions{
-		ExcludePrefixes:                     tpgresource.ConvertStringArr(condition["exclude_prefixes"].([]interface{})),
-		IncludePrefixes:                     tpgresource.ConvertStringArr(condition["include_prefixes"].([]interface{})),
+		ExcludePrefixes:                     convertStringArr(condition["exclude_prefixes"].([]interface{})),
+		IncludePrefixes:                     convertStringArr(condition["include_prefixes"].([]interface{})),
 		MaxTimeElapsedSinceLastModification: condition["max_time_elapsed_since_last_modification"].(string),
 		MinTimeElapsedSinceLastModification: condition["min_time_elapsed_since_last_modification"].(string),
 		LastModifiedSince:                   condition["last_modified_since"].(string),
@@ -1180,7 +1168,7 @@ func expandTransferJobNotificationConfig(notificationConfigs []interface{}) *sto
 	}
 
 	if notificationConfig["event_types"] != nil {
-		apiData.EventTypes = tpgresource.ConvertStringArr(notificationConfig["event_types"].(*schema.Set).List())
+		apiData.EventTypes = convertStringArr(notificationConfig["event_types"].(*schema.Set).List())
 	}
 
 	log.Printf("[DEBUG] apiData: %v\n\n", apiData)
@@ -1198,7 +1186,7 @@ func flattenTransferJobNotificationConfig(notificationConfig *storagetransfer.No
 	}
 
 	if notificationConfig.EventTypes != nil {
-		data["event_types"] = tpgresource.ConvertStringArrToInterface(notificationConfig.EventTypes)
+		data["event_types"] = convertStringArrToInterface(notificationConfig.EventTypes)
 	}
 
 	return []map[string]interface{}{data}

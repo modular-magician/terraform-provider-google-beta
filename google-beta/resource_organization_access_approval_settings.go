@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -143,7 +138,7 @@ func accessapprovalOrganizationSettingsEnrolledServicesSchema() *schema.Resource
 
 func resourceAccessApprovalOrganizationSettingsCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -152,23 +147,23 @@ func resourceAccessApprovalOrganizationSettingsCreate(d *schema.ResourceData, me
 	notificationEmailsProp, err := expandAccessApprovalOrganizationSettingsNotificationEmails(d.Get("notification_emails"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("notification_emails"); !tpgresource.IsEmptyValue(reflect.ValueOf(notificationEmailsProp)) && (ok || !reflect.DeepEqual(v, notificationEmailsProp)) {
+	} else if v, ok := d.GetOkExists("notification_emails"); !isEmptyValue(reflect.ValueOf(notificationEmailsProp)) && (ok || !reflect.DeepEqual(v, notificationEmailsProp)) {
 		obj["notificationEmails"] = notificationEmailsProp
 	}
 	enrolledServicesProp, err := expandAccessApprovalOrganizationSettingsEnrolledServices(d.Get("enrolled_services"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("enrolled_services"); !tpgresource.IsEmptyValue(reflect.ValueOf(enrolledServicesProp)) && (ok || !reflect.DeepEqual(v, enrolledServicesProp)) {
+	} else if v, ok := d.GetOkExists("enrolled_services"); !isEmptyValue(reflect.ValueOf(enrolledServicesProp)) && (ok || !reflect.DeepEqual(v, enrolledServicesProp)) {
 		obj["enrolledServices"] = enrolledServicesProp
 	}
 	activeKeyVersionProp, err := expandAccessApprovalOrganizationSettingsActiveKeyVersion(d.Get("active_key_version"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("active_key_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(activeKeyVersionProp)) && (ok || !reflect.DeepEqual(v, activeKeyVersionProp)) {
+	} else if v, ok := d.GetOkExists("active_key_version"); !isEmptyValue(reflect.ValueOf(activeKeyVersionProp)) && (ok || !reflect.DeepEqual(v, activeKeyVersionProp)) {
 		obj["activeKeyVersion"] = activeKeyVersionProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{AccessApprovalBasePath}}organizations/{{organization_id}}/accessApprovalSettings")
+	url, err := ReplaceVars(d, config, "{{AccessApprovalBasePath}}organizations/{{organization_id}}/accessApprovalSettings")
 	if err != nil {
 		return err
 	}
@@ -177,7 +172,7 @@ func resourceAccessApprovalOrganizationSettingsCreate(d *schema.ResourceData, me
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
@@ -200,15 +195,7 @@ func resourceAccessApprovalOrganizationSettingsCreate(d *schema.ResourceData, me
 	if err != nil {
 		return err
 	}
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating OrganizationSettings: %s", err)
 	}
@@ -217,7 +204,7 @@ func resourceAccessApprovalOrganizationSettingsCreate(d *schema.ResourceData, me
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "organizations/{{organization_id}}/accessApprovalSettings")
+	id, err := ReplaceVars(d, config, "organizations/{{organization_id}}/accessApprovalSettings")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -230,12 +217,12 @@ func resourceAccessApprovalOrganizationSettingsCreate(d *schema.ResourceData, me
 
 func resourceAccessApprovalOrganizationSettingsRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{AccessApprovalBasePath}}organizations/{{organization_id}}/accessApprovalSettings")
+	url, err := ReplaceVars(d, config, "{{AccessApprovalBasePath}}organizations/{{organization_id}}/accessApprovalSettings")
 	if err != nil {
 		return err
 	}
@@ -243,17 +230,11 @@ func resourceAccessApprovalOrganizationSettingsRead(d *schema.ResourceData, meta
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("AccessApprovalOrganizationSettings %q", d.Id()))
 	}
@@ -285,7 +266,7 @@ func resourceAccessApprovalOrganizationSettingsRead(d *schema.ResourceData, meta
 
 func resourceAccessApprovalOrganizationSettingsUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -296,23 +277,23 @@ func resourceAccessApprovalOrganizationSettingsUpdate(d *schema.ResourceData, me
 	notificationEmailsProp, err := expandAccessApprovalOrganizationSettingsNotificationEmails(d.Get("notification_emails"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("notification_emails"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, notificationEmailsProp)) {
+	} else if v, ok := d.GetOkExists("notification_emails"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, notificationEmailsProp)) {
 		obj["notificationEmails"] = notificationEmailsProp
 	}
 	enrolledServicesProp, err := expandAccessApprovalOrganizationSettingsEnrolledServices(d.Get("enrolled_services"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("enrolled_services"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enrolledServicesProp)) {
+	} else if v, ok := d.GetOkExists("enrolled_services"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enrolledServicesProp)) {
 		obj["enrolledServices"] = enrolledServicesProp
 	}
 	activeKeyVersionProp, err := expandAccessApprovalOrganizationSettingsActiveKeyVersion(d.Get("active_key_version"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("active_key_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, activeKeyVersionProp)) {
+	} else if v, ok := d.GetOkExists("active_key_version"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, activeKeyVersionProp)) {
 		obj["activeKeyVersion"] = activeKeyVersionProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{AccessApprovalBasePath}}organizations/{{organization_id}}/accessApprovalSettings")
+	url, err := ReplaceVars(d, config, "{{AccessApprovalBasePath}}organizations/{{organization_id}}/accessApprovalSettings")
 	if err != nil {
 		return err
 	}
@@ -339,19 +320,11 @@ func resourceAccessApprovalOrganizationSettingsUpdate(d *schema.ResourceData, me
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating OrganizationSettings %q: %s", d.Id(), err)
@@ -364,7 +337,7 @@ func resourceAccessApprovalOrganizationSettingsUpdate(d *schema.ResourceData, me
 
 func resourceAccessApprovalOrganizationSettingsDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -374,7 +347,7 @@ func resourceAccessApprovalOrganizationSettingsDelete(d *schema.ResourceData, me
 	obj["enrolledServices"] = []string{}
 	obj["activeKeyVersion"] = ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{AccessApprovalBasePath}}organizations/{{organization_id}}/accessApprovalSettings")
+	url, err := ReplaceVars(d, config, "{{AccessApprovalBasePath}}organizations/{{organization_id}}/accessApprovalSettings")
 	if err != nil {
 		return err
 	}
@@ -393,14 +366,7 @@ func resourceAccessApprovalOrganizationSettingsDelete(d *schema.ResourceData, me
 		return err
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", "", url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error emptying OrganizationSettings %q: %s", d.Id(), err)
@@ -413,7 +379,7 @@ func resourceAccessApprovalOrganizationSettingsDelete(d *schema.ResourceData, me
 
 func resourceAccessApprovalOrganizationSettingsImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"organizations/(?P<organization_id>[^/]+)/accessApprovalSettings",
 		"(?P<organization_id>[^/]+)",
 	}, d, config); err != nil {
@@ -421,7 +387,7 @@ func resourceAccessApprovalOrganizationSettingsImport(d *schema.ResourceData, me
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "organizations/{{organization_id}}/accessApprovalSettings")
+	id, err := ReplaceVars(d, config, "organizations/{{organization_id}}/accessApprovalSettings")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -484,12 +450,12 @@ func flattenAccessApprovalOrganizationSettingsInvalidKeyVersion(v interface{}, d
 	return v
 }
 
-func expandAccessApprovalOrganizationSettingsNotificationEmails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandAccessApprovalOrganizationSettingsNotificationEmails(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	return v, nil
 }
 
-func expandAccessApprovalOrganizationSettingsEnrolledServices(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandAccessApprovalOrganizationSettingsEnrolledServices(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
@@ -503,14 +469,14 @@ func expandAccessApprovalOrganizationSettingsEnrolledServices(v interface{}, d t
 		transformedCloudProduct, err := expandAccessApprovalOrganizationSettingsEnrolledServicesCloudProduct(original["cloud_product"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedCloudProduct); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedCloudProduct); val.IsValid() && !isEmptyValue(val) {
 			transformed["cloudProduct"] = transformedCloudProduct
 		}
 
 		transformedEnrollmentLevel, err := expandAccessApprovalOrganizationSettingsEnrolledServicesEnrollmentLevel(original["enrollment_level"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedEnrollmentLevel); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedEnrollmentLevel); val.IsValid() && !isEmptyValue(val) {
 			transformed["enrollmentLevel"] = transformedEnrollmentLevel
 		}
 
@@ -519,14 +485,14 @@ func expandAccessApprovalOrganizationSettingsEnrolledServices(v interface{}, d t
 	return req, nil
 }
 
-func expandAccessApprovalOrganizationSettingsEnrolledServicesCloudProduct(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandAccessApprovalOrganizationSettingsEnrolledServicesCloudProduct(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandAccessApprovalOrganizationSettingsEnrolledServicesEnrollmentLevel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandAccessApprovalOrganizationSettingsEnrolledServicesEnrollmentLevel(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandAccessApprovalOrganizationSettingsActiveKeyVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandAccessApprovalOrganizationSettingsActiveKeyVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

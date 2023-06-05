@@ -1,25 +1,22 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func DataSourceGoogleRegionComputeSslCertificate() *schema.Resource {
 	// Generate datasource schema from resource
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceComputeRegionSslCertificate().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceComputeRegionSslCertificate().Schema)
 
 	// Set 'Required' schema elements
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "name")
+	addRequiredFieldsToSchema(dsSchema, "name")
 
 	// Set 'Optional' schema elements
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "region")
+	addOptionalFieldsToSchema(dsSchema, "project")
+	addOptionalFieldsToSchema(dsSchema, "region")
 
 	return &schema.Resource{
 		Read:   dataSourceComputeRegionSslCertificateRead,

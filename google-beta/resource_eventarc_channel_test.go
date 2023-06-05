@@ -1,15 +1,11 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"strings"
 	"testing"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 
 	dcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/dcl"
 	eventarc "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/eventarc/beta"
@@ -54,9 +50,9 @@ func TestAccEventarcChannel_cryptoKeyUpdate(t *testing.T) {
 	context := map[string]interface{}{
 		"region":        region,
 		"project_name":  acctest.GetTestProjectFromEnv(),
-		"key_ring":      tpgresource.GetResourceNameFromSelfLink(key1.KeyRing.Name),
-		"key1":          tpgresource.GetResourceNameFromSelfLink(key1.CryptoKey.Name),
-		"key2":          tpgresource.GetResourceNameFromSelfLink(key2.CryptoKey.Name),
+		"key_ring":      GetResourceNameFromSelfLink(key1.KeyRing.Name),
+		"key1":          GetResourceNameFromSelfLink(key1.CryptoKey.Name),
+		"key2":          GetResourceNameFromSelfLink(key2.CryptoKey.Name),
 		"random_suffix": RandString(t, 10),
 	}
 

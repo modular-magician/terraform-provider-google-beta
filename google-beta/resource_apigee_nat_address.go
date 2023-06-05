@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -24,8 +21,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -75,7 +70,7 @@ in the format 'organizations/{{org_name}}/instances/{{instance_name}}'.`,
 
 func resourceApigeeNatAddressCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -84,11 +79,11 @@ func resourceApigeeNatAddressCreate(d *schema.ResourceData, meta interface{}) er
 	nameProp, err := expandApigeeNatAddressName(d.Get("name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApigeeBasePath}}{{instance_id}}/natAddresses")
+	url, err := ReplaceVars(d, config, "{{ApigeeBasePath}}{{instance_id}}/natAddresses")
 	if err != nil {
 		return err
 	}
@@ -97,25 +92,17 @@ func resourceApigeeNatAddressCreate(d *schema.ResourceData, meta interface{}) er
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating NatAddress: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{instance_id}}/natAddresses/{{name}}")
+	id, err := ReplaceVars(d, config, "{{instance_id}}/natAddresses/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -139,7 +126,7 @@ func resourceApigeeNatAddressCreate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	// This may have caused the ID to update - update it if so.
-	id, err = tpgresource.ReplaceVars(d, config, "{{instance_id}}/natAddresses/{{name}}")
+	id, err = ReplaceVars(d, config, "{{instance_id}}/natAddresses/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -152,12 +139,12 @@ func resourceApigeeNatAddressCreate(d *schema.ResourceData, meta interface{}) er
 
 func resourceApigeeNatAddressRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApigeeBasePath}}{{instance_id}}/natAddresses/{{name}}")
+	url, err := ReplaceVars(d, config, "{{ApigeeBasePath}}{{instance_id}}/natAddresses/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -165,17 +152,11 @@ func resourceApigeeNatAddressRead(d *schema.ResourceData, meta interface{}) erro
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ApigeeNatAddress %q", d.Id()))
 	}
@@ -195,14 +176,14 @@ func resourceApigeeNatAddressRead(d *schema.ResourceData, meta interface{}) erro
 
 func resourceApigeeNatAddressDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApigeeBasePath}}{{instance_id}}/natAddresses/{{name}}")
+	url, err := ReplaceVars(d, config, "{{ApigeeBasePath}}{{instance_id}}/natAddresses/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -211,19 +192,11 @@ func resourceApigeeNatAddressDelete(d *schema.ResourceData, meta interface{}) er
 	log.Printf("[DEBUG] Deleting NatAddress %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "NatAddress")
 	}
@@ -244,7 +217,7 @@ func resourceApigeeNatAddressImport(d *schema.ResourceData, meta interface{}) ([
 	config := meta.(*transport_tpg.Config)
 
 	// current import_formats cannot import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"(?P<instance_id>.+)/natAddresses/(?P<name>.+)",
 		"(?P<instance_id>.+)/(?P<name>.+)",
 	}, d, config); err != nil {
@@ -252,7 +225,7 @@ func resourceApigeeNatAddressImport(d *schema.ResourceData, meta interface{}) ([
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{instance_id}}/natAddresses/{{name}}")
+	id, err := ReplaceVars(d, config, "{{instance_id}}/natAddresses/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -273,6 +246,6 @@ func flattenApigeeNatAddressState(v interface{}, d *schema.ResourceData, config 
 	return v
 }
 
-func expandApigeeNatAddressName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeNatAddressName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

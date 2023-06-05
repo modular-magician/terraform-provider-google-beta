@@ -1,12 +1,8 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 	"testing"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -144,8 +140,8 @@ func testAccCheckComputeTargetPoolHealthCheck(targetPool, healthCheck string) re
 		}
 
 		hcLink := healthCheckRes.Primary.Attributes["self_link"]
-		if tpgresource.ConvertSelfLinkToV1(targetPoolRes.Primary.Attributes["health_checks.0"]) != hcLink {
-			return fmt.Errorf("Health check not set up. Expected %q to equal %q", tpgresource.ConvertSelfLinkToV1(targetPoolRes.Primary.Attributes["health_checks.0"]), hcLink)
+		if ConvertSelfLinkToV1(targetPoolRes.Primary.Attributes["health_checks.0"]) != hcLink {
+			return fmt.Errorf("Health check not set up. Expected %q to equal %q", ConvertSelfLinkToV1(targetPoolRes.Primary.Attributes["health_checks.0"]), hcLink)
 		}
 
 		return nil

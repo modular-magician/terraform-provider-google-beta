@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -14,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 
@@ -50,7 +47,7 @@ func ResourceContainerNodePool() *schema.Resource {
 
 		UseJSONNumber: true,
 
-		Schema: tpgresource.MergeSchemas(
+		Schema: mergeSchemas(
 			schemaNodePool,
 			map[string]*schema.Schema{
 				"project": {
@@ -434,12 +431,12 @@ func extractNodePoolInformation(d *schema.ResourceData, config *transport_tpg.Co
 	}
 	log.Printf("[DEBUG] parent cluster %s does not match regex %s", cluster, clusterIdRegex.String())
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return nil, err
 	}
 
-	location, err := tpgresource.GetLocation(d, config)
+	location, err := getLocation(d, config)
 	if err != nil {
 		return nil, err
 	}
@@ -453,7 +450,7 @@ func extractNodePoolInformation(d *schema.ResourceData, config *transport_tpg.Co
 
 func resourceContainerNodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -470,13 +467,13 @@ func resourceContainerNodePoolCreate(d *schema.ResourceData, meta interface{}) e
 
 	// Acquire read-lock on cluster.
 	clusterLockKey := nodePoolInfo.clusterLockKey()
-	transport_tpg.MutexStore.RLock(clusterLockKey)
-	defer transport_tpg.MutexStore.RUnlock(clusterLockKey)
+	mutexKV.RLock(clusterLockKey)
+	defer mutexKV.RUnlock(clusterLockKey)
 
 	// Acquire write-lock on nodepool.
 	npLockKey := nodePoolInfo.nodePoolLockKey(nodePool.Name)
-	transport_tpg.MutexStore.Lock(npLockKey)
-	defer transport_tpg.MutexStore.Unlock(npLockKey)
+	mutexKV.Lock(npLockKey)
+	defer mutexKV.Unlock(npLockKey)
 
 	req := &container.CreateNodePoolRequest{
 		NodePool: nodePool,
@@ -511,7 +508,7 @@ func resourceContainerNodePoolCreate(d *schema.ResourceData, meta interface{}) e
 		operation, err = clusterNodePoolsCreateCall.Do()
 
 		if err != nil {
-			if tpgresource.IsFailedPreconditionError(err) {
+			if isFailedPreconditionError(err) {
 				// We get failed precondition errors if the cluster is updating
 				// while we try to add the node pool.
 				return resource.RetryableError(err)
@@ -574,7 +571,7 @@ func resourceContainerNodePoolCreate(d *schema.ResourceData, meta interface{}) e
 
 func resourceContainerNodePoolRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -633,7 +630,7 @@ func resourceContainerNodePoolRead(d *schema.ResourceData, meta interface{}) err
 
 func resourceContainerNodePoolUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -670,7 +667,7 @@ func resourceContainerNodePoolUpdate(d *schema.ResourceData, meta interface{}) e
 
 func resourceContainerNodePoolDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -696,13 +693,13 @@ func resourceContainerNodePoolDelete(d *schema.ResourceData, meta interface{}) e
 
 	// Acquire read-lock on cluster.
 	clusterLockKey := nodePoolInfo.clusterLockKey()
-	transport_tpg.MutexStore.RLock(clusterLockKey)
-	defer transport_tpg.MutexStore.RUnlock(clusterLockKey)
+	mutexKV.RLock(clusterLockKey)
+	defer mutexKV.RUnlock(clusterLockKey)
 
 	// Acquire write-lock on nodepool.
 	npLockKey := nodePoolInfo.nodePoolLockKey(name)
-	transport_tpg.MutexStore.Lock(npLockKey)
-	defer transport_tpg.MutexStore.Unlock(npLockKey)
+	mutexKV.Lock(npLockKey)
+	defer mutexKV.Unlock(npLockKey)
 
 	timeout := d.Timeout(schema.TimeoutDelete)
 	startTime := time.Now()
@@ -716,7 +713,7 @@ func resourceContainerNodePoolDelete(d *schema.ResourceData, meta interface{}) e
 		operation, err = clusterNodePoolsDeleteCall.Do()
 
 		if err != nil {
-			if tpgresource.IsFailedPreconditionError(err) {
+			if isFailedPreconditionError(err) {
 				// We get failed precondition errors if the cluster is updating
 				// while we try to delete the node pool.
 				return resource.RetryableError(err)
@@ -753,7 +750,7 @@ func resourceContainerNodePoolExists(d *schema.ResourceData, meta interface{}) (
 		return false, err
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return false, err
 	}
@@ -778,23 +775,23 @@ func resourceContainerNodePoolExists(d *schema.ResourceData, meta interface{}) (
 func resourceContainerNodePoolStateImporter(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
 
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := tpgresource.ParseImportId([]string{"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/clusters/(?P<cluster>[^/]+)/nodePools/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<cluster>[^/]+)/(?P<name>[^/]+)", "(?P<location>[^/]+)/(?P<cluster>[^/]+)/(?P<name>[^/]+)"}, d, config); err != nil {
+	if err := ParseImportId([]string{"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/clusters/(?P<cluster>[^/]+)/nodePools/(?P<name>[^/]+)", "(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<cluster>[^/]+)/(?P<name>[^/]+)", "(?P<location>[^/]+)/(?P<cluster>[^/]+)/(?P<name>[^/]+)"}, d, config); err != nil {
 		return nil, err
 	}
 
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/clusters/{{cluster}}/nodePools/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/clusters/{{cluster}}/nodePools/{{name}}")
 	if err != nil {
 		return nil, err
 	}
 
 	d.SetId(id)
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return nil, err
 	}
@@ -998,7 +995,7 @@ func flattenNodePoolUpgradeSettings(us *container.UpgradeSettings) []map[string]
 }
 
 func flattenNodePool(d *schema.ResourceData, config *transport_tpg.Config, np *container.NodePool, prefix string) (map[string]interface{}, error) {
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
@@ -1035,7 +1032,7 @@ func flattenNodePool(d *schema.ResourceData, config *transport_tpg.Config, np *c
 		"name":                        np.Name,
 		"name_prefix":                 d.Get(prefix + "name_prefix"),
 		"initial_node_count":          np.InitialNodeCount,
-		"node_locations":              schema.NewSet(schema.HashString, tpgresource.ConvertStringArrToInterface(np.Locations)),
+		"node_locations":              schema.NewSet(schema.HashString, convertStringArrToInterface(np.Locations)),
 		"node_count":                  nodeCount,
 		"node_config":                 flattenNodeConfig(np.Config),
 		"instance_group_urls":         igmUrls,
@@ -1139,15 +1136,15 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
 	config := meta.(*transport_tpg.Config)
 	name := d.Get(prefix + "name").(string)
 
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	// Acquire read-lock on cluster.
 	clusterLockKey := nodePoolInfo.clusterLockKey()
-	transport_tpg.MutexStore.RLock(clusterLockKey)
-	defer transport_tpg.MutexStore.RUnlock(clusterLockKey)
+	mutexKV.RLock(clusterLockKey)
+	defer mutexKV.RUnlock(clusterLockKey)
 
 	// Nodepool write-lock will be acquired when update function is called.
 	npLockKey := nodePoolInfo.nodePoolLockKey(name)
@@ -1660,14 +1657,13 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
 
 				if v, ok := blueGreenSettingsConfig["standard_rollout_policy"]; ok && len(v.([]interface{})) > 0 {
 					standardRolloutPolicy := &container.StandardRolloutPolicy{}
-					if standardRolloutPolicyConfig, ok := v.([]interface{})[0].(map[string]interface{}); ok {
-						standardRolloutPolicy.BatchSoakDuration = standardRolloutPolicyConfig["batch_soak_duration"].(string)
-						if v, ok := standardRolloutPolicyConfig["batch_node_count"]; ok {
-							standardRolloutPolicy.BatchNodeCount = int64(v.(int))
-						}
-						if v, ok := standardRolloutPolicyConfig["batch_percentage"]; ok {
-							standardRolloutPolicy.BatchPercentage = v.(float64)
-						}
+					standardRolloutPolicyConfig := v.([]interface{})[0].(map[string]interface{})
+					standardRolloutPolicy.BatchSoakDuration = standardRolloutPolicyConfig["batch_soak_duration"].(string)
+					if v, ok := standardRolloutPolicyConfig["batch_node_count"]; ok {
+						standardRolloutPolicy.BatchNodeCount = int64(v.(int))
+					}
+					if v, ok := standardRolloutPolicyConfig["batch_percentage"]; ok {
+						standardRolloutPolicy.BatchPercentage = v.(float64)
 					}
 					blueGreenSettings.StandardRolloutPolicy = standardRolloutPolicy
 				}

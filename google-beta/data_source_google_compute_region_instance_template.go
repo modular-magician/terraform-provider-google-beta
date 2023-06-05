@@ -1,14 +1,10 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"encoding/json"
 	"fmt"
-	"sort"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"sort"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
@@ -17,7 +13,7 @@ import (
 
 func DataSourceGoogleComputeRegionInstanceTemplate() *schema.Resource {
 	// Generate datasource schema from resource
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceComputeRegionInstanceTemplate().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceComputeRegionInstanceTemplate().Schema)
 
 	dsSchema["filter"] = &schema.Schema{
 		Type:     schema.TypeString,
@@ -29,7 +25,7 @@ func DataSourceGoogleComputeRegionInstanceTemplate() *schema.Resource {
 	}
 
 	// Set 'Optional' schema elements
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "name", "filter", "most_recent", "region", "project")
+	addOptionalFieldsToSchema(dsSchema, "name", "filter", "most_recent", "region", "project")
 
 	dsSchema["name"].ExactlyOneOf = []string{"name", "filter"}
 	dsSchema["filter"].ExactlyOneOf = []string{"name", "filter"}
@@ -43,12 +39,12 @@ func DataSourceGoogleComputeRegionInstanceTemplate() *schema.Resource {
 func datasourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 
-	region, err := tpgresource.GetRegion(d, config)
+	region, err := getRegion(d, config)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -57,7 +53,7 @@ func datasourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta in
 		return retrieveInstances(d, meta, project, region, v.(string))
 	}
 	if v, ok := d.GetOk("filter"); ok {
-		userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+		userAgent, err := generateUserAgentString(d, config.UserAgent)
 		if err != nil {
 			return err
 		}
@@ -66,7 +62,7 @@ func datasourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta in
 			"filter": v.(string),
 		}
 
-		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceTemplates")
+		url, err := ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceTemplates")
 		if err != nil {
 			return err
 		}
@@ -76,13 +72,7 @@ func datasourceComputeRegionInstanceTemplateRead(d *schema.ResourceData, meta in
 			return err
 		}
 
-		templates, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "GET",
-			Project:   project,
-			RawURL:    url,
-			UserAgent: userAgent,
-		})
+		templates, err := transport_tpg.SendRequest(config, "GET", project, url, userAgent, nil)
 		if err != nil {
 			return fmt.Errorf("error retrieving list of region instance templates: %s", err)
 		}

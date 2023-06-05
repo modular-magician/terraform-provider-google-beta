@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -101,7 +98,6 @@ func TestAccDataCatalogEntryGroupIamPolicyGenerated(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataCatalogEntryGroupIamPolicy_basicGenerated(context),
-				Check:  resource.TestCheckResourceAttrSet("data.google_data_catalog_entry_group_iam_policy.foo", "policy_data"),
 			},
 			{
 				ResourceName:      "google_data_catalog_entry_group_iam_policy.foo",
@@ -152,13 +148,6 @@ data "google_iam_policy" "foo" {
 resource "google_data_catalog_entry_group_iam_policy" "foo" {
   entry_group = google_data_catalog_entry_group.basic_entry_group.name
   policy_data = data.google_iam_policy.foo.policy_data
-}
-
-data "google_data_catalog_entry_group_iam_policy" "foo" {
-  entry_group = google_data_catalog_entry_group.basic_entry_group.name
-  depends_on = [
-    google_data_catalog_entry_group_iam_policy.foo
-  ]
 }
 `, context)
 }

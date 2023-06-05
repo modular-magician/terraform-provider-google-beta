@@ -1,14 +1,10 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
+	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"log"
 	"time"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
-	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
@@ -64,12 +60,12 @@ func ResourceComputeProjectMetadataItem() *schema.Resource {
 
 func resourceComputeProjectMetadataItemCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	projectID, err := tpgresource.GetProject(d, config)
+	projectID, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -89,12 +85,12 @@ func resourceComputeProjectMetadataItemCreate(d *schema.ResourceData, meta inter
 
 func resourceComputeProjectMetadataItemRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	projectID, err := tpgresource.GetProject(d, config)
+	projectID, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -128,12 +124,12 @@ func resourceComputeProjectMetadataItemRead(d *schema.ResourceData, meta interfa
 
 func resourceComputeProjectMetadataItemUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	projectID, err := tpgresource.GetProject(d, config)
+	projectID, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -153,12 +149,12 @@ func resourceComputeProjectMetadataItemUpdate(d *schema.ResourceData, meta inter
 
 func resourceComputeProjectMetadataItemDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	projectID, err := tpgresource.GetProject(d, config)
+	projectID, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -177,8 +173,8 @@ func resourceComputeProjectMetadataItemDelete(d *schema.ResourceData, meta inter
 func updateComputeCommonInstanceMetadata(config *transport_tpg.Config, projectID, key, userAgent string, afterVal *string, timeout time.Duration, failIfPresent metadataPresentBehavior) error {
 	updateMD := func() error {
 		lockName := fmt.Sprintf("projects/%s/commoninstancemetadata", projectID)
-		transport_tpg.MutexStore.Lock(lockName)
-		defer transport_tpg.MutexStore.Unlock(lockName)
+		mutexKV.Lock(lockName)
+		defer mutexKV.Unlock(lockName)
 
 		log.Printf("[DEBUG] Loading project metadata: %s", projectID)
 		project, err := config.NewComputeClient(userAgent).Projects.Get(projectID).Do()

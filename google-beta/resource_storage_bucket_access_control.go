@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -24,8 +21,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -98,7 +93,7 @@ Examples:
 
 func resourceStorageBucketAccessControlCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -107,30 +102,30 @@ func resourceStorageBucketAccessControlCreate(d *schema.ResourceData, meta inter
 	bucketProp, err := expandStorageBucketAccessControlBucket(d.Get("bucket"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("bucket"); !tpgresource.IsEmptyValue(reflect.ValueOf(bucketProp)) && (ok || !reflect.DeepEqual(v, bucketProp)) {
+	} else if v, ok := d.GetOkExists("bucket"); !isEmptyValue(reflect.ValueOf(bucketProp)) && (ok || !reflect.DeepEqual(v, bucketProp)) {
 		obj["bucket"] = bucketProp
 	}
 	entityProp, err := expandStorageBucketAccessControlEntity(d.Get("entity"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("entity"); !tpgresource.IsEmptyValue(reflect.ValueOf(entityProp)) && (ok || !reflect.DeepEqual(v, entityProp)) {
+	} else if v, ok := d.GetOkExists("entity"); !isEmptyValue(reflect.ValueOf(entityProp)) && (ok || !reflect.DeepEqual(v, entityProp)) {
 		obj["entity"] = entityProp
 	}
 	roleProp, err := expandStorageBucketAccessControlRole(d.Get("role"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("role"); !tpgresource.IsEmptyValue(reflect.ValueOf(roleProp)) && (ok || !reflect.DeepEqual(v, roleProp)) {
+	} else if v, ok := d.GetOkExists("role"); !isEmptyValue(reflect.ValueOf(roleProp)) && (ok || !reflect.DeepEqual(v, roleProp)) {
 		obj["role"] = roleProp
 	}
 
-	lockName, err := tpgresource.ReplaceVars(d, config, "storage/buckets/{{bucket}}")
+	lockName, err := ReplaceVars(d, config, "storage/buckets/{{bucket}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{StorageBasePath}}b/{{bucket}}/acl")
+	url, err := ReplaceVars(d, config, "{{StorageBasePath}}b/{{bucket}}/acl")
 	if err != nil {
 		return err
 	}
@@ -139,25 +134,17 @@ func resourceStorageBucketAccessControlCreate(d *schema.ResourceData, meta inter
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating BucketAccessControl: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{bucket}}/{{entity}}")
+	id, err := ReplaceVars(d, config, "{{bucket}}/{{entity}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -170,12 +157,12 @@ func resourceStorageBucketAccessControlCreate(d *schema.ResourceData, meta inter
 
 func resourceStorageBucketAccessControlRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{StorageBasePath}}b/{{bucket}}/acl/{{entity}}")
+	url, err := ReplaceVars(d, config, "{{StorageBasePath}}b/{{bucket}}/acl/{{entity}}")
 	if err != nil {
 		return err
 	}
@@ -183,17 +170,11 @@ func resourceStorageBucketAccessControlRead(d *schema.ResourceData, meta interfa
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("StorageBucketAccessControl %q", d.Id()))
 	}
@@ -219,7 +200,7 @@ func resourceStorageBucketAccessControlRead(d *schema.ResourceData, meta interfa
 
 func resourceStorageBucketAccessControlUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -230,30 +211,30 @@ func resourceStorageBucketAccessControlUpdate(d *schema.ResourceData, meta inter
 	bucketProp, err := expandStorageBucketAccessControlBucket(d.Get("bucket"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("bucket"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, bucketProp)) {
+	} else if v, ok := d.GetOkExists("bucket"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, bucketProp)) {
 		obj["bucket"] = bucketProp
 	}
 	entityProp, err := expandStorageBucketAccessControlEntity(d.Get("entity"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("entity"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, entityProp)) {
+	} else if v, ok := d.GetOkExists("entity"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, entityProp)) {
 		obj["entity"] = entityProp
 	}
 	roleProp, err := expandStorageBucketAccessControlRole(d.Get("role"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("role"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, roleProp)) {
+	} else if v, ok := d.GetOkExists("role"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, roleProp)) {
 		obj["role"] = roleProp
 	}
 
-	lockName, err := tpgresource.ReplaceVars(d, config, "storage/buckets/{{bucket}}")
+	lockName, err := ReplaceVars(d, config, "storage/buckets/{{bucket}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{StorageBasePath}}b/{{bucket}}/acl/{{entity}}")
+	url, err := ReplaceVars(d, config, "{{StorageBasePath}}b/{{bucket}}/acl/{{entity}}")
 	if err != nil {
 		return err
 	}
@@ -261,19 +242,11 @@ func resourceStorageBucketAccessControlUpdate(d *schema.ResourceData, meta inter
 	log.Printf("[DEBUG] Updating BucketAccessControl %q: %#v", d.Id(), obj)
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PUT",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PUT", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating BucketAccessControl %q: %s", d.Id(), err)
@@ -286,21 +259,21 @@ func resourceStorageBucketAccessControlUpdate(d *schema.ResourceData, meta inter
 
 func resourceStorageBucketAccessControlDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	lockName, err := tpgresource.ReplaceVars(d, config, "storage/buckets/{{bucket}}")
+	lockName, err := ReplaceVars(d, config, "storage/buckets/{{bucket}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{StorageBasePath}}b/{{bucket}}/acl/{{entity}}")
+	url, err := ReplaceVars(d, config, "{{StorageBasePath}}b/{{bucket}}/acl/{{entity}}")
 	if err != nil {
 		return err
 	}
@@ -309,19 +282,11 @@ func resourceStorageBucketAccessControlDelete(d *schema.ResourceData, meta inter
 	log.Printf("[DEBUG] Deleting BucketAccessControl %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "BucketAccessControl")
 	}
@@ -332,14 +297,14 @@ func resourceStorageBucketAccessControlDelete(d *schema.ResourceData, meta inter
 
 func resourceStorageBucketAccessControlImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"(?P<bucket>[^/]+)/(?P<entity>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{bucket}}/{{entity}}")
+	id, err := ReplaceVars(d, config, "{{bucket}}/{{entity}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -352,7 +317,7 @@ func flattenStorageBucketAccessControlBucket(v interface{}, d *schema.ResourceDa
 	if v == nil {
 		return v
 	}
-	return tpgresource.ConvertSelfLinkToV1(v.(string))
+	return ConvertSelfLinkToV1(v.(string))
 }
 
 func flattenStorageBucketAccessControlDomain(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -371,14 +336,14 @@ func flattenStorageBucketAccessControlRole(v interface{}, d *schema.ResourceData
 	return v
 }
 
-func expandStorageBucketAccessControlBucket(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandStorageBucketAccessControlBucket(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandStorageBucketAccessControlEntity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandStorageBucketAccessControlEntity(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandStorageBucketAccessControlRole(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandStorageBucketAccessControlRole(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

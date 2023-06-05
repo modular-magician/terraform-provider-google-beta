@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -26,8 +23,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -287,7 +282,7 @@ Format: 'locations/{location}/workforcePools/{workforcePoolId}/providers/{provid
 
 func resourceIAMWorkforcePoolWorkforcePoolProviderCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -296,47 +291,47 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderCreate(d *schema.ResourceData,
 	displayNameProp, err := expandIAMWorkforcePoolWorkforcePoolProviderDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	descriptionProp, err := expandIAMWorkforcePoolWorkforcePoolProviderDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	disabledProp, err := expandIAMWorkforcePoolWorkforcePoolProviderDisabled(d.Get("disabled"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("disabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(disabledProp)) && (ok || !reflect.DeepEqual(v, disabledProp)) {
+	} else if v, ok := d.GetOkExists("disabled"); !isEmptyValue(reflect.ValueOf(disabledProp)) && (ok || !reflect.DeepEqual(v, disabledProp)) {
 		obj["disabled"] = disabledProp
 	}
 	attributeMappingProp, err := expandIAMWorkforcePoolWorkforcePoolProviderAttributeMapping(d.Get("attribute_mapping"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("attribute_mapping"); !tpgresource.IsEmptyValue(reflect.ValueOf(attributeMappingProp)) && (ok || !reflect.DeepEqual(v, attributeMappingProp)) {
+	} else if v, ok := d.GetOkExists("attribute_mapping"); !isEmptyValue(reflect.ValueOf(attributeMappingProp)) && (ok || !reflect.DeepEqual(v, attributeMappingProp)) {
 		obj["attributeMapping"] = attributeMappingProp
 	}
 	attributeConditionProp, err := expandIAMWorkforcePoolWorkforcePoolProviderAttributeCondition(d.Get("attribute_condition"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("attribute_condition"); !tpgresource.IsEmptyValue(reflect.ValueOf(attributeConditionProp)) && (ok || !reflect.DeepEqual(v, attributeConditionProp)) {
+	} else if v, ok := d.GetOkExists("attribute_condition"); !isEmptyValue(reflect.ValueOf(attributeConditionProp)) && (ok || !reflect.DeepEqual(v, attributeConditionProp)) {
 		obj["attributeCondition"] = attributeConditionProp
 	}
 	samlProp, err := expandIAMWorkforcePoolWorkforcePoolProviderSaml(d.Get("saml"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("saml"); !tpgresource.IsEmptyValue(reflect.ValueOf(samlProp)) && (ok || !reflect.DeepEqual(v, samlProp)) {
+	} else if v, ok := d.GetOkExists("saml"); !isEmptyValue(reflect.ValueOf(samlProp)) && (ok || !reflect.DeepEqual(v, samlProp)) {
 		obj["saml"] = samlProp
 	}
 	oidcProp, err := expandIAMWorkforcePoolWorkforcePoolProviderOidc(d.Get("oidc"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("oidc"); !tpgresource.IsEmptyValue(reflect.ValueOf(oidcProp)) && (ok || !reflect.DeepEqual(v, oidcProp)) {
+	} else if v, ok := d.GetOkExists("oidc"); !isEmptyValue(reflect.ValueOf(oidcProp)) && (ok || !reflect.DeepEqual(v, oidcProp)) {
 		obj["oidc"] = oidcProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAMWorkforcePoolBasePath}}locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers?workforcePoolProviderId={{provider_id}}")
+	url, err := ReplaceVars(d, config, "{{IAMWorkforcePoolBasePath}}locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers?workforcePoolProviderId={{provider_id}}")
 	if err != nil {
 		return err
 	}
@@ -345,25 +340,17 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderCreate(d *schema.ResourceData,
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating WorkforcePoolProvider: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers/{{provider_id}}")
+	id, err := ReplaceVars(d, config, "locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers/{{provider_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -386,12 +373,12 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderCreate(d *schema.ResourceData,
 
 func resourceIAMWorkforcePoolWorkforcePoolProviderRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAMWorkforcePoolBasePath}}locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers/{{provider_id}}")
+	url, err := ReplaceVars(d, config, "{{IAMWorkforcePoolBasePath}}locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers/{{provider_id}}")
 	if err != nil {
 		return err
 	}
@@ -399,17 +386,11 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderRead(d *schema.ResourceData, m
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("IAMWorkforcePoolWorkforcePoolProvider %q", d.Id()))
 	}
@@ -459,7 +440,7 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderRead(d *schema.ResourceData, m
 
 func resourceIAMWorkforcePoolWorkforcePoolProviderUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -470,47 +451,47 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderUpdate(d *schema.ResourceData,
 	displayNameProp, err := expandIAMWorkforcePoolWorkforcePoolProviderDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	descriptionProp, err := expandIAMWorkforcePoolWorkforcePoolProviderDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	disabledProp, err := expandIAMWorkforcePoolWorkforcePoolProviderDisabled(d.Get("disabled"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("disabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, disabledProp)) {
+	} else if v, ok := d.GetOkExists("disabled"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, disabledProp)) {
 		obj["disabled"] = disabledProp
 	}
 	attributeMappingProp, err := expandIAMWorkforcePoolWorkforcePoolProviderAttributeMapping(d.Get("attribute_mapping"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("attribute_mapping"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, attributeMappingProp)) {
+	} else if v, ok := d.GetOkExists("attribute_mapping"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, attributeMappingProp)) {
 		obj["attributeMapping"] = attributeMappingProp
 	}
 	attributeConditionProp, err := expandIAMWorkforcePoolWorkforcePoolProviderAttributeCondition(d.Get("attribute_condition"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("attribute_condition"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, attributeConditionProp)) {
+	} else if v, ok := d.GetOkExists("attribute_condition"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, attributeConditionProp)) {
 		obj["attributeCondition"] = attributeConditionProp
 	}
 	samlProp, err := expandIAMWorkforcePoolWorkforcePoolProviderSaml(d.Get("saml"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("saml"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, samlProp)) {
+	} else if v, ok := d.GetOkExists("saml"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, samlProp)) {
 		obj["saml"] = samlProp
 	}
 	oidcProp, err := expandIAMWorkforcePoolWorkforcePoolProviderOidc(d.Get("oidc"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("oidc"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, oidcProp)) {
+	} else if v, ok := d.GetOkExists("oidc"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, oidcProp)) {
 		obj["oidc"] = oidcProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAMWorkforcePoolBasePath}}locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers/{{provider_id}}")
+	url, err := ReplaceVars(d, config, "{{IAMWorkforcePoolBasePath}}locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers/{{provider_id}}")
 	if err != nil {
 		return err
 	}
@@ -553,19 +534,11 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderUpdate(d *schema.ResourceData,
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating WorkforcePoolProvider %q: %s", d.Id(), err)
@@ -586,14 +559,14 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderUpdate(d *schema.ResourceData,
 
 func resourceIAMWorkforcePoolWorkforcePoolProviderDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAMWorkforcePoolBasePath}}locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers/{{provider_id}}")
+	url, err := ReplaceVars(d, config, "{{IAMWorkforcePoolBasePath}}locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers/{{provider_id}}")
 	if err != nil {
 		return err
 	}
@@ -602,19 +575,11 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderDelete(d *schema.ResourceData,
 	log.Printf("[DEBUG] Deleting WorkforcePoolProvider %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "WorkforcePoolProvider")
 	}
@@ -633,7 +598,7 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderDelete(d *schema.ResourceData,
 
 func resourceIAMWorkforcePoolWorkforcePoolProviderImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"locations/(?P<location>[^/]+)/workforcePools/(?P<workforce_pool_id>[^/]+)/providers/(?P<provider_id>[^/]+)",
 		"(?P<location>[^/]+)/(?P<workforce_pool_id>[^/]+)/(?P<provider_id>[^/]+)",
 	}, d, config); err != nil {
@@ -641,7 +606,7 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderImport(d *schema.ResourceData,
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers/{{provider_id}}")
+	id, err := ReplaceVars(d, config, "locations/{{location}}/workforcePools/{{workforce_pool_id}}/providers/{{provider_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -743,19 +708,19 @@ func flattenIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfigAssertionClaims
 	return v
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderDisplayName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderDisabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderAttributeMapping(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderAttributeMapping(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -766,11 +731,11 @@ func expandIAMWorkforcePoolWorkforcePoolProviderAttributeMapping(v interface{}, 
 	return m, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderAttributeCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderAttributeCondition(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderSaml(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderSaml(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -782,18 +747,18 @@ func expandIAMWorkforcePoolWorkforcePoolProviderSaml(v interface{}, d tpgresourc
 	transformedIdpMetadataXml, err := expandIAMWorkforcePoolWorkforcePoolProviderSamlIdpMetadataXml(original["idp_metadata_xml"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIdpMetadataXml); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIdpMetadataXml); val.IsValid() && !isEmptyValue(val) {
 		transformed["idpMetadataXml"] = transformedIdpMetadataXml
 	}
 
 	return transformed, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderSamlIdpMetadataXml(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderSamlIdpMetadataXml(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderOidc(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderOidc(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -805,36 +770,36 @@ func expandIAMWorkforcePoolWorkforcePoolProviderOidc(v interface{}, d tpgresourc
 	transformedIssuerUri, err := expandIAMWorkforcePoolWorkforcePoolProviderOidcIssuerUri(original["issuer_uri"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIssuerUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIssuerUri); val.IsValid() && !isEmptyValue(val) {
 		transformed["issuerUri"] = transformedIssuerUri
 	}
 
 	transformedClientId, err := expandIAMWorkforcePoolWorkforcePoolProviderOidcClientId(original["client_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedClientId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedClientId); val.IsValid() && !isEmptyValue(val) {
 		transformed["clientId"] = transformedClientId
 	}
 
 	transformedWebSsoConfig, err := expandIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfig(original["web_sso_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWebSsoConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWebSsoConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["webSsoConfig"] = transformedWebSsoConfig
 	}
 
 	return transformed, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderOidcIssuerUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderOidcIssuerUri(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderOidcClientId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderOidcClientId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -846,25 +811,25 @@ func expandIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfig(v interface{}, 
 	transformedResponseType, err := expandIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfigResponseType(original["response_type"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedResponseType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedResponseType); val.IsValid() && !isEmptyValue(val) {
 		transformed["responseType"] = transformedResponseType
 	}
 
 	transformedAssertionClaimsBehavior, err := expandIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfigAssertionClaimsBehavior(original["assertion_claims_behavior"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAssertionClaimsBehavior); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAssertionClaimsBehavior); val.IsValid() && !isEmptyValue(val) {
 		transformed["assertionClaimsBehavior"] = transformedAssertionClaimsBehavior
 	}
 
 	return transformed, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfigResponseType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfigResponseType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfigAssertionClaimsBehavior(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfigAssertionClaimsBehavior(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

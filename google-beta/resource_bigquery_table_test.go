@@ -1,18 +1,15 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"regexp"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 func TestBigQueryTableSchemaDiffSuppress(t *testing.T) {
@@ -1243,7 +1240,7 @@ func (testcase *testUnitBigQueryDataTableJSONChangeableTestCase) check(t *testin
 		t.Errorf("expected changeable result of %v but got %v for testcase %s", testcase.changeable, changeable, testcase.name)
 	}
 
-	d := &tpgresource.ResourceDiffMock{
+	d := &ResourceDiffMock{
 		Before: map[string]interface{}{},
 		After:  map[string]interface{}{},
 	}

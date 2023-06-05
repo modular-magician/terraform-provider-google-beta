@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -3346,7 +3344,6 @@ func TestAccContainerCluster_withDatabaseEncryption(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withDatabaseEncryption(clusterName, kmsData),
-				Check:  resource.TestCheckResourceAttrSet("data.google_kms_key_ring_iam_policy.test_key_ring_iam_policy", "policy_data"),
 			},
 			{
 				ResourceName:      "google_container_cluster.primary",
@@ -3525,7 +3522,7 @@ func TestAccContainerCluster_withGatewayApiConfig(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccContainerCluster_withGatewayApiConfig(clusterName, "CANARY"),
-				ExpectError: regexp.MustCompile(`expected gateway_api_config\.0\.channel to be one of \[CHANNEL_DISABLED CHANNEL_EXPERIMENTAL CHANNEL_STANDARD\], got CANARY`),
+				ExpectError: regexp.MustCompile(`expected gateway_api_config\.0\.channel to be one of \[CHANNEL_DISABLED CHANNEL_STANDARD\], got CANARY`),
 			},
 			{
 				Config: testAccContainerCluster_withGatewayApiConfig(clusterName, "CHANNEL_DISABLED"),
@@ -3891,11 +3888,8 @@ resource "google_container_cluster" "primary" {
       auth     = "AUTH_MUTUAL_TLS"
     }
     kalm_config {
-      enabled = false
-    }
-    gcs_fuse_csi_driver_config {
-      enabled = false
-    }
+	  enabled = false
+	}
   }
 }
 `, projectID, clusterName)
@@ -3952,12 +3946,9 @@ resource "google_container_cluster" "primary" {
       disabled = false
       auth     = "AUTH_NONE"
     }
-    kalm_config {
-      enabled = true
-    }
-    gcs_fuse_csi_driver_config {
-      enabled = true
-    }
+	kalm_config {
+	  enabled = true
+	}
   }
 }
 `, projectID, clusterName)
@@ -6296,28 +6287,28 @@ resource "google_compute_network" "container_network" {
     name                    = "%s"
     auto_create_subnetworks = false
 }
-
+	
     resource "google_compute_subnetwork" "container_subnetwork" {
     name    = google_compute_network.container_network.name
     network = google_compute_network.container_network.name
     region  = "us-central1"
-
+	
     ip_cidr_range = "10.2.0.0/16"
     stack_type = "IPV4_IPV6"
     ipv6_access_type = "EXTERNAL"
 }
-
+	
 resource "google_container_cluster" "with_stack_type" {
     name       = "%s"
     location   = "us-central1-a"
     network    = google_compute_network.container_network.name
     subnetwork = google_compute_subnetwork.container_subnetwork.name
-
+	
     min_master_version = "1.25"
     initial_node_count = 1
     datapath_provider = "ADVANCED_DATAPATH"
     enable_l4_ilb_subsetting = true
-
+	
     ip_allocation_policy {
         cluster_ipv4_cidr_block  = "10.0.0.0/16"
         services_ipv4_cidr_block = "10.1.0.0/16"
@@ -6333,25 +6324,25 @@ resource "google_compute_network" "container_network" {
     name                    = "%s"
     auto_create_subnetworks = false
 }
-
+	
     resource "google_compute_subnetwork" "container_subnetwork" {
     name    = google_compute_network.container_network.name
     network = google_compute_network.container_network.name
     region  = "us-central1"
-
+	
     ip_cidr_range = "10.2.0.0/16"
 }
-
+	
 resource "google_container_cluster" "with_stack_type" {
     name       = "%s"
     location   = "us-central1-a"
     network    = google_compute_network.container_network.name
     subnetwork = google_compute_subnetwork.container_subnetwork.name
-
+	
     min_master_version = "1.25"
     initial_node_count = 1
     enable_l4_ilb_subsetting = true
-
+	
     ip_allocation_policy {
         cluster_ipv4_cidr_block  = "10.0.0.0/16"
         services_ipv4_cidr_block = "10.1.0.0/16"
@@ -6963,10 +6954,6 @@ data "google_iam_policy" "test_kms_binding" {
 resource "google_kms_key_ring_iam_policy" "test_key_ring_iam_policy" {
   key_ring_id = "%[1]s"
   policy_data = data.google_iam_policy.test_kms_binding.policy_data
-}
-
-data "google_kms_key_ring_iam_policy" "test_key_ring_iam_policy" {
-  key_ring_id = "%[1]s"
 }
 
 resource "google_container_cluster" "primary" {

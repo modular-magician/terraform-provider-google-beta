@@ -1,23 +1,20 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func DataSourceGoogleBeyondcorpAppGateway() *schema.Resource {
 
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceBeyondcorpAppGateway().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceBeyondcorpAppGateway().Schema)
 
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "name")
+	addRequiredFieldsToSchema(dsSchema, "name")
 
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "region")
+	addOptionalFieldsToSchema(dsSchema, "project")
+	addOptionalFieldsToSchema(dsSchema, "region")
 
 	return &schema.Resource{
 		Read:   dataSourceGoogleBeyondcorpAppGatewayRead,
@@ -30,12 +27,12 @@ func dataSourceGoogleBeyondcorpAppGatewayRead(d *schema.ResourceData, meta inter
 
 	name := d.Get("name").(string)
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	region, err := tpgresource.GetRegion(d, config)
+	region, err := getRegion(d, config)
 	if err != nil {
 		return err
 	}

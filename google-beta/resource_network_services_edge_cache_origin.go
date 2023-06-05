@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -26,8 +23,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -103,7 +98,7 @@ This is the resource name of the secret version in the format 'projects/*/secret
 			"failover_origin": {
 				Type:             schema.TypeString,
 				Optional:         true,
-				DiffSuppressFunc: tpgresource.CompareResourceNames,
+				DiffSuppressFunc: compareResourceNames,
 				Description: `The Origin resource to try when the current origin cannot be reached.
 After maxAttempts is reached, the configured failoverOrigin will be used to fulfil the request.
 
@@ -344,7 +339,7 @@ If the response headers have already been written to the connection, the respons
 
 func resourceNetworkServicesEdgeCacheOriginCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -353,77 +348,77 @@ func resourceNetworkServicesEdgeCacheOriginCreate(d *schema.ResourceData, meta i
 	descriptionProp, err := expandNetworkServicesEdgeCacheOriginDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	labelsProp, err := expandNetworkServicesEdgeCacheOriginLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 	originAddressProp, err := expandNetworkServicesEdgeCacheOriginOriginAddress(d.Get("origin_address"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("origin_address"); !tpgresource.IsEmptyValue(reflect.ValueOf(originAddressProp)) && (ok || !reflect.DeepEqual(v, originAddressProp)) {
+	} else if v, ok := d.GetOkExists("origin_address"); !isEmptyValue(reflect.ValueOf(originAddressProp)) && (ok || !reflect.DeepEqual(v, originAddressProp)) {
 		obj["originAddress"] = originAddressProp
 	}
 	protocolProp, err := expandNetworkServicesEdgeCacheOriginProtocol(d.Get("protocol"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("protocol"); !tpgresource.IsEmptyValue(reflect.ValueOf(protocolProp)) && (ok || !reflect.DeepEqual(v, protocolProp)) {
+	} else if v, ok := d.GetOkExists("protocol"); !isEmptyValue(reflect.ValueOf(protocolProp)) && (ok || !reflect.DeepEqual(v, protocolProp)) {
 		obj["protocol"] = protocolProp
 	}
 	portProp, err := expandNetworkServicesEdgeCacheOriginPort(d.Get("port"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("port"); !tpgresource.IsEmptyValue(reflect.ValueOf(portProp)) && (ok || !reflect.DeepEqual(v, portProp)) {
+	} else if v, ok := d.GetOkExists("port"); !isEmptyValue(reflect.ValueOf(portProp)) && (ok || !reflect.DeepEqual(v, portProp)) {
 		obj["port"] = portProp
 	}
 	maxAttemptsProp, err := expandNetworkServicesEdgeCacheOriginMaxAttempts(d.Get("max_attempts"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("max_attempts"); !tpgresource.IsEmptyValue(reflect.ValueOf(maxAttemptsProp)) && (ok || !reflect.DeepEqual(v, maxAttemptsProp)) {
+	} else if v, ok := d.GetOkExists("max_attempts"); !isEmptyValue(reflect.ValueOf(maxAttemptsProp)) && (ok || !reflect.DeepEqual(v, maxAttemptsProp)) {
 		obj["maxAttempts"] = maxAttemptsProp
 	}
 	failoverOriginProp, err := expandNetworkServicesEdgeCacheOriginFailoverOrigin(d.Get("failover_origin"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("failover_origin"); !tpgresource.IsEmptyValue(reflect.ValueOf(failoverOriginProp)) && (ok || !reflect.DeepEqual(v, failoverOriginProp)) {
+	} else if v, ok := d.GetOkExists("failover_origin"); !isEmptyValue(reflect.ValueOf(failoverOriginProp)) && (ok || !reflect.DeepEqual(v, failoverOriginProp)) {
 		obj["failoverOrigin"] = failoverOriginProp
 	}
 	retryConditionsProp, err := expandNetworkServicesEdgeCacheOriginRetryConditions(d.Get("retry_conditions"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("retry_conditions"); !tpgresource.IsEmptyValue(reflect.ValueOf(retryConditionsProp)) && (ok || !reflect.DeepEqual(v, retryConditionsProp)) {
+	} else if v, ok := d.GetOkExists("retry_conditions"); !isEmptyValue(reflect.ValueOf(retryConditionsProp)) && (ok || !reflect.DeepEqual(v, retryConditionsProp)) {
 		obj["retryConditions"] = retryConditionsProp
 	}
 	timeoutProp, err := expandNetworkServicesEdgeCacheOriginTimeout(d.Get("timeout"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("timeout"); !tpgresource.IsEmptyValue(reflect.ValueOf(timeoutProp)) && (ok || !reflect.DeepEqual(v, timeoutProp)) {
+	} else if v, ok := d.GetOkExists("timeout"); !isEmptyValue(reflect.ValueOf(timeoutProp)) && (ok || !reflect.DeepEqual(v, timeoutProp)) {
 		obj["timeout"] = timeoutProp
 	}
 	awsV4AuthenticationProp, err := expandNetworkServicesEdgeCacheOriginAwsV4Authentication(d.Get("aws_v4_authentication"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("aws_v4_authentication"); !tpgresource.IsEmptyValue(reflect.ValueOf(awsV4AuthenticationProp)) && (ok || !reflect.DeepEqual(v, awsV4AuthenticationProp)) {
+	} else if v, ok := d.GetOkExists("aws_v4_authentication"); !isEmptyValue(reflect.ValueOf(awsV4AuthenticationProp)) && (ok || !reflect.DeepEqual(v, awsV4AuthenticationProp)) {
 		obj["awsV4Authentication"] = awsV4AuthenticationProp
 	}
 	originOverrideActionProp, err := expandNetworkServicesEdgeCacheOriginOriginOverrideAction(d.Get("origin_override_action"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("origin_override_action"); !tpgresource.IsEmptyValue(reflect.ValueOf(originOverrideActionProp)) && (ok || !reflect.DeepEqual(v, originOverrideActionProp)) {
+	} else if v, ok := d.GetOkExists("origin_override_action"); !isEmptyValue(reflect.ValueOf(originOverrideActionProp)) && (ok || !reflect.DeepEqual(v, originOverrideActionProp)) {
 		obj["originOverrideAction"] = originOverrideActionProp
 	}
 	originRedirectProp, err := expandNetworkServicesEdgeCacheOriginOriginRedirect(d.Get("origin_redirect"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("origin_redirect"); !tpgresource.IsEmptyValue(reflect.ValueOf(originRedirectProp)) && (ok || !reflect.DeepEqual(v, originRedirectProp)) {
+	} else if v, ok := d.GetOkExists("origin_redirect"); !isEmptyValue(reflect.ValueOf(originRedirectProp)) && (ok || !reflect.DeepEqual(v, originRedirectProp)) {
 		obj["originRedirect"] = originRedirectProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/edgeCacheOrigins?edgeCacheOriginId={{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/edgeCacheOrigins?edgeCacheOriginId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -431,32 +426,24 @@ func resourceNetworkServicesEdgeCacheOriginCreate(d *schema.ResourceData, meta i
 	log.Printf("[DEBUG] Creating new EdgeCacheOrigin: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for EdgeCacheOrigin: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating EdgeCacheOrigin: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/edgeCacheOrigins/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/global/edgeCacheOrigins/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -479,36 +466,30 @@ func resourceNetworkServicesEdgeCacheOriginCreate(d *schema.ResourceData, meta i
 
 func resourceNetworkServicesEdgeCacheOriginRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/edgeCacheOrigins/{{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/edgeCacheOrigins/{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for EdgeCacheOrigin: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("NetworkServicesEdgeCacheOrigin %q", d.Id()))
 	}
@@ -559,14 +540,14 @@ func resourceNetworkServicesEdgeCacheOriginRead(d *schema.ResourceData, meta int
 
 func resourceNetworkServicesEdgeCacheOriginUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for EdgeCacheOrigin: %s", err)
 	}
@@ -576,77 +557,77 @@ func resourceNetworkServicesEdgeCacheOriginUpdate(d *schema.ResourceData, meta i
 	descriptionProp, err := expandNetworkServicesEdgeCacheOriginDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	labelsProp, err := expandNetworkServicesEdgeCacheOriginLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 	originAddressProp, err := expandNetworkServicesEdgeCacheOriginOriginAddress(d.Get("origin_address"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("origin_address"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, originAddressProp)) {
+	} else if v, ok := d.GetOkExists("origin_address"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, originAddressProp)) {
 		obj["originAddress"] = originAddressProp
 	}
 	protocolProp, err := expandNetworkServicesEdgeCacheOriginProtocol(d.Get("protocol"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("protocol"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, protocolProp)) {
+	} else if v, ok := d.GetOkExists("protocol"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, protocolProp)) {
 		obj["protocol"] = protocolProp
 	}
 	portProp, err := expandNetworkServicesEdgeCacheOriginPort(d.Get("port"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("port"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, portProp)) {
+	} else if v, ok := d.GetOkExists("port"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, portProp)) {
 		obj["port"] = portProp
 	}
 	maxAttemptsProp, err := expandNetworkServicesEdgeCacheOriginMaxAttempts(d.Get("max_attempts"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("max_attempts"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, maxAttemptsProp)) {
+	} else if v, ok := d.GetOkExists("max_attempts"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, maxAttemptsProp)) {
 		obj["maxAttempts"] = maxAttemptsProp
 	}
 	failoverOriginProp, err := expandNetworkServicesEdgeCacheOriginFailoverOrigin(d.Get("failover_origin"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("failover_origin"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, failoverOriginProp)) {
+	} else if v, ok := d.GetOkExists("failover_origin"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, failoverOriginProp)) {
 		obj["failoverOrigin"] = failoverOriginProp
 	}
 	retryConditionsProp, err := expandNetworkServicesEdgeCacheOriginRetryConditions(d.Get("retry_conditions"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("retry_conditions"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, retryConditionsProp)) {
+	} else if v, ok := d.GetOkExists("retry_conditions"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, retryConditionsProp)) {
 		obj["retryConditions"] = retryConditionsProp
 	}
 	timeoutProp, err := expandNetworkServicesEdgeCacheOriginTimeout(d.Get("timeout"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("timeout"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, timeoutProp)) {
+	} else if v, ok := d.GetOkExists("timeout"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, timeoutProp)) {
 		obj["timeout"] = timeoutProp
 	}
 	awsV4AuthenticationProp, err := expandNetworkServicesEdgeCacheOriginAwsV4Authentication(d.Get("aws_v4_authentication"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("aws_v4_authentication"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, awsV4AuthenticationProp)) {
+	} else if v, ok := d.GetOkExists("aws_v4_authentication"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, awsV4AuthenticationProp)) {
 		obj["awsV4Authentication"] = awsV4AuthenticationProp
 	}
 	originOverrideActionProp, err := expandNetworkServicesEdgeCacheOriginOriginOverrideAction(d.Get("origin_override_action"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("origin_override_action"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, originOverrideActionProp)) {
+	} else if v, ok := d.GetOkExists("origin_override_action"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, originOverrideActionProp)) {
 		obj["originOverrideAction"] = originOverrideActionProp
 	}
 	originRedirectProp, err := expandNetworkServicesEdgeCacheOriginOriginRedirect(d.Get("origin_redirect"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("origin_redirect"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, originRedirectProp)) {
+	} else if v, ok := d.GetOkExists("origin_redirect"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, originRedirectProp)) {
 		obj["originRedirect"] = originRedirectProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/edgeCacheOrigins/{{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/edgeCacheOrigins/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -709,19 +690,11 @@ func resourceNetworkServicesEdgeCacheOriginUpdate(d *schema.ResourceData, meta i
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating EdgeCacheOrigin %q: %s", d.Id(), err)
@@ -742,20 +715,20 @@ func resourceNetworkServicesEdgeCacheOriginUpdate(d *schema.ResourceData, meta i
 
 func resourceNetworkServicesEdgeCacheOriginDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for EdgeCacheOrigin: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/edgeCacheOrigins/{{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/edgeCacheOrigins/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -764,19 +737,11 @@ func resourceNetworkServicesEdgeCacheOriginDelete(d *schema.ResourceData, meta i
 	log.Printf("[DEBUG] Deleting EdgeCacheOrigin %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "EdgeCacheOrigin")
 	}
@@ -795,7 +760,7 @@ func resourceNetworkServicesEdgeCacheOriginDelete(d *schema.ResourceData, meta i
 
 func resourceNetworkServicesEdgeCacheOriginImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/global/edgeCacheOrigins/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<name>[^/]+)",
 		"(?P<name>[^/]+)",
@@ -804,7 +769,7 @@ func resourceNetworkServicesEdgeCacheOriginImport(d *schema.ResourceData, meta i
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/edgeCacheOrigins/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/global/edgeCacheOrigins/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -1018,11 +983,11 @@ func flattenNetworkServicesEdgeCacheOriginOriginRedirectRedirectConditions(v int
 	return v
 }
 
-func expandNetworkServicesEdgeCacheOriginDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandNetworkServicesEdgeCacheOriginLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -1033,31 +998,31 @@ func expandNetworkServicesEdgeCacheOriginLabels(v interface{}, d tpgresource.Ter
 	return m, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginOriginAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginOriginAddress(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginProtocol(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginProtocol(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginPort(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginMaxAttempts(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginMaxAttempts(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginFailoverOrigin(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginFailoverOrigin(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginRetryConditions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginRetryConditions(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginTimeout(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginTimeout(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1069,51 +1034,51 @@ func expandNetworkServicesEdgeCacheOriginTimeout(v interface{}, d tpgresource.Te
 	transformedConnectTimeout, err := expandNetworkServicesEdgeCacheOriginTimeoutConnectTimeout(original["connect_timeout"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedConnectTimeout); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedConnectTimeout); val.IsValid() && !isEmptyValue(val) {
 		transformed["connectTimeout"] = transformedConnectTimeout
 	}
 
 	transformedMaxAttemptsTimeout, err := expandNetworkServicesEdgeCacheOriginTimeoutMaxAttemptsTimeout(original["max_attempts_timeout"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMaxAttemptsTimeout); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMaxAttemptsTimeout); val.IsValid() && !isEmptyValue(val) {
 		transformed["maxAttemptsTimeout"] = transformedMaxAttemptsTimeout
 	}
 
 	transformedResponseTimeout, err := expandNetworkServicesEdgeCacheOriginTimeoutResponseTimeout(original["response_timeout"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedResponseTimeout); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedResponseTimeout); val.IsValid() && !isEmptyValue(val) {
 		transformed["responseTimeout"] = transformedResponseTimeout
 	}
 
 	transformedReadTimeout, err := expandNetworkServicesEdgeCacheOriginTimeoutReadTimeout(original["read_timeout"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedReadTimeout); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedReadTimeout); val.IsValid() && !isEmptyValue(val) {
 		transformed["readTimeout"] = transformedReadTimeout
 	}
 
 	return transformed, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginTimeoutConnectTimeout(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginTimeoutConnectTimeout(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginTimeoutMaxAttemptsTimeout(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginTimeoutMaxAttemptsTimeout(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginTimeoutResponseTimeout(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginTimeoutResponseTimeout(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginTimeoutReadTimeout(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginTimeoutReadTimeout(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginAwsV4Authentication(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginAwsV4Authentication(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1125,40 +1090,40 @@ func expandNetworkServicesEdgeCacheOriginAwsV4Authentication(v interface{}, d tp
 	transformedAccessKeyId, err := expandNetworkServicesEdgeCacheOriginAwsV4AuthenticationAccessKeyId(original["access_key_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAccessKeyId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAccessKeyId); val.IsValid() && !isEmptyValue(val) {
 		transformed["accessKeyId"] = transformedAccessKeyId
 	}
 
 	transformedSecretAccessKeyVersion, err := expandNetworkServicesEdgeCacheOriginAwsV4AuthenticationSecretAccessKeyVersion(original["secret_access_key_version"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSecretAccessKeyVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSecretAccessKeyVersion); val.IsValid() && !isEmptyValue(val) {
 		transformed["secretAccessKeyVersion"] = transformedSecretAccessKeyVersion
 	}
 
 	transformedOriginRegion, err := expandNetworkServicesEdgeCacheOriginAwsV4AuthenticationOriginRegion(original["origin_region"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedOriginRegion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedOriginRegion); val.IsValid() && !isEmptyValue(val) {
 		transformed["originRegion"] = transformedOriginRegion
 	}
 
 	return transformed, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginAwsV4AuthenticationAccessKeyId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginAwsV4AuthenticationAccessKeyId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginAwsV4AuthenticationSecretAccessKeyVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginAwsV4AuthenticationSecretAccessKeyVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginAwsV4AuthenticationOriginRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginAwsV4AuthenticationOriginRegion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginOriginOverrideAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginOriginOverrideAction(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1170,21 +1135,21 @@ func expandNetworkServicesEdgeCacheOriginOriginOverrideAction(v interface{}, d t
 	transformedUrlRewrite, err := expandNetworkServicesEdgeCacheOriginOriginOverrideActionUrlRewrite(original["url_rewrite"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedUrlRewrite); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedUrlRewrite); val.IsValid() && !isEmptyValue(val) {
 		transformed["urlRewrite"] = transformedUrlRewrite
 	}
 
 	transformedHeaderAction, err := expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderAction(original["header_action"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedHeaderAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedHeaderAction); val.IsValid() && !isEmptyValue(val) {
 		transformed["headerAction"] = transformedHeaderAction
 	}
 
 	return transformed, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginOriginOverrideActionUrlRewrite(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginOriginOverrideActionUrlRewrite(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1196,18 +1161,18 @@ func expandNetworkServicesEdgeCacheOriginOriginOverrideActionUrlRewrite(v interf
 	transformedHostRewrite, err := expandNetworkServicesEdgeCacheOriginOriginOverrideActionUrlRewriteHostRewrite(original["host_rewrite"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedHostRewrite); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedHostRewrite); val.IsValid() && !isEmptyValue(val) {
 		transformed["hostRewrite"] = transformedHostRewrite
 	}
 
 	return transformed, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginOriginOverrideActionUrlRewriteHostRewrite(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginOriginOverrideActionUrlRewriteHostRewrite(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderAction(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1219,14 +1184,14 @@ func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderAction(v inte
 	transformedRequestHeadersToAdd, err := expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAdd(original["request_headers_to_add"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRequestHeadersToAdd); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRequestHeadersToAdd); val.IsValid() && !isEmptyValue(val) {
 		transformed["requestHeadersToAdd"] = transformedRequestHeadersToAdd
 	}
 
 	return transformed, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAdd(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAdd(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -1239,21 +1204,21 @@ func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequest
 		transformedHeaderName, err := expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAddHeaderName(original["header_name"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedHeaderName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedHeaderName); val.IsValid() && !isEmptyValue(val) {
 			transformed["headerName"] = transformedHeaderName
 		}
 
 		transformedHeaderValue, err := expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAddHeaderValue(original["header_value"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedHeaderValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedHeaderValue); val.IsValid() && !isEmptyValue(val) {
 			transformed["headerValue"] = transformedHeaderValue
 		}
 
 		transformedReplace, err := expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAddReplace(original["replace"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedReplace); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedReplace); val.IsValid() && !isEmptyValue(val) {
 			transformed["replace"] = transformedReplace
 		}
 
@@ -1262,19 +1227,19 @@ func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequest
 	return req, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAddHeaderName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAddHeaderName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAddHeaderValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAddHeaderValue(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAddReplace(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginOriginOverrideActionHeaderActionRequestHeadersToAddReplace(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginOriginRedirect(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginOriginRedirect(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1286,13 +1251,13 @@ func expandNetworkServicesEdgeCacheOriginOriginRedirect(v interface{}, d tpgreso
 	transformedRedirectConditions, err := expandNetworkServicesEdgeCacheOriginOriginRedirectRedirectConditions(original["redirect_conditions"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRedirectConditions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRedirectConditions); val.IsValid() && !isEmptyValue(val) {
 		transformed["redirectConditions"] = transformedRedirectConditions
 	}
 
 	return transformed, nil
 }
 
-func expandNetworkServicesEdgeCacheOriginOriginRedirectRedirectConditions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesEdgeCacheOriginOriginRedirectRedirectConditions(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

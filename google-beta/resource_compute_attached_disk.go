@@ -1,15 +1,11 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
+	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"log"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
-	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -38,14 +34,14 @@ func ResourceComputeAttachedDisk() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				Description:      `name or self_link of the disk that will be attached.`,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
 			},
 			"instance": {
 				Type:             schema.TypeString,
 				Required:         true,
 				ForceNew:         true,
 				Description:      `name or self_link of the compute instance that the disk will be attached to. If the self_link is provided then zone and project are extracted from the self link. If only the name is used then zone and project must be defined as properties on the resource or provider.`,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
 			},
 			"project": {
 				Type:        schema.TypeString,
@@ -83,23 +79,23 @@ func ResourceComputeAttachedDisk() *schema.Resource {
 
 func resourceAttachedDiskCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	zv, err := tpgresource.ParseZonalFieldValue("instances", d.Get("instance").(string), "project", "zone", d, config, false)
+	zv, err := parseZonalFieldValue("instances", d.Get("instance").(string), "project", "zone", d, config, false)
 	if err != nil {
 		return err
 	}
 
 	disk := d.Get("disk").(string)
-	diskName := tpgresource.GetResourceNameFromSelfLink(disk)
+	diskName := GetResourceNameFromSelfLink(disk)
 	diskSrc := fmt.Sprintf("projects/%s/zones/%s/disks/%s", zv.Project, zv.Zone, diskName)
 
 	// Check if the disk is a regional disk
 	if strings.Contains(disk, "regions") {
-		rv, err := tpgresource.ParseRegionDiskFieldValue(disk, d, config)
+		rv, err := ParseRegionDiskFieldValue(disk, d, config)
 		if err != nil {
 			return err
 		}
@@ -131,12 +127,12 @@ func resourceAttachedDiskCreate(d *schema.ResourceData, meta interface{}) error 
 
 func resourceAttachedDiskRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	zv, err := tpgresource.ParseZonalFieldValue("instances", d.Get("instance").(string), "project", "zone", d, config, false)
+	zv, err := parseZonalFieldValue("instances", d.Get("instance").(string), "project", "zone", d, config, false)
 	if err != nil {
 		return err
 	}
@@ -147,7 +143,7 @@ func resourceAttachedDiskRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error setting zone: %s", err)
 	}
 
-	diskName := tpgresource.GetResourceNameFromSelfLink(d.Get("disk").(string))
+	diskName := GetResourceNameFromSelfLink(d.Get("disk").(string))
 
 	instance, err := config.NewComputeClient(userAgent).Instances.Get(zv.Project, zv.Zone, zv.Name).Do()
 	if err != nil {
@@ -171,14 +167,14 @@ func resourceAttachedDiskRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	// Force the referenced resources to a self-link in state because it's more specific then name.
-	instancePath, err := tpgresource.GetRelativePath(instance.SelfLink)
+	instancePath, err := getRelativePath(instance.SelfLink)
 	if err != nil {
 		return err
 	}
 	if err := d.Set("instance", instancePath); err != nil {
 		return fmt.Errorf("Error setting instance: %s", err)
 	}
-	diskPath, err := tpgresource.GetRelativePath(ad.Source)
+	diskPath, err := getRelativePath(ad.Source)
 	if err != nil {
 		return err
 	}
@@ -191,17 +187,17 @@ func resourceAttachedDiskRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceAttachedDiskDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	zv, err := tpgresource.ParseZonalFieldValue("instances", d.Get("instance").(string), "project", "zone", d, config, false)
+	zv, err := parseZonalFieldValue("instances", d.Get("instance").(string), "project", "zone", d, config, false)
 	if err != nil {
 		return err
 	}
 
-	diskName := tpgresource.GetResourceNameFromSelfLink(d.Get("disk").(string))
+	diskName := GetResourceNameFromSelfLink(d.Get("disk").(string))
 
 	instance, err := config.NewComputeClient(userAgent).Instances.Get(zv.Project, zv.Zone, zv.Name).Do()
 	if err != nil {
@@ -232,14 +228,14 @@ func resourceAttachedDiskDelete(d *schema.ResourceData, meta interface{}) error 
 func resourceAttachedDiskImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
 
-	err := tpgresource.ParseImportId(
+	err := ParseImportId(
 		[]string{"projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/instances/(?P<instance>[^/]+)/(?P<disk>[^/]+)",
 			"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<instance>[^/]+)/(?P<disk>[^/]+)"}, d, config)
 	if err != nil {
 		return nil, err
 	}
 
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instances/{{instance}}/{{disk}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instances/{{instance}}/{{disk}}")
 	if err != nil {
 		return nil, err
 	}
@@ -250,7 +246,7 @@ func resourceAttachedDiskImport(d *schema.ResourceData, meta interface{}) ([]*sc
 
 func findDiskByName(disks []*compute.AttachedDisk, id string) *compute.AttachedDisk {
 	for _, disk := range disks {
-		if tpgresource.CompareSelfLinkOrResourceName("", disk.Source, id, nil) {
+		if compareSelfLinkOrResourceName("", disk.Source, id, nil) {
 			return disk
 		}
 	}

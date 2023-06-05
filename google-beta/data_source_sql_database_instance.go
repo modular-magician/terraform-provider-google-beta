@@ -1,17 +1,14 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 func DataSourceSqlDatabaseInstance() *schema.Resource {
 
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceSqlDatabaseInstance().Schema)
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "name")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceSqlDatabaseInstance().Schema)
+	addRequiredFieldsToSchema(dsSchema, "name")
+	addOptionalFieldsToSchema(dsSchema, "project")
 
 	return &schema.Resource{
 		Read:   dataSourceSqlDatabaseInstanceRead,

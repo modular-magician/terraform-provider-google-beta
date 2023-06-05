@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -24,8 +21,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -130,7 +125,7 @@ resolvers.`,
 
 func resourceDNSResponsePolicyRuleCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -139,29 +134,29 @@ func resourceDNSResponsePolicyRuleCreate(d *schema.ResourceData, meta interface{
 	ruleNameProp, err := expandDNSResponsePolicyRuleRuleName(d.Get("rule_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("rule_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(ruleNameProp)) && (ok || !reflect.DeepEqual(v, ruleNameProp)) {
+	} else if v, ok := d.GetOkExists("rule_name"); !isEmptyValue(reflect.ValueOf(ruleNameProp)) && (ok || !reflect.DeepEqual(v, ruleNameProp)) {
 		obj["ruleName"] = ruleNameProp
 	}
 	dnsNameProp, err := expandDNSResponsePolicyRuleDnsName(d.Get("dns_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("dns_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(dnsNameProp)) && (ok || !reflect.DeepEqual(v, dnsNameProp)) {
+	} else if v, ok := d.GetOkExists("dns_name"); !isEmptyValue(reflect.ValueOf(dnsNameProp)) && (ok || !reflect.DeepEqual(v, dnsNameProp)) {
 		obj["dnsName"] = dnsNameProp
 	}
 	localDataProp, err := expandDNSResponsePolicyRuleLocalData(d.Get("local_data"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("local_data"); !tpgresource.IsEmptyValue(reflect.ValueOf(localDataProp)) && (ok || !reflect.DeepEqual(v, localDataProp)) {
+	} else if v, ok := d.GetOkExists("local_data"); !isEmptyValue(reflect.ValueOf(localDataProp)) && (ok || !reflect.DeepEqual(v, localDataProp)) {
 		obj["localData"] = localDataProp
 	}
 	behaviorProp, err := expandDNSResponsePolicyRuleBehavior(d.Get("behavior"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("behavior"); !tpgresource.IsEmptyValue(reflect.ValueOf(behaviorProp)) && (ok || !reflect.DeepEqual(v, behaviorProp)) {
+	} else if v, ok := d.GetOkExists("behavior"); !isEmptyValue(reflect.ValueOf(behaviorProp)) && (ok || !reflect.DeepEqual(v, behaviorProp)) {
 		obj["behavior"] = behaviorProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DNSBasePath}}projects/{{project}}/responsePolicies/{{response_policy}}/rules")
+	url, err := ReplaceVars(d, config, "{{DNSBasePath}}projects/{{project}}/responsePolicies/{{response_policy}}/rules")
 	if err != nil {
 		return err
 	}
@@ -169,32 +164,24 @@ func resourceDNSResponsePolicyRuleCreate(d *schema.ResourceData, meta interface{
 	log.Printf("[DEBUG] Creating new ResponsePolicyRule: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ResponsePolicyRule: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating ResponsePolicyRule: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/responsePolicies/{{response_policy}}/rules/{{rule_name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/responsePolicies/{{response_policy}}/rules/{{rule_name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -207,36 +194,30 @@ func resourceDNSResponsePolicyRuleCreate(d *schema.ResourceData, meta interface{
 
 func resourceDNSResponsePolicyRuleRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DNSBasePath}}projects/{{project}}/responsePolicies/{{response_policy}}/rules/{{rule_name}}")
+	url, err := ReplaceVars(d, config, "{{DNSBasePath}}projects/{{project}}/responsePolicies/{{response_policy}}/rules/{{rule_name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ResponsePolicyRule: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("DNSResponsePolicyRule %q", d.Id()))
 	}
@@ -263,14 +244,14 @@ func resourceDNSResponsePolicyRuleRead(d *schema.ResourceData, meta interface{})
 
 func resourceDNSResponsePolicyRuleUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ResponsePolicyRule: %s", err)
 	}
@@ -280,23 +261,23 @@ func resourceDNSResponsePolicyRuleUpdate(d *schema.ResourceData, meta interface{
 	dnsNameProp, err := expandDNSResponsePolicyRuleDnsName(d.Get("dns_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("dns_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, dnsNameProp)) {
+	} else if v, ok := d.GetOkExists("dns_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, dnsNameProp)) {
 		obj["dnsName"] = dnsNameProp
 	}
 	localDataProp, err := expandDNSResponsePolicyRuleLocalData(d.Get("local_data"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("local_data"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, localDataProp)) {
+	} else if v, ok := d.GetOkExists("local_data"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, localDataProp)) {
 		obj["localData"] = localDataProp
 	}
 	behaviorProp, err := expandDNSResponsePolicyRuleBehavior(d.Get("behavior"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("behavior"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, behaviorProp)) {
+	} else if v, ok := d.GetOkExists("behavior"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, behaviorProp)) {
 		obj["behavior"] = behaviorProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DNSBasePath}}projects/{{project}}/responsePolicies/{{response_policy}}/rules/{{rule_name}}")
+	url, err := ReplaceVars(d, config, "{{DNSBasePath}}projects/{{project}}/responsePolicies/{{response_policy}}/rules/{{rule_name}}")
 	if err != nil {
 		return err
 	}
@@ -304,19 +285,11 @@ func resourceDNSResponsePolicyRuleUpdate(d *schema.ResourceData, meta interface{
 	log.Printf("[DEBUG] Updating ResponsePolicyRule %q: %#v", d.Id(), obj)
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating ResponsePolicyRule %q: %s", d.Id(), err)
@@ -329,20 +302,20 @@ func resourceDNSResponsePolicyRuleUpdate(d *schema.ResourceData, meta interface{
 
 func resourceDNSResponsePolicyRuleDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for ResponsePolicyRule: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DNSBasePath}}projects/{{project}}/responsePolicies/{{response_policy}}/rules/{{rule_name}}")
+	url, err := ReplaceVars(d, config, "{{DNSBasePath}}projects/{{project}}/responsePolicies/{{response_policy}}/rules/{{rule_name}}")
 	if err != nil {
 		return err
 	}
@@ -351,19 +324,11 @@ func resourceDNSResponsePolicyRuleDelete(d *schema.ResourceData, meta interface{
 	log.Printf("[DEBUG] Deleting ResponsePolicyRule %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "ResponsePolicyRule")
 	}
@@ -374,7 +339,7 @@ func resourceDNSResponsePolicyRuleDelete(d *schema.ResourceData, meta interface{
 
 func resourceDNSResponsePolicyRuleImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/responsePolicies/(?P<response_policy>[^/]+)/rules/(?P<rule_name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<response_policy>[^/]+)/(?P<rule_name>[^/]+)",
 		"(?P<response_policy>[^/]+)/(?P<rule_name>[^/]+)",
@@ -383,7 +348,7 @@ func resourceDNSResponsePolicyRuleImport(d *schema.ResourceData, meta interface{
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/responsePolicies/{{response_policy}}/rules/{{rule_name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/responsePolicies/{{response_policy}}/rules/{{rule_name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -467,15 +432,15 @@ func flattenDNSResponsePolicyRuleBehavior(v interface{}, d *schema.ResourceData,
 	return v
 }
 
-func expandDNSResponsePolicyRuleRuleName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDNSResponsePolicyRuleRuleName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDNSResponsePolicyRuleDnsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDNSResponsePolicyRuleDnsName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDNSResponsePolicyRuleLocalData(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDNSResponsePolicyRuleLocalData(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -487,14 +452,14 @@ func expandDNSResponsePolicyRuleLocalData(v interface{}, d tpgresource.Terraform
 	transformedLocalDatas, err := expandDNSResponsePolicyRuleLocalDataLocalDatas(original["local_datas"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLocalDatas); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLocalDatas); val.IsValid() && !isEmptyValue(val) {
 		transformed["localDatas"] = transformedLocalDatas
 	}
 
 	return transformed, nil
 }
 
-func expandDNSResponsePolicyRuleLocalDataLocalDatas(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDNSResponsePolicyRuleLocalDataLocalDatas(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -507,28 +472,28 @@ func expandDNSResponsePolicyRuleLocalDataLocalDatas(v interface{}, d tpgresource
 		transformedName, err := expandDNSResponsePolicyRuleLocalDataLocalDatasName(original["name"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 			transformed["name"] = transformedName
 		}
 
 		transformedType, err := expandDNSResponsePolicyRuleLocalDataLocalDatasType(original["type"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedType); val.IsValid() && !isEmptyValue(val) {
 			transformed["type"] = transformedType
 		}
 
 		transformedTtl, err := expandDNSResponsePolicyRuleLocalDataLocalDatasTtl(original["ttl"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedTtl); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedTtl); val.IsValid() && !isEmptyValue(val) {
 			transformed["ttl"] = transformedTtl
 		}
 
 		transformedRrdatas, err := expandDNSResponsePolicyRuleLocalDataLocalDatasRrdatas(original["rrdatas"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedRrdatas); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedRrdatas); val.IsValid() && !isEmptyValue(val) {
 			transformed["rrdatas"] = transformedRrdatas
 		}
 
@@ -537,22 +502,22 @@ func expandDNSResponsePolicyRuleLocalDataLocalDatas(v interface{}, d tpgresource
 	return req, nil
 }
 
-func expandDNSResponsePolicyRuleLocalDataLocalDatasName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDNSResponsePolicyRuleLocalDataLocalDatasName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDNSResponsePolicyRuleLocalDataLocalDatasType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDNSResponsePolicyRuleLocalDataLocalDatasType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDNSResponsePolicyRuleLocalDataLocalDatasTtl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDNSResponsePolicyRuleLocalDataLocalDatasTtl(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDNSResponsePolicyRuleLocalDataLocalDatasRrdatas(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDNSResponsePolicyRuleLocalDataLocalDatasRrdatas(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDNSResponsePolicyRuleBehavior(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDNSResponsePolicyRuleBehavior(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

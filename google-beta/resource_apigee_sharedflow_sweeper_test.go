@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -9,9 +7,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -43,7 +39,7 @@ func testSweepApigeeSharedFlow(region string) error {
 	billingId := acctest.GetTestBillingAccountFromEnv(t)
 
 	// Setup variables to replace in list template
-	d := &tpgresource.ResourceDataMock{
+	d := &ResourceDataMock{
 		FieldsInSchema: map[string]interface{}{
 			"project":         config.Project,
 			"region":          region,
@@ -54,19 +50,13 @@ func testSweepApigeeSharedFlow(region string) error {
 	}
 
 	listTemplate := strings.Split("https://apigee.googleapis.com/v1/organizations/{{org_id}}/sharedflows/{{name}}", "?")[0]
-	listUrl, err := tpgresource.ReplaceVars(d, config, listTemplate)
+	listUrl, err := ReplaceVars(d, config, listTemplate)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
 		return nil
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   config.Project,
-		RawURL:    listUrl,
-		UserAgent: config.UserAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", config.Project, listUrl, config.UserAgent, nil)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] Error in response from request %s: %s", listUrl, err)
 		return nil
@@ -88,9 +78,9 @@ func testSweepApigeeSharedFlow(region string) error {
 		var name string
 		// Id detected in the delete URL, attempt to use id.
 		if obj["id"] != nil {
-			name = tpgresource.GetResourceNameFromSelfLink(obj["id"].(string))
+			name = GetResourceNameFromSelfLink(obj["id"].(string))
 		} else if obj["name"] != nil {
-			name = tpgresource.GetResourceNameFromSelfLink(obj["name"].(string))
+			name = GetResourceNameFromSelfLink(obj["name"].(string))
 		} else {
 			log.Printf("[INFO][SWEEPER_LOG] %s resource name and id were nil", resourceName)
 			return nil
@@ -102,7 +92,7 @@ func testSweepApigeeSharedFlow(region string) error {
 		}
 
 		deleteTemplate := "https://apigee.googleapis.com/v1/organizations/{{org_id}}/sharedflows/{{name}}"
-		deleteUrl, err := tpgresource.ReplaceVars(d, config, deleteTemplate)
+		deleteUrl, err := ReplaceVars(d, config, deleteTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing delete url: %s", err)
 			return nil
@@ -110,13 +100,7 @@ func testSweepApigeeSharedFlow(region string) error {
 		deleteUrl = deleteUrl + name
 
 		// Don't wait on operations as we may have a lot to delete
-		_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "DELETE",
-			Project:   config.Project,
-			RawURL:    deleteUrl,
-			UserAgent: config.UserAgent,
-		})
+		_, err = transport_tpg.SendRequest(config, "DELETE", config.Project, deleteUrl, config.UserAgent, nil)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] Error deleting for url %s : %s", deleteUrl, err)
 		} else {

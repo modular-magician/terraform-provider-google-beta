@@ -1,17 +1,13 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -137,18 +133,12 @@ func testAccCheckMonitoringDashboardDestroyProducer(t *testing.T) func(s *terraf
 
 			config := GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{MonitoringBasePath}}v1/{{name}}")
+			url, err := acctest.ReplaceVarsForTest(config, rs, "{{MonitoringBasePath}}v1/{{name}}")
 			if err != nil {
 				return err
 			}
 
-			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:               config,
-				Method:               "GET",
-				RawURL:               url,
-				UserAgent:            config.UserAgent,
-				ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsMonitoringConcurrentEditError},
-			})
+			_, err = transport_tpg.SendRequest(config, "GET", "", url, config.UserAgent, nil, transport_tpg.IsMonitoringConcurrentEditError)
 			if err == nil {
 				return fmt.Errorf("MonitoringDashboard still exists at %s", url)
 			}

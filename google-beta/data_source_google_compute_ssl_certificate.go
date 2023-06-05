@@ -1,24 +1,21 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func DataSourceGoogleComputeSslCertificate() *schema.Resource {
 	// Generate datasource schema from resource
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceComputeSslCertificate().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceComputeSslCertificate().Schema)
 
 	// Set 'Required' schema elements
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "name")
+	addRequiredFieldsToSchema(dsSchema, "name")
 
 	// Set 'Optional' schema elements
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
+	addOptionalFieldsToSchema(dsSchema, "project")
 
 	return &schema.Resource{
 		Read:   dataSourceComputeSslCertificateRead,
@@ -29,7 +26,7 @@ func DataSourceGoogleComputeSslCertificate() *schema.Resource {
 func dataSourceComputeSslCertificateRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}

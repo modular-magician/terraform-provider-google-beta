@@ -1,12 +1,8 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	healthcare "google.golang.org/api/healthcare/v1"
 
@@ -25,11 +21,11 @@ var IamHealthcareFhirStoreSchema = map[string]*schema.Schema{
 
 type HealthcareFhirStoreIamUpdater struct {
 	resourceId string
-	d          tpgresource.TerraformResourceData
+	d          TerraformResourceData
 	Config     *transport_tpg.Config
 }
 
-func NewHealthcareFhirStoreIamUpdater(d tpgresource.TerraformResourceData, config *transport_tpg.Config) (tpgiamresource.ResourceIamUpdater, error) {
+func NewHealthcareFhirStoreIamUpdater(d TerraformResourceData, config *transport_tpg.Config) (ResourceIamUpdater, error) {
 	fhirStore := d.Get("fhir_store_id").(string)
 	fhirStoreId, err := ParseHealthcareFhirStoreId(fhirStore, config)
 
@@ -57,7 +53,7 @@ func FhirStoreIdParseFunc(d *schema.ResourceData, config *transport_tpg.Config) 
 }
 
 func (u *HealthcareFhirStoreIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +80,7 @@ func (u *HealthcareFhirStoreIamUpdater) SetResourceIamPolicy(policy *cloudresour
 		return errwrap.Wrapf(fmt.Sprintf("Invalid IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return err
 	}

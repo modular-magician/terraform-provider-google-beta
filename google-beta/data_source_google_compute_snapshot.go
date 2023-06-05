@@ -1,13 +1,9 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
-	"sort"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"sort"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/compute/v0.beta"
@@ -16,7 +12,7 @@ import (
 func DataSourceGoogleComputeSnapshot() *schema.Resource {
 
 	// Generate datasource schema from resource
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceComputeSnapshot().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceComputeSnapshot().Schema)
 
 	dsSchema["filter"] = &schema.Schema{
 		Type:     schema.TypeString,
@@ -28,7 +24,7 @@ func DataSourceGoogleComputeSnapshot() *schema.Resource {
 	}
 
 	// Set 'Optional' schema elements
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "name", "filter", "most_recent", "project")
+	addOptionalFieldsToSchema(dsSchema, "name", "filter", "most_recent", "project")
 
 	dsSchema["name"].ExactlyOneOf = []string{"name", "filter"}
 	dsSchema["filter"].ExactlyOneOf = []string{"name", "filter"}
@@ -42,7 +38,7 @@ func DataSourceGoogleComputeSnapshot() *schema.Resource {
 func dataSourceGoogleComputeSnapshotRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -52,7 +48,7 @@ func dataSourceGoogleComputeSnapshotRead(d *schema.ResourceData, meta interface{
 	}
 
 	if v, ok := d.GetOk("filter"); ok {
-		userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+		userAgent, err := generateUserAgentString(d, config.UserAgent)
 		if err != nil {
 			return err
 		}
@@ -63,7 +59,7 @@ func dataSourceGoogleComputeSnapshotRead(d *schema.ResourceData, meta interface{
 			billingProject := project
 
 			// err == nil indicates that the billing_project value was found
-			if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			if bp, err := getBillingProject(d, config); err == nil {
 				billingProject = bp
 			}
 			projectGetCall.Header().Add("X-Goog-User-Project", billingProject)

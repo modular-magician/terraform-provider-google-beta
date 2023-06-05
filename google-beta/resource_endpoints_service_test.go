@@ -1,13 +1,10 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"reflect"
 	"strings"
 	"testing"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 
 	"fmt"
 

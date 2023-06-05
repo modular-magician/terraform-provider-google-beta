@@ -1,19 +1,15 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
+	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"log"
 	"os"
 	"strings"
 	"testing"
 	"time"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
-	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	compute "google.golang.org/api/compute/v0.beta"
 
@@ -874,7 +870,7 @@ func runInstanceMigrateTest(t *testing.T, id, testName string, version int, attr
 		// source is the only self link, so compare by relpaths if source is being
 		// compared
 		if strings.HasSuffix(k, "source") {
-			if !tpgresource.CompareSelfLinkOrResourceName("", attributes[k], v, nil) && attributes[k] != v {
+			if !compareSelfLinkOrResourceName("", attributes[k], v, nil) && attributes[k] != v {
 				t.Fatalf(
 					"bad uri: %s\n\n expected: %#v -> %#v\n got: %#v -> %#v\n in: %#v",
 					testName, k, expected[k], k, attributes[k], attributes)
@@ -892,7 +888,7 @@ func runInstanceMigrateTest(t *testing.T, id, testName string, version int, attr
 		// source is the only self link, so compare by relpaths if source is being
 		// compared
 		if strings.HasSuffix(k, "source") {
-			if !tpgresource.CompareSelfLinkOrResourceName("", expected[k], v, nil) && expected[k] != v {
+			if !compareSelfLinkOrResourceName("", expected[k], v, nil) && expected[k] != v {
 				t.Fatalf(
 					"bad: %s\n\n expected: %#v -> %#v\n got: %#v -> %#v\n in: %#v",
 					testName, k, expected[k], k, attributes[k], expected)

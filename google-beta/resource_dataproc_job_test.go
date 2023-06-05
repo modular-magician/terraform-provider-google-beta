@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -16,7 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	tpgdataproc "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataproc"
 	"google.golang.org/api/dataproc/v1"
 	"google.golang.org/api/googleapi"
 )
@@ -353,7 +350,7 @@ func testAccCheckDataprocJobCompletesSuccessfully(t *testing.T, n string, job *d
 		}
 
 		jobCompleteTimeoutMins := 5 * time.Minute
-		waitErr := tpgdataproc.DataprocJobOperationWait(config, region, project, job.Reference.JobId,
+		waitErr := dataprocJobOperationWait(config, region, project, job.Reference.JobId,
 			"Awaiting Dataproc job completion", config.UserAgent, jobCompleteTimeoutMins)
 		if waitErr != nil {
 			return waitErr

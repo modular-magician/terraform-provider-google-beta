@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: DCL     ***
@@ -29,7 +26,6 @@ import (
 	dcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/dcl"
 	gkehub "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/gkehub/beta"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -127,80 +123,12 @@ func ResourceGkeHubFeature() *schema.Resource {
 func GkeHubFeatureSpecSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"fleetobservability": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Fleet Observability spec.",
-				MaxItems:    1,
-				Elem:        GkeHubFeatureSpecFleetobservabilitySchema(),
-			},
-
 			"multiclusteringress": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "Multicluster Ingress-specific spec.",
 				MaxItems:    1,
 				Elem:        GkeHubFeatureSpecMulticlusteringressSchema(),
-			},
-		},
-	}
-}
-
-func GkeHubFeatureSpecFleetobservabilitySchema() *schema.Resource {
-	return &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"logging_config": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Fleet Observability Logging-specific spec.",
-				MaxItems:    1,
-				Elem:        GkeHubFeatureSpecFleetobservabilityLoggingConfigSchema(),
-			},
-		},
-	}
-}
-
-func GkeHubFeatureSpecFleetobservabilityLoggingConfigSchema() *schema.Resource {
-	return &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"default_config": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Specified if applying the default routing config to logs not specified in other configs.",
-				MaxItems:    1,
-				Elem:        GkeHubFeatureSpecFleetobservabilityLoggingConfigDefaultConfigSchema(),
-			},
-
-			"fleet_scope_logs_config": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Specified if applying the routing config to all logs for all fleet scopes.",
-				MaxItems:    1,
-				Elem:        GkeHubFeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfigSchema(),
-			},
-		},
-	}
-}
-
-func GkeHubFeatureSpecFleetobservabilityLoggingConfigDefaultConfigSchema() *schema.Resource {
-	return &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"mode": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The logs routing mode Possible values: MODE_UNSPECIFIED, COPY, MOVE",
-			},
-		},
-	}
-}
-
-func GkeHubFeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfigSchema() *schema.Resource {
-	return &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"mode": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The logs routing mode Possible values: MODE_UNSPECIFIED, COPY, MOVE",
 			},
 		},
 	}
@@ -283,17 +211,17 @@ func resourceGkeHubFeatureCreate(d *schema.ResourceData, meta interface{}) error
 
 	obj := &gkehub.Feature{
 		Location: dcl.String(d.Get("location").(string)),
-		Labels:   tpgresource.CheckStringMap(d.Get("labels")),
+		Labels:   checkStringMap(d.Get("labels")),
 		Name:     dcl.String(d.Get("name").(string)),
 		Project:  dcl.String(project),
 		Spec:     expandGkeHubFeatureSpec(d.Get("spec")),
 	}
-	lockName, err := tpgresource.ReplaceVarsForId(d, config, "{{project}}/{{location}}/{{feature}}")
+	lockName, err := replaceVarsForId(d, config, "{{project}}/{{location}}/{{feature}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
 	id, err := obj.ID()
 	if err != nil {
@@ -301,17 +229,17 @@ func resourceGkeHubFeatureCreate(d *schema.ResourceData, meta interface{}) error
 	}
 	d.SetId(id)
 	directive := CreateDirective
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 	billingProject := project
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 	client := transport_tpg.NewDCLGkeHubClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutCreate))
-	if bp, err := tpgresource.ReplaceVars(d, config, client.Config.BasePath); err != nil {
+	if bp, err := ReplaceVars(d, config, client.Config.BasePath); err != nil {
 		d.SetId("")
 		return fmt.Errorf("Could not format %q: %w", client.Config.BasePath, err)
 	} else {
@@ -341,23 +269,23 @@ func resourceGkeHubFeatureRead(d *schema.ResourceData, meta interface{}) error {
 
 	obj := &gkehub.Feature{
 		Location: dcl.String(d.Get("location").(string)),
-		Labels:   tpgresource.CheckStringMap(d.Get("labels")),
+		Labels:   checkStringMap(d.Get("labels")),
 		Name:     dcl.String(d.Get("name").(string)),
 		Project:  dcl.String(project),
 		Spec:     expandGkeHubFeatureSpec(d.Get("spec")),
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 	billingProject := project
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 	client := transport_tpg.NewDCLGkeHubClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutRead))
-	if bp, err := tpgresource.ReplaceVars(d, config, client.Config.BasePath); err != nil {
+	if bp, err := ReplaceVars(d, config, client.Config.BasePath); err != nil {
 		d.SetId("")
 		return fmt.Errorf("Could not format %q: %w", client.Config.BasePath, err)
 	} else {
@@ -411,31 +339,31 @@ func resourceGkeHubFeatureUpdate(d *schema.ResourceData, meta interface{}) error
 
 	obj := &gkehub.Feature{
 		Location: dcl.String(d.Get("location").(string)),
-		Labels:   tpgresource.CheckStringMap(d.Get("labels")),
+		Labels:   checkStringMap(d.Get("labels")),
 		Name:     dcl.String(d.Get("name").(string)),
 		Project:  dcl.String(project),
 		Spec:     expandGkeHubFeatureSpec(d.Get("spec")),
 	}
-	lockName, err := tpgresource.ReplaceVarsForId(d, config, "{{project}}/{{location}}/{{feature}}")
+	lockName, err := replaceVarsForId(d, config, "{{project}}/{{location}}/{{feature}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
 	directive := UpdateDirective
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 	client := transport_tpg.NewDCLGkeHubClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutUpdate))
-	if bp, err := tpgresource.ReplaceVars(d, config, client.Config.BasePath); err != nil {
+	if bp, err := ReplaceVars(d, config, client.Config.BasePath); err != nil {
 		d.SetId("")
 		return fmt.Errorf("Could not format %q: %w", client.Config.BasePath, err)
 	} else {
@@ -465,30 +393,30 @@ func resourceGkeHubFeatureDelete(d *schema.ResourceData, meta interface{}) error
 
 	obj := &gkehub.Feature{
 		Location: dcl.String(d.Get("location").(string)),
-		Labels:   tpgresource.CheckStringMap(d.Get("labels")),
+		Labels:   checkStringMap(d.Get("labels")),
 		Name:     dcl.String(d.Get("name").(string)),
 		Project:  dcl.String(project),
 		Spec:     expandGkeHubFeatureSpec(d.Get("spec")),
 	}
-	lockName, err := tpgresource.ReplaceVarsForId(d, config, "{{project}}/{{location}}/{{feature}}")
+	lockName, err := replaceVarsForId(d, config, "{{project}}/{{location}}/{{feature}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
 	log.Printf("[DEBUG] Deleting Feature %q", d.Id())
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 	billingProject := project
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 	client := transport_tpg.NewDCLGkeHubClient(config, userAgent, billingProject, d.Timeout(schema.TimeoutDelete))
-	if bp, err := tpgresource.ReplaceVars(d, config, client.Config.BasePath); err != nil {
+	if bp, err := ReplaceVars(d, config, client.Config.BasePath); err != nil {
 		d.SetId("")
 		return fmt.Errorf("Could not format %q: %w", client.Config.BasePath, err)
 	} else {
@@ -505,7 +433,7 @@ func resourceGkeHubFeatureDelete(d *schema.ResourceData, meta interface{}) error
 func resourceGkeHubFeatureImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
 
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/features/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)",
 		"(?P<location>[^/]+)/(?P<name>[^/]+)",
@@ -514,7 +442,7 @@ func resourceGkeHubFeatureImport(d *schema.ResourceData, meta interface{}) ([]*s
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVarsForId(d, config, "projects/{{project}}/locations/{{location}}/features/{{name}}")
+	id, err := replaceVarsForId(d, config, "projects/{{project}}/locations/{{location}}/features/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -533,7 +461,6 @@ func expandGkeHubFeatureSpec(o interface{}) *gkehub.FeatureSpec {
 	}
 	obj := objArr[0].(map[string]interface{})
 	return &gkehub.FeatureSpec{
-		Fleetobservability:  expandGkeHubFeatureSpecFleetobservability(obj["fleetobservability"]),
 		Multiclusteringress: expandGkeHubFeatureSpecMulticlusteringress(obj["multiclusteringress"]),
 	}
 }
@@ -543,114 +470,7 @@ func flattenGkeHubFeatureSpec(obj *gkehub.FeatureSpec) interface{} {
 		return nil
 	}
 	transformed := map[string]interface{}{
-		"fleetobservability":  flattenGkeHubFeatureSpecFleetobservability(obj.Fleetobservability),
 		"multiclusteringress": flattenGkeHubFeatureSpecMulticlusteringress(obj.Multiclusteringress),
-	}
-
-	return []interface{}{transformed}
-
-}
-
-func expandGkeHubFeatureSpecFleetobservability(o interface{}) *gkehub.FeatureSpecFleetobservability {
-	if o == nil {
-		return gkehub.EmptyFeatureSpecFleetobservability
-	}
-	objArr := o.([]interface{})
-	if len(objArr) == 0 || objArr[0] == nil {
-		return gkehub.EmptyFeatureSpecFleetobservability
-	}
-	obj := objArr[0].(map[string]interface{})
-	return &gkehub.FeatureSpecFleetobservability{
-		LoggingConfig: expandGkeHubFeatureSpecFleetobservabilityLoggingConfig(obj["logging_config"]),
-	}
-}
-
-func flattenGkeHubFeatureSpecFleetobservability(obj *gkehub.FeatureSpecFleetobservability) interface{} {
-	if obj == nil || obj.Empty() {
-		return nil
-	}
-	transformed := map[string]interface{}{
-		"logging_config": flattenGkeHubFeatureSpecFleetobservabilityLoggingConfig(obj.LoggingConfig),
-	}
-
-	return []interface{}{transformed}
-
-}
-
-func expandGkeHubFeatureSpecFleetobservabilityLoggingConfig(o interface{}) *gkehub.FeatureSpecFleetobservabilityLoggingConfig {
-	if o == nil {
-		return gkehub.EmptyFeatureSpecFleetobservabilityLoggingConfig
-	}
-	objArr := o.([]interface{})
-	if len(objArr) == 0 || objArr[0] == nil {
-		return gkehub.EmptyFeatureSpecFleetobservabilityLoggingConfig
-	}
-	obj := objArr[0].(map[string]interface{})
-	return &gkehub.FeatureSpecFleetobservabilityLoggingConfig{
-		DefaultConfig:        expandGkeHubFeatureSpecFleetobservabilityLoggingConfigDefaultConfig(obj["default_config"]),
-		FleetScopeLogsConfig: expandGkeHubFeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfig(obj["fleet_scope_logs_config"]),
-	}
-}
-
-func flattenGkeHubFeatureSpecFleetobservabilityLoggingConfig(obj *gkehub.FeatureSpecFleetobservabilityLoggingConfig) interface{} {
-	if obj == nil || obj.Empty() {
-		return nil
-	}
-	transformed := map[string]interface{}{
-		"default_config":          flattenGkeHubFeatureSpecFleetobservabilityLoggingConfigDefaultConfig(obj.DefaultConfig),
-		"fleet_scope_logs_config": flattenGkeHubFeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfig(obj.FleetScopeLogsConfig),
-	}
-
-	return []interface{}{transformed}
-
-}
-
-func expandGkeHubFeatureSpecFleetobservabilityLoggingConfigDefaultConfig(o interface{}) *gkehub.FeatureSpecFleetobservabilityLoggingConfigDefaultConfig {
-	if o == nil {
-		return gkehub.EmptyFeatureSpecFleetobservabilityLoggingConfigDefaultConfig
-	}
-	objArr := o.([]interface{})
-	if len(objArr) == 0 || objArr[0] == nil {
-		return gkehub.EmptyFeatureSpecFleetobservabilityLoggingConfigDefaultConfig
-	}
-	obj := objArr[0].(map[string]interface{})
-	return &gkehub.FeatureSpecFleetobservabilityLoggingConfigDefaultConfig{
-		Mode: gkehub.FeatureSpecFleetobservabilityLoggingConfigDefaultConfigModeEnumRef(obj["mode"].(string)),
-	}
-}
-
-func flattenGkeHubFeatureSpecFleetobservabilityLoggingConfigDefaultConfig(obj *gkehub.FeatureSpecFleetobservabilityLoggingConfigDefaultConfig) interface{} {
-	if obj == nil || obj.Empty() {
-		return nil
-	}
-	transformed := map[string]interface{}{
-		"mode": obj.Mode,
-	}
-
-	return []interface{}{transformed}
-
-}
-
-func expandGkeHubFeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfig(o interface{}) *gkehub.FeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfig {
-	if o == nil {
-		return gkehub.EmptyFeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfig
-	}
-	objArr := o.([]interface{})
-	if len(objArr) == 0 || objArr[0] == nil {
-		return gkehub.EmptyFeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfig
-	}
-	obj := objArr[0].(map[string]interface{})
-	return &gkehub.FeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfig{
-		Mode: gkehub.FeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfigModeEnumRef(obj["mode"].(string)),
-	}
-}
-
-func flattenGkeHubFeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfig(obj *gkehub.FeatureSpecFleetobservabilityLoggingConfigFleetScopeLogsConfig) interface{} {
-	if obj == nil || obj.Empty() {
-		return nil
-	}
-	transformed := map[string]interface{}{
-		"mode": obj.Mode,
 	}
 
 	return []interface{}{transformed}

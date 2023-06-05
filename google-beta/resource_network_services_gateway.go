@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,126 +22,9 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
-
-// Checks if there is another gateway under the same location.
-func gatewaysSameLocation(d *schema.ResourceData, config *transport_tpg.Config, billingProject, userAgent string) ([]interface{}, error) {
-	log.Print("[DEBUG] Looking for gateways under the same location.")
-	var gateways []interface{}
-
-	gatewaysUrl, err := ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/gateways")
-	if err != nil {
-		return gateways, err
-	}
-
-	resp, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    gatewaysUrl,
-		UserAgent: userAgent,
-	})
-	if err != nil {
-		return gateways, err
-	}
-
-	data, ok := resp["gateways"]
-	if !ok || data == nil {
-		log.Print("[DEBUG] No gateways under the same location found.")
-		return gateways, nil
-	}
-
-	gateways = data.([]interface{})
-
-	log.Printf("[DEBUG] There are still gateways under the same location: %#v", gateways)
-
-	return gateways, nil
-}
-
-// Checks if the given list of gateways contains a gateway of type SECURE_WEB_GATEWAY.
-func isLastSWGGateway(gateways []interface{}, network string) bool {
-	log.Print("[DEBUG] Checking if this is the last gateway of type SECURE_WEB_GATEWAY.")
-	for _, itemRaw := range gateways {
-		if itemRaw == nil {
-			continue
-		}
-		item := itemRaw.(map[string]interface{})
-
-		gType, ok := item["type"]
-		if !ok || gType == nil {
-			continue
-		}
-
-		gNetwork, ok := item["network"]
-		if !ok || gNetwork == nil {
-			continue
-		}
-
-		if gType.(string) == "SECURE_WEB_GATEWAY" && gNetwork.(string) == network {
-			return false
-		}
-	}
-
-	log.Print("[DEBUG] There is no other gateway of type SECURE_WEB_GATEWAY.")
-	// no gateways of type SWG found.
-	return true
-}
-
-// Deletes the swg-autogen-router if the current gateway being deleted is the type of swg so there is no other gateway using it.
-func deleteSWGAutoGenRouter(d *schema.ResourceData, config *transport_tpg.Config, billingProject, userAgent string) error {
-	log.Printf("[DEBUG] Searching the network id by name %q.", d.Get("network"))
-
-	networkPath := fmt.Sprintf("{{ComputeBasePath}}%s", d.Get("network"))
-	networkUrl, err := ReplaceVars(d, config, networkPath)
-	if err != nil {
-		return err
-	}
-
-	resp, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    networkUrl,
-		UserAgent: userAgent,
-	})
-	if err != nil {
-		return err
-	}
-
-	// The name of swg auto generated router is in the following format: swg-autogen-router-{NETWORK-ID}
-	routerId := fmt.Sprintf("swg-autogen-router-%s", resp["id"])
-	log.Printf("[DEBUG] Deleting the auto generated router %q.", routerId)
-
-	routerPath := fmt.Sprintf("{{ComputeBasePath}}projects/{{project}}/regions/{{location}}/routers/%s", routerId)
-	routerUrl, err := ReplaceVars(d, config, routerPath)
-	if err != nil {
-		return err
-	}
-
-	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:               config,
-		Method:               "DELETE",
-		Project:              billingProject,
-		RawURL:               routerUrl,
-		UserAgent:            userAgent,
-		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsSwgAutogenRouterRetryable},
-	})
-	if err != nil {
-		if transport_tpg.IsGoogleApiErrorWithCode(err, 404) {
-			// The swg auto gen router may have already been deleted.
-			// No further action needed.
-			return nil
-		}
-
-		return err
-	}
-
-	return nil
-}
 
 func ResourceNetworkServicesGateway() *schema.Resource {
 	return &schema.Resource{
@@ -183,7 +63,6 @@ limited to 1 port. Gateways of type 'OPEN_MESH' listen on 0.0.0.0 and support mu
 			"scope": {
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: true,
 				Description: `Immutable. Scope determines how configuration across multiple Gateway instances are merged.
 The configuration for multiple Gateway instances with the same scope will be merged as presented as
 a single coniguration to the proxy/load balancer.
@@ -196,39 +75,10 @@ Max length 64 characters. Scope should start with a letter and can only have let
 				ValidateFunc: verify.ValidateEnum([]string{"TYPE_UNSPECIFIED", "OPEN_MESH", "SECURE_WEB_GATEWAY"}),
 				Description:  `Immutable. The type of the customer-managed gateway. Possible values are: * OPEN_MESH * SECURE_WEB_GATEWAY. Possible values: ["TYPE_UNSPECIFIED", "OPEN_MESH", "SECURE_WEB_GATEWAY"]`,
 			},
-			"addresses": {
-				Type:     schema.TypeList,
-				Optional: true,
-				ForceNew: true,
-				Description: `Zero or one IPv4-address on which the Gateway will receive the traffic. When no address is provided,
-an IP from the subnetwork is allocated This field only applies to gateways of type 'SECURE_WEB_GATEWAY'.
-Gateways of type 'OPEN_MESH' listen on 0.0.0.0.`,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"certificate_urls": {
-				Type:     schema.TypeList,
-				Optional: true,
-				ForceNew: true,
-				Description: `A fully-qualified Certificates URL reference. The proxy presents a Certificate (selected based on SNI) when establishing a TLS connection.
-This feature only applies to gateways of type 'SECURE_WEB_GATEWAY'.`,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: `A free-text description of the resource. Max length 1024 characters.`,
-			},
-			"gateway_security_policy": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Description: `A fully-qualified GatewaySecurityPolicy URL reference. Defines how a server should apply security policy to inbound (VM to Proxy) initiated connections. 
-For example: 'projects/*/locations/*/gatewaySecurityPolicies/swg-policy'.
-This policy is specific to gateways of type 'SECURE_WEB_GATEWAY'.`,
 			},
 			"labels": {
 				Type:        schema.TypeMap,
@@ -243,27 +93,11 @@ This policy is specific to gateways of type 'SECURE_WEB_GATEWAY'.`,
 The default value is 'global'.`,
 				Default: "global",
 			},
-			"network": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Description: `The relative resource name identifying the VPC network that is using this configuration. 
-For example: 'projects/*/global/networks/network-1'. 
-Currently, this field is specific to gateways of type 'SECURE_WEB_GATEWAY'.`,
-			},
 			"server_tls_policy": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Description: `A fully-qualified ServerTLSPolicy URL reference. Specifies how TLS traffic is terminated.
 If empty, TLS termination is disabled.`,
-			},
-			"subnetwork": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Description: `The relative resource name identifying the subnetwork in which this SWG is allocated.
-For example: 'projects/*/regions/us-central1/subnetworks/network-1'.
-Currently, this field is specific to gateways of type 'SECURE_WEB_GATEWAY.`,
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -280,13 +114,6 @@ Currently, this field is specific to gateways of type 'SECURE_WEB_GATEWAY.`,
 				Computed:    true,
 				Description: `Time the AccessPolicy was updated in UTC.`,
 			},
-			"delete_swg_autogen_router_on_destroy": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  false,
-				Description: `When deleting a gateway of type 'SECURE_WEB_GATEWAY', this boolean option will also delete auto generated router by the gateway creation. 
-If there is no other gateway of type 'SECURE_WEB_GATEWAY' remaining for that region and network it will be deleted.`,
-			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -300,7 +127,7 @@ If there is no other gateway of type 'SECURE_WEB_GATEWAY' remaining for that reg
 
 func resourceNetworkServicesGatewayCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -309,71 +136,41 @@ func resourceNetworkServicesGatewayCreate(d *schema.ResourceData, meta interface
 	labelsProp, err := expandNetworkServicesGatewayLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 	descriptionProp, err := expandNetworkServicesGatewayDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	typeProp, err := expandNetworkServicesGatewayType(d.Get("type"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("type"); !tpgresource.IsEmptyValue(reflect.ValueOf(typeProp)) && (ok || !reflect.DeepEqual(v, typeProp)) {
+	} else if v, ok := d.GetOkExists("type"); !isEmptyValue(reflect.ValueOf(typeProp)) && (ok || !reflect.DeepEqual(v, typeProp)) {
 		obj["type"] = typeProp
 	}
 	portsProp, err := expandNetworkServicesGatewayPorts(d.Get("ports"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("ports"); !tpgresource.IsEmptyValue(reflect.ValueOf(portsProp)) && (ok || !reflect.DeepEqual(v, portsProp)) {
+	} else if v, ok := d.GetOkExists("ports"); !isEmptyValue(reflect.ValueOf(portsProp)) && (ok || !reflect.DeepEqual(v, portsProp)) {
 		obj["ports"] = portsProp
 	}
 	scopeProp, err := expandNetworkServicesGatewayScope(d.Get("scope"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("scope"); !tpgresource.IsEmptyValue(reflect.ValueOf(scopeProp)) && (ok || !reflect.DeepEqual(v, scopeProp)) {
+	} else if v, ok := d.GetOkExists("scope"); !isEmptyValue(reflect.ValueOf(scopeProp)) && (ok || !reflect.DeepEqual(v, scopeProp)) {
 		obj["scope"] = scopeProp
 	}
 	serverTlsPolicyProp, err := expandNetworkServicesGatewayServerTlsPolicy(d.Get("server_tls_policy"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("server_tls_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(serverTlsPolicyProp)) && (ok || !reflect.DeepEqual(v, serverTlsPolicyProp)) {
+	} else if v, ok := d.GetOkExists("server_tls_policy"); !isEmptyValue(reflect.ValueOf(serverTlsPolicyProp)) && (ok || !reflect.DeepEqual(v, serverTlsPolicyProp)) {
 		obj["serverTlsPolicy"] = serverTlsPolicyProp
 	}
-	addressesProp, err := expandNetworkServicesGatewayAddresses(d.Get("addresses"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("addresses"); !tpgresource.IsEmptyValue(reflect.ValueOf(addressesProp)) && (ok || !reflect.DeepEqual(v, addressesProp)) {
-		obj["addresses"] = addressesProp
-	}
-	subnetworkProp, err := expandNetworkServicesGatewaySubnetwork(d.Get("subnetwork"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("subnetwork"); !tpgresource.IsEmptyValue(reflect.ValueOf(subnetworkProp)) && (ok || !reflect.DeepEqual(v, subnetworkProp)) {
-		obj["subnetwork"] = subnetworkProp
-	}
-	networkProp, err := expandNetworkServicesGatewayNetwork(d.Get("network"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("network"); !tpgresource.IsEmptyValue(reflect.ValueOf(networkProp)) && (ok || !reflect.DeepEqual(v, networkProp)) {
-		obj["network"] = networkProp
-	}
-	gatewaySecurityPolicyProp, err := expandNetworkServicesGatewayGatewaySecurityPolicy(d.Get("gateway_security_policy"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("gateway_security_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(gatewaySecurityPolicyProp)) && (ok || !reflect.DeepEqual(v, gatewaySecurityPolicyProp)) {
-		obj["gatewaySecurityPolicy"] = gatewaySecurityPolicyProp
-	}
-	certificateUrlsProp, err := expandNetworkServicesGatewayCertificateUrls(d.Get("certificate_urls"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("certificate_urls"); !tpgresource.IsEmptyValue(reflect.ValueOf(certificateUrlsProp)) && (ok || !reflect.DeepEqual(v, certificateUrlsProp)) {
-		obj["certificateUrls"] = certificateUrlsProp
-	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/gateways?gatewayId={{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/gateways?gatewayId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -381,32 +178,24 @@ func resourceNetworkServicesGatewayCreate(d *schema.ResourceData, meta interface
 	log.Printf("[DEBUG] Creating new Gateway: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Gateway: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating Gateway: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/gateways/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/gateways/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -429,46 +218,34 @@ func resourceNetworkServicesGatewayCreate(d *schema.ResourceData, meta interface
 
 func resourceNetworkServicesGatewayRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/gateways/{{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/gateways/{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Gateway: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("NetworkServicesGateway %q", d.Id()))
 	}
 
-	// Explicitly set virtual fields to default values if unset
-	if _, ok := d.GetOkExists("delete_swg_autogen_router_on_destroy"); !ok {
-		if err := d.Set("delete_swg_autogen_router_on_destroy", false); err != nil {
-			return fmt.Errorf("Error setting delete_swg_autogen_router_on_destroy: %s", err)
-		}
-	}
 	if err := d.Set("project", project); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
@@ -500,35 +277,20 @@ func resourceNetworkServicesGatewayRead(d *schema.ResourceData, meta interface{}
 	if err := d.Set("server_tls_policy", flattenNetworkServicesGatewayServerTlsPolicy(res["serverTlsPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Gateway: %s", err)
 	}
-	if err := d.Set("addresses", flattenNetworkServicesGatewayAddresses(res["addresses"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Gateway: %s", err)
-	}
-	if err := d.Set("subnetwork", flattenNetworkServicesGatewaySubnetwork(res["subnetwork"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Gateway: %s", err)
-	}
-	if err := d.Set("network", flattenNetworkServicesGatewayNetwork(res["network"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Gateway: %s", err)
-	}
-	if err := d.Set("gateway_security_policy", flattenNetworkServicesGatewayGatewaySecurityPolicy(res["gatewaySecurityPolicy"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Gateway: %s", err)
-	}
-	if err := d.Set("certificate_urls", flattenNetworkServicesGatewayCertificateUrls(res["certificateUrls"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Gateway: %s", err)
-	}
 
 	return nil
 }
 
 func resourceNetworkServicesGatewayUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Gateway: %s", err)
 	}
@@ -538,23 +300,29 @@ func resourceNetworkServicesGatewayUpdate(d *schema.ResourceData, meta interface
 	labelsProp, err := expandNetworkServicesGatewayLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 	descriptionProp, err := expandNetworkServicesGatewayDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
+	}
+	scopeProp, err := expandNetworkServicesGatewayScope(d.Get("scope"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("scope"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, scopeProp)) {
+		obj["scope"] = scopeProp
 	}
 	serverTlsPolicyProp, err := expandNetworkServicesGatewayServerTlsPolicy(d.Get("server_tls_policy"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("server_tls_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, serverTlsPolicyProp)) {
+	} else if v, ok := d.GetOkExists("server_tls_policy"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, serverTlsPolicyProp)) {
 		obj["serverTlsPolicy"] = serverTlsPolicyProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/gateways/{{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/gateways/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -570,6 +338,10 @@ func resourceNetworkServicesGatewayUpdate(d *schema.ResourceData, meta interface
 		updateMask = append(updateMask, "description")
 	}
 
+	if d.HasChange("scope") {
+		updateMask = append(updateMask, "scope")
+	}
+
 	if d.HasChange("server_tls_policy") {
 		updateMask = append(updateMask, "serverTlsPolicy")
 	}
@@ -581,19 +353,11 @@ func resourceNetworkServicesGatewayUpdate(d *schema.ResourceData, meta interface
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating Gateway %q: %s", d.Id(), err)
@@ -614,20 +378,20 @@ func resourceNetworkServicesGatewayUpdate(d *schema.ResourceData, meta interface
 
 func resourceNetworkServicesGatewayDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Gateway: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/gateways/{{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/gateways/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -636,19 +400,11 @@ func resourceNetworkServicesGatewayDelete(d *schema.ResourceData, meta interface
 	log.Printf("[DEBUG] Deleting Gateway %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "Gateway")
 	}
@@ -660,21 +416,6 @@ func resourceNetworkServicesGatewayDelete(d *schema.ResourceData, meta interface
 	if err != nil {
 		return err
 	}
-	if d.Get("delete_swg_autogen_router_on_destroy").(bool) {
-		log.Print("[DEBUG] The field delete_swg_autogen_router_on_destroy is true. Deleting swg_autogen_router.")
-		gateways, err := gatewaysSameLocation(d, config, billingProject, userAgent)
-		if err != nil {
-			return err
-		}
-
-		network := d.Get("network").(string)
-		if isLastSWGGateway(gateways, network) {
-			err := deleteSWGAutoGenRouter(d, config, billingProject, userAgent)
-			if err != nil {
-				return err
-			}
-		}
-	}
 
 	log.Printf("[DEBUG] Finished deleting Gateway %q: %#v", d.Id(), res)
 	return nil
@@ -682,7 +423,7 @@ func resourceNetworkServicesGatewayDelete(d *schema.ResourceData, meta interface
 
 func resourceNetworkServicesGatewayImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/gateways/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)",
 		"(?P<location>[^/]+)/(?P<name>[^/]+)",
@@ -691,16 +432,11 @@ func resourceNetworkServicesGatewayImport(d *schema.ResourceData, meta interface
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/gateways/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/gateways/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
-
-	// Explicitly set virtual fields to default values on import
-	if err := d.Set("delete_swg_autogen_router_on_destroy", false); err != nil {
-		return nil, fmt.Errorf("Error setting delete_swg_autogen_router_on_destroy: %s", err)
-	}
 
 	return []*schema.ResourceData{d}, nil
 }
@@ -741,27 +477,7 @@ func flattenNetworkServicesGatewayServerTlsPolicy(v interface{}, d *schema.Resou
 	return v
 }
 
-func flattenNetworkServicesGatewayAddresses(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetworkServicesGatewaySubnetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetworkServicesGatewayNetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetworkServicesGatewayGatewaySecurityPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetworkServicesGatewayCertificateUrls(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func expandNetworkServicesGatewayLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandNetworkServicesGatewayLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -772,42 +488,22 @@ func expandNetworkServicesGatewayLabels(v interface{}, d tpgresource.TerraformRe
 	return m, nil
 }
 
-func expandNetworkServicesGatewayDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesGatewayDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesGatewayType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesGatewayType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesGatewayPorts(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesGatewayPorts(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesGatewayScope(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesGatewayScope(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkServicesGatewayServerTlsPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNetworkServicesGatewayAddresses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNetworkServicesGatewaySubnetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNetworkServicesGatewayNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNetworkServicesGatewayGatewaySecurityPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNetworkServicesGatewayCertificateUrls(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkServicesGatewayServerTlsPolicy(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

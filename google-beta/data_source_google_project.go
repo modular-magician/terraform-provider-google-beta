@@ -1,21 +1,18 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
 
 func DataSourceGoogleProject() *schema.Resource {
 	// Generate datasource schema from resource
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceGoogleProject().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceGoogleProject().Schema)
 
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project_id")
+	addOptionalFieldsToSchema(dsSchema, "project_id")
 
 	dsSchema["project_id"].ValidateFunc = verify.ValidateDSProjectID()
 	return &schema.Resource{
@@ -31,7 +28,7 @@ func datasourceGoogleProjectRead(d *schema.ResourceData, meta interface{}) error
 		project := v.(string)
 		d.SetId(fmt.Sprintf("projects/%s", project))
 	} else {
-		project, err := tpgresource.GetProject(d, config)
+		project, err := getProject(d, config)
 		if err != nil {
 			return fmt.Errorf("no project value set. `project_id` must be set at the resource level, or a default `project` value must be specified on the provider")
 		}

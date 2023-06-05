@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -26,8 +23,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 
@@ -747,7 +742,7 @@ projects/[PROJECT_ID_OR_NUMBER]/services/[SERVICE_ID]/serviceLevelObjectives/[SL
 
 func resourceMonitoringSloCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -756,25 +751,25 @@ func resourceMonitoringSloCreate(d *schema.ResourceData, meta interface{}) error
 	displayNameProp, err := expandMonitoringSloDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	goalProp, err := expandMonitoringSloGoal(d.Get("goal"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("goal"); !tpgresource.IsEmptyValue(reflect.ValueOf(goalProp)) && (ok || !reflect.DeepEqual(v, goalProp)) {
+	} else if v, ok := d.GetOkExists("goal"); !isEmptyValue(reflect.ValueOf(goalProp)) && (ok || !reflect.DeepEqual(v, goalProp)) {
 		obj["goal"] = goalProp
 	}
 	rollingPeriodProp, err := expandMonitoringSloRollingPeriodDays(d.Get("rolling_period_days"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("rolling_period_days"); !tpgresource.IsEmptyValue(reflect.ValueOf(rollingPeriodProp)) && (ok || !reflect.DeepEqual(v, rollingPeriodProp)) {
+	} else if v, ok := d.GetOkExists("rolling_period_days"); !isEmptyValue(reflect.ValueOf(rollingPeriodProp)) && (ok || !reflect.DeepEqual(v, rollingPeriodProp)) {
 		obj["rollingPeriod"] = rollingPeriodProp
 	}
 	calendarPeriodProp, err := expandMonitoringSloCalendarPeriod(d.Get("calendar_period"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("calendar_period"); !tpgresource.IsEmptyValue(reflect.ValueOf(calendarPeriodProp)) && (ok || !reflect.DeepEqual(v, calendarPeriodProp)) {
+	} else if v, ok := d.GetOkExists("calendar_period"); !isEmptyValue(reflect.ValueOf(calendarPeriodProp)) && (ok || !reflect.DeepEqual(v, calendarPeriodProp)) {
 		obj["calendarPeriod"] = calendarPeriodProp
 	}
 	userLabelsProp, err := expandMonitoringSloUserLabels(d.Get("user_labels"), d, config)
@@ -786,13 +781,13 @@ func resourceMonitoringSloCreate(d *schema.ResourceData, meta interface{}) error
 	serviceLevelIndicatorProp, err := expandMonitoringSloServiceLevelIndicator(nil, d, config)
 	if err != nil {
 		return err
-	} else if !tpgresource.IsEmptyValue(reflect.ValueOf(serviceLevelIndicatorProp)) {
+	} else if !isEmptyValue(reflect.ValueOf(serviceLevelIndicatorProp)) {
 		obj["serviceLevelIndicator"] = serviceLevelIndicatorProp
 	}
 	nameProp, err := expandMonitoringSloSloId(d.Get("slo_id"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("slo_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+	} else if v, ok := d.GetOkExists("slo_id"); !isEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
 
@@ -801,14 +796,14 @@ func resourceMonitoringSloCreate(d *schema.ResourceData, meta interface{}) error
 		return err
 	}
 
-	lockName, err := tpgresource.ReplaceVars(d, config, "monitoring/project/{{project}}/service/{{service}}")
+	lockName, err := ReplaceVars(d, config, "monitoring/project/{{project}}/service/{{service}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{MonitoringBasePath}}v3/projects/{{project}}/services/{{service}}/serviceLevelObjectives?serviceLevelObjectiveId={{slo_id}}")
+	url, err := ReplaceVars(d, config, "{{MonitoringBasePath}}v3/projects/{{project}}/services/{{service}}/serviceLevelObjectives?serviceLevelObjectiveId={{slo_id}}")
 	if err != nil {
 		return err
 	}
@@ -816,26 +811,18 @@ func resourceMonitoringSloCreate(d *schema.ResourceData, meta interface{}) error
 	log.Printf("[DEBUG] Creating new Slo: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Slo: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating Slo: %s", err)
 	}
@@ -844,7 +831,7 @@ func resourceMonitoringSloCreate(d *schema.ResourceData, meta interface{}) error
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{name}}")
+	id, err := ReplaceVars(d, config, "{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -857,36 +844,30 @@ func resourceMonitoringSloCreate(d *schema.ResourceData, meta interface{}) error
 
 func resourceMonitoringSloRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{MonitoringBasePath}}v3/{{name}}")
+	url, err := ReplaceVars(d, config, "{{MonitoringBasePath}}v3/{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Slo: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("MonitoringSlo %q", d.Id()))
 	}
@@ -937,14 +918,14 @@ func resourceMonitoringSloRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceMonitoringSloUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Slo: %s", err)
 	}
@@ -954,25 +935,25 @@ func resourceMonitoringSloUpdate(d *schema.ResourceData, meta interface{}) error
 	displayNameProp, err := expandMonitoringSloDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	goalProp, err := expandMonitoringSloGoal(d.Get("goal"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("goal"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, goalProp)) {
+	} else if v, ok := d.GetOkExists("goal"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, goalProp)) {
 		obj["goal"] = goalProp
 	}
 	rollingPeriodProp, err := expandMonitoringSloRollingPeriodDays(d.Get("rolling_period_days"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("rolling_period_days"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, rollingPeriodProp)) {
+	} else if v, ok := d.GetOkExists("rolling_period_days"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, rollingPeriodProp)) {
 		obj["rollingPeriod"] = rollingPeriodProp
 	}
 	calendarPeriodProp, err := expandMonitoringSloCalendarPeriod(d.Get("calendar_period"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("calendar_period"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, calendarPeriodProp)) {
+	} else if v, ok := d.GetOkExists("calendar_period"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, calendarPeriodProp)) {
 		obj["calendarPeriod"] = calendarPeriodProp
 	}
 	userLabelsProp, err := expandMonitoringSloUserLabels(d.Get("user_labels"), d, config)
@@ -984,7 +965,7 @@ func resourceMonitoringSloUpdate(d *schema.ResourceData, meta interface{}) error
 	serviceLevelIndicatorProp, err := expandMonitoringSloServiceLevelIndicator(nil, d, config)
 	if err != nil {
 		return err
-	} else if !tpgresource.IsEmptyValue(reflect.ValueOf(serviceLevelIndicatorProp)) {
+	} else if !isEmptyValue(reflect.ValueOf(serviceLevelIndicatorProp)) {
 		obj["serviceLevelIndicator"] = serviceLevelIndicatorProp
 	}
 
@@ -993,14 +974,14 @@ func resourceMonitoringSloUpdate(d *schema.ResourceData, meta interface{}) error
 		return err
 	}
 
-	lockName, err := tpgresource.ReplaceVars(d, config, "monitoring/project/{{project}}/service/{{service}}")
+	lockName, err := ReplaceVars(d, config, "monitoring/project/{{project}}/service/{{service}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{MonitoringBasePath}}v3/{{name}}")
+	url, err := ReplaceVars(d, config, "{{MonitoringBasePath}}v3/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -1063,19 +1044,11 @@ func resourceMonitoringSloUpdate(d *schema.ResourceData, meta interface{}) error
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating Slo %q: %s", d.Id(), err)
@@ -1088,27 +1061,27 @@ func resourceMonitoringSloUpdate(d *schema.ResourceData, meta interface{}) error
 
 func resourceMonitoringSloDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Slo: %s", err)
 	}
 	billingProject = project
 
-	lockName, err := tpgresource.ReplaceVars(d, config, "monitoring/project/{{project}}/service/{{service}}")
+	lockName, err := ReplaceVars(d, config, "monitoring/project/{{project}}/service/{{service}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{MonitoringBasePath}}v3/{{name}}")
+	url, err := ReplaceVars(d, config, "{{MonitoringBasePath}}v3/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -1117,19 +1090,11 @@ func resourceMonitoringSloDelete(d *schema.ResourceData, meta interface{}) error
 	log.Printf("[DEBUG] Deleting Slo %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "Slo")
 	}
@@ -1143,7 +1108,7 @@ func resourceMonitoringSloImport(d *schema.ResourceData, meta interface{}) ([]*s
 	config := meta.(*transport_tpg.Config)
 
 	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
+	if err := ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
 		return nil, err
 	}
 
@@ -1162,7 +1127,7 @@ func flattenMonitoringSloGoal(v interface{}, d *schema.ResourceData, config *tra
 	return v
 }
 
-func expandMonitoringSloRollingPeriodDays(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloRollingPeriodDays(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -1648,14 +1613,14 @@ func flattenMonitoringSloSloId(v interface{}, d *schema.ResourceData, config *tr
 	if v == nil {
 		return v
 	}
-	return tpgresource.NameFromSelfLinkStateFunc(v)
+	return NameFromSelfLinkStateFunc(v)
 }
 
-func expandMonitoringSloDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloDisplayName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloGoal(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloGoal(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1673,11 +1638,11 @@ func flattenMonitoringSloRollingPeriodDays(v interface{}, d *schema.ResourceData
 	return int(dur / (time.Hour * 24))
 }
 
-func expandMonitoringSloCalendarPeriod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloCalendarPeriod(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloUserLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandMonitoringSloUserLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -1688,33 +1653,33 @@ func expandMonitoringSloUserLabels(v interface{}, d tpgresource.TerraformResourc
 	return m, nil
 }
 
-func expandMonitoringSloServiceLevelIndicator(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicator(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	transformed := make(map[string]interface{})
 	transformedBasicSli, err := expandMonitoringSloServiceLevelIndicatorBasicSli(d.Get("basic_sli"), d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBasicSli); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBasicSli); val.IsValid() && !isEmptyValue(val) {
 		transformed["basicSli"] = transformedBasicSli
 	}
 
 	transformedRequestBasedSli, err := expandMonitoringSloServiceLevelIndicatorRequestBasedSli(d.Get("request_based_sli"), d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRequestBasedSli); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRequestBasedSli); val.IsValid() && !isEmptyValue(val) {
 		transformed["requestBased"] = transformedRequestBasedSli
 	}
 
 	transformedWindowsBasedSli, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSli(d.Get("windows_based_sli"), d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWindowsBasedSli); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWindowsBasedSli); val.IsValid() && !isEmptyValue(val) {
 		transformed["windowsBased"] = transformedWindowsBasedSli
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorBasicSli(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorBasicSli(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1726,57 +1691,57 @@ func expandMonitoringSloServiceLevelIndicatorBasicSli(v interface{}, d tpgresour
 	transformedMethod, err := expandMonitoringSloServiceLevelIndicatorBasicSliMethod(original["method"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMethod); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMethod); val.IsValid() && !isEmptyValue(val) {
 		transformed["method"] = transformedMethod
 	}
 
 	transformedLocation, err := expandMonitoringSloServiceLevelIndicatorBasicSliLocation(original["location"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !isEmptyValue(val) {
 		transformed["location"] = transformedLocation
 	}
 
 	transformedVersion, err := expandMonitoringSloServiceLevelIndicatorBasicSliVersion(original["version"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !isEmptyValue(val) {
 		transformed["version"] = transformedVersion
 	}
 
 	transformedLatency, err := expandMonitoringSloServiceLevelIndicatorBasicSliLatency(original["latency"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLatency); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLatency); val.IsValid() && !isEmptyValue(val) {
 		transformed["latency"] = transformedLatency
 	}
 
 	transformedAvailability, err := expandMonitoringSloServiceLevelIndicatorBasicSliAvailability(original["availability"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAvailability); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAvailability); val.IsValid() && !isEmptyValue(val) {
 		transformed["availability"] = transformedAvailability
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorBasicSliMethod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorBasicSliMethod(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorBasicSliLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorBasicSliLocation(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorBasicSliVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorBasicSliVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorBasicSliLatency(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorBasicSliLatency(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1788,18 +1753,18 @@ func expandMonitoringSloServiceLevelIndicatorBasicSliLatency(v interface{}, d tp
 	transformedThreshold, err := expandMonitoringSloServiceLevelIndicatorBasicSliLatencyThreshold(original["threshold"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedThreshold); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedThreshold); val.IsValid() && !isEmptyValue(val) {
 		transformed["threshold"] = transformedThreshold
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorBasicSliLatencyThreshold(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorBasicSliLatencyThreshold(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorBasicSliAvailability(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorBasicSliAvailability(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1811,18 +1776,18 @@ func expandMonitoringSloServiceLevelIndicatorBasicSliAvailability(v interface{},
 	transformedEnabled, err := expandMonitoringSloServiceLevelIndicatorBasicSliAvailabilityEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorBasicSliAvailabilityEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorBasicSliAvailabilityEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorRequestBasedSli(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorRequestBasedSli(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1834,21 +1799,21 @@ func expandMonitoringSloServiceLevelIndicatorRequestBasedSli(v interface{}, d tp
 	transformedGoodTotalRatio, err := expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatio(original["good_total_ratio"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGoodTotalRatio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGoodTotalRatio); val.IsValid() && !isEmptyValue(val) {
 		transformed["goodTotalRatio"] = transformedGoodTotalRatio
 	}
 
 	transformedDistributionCut, err := expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCut(original["distribution_cut"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDistributionCut); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDistributionCut); val.IsValid() && !isEmptyValue(val) {
 		transformed["distributionCut"] = transformedDistributionCut
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatio(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1860,40 +1825,40 @@ func expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatio(v int
 	transformedGoodServiceFilter, err := expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatioGoodServiceFilter(original["good_service_filter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGoodServiceFilter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGoodServiceFilter); val.IsValid() && !isEmptyValue(val) {
 		transformed["goodServiceFilter"] = transformedGoodServiceFilter
 	}
 
 	transformedBadServiceFilter, err := expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatioBadServiceFilter(original["bad_service_filter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBadServiceFilter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBadServiceFilter); val.IsValid() && !isEmptyValue(val) {
 		transformed["badServiceFilter"] = transformedBadServiceFilter
 	}
 
 	transformedTotalServiceFilter, err := expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatioTotalServiceFilter(original["total_service_filter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTotalServiceFilter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTotalServiceFilter); val.IsValid() && !isEmptyValue(val) {
 		transformed["totalServiceFilter"] = transformedTotalServiceFilter
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatioGoodServiceFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatioGoodServiceFilter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatioBadServiceFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatioBadServiceFilter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatioTotalServiceFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorRequestBasedSliGoodTotalRatioTotalServiceFilter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCut(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCut(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1905,25 +1870,25 @@ func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCut(v in
 	transformedDistributionFilter, err := expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutDistributionFilter(original["distribution_filter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDistributionFilter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDistributionFilter); val.IsValid() && !isEmptyValue(val) {
 		transformed["distributionFilter"] = transformedDistributionFilter
 	}
 
 	transformedRange, err := expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutRange(original["range"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRange); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRange); val.IsValid() && !isEmptyValue(val) {
 		transformed["range"] = transformedRange
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutDistributionFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutDistributionFilter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutRange(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1935,29 +1900,29 @@ func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutRange
 	transformedMin, err := expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutRangeMin(original["min"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMin); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMin); val.IsValid() && !isEmptyValue(val) {
 		transformed["min"] = transformedMin
 	}
 
 	transformedMax, err := expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutRangeMax(original["max"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMax); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMax); val.IsValid() && !isEmptyValue(val) {
 		transformed["max"] = transformedMax
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutRangeMin(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutRangeMin(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutRangeMax(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorRequestBasedSliDistributionCutRangeMax(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSli(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSli(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1969,50 +1934,50 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSli(v interface{}, d tp
 	transformedWindowPeriod, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliWindowPeriod(original["window_period"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWindowPeriod); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWindowPeriod); val.IsValid() && !isEmptyValue(val) {
 		transformed["windowPeriod"] = transformedWindowPeriod
 	}
 
 	transformedGoodBadMetricFilter, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodBadMetricFilter(original["good_bad_metric_filter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGoodBadMetricFilter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGoodBadMetricFilter); val.IsValid() && !isEmptyValue(val) {
 		transformed["goodBadMetricFilter"] = transformedGoodBadMetricFilter
 	}
 
 	transformedGoodTotalRatioThreshold, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThreshold(original["good_total_ratio_threshold"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGoodTotalRatioThreshold); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGoodTotalRatioThreshold); val.IsValid() && !isEmptyValue(val) {
 		transformed["goodTotalRatioThreshold"] = transformedGoodTotalRatioThreshold
 	}
 
 	transformedMetricMeanInRange, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRange(original["metric_mean_in_range"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMetricMeanInRange); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMetricMeanInRange); val.IsValid() && !isEmptyValue(val) {
 		transformed["metricMeanInRange"] = transformedMetricMeanInRange
 	}
 
 	transformedMetricSumInRange, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRange(original["metric_sum_in_range"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMetricSumInRange); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMetricSumInRange); val.IsValid() && !isEmptyValue(val) {
 		transformed["metricSumInRange"] = transformedMetricSumInRange
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliWindowPeriod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliWindowPeriod(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodBadMetricFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodBadMetricFilter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThreshold(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThreshold(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2024,32 +1989,32 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresh
 	transformedThreshold, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdThreshold(original["threshold"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedThreshold); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedThreshold); val.IsValid() && !isEmptyValue(val) {
 		transformed["threshold"] = transformedThreshold
 	}
 
 	transformedPerformance, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformance(original["performance"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPerformance); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPerformance); val.IsValid() && !isEmptyValue(val) {
 		transformed["performance"] = transformedPerformance
 	}
 
 	transformedBasicSliPerformance, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformance(original["basic_sli_performance"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBasicSliPerformance); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBasicSliPerformance); val.IsValid() && !isEmptyValue(val) {
 		transformed["basicSliPerformance"] = transformedBasicSliPerformance
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdThreshold(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdThreshold(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformance(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2061,21 +2026,21 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresh
 	transformedGoodTotalRatio, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatio(original["good_total_ratio"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGoodTotalRatio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGoodTotalRatio); val.IsValid() && !isEmptyValue(val) {
 		transformed["goodTotalRatio"] = transformedGoodTotalRatio
 	}
 
 	transformedDistributionCut, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCut(original["distribution_cut"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDistributionCut); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDistributionCut); val.IsValid() && !isEmptyValue(val) {
 		transformed["distributionCut"] = transformedDistributionCut
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatio(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2087,40 +2052,40 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresh
 	transformedGoodServiceFilter, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatioGoodServiceFilter(original["good_service_filter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedGoodServiceFilter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedGoodServiceFilter); val.IsValid() && !isEmptyValue(val) {
 		transformed["goodServiceFilter"] = transformedGoodServiceFilter
 	}
 
 	transformedBadServiceFilter, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatioBadServiceFilter(original["bad_service_filter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedBadServiceFilter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedBadServiceFilter); val.IsValid() && !isEmptyValue(val) {
 		transformed["badServiceFilter"] = transformedBadServiceFilter
 	}
 
 	transformedTotalServiceFilter, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatioTotalServiceFilter(original["total_service_filter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTotalServiceFilter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTotalServiceFilter); val.IsValid() && !isEmptyValue(val) {
 		transformed["totalServiceFilter"] = transformedTotalServiceFilter
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatioGoodServiceFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatioGoodServiceFilter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatioBadServiceFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatioBadServiceFilter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatioTotalServiceFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceGoodTotalRatioTotalServiceFilter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCut(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCut(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2132,25 +2097,25 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresh
 	transformedDistributionFilter, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutDistributionFilter(original["distribution_filter"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDistributionFilter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDistributionFilter); val.IsValid() && !isEmptyValue(val) {
 		transformed["distributionFilter"] = transformedDistributionFilter
 	}
 
 	transformedRange, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutRange(original["range"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRange); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRange); val.IsValid() && !isEmptyValue(val) {
 		transformed["range"] = transformedRange
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutDistributionFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutDistributionFilter(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutRange(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2162,29 +2127,29 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresh
 	transformedMin, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutRangeMin(original["min"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMin); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMin); val.IsValid() && !isEmptyValue(val) {
 		transformed["min"] = transformedMin
 	}
 
 	transformedMax, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutRangeMax(original["max"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMax); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMax); val.IsValid() && !isEmptyValue(val) {
 		transformed["max"] = transformedMax
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutRangeMin(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutRangeMin(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutRangeMax(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdPerformanceDistributionCutRangeMax(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformance(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2196,57 +2161,57 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresh
 	transformedMethod, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceMethod(original["method"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMethod); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMethod); val.IsValid() && !isEmptyValue(val) {
 		transformed["method"] = transformedMethod
 	}
 
 	transformedLocation, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceLocation(original["location"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !isEmptyValue(val) {
 		transformed["location"] = transformedLocation
 	}
 
 	transformedVersion, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceVersion(original["version"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !isEmptyValue(val) {
 		transformed["version"] = transformedVersion
 	}
 
 	transformedLatency, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceLatency(original["latency"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLatency); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLatency); val.IsValid() && !isEmptyValue(val) {
 		transformed["latency"] = transformedLatency
 	}
 
 	transformedAvailability, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceAvailability(original["availability"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAvailability); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAvailability); val.IsValid() && !isEmptyValue(val) {
 		transformed["availability"] = transformedAvailability
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceMethod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceMethod(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceLocation(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceLatency(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceLatency(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2258,18 +2223,18 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresh
 	transformedThreshold, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceLatencyThreshold(original["threshold"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedThreshold); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedThreshold); val.IsValid() && !isEmptyValue(val) {
 		transformed["threshold"] = transformedThreshold
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceLatencyThreshold(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceLatencyThreshold(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceAvailability(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceAvailability(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2281,18 +2246,18 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresh
 	transformedEnabled, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceAvailabilityEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceAvailabilityEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliGoodTotalRatioThresholdBasicSliPerformanceAvailabilityEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRange(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2304,25 +2269,25 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRange(v 
 	transformedTimeSeries, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeTimeSeries(original["time_series"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTimeSeries); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTimeSeries); val.IsValid() && !isEmptyValue(val) {
 		transformed["timeSeries"] = transformedTimeSeries
 	}
 
 	transformedRange, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeRange(original["range"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRange); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRange); val.IsValid() && !isEmptyValue(val) {
 		transformed["range"] = transformedRange
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeTimeSeries(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeTimeSeries(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeRange(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2334,29 +2299,29 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeRan
 	transformedMin, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeRangeMin(original["min"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMin); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMin); val.IsValid() && !isEmptyValue(val) {
 		transformed["min"] = transformedMin
 	}
 
 	transformedMax, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeRangeMax(original["max"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMax); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMax); val.IsValid() && !isEmptyValue(val) {
 		transformed["max"] = transformedMax
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeRangeMin(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeRangeMin(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeRangeMax(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricMeanInRangeRangeMax(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRange(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2368,25 +2333,25 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRange(v i
 	transformedTimeSeries, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeTimeSeries(original["time_series"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTimeSeries); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTimeSeries); val.IsValid() && !isEmptyValue(val) {
 		transformed["timeSeries"] = transformedTimeSeries
 	}
 
 	transformedRange, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRange(original["range"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRange); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRange); val.IsValid() && !isEmptyValue(val) {
 		transformed["range"] = transformedRange
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeTimeSeries(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeTimeSeries(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRange(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2398,29 +2363,29 @@ func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRang
 	transformedMin, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRangeMin(original["min"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMin); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMin); val.IsValid() && !isEmptyValue(val) {
 		transformed["min"] = transformedMin
 	}
 
 	transformedMax, err := expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRangeMax(original["max"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMax); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMax); val.IsValid() && !isEmptyValue(val) {
 		transformed["max"] = transformedMax
 	}
 
 	return transformed, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRangeMin(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRangeMin(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRangeMax(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloServiceLevelIndicatorWindowsBasedSliMetricSumInRangeRangeMax(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandMonitoringSloSloId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandMonitoringSloSloId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -18,8 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/structure"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"google.golang.org/api/bigquery/v2"
 )
@@ -184,7 +180,7 @@ func bigQueryTableConnectionIdSuppress(name, old, new string, _ *schema.Resource
 	// "projects/{{project}}/locations/{{location}}/connections/{{connection_id}}".
 	// but always returns "{{project}}.{{location}}.{{connection_id}}"
 
-	if tpgresource.IsEmptyValue(reflect.ValueOf(old)) || tpgresource.IsEmptyValue(reflect.ValueOf(new)) {
+	if isEmptyValue(reflect.ValueOf(old)) || isEmptyValue(reflect.ValueOf(new)) {
 		return false
 	}
 
@@ -325,7 +321,7 @@ func resourceBigQueryTableSchemaIsChangeable(old, new interface{}) (bool, error)
 	}
 }
 
-func resourceBigQueryTableSchemaCustomizeDiffFunc(d tpgresource.TerraformResourceDiff) error {
+func resourceBigQueryTableSchemaCustomizeDiffFunc(d TerraformResourceDiff) error {
 	if _, hasSchema := d.GetOk("schema"); hasSchema {
 		oldSchema, newSchema := d.GetChange("schema")
 		oldSchemaText := oldSchema.(string)
@@ -445,9 +441,9 @@ func ResourceBigQueryTable() *schema.Resource {
 						"source_format": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: ` Please see sourceFormat under ExternalDataConfiguration in Bigquery's public API documentation (https://cloud.google.com/bigquery/docs/reference/rest/v2/tables#externaldataconfiguration) for supported formats. To use "GOOGLE_SHEETS" the scopes must include "googleapis.com/auth/drive.readonly".`,
+							Description: `The data format. Supported values are: "CSV", "GOOGLE_SHEETS", "NEWLINE_DELIMITED_JSON", "AVRO", "PARQUET", "ORC" and "DATASTORE_BACKUP". To use "GOOGLE_SHEETS" the scopes must include "googleapis.com/auth/drive.readonly".`,
 							ValidateFunc: validation.StringInSlice([]string{
-								"CSV", "GOOGLE_SHEETS", "NEWLINE_DELIMITED_JSON", "AVRO", "ICEBERG", "DATASTORE_BACKUP", "PARQUET", "ORC", "BIGTABLE",
+								"CSV", "GOOGLE_SHEETS", "NEWLINE_DELIMITED_JSON", "AVRO", "DATASTORE_BACKUP", "PARQUET", "ORC", "BIGTABLE",
 							}, false),
 						},
 						// SourceURIs [Required] The fully-qualified URIs that point to your data in Google Cloud.
@@ -467,7 +463,7 @@ func ResourceBigQueryTable() *schema.Resource {
 						},
 						// Schema: Optional] The schema for the  data.
 						// Schema is required for CSV and JSON formats if autodetect is not on.
-						// Schema is disallowed for Google Cloud Bigtable, Cloud Datastore backups, Avro, Iceberg, ORC, and Parquet formats.
+						// Schema is disallowed for Google Cloud Bigtable, Cloud Datastore backups, Avro, ORC and Parquet formats.
 						"schema": {
 							Type:         schema.TypeString,
 							Optional:     true,
@@ -987,7 +983,7 @@ func ResourceBigQueryTable() *schema.Resource {
 func resourceTable(d *schema.ResourceData, meta interface{}) (*bigquery.Table, error) {
 	config := meta.(*transport_tpg.Config)
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return nil, err
 	}
@@ -1068,7 +1064,7 @@ func resourceTable(d *schema.ResourceData, meta interface{}) (*bigquery.Table, e
 
 	if v, ok := d.GetOk("clustering"); ok {
 		table.Clustering = &bigquery.Clustering{
-			Fields:          tpgresource.ConvertStringArr(v.([]interface{})),
+			Fields:          convertStringArr(v.([]interface{})),
 			ForceSendFields: []string{"Fields"},
 		}
 	}
@@ -1078,12 +1074,12 @@ func resourceTable(d *schema.ResourceData, meta interface{}) (*bigquery.Table, e
 
 func resourceBigQueryTableCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -1135,14 +1131,14 @@ func resourceBigQueryTableCreate(d *schema.ResourceData, meta interface{}) error
 
 func resourceBigQueryTableRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[INFO] Reading BigQuery table: %s", d.Id())
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -1286,7 +1282,7 @@ func resourceBigQueryTableRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceBigQueryTableUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -1298,7 +1294,7 @@ func resourceBigQueryTableUpdate(d *schema.ResourceData, meta interface{}) error
 
 	log.Printf("[INFO] Updating BigQuery table: %s", d.Id())
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -1318,14 +1314,14 @@ func resourceBigQueryTableDelete(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("cannot destroy instance without setting deletion_protection=false and running `terraform apply`")
 	}
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	log.Printf("[INFO] Deleting BigQuery table: %s", d.Id())
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -1786,7 +1782,7 @@ func flattenMaterializedView(mvd *bigquery.MaterializedViewDefinition) []map[str
 
 func resourceBigQueryTableImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)/tables/(?P<table_id>[^/]+)",
 		"(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/(?P<table_id>[^/]+)",
 		"(?P<dataset_id>[^/]+)/(?P<table_id>[^/]+)",
@@ -1800,7 +1796,7 @@ func resourceBigQueryTableImport(d *schema.ResourceData, meta interface{}) ([]*s
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/datasets/{{dataset_id}}/tables/{{table_id}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/datasets/{{dataset_id}}/tables/{{table_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

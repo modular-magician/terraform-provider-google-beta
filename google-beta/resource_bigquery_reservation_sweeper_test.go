@@ -1,13 +1,10 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"context"
+	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"log"
 	"strings"
-
-	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
@@ -38,13 +35,7 @@ func testSweepBigqueryReservation(region string) error {
 		return err
 	}
 	servicesUrl := config.BigqueryReservationBasePath + "projects/" + config.Project + "/locations/" + region + "/reservations"
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   config.Project,
-		RawURL:    servicesUrl,
-		UserAgent: config.UserAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", config.Project, servicesUrl, config.UserAgent, nil)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] Error in response from request %s: %s", servicesUrl, err)
 		return nil
@@ -81,13 +72,7 @@ func testSweepBigqueryReservation(region string) error {
 
 		deleteUrl := servicesUrl + "/" + reservationShortName
 		// Don't wait on operations as we may have a lot to delete
-		_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "DELETE",
-			Project:   config.Project,
-			RawURL:    deleteUrl,
-			UserAgent: config.UserAgent,
-		})
+		_, err = transport_tpg.SendRequest(config, "DELETE", config.Project, deleteUrl, config.UserAgent, nil)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] Error deleting for url %s : %s", deleteUrl, err)
 		} else {
@@ -105,13 +90,7 @@ func testSweepBigqueryReservation(region string) error {
 func deleteAllAssignments(config *transport_tpg.Config, reservationName string) {
 	assignmentListUrl := config.BigqueryReservationBasePath + reservationName + "/assignments"
 
-	assignmentRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   config.Project,
-		RawURL:    assignmentListUrl,
-		UserAgent: config.UserAgent,
-	})
+	assignmentRes, err := transport_tpg.SendRequest(config, "GET", config.Project, assignmentListUrl, config.UserAgent, nil)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] Error in response from request %s: %s", assignmentListUrl, err)
 		return
@@ -130,13 +109,7 @@ func deleteAllAssignments(config *transport_tpg.Config, reservationName string) 
 		name := obj["name"].(string)
 
 		deleteUrl := config.BigqueryReservationBasePath + name
-		_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "DELETE",
-			Project:   config.Project,
-			RawURL:    deleteUrl,
-			UserAgent: config.UserAgent,
-		})
+		_, err = transport_tpg.SendRequest(config, "DELETE", config.Project, deleteUrl, config.UserAgent, nil)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] Error deleting for url %s : %s", deleteUrl, err)
 		} else {

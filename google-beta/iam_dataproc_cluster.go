@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,8 +5,6 @@ import (
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"google.golang.org/api/cloudresourcemanager/v1"
 	"google.golang.org/api/dataproc/v1"
@@ -38,17 +34,17 @@ type DataprocClusterIamUpdater struct {
 	project string
 	region  string
 	cluster string
-	d       tpgresource.TerraformResourceData
+	d       TerraformResourceData
 	Config  *transport_tpg.Config
 }
 
-func NewDataprocClusterUpdater(d tpgresource.TerraformResourceData, config *transport_tpg.Config) (tpgiamresource.ResourceIamUpdater, error) {
-	project, err := tpgresource.GetProject(d, config)
+func NewDataprocClusterUpdater(d TerraformResourceData, config *transport_tpg.Config) (ResourceIamUpdater, error) {
+	project, err := getProject(d, config)
 	if err != nil {
 		return nil, err
 	}
 
-	region, err := tpgresource.GetRegion(d, config)
+	region, err := getRegion(d, config)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +66,7 @@ func NewDataprocClusterUpdater(d tpgresource.TerraformResourceData, config *tran
 }
 
 func DataprocClusterIdParseFunc(d *schema.ResourceData, config *transport_tpg.Config) error {
-	fv, err := tpgresource.ParseRegionalFieldValue("clusters", d.Id(), "project", "region", "zone", d, config, true)
+	fv, err := parseRegionalFieldValue("clusters", d.Id(), "project", "region", "zone", d, config, true)
 	if err != nil {
 		return err
 	}
@@ -93,7 +89,7 @@ func DataprocClusterIdParseFunc(d *schema.ResourceData, config *transport_tpg.Co
 func (u *DataprocClusterIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
 	req := &dataproc.GetIamPolicyRequest{}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +113,7 @@ func (u *DataprocClusterIamUpdater) SetResourceIamPolicy(policy *cloudresourcema
 		return errwrap.Wrapf(fmt.Sprintf("Invalid IAM policy for %s: {{err}}", u.DescribeResource()), err)
 	}
 
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return err
 	}

@@ -1,13 +1,9 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
-	"time"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cloudidentity "google.golang.org/api/cloudidentity/v1beta1"
@@ -15,7 +11,7 @@ import (
 
 func DataSourceGoogleCloudIdentityGroupMemberships() *schema.Resource {
 	// Generate datasource schema from resource
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceCloudIdentityGroupMembership().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceCloudIdentityGroupMembership().Schema)
 
 	return &schema.Resource{
 		Read: dataSourceGoogleCloudIdentityGroupMembershipsRead,
@@ -33,7 +29,7 @@ func DataSourceGoogleCloudIdentityGroupMemberships() *schema.Resource {
 				Type:             schema.TypeString,
 				Required:         true,
 				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
 				Description:      `The name of the Group to get memberships from.`,
 			},
 		},
@@ -42,7 +38,7 @@ func DataSourceGoogleCloudIdentityGroupMemberships() *schema.Resource {
 
 func dataSourceGoogleCloudIdentityGroupMembershipsRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -52,12 +48,12 @@ func dataSourceGoogleCloudIdentityGroupMembershipsRead(d *schema.ResourceData, m
 	if config.UserProjectOverride {
 		billingProject := ""
 		// err may be nil - project isn't required for this resource
-		if project, err := tpgresource.GetProject(d, config); err == nil {
+		if project, err := getProject(d, config); err == nil {
 			billingProject = project
 		}
 
 		// err == nil indicates that the billing_project value was found
-		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+		if bp, err := getBillingProject(d, config); err == nil {
 			billingProject = bp
 		}
 

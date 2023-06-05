@@ -1,16 +1,12 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
+	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"log"
 	"time"
 
 	"strings"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
-	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/googleapi"
@@ -49,7 +45,7 @@ func ResourceComputeRouterInterface() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
 				AtLeastOneOf:     []string{"ip_range", "interconnect_attachment", "subnetwork", "vpn_tunnel"},
 				ConflictsWith:    []string{"interconnect_attachment", "subnetwork"},
 				Description:      `The name or resource link to the VPN tunnel this interface will be linked to. Changing this forces a new interface to be created. Only one of vpn_tunnel, interconnect_attachment or subnetwork can be specified.`,
@@ -58,7 +54,7 @@ func ResourceComputeRouterInterface() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
 				AtLeastOneOf:     []string{"ip_range", "interconnect_attachment", "subnetwork", "vpn_tunnel"},
 				ConflictsWith:    []string{"subnetwork", "vpn_tunnel"},
 				Description:      `The name or resource link to the VLAN interconnect for this interface. Changing this forces a new interface to be created. Only one of interconnect_attachment, subnetwork or vpn_tunnel can be specified.`,
@@ -81,7 +77,7 @@ func ResourceComputeRouterInterface() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
 				AtLeastOneOf:     []string{"ip_range", "interconnect_attachment", "subnetwork", "vpn_tunnel"},
 				ConflictsWith:    []string{"interconnect_attachment", "vpn_tunnel"},
 				Description:      `The URI of the subnetwork resource that this interface belongs to, which must be in the same region as the Cloud Router. Changing this forces a new interface to be created. Only one of subnetwork, interconnect_attachment or vpn_tunnel can be specified.`,
@@ -115,17 +111,17 @@ func ResourceComputeRouterInterface() *schema.Resource {
 
 func resourceComputeRouterInterfaceCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	region, err := tpgresource.GetRegion(d, config)
+	region, err := getRegion(d, config)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -133,9 +129,9 @@ func resourceComputeRouterInterfaceCreate(d *schema.ResourceData, meta interface
 	routerName := d.Get("router").(string)
 	ifaceName := d.Get("name").(string)
 
-	routerLock := tpgresource.GetRouterLockName(region, routerName)
-	transport_tpg.MutexStore.Lock(routerLock)
-	defer transport_tpg.MutexStore.Unlock(routerLock)
+	routerLock := getRouterLockName(region, routerName)
+	mutexKV.Lock(routerLock)
+	defer mutexKV.Unlock(routerLock)
 
 	routersService := config.NewComputeClient(userAgent).Routers
 	router, err := routersService.Get(project, region, routerName).Do()
@@ -216,17 +212,17 @@ func resourceComputeRouterInterfaceCreate(d *schema.ResourceData, meta interface
 
 func resourceComputeRouterInterfaceRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	region, err := tpgresource.GetRegion(d, config)
+	region, err := getRegion(d, config)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -286,17 +282,17 @@ func resourceComputeRouterInterfaceRead(d *schema.ResourceData, meta interface{}
 
 func resourceComputeRouterInterfaceDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	region, err := tpgresource.GetRegion(d, config)
+	region, err := getRegion(d, config)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -304,9 +300,9 @@ func resourceComputeRouterInterfaceDelete(d *schema.ResourceData, meta interface
 	routerName := d.Get("router").(string)
 	ifaceName := d.Get("name").(string)
 
-	routerLock := tpgresource.GetRouterLockName(region, routerName)
-	transport_tpg.MutexStore.Lock(routerLock)
-	defer transport_tpg.MutexStore.Unlock(routerLock)
+	routerLock := getRouterLockName(region, routerName)
+	mutexKV.Lock(routerLock)
+	defer mutexKV.Unlock(routerLock)
 
 	routersService := config.NewComputeClient(userAgent).Routers
 	router, err := routersService.Get(project, region, routerName).Do()

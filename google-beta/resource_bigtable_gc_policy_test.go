@@ -1,19 +1,16 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"testing"
 	"time"
 
 	"cloud.google.com/go/bigtable"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 func TestAccBigtableGCPolicy_basic(t *testing.T) {
@@ -210,7 +207,7 @@ func TestUnitBigtableGCPolicy_customizeDiff(t *testing.T) {
 }
 
 func (testcase *testUnitBigtableGCPolicyCustomizeDiffTestcase) check(t *testing.T) {
-	d := &tpgresource.ResourceDiffMock{
+	d := &ResourceDiffMock{
 		Before: map[string]interface{}{},
 		After:  map[string]interface{}{},
 	}

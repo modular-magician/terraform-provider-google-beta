@@ -1,18 +1,15 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func DataSourceGoogleKmsKeyRing() *schema.Resource {
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceKMSKeyRing().Schema)
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "name")
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "location")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceKMSKeyRing().Schema)
+	addRequiredFieldsToSchema(dsSchema, "name")
+	addRequiredFieldsToSchema(dsSchema, "location")
+	addOptionalFieldsToSchema(dsSchema, "project")
 
 	return &schema.Resource{
 		Read:   dataSourceGoogleKmsKeyRingRead,
@@ -23,7 +20,7 @@ func DataSourceGoogleKmsKeyRing() *schema.Resource {
 func dataSourceGoogleKmsKeyRingRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}

@@ -1,15 +1,12 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
+	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"log"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
-	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	compute "google.golang.org/api/compute/v0.beta"
 )
@@ -117,12 +114,12 @@ func DataSourceGoogleComputeImage() *schema.Resource {
 
 func dataSourceGoogleComputeImageRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -222,7 +219,7 @@ func dataSourceGoogleComputeImageRead(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error setting status: %s", err)
 	}
 
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/global/images/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/global/images/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}

@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -11,8 +9,6 @@ import (
 	"cloud.google.com/go/bigtable"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -63,7 +59,7 @@ func ResourceBigtableTable() *schema.Resource {
 				Type:             schema.TypeString,
 				Required:         true,
 				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareResourceNames,
+				DiffSuppressFunc: compareResourceNames,
 				Description:      `The name of the Bigtable instance.`,
 			},
 
@@ -98,19 +94,19 @@ func ResourceBigtableTable() *schema.Resource {
 
 func resourceBigtableTableCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	ctx := context.Background()
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	instanceName := tpgresource.GetResourceNameFromSelfLink(d.Get("instance_name").(string))
+	instanceName := GetResourceNameFromSelfLink(d.Get("instance_name").(string))
 	c, err := config.BigTableClientFactory(userAgent).NewAdminClient(project, instanceName)
 	if err != nil {
 		return fmt.Errorf("Error starting admin client. %s", err)
@@ -135,7 +131,7 @@ func resourceBigtableTableCreate(d *schema.ResourceData, meta interface{}) error
 
 	// Set the split keys if given.
 	if v, ok := d.GetOk("split_keys"); ok {
-		tblConf.SplitKeys = tpgresource.ConvertStringArr(v.([]interface{}))
+		tblConf.SplitKeys = convertStringArr(v.([]interface{}))
 	}
 
 	// Set the column families if given.
@@ -164,7 +160,7 @@ func resourceBigtableTableCreate(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error creating table. %s", err)
 	}
 
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/instances/{{instance_name}}/tables/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/instances/{{instance_name}}/tables/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -175,18 +171,18 @@ func resourceBigtableTableCreate(d *schema.ResourceData, meta interface{}) error
 
 func resourceBigtableTableRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 	ctx := context.Background()
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	instanceName := tpgresource.GetResourceNameFromSelfLink(d.Get("instance_name").(string))
+	instanceName := GetResourceNameFromSelfLink(d.Get("instance_name").(string))
 	c, err := config.BigTableClientFactory(userAgent).NewAdminClient(project, instanceName)
 	if err != nil {
 		return fmt.Errorf("Error starting admin client. %s", err)
@@ -197,7 +193,7 @@ func resourceBigtableTableRead(d *schema.ResourceData, meta interface{}) error {
 	name := d.Get("name").(string)
 	table, err := c.TableInfo(ctx, name)
 	if err != nil {
-		if tpgresource.IsNotFoundGrpcError(err) {
+		if isNotFoundGrpcError(err) {
 			log.Printf("[WARN] Removing %s because it's gone", name)
 			d.SetId("")
 			return nil
@@ -229,18 +225,18 @@ func resourceBigtableTableRead(d *schema.ResourceData, meta interface{}) error {
 
 func resourceBigtableTableUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 	ctx := context.Background()
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	instanceName := tpgresource.GetResourceNameFromSelfLink(d.Get("instance_name").(string))
+	instanceName := GetResourceNameFromSelfLink(d.Get("instance_name").(string))
 	c, err := config.BigTableClientFactory(userAgent).NewAdminClient(project, instanceName)
 	if err != nil {
 		return fmt.Errorf("Error starting admin client. %s", err)
@@ -294,19 +290,19 @@ func resourceBigtableTableUpdate(d *schema.ResourceData, meta interface{}) error
 
 func resourceBigtableTableDestroy(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	ctx := context.Background()
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	instanceName := tpgresource.GetResourceNameFromSelfLink(d.Get("instance_name").(string))
+	instanceName := GetResourceNameFromSelfLink(d.Get("instance_name").(string))
 	c, err := config.BigTableClientFactory(userAgent).NewAdminClient(project, instanceName)
 	if err != nil {
 		return fmt.Errorf("Error starting admin client. %s", err)
@@ -340,7 +336,7 @@ func flattenColumnFamily(families []string) []map[string]interface{} {
 // TODO(rileykarson): Fix the stored import format after rebasing 3.0.0
 func resourceBigtableTableImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/instances/(?P<instance_name>[^/]+)/tables/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<instance_name>[^/]+)/(?P<name>[^/]+)",
 		"(?P<instance_name>[^/]+)/(?P<name>[^/]+)",
@@ -349,7 +345,7 @@ func resourceBigtableTableImport(d *schema.ResourceData, meta interface{}) ([]*s
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/instances/{{instance_name}}/tables/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/instances/{{instance_name}}/tables/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

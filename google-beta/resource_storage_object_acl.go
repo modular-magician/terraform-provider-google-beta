@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -120,7 +117,7 @@ func getObjectAclId(object string) string {
 
 func resourceStorageObjectAclCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -128,12 +125,12 @@ func resourceStorageObjectAclCreate(d *schema.ResourceData, meta interface{}) er
 	bucket := d.Get("bucket").(string)
 	object := d.Get("object").(string)
 
-	lockName, err := tpgresource.ReplaceVars(d, config, "storage/buckets/{{bucket}}/objects/{{object}}")
+	lockName, err := ReplaceVars(d, config, "storage/buckets/{{bucket}}/objects/{{object}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
 	// If we're using a predefined acl we just use the canned api.
 	if predefinedAcl, ok := d.GetOk("predefined_acl"); ok {
@@ -181,7 +178,7 @@ func resourceStorageObjectAclCreate(d *schema.ResourceData, meta interface{}) er
 
 func resourceStorageObjectAclRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -205,7 +202,7 @@ func resourceStorageObjectAclRead(d *schema.ResourceData, meta interface{}) erro
 
 func resourceStorageObjectAclUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -213,12 +210,12 @@ func resourceStorageObjectAclUpdate(d *schema.ResourceData, meta interface{}) er
 	bucket := d.Get("bucket").(string)
 	object := d.Get("object").(string)
 
-	lockName, err := tpgresource.ReplaceVars(d, config, "storage/buckets/{{bucket}}/objects/{{object}}")
+	lockName, err := ReplaceVars(d, config, "storage/buckets/{{bucket}}/objects/{{object}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
 	if _, ok := d.GetOk("predefined_acl"); d.HasChange("predefined_acl") && ok {
 		res, err := config.NewStorageClient(userAgent).Objects.Get(bucket, object).Do()
@@ -263,7 +260,7 @@ func resourceStorageObjectAclUpdate(d *schema.ResourceData, meta interface{}) er
 
 func resourceStorageObjectAclDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -271,12 +268,12 @@ func resourceStorageObjectAclDelete(d *schema.ResourceData, meta interface{}) er
 	bucket := d.Get("bucket").(string)
 	object := d.Get("object").(string)
 
-	lockName, err := tpgresource.ReplaceVars(d, config, "storage/buckets/{{bucket}}/objects/{{object}}")
+	lockName, err := ReplaceVars(d, config, "storage/buckets/{{bucket}}/objects/{{object}}")
 	if err != nil {
 		return err
 	}
-	transport_tpg.MutexStore.Lock(lockName)
-	defer transport_tpg.MutexStore.Unlock(lockName)
+	mutexKV.Lock(lockName)
+	defer mutexKV.Unlock(lockName)
 
 	res, err := config.NewStorageClient(userAgent).Objects.Get(bucket, object).Do()
 	if err != nil {

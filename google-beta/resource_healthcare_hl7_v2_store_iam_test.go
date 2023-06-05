@@ -1,14 +1,11 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"reflect"
 	"sort"
 	"testing"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -119,11 +116,8 @@ func TestAccHealthcareHl7V2StoreIamPolicy(t *testing.T) {
 			{
 				// Test Iam Policy creation (no update for policy, no need to test)
 				Config: testAccHealthcareHl7V2StoreIamPolicy_basic(account, datasetName, hl7V2StoreName, roleId),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGoogleHealthcareHl7V2StoreIamPolicyExists(t, "foo", roleId,
-						fmt.Sprintf("serviceAccount:%s@%s.iam.gserviceaccount.com", account, projectId),
-					),
-					resource.TestCheckResourceAttrSet("data.google_healthcare_hl7_v2_store_iam_policy.foo", "policy_data"),
+				Check: testAccCheckGoogleHealthcareHl7V2StoreIamPolicyExists(t, "foo", roleId,
+					fmt.Sprintf("serviceAccount:%s@%s.iam.gserviceaccount.com", account, projectId),
 				),
 			},
 			{
@@ -355,10 +349,6 @@ data "google_iam_policy" "foo" {
 resource "google_healthcare_hl7_v2_store_iam_policy" "foo" {
   hl7_v2_store_id = google_healthcare_hl7_v2_store.hl7_v2_store.id
   policy_data     = data.google_iam_policy.foo.policy_data
-}
-
-data "google_healthcare_hl7_v2_store_iam_policy" "foo" {
-  hl7_v2_store_id = google_healthcare_hl7_v2_store.hl7_v2_store.id
 }
 `, account, datasetName, hl7V2StoreName, roleId)
 }

@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -101,7 +98,6 @@ func TestAccBigqueryDatapolicyDataPolicyIamPolicyGenerated(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBigqueryDatapolicyDataPolicyIamPolicy_basicGenerated(context),
-				Check:  resource.TestCheckResourceAttrSet("data.google_bigquery_datapolicy_data_policy_iam_policy.foo", "policy_data"),
 			},
 			{
 				ResourceName:      "google_bigquery_datapolicy_data_policy_iam_policy.foo",
@@ -188,15 +184,6 @@ resource "google_bigquery_datapolicy_data_policy_iam_policy" "foo" {
   location = google_bigquery_datapolicy_data_policy.data_policy.location
   data_policy_id = google_bigquery_datapolicy_data_policy.data_policy.data_policy_id
   policy_data = data.google_iam_policy.foo.policy_data
-}
-
-data "google_bigquery_datapolicy_data_policy_iam_policy" "foo" {
-  project = google_bigquery_datapolicy_data_policy.data_policy.project
-  location = google_bigquery_datapolicy_data_policy.data_policy.location
-  data_policy_id = google_bigquery_datapolicy_data_policy.data_policy.data_policy_id
-  depends_on = [
-    google_bigquery_datapolicy_data_policy_iam_policy.foo
-  ]
 }
 `, context)
 }

@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -101,7 +98,6 @@ func TestAccCloudTasksQueueIamPolicyGenerated(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCloudTasksQueueIamPolicy_basicGenerated(context),
-				Check:  resource.TestCheckResourceAttrSet("data.google_cloud_tasks_queue_iam_policy.foo", "policy_data"),
 			},
 			{
 				ResourceName:      "google_cloud_tasks_queue_iam_policy.foo",
@@ -158,15 +154,6 @@ resource "google_cloud_tasks_queue_iam_policy" "foo" {
   location = google_cloud_tasks_queue.default.location
   name = google_cloud_tasks_queue.default.name
   policy_data = data.google_iam_policy.foo.policy_data
-}
-
-data "google_cloud_tasks_queue_iam_policy" "foo" {
-  project = google_cloud_tasks_queue.default.project
-  location = google_cloud_tasks_queue.default.location
-  name = google_cloud_tasks_queue.default.name
-  depends_on = [
-    google_cloud_tasks_queue_iam_policy.foo
-  ]
 }
 `, context)
 }

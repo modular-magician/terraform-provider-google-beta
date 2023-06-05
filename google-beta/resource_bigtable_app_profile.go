@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,10 +22,8 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"google.golang.org/api/bigtableadmin/v2"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"google.golang.org/api/bigtableadmin/v2"
 )
 
 func ResourceBigtableAppProfile() *schema.Resource {
@@ -70,7 +65,7 @@ func ResourceBigtableAppProfile() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareResourceNames,
+				DiffSuppressFunc: compareResourceNames,
 				Description:      `The name of the instance to create the app profile within.`,
 			},
 			"multi_cluster_routing_use_any": {
@@ -130,7 +125,7 @@ It is unsafe to send these requests to the same table/row/column in multiple clu
 
 func resourceBigtableAppProfileCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -139,19 +134,19 @@ func resourceBigtableAppProfileCreate(d *schema.ResourceData, meta interface{}) 
 	descriptionProp, err := expandBigtableAppProfileDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	multiClusterRoutingUseAnyProp, err := expandBigtableAppProfileMultiClusterRoutingUseAny(d.Get("multi_cluster_routing_use_any"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("multi_cluster_routing_use_any"); !tpgresource.IsEmptyValue(reflect.ValueOf(multiClusterRoutingUseAnyProp)) && (ok || !reflect.DeepEqual(v, multiClusterRoutingUseAnyProp)) {
+	} else if v, ok := d.GetOkExists("multi_cluster_routing_use_any"); !isEmptyValue(reflect.ValueOf(multiClusterRoutingUseAnyProp)) && (ok || !reflect.DeepEqual(v, multiClusterRoutingUseAnyProp)) {
 		obj["multiClusterRoutingUseAny"] = multiClusterRoutingUseAnyProp
 	}
 	singleClusterRoutingProp, err := expandBigtableAppProfileSingleClusterRouting(d.Get("single_cluster_routing"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("single_cluster_routing"); !tpgresource.IsEmptyValue(reflect.ValueOf(singleClusterRoutingProp)) && (ok || !reflect.DeepEqual(v, singleClusterRoutingProp)) {
+	} else if v, ok := d.GetOkExists("single_cluster_routing"); !isEmptyValue(reflect.ValueOf(singleClusterRoutingProp)) && (ok || !reflect.DeepEqual(v, singleClusterRoutingProp)) {
 		obj["singleClusterRouting"] = singleClusterRoutingProp
 	}
 
@@ -160,7 +155,7 @@ func resourceBigtableAppProfileCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{BigtableBasePath}}projects/{{project}}/instances/{{instance}}/appProfiles?appProfileId={{app_profile_id}}&ignoreWarnings={{ignore_warnings}}")
+	url, err := ReplaceVars(d, config, "{{BigtableBasePath}}projects/{{project}}/instances/{{instance}}/appProfiles?appProfileId={{app_profile_id}}&ignoreWarnings={{ignore_warnings}}")
 	if err != nil {
 		return err
 	}
@@ -168,26 +163,18 @@ func resourceBigtableAppProfileCreate(d *schema.ResourceData, meta interface{}) 
 	log.Printf("[DEBUG] Creating new AppProfile: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for AppProfile: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating AppProfile: %s", err)
 	}
@@ -196,7 +183,7 @@ func resourceBigtableAppProfileCreate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/instances/{{instance}}/appProfiles/{{app_profile_id}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/instances/{{instance}}/appProfiles/{{app_profile_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -209,36 +196,30 @@ func resourceBigtableAppProfileCreate(d *schema.ResourceData, meta interface{}) 
 
 func resourceBigtableAppProfileRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{BigtableBasePath}}projects/{{project}}/instances/{{instance}}/appProfiles/{{app_profile_id}}")
+	url, err := ReplaceVars(d, config, "{{BigtableBasePath}}projects/{{project}}/instances/{{instance}}/appProfiles/{{app_profile_id}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for AppProfile: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("BigtableAppProfile %q", d.Id()))
 	}
@@ -265,14 +246,14 @@ func resourceBigtableAppProfileRead(d *schema.ResourceData, meta interface{}) er
 
 func resourceBigtableAppProfileUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for AppProfile: %s", err)
 	}
@@ -282,19 +263,19 @@ func resourceBigtableAppProfileUpdate(d *schema.ResourceData, meta interface{}) 
 	descriptionProp, err := expandBigtableAppProfileDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	multiClusterRoutingUseAnyProp, err := expandBigtableAppProfileMultiClusterRoutingUseAny(d.Get("multi_cluster_routing_use_any"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("multi_cluster_routing_use_any"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, multiClusterRoutingUseAnyProp)) {
+	} else if v, ok := d.GetOkExists("multi_cluster_routing_use_any"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, multiClusterRoutingUseAnyProp)) {
 		obj["multiClusterRoutingUseAny"] = multiClusterRoutingUseAnyProp
 	}
 	singleClusterRoutingProp, err := expandBigtableAppProfileSingleClusterRouting(d.Get("single_cluster_routing"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("single_cluster_routing"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, singleClusterRoutingProp)) {
+	} else if v, ok := d.GetOkExists("single_cluster_routing"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, singleClusterRoutingProp)) {
 		obj["singleClusterRouting"] = singleClusterRoutingProp
 	}
 
@@ -303,7 +284,7 @@ func resourceBigtableAppProfileUpdate(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{BigtableBasePath}}projects/{{project}}/instances/{{instance}}/appProfiles/{{app_profile_id}}?ignoreWarnings={{ignore_warnings}}")
+	url, err := ReplaceVars(d, config, "{{BigtableBasePath}}projects/{{project}}/instances/{{instance}}/appProfiles/{{app_profile_id}}?ignoreWarnings={{ignore_warnings}}")
 	if err != nil {
 		return err
 	}
@@ -356,19 +337,11 @@ func resourceBigtableAppProfileUpdate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating AppProfile %q: %s", d.Id(), err)
@@ -381,20 +354,20 @@ func resourceBigtableAppProfileUpdate(d *schema.ResourceData, meta interface{}) 
 
 func resourceBigtableAppProfileDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for AppProfile: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{BigtableBasePath}}projects/{{project}}/instances/{{instance}}/appProfiles/{{app_profile_id}}?ignoreWarnings={{ignore_warnings}}")
+	url, err := ReplaceVars(d, config, "{{BigtableBasePath}}projects/{{project}}/instances/{{instance}}/appProfiles/{{app_profile_id}}?ignoreWarnings={{ignore_warnings}}")
 	if err != nil {
 		return err
 	}
@@ -403,19 +376,11 @@ func resourceBigtableAppProfileDelete(d *schema.ResourceData, meta interface{}) 
 	log.Printf("[DEBUG] Deleting AppProfile %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "AppProfile")
 	}
@@ -426,7 +391,7 @@ func resourceBigtableAppProfileDelete(d *schema.ResourceData, meta interface{}) 
 
 func resourceBigtableAppProfileImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/instances/(?P<instance>[^/]+)/appProfiles/(?P<app_profile_id>[^/]+)",
 		"(?P<project>[^/]+)/(?P<instance>[^/]+)/(?P<app_profile_id>[^/]+)",
 		"(?P<instance>[^/]+)/(?P<app_profile_id>[^/]+)",
@@ -435,7 +400,7 @@ func resourceBigtableAppProfileImport(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/instances/{{instance}}/appProfiles/{{app_profile_id}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/instances/{{instance}}/appProfiles/{{app_profile_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -493,11 +458,11 @@ func flattenBigtableAppProfileSingleClusterRoutingAllowTransactionalWrites(v int
 	return v
 }
 
-func expandBigtableAppProfileDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandBigtableAppProfileDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBigtableAppProfileMultiClusterRoutingUseAny(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandBigtableAppProfileMultiClusterRoutingUseAny(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil || !v.(bool) {
 		return nil, nil
 	}
@@ -513,7 +478,7 @@ func expandBigtableAppProfileMultiClusterRoutingUseAny(v interface{}, d tpgresou
 	return obj, nil
 }
 
-func expandBigtableAppProfileSingleClusterRouting(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandBigtableAppProfileSingleClusterRouting(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -525,31 +490,31 @@ func expandBigtableAppProfileSingleClusterRouting(v interface{}, d tpgresource.T
 	transformedClusterId, err := expandBigtableAppProfileSingleClusterRoutingClusterId(original["cluster_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedClusterId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedClusterId); val.IsValid() && !isEmptyValue(val) {
 		transformed["clusterId"] = transformedClusterId
 	}
 
 	transformedAllowTransactionalWrites, err := expandBigtableAppProfileSingleClusterRoutingAllowTransactionalWrites(original["allow_transactional_writes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAllowTransactionalWrites); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAllowTransactionalWrites); val.IsValid() && !isEmptyValue(val) {
 		transformed["allowTransactionalWrites"] = transformedAllowTransactionalWrites
 	}
 
 	return transformed, nil
 }
 
-func expandBigtableAppProfileSingleClusterRoutingClusterId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandBigtableAppProfileSingleClusterRoutingClusterId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandBigtableAppProfileSingleClusterRoutingAllowTransactionalWrites(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandBigtableAppProfileSingleClusterRoutingAllowTransactionalWrites(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func resourceBigtableAppProfileEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	// Instance is a URL parameter only, so replace self-link/path with resource name only.
-	if err := d.Set("instance", tpgresource.GetResourceNameFromSelfLink(d.Get("instance").(string))); err != nil {
+	if err := d.Set("instance", GetResourceNameFromSelfLink(d.Get("instance").(string))); err != nil {
 		return nil, fmt.Errorf("Error setting instance: %s", err)
 	}
 	return obj, nil

@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -24,8 +21,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -49,7 +44,7 @@ func ResourceLoggingLinkedDataset() *schema.Resource {
 				Type:             schema.TypeString,
 				Required:         true,
 				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareResourceNames,
+				DiffSuppressFunc: compareResourceNames,
 				Description:      `The bucket to which the linked dataset is attached.`,
 			},
 			"link_id": {
@@ -76,7 +71,7 @@ func ResourceLoggingLinkedDataset() *schema.Resource {
 				Computed:         true,
 				Optional:         true,
 				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
 				Description:      `The parent of the linked dataset.`,
 			},
 			"bigquery_dataset": {
@@ -124,7 +119,7 @@ and "2014-10-02T15:01:23.045123456Z".`,
 
 func resourceLoggingLinkedDatasetCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -133,7 +128,7 @@ func resourceLoggingLinkedDatasetCreate(d *schema.ResourceData, meta interface{}
 	descriptionProp, err := expandLoggingLinkedDatasetDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 
@@ -142,7 +137,7 @@ func resourceLoggingLinkedDatasetCreate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{LoggingBasePath}}{{parent}}/locations/{{location}}/buckets/{{bucket}}/links?linkId={{link_id}}")
+	url, err := ReplaceVars(d, config, "{{LoggingBasePath}}{{parent}}/locations/{{location}}/buckets/{{bucket}}/links?linkId={{link_id}}")
 	if err != nil {
 		return err
 	}
@@ -151,25 +146,17 @@ func resourceLoggingLinkedDatasetCreate(d *schema.ResourceData, meta interface{}
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating LinkedDataset: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/locations/{{location}}/buckets/{{bucket}}/links/{{link_id}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/locations/{{location}}/buckets/{{bucket}}/links/{{link_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -193,7 +180,7 @@ func resourceLoggingLinkedDatasetCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// This may have caused the ID to update - update it if so.
-	id, err = tpgresource.ReplaceVars(d, config, "{{parent}}/locations/{{location}}/buckets/{{bucket}}/links/{{link_id}}")
+	id, err = ReplaceVars(d, config, "{{parent}}/locations/{{location}}/buckets/{{bucket}}/links/{{link_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -206,12 +193,12 @@ func resourceLoggingLinkedDatasetCreate(d *schema.ResourceData, meta interface{}
 
 func resourceLoggingLinkedDatasetRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{LoggingBasePath}}{{parent}}/locations/{{location}}/buckets/{{bucket}}/links/{{link_id}}")
+	url, err := ReplaceVars(d, config, "{{LoggingBasePath}}{{parent}}/locations/{{location}}/buckets/{{bucket}}/links/{{link_id}}")
 	if err != nil {
 		return err
 	}
@@ -219,17 +206,11 @@ func resourceLoggingLinkedDatasetRead(d *schema.ResourceData, meta interface{}) 
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("LoggingLinkedDataset %q", d.Id()))
 	}
@@ -255,14 +236,14 @@ func resourceLoggingLinkedDatasetRead(d *schema.ResourceData, meta interface{}) 
 
 func resourceLoggingLinkedDatasetDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{LoggingBasePath}}{{parent}}/locations/{{location}}/buckets/{{bucket}}/links/{{link_id}}")
+	url, err := ReplaceVars(d, config, "{{LoggingBasePath}}{{parent}}/locations/{{location}}/buckets/{{bucket}}/links/{{link_id}}")
 	if err != nil {
 		return err
 	}
@@ -271,19 +252,11 @@ func resourceLoggingLinkedDatasetDelete(d *schema.ResourceData, meta interface{}
 	log.Printf("[DEBUG] Deleting LinkedDataset %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "LinkedDataset")
 	}
@@ -302,14 +275,14 @@ func resourceLoggingLinkedDatasetDelete(d *schema.ResourceData, meta interface{}
 
 func resourceLoggingLinkedDatasetImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"(?P<parent>.+)/locations/(?P<location>[^/]+)/buckets/(?P<bucket>[^/]+)/links/(?P<link_id>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/locations/{{location}}/buckets/{{bucket}}/links/{{link_id}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/locations/{{location}}/buckets/{{bucket}}/links/{{link_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -351,7 +324,7 @@ func flattenLoggingLinkedDatasetBigqueryDatasetDatasetId(v interface{}, d *schem
 	return v
 }
 
-func expandLoggingLinkedDatasetDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandLoggingLinkedDatasetDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -371,9 +344,9 @@ func resourceLoggingLinkedDatasetEncoder(d *schema.ResourceData, meta interface{
 	// Set parent to the extracted value.
 	d.Set("parent", parent)
 	// Set all the other fields to their short forms before forming url and setting ID.
-	bucket = tpgresource.GetResourceNameFromSelfLink(bucket)
+	bucket = GetResourceNameFromSelfLink(bucket)
 	name := d.Get("name").(string)
-	name = tpgresource.GetResourceNameFromSelfLink(name)
+	name = GetResourceNameFromSelfLink(name)
 	d.Set("location", location)
 	d.Set("bucket", bucket)
 	d.Set("name", name)

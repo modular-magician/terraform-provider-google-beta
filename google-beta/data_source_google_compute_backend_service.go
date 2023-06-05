@@ -1,23 +1,20 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func DataSourceGoogleComputeBackendService() *schema.Resource {
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceComputeBackendService().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceComputeBackendService().Schema)
 
 	// Set 'Required' schema elements
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "name")
+	addRequiredFieldsToSchema(dsSchema, "name")
 
 	// Set 'Optional' schema elements
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
+	addOptionalFieldsToSchema(dsSchema, "project")
 
 	return &schema.Resource{
 		Read:   dataSourceComputeBackendServiceRead,
@@ -30,7 +27,7 @@ func dataSourceComputeBackendServiceRead(d *schema.ResourceData, meta interface{
 
 	serviceName := d.Get("name").(string)
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}

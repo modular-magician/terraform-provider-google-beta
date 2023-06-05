@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -549,7 +547,7 @@ func ResourceDataprocCluster() *schema.Resource {
 										AtLeastOneOf:     gceClusterConfigKeys,
 										ForceNew:         true,
 										ConflictsWith:    []string{"cluster_config.0.gce_cluster_config.0.subnetwork"},
-										DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+										DiffSuppressFunc: compareSelfLinkOrResourceName,
 										Description:      `The name or self_link of the Google Compute Engine network to the cluster will be part of. Conflicts with subnetwork. If neither is specified, this defaults to the "default" network.`,
 									},
 
@@ -559,7 +557,7 @@ func ResourceDataprocCluster() *schema.Resource {
 										AtLeastOneOf:     gceClusterConfigKeys,
 										ForceNew:         true,
 										ConflictsWith:    []string{"cluster_config.0.gce_cluster_config.0.network"},
-										DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+										DiffSuppressFunc: compareSelfLinkOrResourceName,
 										Description:      `The name or self_link of the Google Compute Engine subnetwork the cluster will be part of. Conflicts with network.`,
 									},
 
@@ -590,10 +588,10 @@ func ResourceDataprocCluster() *schema.Resource {
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 											StateFunc: func(v interface{}) string {
-												return tpgresource.CanonicalizeServiceScope(v.(string))
+												return canonicalizeServiceScope(v.(string))
 											},
 										},
-										Set: tpgresource.StringScopeHashcode,
+										Set: stringScopeHashcode,
 									},
 
 									"internal_ip_only": {
@@ -701,7 +699,7 @@ func ResourceDataprocCluster() *schema.Resource {
 													ForceNew:         true,
 													Required:         true,
 													Description:      `The URI of a sole-tenant that the cluster will be created on.`,
-													DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+													DiffSuppressFunc: compareSelfLinkOrResourceName,
 												},
 											},
 										},
@@ -1299,12 +1297,12 @@ func acceleratorsSchema() *schema.Resource {
 
 func resourceDataprocClusterCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -1326,7 +1324,7 @@ func resourceDataprocClusterCreate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	if _, ok := d.GetOk("labels"); ok {
-		cluster.Labels = tpgresource.ExpandLabels(d)
+		cluster.Labels = expandLabels(d)
 	}
 
 	// Checking here caters for the case where the user does not specify cluster_config
@@ -1634,7 +1632,7 @@ func expandGceClusterConfig(d *schema.ResourceData, config *transport_tpg.Config
 		conf.ZoneUri = v.(string)
 	}
 	if v, ok := cfg["network"]; ok {
-		nf, err := tpgresource.ParseNetworkFieldValue(v.(string), d, config)
+		nf, err := ParseNetworkFieldValue(v.(string), d, config)
 		if err != nil {
 			return nil, fmt.Errorf("cannot determine self_link for network %q: %s", v, err)
 		}
@@ -1642,7 +1640,7 @@ func expandGceClusterConfig(d *schema.ResourceData, config *transport_tpg.Config
 		conf.NetworkUri = nf.RelativeLink()
 	}
 	if v, ok := cfg["subnetwork"]; ok {
-		snf, err := tpgresource.ParseSubnetworkFieldValue(v.(string), d, config)
+		snf, err := ParseSubnetworkFieldValue(v.(string), d, config)
 		if err != nil {
 			return nil, fmt.Errorf("cannot determine self_link for subnetwork %q: %s", v, err)
 		}
@@ -1659,7 +1657,7 @@ func expandGceClusterConfig(d *schema.ResourceData, config *transport_tpg.Config
 		scopesSet := scopes.(*schema.Set)
 		scopes := make([]string, scopesSet.Len())
 		for i, scope := range scopesSet.List() {
-			scopes[i] = tpgresource.CanonicalizeServiceScope(scope.(string))
+			scopes[i] = canonicalizeServiceScope(scope.(string))
 		}
 		conf.ServiceAccountScopes = scopes
 	}
@@ -1901,7 +1899,7 @@ func expandInstanceGroupConfig(cfg map[string]interface{}) *dataproc.InstanceGro
 		icg.NumInstances = int64(v.(int))
 	}
 	if v, ok := cfg["machine_type"]; ok {
-		icg.MachineTypeUri = tpgresource.GetResourceNameFromSelfLink(v.(string))
+		icg.MachineTypeUri = GetResourceNameFromSelfLink(v.(string))
 	}
 	if v, ok := cfg["min_cpu_platform"]; ok {
 		icg.MinCpuPlatform = v.(string)
@@ -1949,12 +1947,12 @@ func expandAccelerators(configured []interface{}) []*dataproc.AcceleratorConfig 
 
 func resourceDataprocClusterUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -2056,12 +2054,12 @@ func resourceDataprocClusterUpdate(d *schema.ResourceData, meta interface{}) err
 
 func resourceDataprocClusterRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -2089,33 +2087,32 @@ func resourceDataprocClusterRead(d *schema.ResourceData, meta interface{}) error
 	}
 
 	var cfg []map[string]interface{}
-	cfg, err = flattenClusterConfig(d, cluster.Config)
+
+	if cluster.Config != nil {
+		cfg, err = flattenClusterConfig(d, cluster.Config)
+
+		if err != nil {
+			return err
+		}
+
+		err = d.Set("cluster_config", cfg)
+	} else {
+		cfg, err = flattenVirtualClusterConfig(d, cluster.VirtualClusterConfig)
+
+		if err != nil {
+			return err
+		}
+
+		err = d.Set("virtual_cluster_config", cfg)
+	}
 
 	if err != nil {
 		return err
 	}
-
-	err = d.Set("cluster_config", cfg)
-	virtualCfg, err := flattenVirtualClusterConfig(d, cluster.VirtualClusterConfig)
-
-	if err != nil {
-		return err
-	}
-
-	err = d.Set("virtual_cluster_config", virtualCfg)
-
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
 func flattenVirtualClusterConfig(d *schema.ResourceData, cfg *dataproc.VirtualClusterConfig) ([]map[string]interface{}, error) {
-	if cfg == nil {
-		return []map[string]interface{}{}, nil
-	}
-
 	data := map[string]interface{}{
 		"staging_bucket":            d.Get("virtual_cluster_config.0.staging_bucket"),
 		"auxiliary_services_config": flattenAuxiliaryServicesConfig(d, cfg.AuxiliaryServicesConfig),
@@ -2232,9 +2229,6 @@ func flattenKubernetesSoftwareConfig(d *schema.ResourceData, cfg *dataproc.Kuber
 }
 
 func flattenClusterConfig(d *schema.ResourceData, cfg *dataproc.ClusterConfig) ([]map[string]interface{}, error) {
-	if cfg == nil {
-		return []map[string]interface{}{}, nil
-	}
 
 	data := map[string]interface{}{
 		"staging_bucket": d.Get("cluster_config.0.staging_bucket").(string),
@@ -2395,7 +2389,7 @@ func flattenAccelerators(accelerators []*dataproc.AcceleratorConfig) interface{}
 	acceleratorsTypeSet := schema.NewSet(schema.HashResource(acceleratorsSchema()), []interface{}{})
 	for _, accelerator := range accelerators {
 		data := map[string]interface{}{
-			"accelerator_type":  tpgresource.GetResourceNameFromSelfLink(accelerator.AcceleratorTypeUri),
+			"accelerator_type":  GetResourceNameFromSelfLink(accelerator.AcceleratorTypeUri),
 			"accelerator_count": int(accelerator.AcceleratorCount),
 		}
 
@@ -2427,14 +2421,11 @@ func flattenInitializationActions(nia []*dataproc.NodeInitializationAction) ([]m
 }
 
 func flattenGceClusterConfig(d *schema.ResourceData, gcc *dataproc.GceClusterConfig) []map[string]interface{} {
-	if gcc == nil {
-		return []map[string]interface{}{}
-	}
 
 	gceConfig := map[string]interface{}{
-		"tags":             schema.NewSet(schema.HashString, tpgresource.ConvertStringArrToInterface(gcc.Tags)),
+		"tags":             schema.NewSet(schema.HashString, convertStringArrToInterface(gcc.Tags)),
 		"service_account":  gcc.ServiceAccount,
-		"zone":             tpgresource.GetResourceNameFromSelfLink(gcc.ZoneUri),
+		"zone":             GetResourceNameFromSelfLink(gcc.ZoneUri),
 		"internal_ip_only": gcc.InternalIpOnly,
 		"metadata":         gcc.Metadata,
 	}
@@ -2446,7 +2437,7 @@ func flattenGceClusterConfig(d *schema.ResourceData, gcc *dataproc.GceClusterCon
 		gceConfig["subnetwork"] = gcc.SubnetworkUri
 	}
 	if len(gcc.ServiceAccountScopes) > 0 {
-		gceConfig["service_account_scopes"] = schema.NewSet(tpgresource.StringScopeHashcode, tpgresource.ConvertStringArrToInterface(gcc.ServiceAccountScopes))
+		gceConfig["service_account_scopes"] = schema.NewSet(stringScopeHashcode, convertStringArrToInterface(gcc.ServiceAccountScopes))
 	}
 	if gcc.ShieldedInstanceConfig != nil {
 		gceConfig["shielded_instance_config"] = []map[string]interface{}{
@@ -2518,7 +2509,7 @@ func flattenInstanceGroupConfig(d *schema.ResourceData, icg *dataproc.InstanceGr
 
 	if icg != nil {
 		data["num_instances"] = icg.NumInstances
-		data["machine_type"] = tpgresource.GetResourceNameFromSelfLink(icg.MachineTypeUri)
+		data["machine_type"] = GetResourceNameFromSelfLink(icg.MachineTypeUri)
 		data["min_cpu_platform"] = icg.MinCpuPlatform
 		data["image_uri"] = icg.ImageUri
 		data["instance_names"] = icg.InstanceNames
@@ -2545,12 +2536,12 @@ func extractInitTimeout(t string) (int, error) {
 
 func resourceDataprocClusterDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}

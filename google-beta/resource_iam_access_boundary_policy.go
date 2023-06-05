@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -24,8 +21,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -146,7 +141,7 @@ This can be used e.g. in UIs which allow to enter the expression.`,
 
 func resourceIAM2AccessBoundaryPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -155,23 +150,23 @@ func resourceIAM2AccessBoundaryPolicyCreate(d *schema.ResourceData, meta interfa
 	displayNameProp, err := expandIAM2AccessBoundaryPolicyDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	etagProp, err := expandIAM2AccessBoundaryPolicyEtag(d.Get("etag"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("etag"); !tpgresource.IsEmptyValue(reflect.ValueOf(etagProp)) && (ok || !reflect.DeepEqual(v, etagProp)) {
+	} else if v, ok := d.GetOkExists("etag"); !isEmptyValue(reflect.ValueOf(etagProp)) && (ok || !reflect.DeepEqual(v, etagProp)) {
 		obj["etag"] = etagProp
 	}
 	rulesProp, err := expandIAM2AccessBoundaryPolicyRules(d.Get("rules"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("rules"); !tpgresource.IsEmptyValue(reflect.ValueOf(rulesProp)) && (ok || !reflect.DeepEqual(v, rulesProp)) {
+	} else if v, ok := d.GetOkExists("rules"); !isEmptyValue(reflect.ValueOf(rulesProp)) && (ok || !reflect.DeepEqual(v, rulesProp)) {
 		obj["rules"] = rulesProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/accessboundarypolicies?policyId={{name}}")
+	url, err := ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/accessboundarypolicies?policyId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -180,25 +175,17 @@ func resourceIAM2AccessBoundaryPolicyCreate(d *schema.ResourceData, meta interfa
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating AccessBoundaryPolicy: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/{{name}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -221,12 +208,12 @@ func resourceIAM2AccessBoundaryPolicyCreate(d *schema.ResourceData, meta interfa
 
 func resourceIAM2AccessBoundaryPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/accessboundarypolicies/{{name}}")
+	url, err := ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/accessboundarypolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -234,17 +221,11 @@ func resourceIAM2AccessBoundaryPolicyRead(d *schema.ResourceData, meta interface
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("IAM2AccessBoundaryPolicy %q", d.Id()))
 	}
@@ -264,7 +245,7 @@ func resourceIAM2AccessBoundaryPolicyRead(d *schema.ResourceData, meta interface
 
 func resourceIAM2AccessBoundaryPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -275,23 +256,23 @@ func resourceIAM2AccessBoundaryPolicyUpdate(d *schema.ResourceData, meta interfa
 	displayNameProp, err := expandIAM2AccessBoundaryPolicyDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+	} else if v, ok := d.GetOkExists("display_name"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
 	etagProp, err := expandIAM2AccessBoundaryPolicyEtag(d.Get("etag"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("etag"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, etagProp)) {
+	} else if v, ok := d.GetOkExists("etag"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, etagProp)) {
 		obj["etag"] = etagProp
 	}
 	rulesProp, err := expandIAM2AccessBoundaryPolicyRules(d.Get("rules"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("rules"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, rulesProp)) {
+	} else if v, ok := d.GetOkExists("rules"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, rulesProp)) {
 		obj["rules"] = rulesProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/accessboundarypolicies/{{name}}")
+	url, err := ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/accessboundarypolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -299,19 +280,11 @@ func resourceIAM2AccessBoundaryPolicyUpdate(d *schema.ResourceData, meta interfa
 	log.Printf("[DEBUG] Updating AccessBoundaryPolicy %q: %#v", d.Id(), obj)
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PUT",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PUT", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating AccessBoundaryPolicy %q: %s", d.Id(), err)
@@ -332,14 +305,14 @@ func resourceIAM2AccessBoundaryPolicyUpdate(d *schema.ResourceData, meta interfa
 
 func resourceIAM2AccessBoundaryPolicyDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/accessboundarypolicies/{{name}}")
+	url, err := ReplaceVars(d, config, "{{IAM2BasePath}}policies/{{parent}}/accessboundarypolicies/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -348,19 +321,11 @@ func resourceIAM2AccessBoundaryPolicyDelete(d *schema.ResourceData, meta interfa
 	log.Printf("[DEBUG] Deleting AccessBoundaryPolicy %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "AccessBoundaryPolicy")
 	}
@@ -379,14 +344,14 @@ func resourceIAM2AccessBoundaryPolicyDelete(d *schema.ResourceData, meta interfa
 
 func resourceIAM2AccessBoundaryPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"(?P<parent>[^/]+)/(?P<name>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/{{name}}")
+	id, err := ReplaceVars(d, config, "{{parent}}/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -486,15 +451,15 @@ func flattenIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityCondition
 	return v
 }
 
-func expandIAM2AccessBoundaryPolicyDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyDisplayName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2AccessBoundaryPolicyEtag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyEtag(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2AccessBoundaryPolicyRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyRules(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -507,14 +472,14 @@ func expandIAM2AccessBoundaryPolicyRules(v interface{}, d tpgresource.TerraformR
 		transformedDescription, err := expandIAM2AccessBoundaryPolicyRulesDescription(original["description"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !isEmptyValue(val) {
 			transformed["description"] = transformedDescription
 		}
 
 		transformedAccessBoundaryRule, err := expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRule(original["access_boundary_rule"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedAccessBoundaryRule); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedAccessBoundaryRule); val.IsValid() && !isEmptyValue(val) {
 			transformed["accessBoundaryRule"] = transformedAccessBoundaryRule
 		}
 
@@ -523,11 +488,11 @@ func expandIAM2AccessBoundaryPolicyRules(v interface{}, d tpgresource.TerraformR
 	return req, nil
 }
 
-func expandIAM2AccessBoundaryPolicyRulesDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyRulesDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRule(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -539,36 +504,36 @@ func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRule(v interface{}, d tpgr
 	transformedAvailableResource, err := expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailableResource(original["available_resource"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAvailableResource); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAvailableResource); val.IsValid() && !isEmptyValue(val) {
 		transformed["availableResource"] = transformedAvailableResource
 	}
 
 	transformedAvailablePermissions, err := expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailablePermissions(original["available_permissions"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAvailablePermissions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAvailablePermissions); val.IsValid() && !isEmptyValue(val) {
 		transformed["availablePermissions"] = transformedAvailablePermissions
 	}
 
 	transformedAvailabilityCondition, err := expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityCondition(original["availability_condition"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAvailabilityCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAvailabilityCondition); val.IsValid() && !isEmptyValue(val) {
 		transformed["availabilityCondition"] = transformedAvailabilityCondition
 	}
 
 	return transformed, nil
 }
 
-func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailableResource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailableResource(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailablePermissions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailablePermissions(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityCondition(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -580,46 +545,46 @@ func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityCondition(
 	transformedExpression, err := expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionExpression(original["expression"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExpression); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExpression); val.IsValid() && !isEmptyValue(val) {
 		transformed["expression"] = transformedExpression
 	}
 
 	transformedTitle, err := expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionTitle(original["title"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedTitle); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedTitle); val.IsValid() && !isEmptyValue(val) {
 		transformed["title"] = transformedTitle
 	}
 
 	transformedDescription, err := expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionDescription(original["description"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !isEmptyValue(val) {
 		transformed["description"] = transformedDescription
 	}
 
 	transformedLocation, err := expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionLocation(original["location"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !isEmptyValue(val) {
 		transformed["location"] = transformedLocation
 	}
 
 	return transformed, nil
 }
 
-func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionExpression(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionExpression(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionTitle(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionTitle(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityConditionLocation(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

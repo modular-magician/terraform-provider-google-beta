@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -42,8 +40,8 @@ func sendFrameworkRequestWithTimeout(p *frameworkProvider, method, project, rawu
 	}
 
 	var res *http.Response
-	err := transport_tpg.Retry(transport_tpg.RetryOptions{
-		RetryFunc: func() error {
+	err := transport_tpg.RetryTimeDuration(
+		func() error {
 			var buf bytes.Buffer
 			if body != nil {
 				err := json.NewEncoder(&buf).Encode(body)
@@ -74,9 +72,9 @@ func sendFrameworkRequestWithTimeout(p *frameworkProvider, method, project, rawu
 
 			return nil
 		},
-		Timeout:              timeout,
-		ErrorRetryPredicates: errorRetryPredicates,
-	})
+		timeout,
+		errorRetryPredicates...,
+	)
 	if err != nil {
 		diags.AddError("error sending request", err.Error())
 		return nil, diags

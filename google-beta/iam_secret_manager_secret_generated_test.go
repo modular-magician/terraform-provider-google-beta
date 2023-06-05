@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -101,7 +98,6 @@ func TestAccSecretManagerSecretIamPolicyGenerated(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSecretManagerSecretIamPolicy_basicGenerated(context),
-				Check:  resource.TestCheckResourceAttrSet("data.google_secret_manager_secret_iam_policy.foo", "policy_data"),
 			},
 			{
 				ResourceName:      "google_secret_manager_secret_iam_policy.foo",
@@ -184,14 +180,6 @@ resource "google_secret_manager_secret_iam_policy" "foo" {
   project = google_secret_manager_secret.secret-basic.project
   secret_id = google_secret_manager_secret.secret-basic.secret_id
   policy_data = data.google_iam_policy.foo.policy_data
-}
-
-data "google_secret_manager_secret_iam_policy" "foo" {
-  project = google_secret_manager_secret.secret-basic.project
-  secret_id = google_secret_manager_secret.secret-basic.secret_id
-  depends_on = [
-    google_secret_manager_secret_iam_policy.foo
-  ]
 }
 `, context)
 }

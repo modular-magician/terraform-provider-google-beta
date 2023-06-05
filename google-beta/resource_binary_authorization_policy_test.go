@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -163,12 +161,7 @@ func testAccCheckBinaryAuthorizationPolicyDefault(t *testing.T, pid string) reso
 	return func(s *terraform.State) error {
 		config := GoogleProviderConfig(t)
 		url := fmt.Sprintf("https://binaryauthorization.googleapis.com/v1/projects/%s/policy", pid)
-		pol, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "GET",
-			RawURL:    url,
-			UserAgent: config.UserAgent,
-		})
+		pol, err := transport_tpg.SendRequest(config, "GET", "", url, config.UserAgent, nil)
 		if err != nil {
 			return err
 		}

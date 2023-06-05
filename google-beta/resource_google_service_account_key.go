@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,7 +5,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -100,12 +97,12 @@ func ResourceGoogleServiceAccountKey() *schema.Resource {
 
 func resourceGoogleServiceAccountKeyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	serviceAccountName, err := tpgresource.ServiceAccountFQN(d.Get("service_account_id").(string), d, config)
+	serviceAccountName, err := serviceAccountFQN(d.Get("service_account_id").(string), d, config)
 	if err != nil {
 		return err
 	}
@@ -152,7 +149,7 @@ func resourceGoogleServiceAccountKeyCreate(d *schema.ResourceData, meta interfac
 
 func resourceGoogleServiceAccountKeyRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -190,7 +187,7 @@ func resourceGoogleServiceAccountKeyRead(d *schema.ResourceData, meta interface{
 
 func resourceGoogleServiceAccountKeyDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}

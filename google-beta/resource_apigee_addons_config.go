@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -156,7 +151,7 @@ func ResourceApigeeAddonsConfig() *schema.Resource {
 
 func resourceApigeeAddonsConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -165,11 +160,11 @@ func resourceApigeeAddonsConfigCreate(d *schema.ResourceData, meta interface{}) 
 	addonsConfigProp, err := expandApigeeAddonsConfigAddonsConfig(d.Get("addons_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("addons_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(addonsConfigProp)) && (ok || !reflect.DeepEqual(v, addonsConfigProp)) {
+	} else if v, ok := d.GetOkExists("addons_config"); !isEmptyValue(reflect.ValueOf(addonsConfigProp)) && (ok || !reflect.DeepEqual(v, addonsConfigProp)) {
 		obj["addonsConfig"] = addonsConfigProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApigeeBasePath}}organizations/{{org}}:setAddons")
+	url, err := ReplaceVars(d, config, "{{ApigeeBasePath}}organizations/{{org}}:setAddons")
 	if err != nil {
 		return err
 	}
@@ -178,25 +173,17 @@ func resourceApigeeAddonsConfigCreate(d *schema.ResourceData, meta interface{}) 
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating AddonsConfig: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "organizations/{{org}}")
+	id, err := ReplaceVars(d, config, "organizations/{{org}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -219,12 +206,12 @@ func resourceApigeeAddonsConfigCreate(d *schema.ResourceData, meta interface{}) 
 
 func resourceApigeeAddonsConfigRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApigeeBasePath}}organizations/{{org}}")
+	url, err := ReplaceVars(d, config, "{{ApigeeBasePath}}organizations/{{org}}")
 	if err != nil {
 		return err
 	}
@@ -232,17 +219,11 @@ func resourceApigeeAddonsConfigRead(d *schema.ResourceData, meta interface{}) er
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ApigeeAddonsConfig %q", d.Id()))
 	}
@@ -256,7 +237,7 @@ func resourceApigeeAddonsConfigRead(d *schema.ResourceData, meta interface{}) er
 
 func resourceApigeeAddonsConfigUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -267,11 +248,11 @@ func resourceApigeeAddonsConfigUpdate(d *schema.ResourceData, meta interface{}) 
 	addonsConfigProp, err := expandApigeeAddonsConfigAddonsConfig(d.Get("addons_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("addons_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, addonsConfigProp)) {
+	} else if v, ok := d.GetOkExists("addons_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, addonsConfigProp)) {
 		obj["addonsConfig"] = addonsConfigProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApigeeBasePath}}organizations/{{org}}:setAddons")
+	url, err := ReplaceVars(d, config, "{{ApigeeBasePath}}organizations/{{org}}:setAddons")
 	if err != nil {
 		return err
 	}
@@ -279,19 +260,11 @@ func resourceApigeeAddonsConfigUpdate(d *schema.ResourceData, meta interface{}) 
 	log.Printf("[DEBUG] Updating AddonsConfig %q: %#v", d.Id(), obj)
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating AddonsConfig %q: %s", d.Id(), err)
@@ -312,14 +285,14 @@ func resourceApigeeAddonsConfigUpdate(d *schema.ResourceData, meta interface{}) 
 
 func resourceApigeeAddonsConfigDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ApigeeBasePath}}organizations/{{org}}:setAddons")
+	url, err := ReplaceVars(d, config, "{{ApigeeBasePath}}organizations/{{org}}:setAddons")
 	if err != nil {
 		return err
 	}
@@ -328,19 +301,11 @@ func resourceApigeeAddonsConfigDelete(d *schema.ResourceData, meta interface{}) 
 	log.Printf("[DEBUG] Deleting AddonsConfig %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "AddonsConfig")
 	}
@@ -361,7 +326,7 @@ func resourceApigeeAddonsConfigImport(d *schema.ResourceData, meta interface{}) 
 	config := meta.(*transport_tpg.Config)
 
 	// current import_formats can't import fields with forward slashes in their value
-	if err := tpgresource.ParseImportId([]string{"(?P<org>.+)"}, d, config); err != nil {
+	if err := ParseImportId([]string{"(?P<org>.+)"}, d, config); err != nil {
 		return nil, err
 	}
 
@@ -387,7 +352,7 @@ func resourceApigeeAddonsConfigImport(d *schema.ResourceData, meta interface{}) 
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "organizations/{{org}}")
+	id, err := ReplaceVars(d, config, "organizations/{{org}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -514,7 +479,7 @@ func flattenApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigExpiresAt(v in
 	return v
 }
 
-func expandApigeeAddonsConfigAddonsConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -526,42 +491,42 @@ func expandApigeeAddonsConfigAddonsConfig(v interface{}, d tpgresource.Terraform
 	transformedAdvancedApiOpsConfig, err := expandApigeeAddonsConfigAddonsConfigAdvancedApiOpsConfig(original["advanced_api_ops_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAdvancedApiOpsConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAdvancedApiOpsConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["advancedApiOpsConfig"] = transformedAdvancedApiOpsConfig
 	}
 
 	transformedIntegrationConfig, err := expandApigeeAddonsConfigAddonsConfigIntegrationConfig(original["integration_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedIntegrationConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedIntegrationConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["integrationConfig"] = transformedIntegrationConfig
 	}
 
 	transformedMonetizationConfig, err := expandApigeeAddonsConfigAddonsConfigMonetizationConfig(original["monetization_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMonetizationConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMonetizationConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["monetizationConfig"] = transformedMonetizationConfig
 	}
 
 	transformedApiSecurityConfig, err := expandApigeeAddonsConfigAddonsConfigApiSecurityConfig(original["api_security_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedApiSecurityConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedApiSecurityConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["apiSecurityConfig"] = transformedApiSecurityConfig
 	}
 
 	transformedConnectorsPlatformConfig, err := expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfig(original["connectors_platform_config"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedConnectorsPlatformConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedConnectorsPlatformConfig); val.IsValid() && !isEmptyValue(val) {
 		transformed["connectorsPlatformConfig"] = transformedConnectorsPlatformConfig
 	}
 
 	return transformed, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigAdvancedApiOpsConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigAdvancedApiOpsConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -573,18 +538,18 @@ func expandApigeeAddonsConfigAddonsConfigAdvancedApiOpsConfig(v interface{}, d t
 	transformedEnabled, err := expandApigeeAddonsConfigAddonsConfigAdvancedApiOpsConfigEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigAdvancedApiOpsConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigAdvancedApiOpsConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigIntegrationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigIntegrationConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -596,18 +561,18 @@ func expandApigeeAddonsConfigAddonsConfigIntegrationConfig(v interface{}, d tpgr
 	transformedEnabled, err := expandApigeeAddonsConfigAddonsConfigIntegrationConfigEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigIntegrationConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigIntegrationConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigMonetizationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigMonetizationConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -619,18 +584,18 @@ func expandApigeeAddonsConfigAddonsConfigMonetizationConfig(v interface{}, d tpg
 	transformedEnabled, err := expandApigeeAddonsConfigAddonsConfigMonetizationConfigEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	return transformed, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigMonetizationConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigMonetizationConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigApiSecurityConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigApiSecurityConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -642,29 +607,29 @@ func expandApigeeAddonsConfigAddonsConfigApiSecurityConfig(v interface{}, d tpgr
 	transformedEnabled, err := expandApigeeAddonsConfigAddonsConfigApiSecurityConfigEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	transformedExpiresAt, err := expandApigeeAddonsConfigAddonsConfigApiSecurityConfigExpiresAt(original["expires_at"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExpiresAt); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExpiresAt); val.IsValid() && !isEmptyValue(val) {
 		transformed["expiresAt"] = transformedExpiresAt
 	}
 
 	return transformed, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigApiSecurityConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigApiSecurityConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigApiSecurityConfigExpiresAt(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigApiSecurityConfigExpiresAt(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -676,24 +641,24 @@ func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfig(v interface{},
 	transformedEnabled, err := expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigEnabled(original["enabled"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !isEmptyValue(val) {
 		transformed["enabled"] = transformedEnabled
 	}
 
 	transformedExpiresAt, err := expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigExpiresAt(original["expires_at"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedExpiresAt); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedExpiresAt); val.IsValid() && !isEmptyValue(val) {
 		transformed["expiresAt"] = transformedExpiresAt
 	}
 
 	return transformed, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigExpiresAt(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigExpiresAt(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

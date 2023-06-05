@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -22,14 +19,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 type ApigeeOperationWaiter struct {
 	Config    *transport_tpg.Config
 	UserAgent string
-	tpgresource.CommonOperationWaiter
+	CommonOperationWaiter
 }
 
 func (w *ApigeeOperationWaiter) QueryOp() (interface{}, error) {
@@ -39,12 +35,7 @@ func (w *ApigeeOperationWaiter) QueryOp() (interface{}, error) {
 	// Returns the proper get.
 	url := fmt.Sprintf("%s%s", w.Config.ApigeeBasePath, w.CommonOperationWaiter.Op.Name)
 
-	return transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    w.Config,
-		Method:    "GET",
-		RawURL:    url,
-		UserAgent: w.UserAgent,
-	})
+	return transport_tpg.SendRequest(w.Config, "GET", "", url, w.UserAgent, nil)
 }
 
 func createApigeeWaiter(config *transport_tpg.Config, op map[string]interface{}, activity, userAgent string) (*ApigeeOperationWaiter, error) {
@@ -64,7 +55,7 @@ func ApigeeOperationWaitTimeWithResponse(config *transport_tpg.Config, op map[st
 	if err != nil {
 		return err
 	}
-	if err := tpgresource.OperationWait(w, activity, timeout, config.PollInterval); err != nil {
+	if err := OperationWait(w, activity, timeout, config.PollInterval); err != nil {
 		return err
 	}
 	return json.Unmarshal([]byte(w.CommonOperationWaiter.Op.Response), response)
@@ -80,5 +71,5 @@ func ApigeeOperationWaitTime(config *transport_tpg.Config, op map[string]interfa
 		// If w is nil, the op was synchronous.
 		return err
 	}
-	return tpgresource.OperationWait(w, activity, timeout, config.PollInterval)
+	return OperationWait(w, activity, timeout, config.PollInterval)
 }

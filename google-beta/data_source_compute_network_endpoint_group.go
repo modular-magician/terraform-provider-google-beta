@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,19 +5,18 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func DataSourceGoogleComputeNetworkEndpointGroup() *schema.Resource {
 	// Generate datasource schema from resource
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceComputeNetworkEndpointGroup().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceComputeNetworkEndpointGroup().Schema)
 
 	// Set 'Optional' schema elements
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "name")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "zone")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "self_link")
+	addOptionalFieldsToSchema(dsSchema, "name")
+	addOptionalFieldsToSchema(dsSchema, "zone")
+	addOptionalFieldsToSchema(dsSchema, "project")
+	addOptionalFieldsToSchema(dsSchema, "self_link")
 
 	return &schema.Resource{
 		Read:   dataSourceComputeNetworkEndpointGroupRead,
@@ -30,17 +27,17 @@ func DataSourceGoogleComputeNetworkEndpointGroup() *schema.Resource {
 func dataSourceComputeNetworkEndpointGroupRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	if name, ok := d.GetOk("name"); ok {
-		project, err := tpgresource.GetProject(d, config)
+		project, err := getProject(d, config)
 		if err != nil {
 			return err
 		}
-		zone, err := tpgresource.GetZone(d, config)
+		zone, err := getZone(d, config)
 		if err != nil {
 			return err
 		}
 		d.SetId(fmt.Sprintf("projects/%s/zones/%s/networkEndpointGroups/%s", project, zone, name.(string)))
 	} else if selfLink, ok := d.GetOk("self_link"); ok {
-		parsed, err := tpgresource.ParseNetworkEndpointGroupFieldValue(selfLink.(string), d, config)
+		parsed, err := ParseNetworkEndpointGroupFieldValue(selfLink.(string), d, config)
 		if err != nil {
 			return err
 		}

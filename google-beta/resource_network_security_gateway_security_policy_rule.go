@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -137,7 +132,7 @@ Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".`,
 
 func resourceNetworkSecurityGatewaySecurityPolicyRuleCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -146,47 +141,47 @@ func resourceNetworkSecurityGatewaySecurityPolicyRuleCreate(d *schema.ResourceDa
 	enabledProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleEnabled(d.Get("enabled"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(enabledProp)) && (ok || !reflect.DeepEqual(v, enabledProp)) {
+	} else if v, ok := d.GetOkExists("enabled"); !isEmptyValue(reflect.ValueOf(enabledProp)) && (ok || !reflect.DeepEqual(v, enabledProp)) {
 		obj["enabled"] = enabledProp
 	}
 	priorityProp, err := expandNetworkSecurityGatewaySecurityPolicyRulePriority(d.Get("priority"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("priority"); !tpgresource.IsEmptyValue(reflect.ValueOf(priorityProp)) && (ok || !reflect.DeepEqual(v, priorityProp)) {
+	} else if v, ok := d.GetOkExists("priority"); !isEmptyValue(reflect.ValueOf(priorityProp)) && (ok || !reflect.DeepEqual(v, priorityProp)) {
 		obj["priority"] = priorityProp
 	}
 	descriptionProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	sessionMatcherProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleSessionMatcher(d.Get("session_matcher"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("session_matcher"); !tpgresource.IsEmptyValue(reflect.ValueOf(sessionMatcherProp)) && (ok || !reflect.DeepEqual(v, sessionMatcherProp)) {
+	} else if v, ok := d.GetOkExists("session_matcher"); !isEmptyValue(reflect.ValueOf(sessionMatcherProp)) && (ok || !reflect.DeepEqual(v, sessionMatcherProp)) {
 		obj["sessionMatcher"] = sessionMatcherProp
 	}
 	applicationMatcherProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleApplicationMatcher(d.Get("application_matcher"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("application_matcher"); !tpgresource.IsEmptyValue(reflect.ValueOf(applicationMatcherProp)) && (ok || !reflect.DeepEqual(v, applicationMatcherProp)) {
+	} else if v, ok := d.GetOkExists("application_matcher"); !isEmptyValue(reflect.ValueOf(applicationMatcherProp)) && (ok || !reflect.DeepEqual(v, applicationMatcherProp)) {
 		obj["applicationMatcher"] = applicationMatcherProp
 	}
 	tlsInspectionEnabledProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleTlsInspectionEnabled(d.Get("tls_inspection_enabled"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("tls_inspection_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(tlsInspectionEnabledProp)) && (ok || !reflect.DeepEqual(v, tlsInspectionEnabledProp)) {
+	} else if v, ok := d.GetOkExists("tls_inspection_enabled"); !isEmptyValue(reflect.ValueOf(tlsInspectionEnabledProp)) && (ok || !reflect.DeepEqual(v, tlsInspectionEnabledProp)) {
 		obj["tlsInspectionEnabled"] = tlsInspectionEnabledProp
 	}
 	basicProfileProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleBasicProfile(d.Get("basic_profile"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("basic_profile"); !tpgresource.IsEmptyValue(reflect.ValueOf(basicProfileProp)) && (ok || !reflect.DeepEqual(v, basicProfileProp)) {
+	} else if v, ok := d.GetOkExists("basic_profile"); !isEmptyValue(reflect.ValueOf(basicProfileProp)) && (ok || !reflect.DeepEqual(v, basicProfileProp)) {
 		obj["basicProfile"] = basicProfileProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkSecurityBasePath}}projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules?gatewaySecurityPolicyRuleId={{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkSecurityBasePath}}projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules?gatewaySecurityPolicyRuleId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -194,32 +189,24 @@ func resourceNetworkSecurityGatewaySecurityPolicyRuleCreate(d *schema.ResourceDa
 	log.Printf("[DEBUG] Creating new GatewaySecurityPolicyRule: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for GatewaySecurityPolicyRule: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating GatewaySecurityPolicyRule: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -242,36 +229,30 @@ func resourceNetworkSecurityGatewaySecurityPolicyRuleCreate(d *schema.ResourceDa
 
 func resourceNetworkSecurityGatewaySecurityPolicyRuleRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkSecurityBasePath}}projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules/{{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkSecurityBasePath}}projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules/{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for GatewaySecurityPolicyRule: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("NetworkSecurityGatewaySecurityPolicyRule %q", d.Id()))
 	}
@@ -316,14 +297,14 @@ func resourceNetworkSecurityGatewaySecurityPolicyRuleRead(d *schema.ResourceData
 
 func resourceNetworkSecurityGatewaySecurityPolicyRuleUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for GatewaySecurityPolicyRule: %s", err)
 	}
@@ -333,47 +314,47 @@ func resourceNetworkSecurityGatewaySecurityPolicyRuleUpdate(d *schema.ResourceDa
 	enabledProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleEnabled(d.Get("enabled"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enabledProp)) {
+	} else if v, ok := d.GetOkExists("enabled"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enabledProp)) {
 		obj["enabled"] = enabledProp
 	}
 	priorityProp, err := expandNetworkSecurityGatewaySecurityPolicyRulePriority(d.Get("priority"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("priority"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, priorityProp)) {
+	} else if v, ok := d.GetOkExists("priority"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, priorityProp)) {
 		obj["priority"] = priorityProp
 	}
 	descriptionProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	sessionMatcherProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleSessionMatcher(d.Get("session_matcher"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("session_matcher"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, sessionMatcherProp)) {
+	} else if v, ok := d.GetOkExists("session_matcher"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, sessionMatcherProp)) {
 		obj["sessionMatcher"] = sessionMatcherProp
 	}
 	applicationMatcherProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleApplicationMatcher(d.Get("application_matcher"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("application_matcher"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, applicationMatcherProp)) {
+	} else if v, ok := d.GetOkExists("application_matcher"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, applicationMatcherProp)) {
 		obj["applicationMatcher"] = applicationMatcherProp
 	}
 	tlsInspectionEnabledProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleTlsInspectionEnabled(d.Get("tls_inspection_enabled"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("tls_inspection_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, tlsInspectionEnabledProp)) {
+	} else if v, ok := d.GetOkExists("tls_inspection_enabled"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, tlsInspectionEnabledProp)) {
 		obj["tlsInspectionEnabled"] = tlsInspectionEnabledProp
 	}
 	basicProfileProp, err := expandNetworkSecurityGatewaySecurityPolicyRuleBasicProfile(d.Get("basic_profile"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("basic_profile"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, basicProfileProp)) {
+	} else if v, ok := d.GetOkExists("basic_profile"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, basicProfileProp)) {
 		obj["basicProfile"] = basicProfileProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkSecurityBasePath}}projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules/{{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkSecurityBasePath}}projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -416,19 +397,11 @@ func resourceNetworkSecurityGatewaySecurityPolicyRuleUpdate(d *schema.ResourceDa
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating GatewaySecurityPolicyRule %q: %s", d.Id(), err)
@@ -449,20 +422,20 @@ func resourceNetworkSecurityGatewaySecurityPolicyRuleUpdate(d *schema.ResourceDa
 
 func resourceNetworkSecurityGatewaySecurityPolicyRuleDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for GatewaySecurityPolicyRule: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkSecurityBasePath}}projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules/{{name}}")
+	url, err := ReplaceVars(d, config, "{{NetworkSecurityBasePath}}projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -471,19 +444,11 @@ func resourceNetworkSecurityGatewaySecurityPolicyRuleDelete(d *schema.ResourceDa
 	log.Printf("[DEBUG] Deleting GatewaySecurityPolicyRule %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "GatewaySecurityPolicyRule")
 	}
@@ -502,7 +467,7 @@ func resourceNetworkSecurityGatewaySecurityPolicyRuleDelete(d *schema.ResourceDa
 
 func resourceNetworkSecurityGatewaySecurityPolicyRuleImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/gatewaySecurityPolicies/(?P<gateway_security_policy>[^/]+)/rules/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<gateway_security_policy>[^/]+)/(?P<name>[^/]+)",
 		"(?P<location>[^/]+)/(?P<gateway_security_policy>[^/]+)/(?P<name>[^/]+)",
@@ -511,7 +476,7 @@ func resourceNetworkSecurityGatewaySecurityPolicyRuleImport(d *schema.ResourceDa
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/gatewaySecurityPolicies/{{gateway_security_policy}}/rules/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -573,30 +538,30 @@ func flattenNetworkSecurityGatewaySecurityPolicyRuleBasicProfile(v interface{}, 
 	return v
 }
 
-func expandNetworkSecurityGatewaySecurityPolicyRuleEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkSecurityGatewaySecurityPolicyRuleEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkSecurityGatewaySecurityPolicyRulePriority(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkSecurityGatewaySecurityPolicyRulePriority(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkSecurityGatewaySecurityPolicyRuleDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkSecurityGatewaySecurityPolicyRuleDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkSecurityGatewaySecurityPolicyRuleSessionMatcher(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkSecurityGatewaySecurityPolicyRuleSessionMatcher(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkSecurityGatewaySecurityPolicyRuleApplicationMatcher(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkSecurityGatewaySecurityPolicyRuleApplicationMatcher(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkSecurityGatewaySecurityPolicyRuleTlsInspectionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkSecurityGatewaySecurityPolicyRuleTlsInspectionEnabled(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandNetworkSecurityGatewaySecurityPolicyRuleBasicProfile(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNetworkSecurityGatewaySecurityPolicyRuleBasicProfile(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

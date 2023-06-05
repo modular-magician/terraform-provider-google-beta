@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
@@ -137,7 +132,7 @@ and hyphens (-). Cannot begin or end with underscore or hyphen. Must consist of 
 
 func resourceDataprocMetastoreFederationCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -146,23 +141,23 @@ func resourceDataprocMetastoreFederationCreate(d *schema.ResourceData, meta inte
 	labelsProp, err := expandDataprocMetastoreFederationLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 	versionProp, err := expandDataprocMetastoreFederationVersion(d.Get("version"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("version"); !tpgresource.IsEmptyValue(reflect.ValueOf(versionProp)) && (ok || !reflect.DeepEqual(v, versionProp)) {
+	} else if v, ok := d.GetOkExists("version"); !isEmptyValue(reflect.ValueOf(versionProp)) && (ok || !reflect.DeepEqual(v, versionProp)) {
 		obj["version"] = versionProp
 	}
 	backendMetastoresProp, err := expandDataprocMetastoreFederationBackendMetastores(d.Get("backend_metastores"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("backend_metastores"); !tpgresource.IsEmptyValue(reflect.ValueOf(backendMetastoresProp)) && (ok || !reflect.DeepEqual(v, backendMetastoresProp)) {
+	} else if v, ok := d.GetOkExists("backend_metastores"); !isEmptyValue(reflect.ValueOf(backendMetastoresProp)) && (ok || !reflect.DeepEqual(v, backendMetastoresProp)) {
 		obj["backendMetastores"] = backendMetastoresProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataprocMetastoreBasePath}}projects/{{project}}/locations/{{location}}/federations?federationId={{federation_id}}")
+	url, err := ReplaceVars(d, config, "{{DataprocMetastoreBasePath}}projects/{{project}}/locations/{{location}}/federations?federationId={{federation_id}}")
 	if err != nil {
 		return err
 	}
@@ -170,32 +165,24 @@ func resourceDataprocMetastoreFederationCreate(d *schema.ResourceData, meta inte
 	log.Printf("[DEBUG] Creating new Federation: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Federation: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating Federation: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/federations/{{federation_id}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/federations/{{federation_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -218,36 +205,30 @@ func resourceDataprocMetastoreFederationCreate(d *schema.ResourceData, meta inte
 
 func resourceDataprocMetastoreFederationRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataprocMetastoreBasePath}}projects/{{project}}/locations/{{location}}/federations/{{federation_id}}")
+	url, err := ReplaceVars(d, config, "{{DataprocMetastoreBasePath}}projects/{{project}}/locations/{{location}}/federations/{{federation_id}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Federation: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("DataprocMetastoreFederation %q", d.Id()))
 	}
@@ -286,14 +267,14 @@ func resourceDataprocMetastoreFederationRead(d *schema.ResourceData, meta interf
 
 func resourceDataprocMetastoreFederationUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Federation: %s", err)
 	}
@@ -303,17 +284,17 @@ func resourceDataprocMetastoreFederationUpdate(d *schema.ResourceData, meta inte
 	labelsProp, err := expandDataprocMetastoreFederationLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 	backendMetastoresProp, err := expandDataprocMetastoreFederationBackendMetastores(d.Get("backend_metastores"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("backend_metastores"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, backendMetastoresProp)) {
+	} else if v, ok := d.GetOkExists("backend_metastores"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, backendMetastoresProp)) {
 		obj["backendMetastores"] = backendMetastoresProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataprocMetastoreBasePath}}projects/{{project}}/locations/{{location}}/federations/{{federation_id}}")
+	url, err := ReplaceVars(d, config, "{{DataprocMetastoreBasePath}}projects/{{project}}/locations/{{location}}/federations/{{federation_id}}")
 	if err != nil {
 		return err
 	}
@@ -336,19 +317,11 @@ func resourceDataprocMetastoreFederationUpdate(d *schema.ResourceData, meta inte
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating Federation %q: %s", d.Id(), err)
@@ -369,20 +342,20 @@ func resourceDataprocMetastoreFederationUpdate(d *schema.ResourceData, meta inte
 
 func resourceDataprocMetastoreFederationDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Federation: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataprocMetastoreBasePath}}projects/{{project}}/locations/{{location}}/federations/{{federation_id}}")
+	url, err := ReplaceVars(d, config, "{{DataprocMetastoreBasePath}}projects/{{project}}/locations/{{location}}/federations/{{federation_id}}")
 	if err != nil {
 		return err
 	}
@@ -391,19 +364,11 @@ func resourceDataprocMetastoreFederationDelete(d *schema.ResourceData, meta inte
 	log.Printf("[DEBUG] Deleting Federation %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "Federation")
 	}
@@ -422,7 +387,7 @@ func resourceDataprocMetastoreFederationDelete(d *schema.ResourceData, meta inte
 
 func resourceDataprocMetastoreFederationImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/federations/(?P<federation_id>[^/]+)",
 		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<federation_id>[^/]+)",
 		"(?P<location>[^/]+)/(?P<federation_id>[^/]+)",
@@ -431,7 +396,7 @@ func resourceDataprocMetastoreFederationImport(d *schema.ResourceData, meta inte
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/federations/{{federation_id}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/federations/{{federation_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -492,7 +457,7 @@ func flattenDataprocMetastoreFederationBackendMetastoresMetastoreType(v interfac
 	return v
 }
 
-func expandDataprocMetastoreFederationLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandDataprocMetastoreFederationLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -503,11 +468,11 @@ func expandDataprocMetastoreFederationLabels(v interface{}, d tpgresource.Terraf
 	return m, nil
 }
 
-func expandDataprocMetastoreFederationVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataprocMetastoreFederationVersion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataprocMetastoreFederationBackendMetastores(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
+func expandDataprocMetastoreFederationBackendMetastores(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
 	if v == nil {
 		return map[string]interface{}{}, nil
 	}
@@ -519,18 +484,18 @@ func expandDataprocMetastoreFederationBackendMetastores(v interface{}, d tpgreso
 		transformedName, err := expandDataprocMetastoreFederationBackendMetastoresName(original["name"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !isEmptyValue(val) {
 			transformed["name"] = transformedName
 		}
 
 		transformedMetastoreType, err := expandDataprocMetastoreFederationBackendMetastoresMetastoreType(original["metastore_type"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedMetastoreType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedMetastoreType); val.IsValid() && !isEmptyValue(val) {
 			transformed["metastoreType"] = transformedMetastoreType
 		}
 
-		transformedRank, err := tpgresource.ExpandString(original["rank"], d, config)
+		transformedRank, err := expandString(original["rank"], d, config)
 		if err != nil {
 			return nil, err
 		}
@@ -539,10 +504,10 @@ func expandDataprocMetastoreFederationBackendMetastores(v interface{}, d tpgreso
 	return m, nil
 }
 
-func expandDataprocMetastoreFederationBackendMetastoresName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataprocMetastoreFederationBackendMetastoresName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDataprocMetastoreFederationBackendMetastoresMetastoreType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandDataprocMetastoreFederationBackendMetastoresMetastoreType(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

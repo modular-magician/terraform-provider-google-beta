@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -165,7 +160,7 @@ func cloudbuildBitbucketServerConfigConnectedRepositoriesSchema() *schema.Resour
 
 func resourceCloudBuildBitbucketServerConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -174,43 +169,43 @@ func resourceCloudBuildBitbucketServerConfigCreate(d *schema.ResourceData, meta 
 	hostUriProp, err := expandCloudBuildBitbucketServerConfigHostUri(d.Get("host_uri"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("host_uri"); !tpgresource.IsEmptyValue(reflect.ValueOf(hostUriProp)) && (ok || !reflect.DeepEqual(v, hostUriProp)) {
+	} else if v, ok := d.GetOkExists("host_uri"); !isEmptyValue(reflect.ValueOf(hostUriProp)) && (ok || !reflect.DeepEqual(v, hostUriProp)) {
 		obj["hostUri"] = hostUriProp
 	}
 	secretsProp, err := expandCloudBuildBitbucketServerConfigSecrets(d.Get("secrets"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("secrets"); !tpgresource.IsEmptyValue(reflect.ValueOf(secretsProp)) && (ok || !reflect.DeepEqual(v, secretsProp)) {
+	} else if v, ok := d.GetOkExists("secrets"); !isEmptyValue(reflect.ValueOf(secretsProp)) && (ok || !reflect.DeepEqual(v, secretsProp)) {
 		obj["secrets"] = secretsProp
 	}
 	usernameProp, err := expandCloudBuildBitbucketServerConfigUsername(d.Get("username"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("username"); !tpgresource.IsEmptyValue(reflect.ValueOf(usernameProp)) && (ok || !reflect.DeepEqual(v, usernameProp)) {
+	} else if v, ok := d.GetOkExists("username"); !isEmptyValue(reflect.ValueOf(usernameProp)) && (ok || !reflect.DeepEqual(v, usernameProp)) {
 		obj["username"] = usernameProp
 	}
 	apiKeyProp, err := expandCloudBuildBitbucketServerConfigApiKey(d.Get("api_key"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("api_key"); !tpgresource.IsEmptyValue(reflect.ValueOf(apiKeyProp)) && (ok || !reflect.DeepEqual(v, apiKeyProp)) {
+	} else if v, ok := d.GetOkExists("api_key"); !isEmptyValue(reflect.ValueOf(apiKeyProp)) && (ok || !reflect.DeepEqual(v, apiKeyProp)) {
 		obj["apiKey"] = apiKeyProp
 	}
 	connectedRepositoriesProp, err := expandCloudBuildBitbucketServerConfigConnectedRepositories(d.Get("connected_repositories"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("connected_repositories"); !tpgresource.IsEmptyValue(reflect.ValueOf(connectedRepositoriesProp)) && (ok || !reflect.DeepEqual(v, connectedRepositoriesProp)) {
+	} else if v, ok := d.GetOkExists("connected_repositories"); !isEmptyValue(reflect.ValueOf(connectedRepositoriesProp)) && (ok || !reflect.DeepEqual(v, connectedRepositoriesProp)) {
 		obj["connectedRepositories"] = connectedRepositoriesProp
 	}
 	peeredNetworkProp, err := expandCloudBuildBitbucketServerConfigPeeredNetwork(d.Get("peered_network"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("peered_network"); !tpgresource.IsEmptyValue(reflect.ValueOf(peeredNetworkProp)) && (ok || !reflect.DeepEqual(v, peeredNetworkProp)) {
+	} else if v, ok := d.GetOkExists("peered_network"); !isEmptyValue(reflect.ValueOf(peeredNetworkProp)) && (ok || !reflect.DeepEqual(v, peeredNetworkProp)) {
 		obj["peeredNetwork"] = peeredNetworkProp
 	}
 	sslCaProp, err := expandCloudBuildBitbucketServerConfigSslCa(d.Get("ssl_ca"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("ssl_ca"); !tpgresource.IsEmptyValue(reflect.ValueOf(sslCaProp)) && (ok || !reflect.DeepEqual(v, sslCaProp)) {
+	} else if v, ok := d.GetOkExists("ssl_ca"); !isEmptyValue(reflect.ValueOf(sslCaProp)) && (ok || !reflect.DeepEqual(v, sslCaProp)) {
 		obj["sslCa"] = sslCaProp
 	}
 
@@ -219,7 +214,7 @@ func resourceCloudBuildBitbucketServerConfigCreate(d *schema.ResourceData, meta 
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs?bitbucketServerConfigId={{config_id}}")
+	url, err := ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs?bitbucketServerConfigId={{config_id}}")
 	if err != nil {
 		return err
 	}
@@ -227,32 +222,24 @@ func resourceCloudBuildBitbucketServerConfigCreate(d *schema.ResourceData, meta 
 	log.Printf("[DEBUG] Creating new BitbucketServerConfig: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for BitbucketServerConfig: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating BitbucketServerConfig: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -276,7 +263,7 @@ func resourceCloudBuildBitbucketServerConfigCreate(d *schema.ResourceData, meta 
 	}
 
 	// This may have caused the ID to update - update it if so.
-	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
+	id, err = ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -284,7 +271,7 @@ func resourceCloudBuildBitbucketServerConfigCreate(d *schema.ResourceData, meta 
 
 	log.Printf("[DEBUG] Finished creating BitbucketServerConfig without connected repos: %q: %#v", d.Id(), res)
 
-	if v, ok := d.GetOkExists("connected_repositories"); !tpgresource.IsEmptyValue(reflect.ValueOf(connectedRepositoriesProp)) && (ok || !reflect.DeepEqual(v, connectedRepositoriesProp)) {
+	if v, ok := d.GetOkExists("connected_repositories"); !isEmptyValue(reflect.ValueOf(connectedRepositoriesProp)) && (ok || !reflect.DeepEqual(v, connectedRepositoriesProp)) {
 		connectedReposPropArray, ok := connectedRepositoriesProp.([]interface{})
 		if !ok {
 			return fmt.Errorf("Error reading connected_repositories")
@@ -305,20 +292,12 @@ func resourceCloudBuildBitbucketServerConfigCreate(d *schema.ResourceData, meta 
 		obj = make(map[string]interface{})
 		obj["requests"] = requests
 
-		url, err = tpgresource.ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}/connectedRepositories:batchCreate")
+		url, err = ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}/connectedRepositories:batchCreate")
 		if err != nil {
 			return err
 		}
 
-		res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "POST",
-			Project:   billingProject,
-			RawURL:    url,
-			UserAgent: userAgent,
-			Body:      obj,
-			Timeout:   d.Timeout(schema.TimeoutCreate),
-		})
+		res, err = transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 		if err != nil {
 			return fmt.Errorf("Error creating connected_repositories: %s", err)
 		}
@@ -340,36 +319,30 @@ func resourceCloudBuildBitbucketServerConfigCreate(d *schema.ResourceData, meta 
 
 func resourceCloudBuildBitbucketServerConfigRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
+	url, err := ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for BitbucketServerConfig: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("CloudBuildBitbucketServerConfig %q", d.Id()))
 	}
@@ -411,14 +384,14 @@ func resourceCloudBuildBitbucketServerConfigRead(d *schema.ResourceData, meta in
 
 func resourceCloudBuildBitbucketServerConfigUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for BitbucketServerConfig: %s", err)
 	}
@@ -428,37 +401,37 @@ func resourceCloudBuildBitbucketServerConfigUpdate(d *schema.ResourceData, meta 
 	hostUriProp, err := expandCloudBuildBitbucketServerConfigHostUri(d.Get("host_uri"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("host_uri"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, hostUriProp)) {
+	} else if v, ok := d.GetOkExists("host_uri"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, hostUriProp)) {
 		obj["hostUri"] = hostUriProp
 	}
 	secretsProp, err := expandCloudBuildBitbucketServerConfigSecrets(d.Get("secrets"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("secrets"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, secretsProp)) {
+	} else if v, ok := d.GetOkExists("secrets"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, secretsProp)) {
 		obj["secrets"] = secretsProp
 	}
 	usernameProp, err := expandCloudBuildBitbucketServerConfigUsername(d.Get("username"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("username"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, usernameProp)) {
+	} else if v, ok := d.GetOkExists("username"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, usernameProp)) {
 		obj["username"] = usernameProp
 	}
 	connectedRepositoriesProp, err := expandCloudBuildBitbucketServerConfigConnectedRepositories(d.Get("connected_repositories"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("connected_repositories"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, connectedRepositoriesProp)) {
+	} else if v, ok := d.GetOkExists("connected_repositories"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, connectedRepositoriesProp)) {
 		obj["connectedRepositories"] = connectedRepositoriesProp
 	}
 	peeredNetworkProp, err := expandCloudBuildBitbucketServerConfigPeeredNetwork(d.Get("peered_network"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("peered_network"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, peeredNetworkProp)) {
+	} else if v, ok := d.GetOkExists("peered_network"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, peeredNetworkProp)) {
 		obj["peeredNetwork"] = peeredNetworkProp
 	}
 	sslCaProp, err := expandCloudBuildBitbucketServerConfigSslCa(d.Get("ssl_ca"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("ssl_ca"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, sslCaProp)) {
+	} else if v, ok := d.GetOkExists("ssl_ca"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, sslCaProp)) {
 		obj["sslCa"] = sslCaProp
 	}
 
@@ -467,7 +440,7 @@ func resourceCloudBuildBitbucketServerConfigUpdate(d *schema.ResourceData, meta 
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
+	url, err := ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
 	if err != nil {
 		return err
 	}
@@ -512,7 +485,7 @@ func resourceCloudBuildBitbucketServerConfigUpdate(d *schema.ResourceData, meta 
 		}
 	}
 	// reconstruct url
-	url, err = tpgresource.ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
+	url, err = ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
 	if err != nil {
 		return err
 	}
@@ -522,19 +495,11 @@ func resourceCloudBuildBitbucketServerConfigUpdate(d *schema.ResourceData, meta 
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating BitbucketServerConfig %q: %s", d.Id(), err)
@@ -564,7 +529,7 @@ func resourceCloudBuildBitbucketServerConfigUpdate(d *schema.ResourceData, meta 
 		removeRepos := oReposSet.Difference(nReposSet).List()
 		createRepos := nReposSet.Difference(oReposSet).List()
 
-		url, err = tpgresource.ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}:removeBitbucketServerConnectedRepository")
+		url, err = ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}:removeBitbucketServerConnectedRepository")
 		if err != nil {
 			return err
 		}
@@ -573,15 +538,7 @@ func resourceCloudBuildBitbucketServerConfigUpdate(d *schema.ResourceData, meta 
 		for _, repo := range removeRepos {
 			obj := make(map[string]interface{})
 			obj["connectedRepository"] = repo
-			res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "POST",
-				Project:   billingProject,
-				RawURL:    url,
-				UserAgent: userAgent,
-				Body:      obj,
-				Timeout:   d.Timeout(schema.TimeoutCreate),
-			})
+			res, err = transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 			if err != nil {
 				return fmt.Errorf("Error removing connected_repositories: %s", err)
 			}
@@ -589,7 +546,7 @@ func resourceCloudBuildBitbucketServerConfigUpdate(d *schema.ResourceData, meta 
 
 		// if repos to create, prepare and send batchCreate request
 		if len(createRepos) > 0 {
-			parent, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
+			parent, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
 			if err != nil {
 				return fmt.Errorf("Error constructing id: %s", err)
 			}
@@ -608,20 +565,12 @@ func resourceCloudBuildBitbucketServerConfigUpdate(d *schema.ResourceData, meta 
 			obj = make(map[string]interface{})
 			obj["requests"] = requests
 
-			url, err = tpgresource.ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}/connectedRepositories:batchCreate")
+			url, err = ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}/connectedRepositories:batchCreate")
 			if err != nil {
 				return err
 			}
 
-			res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "POST",
-				Project:   billingProject,
-				RawURL:    url,
-				UserAgent: userAgent,
-				Body:      obj,
-				Timeout:   d.Timeout(schema.TimeoutCreate),
-			})
+			res, err = transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 			if err != nil {
 				return fmt.Errorf("Error creating connected_repositories: %s", err)
 			}
@@ -641,20 +590,20 @@ func resourceCloudBuildBitbucketServerConfigUpdate(d *schema.ResourceData, meta 
 
 func resourceCloudBuildBitbucketServerConfigDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for BitbucketServerConfig: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
+	url, err := ReplaceVars(d, config, "{{CloudBuildBasePath}}projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
 	if err != nil {
 		return err
 	}
@@ -663,19 +612,11 @@ func resourceCloudBuildBitbucketServerConfigDelete(d *schema.ResourceData, meta 
 	log.Printf("[DEBUG] Deleting BitbucketServerConfig %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "BitbucketServerConfig")
 	}
@@ -694,7 +635,7 @@ func resourceCloudBuildBitbucketServerConfigDelete(d *schema.ResourceData, meta 
 
 func resourceCloudBuildBitbucketServerConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/bitbucketServerConfigs/(?P<config_id>[^/]+)",
 		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<config_id>[^/]+)",
 		"(?P<location>[^/]+)/(?P<config_id>[^/]+)",
@@ -703,7 +644,7 @@ func resourceCloudBuildBitbucketServerConfigImport(d *schema.ResourceData, meta 
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/bitbucketServerConfigs/{{config_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -796,11 +737,11 @@ func flattenCloudBuildBitbucketServerConfigSslCa(v interface{}, d *schema.Resour
 	return v
 }
 
-func expandCloudBuildBitbucketServerConfigHostUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigHostUri(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudBuildBitbucketServerConfigSecrets(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigSecrets(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -812,48 +753,48 @@ func expandCloudBuildBitbucketServerConfigSecrets(v interface{}, d tpgresource.T
 	transformedAdminAccessTokenVersionName, err := expandCloudBuildBitbucketServerConfigSecretsAdminAccessTokenVersionName(original["admin_access_token_version_name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAdminAccessTokenVersionName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAdminAccessTokenVersionName); val.IsValid() && !isEmptyValue(val) {
 		transformed["adminAccessTokenVersionName"] = transformedAdminAccessTokenVersionName
 	}
 
 	transformedReadAccessTokenVersionName, err := expandCloudBuildBitbucketServerConfigSecretsReadAccessTokenVersionName(original["read_access_token_version_name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedReadAccessTokenVersionName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedReadAccessTokenVersionName); val.IsValid() && !isEmptyValue(val) {
 		transformed["readAccessTokenVersionName"] = transformedReadAccessTokenVersionName
 	}
 
 	transformedWebhookSecretVersionName, err := expandCloudBuildBitbucketServerConfigSecretsWebhookSecretVersionName(original["webhook_secret_version_name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedWebhookSecretVersionName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedWebhookSecretVersionName); val.IsValid() && !isEmptyValue(val) {
 		transformed["webhookSecretVersionName"] = transformedWebhookSecretVersionName
 	}
 
 	return transformed, nil
 }
 
-func expandCloudBuildBitbucketServerConfigSecretsAdminAccessTokenVersionName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigSecretsAdminAccessTokenVersionName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudBuildBitbucketServerConfigSecretsReadAccessTokenVersionName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigSecretsReadAccessTokenVersionName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudBuildBitbucketServerConfigSecretsWebhookSecretVersionName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigSecretsWebhookSecretVersionName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudBuildBitbucketServerConfigUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigUsername(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudBuildBitbucketServerConfigApiKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigApiKey(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudBuildBitbucketServerConfigConnectedRepositories(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigConnectedRepositories(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
@@ -867,14 +808,14 @@ func expandCloudBuildBitbucketServerConfigConnectedRepositories(v interface{}, d
 		transformedProjectKey, err := expandCloudBuildBitbucketServerConfigConnectedRepositoriesProjectKey(original["project_key"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedProjectKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedProjectKey); val.IsValid() && !isEmptyValue(val) {
 			transformed["projectKey"] = transformedProjectKey
 		}
 
 		transformedRepoSlug, err := expandCloudBuildBitbucketServerConfigConnectedRepositoriesRepoSlug(original["repo_slug"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedRepoSlug); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedRepoSlug); val.IsValid() && !isEmptyValue(val) {
 			transformed["repoSlug"] = transformedRepoSlug
 		}
 
@@ -883,19 +824,19 @@ func expandCloudBuildBitbucketServerConfigConnectedRepositories(v interface{}, d
 	return req, nil
 }
 
-func expandCloudBuildBitbucketServerConfigConnectedRepositoriesProjectKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigConnectedRepositoriesProjectKey(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudBuildBitbucketServerConfigConnectedRepositoriesRepoSlug(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigConnectedRepositoriesRepoSlug(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudBuildBitbucketServerConfigPeeredNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigPeeredNetwork(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCloudBuildBitbucketServerConfigSslCa(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCloudBuildBitbucketServerConfigSslCa(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

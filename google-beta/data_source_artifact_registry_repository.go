@@ -1,24 +1,21 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func DataSourceArtifactRegistryRepository() *schema.Resource {
 	// Generate datasource schema from resource
-	dsSchema := tpgresource.DatasourceSchemaFromResourceSchema(ResourceArtifactRegistryRepository().Schema)
+	dsSchema := datasourceSchemaFromResourceSchema(ResourceArtifactRegistryRepository().Schema)
 
 	// Set 'Required' schema elements
-	tpgresource.AddRequiredFieldsToSchema(dsSchema, "repository_id", "location")
+	addRequiredFieldsToSchema(dsSchema, "repository_id", "location")
 
 	// Set 'Optional' schema elements
-	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
+	addOptionalFieldsToSchema(dsSchema, "project")
 
 	return &schema.Resource{
 		Read:   dataSourceArtifactRegistryRepositoryRead,
@@ -29,12 +26,12 @@ func DataSourceArtifactRegistryRepository() *schema.Resource {
 func dataSourceArtifactRegistryRepositoryRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
 
-	location, err := tpgresource.GetLocation(d, config)
+	location, err := getLocation(d, config)
 	if err != nil {
 		return err
 	}

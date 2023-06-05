@@ -1,11 +1,8 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
 	"log"
-	"reflect"
 	"sort"
 	"strings"
 	"time"
@@ -13,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/googleapi"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 
@@ -52,7 +48,7 @@ func ResourceComputeNetworkPeering() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				ValidateFunc:     verify.ValidateRegexp(peerNetworkLinkRegex),
-				DiffSuppressFunc: tpgresource.CompareSelfLinkRelativePaths,
+				DiffSuppressFunc: compareSelfLinkRelativePaths,
 				Description:      `The primary network of the peering.`,
 			},
 
@@ -61,7 +57,7 @@ func ResourceComputeNetworkPeering() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				ValidateFunc:     verify.ValidateRegexp(peerNetworkLinkRegex),
-				DiffSuppressFunc: tpgresource.CompareSelfLinkRelativePaths,
+				DiffSuppressFunc: compareSelfLinkRelativePaths,
 				Description:      `The peer network in the peering. The peer network may belong to a different project.`,
 			},
 
@@ -103,14 +99,6 @@ func ResourceComputeNetworkPeering() *schema.Resource {
 				Computed:    true,
 				Description: `Details about the current state of the peering.`,
 			},
-
-			"stack_type": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"IPV4_ONLY", "IPV4_IPV6"}),
-				Description:  `Which IP version(s) of traffic and routes are allowed to be imported or exported between peer networks. The default value is IPV4_ONLY. Possible values: ["IPV4_ONLY", "IPV4_IPV6"]`,
-				Default:      "IPV4_ONLY",
-			},
 		},
 		UseJSONNumber: true,
 	}
@@ -118,16 +106,16 @@ func ResourceComputeNetworkPeering() *schema.Resource {
 
 func resourceComputeNetworkPeeringCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	networkFieldValue, err := tpgresource.ParseNetworkFieldValue(d.Get("network").(string), d, config)
+	networkFieldValue, err := ParseNetworkFieldValue(d.Get("network").(string), d, config)
 	if err != nil {
 		return err
 	}
-	peerNetworkFieldValue, err := tpgresource.ParseNetworkFieldValue(d.Get("peer_network").(string), d, config)
+	peerNetworkFieldValue, err := ParseNetworkFieldValue(d.Get("peer_network").(string), d, config)
 	if err != nil {
 		return err
 	}
@@ -139,8 +127,8 @@ func resourceComputeNetworkPeeringCreate(d *schema.ResourceData, meta interface{
 	// Lock on both networks, sorted so we don't deadlock for A <--> B peering pairs.
 	peeringLockNames := sortedNetworkPeeringMutexKeys(networkFieldValue, peerNetworkFieldValue)
 	for _, kn := range peeringLockNames {
-		transport_tpg.MutexStore.Lock(kn)
-		defer transport_tpg.MutexStore.Unlock(kn)
+		mutexKV.Lock(kn)
+		defer mutexKV.Unlock(kn)
 	}
 
 	addOp, err := config.NewComputeClient(userAgent).Networks.AddPeering(networkFieldValue.Project, networkFieldValue.Name, request).Do()
@@ -160,13 +148,13 @@ func resourceComputeNetworkPeeringCreate(d *schema.ResourceData, meta interface{
 
 func resourceComputeNetworkPeeringRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	peeringName := d.Get("name").(string)
-	networkFieldValue, err := tpgresource.ParseNetworkFieldValue(d.Get("network").(string), d, config)
+	networkFieldValue, err := ParseNetworkFieldValue(d.Get("network").(string), d, config)
 	if err != nil {
 		return err
 	}
@@ -207,25 +195,22 @@ func resourceComputeNetworkPeeringRead(d *schema.ResourceData, meta interface{})
 	if err := d.Set("state_details", peering.StateDetails); err != nil {
 		return fmt.Errorf("Error setting state_details: %s", err)
 	}
-	if err := d.Set("stack_type", flattenNetworkPeeringStackType(peering.StackType, d, config)); err != nil {
-		return fmt.Errorf("Error setting stack_type: %s", err)
-	}
 
 	return nil
 }
 
 func resourceComputeNetworkPeeringUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	networkFieldValue, err := tpgresource.ParseNetworkFieldValue(d.Get("network").(string), d, config)
+	networkFieldValue, err := ParseNetworkFieldValue(d.Get("network").(string), d, config)
 	if err != nil {
 		return err
 	}
-	peerNetworkFieldValue, err := tpgresource.ParseNetworkFieldValue(d.Get("peer_network").(string), d, config)
+	peerNetworkFieldValue, err := ParseNetworkFieldValue(d.Get("peer_network").(string), d, config)
 	if err != nil {
 		return err
 	}
@@ -237,8 +222,8 @@ func resourceComputeNetworkPeeringUpdate(d *schema.ResourceData, meta interface{
 	// Lock on both networks, sorted so we don't deadlock for A <--> B peering pairs.
 	peeringLockNames := sortedNetworkPeeringMutexKeys(networkFieldValue, peerNetworkFieldValue)
 	for _, kn := range peeringLockNames {
-		transport_tpg.MutexStore.Lock(kn)
-		defer transport_tpg.MutexStore.Unlock(kn)
+		mutexKV.Lock(kn)
+		defer mutexKV.Unlock(kn)
 	}
 
 	updateOp, err := config.NewComputeClient(userAgent).Networks.UpdatePeering(networkFieldValue.Project, networkFieldValue.Name, request).Do()
@@ -256,18 +241,18 @@ func resourceComputeNetworkPeeringUpdate(d *schema.ResourceData, meta interface{
 
 func resourceComputeNetworkPeeringDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	// Remove the `network` to `peer_network` peering
 	name := d.Get("name").(string)
-	networkFieldValue, err := tpgresource.ParseNetworkFieldValue(d.Get("network").(string), d, config)
+	networkFieldValue, err := ParseNetworkFieldValue(d.Get("network").(string), d, config)
 	if err != nil {
 		return err
 	}
-	peerNetworkFieldValue, err := tpgresource.ParseNetworkFieldValue(d.Get("peer_network").(string), d, config)
+	peerNetworkFieldValue, err := ParseNetworkFieldValue(d.Get("peer_network").(string), d, config)
 	if err != nil {
 		return err
 	}
@@ -280,8 +265,8 @@ func resourceComputeNetworkPeeringDelete(d *schema.ResourceData, meta interface{
 	// Lock on both networks, sorted so we don't deadlock for A <--> B peering pairs.
 	peeringLockNames := sortedNetworkPeeringMutexKeys(networkFieldValue, peerNetworkFieldValue)
 	for _, kn := range peeringLockNames {
-		transport_tpg.MutexStore.Lock(kn)
-		defer transport_tpg.MutexStore.Unlock(kn)
+		mutexKV.Lock(kn)
+		defer mutexKV.Unlock(kn)
 	}
 
 	removeOp, err := config.NewComputeClient(userAgent).Networks.RemovePeering(networkFieldValue.Project, networkFieldValue.Name, request).Do()
@@ -318,21 +303,11 @@ func expandNetworkPeering(d *schema.ResourceData) *compute.NetworkPeering {
 		ImportCustomRoutes:             d.Get("import_custom_routes").(bool),
 		ExportSubnetRoutesWithPublicIp: d.Get("export_subnet_routes_with_public_ip").(bool),
 		ImportSubnetRoutesWithPublicIp: d.Get("import_subnet_routes_with_public_ip").(bool),
-		StackType:                      d.Get("stack_type").(string),
 		ForceSendFields:                []string{"ExportSubnetRoutesWithPublicIp", "ImportCustomRoutes", "ExportCustomRoutes"},
 	}
 }
 
-func flattenNetworkPeeringStackType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// To prevent the perma-diff caused by the absence of `stack_type` in API responses for older resource
-	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
-		return "IPV4_ONLY"
-	}
-
-	return v
-}
-
-func sortedNetworkPeeringMutexKeys(networkName, peerNetworkName *tpgresource.GlobalFieldValue) []string {
+func sortedNetworkPeeringMutexKeys(networkName, peerNetworkName *GlobalFieldValue) []string {
 	// Whether you delete the peering from network A to B or the one from B to A, they
 	// cannot happen at the same time.
 	networks := []string{
@@ -353,7 +328,7 @@ func resourceComputeNetworkPeeringImport(d *schema.ResourceData, meta interface{
 	network := splits[1]
 	name := splits[2]
 
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
@@ -365,7 +340,7 @@ func resourceComputeNetworkPeeringImport(d *schema.ResourceData, meta interface{
 		return nil, transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("Network %q", splits[1]))
 	}
 
-	if err := d.Set("network", tpgresource.ConvertSelfLinkToV1(net.SelfLink)); err != nil {
+	if err := d.Set("network", ConvertSelfLinkToV1(net.SelfLink)); err != nil {
 		return nil, fmt.Errorf("Error setting network: %s", err)
 	}
 	if err := d.Set("name", name); err != nil {

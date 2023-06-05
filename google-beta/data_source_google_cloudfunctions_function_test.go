@@ -1,13 +1,10 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"os"
 	"testing"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -32,8 +29,6 @@ func TestAccDataSourceGoogleCloudFunctionsFunction_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					acctest.CheckDataSourceStateMatchesResourceState(funcDataNameHttp,
 						"google_cloudfunctions_function.function_http"),
-					resource.TestCheckResourceAttr(funcDataNameHttp,
-						"status", "ACTIVE"),
 				),
 			},
 		},

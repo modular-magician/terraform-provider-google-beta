@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -26,7 +23,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
@@ -211,7 +207,6 @@ certificates before they expire remains the user's responsibility.`,
 							Type:       schema.TypeString,
 							Optional:   true,
 							Deprecated: "Deprecated in favor of `pem_certificate`",
-							ForceNew:   true,
 							Description: `**Deprecated** The certificate chain in PEM-encoded form.
 
 Leaf certificate comes first, followed by intermediate ones if any.`,
@@ -221,7 +216,6 @@ Leaf certificate comes first, followed by intermediate ones if any.`,
 						"pem_certificate": {
 							Type:     schema.TypeString,
 							Optional: true,
-							ForceNew: true,
 							Description: `The certificate chain in PEM-encoded form.
 
 Leaf certificate comes first, followed by intermediate ones if any.`,
@@ -230,7 +224,6 @@ Leaf certificate comes first, followed by intermediate ones if any.`,
 						"pem_private_key": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							ForceNew:     true,
 							Description:  `The private key of the leaf certificate in PEM-encoded form.`,
 							Sensitive:    true,
 							ExactlyOneOf: []string{"self_managed.0.private_key_pem", "self_managed.0.pem_private_key"},
@@ -239,7 +232,6 @@ Leaf certificate comes first, followed by intermediate ones if any.`,
 							Type:         schema.TypeString,
 							Optional:     true,
 							Deprecated:   "Deprecated in favor of `pem_private_key`",
-							ForceNew:     true,
 							Description:  `**Deprecated** The private key of the leaf certificate in PEM-encoded form.`,
 							Sensitive:    true,
 							ExactlyOneOf: []string{"self_managed.0.private_key_pem", "self_managed.0.pem_private_key"},
@@ -261,7 +253,7 @@ Leaf certificate comes first, followed by intermediate ones if any.`,
 
 func resourceCertificateManagerCertificateCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -270,35 +262,35 @@ func resourceCertificateManagerCertificateCreate(d *schema.ResourceData, meta in
 	descriptionProp, err := expandCertificateManagerCertificateDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	labelsProp, err := expandCertificateManagerCertificateLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 	scopeProp, err := expandCertificateManagerCertificateScope(d.Get("scope"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("scope"); !tpgresource.IsEmptyValue(reflect.ValueOf(scopeProp)) && (ok || !reflect.DeepEqual(v, scopeProp)) {
+	} else if v, ok := d.GetOkExists("scope"); !isEmptyValue(reflect.ValueOf(scopeProp)) && (ok || !reflect.DeepEqual(v, scopeProp)) {
 		obj["scope"] = scopeProp
 	}
 	selfManagedProp, err := expandCertificateManagerCertificateSelfManaged(d.Get("self_managed"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("self_managed"); !tpgresource.IsEmptyValue(reflect.ValueOf(selfManagedProp)) && (ok || !reflect.DeepEqual(v, selfManagedProp)) {
+	} else if v, ok := d.GetOkExists("self_managed"); !isEmptyValue(reflect.ValueOf(selfManagedProp)) && (ok || !reflect.DeepEqual(v, selfManagedProp)) {
 		obj["selfManaged"] = selfManagedProp
 	}
 	managedProp, err := expandCertificateManagerCertificateManaged(d.Get("managed"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("managed"); !tpgresource.IsEmptyValue(reflect.ValueOf(managedProp)) && (ok || !reflect.DeepEqual(v, managedProp)) {
+	} else if v, ok := d.GetOkExists("managed"); !isEmptyValue(reflect.ValueOf(managedProp)) && (ok || !reflect.DeepEqual(v, managedProp)) {
 		obj["managed"] = managedProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates?certificateId={{name}}")
+	url, err := ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates?certificateId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -306,32 +298,24 @@ func resourceCertificateManagerCertificateCreate(d *schema.ResourceData, meta in
 	log.Printf("[DEBUG] Creating new Certificate: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Certificate: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating Certificate: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/certificates/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/certificates/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -354,36 +338,30 @@ func resourceCertificateManagerCertificateCreate(d *schema.ResourceData, meta in
 
 func resourceCertificateManagerCertificateRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates/{{name}}")
+	url, err := ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates/{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Certificate: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("CertificateManagerCertificate %q", d.Id()))
 	}
@@ -410,14 +388,14 @@ func resourceCertificateManagerCertificateRead(d *schema.ResourceData, meta inte
 
 func resourceCertificateManagerCertificateUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Certificate: %s", err)
 	}
@@ -427,17 +405,17 @@ func resourceCertificateManagerCertificateUpdate(d *schema.ResourceData, meta in
 	descriptionProp, err := expandCertificateManagerCertificateDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+	} else if v, ok := d.GetOkExists("description"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
 	labelsProp, err := expandCertificateManagerCertificateLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates/{{name}}")
+	url, err := ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -460,19 +438,11 @@ func resourceCertificateManagerCertificateUpdate(d *schema.ResourceData, meta in
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating Certificate %q: %s", d.Id(), err)
@@ -493,20 +463,20 @@ func resourceCertificateManagerCertificateUpdate(d *schema.ResourceData, meta in
 
 func resourceCertificateManagerCertificateDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Certificate: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates/{{name}}")
+	url, err := ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificates/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -515,19 +485,11 @@ func resourceCertificateManagerCertificateDelete(d *schema.ResourceData, meta in
 	log.Printf("[DEBUG] Deleting Certificate %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "Certificate")
 	}
@@ -546,7 +508,7 @@ func resourceCertificateManagerCertificateDelete(d *schema.ResourceData, meta in
 
 func resourceCertificateManagerCertificateImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/certificates/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)",
 		"(?P<location>[^/]+)/(?P<name>[^/]+)",
@@ -555,7 +517,7 @@ func resourceCertificateManagerCertificateImport(d *schema.ResourceData, meta in
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/certificates/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/certificates/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -669,11 +631,11 @@ func flattenCertificateManagerCertificateManagedAuthorizationAttemptInfoDetails(
 	return v
 }
 
-func expandCertificateManagerCertificateDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateDescription(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandCertificateManagerCertificateLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -684,11 +646,11 @@ func expandCertificateManagerCertificateLabels(v interface{}, d tpgresource.Terr
 	return m, nil
 }
 
-func expandCertificateManagerCertificateScope(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateScope(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateSelfManaged(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateSelfManaged(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -700,51 +662,51 @@ func expandCertificateManagerCertificateSelfManaged(v interface{}, d tpgresource
 	transformedCertificatePem, err := expandCertificateManagerCertificateSelfManagedCertificatePem(original["certificate_pem"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCertificatePem); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCertificatePem); val.IsValid() && !isEmptyValue(val) {
 		transformed["certificatePem"] = transformedCertificatePem
 	}
 
 	transformedPrivateKeyPem, err := expandCertificateManagerCertificateSelfManagedPrivateKeyPem(original["private_key_pem"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPrivateKeyPem); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPrivateKeyPem); val.IsValid() && !isEmptyValue(val) {
 		transformed["privateKeyPem"] = transformedPrivateKeyPem
 	}
 
 	transformedPemCertificate, err := expandCertificateManagerCertificateSelfManagedPemCertificate(original["pem_certificate"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPemCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPemCertificate); val.IsValid() && !isEmptyValue(val) {
 		transformed["pemCertificate"] = transformedPemCertificate
 	}
 
 	transformedPemPrivateKey, err := expandCertificateManagerCertificateSelfManagedPemPrivateKey(original["pem_private_key"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPemPrivateKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPemPrivateKey); val.IsValid() && !isEmptyValue(val) {
 		transformed["pemPrivateKey"] = transformedPemPrivateKey
 	}
 
 	return transformed, nil
 }
 
-func expandCertificateManagerCertificateSelfManagedCertificatePem(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateSelfManagedCertificatePem(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateSelfManagedPrivateKeyPem(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateSelfManagedPrivateKeyPem(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateSelfManagedPemCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateSelfManagedPemCertificate(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateSelfManagedPemPrivateKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateSelfManagedPemPrivateKey(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateManaged(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManaged(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -756,54 +718,54 @@ func expandCertificateManagerCertificateManaged(v interface{}, d tpgresource.Ter
 	transformedDomains, err := expandCertificateManagerCertificateManagedDomains(original["domains"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDomains); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDomains); val.IsValid() && !isEmptyValue(val) {
 		transformed["domains"] = transformedDomains
 	}
 
 	transformedDnsAuthorizations, err := expandCertificateManagerCertificateManagedDnsAuthorizations(original["dns_authorizations"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDnsAuthorizations); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDnsAuthorizations); val.IsValid() && !isEmptyValue(val) {
 		transformed["dnsAuthorizations"] = transformedDnsAuthorizations
 	}
 
 	transformedState, err := expandCertificateManagerCertificateManagedState(original["state"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedState); val.IsValid() && !isEmptyValue(val) {
 		transformed["state"] = transformedState
 	}
 
 	transformedProvisioningIssue, err := expandCertificateManagerCertificateManagedProvisioningIssue(original["provisioning_issue"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedProvisioningIssue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedProvisioningIssue); val.IsValid() && !isEmptyValue(val) {
 		transformed["provisioningIssue"] = transformedProvisioningIssue
 	}
 
 	transformedAuthorizationAttemptInfo, err := expandCertificateManagerCertificateManagedAuthorizationAttemptInfo(original["authorization_attempt_info"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAuthorizationAttemptInfo); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedAuthorizationAttemptInfo); val.IsValid() && !isEmptyValue(val) {
 		transformed["authorizationAttemptInfo"] = transformedAuthorizationAttemptInfo
 	}
 
 	return transformed, nil
 }
 
-func expandCertificateManagerCertificateManagedDomains(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManagedDomains(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateManagedDnsAuthorizations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManagedDnsAuthorizations(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateManagedState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManagedState(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateManagedProvisioningIssue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManagedProvisioningIssue(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -815,29 +777,29 @@ func expandCertificateManagerCertificateManagedProvisioningIssue(v interface{}, 
 	transformedReason, err := expandCertificateManagerCertificateManagedProvisioningIssueReason(original["reason"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedReason); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedReason); val.IsValid() && !isEmptyValue(val) {
 		transformed["reason"] = transformedReason
 	}
 
 	transformedDetails, err := expandCertificateManagerCertificateManagedProvisioningIssueDetails(original["details"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedDetails); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedDetails); val.IsValid() && !isEmptyValue(val) {
 		transformed["details"] = transformedDetails
 	}
 
 	return transformed, nil
 }
 
-func expandCertificateManagerCertificateManagedProvisioningIssueReason(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManagedProvisioningIssueReason(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateManagedProvisioningIssueDetails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManagedProvisioningIssueDetails(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateManagedAuthorizationAttemptInfo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManagedAuthorizationAttemptInfo(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -850,28 +812,28 @@ func expandCertificateManagerCertificateManagedAuthorizationAttemptInfo(v interf
 		transformedDomain, err := expandCertificateManagerCertificateManagedAuthorizationAttemptInfoDomain(original["domain"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedDomain); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedDomain); val.IsValid() && !isEmptyValue(val) {
 			transformed["domain"] = transformedDomain
 		}
 
 		transformedState, err := expandCertificateManagerCertificateManagedAuthorizationAttemptInfoState(original["state"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedState); val.IsValid() && !isEmptyValue(val) {
 			transformed["state"] = transformedState
 		}
 
 		transformedFailureReason, err := expandCertificateManagerCertificateManagedAuthorizationAttemptInfoFailureReason(original["failure_reason"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedFailureReason); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedFailureReason); val.IsValid() && !isEmptyValue(val) {
 			transformed["failureReason"] = transformedFailureReason
 		}
 
 		transformedDetails, err := expandCertificateManagerCertificateManagedAuthorizationAttemptInfoDetails(original["details"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedDetails); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedDetails); val.IsValid() && !isEmptyValue(val) {
 			transformed["details"] = transformedDetails
 		}
 
@@ -880,19 +842,19 @@ func expandCertificateManagerCertificateManagedAuthorizationAttemptInfo(v interf
 	return req, nil
 }
 
-func expandCertificateManagerCertificateManagedAuthorizationAttemptInfoDomain(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManagedAuthorizationAttemptInfoDomain(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateManagedAuthorizationAttemptInfoState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManagedAuthorizationAttemptInfoState(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateManagedAuthorizationAttemptInfoFailureReason(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManagedAuthorizationAttemptInfoFailureReason(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandCertificateManagerCertificateManagedAuthorizationAttemptInfoDetails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandCertificateManagerCertificateManagedAuthorizationAttemptInfoDetails(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

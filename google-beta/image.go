@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,7 +5,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 
@@ -217,7 +214,7 @@ func resolveImage(c *transport_tpg.Config, project, name, userAgent string) (str
 func resolveImageRefToRelativeURI(providerProject, name string) (string, error) {
 	switch {
 	case resolveImageLink.MatchString(name): // https://www.googleapis.com/compute/v1/projects/xyz/global/images/xyz
-		namePath, err := tpgresource.GetRelativePath(name)
+		namePath, err := getRelativePath(name)
 		if err != nil {
 			return "", err
 		}

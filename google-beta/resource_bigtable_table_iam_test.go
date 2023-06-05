@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -116,7 +114,6 @@ func TestAccBigtableTableIamPolicy(t *testing.T) {
 			{
 				// Test IAM Binding creation
 				Config: testAccBigtableTableIamPolicy(instance, cluster, account, role),
-				Check:  resource.TestCheckResourceAttrSet("data.google_bigtable_table_iam_policy.policy", "policy_data"),
 			},
 			{
 				ResourceName:      "google_bigtable_table_iam_policy.policy",
@@ -210,12 +207,6 @@ resource "google_bigtable_table_iam_policy" "policy" {
   table       = google_bigtable_table.table.name
   policy_data = data.google_iam_policy.policy.policy_data
 }
-
-data "google_bigtable_table_iam_policy" "policy" {
-  instance    = google_bigtable_instance.instance.name
-  table       = google_bigtable_table.table.name
-}
-
 `, instance, cluster, cluster, account, role)
 }
 

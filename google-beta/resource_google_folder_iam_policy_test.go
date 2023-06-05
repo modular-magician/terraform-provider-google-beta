@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -26,7 +24,6 @@ func TestAccFolderIamPolicy_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccFolderIamPolicy_basic(folderDisplayName, parent, "roles/viewer", "user:admin@hashicorptest.com"),
-				Check:  resource.TestCheckResourceAttrSet("data.google_folder_iam_policy.test", "policy_data"),
 			},
 			{
 				ResourceName:      "google_folder_iam_policy.test",
@@ -122,10 +119,6 @@ data "google_iam_policy" "test" {
 resource "google_folder_iam_policy" "test" {
   folder      = google_folder.permissiontest.name
   policy_data = data.google_iam_policy.test.policy_data
-}
-
-data "google_folder_iam_policy" "test" {
-  folder      = google_folder.permissiontest.name
 }
 `, folder, parent, role, member)
 }

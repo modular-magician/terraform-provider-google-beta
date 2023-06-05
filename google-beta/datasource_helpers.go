@@ -1,10 +1,7 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 // datasourceSchemaFromResourceSchema is a recursive func that
@@ -13,11 +10,44 @@ import (
 // - all attributes have Computed = true
 // - all attributes have ForceNew, Required = false
 // - Validation funcs and attributes (e.g. MaxItems) are not copied
-//
-// Deprecated: For backward compatibility datasourceSchemaFromResourceSchema is still working,
-// but all new code should use DatasourceSchemaFromResourceSchema in the tpgresource package instead.
 func datasourceSchemaFromResourceSchema(rs map[string]*schema.Schema) map[string]*schema.Schema {
-	return tpgresource.DatasourceSchemaFromResourceSchema(rs)
+	ds := make(map[string]*schema.Schema, len(rs))
+	for k, v := range rs {
+		dv := &schema.Schema{
+			Computed:    true,
+			ForceNew:    false,
+			Required:    false,
+			Description: v.Description,
+			Type:        v.Type,
+		}
+
+		switch v.Type {
+		case schema.TypeSet:
+			dv.Set = v.Set
+			fallthrough
+		case schema.TypeList:
+			// List & Set types are generally used for 2 cases:
+			// - a list/set of simple primitive values (e.g. list of strings)
+			// - a sub resource
+			if elem, ok := v.Elem.(*schema.Resource); ok {
+				// handle the case where the Element is a sub-resource
+				dv.Elem = &schema.Resource{
+					Schema: datasourceSchemaFromResourceSchema(elem.Schema),
+				}
+			} else {
+				// handle simple primitive case
+				dv.Elem = v.Elem
+			}
+
+		default:
+			// Elem of all other types are copied as-is
+			dv.Elem = v.Elem
+
+		}
+		ds[k] = dv
+
+	}
+	return ds
 }
 
 // fixDatasourceSchemaFlags is a convenience func that toggles the Computed,
@@ -26,21 +56,18 @@ func datasourceSchemaFromResourceSchema(rs map[string]*schema.Schema) map[string
 // example) and therefore the attribute flags were not set appropriately when
 // first added to the schema definition. Currently only supports top-level
 // schema elements.
-//
-// Deprecated: For backward compatibility fixDatasourceSchemaFlags is still working,
-// but all new code should use FixDatasourceSchemaFlags in the tpgresource package instead.
 func fixDatasourceSchemaFlags(schema map[string]*schema.Schema, required bool, keys ...string) {
-	tpgresource.FixDatasourceSchemaFlags(schema, required, keys...)
+	for _, v := range keys {
+		schema[v].Computed = false
+		schema[v].Optional = !required
+		schema[v].Required = required
+	}
 }
 
-// Deprecated: For backward compatibility addRequiredFieldsToSchema is still working,
-// but all new code should use AddRequiredFieldsToSchema in the tpgresource package instead.
 func addRequiredFieldsToSchema(schema map[string]*schema.Schema, keys ...string) {
-	tpgresource.AddRequiredFieldsToSchema(schema, keys...)
+	fixDatasourceSchemaFlags(schema, true, keys...)
 }
 
-// Deprecated: For backward compatibility addOptionalFieldsToSchema is still working,
-// but all new code should use AddOptionalFieldsToSchema in the tpgresource package instead.
 func addOptionalFieldsToSchema(schema map[string]*schema.Schema, keys ...string) {
-	tpgresource.AddOptionalFieldsToSchema(schema, keys...)
+	fixDatasourceSchemaFlags(schema, false, keys...)
 }

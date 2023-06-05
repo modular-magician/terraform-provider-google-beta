@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -24,8 +21,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -80,7 +75,7 @@ creation. Do not specify the self link.`,
 
 func resourceComputeDiskResourcePolicyAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -89,7 +84,7 @@ func resourceComputeDiskResourcePolicyAttachmentCreate(d *schema.ResourceData, m
 	nameProp, err := expandNestedComputeDiskResourcePolicyAttachmentName(d.Get("name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
 
@@ -98,7 +93,7 @@ func resourceComputeDiskResourcePolicyAttachmentCreate(d *schema.ResourceData, m
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/disks/{{disk}}/addResourcePolicies")
+	url, err := ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/disks/{{disk}}/addResourcePolicies")
 	if err != nil {
 		return err
 	}
@@ -106,32 +101,24 @@ func resourceComputeDiskResourcePolicyAttachmentCreate(d *schema.ResourceData, m
 	log.Printf("[DEBUG] Creating new DiskResourcePolicyAttachment: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for DiskResourcePolicyAttachment: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating DiskResourcePolicyAttachment: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{project}}/{{zone}}/{{disk}}/{{name}}")
+	id, err := ReplaceVars(d, config, "{{project}}/{{zone}}/{{disk}}/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -154,36 +141,30 @@ func resourceComputeDiskResourcePolicyAttachmentCreate(d *schema.ResourceData, m
 
 func resourceComputeDiskResourcePolicyAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/disks/{{disk}}")
+	url, err := ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/disks/{{disk}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for DiskResourcePolicyAttachment: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ComputeDiskResourcePolicyAttachment %q", d.Id()))
 	}
@@ -225,20 +206,20 @@ func resourceComputeDiskResourcePolicyAttachmentRead(d *schema.ResourceData, met
 
 func resourceComputeDiskResourcePolicyAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for DiskResourcePolicyAttachment: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/disks/{{disk}}/removeResourcePolicies")
+	url, err := ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/disks/{{disk}}/removeResourcePolicies")
 	if err != nil {
 		return err
 	}
@@ -246,7 +227,7 @@ func resourceComputeDiskResourcePolicyAttachmentDelete(d *schema.ResourceData, m
 	var obj map[string]interface{}
 	obj = make(map[string]interface{})
 
-	zone, err := tpgresource.GetZone(d, config)
+	zone, err := getZone(d, config)
 	if err != nil {
 		return err
 	}
@@ -258,7 +239,7 @@ func resourceComputeDiskResourcePolicyAttachmentDelete(d *schema.ResourceData, m
 	// We construct the regional name from the zone:
 	//
 	//	projects/{project}/regions/{region}/resourcePolicies/{resourceId}
-	region := tpgresource.GetRegionFromZone(zone)
+	region := getRegionFromZone(zone)
 	if region == "" {
 		return fmt.Errorf("invalid zone %q, unable to infer region from zone", zone)
 	}
@@ -266,25 +247,17 @@ func resourceComputeDiskResourcePolicyAttachmentDelete(d *schema.ResourceData, m
 	name, err := expandNestedComputeDiskResourcePolicyAttachmentName(d.Get("name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(name)) && (ok || !reflect.DeepEqual(v, name)) {
+	} else if v, ok := d.GetOkExists("name"); !isEmptyValue(reflect.ValueOf(name)) && (ok || !reflect.DeepEqual(v, name)) {
 		obj["resourcePolicies"] = []interface{}{fmt.Sprintf("projects/%s/regions/%s/resourcePolicies/%s", project, region, name)}
 	}
 	log.Printf("[DEBUG] Deleting DiskResourcePolicyAttachment %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "DiskResourcePolicyAttachment")
 	}
@@ -303,7 +276,7 @@ func resourceComputeDiskResourcePolicyAttachmentDelete(d *schema.ResourceData, m
 
 func resourceComputeDiskResourcePolicyAttachmentImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/disks/(?P<disk>[^/]+)/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<disk>[^/]+)/(?P<name>[^/]+)",
 		"(?P<zone>[^/]+)/(?P<disk>[^/]+)/(?P<name>[^/]+)",
@@ -313,7 +286,7 @@ func resourceComputeDiskResourcePolicyAttachmentImport(d *schema.ResourceData, m
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "{{project}}/{{zone}}/{{disk}}/{{name}}")
+	id, err := ReplaceVars(d, config, "{{project}}/{{zone}}/{{disk}}/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -326,18 +299,18 @@ func flattenNestedComputeDiskResourcePolicyAttachmentName(v interface{}, d *sche
 	return v
 }
 
-func expandNestedComputeDiskResourcePolicyAttachmentName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandNestedComputeDiskResourcePolicyAttachmentName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func resourceComputeDiskResourcePolicyAttachmentEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	config := meta.(*transport_tpg.Config)
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return nil, err
 	}
 
-	zone, err := tpgresource.GetZone(d, config)
+	zone, err := getZone(d, config)
 	if err != nil {
 		return nil, err
 	}
@@ -349,7 +322,7 @@ func resourceComputeDiskResourcePolicyAttachmentEncoder(d *schema.ResourceData, 
 	// We construct the regional name from the zone:
 	//
 	//	projects/{project}/regions/{region}/resourcePolicies/{resourceId}
-	region := tpgresource.GetRegionFromZone(zone)
+	region := getRegionFromZone(zone)
 	if region == "" {
 		return nil, fmt.Errorf("invalid zone %q, unable to infer region from zone", zone)
 	}
@@ -409,8 +382,8 @@ func resourceComputeDiskResourcePolicyAttachmentFindNestedObjectInList(d *schema
 		}
 
 		itemName := flattenNestedComputeDiskResourcePolicyAttachmentName(item["name"], d, meta.(*transport_tpg.Config))
-		// IsEmptyValue check so that if one is nil and the other is "", that's considered a match
-		if !(tpgresource.IsEmptyValue(reflect.ValueOf(itemName)) && tpgresource.IsEmptyValue(reflect.ValueOf(expectedFlattenedName))) && !reflect.DeepEqual(itemName, expectedFlattenedName) {
+		// isEmptyValue check so that if one is nil and the other is "", that's considered a match
+		if !(isEmptyValue(reflect.ValueOf(itemName)) && isEmptyValue(reflect.ValueOf(expectedFlattenedName))) && !reflect.DeepEqual(itemName, expectedFlattenedName) {
 			log.Printf("[DEBUG] Skipping item with name= %#v, looking for %#v)", itemName, expectedFlattenedName)
 			continue
 		}
@@ -420,6 +393,6 @@ func resourceComputeDiskResourcePolicyAttachmentFindNestedObjectInList(d *schema
 	return -1, nil, nil
 }
 func resourceComputeDiskResourcePolicyAttachmentDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	res["name"] = tpgresource.GetResourceNameFromSelfLink(res["name"].(string))
+	res["name"] = GetResourceNameFromSelfLink(res["name"].(string))
 	return res, nil
 }

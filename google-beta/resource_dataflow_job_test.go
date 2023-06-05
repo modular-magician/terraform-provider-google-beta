@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -11,9 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 
 	compute "google.golang.org/api/compute/v0.beta"
 )
@@ -544,7 +540,7 @@ func testAccDataflowJobHasNetwork(t *testing.T, res, expected string) resource.T
 			return fmt.Errorf("no network interfaces in template properties: %+v", instanceTmpl.Properties)
 		}
 		actual := instanceTmpl.Properties.NetworkInterfaces[0].Network
-		if tpgresource.GetResourceNameFromSelfLink(actual) != tpgresource.GetResourceNameFromSelfLink(expected) {
+		if GetResourceNameFromSelfLink(actual) != GetResourceNameFromSelfLink(expected) {
 			return fmt.Errorf("network mismatch: %s != %s", actual, expected)
 		}
 		return nil
@@ -561,7 +557,7 @@ func testAccDataflowJobHasSubnetwork(t *testing.T, res, expected string) resourc
 			return fmt.Errorf("no network interfaces in template properties: %+v", instanceTmpl.Properties)
 		}
 		actual := instanceTmpl.Properties.NetworkInterfaces[0].Subnetwork
-		if tpgresource.GetResourceNameFromSelfLink(actual) != tpgresource.GetResourceNameFromSelfLink(expected) {
+		if GetResourceNameFromSelfLink(actual) != GetResourceNameFromSelfLink(expected) {
 			return fmt.Errorf("subnetwork mismatch: %s != %s", actual, expected)
 		}
 		return nil
@@ -721,7 +717,7 @@ func testAccDataflowJobHasTempLocation(t *testing.T, res, targetLocation string)
 		if err != nil {
 			return fmt.Errorf("dataflow job does not exist")
 		}
-		sdkPipelineOptions, err := tpgresource.ConvertToMap(job.Environment.SdkPipelineOptions)
+		sdkPipelineOptions, err := ConvertToMap(job.Environment.SdkPipelineOptions)
 		if err != nil {
 			return err
 		}

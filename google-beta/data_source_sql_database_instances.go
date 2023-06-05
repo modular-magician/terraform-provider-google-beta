@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	sqladmin "google.golang.org/api/sqladmin/v1beta4"
 )
@@ -52,7 +49,7 @@ func DataSourceSqlDatabaseInstances() *schema.Resource {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
-					Schema: tpgresource.DatasourceSchemaFromResourceSchema(ResourceSqlDatabaseInstance().Schema),
+					Schema: datasourceSchemaFromResourceSchema(ResourceSqlDatabaseInstance().Schema),
 				},
 			},
 		},
@@ -61,11 +58,11 @@ func DataSourceSqlDatabaseInstances() *schema.Resource {
 
 func dataSourceSqlDatabaseInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return err
 	}
@@ -102,14 +99,10 @@ func dataSourceSqlDatabaseInstancesRead(d *schema.ResourceData, meta interface{}
 	databaseInstances := make([]map[string]interface{}, 0)
 	for {
 		var instances *sqladmin.InstancesListResponse
-		err = transport_tpg.Retry(transport_tpg.RetryOptions{
-			RetryFunc: func() (rerr error) {
-				instances, rerr = config.NewSqlAdminClient(userAgent).Instances.List(project).Filter(filter).PageToken(pageToken).Do()
-				return rerr
-			},
-			Timeout:              d.Timeout(schema.TimeoutRead),
-			ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsSqlOperationInProgressError},
-		})
+		err = transport_tpg.RetryTimeDuration(func() (rerr error) {
+			instances, rerr = config.NewSqlAdminClient(userAgent).Instances.List(project).Filter(filter).PageToken(pageToken).Do()
+			return rerr
+		}, d.Timeout(schema.TimeoutRead), transport_tpg.IsSqlOperationInProgressError)
 		if err != nil {
 			return err
 		}

@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -21,14 +18,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 type IAMWorkforcePoolOperationWaiter struct {
 	Config    *transport_tpg.Config
 	UserAgent string
-	tpgresource.CommonOperationWaiter
+	CommonOperationWaiter
 }
 
 func (w *IAMWorkforcePoolOperationWaiter) QueryOp() (interface{}, error) {
@@ -38,12 +34,7 @@ func (w *IAMWorkforcePoolOperationWaiter) QueryOp() (interface{}, error) {
 	// Returns the proper get.
 	url := fmt.Sprintf("%s%s", w.Config.IAMWorkforcePoolBasePath, w.CommonOperationWaiter.Op.Name)
 
-	return transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    w.Config,
-		Method:    "GET",
-		RawURL:    url,
-		UserAgent: w.UserAgent,
-	})
+	return transport_tpg.SendRequest(w.Config, "GET", "", url, w.UserAgent, nil)
 }
 
 func createIAMWorkforcePoolWaiter(config *transport_tpg.Config, op map[string]interface{}, activity, userAgent string) (*IAMWorkforcePoolOperationWaiter, error) {
@@ -67,5 +58,5 @@ func IAMWorkforcePoolOperationWaitTime(config *transport_tpg.Config, op map[stri
 		// If w is nil, the op was synchronous.
 		return err
 	}
-	return tpgresource.OperationWait(w, activity, timeout, config.PollInterval)
+	return OperationWait(w, activity, timeout, config.PollInterval)
 }

@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -8,7 +6,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -68,7 +65,7 @@ func DataSourceGoogleIamTestablePermissions() *schema.Resource {
 
 func dataSourceGoogleIamTestablePermissionsRead(d *schema.ResourceData, meta interface{}) (err error) {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -89,13 +86,7 @@ func dataSourceGoogleIamTestablePermissionsRead(d *schema.ResourceData, meta int
 	for {
 		url := "https://iam.googleapis.com/v1/permissions:queryTestablePermissions"
 		body["fullResourceName"] = d.Get("full_resource_name").(string)
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "POST",
-			RawURL:    url,
-			UserAgent: userAgent,
-			Body:      body,
-		})
+		res, err := transport_tpg.SendRequest(config, "POST", "", url, userAgent, body)
 		if err != nil {
 			return fmt.Errorf("Error retrieving permissions: %s", err)
 		}

@@ -1,5 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
@@ -7,8 +5,6 @@ import (
 
 	"github.com/hashicorp/errwrap"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"google.golang.org/api/cloudresourcemanager/v1"
 )
@@ -24,11 +20,11 @@ var IamOrganizationSchema = map[string]*schema.Schema{
 
 type OrganizationIamUpdater struct {
 	resourceId string
-	d          tpgresource.TerraformResourceData
+	d          TerraformResourceData
 	Config     *transport_tpg.Config
 }
 
-func NewOrganizationIamUpdater(d tpgresource.TerraformResourceData, config *transport_tpg.Config) (tpgiamresource.ResourceIamUpdater, error) {
+func NewOrganizationIamUpdater(d TerraformResourceData, config *transport_tpg.Config) (ResourceIamUpdater, error) {
 	return &OrganizationIamUpdater{
 		resourceId: d.Get("org_id").(string),
 		d:          d,
@@ -44,7 +40,7 @@ func OrgIdParseFunc(d *schema.ResourceData, _ *transport_tpg.Config) error {
 }
 
 func (u *OrganizationIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.Policy, error) {
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +49,7 @@ func (u *OrganizationIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.P
 		"organizations/"+u.resourceId,
 		&cloudresourcemanager.GetIamPolicyRequest{
 			Options: &cloudresourcemanager.GetPolicyOptions{
-				RequestedPolicyVersion: tpgiamresource.IamPolicyVersion,
+				RequestedPolicyVersion: IamPolicyVersion,
 			},
 		},
 	).Do()
@@ -65,7 +61,7 @@ func (u *OrganizationIamUpdater) GetResourceIamPolicy() (*cloudresourcemanager.P
 }
 
 func (u *OrganizationIamUpdater) SetResourceIamPolicy(policy *cloudresourcemanager.Policy) error {
-	userAgent, err := tpgresource.GenerateUserAgentString(u.d, u.Config.UserAgent)
+	userAgent, err := generateUserAgentString(u.d, u.Config.UserAgent)
 	if err != nil {
 		return err
 	}

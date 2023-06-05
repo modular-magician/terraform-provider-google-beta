@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -117,7 +114,6 @@ func TestAccComputeSubnetworkIamPolicyGenerated(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeSubnetworkIamPolicy_basicGenerated(context),
-				Check:  resource.TestCheckResourceAttrSet("data.google_compute_subnetwork_iam_policy.foo", "policy_data"),
 			},
 			{
 				ResourceName:      "google_compute_subnetwork_iam_policy.foo",
@@ -384,15 +380,6 @@ resource "google_compute_subnetwork_iam_policy" "foo" {
   region = google_compute_subnetwork.network-with-private-secondary-ip-ranges.region
   subnetwork = google_compute_subnetwork.network-with-private-secondary-ip-ranges.name
   policy_data = data.google_iam_policy.foo.policy_data
-}
-
-data "google_compute_subnetwork_iam_policy" "foo" {
-  project = google_compute_subnetwork.network-with-private-secondary-ip-ranges.project
-  region = google_compute_subnetwork.network-with-private-secondary-ip-ranges.region
-  subnetwork = google_compute_subnetwork.network-with-private-secondary-ip-ranges.name
-  depends_on = [
-    google_compute_subnetwork_iam_policy.foo
-  ]
 }
 `, context)
 }

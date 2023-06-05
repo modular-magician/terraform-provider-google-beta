@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -184,7 +179,7 @@ sites/SITE_ID/versions/VERSION_ID`,
 
 func resourceFirebaseHostingVersionCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -193,11 +188,11 @@ func resourceFirebaseHostingVersionCreate(d *schema.ResourceData, meta interface
 	configProp, err := expandFirebaseHostingVersionConfig(d.Get("config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("config"); !tpgresource.IsEmptyValue(reflect.ValueOf(configProp)) && (ok || !reflect.DeepEqual(v, configProp)) {
+	} else if v, ok := d.GetOkExists("config"); !isEmptyValue(reflect.ValueOf(configProp)) && (ok || !reflect.DeepEqual(v, configProp)) {
 		obj["config"] = configProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{FirebaseHostingBasePath}}sites/{{site_id}}/versions")
+	url, err := ReplaceVars(d, config, "{{FirebaseHostingBasePath}}sites/{{site_id}}/versions")
 	if err != nil {
 		return err
 	}
@@ -206,19 +201,11 @@ func resourceFirebaseHostingVersionCreate(d *schema.ResourceData, meta interface
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating Version: %s", err)
 	}
@@ -227,7 +214,7 @@ func resourceFirebaseHostingVersionCreate(d *schema.ResourceData, meta interface
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "sites/{{site_id}}/versions/{{version_id}}")
+	id, err := ReplaceVars(d, config, "sites/{{site_id}}/versions/{{version_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -236,14 +223,14 @@ func resourceFirebaseHostingVersionCreate(d *schema.ResourceData, meta interface
 	// Store the name as ID
 	d.SetId(res["name"].(string))
 
-	if err = d.Set("version_id", tpgresource.GetResourceNameFromSelfLink(res["name"].(string))); err != nil {
+	if err = d.Set("version_id", GetResourceNameFromSelfLink(res["name"].(string))); err != nil {
 		return fmt.Errorf("Error setting version_id: %s", err)
 	}
 
 	obj = make(map[string]interface{})
 	obj["status"] = "FINALIZED"
 
-	url, err = tpgresource.ReplaceVars(d, config, "{{FirebaseHostingBasePath}}{{name}}")
+	url, err = ReplaceVars(d, config, "{{FirebaseHostingBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -257,15 +244,7 @@ func resourceFirebaseHostingVersionCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err = transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error finalizing Version %q: %s", d.Id(), err)
@@ -280,12 +259,12 @@ func resourceFirebaseHostingVersionCreate(d *schema.ResourceData, meta interface
 
 func resourceFirebaseHostingVersionRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{FirebaseHostingBasePath}}sites/{{site_id}}/versions/{{version_id}}")
+	url, err := ReplaceVars(d, config, "{{FirebaseHostingBasePath}}sites/{{site_id}}/versions/{{version_id}}")
 	if err != nil {
 		return err
 	}
@@ -293,17 +272,11 @@ func resourceFirebaseHostingVersionRead(d *schema.ResourceData, meta interface{}
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("FirebaseHostingVersion %q", d.Id()))
 	}
@@ -341,7 +314,7 @@ func resourceFirebaseHostingVersionDelete(d *schema.ResourceData, meta interface
 
 func resourceFirebaseHostingVersionImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"sites/(?P<site_id>[^/]+)/versions/(?P<version_id>[^/]+)",
 		"(?P<site_id>[^/]+)/(?P<version_id>[^/]+)",
 	}, d, config); err != nil {
@@ -349,7 +322,7 @@ func resourceFirebaseHostingVersionImport(d *schema.ResourceData, meta interface
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "sites/{{site_id}}/versions/{{version_id}}")
+	id, err := ReplaceVars(d, config, "sites/{{site_id}}/versions/{{version_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -483,7 +456,7 @@ func flattenFirebaseHostingVersionConfigRedirectsLocation(v interface{}, d *sche
 	return v
 }
 
-func expandFirebaseHostingVersionConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -495,21 +468,21 @@ func expandFirebaseHostingVersionConfig(v interface{}, d tpgresource.TerraformRe
 	transformedRewrites, err := expandFirebaseHostingVersionConfigRewrites(original["rewrites"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRewrites); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRewrites); val.IsValid() && !isEmptyValue(val) {
 		transformed["rewrites"] = transformedRewrites
 	}
 
 	transformedRedirects, err := expandFirebaseHostingVersionConfigRedirects(original["redirects"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRedirects); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRedirects); val.IsValid() && !isEmptyValue(val) {
 		transformed["redirects"] = transformedRedirects
 	}
 
 	return transformed, nil
 }
 
-func expandFirebaseHostingVersionConfigRewrites(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRewrites(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -522,28 +495,28 @@ func expandFirebaseHostingVersionConfigRewrites(v interface{}, d tpgresource.Ter
 		transformedGlob, err := expandFirebaseHostingVersionConfigRewritesGlob(original["glob"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedGlob); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedGlob); val.IsValid() && !isEmptyValue(val) {
 			transformed["glob"] = transformedGlob
 		}
 
 		transformedRegex, err := expandFirebaseHostingVersionConfigRewritesRegex(original["regex"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedRegex); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedRegex); val.IsValid() && !isEmptyValue(val) {
 			transformed["regex"] = transformedRegex
 		}
 
 		transformedFunction, err := expandFirebaseHostingVersionConfigRewritesFunction(original["function"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedFunction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedFunction); val.IsValid() && !isEmptyValue(val) {
 			transformed["function"] = transformedFunction
 		}
 
 		transformedRun, err := expandFirebaseHostingVersionConfigRewritesRun(original["run"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedRun); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedRun); val.IsValid() && !isEmptyValue(val) {
 			transformed["run"] = transformedRun
 		}
 
@@ -552,19 +525,19 @@ func expandFirebaseHostingVersionConfigRewrites(v interface{}, d tpgresource.Ter
 	return req, nil
 }
 
-func expandFirebaseHostingVersionConfigRewritesGlob(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRewritesGlob(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandFirebaseHostingVersionConfigRewritesRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRewritesRegex(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandFirebaseHostingVersionConfigRewritesFunction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRewritesFunction(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandFirebaseHostingVersionConfigRewritesRun(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRewritesRun(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -576,29 +549,29 @@ func expandFirebaseHostingVersionConfigRewritesRun(v interface{}, d tpgresource.
 	transformedServiceId, err := expandFirebaseHostingVersionConfigRewritesRunServiceId(original["service_id"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedServiceId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedServiceId); val.IsValid() && !isEmptyValue(val) {
 		transformed["serviceId"] = transformedServiceId
 	}
 
 	transformedRegion, err := expandFirebaseHostingVersionConfigRewritesRunRegion(original["region"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedRegion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedRegion); val.IsValid() && !isEmptyValue(val) {
 		transformed["region"] = transformedRegion
 	}
 
 	return transformed, nil
 }
 
-func expandFirebaseHostingVersionConfigRewritesRunServiceId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRewritesRunServiceId(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandFirebaseHostingVersionConfigRewritesRunRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRewritesRunRegion(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandFirebaseHostingVersionConfigRedirects(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRedirects(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -611,28 +584,28 @@ func expandFirebaseHostingVersionConfigRedirects(v interface{}, d tpgresource.Te
 		transformedGlob, err := expandFirebaseHostingVersionConfigRedirectsGlob(original["glob"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedGlob); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedGlob); val.IsValid() && !isEmptyValue(val) {
 			transformed["glob"] = transformedGlob
 		}
 
 		transformedRegex, err := expandFirebaseHostingVersionConfigRedirectsRegex(original["regex"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedRegex); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedRegex); val.IsValid() && !isEmptyValue(val) {
 			transformed["regex"] = transformedRegex
 		}
 
 		transformedStatusCode, err := expandFirebaseHostingVersionConfigRedirectsStatusCode(original["status_code"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedStatusCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedStatusCode); val.IsValid() && !isEmptyValue(val) {
 			transformed["statusCode"] = transformedStatusCode
 		}
 
 		transformedLocation, err := expandFirebaseHostingVersionConfigRedirectsLocation(original["location"], d, config)
 		if err != nil {
 			return nil, err
-		} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !isEmptyValue(val) {
 			transformed["location"] = transformedLocation
 		}
 
@@ -641,24 +614,24 @@ func expandFirebaseHostingVersionConfigRedirects(v interface{}, d tpgresource.Te
 	return req, nil
 }
 
-func expandFirebaseHostingVersionConfigRedirectsGlob(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRedirectsGlob(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandFirebaseHostingVersionConfigRedirectsRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRedirectsRegex(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandFirebaseHostingVersionConfigRedirectsStatusCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRedirectsStatusCode(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandFirebaseHostingVersionConfigRedirectsLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandFirebaseHostingVersionConfigRedirectsLocation(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func resourceFirebaseHostingVersionDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	if err := d.Set("version_id", tpgresource.GetResourceNameFromSelfLink(res["name"].(string))); err != nil {
+	if err := d.Set("version_id", GetResourceNameFromSelfLink(res["name"].(string))); err != nil {
 		return nil, err
 	}
 

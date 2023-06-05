@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -52,7 +47,7 @@ func ResourcePubsubLiteTopic() *schema.Resource {
 				Type:             schema.TypeString,
 				Required:         true,
 				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				DiffSuppressFunc: compareSelfLinkOrResourceName,
 				Description:      `Name of the topic.`,
 			},
 			"partition_config": {
@@ -105,7 +100,7 @@ func ResourcePubsubLiteTopic() *schema.Resource {
 						"throughput_reservation": {
 							Type:             schema.TypeString,
 							Optional:         true,
-							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+							DiffSuppressFunc: compareSelfLinkOrResourceName,
 							Description:      `The Reservation to use for this topic's throughput capacity.`,
 						},
 					},
@@ -154,7 +149,7 @@ Example: "3.5s".`,
 
 func resourcePubsubLiteTopicCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -163,19 +158,19 @@ func resourcePubsubLiteTopicCreate(d *schema.ResourceData, meta interface{}) err
 	partitionConfigProp, err := expandPubsubLiteTopicPartitionConfig(d.Get("partition_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("partition_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(partitionConfigProp)) && (ok || !reflect.DeepEqual(v, partitionConfigProp)) {
+	} else if v, ok := d.GetOkExists("partition_config"); !isEmptyValue(reflect.ValueOf(partitionConfigProp)) && (ok || !reflect.DeepEqual(v, partitionConfigProp)) {
 		obj["partitionConfig"] = partitionConfigProp
 	}
 	retentionConfigProp, err := expandPubsubLiteTopicRetentionConfig(d.Get("retention_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("retention_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(retentionConfigProp)) && (ok || !reflect.DeepEqual(v, retentionConfigProp)) {
+	} else if v, ok := d.GetOkExists("retention_config"); !isEmptyValue(reflect.ValueOf(retentionConfigProp)) && (ok || !reflect.DeepEqual(v, retentionConfigProp)) {
 		obj["retentionConfig"] = retentionConfigProp
 	}
 	reservationConfigProp, err := expandPubsubLiteTopicReservationConfig(d.Get("reservation_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("reservation_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(reservationConfigProp)) && (ok || !reflect.DeepEqual(v, reservationConfigProp)) {
+	} else if v, ok := d.GetOkExists("reservation_config"); !isEmptyValue(reflect.ValueOf(reservationConfigProp)) && (ok || !reflect.DeepEqual(v, reservationConfigProp)) {
 		obj["reservationConfig"] = reservationConfigProp
 	}
 
@@ -184,7 +179,7 @@ func resourcePubsubLiteTopicCreate(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{PubsubLiteBasePath}}projects/{{project}}/locations/{{zone}}/topics?topicId={{name}}")
+	url, err := ReplaceVars(d, config, "{{PubsubLiteBasePath}}projects/{{project}}/locations/{{zone}}/topics?topicId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -192,32 +187,24 @@ func resourcePubsubLiteTopicCreate(d *schema.ResourceData, meta interface{}) err
 	log.Printf("[DEBUG] Creating new Topic: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Topic: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating Topic: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{zone}}/topics/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{zone}}/topics/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -230,36 +217,30 @@ func resourcePubsubLiteTopicCreate(d *schema.ResourceData, meta interface{}) err
 
 func resourcePubsubLiteTopicRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{PubsubLiteBasePath}}projects/{{project}}/locations/{{zone}}/topics/{{name}}")
+	url, err := ReplaceVars(d, config, "{{PubsubLiteBasePath}}projects/{{project}}/locations/{{zone}}/topics/{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Topic: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("PubsubLiteTopic %q", d.Id()))
 	}
@@ -283,14 +264,14 @@ func resourcePubsubLiteTopicRead(d *schema.ResourceData, meta interface{}) error
 
 func resourcePubsubLiteTopicUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Topic: %s", err)
 	}
@@ -300,19 +281,19 @@ func resourcePubsubLiteTopicUpdate(d *schema.ResourceData, meta interface{}) err
 	partitionConfigProp, err := expandPubsubLiteTopicPartitionConfig(d.Get("partition_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("partition_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, partitionConfigProp)) {
+	} else if v, ok := d.GetOkExists("partition_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, partitionConfigProp)) {
 		obj["partitionConfig"] = partitionConfigProp
 	}
 	retentionConfigProp, err := expandPubsubLiteTopicRetentionConfig(d.Get("retention_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("retention_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, retentionConfigProp)) {
+	} else if v, ok := d.GetOkExists("retention_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, retentionConfigProp)) {
 		obj["retentionConfig"] = retentionConfigProp
 	}
 	reservationConfigProp, err := expandPubsubLiteTopicReservationConfig(d.Get("reservation_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("reservation_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, reservationConfigProp)) {
+	} else if v, ok := d.GetOkExists("reservation_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, reservationConfigProp)) {
 		obj["reservationConfig"] = reservationConfigProp
 	}
 
@@ -321,7 +302,7 @@ func resourcePubsubLiteTopicUpdate(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{PubsubLiteBasePath}}projects/{{project}}/locations/{{zone}}/topics/{{name}}")
+	url, err := ReplaceVars(d, config, "{{PubsubLiteBasePath}}projects/{{project}}/locations/{{zone}}/topics/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -348,19 +329,11 @@ func resourcePubsubLiteTopicUpdate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating Topic %q: %s", d.Id(), err)
@@ -373,20 +346,20 @@ func resourcePubsubLiteTopicUpdate(d *schema.ResourceData, meta interface{}) err
 
 func resourcePubsubLiteTopicDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Topic: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{PubsubLiteBasePath}}projects/{{project}}/locations/{{zone}}/topics/{{name}}")
+	url, err := ReplaceVars(d, config, "{{PubsubLiteBasePath}}projects/{{project}}/locations/{{zone}}/topics/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -395,19 +368,11 @@ func resourcePubsubLiteTopicDelete(d *schema.ResourceData, meta interface{}) err
 	log.Printf("[DEBUG] Deleting Topic %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "Topic")
 	}
@@ -418,7 +383,7 @@ func resourcePubsubLiteTopicDelete(d *schema.ResourceData, meta interface{}) err
 
 func resourcePubsubLiteTopicImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<zone>[^/]+)/topics/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<name>[^/]+)",
 		"(?P<zone>[^/]+)/(?P<name>[^/]+)",
@@ -428,7 +393,7 @@ func resourcePubsubLiteTopicImport(d *schema.ResourceData, meta interface{}) ([]
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{zone}}/topics/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{zone}}/topics/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -558,10 +523,10 @@ func flattenPubsubLiteTopicReservationConfigThroughputReservation(v interface{},
 	if v == nil {
 		return v
 	}
-	return tpgresource.ConvertSelfLinkToV1(v.(string))
+	return ConvertSelfLinkToV1(v.(string))
 }
 
-func expandPubsubLiteTopicPartitionConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandPubsubLiteTopicPartitionConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -573,25 +538,25 @@ func expandPubsubLiteTopicPartitionConfig(v interface{}, d tpgresource.Terraform
 	transformedCount, err := expandPubsubLiteTopicPartitionConfigCount(original["count"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCount); val.IsValid() && !isEmptyValue(val) {
 		transformed["count"] = transformedCount
 	}
 
 	transformedCapacity, err := expandPubsubLiteTopicPartitionConfigCapacity(original["capacity"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedCapacity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedCapacity); val.IsValid() && !isEmptyValue(val) {
 		transformed["capacity"] = transformedCapacity
 	}
 
 	return transformed, nil
 }
 
-func expandPubsubLiteTopicPartitionConfigCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandPubsubLiteTopicPartitionConfigCount(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandPubsubLiteTopicPartitionConfigCapacity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandPubsubLiteTopicPartitionConfigCapacity(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -603,29 +568,29 @@ func expandPubsubLiteTopicPartitionConfigCapacity(v interface{}, d tpgresource.T
 	transformedPublishMibPerSec, err := expandPubsubLiteTopicPartitionConfigCapacityPublishMibPerSec(original["publish_mib_per_sec"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPublishMibPerSec); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPublishMibPerSec); val.IsValid() && !isEmptyValue(val) {
 		transformed["publishMibPerSec"] = transformedPublishMibPerSec
 	}
 
 	transformedSubscribeMibPerSec, err := expandPubsubLiteTopicPartitionConfigCapacitySubscribeMibPerSec(original["subscribe_mib_per_sec"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedSubscribeMibPerSec); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedSubscribeMibPerSec); val.IsValid() && !isEmptyValue(val) {
 		transformed["subscribeMibPerSec"] = transformedSubscribeMibPerSec
 	}
 
 	return transformed, nil
 }
 
-func expandPubsubLiteTopicPartitionConfigCapacityPublishMibPerSec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandPubsubLiteTopicPartitionConfigCapacityPublishMibPerSec(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandPubsubLiteTopicPartitionConfigCapacitySubscribeMibPerSec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandPubsubLiteTopicPartitionConfigCapacitySubscribeMibPerSec(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandPubsubLiteTopicRetentionConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandPubsubLiteTopicRetentionConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -637,29 +602,29 @@ func expandPubsubLiteTopicRetentionConfig(v interface{}, d tpgresource.Terraform
 	transformedPerPartitionBytes, err := expandPubsubLiteTopicRetentionConfigPerPartitionBytes(original["per_partition_bytes"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPerPartitionBytes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPerPartitionBytes); val.IsValid() && !isEmptyValue(val) {
 		transformed["perPartitionBytes"] = transformedPerPartitionBytes
 	}
 
 	transformedPeriod, err := expandPubsubLiteTopicRetentionConfigPeriod(original["period"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedPeriod); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedPeriod); val.IsValid() && !isEmptyValue(val) {
 		transformed["period"] = transformedPeriod
 	}
 
 	return transformed, nil
 }
 
-func expandPubsubLiteTopicRetentionConfigPerPartitionBytes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandPubsubLiteTopicRetentionConfigPerPartitionBytes(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandPubsubLiteTopicRetentionConfigPeriod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandPubsubLiteTopicRetentionConfigPeriod(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandPubsubLiteTopicReservationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandPubsubLiteTopicReservationConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -671,15 +636,15 @@ func expandPubsubLiteTopicReservationConfig(v interface{}, d tpgresource.Terrafo
 	transformedThroughputReservation, err := expandPubsubLiteTopicReservationConfigThroughputReservation(original["throughput_reservation"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedThroughputReservation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedThroughputReservation); val.IsValid() && !isEmptyValue(val) {
 		transformed["throughputReservation"] = transformedThroughputReservation
 	}
 
 	return transformed, nil
 }
 
-func expandPubsubLiteTopicReservationConfigThroughputReservation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	f, err := tpgresource.ParseRegionalFieldValue("reservations", v.(string), "project", "region", "zone", d, config, true)
+func expandPubsubLiteTopicReservationConfigThroughputReservation(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	f, err := parseRegionalFieldValue("reservations", v.(string), "project", "region", "zone", d, config, true)
 	if err != nil {
 		return nil, fmt.Errorf("Invalid value for throughput_reservation: %s", err)
 	}
@@ -690,7 +655,7 @@ func expandPubsubLiteTopicReservationConfigThroughputReservation(v interface{}, 
 func resourcePubsubLiteTopicEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	config := meta.(*transport_tpg.Config)
 
-	zone, err := tpgresource.GetZone(d, config)
+	zone, err := getZone(d, config)
 	if err != nil {
 		return nil, err
 	}
@@ -701,7 +666,7 @@ func resourcePubsubLiteTopicEncoder(d *schema.ResourceData, meta interface{}, ob
 
 	// API Endpoint requires region in the URL. We infer it from the zone.
 
-	region := tpgresource.GetRegionFromZone(zone)
+	region := getRegionFromZone(zone)
 
 	if region == "" {
 		return nil, fmt.Errorf("invalid zone %q, unable to infer region from zone", zone)

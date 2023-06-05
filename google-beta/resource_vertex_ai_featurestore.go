@@ -1,6 +1,3 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
-
 // ----------------------------------------------------------------------------
 //
 //     ***     AUTO GENERATED CODE    ***    Type: MMv1     ***
@@ -25,8 +22,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -159,7 +154,7 @@ func ResourceVertexAIFeaturestore() *schema.Resource {
 
 func resourceVertexAIFeaturestoreCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
@@ -168,29 +163,29 @@ func resourceVertexAIFeaturestoreCreate(d *schema.ResourceData, meta interface{}
 	labelsProp, err := expandVertexAIFeaturestoreLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 	onlineServingConfigProp, err := expandVertexAIFeaturestoreOnlineServingConfig(d.Get("online_serving_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("online_serving_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(onlineServingConfigProp)) && (ok || !reflect.DeepEqual(v, onlineServingConfigProp)) {
+	} else if v, ok := d.GetOkExists("online_serving_config"); !isEmptyValue(reflect.ValueOf(onlineServingConfigProp)) && (ok || !reflect.DeepEqual(v, onlineServingConfigProp)) {
 		obj["onlineServingConfig"] = onlineServingConfigProp
 	}
 	onlineStorageTtlDaysProp, err := expandVertexAIFeaturestoreOnlineStorageTtlDays(d.Get("online_storage_ttl_days"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("online_storage_ttl_days"); !tpgresource.IsEmptyValue(reflect.ValueOf(onlineStorageTtlDaysProp)) && (ok || !reflect.DeepEqual(v, onlineStorageTtlDaysProp)) {
+	} else if v, ok := d.GetOkExists("online_storage_ttl_days"); !isEmptyValue(reflect.ValueOf(onlineStorageTtlDaysProp)) && (ok || !reflect.DeepEqual(v, onlineStorageTtlDaysProp)) {
 		obj["onlineStorageTtlDays"] = onlineStorageTtlDaysProp
 	}
 	encryptionSpecProp, err := expandVertexAIFeaturestoreEncryptionSpec(d.Get("encryption_spec"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("encryption_spec"); !tpgresource.IsEmptyValue(reflect.ValueOf(encryptionSpecProp)) && (ok || !reflect.DeepEqual(v, encryptionSpecProp)) {
+	} else if v, ok := d.GetOkExists("encryption_spec"); !isEmptyValue(reflect.ValueOf(encryptionSpecProp)) && (ok || !reflect.DeepEqual(v, encryptionSpecProp)) {
 		obj["encryptionSpec"] = encryptionSpecProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/featurestores?featurestoreId={{name}}")
+	url, err := ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/featurestores?featurestoreId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -198,32 +193,24 @@ func resourceVertexAIFeaturestoreCreate(d *schema.ResourceData, meta interface{}
 	log.Printf("[DEBUG] Creating new Featurestore: %#v", obj)
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Featurestore: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "POST", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutCreate))
 	if err != nil {
 		return fmt.Errorf("Error creating Featurestore: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -243,7 +230,7 @@ func resourceVertexAIFeaturestoreCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// This may have caused the ID to update - update it if so.
-	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
+	id, err = ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -256,36 +243,30 @@ func resourceVertexAIFeaturestoreCreate(d *schema.ResourceData, meta interface{}
 
 func resourceVertexAIFeaturestoreRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
+	url, err := ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Featurestore: %s", err)
 	}
 	billingProject = project
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "GET",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
+	res, err := transport_tpg.SendRequest(config, "GET", billingProject, url, userAgent, nil)
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("VertexAIFeaturestore %q", d.Id()))
 	}
@@ -324,14 +305,14 @@ func resourceVertexAIFeaturestoreRead(d *schema.ResourceData, meta interface{}) 
 
 func resourceVertexAIFeaturestoreUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Featurestore: %s", err)
 	}
@@ -341,29 +322,29 @@ func resourceVertexAIFeaturestoreUpdate(d *schema.ResourceData, meta interface{}
 	labelsProp, err := expandVertexAIFeaturestoreLabels(d.Get("labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("labels"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 	onlineServingConfigProp, err := expandVertexAIFeaturestoreOnlineServingConfig(d.Get("online_serving_config"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("online_serving_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, onlineServingConfigProp)) {
+	} else if v, ok := d.GetOkExists("online_serving_config"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, onlineServingConfigProp)) {
 		obj["onlineServingConfig"] = onlineServingConfigProp
 	}
 	onlineStorageTtlDaysProp, err := expandVertexAIFeaturestoreOnlineStorageTtlDays(d.Get("online_storage_ttl_days"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("online_storage_ttl_days"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, onlineStorageTtlDaysProp)) {
+	} else if v, ok := d.GetOkExists("online_storage_ttl_days"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, onlineStorageTtlDaysProp)) {
 		obj["onlineStorageTtlDays"] = onlineStorageTtlDaysProp
 	}
 	encryptionSpecProp, err := expandVertexAIFeaturestoreEncryptionSpec(d.Get("encryption_spec"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("encryption_spec"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, encryptionSpecProp)) {
+	} else if v, ok := d.GetOkExists("encryption_spec"); !isEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, encryptionSpecProp)) {
 		obj["encryptionSpec"] = encryptionSpecProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
+	url, err := ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -394,19 +375,11 @@ func resourceVertexAIFeaturestoreUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutUpdate),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "PATCH", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutUpdate))
 
 	if err != nil {
 		return fmt.Errorf("Error updating Featurestore %q: %s", d.Id(), err)
@@ -427,20 +400,20 @@ func resourceVertexAIFeaturestoreUpdate(d *schema.ResourceData, meta interface{}
 
 func resourceVertexAIFeaturestoreDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	userAgent, err := generateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
 	billingProject := ""
 
-	project, err := tpgresource.GetProject(d, config)
+	project, err := getProject(d, config)
 	if err != nil {
 		return fmt.Errorf("Error fetching project for Featurestore: %s", err)
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
+	url, err := ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -456,19 +429,11 @@ func resourceVertexAIFeaturestoreDelete(d *schema.ResourceData, meta interface{}
 	log.Printf("[DEBUG] Deleting Featurestore %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+	if bp, err := getBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-	})
+	res, err := transport_tpg.SendRequestWithTimeout(config, "DELETE", billingProject, url, userAgent, obj, d.Timeout(schema.TimeoutDelete))
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "Featurestore")
 	}
@@ -487,7 +452,7 @@ func resourceVertexAIFeaturestoreDelete(d *schema.ResourceData, meta interface{}
 
 func resourceVertexAIFeaturestoreImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
+	if err := ParseImportId([]string{
 		"projects/(?P<project>[^/]+)/locations/(?P<region>[^/]+)/featurestores/(?P<name>[^/]+)",
 		"(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<name>[^/]+)",
 		"(?P<region>[^/]+)/(?P<name>[^/]+)",
@@ -497,7 +462,7 @@ func resourceVertexAIFeaturestoreImport(d *schema.ResourceData, meta interface{}
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
+	id, err := ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/featurestores/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -638,7 +603,7 @@ func flattenVertexAIFeaturestoreEncryptionSpecKmsKeyName(v interface{}, d *schem
 	return v
 }
 
-func expandVertexAIFeaturestoreLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandVertexAIFeaturestoreLabels(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -649,7 +614,7 @@ func expandVertexAIFeaturestoreLabels(v interface{}, d tpgresource.TerraformReso
 	return m, nil
 }
 
-func expandVertexAIFeaturestoreOnlineServingConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandVertexAIFeaturestoreOnlineServingConfig(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -661,25 +626,25 @@ func expandVertexAIFeaturestoreOnlineServingConfig(v interface{}, d tpgresource.
 	transformedFixedNodeCount, err := expandVertexAIFeaturestoreOnlineServingConfigFixedNodeCount(original["fixed_node_count"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedFixedNodeCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedFixedNodeCount); val.IsValid() && !isEmptyValue(val) {
 		transformed["fixedNodeCount"] = transformedFixedNodeCount
 	}
 
 	transformedScaling, err := expandVertexAIFeaturestoreOnlineServingConfigScaling(original["scaling"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedScaling); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedScaling); val.IsValid() && !isEmptyValue(val) {
 		transformed["scaling"] = transformedScaling
 	}
 
 	return transformed, nil
 }
 
-func expandVertexAIFeaturestoreOnlineServingConfigFixedNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandVertexAIFeaturestoreOnlineServingConfigFixedNodeCount(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandVertexAIFeaturestoreOnlineServingConfigScaling(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandVertexAIFeaturestoreOnlineServingConfigScaling(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -691,33 +656,33 @@ func expandVertexAIFeaturestoreOnlineServingConfigScaling(v interface{}, d tpgre
 	transformedMinNodeCount, err := expandVertexAIFeaturestoreOnlineServingConfigScalingMinNodeCount(original["min_node_count"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMinNodeCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMinNodeCount); val.IsValid() && !isEmptyValue(val) {
 		transformed["minNodeCount"] = transformedMinNodeCount
 	}
 
 	transformedMaxNodeCount, err := expandVertexAIFeaturestoreOnlineServingConfigScalingMaxNodeCount(original["max_node_count"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedMaxNodeCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedMaxNodeCount); val.IsValid() && !isEmptyValue(val) {
 		transformed["maxNodeCount"] = transformedMaxNodeCount
 	}
 
 	return transformed, nil
 }
 
-func expandVertexAIFeaturestoreOnlineServingConfigScalingMinNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandVertexAIFeaturestoreOnlineServingConfigScalingMinNodeCount(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandVertexAIFeaturestoreOnlineServingConfigScalingMaxNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandVertexAIFeaturestoreOnlineServingConfigScalingMaxNodeCount(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandVertexAIFeaturestoreOnlineStorageTtlDays(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandVertexAIFeaturestoreOnlineStorageTtlDays(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandVertexAIFeaturestoreEncryptionSpec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandVertexAIFeaturestoreEncryptionSpec(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -729,13 +694,13 @@ func expandVertexAIFeaturestoreEncryptionSpec(v interface{}, d tpgresource.Terra
 	transformedKmsKeyName, err := expandVertexAIFeaturestoreEncryptionSpecKmsKeyName(original["kms_key_name"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedKmsKeyName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else if val := reflect.ValueOf(transformedKmsKeyName); val.IsValid() && !isEmptyValue(val) {
 		transformed["kmsKeyName"] = transformedKmsKeyName
 	}
 
 	return transformed, nil
 }
 
-func expandVertexAIFeaturestoreEncryptionSpecKmsKeyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandVertexAIFeaturestoreEncryptionSpecKmsKeyName(v interface{}, d TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

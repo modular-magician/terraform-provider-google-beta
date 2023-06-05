@@ -1,18 +1,31 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
-	"time"
-
-	tpgcomposer "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/composer"
+	"fmt"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"time"
 
 	"google.golang.org/api/composer/v1beta1"
 )
 
-// Deprecated: For backward compatibility ComposerOperationWaitTime is still working,
-// but all new code should use ComposerOperationWaitTime in the tpgcomposer package instead.
+type ComposerOperationWaiter struct {
+	Service *composer.ProjectsLocationsService
+	CommonOperationWaiter
+}
+
+func (w *ComposerOperationWaiter) QueryOp() (interface{}, error) {
+	if w == nil {
+		return nil, fmt.Errorf("Cannot query operation, it's unset or nil.")
+	}
+	return w.Service.Operations.Get(w.Op.Name).Do()
+}
+
 func ComposerOperationWaitTime(config *transport_tpg.Config, op *composer.Operation, project, activity, userAgent string, timeout time.Duration) error {
-	return tpgcomposer.ComposerOperationWaitTime(config, op, project, activity, userAgent, timeout)
+	w := &ComposerOperationWaiter{
+		Service: config.NewComposerClient(userAgent).Projects.Locations,
+	}
+	if err := w.SetOp(op); err != nil {
+		return err
+	}
+	return OperationWait(w, activity, timeout, config.PollInterval)
 }

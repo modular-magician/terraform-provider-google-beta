@@ -1,17 +1,13 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
 package google
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"reflect"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
@@ -59,17 +55,12 @@ func testAccCheckAccessContextManagerAccessLevelConditionPresent(t *testing.T, n
 		}
 
 		config := GoogleProviderConfig(t)
-		url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{AccessContextManagerBasePath}}{{access_level}}")
+		url, err := acctest.ReplaceVarsForTest(config, rs, "{{AccessContextManagerBasePath}}{{access_level}}")
 		if err != nil {
 			return err
 		}
 
-		al, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "GET",
-			RawURL:    url,
-			UserAgent: config.UserAgent,
-		})
+		al, err := transport_tpg.SendRequest(config, "GET", "", url, config.UserAgent, nil)
 		if err != nil {
 			return err
 		}
@@ -92,17 +83,12 @@ func testAccCheckAccessContextManagerAccessLevelConditionDestroyProducer(t *test
 
 			config := GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{AccessContextManagerBasePath}}{{access_level}}")
+			url, err := acctest.ReplaceVarsForTest(config, rs, "{{AccessContextManagerBasePath}}{{access_level}}")
 			if err != nil {
 				return err
 			}
 
-			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "GET",
-				RawURL:    url,
-				UserAgent: config.UserAgent,
-			})
+			_, err = transport_tpg.SendRequest(config, "GET", "", url, config.UserAgent, nil)
 			if err == nil {
 				return fmt.Errorf("AccessLevel still exists at %s", url)
 			}
