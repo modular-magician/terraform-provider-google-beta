@@ -179,6 +179,7 @@ func ResourceContainerCluster() *schema.Resource {
 		Delete:        resourceContainerClusterDelete,
 
 		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
 			resourceNodeConfigEmptyGuestAccelerator,
 			customdiff.ForceNewIfChange("enable_l4_ilb_subsetting", isBeenEnabled),
 			containerClusterAutopilotCustomizeDiff,

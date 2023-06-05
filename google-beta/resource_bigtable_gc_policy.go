@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/bigtable"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/structure"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -65,11 +66,14 @@ func resourceBigtableGCPolicyCustomizeDiff(_ context.Context, d *schema.Resource
 
 func ResourceBigtableGCPolicy() *schema.Resource {
 	return &schema.Resource{
-		Create:        resourceBigtableGCPolicyUpsert,
-		Read:          resourceBigtableGCPolicyRead,
-		Delete:        resourceBigtableGCPolicyDestroy,
-		Update:        resourceBigtableGCPolicyUpsert,
-		CustomizeDiff: resourceBigtableGCPolicyCustomizeDiff,
+		Create: resourceBigtableGCPolicyUpsert,
+		Read:   resourceBigtableGCPolicyRead,
+		Delete: resourceBigtableGCPolicyDestroy,
+		Update: resourceBigtableGCPolicyUpsert,
+		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
+			resourceBigtableGCPolicyCustomizeDiff,
+		),
 
 		Schema: map[string]*schema.Schema{
 			"instance_name": {

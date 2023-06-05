@@ -99,7 +99,6 @@ func ResourceCloudBuildTrigger() *schema.Resource {
 				Version: 1,
 			},
 		},
-
 		CustomizeDiff: stepTimeoutCustomizeDiff,
 
 		Schema: map[string]*schema.Schema{

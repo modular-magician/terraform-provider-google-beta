@@ -7,6 +7,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
@@ -27,8 +28,11 @@ func ResourceComputeInstanceFromMachineImage() *schema.Resource {
 
 		Timeouts: ResourceComputeInstance().Timeouts,
 
-		Schema:        computeInstanceFromMachineImageSchema(),
-		CustomizeDiff: ResourceComputeInstance().CustomizeDiff,
+		Schema: computeInstanceFromMachineImageSchema(),
+		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
+			ResourceComputeInstance().CustomizeDiff,
+		),
 		UseJSONNumber: true,
 	}
 }

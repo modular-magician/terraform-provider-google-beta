@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -17,12 +18,15 @@ const nonUniqueWriterAccount = "serviceAccount:cloud-logs@system.gserviceaccount
 
 func ResourceLoggingProjectSink() *schema.Resource {
 	schm := &schema.Resource{
-		Create:        resourceLoggingProjectSinkCreate,
-		Read:          resourceLoggingProjectSinkRead,
-		Delete:        resourceLoggingProjectSinkDelete,
-		Update:        resourceLoggingProjectSinkUpdate,
-		Schema:        resourceLoggingSinkSchema(),
-		CustomizeDiff: resourceLoggingProjectSinkCustomizeDiff,
+		Create: resourceLoggingProjectSinkCreate,
+		Read:   resourceLoggingProjectSinkRead,
+		Delete: resourceLoggingProjectSinkDelete,
+		Update: resourceLoggingProjectSinkUpdate,
+		Schema: resourceLoggingSinkSchema(),
+		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
+			resourceLoggingProjectSinkCustomizeDiff,
+		),
 		Importer: &schema.ResourceImporter{
 			State: resourceLoggingSinkImportState("project"),
 		},

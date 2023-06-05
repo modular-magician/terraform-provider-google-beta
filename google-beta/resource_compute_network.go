@@ -23,6 +23,7 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
@@ -48,6 +49,10 @@ func ResourceComputeNetwork() *schema.Resource {
 			Update: schema.DefaultTimeout(20 * time.Minute),
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
+
+		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
+		),
 
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -114,8 +119,9 @@ with varying MTUs.`,
 			"network_firewall_policy_enforcement_order": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				ForceNew:     true,
 				ValidateFunc: verify.ValidateEnum([]string{"BEFORE_CLASSIC_FIREWALL", "AFTER_CLASSIC_FIREWALL", ""}),
-				Description:  `Set the order that Firewall Rules and Firewall Policies are evaluated. Default value: "AFTER_CLASSIC_FIREWALL" Possible values: ["BEFORE_CLASSIC_FIREWALL", "AFTER_CLASSIC_FIREWALL"]`,
+				Description:  `Set the order that Firewall Rules and Firewall Policies are evaluated. Needs to be either 'AFTER_CLASSIC_FIREWALL' or 'BEFORE_CLASSIC_FIREWALL' Default 'AFTER_CLASSIC_FIREWALL' Default value: "AFTER_CLASSIC_FIREWALL" Possible values: ["BEFORE_CLASSIC_FIREWALL", "AFTER_CLASSIC_FIREWALL"]`,
 				Default:      "AFTER_CLASSIC_FIREWALL",
 			},
 			"routing_mode": {
@@ -410,7 +416,7 @@ func resourceComputeNetworkUpdate(d *schema.ResourceData, meta interface{}) erro
 
 	d.Partial(true)
 
-	if d.HasChange("routing_mode") || d.HasChange("network_firewall_policy_enforcement_order") {
+	if d.HasChange("routing_mode") {
 		obj := make(map[string]interface{})
 
 		routingConfigProp, err := expandComputeNetworkRoutingConfig(nil, d, config)
@@ -418,12 +424,6 @@ func resourceComputeNetworkUpdate(d *schema.ResourceData, meta interface{}) erro
 			return err
 		} else if !tpgresource.IsEmptyValue(reflect.ValueOf(routingConfigProp)) {
 			obj["routingConfig"] = routingConfigProp
-		}
-		networkFirewallPolicyEnforcementOrderProp, err := expandComputeNetworkNetworkFirewallPolicyEnforcementOrder(d.Get("network_firewall_policy_enforcement_order"), d, config)
-		if err != nil {
-			return err
-		} else if v, ok := d.GetOkExists("network_firewall_policy_enforcement_order"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, networkFirewallPolicyEnforcementOrderProp)) {
-			obj["networkFirewallPolicyEnforcementOrder"] = networkFirewallPolicyEnforcementOrderProp
 		}
 
 		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/networks/{{name}}")

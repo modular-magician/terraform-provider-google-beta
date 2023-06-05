@@ -62,6 +62,7 @@ func ResourceDataflowJob() *schema.Resource {
 			Update: schema.DefaultTimeout(10 * time.Minute),
 		},
 		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
 			resourceDataflowJobTypeCustomizeDiff,
 		),
 		Importer: &schema.ResourceImporter{

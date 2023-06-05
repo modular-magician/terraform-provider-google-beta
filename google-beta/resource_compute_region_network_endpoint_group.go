@@ -23,6 +23,7 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
@@ -44,6 +45,11 @@ func ResourceComputeRegionNetworkEndpointGroup() *schema.Resource {
 			Create: schema.DefaultTimeout(20 * time.Minute),
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
+
+		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
+			tpgresource.DefaultProviderRegion,
+		),
 
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -455,6 +461,14 @@ func resourceComputeRegionNetworkEndpointGroupRead(d *schema.ResourceData, meta 
 		return fmt.Errorf("Error reading RegionNetworkEndpointGroup: %s", err)
 	}
 
+	region, err := tpgresource.GetRegion(d, config)
+	if err != nil {
+		return err
+	}
+	if err := d.Set("region", region); err != nil {
+		return fmt.Errorf("Error reading RegionNetworkEndpointGroup: %s", err)
+	}
+
 	if err := d.Set("name", flattenComputeRegionNetworkEndpointGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkEndpointGroup: %s", err)
 	}
@@ -483,9 +497,6 @@ func resourceComputeRegionNetworkEndpointGroupRead(d *schema.ResourceData, meta 
 		return fmt.Errorf("Error reading RegionNetworkEndpointGroup: %s", err)
 	}
 	if err := d.Set("serverless_deployment", flattenComputeRegionNetworkEndpointGroupServerlessDeployment(res["serverlessDeployment"], d, config)); err != nil {
-		return fmt.Errorf("Error reading RegionNetworkEndpointGroup: %s", err)
-	}
-	if err := d.Set("region", flattenComputeRegionNetworkEndpointGroupRegion(res["region"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionNetworkEndpointGroup: %s", err)
 	}
 	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
@@ -707,13 +718,6 @@ func flattenComputeRegionNetworkEndpointGroupServerlessDeploymentVersion(v inter
 
 func flattenComputeRegionNetworkEndpointGroupServerlessDeploymentUrlMask(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func flattenComputeRegionNetworkEndpointGroupRegion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	return tpgresource.ConvertSelfLinkToV1(v.(string))
 }
 
 func expandComputeRegionNetworkEndpointGroupName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

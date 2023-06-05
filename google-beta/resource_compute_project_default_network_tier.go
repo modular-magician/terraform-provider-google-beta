@@ -12,6 +12,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	compute "google.golang.org/api/compute/v0.beta"
@@ -32,6 +33,10 @@ func ResourceComputeProjectDefaultNetworkTier() *schema.Resource {
 		},
 
 		SchemaVersion: 0,
+
+		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
+		),
 
 		Schema: map[string]*schema.Schema{
 			"network_tier": {

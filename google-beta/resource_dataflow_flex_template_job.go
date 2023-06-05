@@ -11,13 +11,12 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
-	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
-	"google.golang.org/api/googleapi"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
+	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	dataflow "google.golang.org/api/dataflow/v1b3"
+	"google.golang.org/api/googleapi"
 )
 
 // NOTE: resource_dataflow_flex_template currently does not support updating existing jobs.
@@ -32,6 +31,7 @@ func ResourceDataflowFlexTemplateJob() *schema.Resource {
 		Update: resourceDataflowFlexTemplateJobUpdate,
 		Delete: resourceDataflowFlexTemplateJobDelete,
 		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
 			resourceDataflowFlexJobTypeCustomizeDiff,
 		),
 		Importer: &schema.ResourceImporter{

@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"regexp"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	runtimeconfig "google.golang.org/api/runtimeconfig/v1beta1"
 )
 
@@ -23,6 +23,10 @@ func ResourceRuntimeconfigVariable() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: resourceRuntimeconfigVariableImport,
 		},
+
+		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderCustomizeDiff,
+		),
 
 		Schema: map[string]*schema.Schema{
 			"name": {

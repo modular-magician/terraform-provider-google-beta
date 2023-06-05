@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"google.golang.org/api/storage/v1"
@@ -17,12 +18,14 @@ import (
 
 func ResourceStorageObjectAcl() *schema.Resource {
 	return &schema.Resource{
-		Create:        resourceStorageObjectAclCreate,
-		Read:          resourceStorageObjectAclRead,
-		Update:        resourceStorageObjectAclUpdate,
-		Delete:        resourceStorageObjectAclDelete,
-		CustomizeDiff: resourceStorageObjectAclDiff,
-
+		Create: resourceStorageObjectAclCreate,
+		Read:   resourceStorageObjectAclRead,
+		Update: resourceStorageObjectAclUpdate,
+		Delete: resourceStorageObjectAclDelete,
+		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
+			resourceStorageObjectAclDiff,
+		),
 		Schema: map[string]*schema.Schema{
 			"bucket": {
 				Type:     schema.TypeString,

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/bigtable"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
@@ -36,6 +37,10 @@ func ResourceBigtableTable() *schema.Resource {
 		// IMPORTANT: Do not add any additional ForceNew fields to this resource.
 		// Destroying/recreating tables can lead to data loss for users.
 		// ----------------------------------------------------------------------
+		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
+		),
+
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,

@@ -37,6 +37,7 @@ func ResourceStorageBucket() *schema.Resource {
 			State: resourceStorageBucketStateImporter,
 		},
 		CustomizeDiff: customdiff.All(
+			tpgresource.DefaultProviderProject,
 			customdiff.ForceNewIfChange("retention_policy.0.is_locked", isPolicyLocked),
 		),
 
