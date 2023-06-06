@@ -226,7 +226,7 @@ This feature only applies to gateways of type 'SECURE_WEB_GATEWAY'.`,
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
-				Description: `A fully-qualified GatewaySecurityPolicy URL reference. Defines how a server should apply security policy to inbound (VM to Proxy) initiated connections. 
+				Description: `A fully-qualified GatewaySecurityPolicy URL reference. Defines how a server should apply security policy to inbound (VM to Proxy) initiated connections.
 For example: 'projects/*/locations/*/gatewaySecurityPolicies/swg-policy'.
 This policy is specific to gateways of type 'SECURE_WEB_GATEWAY'.`,
 			},
@@ -247,8 +247,8 @@ The default value is 'global'.`,
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
-				Description: `The relative resource name identifying the VPC network that is using this configuration. 
-For example: 'projects/*/global/networks/network-1'. 
+				Description: `The relative resource name identifying the VPC network that is using this configuration.
+For example: 'projects/*/global/networks/network-1'.
 Currently, this field is specific to gateways of type 'SECURE_WEB_GATEWAY'.`,
 			},
 			"server_tls_policy": {
@@ -284,7 +284,7 @@ Currently, this field is specific to gateways of type 'SECURE_WEB_GATEWAY.`,
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
-				Description: `When deleting a gateway of type 'SECURE_WEB_GATEWAY', this boolean option will also delete auto generated router by the gateway creation. 
+				Description: `When deleting a gateway of type 'SECURE_WEB_GATEWAY', this boolean option will also delete auto generated router by the gateway creation.
 If there is no other gateway of type 'SECURE_WEB_GATEWAY' remaining for that region and network it will be deleted.`,
 			},
 			"project": {

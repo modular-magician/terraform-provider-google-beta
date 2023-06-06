@@ -230,7 +230,7 @@ Only relevant if a maxValue has been defined. Default = false.`,
 												"strict_min_enabled": {
 													Type:     schema.TypeBool,
 													Optional: true,
-													Description: `Whether each value needs to be strictly greater than ('>') the minimum, or if equality is allowed. 
+													Description: `Whether each value needs to be strictly greater than ('>') the minimum, or if equality is allowed.
 Only relevant if a minValue has been defined. Default = false.`,
 													Default: false,
 												},
@@ -734,7 +734,7 @@ Only relevant if a maxValue has been defined. Default = false.`,
 															"strict_min_enabled": {
 																Type:     schema.TypeBool,
 																Optional: true,
-																Description: `Whether each value needs to be strictly greater than ('>') the minimum, or if equality is allowed. 
+																Description: `Whether each value needs to be strictly greater than ('>') the minimum, or if equality is allowed.
 Only relevant if a minValue has been defined. Default = false.`,
 																Default: false,
 															},
