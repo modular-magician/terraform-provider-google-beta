@@ -365,6 +365,32 @@ func resourceBigQueryTableSchemaCustomizeDiff(_ context.Context, d *schema.Resou
 	return resourceBigQueryTableSchemaCustomizeDiffFunc(d)
 }
 
+func validateBigQueryTableSchema(v interface{}, k string) (warnings []string, errs []error) {
+	if v == nil {
+		return
+	}
+
+	if _, e := validation.StringIsJSON(v, k); e != nil {
+		errs = append(errs, e...)
+		return
+	}
+
+	var jsonList []interface{}
+	if err := json.Unmarshal([]byte(v.(string)), &jsonList); err != nil {
+		errs = append(errs, fmt.Errorf("\"schema\" is not a JSON array: %s", err))
+		return
+	}
+
+	for _, v := range jsonList {
+		if v == nil {
+			errs = append(errs, errors.New("\"schema\" contains a nil element"))
+			return
+		}
+	}
+
+	return
+}
+
 func ResourceBigQueryTable() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceBigQueryTableCreate,
@@ -465,7 +491,7 @@ func ResourceBigQueryTable() *schema.Resource {
 							Default:      "NONE",
 							Description:  `The compression type of the data source. Valid values are "NONE" or "GZIP".`,
 						},
-						// Schema: Optional] The schema for the  data.
+						// Schema: [Optional] The schema for the data.
 						// Schema is required for CSV and JSON formats if autodetect is not on.
 						// Schema is disallowed for Google Cloud Bigtable, Cloud Datastore backups, Avro, Iceberg, ORC, and Parquet formats.
 						"schema": {
@@ -473,7 +499,7 @@ func ResourceBigQueryTable() *schema.Resource {
 							Optional:     true,
 							Computed:     true,
 							ForceNew:     true,
-							ValidateFunc: validation.StringIsJSON,
+							ValidateFunc: validateBigQueryTableSchema,
 							StateFunc: func(v interface{}) string {
 								json, _ := structure.NormalizeJsonString(v)
 								return json
@@ -690,7 +716,7 @@ func ResourceBigQueryTable() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validation.StringIsJSON,
+				ValidateFunc: validateBigQueryTableSchema,
 				StateFunc: func(v interface{}) string {
 					json, _ := structure.NormalizeJsonString(v)
 					return json
