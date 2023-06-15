@@ -926,6 +926,8 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		"google_redis_instance":                               redis.DataSourceGoogleRedisInstance(),
 		"google_vertex_ai_index":                              vertexai.DataSourceVertexAIIndex(),
 		"google_vmwareengine_network":                         vmwareengine.DataSourceVmwareengineNetwork(),
+		"google_vmwareengine_private_cloud":                   vmwareengine.DataSourceVmwareenginePrivateCloud(),
+		"google_vmwareengine_cluster":                         vmwareengine.DataSourceVmwareengineCluster(),
 		// ####### END datasources ###########
 		// ####### END handwritten datasources ###########
 	},
@@ -1033,9 +1035,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		})
 }
 
-// Generated resources: 347
+// Generated resources: 349
 // Generated IAM resources: 225
-// Total generated resources: 572
+// Total generated resources: 574
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1604,7 +1606,9 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_vertex_ai_index_endpoint":                                vertexai.ResourceVertexAIIndexEndpoint(),
 			"google_vertex_ai_metadata_store":                                vertexai.ResourceVertexAIMetadataStore(),
 			"google_vertex_ai_tensorboard":                                   vertexai.ResourceVertexAITensorboard(),
+			"google_vmwareengine_cluster":                                    vmwareengine.ResourceVmwareengineCluster(),
 			"google_vmwareengine_network":                                    vmwareengine.ResourceVmwareengineNetwork(),
+			"google_vmwareengine_private_cloud":                              vmwareengine.ResourceVmwareenginePrivateCloud(),
 			"google_vpc_access_connector":                                    vpcaccess.ResourceVPCAccessConnector(),
 			"google_workflows_workflow":                                      workflows.ResourceWorkflowsWorkflow(),
 			"google_workstations_workstation":                                workstations.ResourceWorkstationsWorkstation(),
