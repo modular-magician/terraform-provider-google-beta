@@ -50,14 +50,14 @@ func TestAccDataLossPreventionJobTrigger_dlpJobTriggerBasicExample(t *testing.T)
 				ResourceName:            "google_data_loss_prevention_job_trigger.basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trigger_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionJobTrigger_dlpJobTriggerBasicExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_job_trigger" "basic" {
 	parent = "projects/%{project}"
 	description = "Description"
@@ -113,14 +113,14 @@ func TestAccDataLossPreventionJobTrigger_dlpJobTriggerBigqueryRowLimitExample(t 
 				ResourceName:            "google_data_loss_prevention_job_trigger.bigquery_row_limit",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trigger_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionJobTrigger_dlpJobTriggerBigqueryRowLimitExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_job_trigger" "bigquery_row_limit" {
 	parent = "projects/%{project}"
 	description = "Description"
@@ -181,14 +181,14 @@ func TestAccDataLossPreventionJobTrigger_dlpJobTriggerBigqueryRowLimitPercentage
 				ResourceName:            "google_data_loss_prevention_job_trigger.bigquery_row_limit_percentage",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trigger_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionJobTrigger_dlpJobTriggerBigqueryRowLimitPercentageExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_job_trigger" "bigquery_row_limit_percentage" {
 	parent = "projects/%{project}"
 	description = "Description"
@@ -249,14 +249,14 @@ func TestAccDataLossPreventionJobTrigger_dlpJobTriggerDataCatalogOutputExample(t
 				ResourceName:            "google_data_loss_prevention_job_trigger.data_catalog_output",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trigger_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionJobTrigger_dlpJobTriggerDataCatalogOutputExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_job_trigger" "data_catalog_output" {
   parent = "projects/%{project}"
   description = "Description"
@@ -310,14 +310,14 @@ func TestAccDataLossPreventionJobTrigger_dlpJobTriggerSccOutputExample(t *testin
 				ResourceName:            "google_data_loss_prevention_job_trigger.scc_output",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trigger_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionJobTrigger_dlpJobTriggerSccOutputExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_job_trigger" "scc_output" {
   parent = "projects/%{project}"
   description = "Description"
@@ -371,14 +371,14 @@ func TestAccDataLossPreventionJobTrigger_dlpJobTriggerJobNotificationEmailsExamp
 				ResourceName:            "google_data_loss_prevention_job_trigger.job_notification_emails",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trigger_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionJobTrigger_dlpJobTriggerJobNotificationEmailsExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_job_trigger" "job_notification_emails" {
   parent       = "projects/%{project}"
   description  = "Description for the job_trigger created by terraform"
@@ -428,14 +428,14 @@ func TestAccDataLossPreventionJobTrigger_dlpJobTriggerDeidentifyExample(t *testi
 				ResourceName:            "google_data_loss_prevention_job_trigger.deidentify",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trigger_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionJobTrigger_dlpJobTriggerDeidentifyExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_job_trigger" "deidentify" {
   parent       = "projects/%{project}"
   description  = "Description for the job_trigger created by terraform"
@@ -542,14 +542,14 @@ func TestAccDataLossPreventionJobTrigger_dlpJobTriggerHybridExample(t *testing.T
 				ResourceName:            "google_data_loss_prevention_job_trigger.hybrid_trigger",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trigger_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionJobTrigger_dlpJobTriggerHybridExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_job_trigger" "hybrid_trigger" {
   parent = "projects/%{project}"
 
@@ -610,14 +610,14 @@ func TestAccDataLossPreventionJobTrigger_dlpJobTriggerInspectExample(t *testing.
 				ResourceName:            "google_data_loss_prevention_job_trigger.inspect",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trigger_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionJobTrigger_dlpJobTriggerInspectExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_job_trigger" "inspect" {
   parent = "projects/%{project}"
   description = "Description"
@@ -729,14 +729,14 @@ func TestAccDataLossPreventionJobTrigger_dlpJobTriggerPublishToStackdriverExampl
 				ResourceName:            "google_data_loss_prevention_job_trigger.publish_to_stackdriver",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trigger_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionJobTrigger_dlpJobTriggerPublishToStackdriverExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_job_trigger" "publish_to_stackdriver" {
   parent       = "projects/%{project}"
   description  = "Description for the job_trigger created by terraform"
@@ -752,70 +752,6 @@ resource "google_data_loss_prevention_job_trigger" "publish_to_stackdriver" {
     inspect_template_name = "sample-inspect-template"
     actions {
       publish_to_stackdriver {}
-    }
-    storage_config {
-      cloud_storage_options {
-        file_set {
-          url = "gs://mybucket/directory/"
-        }
-      }
-    }
-  }
-}
-`, context)
-}
-
-func TestAccDataLossPreventionJobTrigger_dlpJobTriggerWithIdExample(t *testing.T) {
-	t.Parallel()
-
-	context := map[string]interface{}{
-		"project":       acctest.GetTestProjectFromEnv(),
-		"random_suffix": RandString(t, 10),
-	}
-
-	VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckDataLossPreventionJobTriggerDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccDataLossPreventionJobTrigger_dlpJobTriggerWithIdExample(context),
-			},
-			{
-				ResourceName:            "google_data_loss_prevention_job_trigger.with_trigger_id",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trigger_id", "parent"},
-			},
-		},
-	})
-}
-
-func testAccDataLossPreventionJobTrigger_dlpJobTriggerWithIdExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
-resource "google_data_loss_prevention_job_trigger" "with_trigger_id" {
-  parent = "projects/%{project}"
-  description = "Starting description"
-  display_name = "display"
-  trigger_id = "tf-test-id-%{random_suffix}"
-
-  triggers {
-    schedule {
-      recurrence_period_duration = "86400s"
-    }
-  }
-
-  inspect_job {
-    inspect_template_name = "fake"
-    actions {
-      save_findings {
-        output_config {
-          table {
-            project_id = "project"
-            dataset_id = "dataset123"
-          }
-        }
-      }
     }
     storage_config {
       cloud_storage_options {

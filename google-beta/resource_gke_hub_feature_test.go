@@ -14,7 +14,7 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-func TestAccGKEHubFeature_gkehubFeatureFleetObservability(t *testing.T) {
+func TestAccGKEHubFeature_gkehubFeatureMciUpdate(t *testing.T) {
 	// VCR fails to handle batched project services
 	acctest.SkipIfVcr(t)
 	t.Parallel()
@@ -29,12 +29,9 @@ func TestAccGKEHubFeature_gkehubFeatureFleetObservability(t *testing.T) {
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: ProtoV5ProviderBetaFactories(t),
 		CheckDestroy:             testAccCheckGKEHubFeatureDestroyProducer(t),
-		ExternalProviders: map[string]resource.ExternalProvider{
-			"time": {},
-		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGKEHubFeature_gkehubFeatureFleetObservability(context),
+				Config: testAccGKEHubFeature_gkehubFeatureMciUpdateStart(context),
 			},
 			{
 				ResourceName:      "google_gke_hub_feature.feature",
@@ -42,15 +39,7 @@ func TestAccGKEHubFeature_gkehubFeatureFleetObservability(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccGKEHubFeature_gkehubFeatureFleetObservabilityUpdate1(context),
-			},
-			{
-				ResourceName:      "google_gke_hub_feature.feature",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-			{
-				Config: testAccGKEHubFeature_gkehubFeatureFleetObservabilityUpdate2(context),
+				Config: testAccGKEHubFeature_gkehubFeatureMciChangeMembership(context),
 			},
 			{
 				ResourceName:      "google_gke_hub_feature.feature",
@@ -61,83 +50,189 @@ func TestAccGKEHubFeature_gkehubFeatureFleetObservability(t *testing.T) {
 	})
 }
 
-func testAccGKEHubFeature_gkehubFeatureFleetObservability(context map[string]interface{}) string {
+func testAccGKEHubFeature_gkehubFeatureMciUpdateStart(context map[string]interface{}) string {
 	return gkeHubFeatureProjectSetup(context) + Nprintf(`
-resource "time_sleep" "wait_for_gkehub_enablement" {
-  create_duration = "150s"
-  depends_on = [google_project_service.gkehub]
-}
-  
-resource "google_gke_hub_feature" "feature" {
-  name = "fleetobservability"
-  location = "global"
+
+resource "google_container_cluster" "primary" {
+  name               = "tf-test%{random_suffix}"
+  location           = "us-central1-a"
+  initial_node_count = 1
   project = google_project.project.project_id
-  spec {
-    fleetobservability {
-      logging_config {
-        default_config {
-	  mode = "MOVE"
-        }
-        fleet_scope_logs_config {
-          mode = "COPY"
-        }
-      }
+  provider = google-beta
+  depends_on = [google_project_service.mci, google_project_service.container, google_project_service.container, google_project_service.gkehub]
+}
+
+resource "google_container_cluster" "secondary" {
+  name               = "tf-test2%{random_suffix}"
+  location           = "us-central1-a"
+  initial_node_count = 1
+  project = google_project.project.project_id
+  provider = google-beta
+  depends_on = [google_project_service.mci, google_project_service.container, google_project_service.container, google_project_service.gkehub]
+}
+
+resource "google_gke_hub_membership" "membership" {
+  membership_id = "tf-test%{random_suffix}"
+  endpoint {
+    gke_cluster {
+      resource_link = "//container.googleapis.com/${google_container_cluster.primary.id}"
     }
   }
-  depends_on = [time_sleep.wait_for_gkehub_enablement]
+  description = "test resource."
+  project = google_project.project.project_id
+  provider = google-beta
+}
+
+resource "google_gke_hub_membership" "membership_second" {
+  membership_id = "tf-test2%{random_suffix}"
+  endpoint {
+    gke_cluster {
+      resource_link = "//container.googleapis.com/${google_container_cluster.secondary.id}"
+    }
+  }
+  description = "test resource."
+  project = google_project.project.project_id
+  provider = google-beta
+}
+
+resource "google_gke_hub_feature" "feature" {
+  name = "multiclusteringress"
+  location = "global"
+  spec {
+    multiclusteringress {
+      config_membership = google_gke_hub_membership.membership.id
+    }
+  }
+  project = google_project.project.project_id
   provider = google-beta
 }
 `, context)
 }
 
-func testAccGKEHubFeature_gkehubFeatureFleetObservabilityUpdate1(context map[string]interface{}) string {
+func testAccGKEHubFeature_gkehubFeatureMciChangeMembership(context map[string]interface{}) string {
 	return gkeHubFeatureProjectSetup(context) + Nprintf(`
-resource "time_sleep" "wait_for_gkehub_enablement" {
-  create_duration = "150s"
-  depends_on = [google_project_service.gkehub]
+resource "google_container_cluster" "primary" {
+  name               = "tf-test%{random_suffix}"
+  location           = "us-central1-a"
+  initial_node_count = 1
+  project = google_project.project.project_id
+  provider = google-beta
+  depends_on = [google_project_service.mci, google_project_service.container, google_project_service.container, google_project_service.gkehub]
+}
+
+resource "google_container_cluster" "secondary" {
+  name               = "tf-test2%{random_suffix}"
+  location           = "us-central1-a"
+  initial_node_count = 1
+  project = google_project.project.project_id
+  provider = google-beta
+  depends_on = [google_project_service.mci, google_project_service.container, google_project_service.container, google_project_service.gkehub]
+}
+
+resource "google_gke_hub_membership" "membership" {
+  membership_id = "tf-test%{random_suffix}"
+  endpoint {
+    gke_cluster {
+      resource_link = "//container.googleapis.com/${google_container_cluster.primary.id}"
+    }
+  }
+  description = "test resource."
+  project = google_project.project.project_id
+  provider = google-beta
+}
+
+resource "google_gke_hub_membership" "membership_second" {
+  membership_id = "tf-test2%{random_suffix}"
+  endpoint {
+    gke_cluster {
+      resource_link = "//container.googleapis.com/${google_container_cluster.secondary.id}"
+    }
+  }
+  description = "test resource."
+  project = google_project.project.project_id
+  provider = google-beta
 }
 
 resource "google_gke_hub_feature" "feature" {
-  name = "fleetobservability"
+  name = "multiclusteringress"
   location = "global"
-  project = google_project.project.project_id
   spec {
-    fleetobservability {
-      logging_config {
-        default_config {
-	  mode = "MOVE"
-        }
-      }
+    multiclusteringress {
+      config_membership = google_gke_hub_membership.membership_second.id
     }
   }
-  depends_on = [time_sleep.wait_for_gkehub_enablement]
+  labels = {
+    foo = "bar"
+  }
+  project = google_project.project.project_id
   provider = google-beta
 }
 `, context)
 }
 
-func testAccGKEHubFeature_gkehubFeatureFleetObservabilityUpdate2(context map[string]interface{}) string {
-	return gkeHubFeatureProjectSetup(context) + Nprintf(`
-resource "time_sleep" "wait_for_gkehub_enablement" {
-  create_duration = "150s"
-  depends_on = [google_project_service.gkehub]
+func TestAccGKEHubFeature_gkehubFeatureMcsd(t *testing.T) {
+	// VCR fails to handle batched project services
+	acctest.SkipIfVcr(t)
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix":   RandString(t, 10),
+		"org_id":          acctest.GetTestOrgFromEnv(t),
+		"billing_account": acctest.GetTestBillingAccountFromEnv(t),
+	}
+
+	VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckGKEHubFeatureDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccGKEHubFeature_gkehubFeatureMcsd(context),
+			},
+			{
+				ResourceName:      "google_gke_hub_feature.feature",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccGKEHubFeature_gkehubFeatureMcsdUpdate(context),
+			},
+			{
+				ResourceName:      "google_gke_hub_feature.feature",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
 }
 
+func testAccGKEHubFeature_gkehubFeatureMcsd(context map[string]interface{}) string {
+	return gkeHubFeatureProjectSetup(context) + Nprintf(`
 resource "google_gke_hub_feature" "feature" {
-  name = "fleetobservability"
+  name = "multiclusterservicediscovery"
   location = "global"
   project = google_project.project.project_id
-  spec {
-    fleetobservability {
-      logging_config {
-        fleet_scope_logs_config {
-          mode = "COPY"
-        }
-      }
-    }
+  labels = {
+    foo = "bar"
   }
-  depends_on = [time_sleep.wait_for_gkehub_enablement]
   provider = google-beta
+  depends_on = [google_project_service.mcsd]
+}
+`, context)
+}
+
+func testAccGKEHubFeature_gkehubFeatureMcsdUpdate(context map[string]interface{}) string {
+	return gkeHubFeatureProjectSetup(context) + Nprintf(`
+resource "google_gke_hub_feature" "feature" {
+  name = "multiclusterservicediscovery"
+  location = "global"
+  project = google_project.project.project_id
+  labels = {
+    foo = "quux"
+    baz = "qux"
+  }
+  provider = google-beta
+  depends_on = [google_project_service.mcsd]
 }
 `, context)
 }
@@ -199,264 +294,6 @@ resource "google_project_service" "gkehub" {
 `, context)
 }
 
-func TestAccGKEHubFeature_gkehubFeatureMciUpdate(t *testing.T) {
-	// VCR fails to handle batched project services
-	acctest.SkipIfVcr(t)
-	t.Parallel()
-
-	context := map[string]interface{}{
-		"random_suffix":   RandString(t, 10),
-		"org_id":          acctest.GetTestOrgFromEnv(t),
-		"billing_account": acctest.GetTestBillingAccountFromEnv(t),
-	}
-
-	VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckGKEHubFeatureDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccGKEHubFeature_gkehubFeatureMciUpdateStart(context),
-			},
-			{
-				ResourceName:            "google_gke_hub_feature.feature",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"update_time"},
-			},
-			{
-				Config: testAccGKEHubFeature_gkehubFeatureMciChangeMembership(context),
-			},
-			{
-				ResourceName:            "google_gke_hub_feature.feature",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"update_time"},
-			},
-		},
-	})
-}
-
-func testAccGKEHubFeature_gkehubFeatureMciUpdateStart(context map[string]interface{}) string {
-	return gkeHubFeatureProjectSetupForGA(context) + Nprintf(`
-
-resource "google_container_cluster" "primary" {
-  name               = "tf-test%{random_suffix}"
-  location           = "us-central1-a"
-  initial_node_count = 1
-  project = google_project.project.project_id
-  depends_on = [google_project_service.mci, google_project_service.container, google_project_service.container, google_project_service.gkehub]
-}
-
-resource "google_container_cluster" "secondary" {
-  name               = "tf-test2%{random_suffix}"
-  location           = "us-central1-a"
-  initial_node_count = 1
-  project = google_project.project.project_id
-  depends_on = [google_project_service.mci, google_project_service.container, google_project_service.container, google_project_service.gkehub]
-}
-
-resource "google_gke_hub_membership" "membership" {
-  membership_id = "tf-test%{random_suffix}"
-  endpoint {
-    gke_cluster {
-      resource_link = "//container.googleapis.com/${google_container_cluster.primary.id}"
-    }
-  }
-  project = google_project.project.project_id
-}
-
-resource "google_gke_hub_membership" "membership_second" {
-  membership_id = "tf-test2%{random_suffix}"
-  endpoint {
-    gke_cluster {
-      resource_link = "//container.googleapis.com/${google_container_cluster.secondary.id}"
-    }
-  }
-  project = google_project.project.project_id
-}
-
-resource "google_gke_hub_feature" "feature" {
-  name = "multiclusteringress"
-  location = "global"
-  spec {
-    multiclusteringress {
-      config_membership = google_gke_hub_membership.membership.id
-    }
-  }
-  project = google_project.project.project_id
-}
-`, context)
-}
-
-func testAccGKEHubFeature_gkehubFeatureMciChangeMembership(context map[string]interface{}) string {
-	return gkeHubFeatureProjectSetupForGA(context) + Nprintf(`
-resource "google_container_cluster" "primary" {
-  name               = "tf-test%{random_suffix}"
-  location           = "us-central1-a"
-  initial_node_count = 1
-  project = google_project.project.project_id
-  depends_on = [google_project_service.mci, google_project_service.container, google_project_service.container, google_project_service.gkehub]
-}
-
-resource "google_container_cluster" "secondary" {
-  name               = "tf-test2%{random_suffix}"
-  location           = "us-central1-a"
-  initial_node_count = 1
-  project = google_project.project.project_id
-  depends_on = [google_project_service.mci, google_project_service.container, google_project_service.container, google_project_service.gkehub]
-}
-
-resource "google_gke_hub_membership" "membership" {
-  membership_id = "tf-test%{random_suffix}"
-  endpoint {
-    gke_cluster {
-      resource_link = "//container.googleapis.com/${google_container_cluster.primary.id}"
-    }
-  }
-  project = google_project.project.project_id
-}
-
-resource "google_gke_hub_membership" "membership_second" {
-  membership_id = "tf-test2%{random_suffix}"
-  endpoint {
-    gke_cluster {
-      resource_link = "//container.googleapis.com/${google_container_cluster.secondary.id}"
-    }
-  }
-  project = google_project.project.project_id
-}
-
-resource "google_gke_hub_feature" "feature" {
-  name = "multiclusteringress"
-  location = "global"
-  spec {
-    multiclusteringress {
-      config_membership = google_gke_hub_membership.membership_second.id
-    }
-  }
-  labels = {
-    foo = "bar"
-  }
-  project = google_project.project.project_id
-}
-`, context)
-}
-
-func TestAccGKEHubFeature_gkehubFeatureMcsd(t *testing.T) {
-	// VCR fails to handle batched project services
-	acctest.SkipIfVcr(t)
-	t.Parallel()
-
-	context := map[string]interface{}{
-		"random_suffix":   RandString(t, 10),
-		"org_id":          acctest.GetTestOrgFromEnv(t),
-		"billing_account": acctest.GetTestBillingAccountFromEnv(t),
-	}
-
-	VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckGKEHubFeatureDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccGKEHubFeature_gkehubFeatureMcsd(context),
-			},
-			{
-				ResourceName:      "google_gke_hub_feature.feature",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-			{
-				Config: testAccGKEHubFeature_gkehubFeatureMcsdUpdate(context),
-			},
-			{
-				ResourceName:      "google_gke_hub_feature.feature",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-		},
-	})
-}
-
-func testAccGKEHubFeature_gkehubFeatureMcsd(context map[string]interface{}) string {
-	return gkeHubFeatureProjectSetupForGA(context) + Nprintf(`
-resource "google_gke_hub_feature" "feature" {
-  name = "multiclusterservicediscovery"
-  location = "global"
-  project = google_project.project.project_id
-  labels = {
-    foo = "bar"
-  }
-  depends_on = [google_project_service.mcsd]
-}
-`, context)
-}
-
-func testAccGKEHubFeature_gkehubFeatureMcsdUpdate(context map[string]interface{}) string {
-	return gkeHubFeatureProjectSetupForGA(context) + Nprintf(`
-resource "google_gke_hub_feature" "feature" {
-  name = "multiclusterservicediscovery"
-  location = "global"
-  project = google_project.project.project_id
-  labels = {
-    foo = "quux"
-    baz = "qux"
-  }
-  depends_on = [google_project_service.mcsd]
-}
-`, context)
-}
-
-func gkeHubFeatureProjectSetupForGA(context map[string]interface{}) string {
-	return Nprintf(`
-resource "google_project" "project" {
-  name            = "tf-test-gkehub%{random_suffix}"
-  project_id      = "tf-test-gkehub%{random_suffix}"
-  org_id          = "%{org_id}"
-  billing_account = "%{billing_account}"
-}
-
-resource "google_project_service" "mesh" {
-  project = google_project.project.project_id
-  service = "meshconfig.googleapis.com"
-}
-
-resource "google_project_service" "mci" {
-  project = google_project.project.project_id
-  service = "multiclusteringress.googleapis.com"
-}
-
-resource "google_project_service" "acm" {
-  project = google_project.project.project_id
-  service = "anthosconfigmanagement.googleapis.com"
-}
-
-resource "google_project_service" "mcsd" {
-  project = google_project.project.project_id
-  service = "multiclusterservicediscovery.googleapis.com"
-}
-
-resource "google_project_service" "compute" {
-  project = google_project.project.project_id
-  service = "compute.googleapis.com"
-  disable_on_destroy = false
-}
-
-resource "google_project_service" "container" {
-  project = google_project.project.project_id
-  service = "container.googleapis.com"
-  disable_on_destroy = false
-}
-
-resource "google_project_service" "gkehub" {
-  project = google_project.project.project_id
-  service = "gkehub.googleapis.com"
-  disable_on_destroy = false
-}
-`, context)
-}
-
 func testAccCheckGKEHubFeatureDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
@@ -469,7 +306,7 @@ func testAccCheckGKEHubFeatureDestroyProducer(t *testing.T) func(s *terraform.St
 
 			config := GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{GKEHub2BasePath}}projects/{{project}}/locations/{{location}}/features/{{name}}")
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{GkeHubBasePath}}projects/{{project}}/locations/{{location}}/features/{{name}}")
 			if err != nil {
 				return err
 			}

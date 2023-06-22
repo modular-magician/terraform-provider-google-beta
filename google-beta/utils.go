@@ -14,6 +14,7 @@ import (
 
 	fwDiags "github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"google.golang.org/api/googleapi"
@@ -331,7 +332,15 @@ func checkGoogleIamPolicy(value string) error {
 // cluster. This error can be safely retried until the incompatible operation
 // completes, and the newly requested operation can begin.
 func retryWhileIncompatibleOperation(timeout time.Duration, lockKey string, f func() error) error {
-	return tpgresource.RetryWhileIncompatibleOperation(timeout, lockKey, f)
+	return resource.Retry(timeout, func() *resource.RetryError {
+		if err := transport_tpg.LockedCall(lockKey, f); err != nil {
+			if isFailedPreconditionError(err) {
+				return resource.RetryableError(err)
+			}
+			return resource.NonRetryableError(err)
+		}
+		return nil
+	})
 }
 
 // Deprecated: For backward compatibility frameworkDiagsToSdkDiags is still working,

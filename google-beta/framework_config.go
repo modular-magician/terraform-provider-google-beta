@@ -125,7 +125,6 @@ func (p *frameworkProvider) LoadAndValidateFramework(ctx context.Context, data P
 	p.GameServicesBasePath = data.GameServicesCustomEndpoint.ValueString()
 	p.GKEBackupBasePath = data.GKEBackupCustomEndpoint.ValueString()
 	p.GKEHubBasePath = data.GKEHubCustomEndpoint.ValueString()
-	p.GKEHub2BasePath = data.GKEHub2CustomEndpoint.ValueString()
 	p.GkeonpremBasePath = data.GkeonpremCustomEndpoint.ValueString()
 	p.HealthcareBasePath = data.HealthcareCustomEndpoint.ValueString()
 	p.IAM2BasePath = data.IAM2CustomEndpoint.ValueString()
@@ -165,7 +164,6 @@ func (p *frameworkProvider) LoadAndValidateFramework(ctx context.Context, data P
 	p.TagsBasePath = data.TagsCustomEndpoint.ValueString()
 	p.TPUBasePath = data.TPUCustomEndpoint.ValueString()
 	p.VertexAIBasePath = data.VertexAICustomEndpoint.ValueString()
-	p.VmwareengineBasePath = data.VmwareengineCustomEndpoint.ValueString()
 	p.VPCAccessBasePath = data.VPCAccessCustomEndpoint.ValueString()
 	p.WorkflowsBasePath = data.WorkflowsCustomEndpoint.ValueString()
 	p.WorkstationsBasePath = data.WorkstationsCustomEndpoint.ValueString()
@@ -763,14 +761,6 @@ func (p *frameworkProvider) HandleDefaults(ctx context.Context, data *ProviderMo
 			data.GKEHubCustomEndpoint = types.StringValue(customEndpoint.(string))
 		}
 	}
-	if data.GKEHub2CustomEndpoint.IsNull() {
-		customEndpoint := transport_tpg.MultiEnvDefault([]string{
-			"GOOGLE_GKE_HUB2_CUSTOM_ENDPOINT",
-		}, transport_tpg.DefaultBasePaths[transport_tpg.GKEHub2BasePathKey])
-		if customEndpoint != nil {
-			data.GKEHub2CustomEndpoint = types.StringValue(customEndpoint.(string))
-		}
-	}
 	if data.GkeonpremCustomEndpoint.IsNull() {
 		customEndpoint := transport_tpg.MultiEnvDefault([]string{
 			"GOOGLE_GKEONPREM_CUSTOM_ENDPOINT",
@@ -1081,14 +1071,6 @@ func (p *frameworkProvider) HandleDefaults(ctx context.Context, data *ProviderMo
 		}, transport_tpg.DefaultBasePaths[transport_tpg.VertexAIBasePathKey])
 		if customEndpoint != nil {
 			data.VertexAICustomEndpoint = types.StringValue(customEndpoint.(string))
-		}
-	}
-	if data.VmwareengineCustomEndpoint.IsNull() {
-		customEndpoint := transport_tpg.MultiEnvDefault([]string{
-			"GOOGLE_VMWAREENGINE_CUSTOM_ENDPOINT",
-		}, transport_tpg.DefaultBasePaths[transport_tpg.VmwareengineBasePathKey])
-		if customEndpoint != nil {
-			data.VmwareengineCustomEndpoint = types.StringValue(customEndpoint.(string))
 		}
 	}
 	if data.VPCAccessCustomEndpoint.IsNull() {

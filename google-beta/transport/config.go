@@ -242,7 +242,6 @@ type Config struct {
 	GameServicesBasePath             string
 	GKEBackupBasePath                string
 	GKEHubBasePath                   string
-	GKEHub2BasePath                  string
 	GkeonpremBasePath                string
 	HealthcareBasePath               string
 	IAM2BasePath                     string
@@ -282,7 +281,6 @@ type Config struct {
 	TagsBasePath                     string
 	TPUBasePath                      string
 	VertexAIBasePath                 string
-	VmwareengineBasePath             string
 	VPCAccessBasePath                string
 	WorkflowsBasePath                string
 	WorkstationsBasePath             string
@@ -366,7 +364,6 @@ const FirestoreBasePathKey = "Firestore"
 const GameServicesBasePathKey = "GameServices"
 const GKEBackupBasePathKey = "GKEBackup"
 const GKEHubBasePathKey = "GKEHub"
-const GKEHub2BasePathKey = "GKEHub2"
 const GkeonpremBasePathKey = "Gkeonprem"
 const HealthcareBasePathKey = "Healthcare"
 const IAM2BasePathKey = "IAM2"
@@ -406,7 +403,6 @@ const StorageTransferBasePathKey = "StorageTransfer"
 const TagsBasePathKey = "Tags"
 const TPUBasePathKey = "TPU"
 const VertexAIBasePathKey = "VertexAI"
-const VmwareengineBasePathKey = "Vmwareengine"
 const VPCAccessBasePathKey = "VPCAccess"
 const WorkflowsBasePathKey = "Workflows"
 const WorkstationsBasePathKey = "Workstations"
@@ -484,7 +480,6 @@ var DefaultBasePaths = map[string]string{
 	GameServicesBasePathKey:             "https://gameservices.googleapis.com/v1beta/",
 	GKEBackupBasePathKey:                "https://gkebackup.googleapis.com/v1/",
 	GKEHubBasePathKey:                   "https://gkehub.googleapis.com/v1beta1/",
-	GKEHub2BasePathKey:                  "https://gkehub.googleapis.com/v1beta/",
 	GkeonpremBasePathKey:                "https://gkeonprem.googleapis.com/v1/",
 	HealthcareBasePathKey:               "https://healthcare.googleapis.com/v1beta1/",
 	IAM2BasePathKey:                     "https://iam.googleapis.com/v2beta/",
@@ -524,7 +519,6 @@ var DefaultBasePaths = map[string]string{
 	TagsBasePathKey:                     "https://cloudresourcemanager.googleapis.com/v3/",
 	TPUBasePathKey:                      "https://tpu.googleapis.com/v1/",
 	VertexAIBasePathKey:                 "https://{{region}}-aiplatform.googleapis.com/v1beta1/",
-	VmwareengineBasePathKey:             "https://vmwareengine.googleapis.com/v1/",
 	VPCAccessBasePathKey:                "https://vpcaccess.googleapis.com/v1beta1/",
 	WorkflowsBasePathKey:                "https://workflows.googleapis.com/v1/",
 	WorkstationsBasePathKey:             "https://workstations.googleapis.com/v1beta/",
@@ -901,11 +895,6 @@ func HandleSDKDefaults(d *schema.ResourceData) error {
 			"GOOGLE_GKE_HUB_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[GKEHubBasePathKey]))
 	}
-	if d.Get("gke_hub2_custom_endpoint") == "" {
-		d.Set("gke_hub2_custom_endpoint", MultiEnvDefault([]string{
-			"GOOGLE_GKE_HUB2_CUSTOM_ENDPOINT",
-		}, DefaultBasePaths[GKEHub2BasePathKey]))
-	}
 	if d.Get("gkeonprem_custom_endpoint") == "" {
 		d.Set("gkeonprem_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_GKEONPREM_CUSTOM_ENDPOINT",
@@ -1100,11 +1089,6 @@ func HandleSDKDefaults(d *schema.ResourceData) error {
 		d.Set("vertex_ai_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_VERTEX_AI_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[VertexAIBasePathKey]))
-	}
-	if d.Get("vmwareengine_custom_endpoint") == "" {
-		d.Set("vmwareengine_custom_endpoint", MultiEnvDefault([]string{
-			"GOOGLE_VMWAREENGINE_CUSTOM_ENDPOINT",
-		}, DefaultBasePaths[VmwareengineBasePathKey]))
 	}
 	if d.Get("vpc_access_custom_endpoint") == "" {
 		d.Set("vpc_access_custom_endpoint", MultiEnvDefault([]string{
@@ -2040,7 +2024,6 @@ func ConfigureBasePaths(c *Config) {
 	c.GameServicesBasePath = DefaultBasePaths[GameServicesBasePathKey]
 	c.GKEBackupBasePath = DefaultBasePaths[GKEBackupBasePathKey]
 	c.GKEHubBasePath = DefaultBasePaths[GKEHubBasePathKey]
-	c.GKEHub2BasePath = DefaultBasePaths[GKEHub2BasePathKey]
 	c.GkeonpremBasePath = DefaultBasePaths[GkeonpremBasePathKey]
 	c.HealthcareBasePath = DefaultBasePaths[HealthcareBasePathKey]
 	c.IAM2BasePath = DefaultBasePaths[IAM2BasePathKey]
@@ -2080,7 +2063,6 @@ func ConfigureBasePaths(c *Config) {
 	c.TagsBasePath = DefaultBasePaths[TagsBasePathKey]
 	c.TPUBasePath = DefaultBasePaths[TPUBasePathKey]
 	c.VertexAIBasePath = DefaultBasePaths[VertexAIBasePathKey]
-	c.VmwareengineBasePath = DefaultBasePaths[VmwareengineBasePathKey]
 	c.VPCAccessBasePath = DefaultBasePaths[VPCAccessBasePathKey]
 	c.WorkflowsBasePath = DefaultBasePaths[WorkflowsBasePathKey]
 	c.WorkstationsBasePath = DefaultBasePaths[WorkstationsBasePathKey]

@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
 	"google.golang.org/api/cloudkms/v1"
 )
 
@@ -88,7 +87,7 @@ func TestAccKmsSecret_basic(t *testing.T) {
 	})
 }
 
-func testAccEncryptSecretDataWithCryptoKey(t *testing.T, s *terraform.State, cryptoKeyResourceName, plaintext, aad string) (string, *kms.KmsCryptoKeyId, error) {
+func testAccEncryptSecretDataWithCryptoKey(t *testing.T, s *terraform.State, cryptoKeyResourceName, plaintext, aad string) (string, *KmsCryptoKeyId, error) {
 	config := GoogleProviderConfig(t)
 
 	rs, ok := s.RootModule().Resources[cryptoKeyResourceName]
@@ -96,7 +95,7 @@ func testAccEncryptSecretDataWithCryptoKey(t *testing.T, s *terraform.State, cry
 		return "", nil, fmt.Errorf("Resource not found: %s", cryptoKeyResourceName)
 	}
 
-	cryptoKeyId, err := kms.ParseKmsCryptoKeyId(rs.Primary.Attributes["id"], config)
+	cryptoKeyId, err := ParseKmsCryptoKeyId(rs.Primary.Attributes["id"], config)
 
 	if err != nil {
 		return "", nil, err

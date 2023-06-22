@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/privateca"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
@@ -46,13 +45,13 @@ func testAccCheckPrivatecaCaPoolIam(t *testing.T, capool, region, project, role 
 				"member":  "",
 			},
 		}
-		u := &privateca.PrivatecaCaPoolIamUpdater{
-			Config: GoogleProviderConfig(t),
+		u := &PrivatecaCaPoolIamUpdater{
+			project:  project,
+			location: region,
+			caPool:   capool,
+			d:        d,
+			Config:   GoogleProviderConfig(t),
 		}
-		u.SetProject(project)
-		u.SetLocation(region)
-		u.SetCaPool(capool)
-		u.SetResourceData(d)
 		p, err := u.GetResourceIamPolicy()
 		if err != nil {
 			return err

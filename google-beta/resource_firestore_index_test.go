@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firestore"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
@@ -121,7 +120,7 @@ func (tc *FirestoreIndexDiffSuppressTestCase) Test(t *testing.T) {
 		if !ok {
 			newValue = ""
 		}
-		suppressed := firestore.FirestoreIFieldsDiffSuppressFunc(key, fmt.Sprintf("%v", oldValue), fmt.Sprintf("%v", newValue), mockResourceDiff)
+		suppressed := FirestoreIFieldsDiffSuppressFunc(key, fmt.Sprintf("%v", oldValue), fmt.Sprintf("%v", newValue), mockResourceDiff)
 		if suppressed != tcSuppress {
 			var expectation string
 			if tcSuppress {

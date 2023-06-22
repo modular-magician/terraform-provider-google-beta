@@ -23,7 +23,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 func TestAccFirebaseHostingRelease_firebasehostingReleaseInSiteExample(t *testing.T) {
@@ -52,7 +51,7 @@ func TestAccFirebaseHostingRelease_firebasehostingReleaseInSiteExample(t *testin
 }
 
 func testAccFirebaseHostingRelease_firebasehostingReleaseInSiteExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_firebase_hosting_site" "default" {
   provider = google-beta
   project  = "%{project_id}"
@@ -106,7 +105,7 @@ func TestAccFirebaseHostingRelease_firebasehostingReleaseInChannelExample(t *tes
 }
 
 func testAccFirebaseHostingRelease_firebasehostingReleaseInChannelExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_firebase_hosting_site" "default" {
   provider = google-beta
   project  = "%{project_id}"
@@ -167,7 +166,7 @@ func TestAccFirebaseHostingRelease_firebasehostingReleaseDisableExample(t *testi
 }
 
 func testAccFirebaseHostingRelease_firebasehostingReleaseDisableExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_firebase_hosting_site" "default" {
   provider = google-beta
   project  = "%{project_id}"

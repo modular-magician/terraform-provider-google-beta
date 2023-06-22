@@ -6,7 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/iambeta"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
 
@@ -29,7 +28,7 @@ func TestValidateIAMBetaWorkloadIdentityPoolProviderId(t *testing.T) {
 		{TestName: "too long", Value: strings.Repeat("f", 33), ExpectError: true},
 	}
 
-	es := verify.TestStringValidationCases(x, iambeta.ValidateWorkloadIdentityPoolProviderId)
+	es := verify.TestStringValidationCases(x, ValidateWorkloadIdentityPoolProviderId)
 	if len(es) > 0 {
 		t.Errorf("Failed to validate WorkloadIdentityPoolProvider names: %v", es)
 	}

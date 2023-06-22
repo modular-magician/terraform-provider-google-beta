@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	tpgcompute "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 
 	compute "google.golang.org/api/compute/v0.beta"
 )
@@ -287,7 +286,7 @@ func TestDiskImageDiffSuppress(t *testing.T) {
 		tc := tc
 		t.Run(tn, func(t *testing.T) {
 			t.Parallel()
-			if tpgcompute.DiskImageDiffSuppress("image", tc.Old, tc.New, nil) != tc.ExpectDiffSuppress {
+			if DiskImageDiffSuppress("image", tc.Old, tc.New, nil) != tc.ExpectDiffSuppress {
 				t.Fatalf("%q => %q expect DiffSuppress to return %t", tc.Old, tc.New, tc.ExpectDiffSuppress)
 			}
 		})
@@ -304,7 +303,7 @@ func TestAccComputeDisk_imageDiffSuppressPublicVendorsFamilyNames(t *testing.T) 
 
 	config := getInitializedConfig(t)
 
-	for _, publicImageProject := range tpgcompute.ImageMap {
+	for _, publicImageProject := range imageMap {
 		token := ""
 		for paginate := true; paginate; {
 			resp, err := config.NewComputeClient(config.UserAgent).Images.List(publicImageProject).Filter("deprecated.replacement ne .*images.*").PageToken(token).Do()
@@ -313,7 +312,7 @@ func TestAccComputeDisk_imageDiffSuppressPublicVendorsFamilyNames(t *testing.T) 
 			}
 
 			for _, image := range resp.Items {
-				if !tpgcompute.DiskImageDiffSuppress("image", image.SelfLink, "family/"+image.Family, nil) {
+				if !DiskImageDiffSuppress("image", image.SelfLink, "family/"+image.Family, nil) {
 					t.Errorf("should suppress diff for image %q and family %q", image.SelfLink, image.Family)
 				}
 			}
@@ -342,60 +341,6 @@ func TestAccComputeDisk_update(t *testing.T) {
 			},
 			{
 				Config: testAccComputeDisk_updated(diskName),
-			},
-			{
-				ResourceName:      "google_compute_disk.foobar",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-		},
-	})
-}
-func TestAccComputeDisk_pdHyperDiskProvisionedIopsLifeCycle(t *testing.T) {
-	t.Parallel()
-
-	context_1 := map[string]interface{}{
-		"random_suffix":    RandString(t, 10),
-		"provisioned_iops": 10000,
-		"disk_size":        64,
-		"lifecycle_bool":   true,
-	}
-	context_2 := map[string]interface{}{
-		"random_suffix":    context_1["random_suffix"],
-		"provisioned_iops": 11000,
-		"disk_size":        64,
-		"lifecycle_bool":   true,
-	}
-	context_3 := map[string]interface{}{
-		"random_suffix":    context_1["random_suffix"],
-		"provisioned_iops": 11000,
-		"disk_size":        64,
-		"lifecycle_bool":   false,
-	}
-
-	VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckComputeDiskDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccComputeDisk_pdHyperDiskProvisionedIopsLifeCycle(context_1),
-			},
-			{
-				ResourceName:      "google_compute_disk.foobar",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-			{
-				Config: testAccComputeDisk_pdHyperDiskProvisionedIopsLifeCycle(context_2),
-			},
-			{
-				ResourceName:      "google_compute_disk.foobar",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-			{
-				Config: testAccComputeDisk_pdHyperDiskProvisionedIopsLifeCycle(context_3),
 			},
 			{
 				ResourceName:      "google_compute_disk.foobar",
@@ -964,20 +909,6 @@ resource "google_compute_instance_group_manager" "manager" {
   wait_for_instances = true
 }
 `, diskName, mgrName)
-}
-
-func testAccComputeDisk_pdHyperDiskProvisionedIopsLifeCycle(context map[string]interface{}) string {
-	return Nprintf(`
-	resource "google_compute_disk" "foobar" {
-		name  = "tf-test-hyperdisk-%{random_suffix}"
-		type = "hyperdisk-extreme"
-		provisioned_iops = %{provisioned_iops}
-		size = %{disk_size}
-		lifecycle {
-		  prevent_destroy = %{lifecycle_bool}
-		}
-	  }
-`, context)
 }
 
 func testAccComputeDisk_pdExtremeImplicitProvisionedIops(diskName string) string {

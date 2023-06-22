@@ -12,10 +12,26 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	tpgdns "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dns"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
+
+func TestValidateRecordNameTrailingDot(t *testing.T) {
+	cases := []verify.StringValidationTestCase{
+		// No errors
+		{TestName: "trailing dot", Value: "test-record.hashicorptest.com."},
+
+		// With errors
+		{TestName: "empty string", Value: "", ExpectError: true},
+		{TestName: "no trailing dot", Value: "test-record.hashicorptest.com", ExpectError: true},
+	}
+
+	es := verify.TestStringValidationCases(cases, validateRecordNameTrailingDot)
+	if len(es) > 0 {
+		t.Errorf("Failed to validate DNS Record name with value: %v", es)
+	}
+}
 
 func TestIpv6AddressDiffSuppress(t *testing.T) {
 	cases := map[string]struct {
@@ -54,7 +70,7 @@ func TestIpv6AddressDiffSuppress(t *testing.T) {
 	}
 
 	for tn, tc := range cases {
-		shouldSuppress := tpgdns.RrdatasListDiffSuppress(tc.Old, tc.New, parseFunc, nil)
+		shouldSuppress := RrdatasListDiffSuppress(tc.Old, tc.New, parseFunc, nil)
 		if shouldSuppress != tc.ShouldSuppress {
 			t.Errorf("%s: expected %t", tn, tc.ShouldSuppress)
 		}

@@ -3,15 +3,24 @@
 package google
 
 import (
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/pubsub"
+	"fmt"
+	"regexp"
 )
 
-const PubsubTopicRegex = pubsub.PubsubTopicRegex
+const PubsubTopicRegex = "projects\\/.*\\/topics\\/.*"
 
 func getComputedSubscriptionName(project, subscription string) string {
-	return pubsub.GetComputedSubscriptionName(project, subscription)
+	match, _ := regexp.MatchString("projects\\/.*\\/subscriptions\\/.*", subscription)
+	if match {
+		return subscription
+	}
+	return fmt.Sprintf("projects/%s/subscriptions/%s", project, subscription)
 }
 
 func getComputedTopicName(project, topic string) string {
-	return pubsub.GetComputedTopicName(project, topic)
+	match, _ := regexp.MatchString(PubsubTopicRegex, topic)
+	if match {
+		return topic
+	}
+	return fmt.Sprintf("projects/%s/topics/%s", project, topic)
 }

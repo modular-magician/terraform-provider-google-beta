@@ -23,7 +23,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 func TestAccIdentityPlatformConfig_identityPlatformConfigBasicExample(t *testing.T) {
@@ -53,7 +52,7 @@ func TestAccIdentityPlatformConfig_identityPlatformConfigBasicExample(t *testing
 }
 
 func testAccIdentityPlatformConfig_identityPlatformConfigBasicExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_project" "default" {
   project_id = "tf-test-my-project%{random_suffix}"
   name       = "tf-test-my-project%{random_suffix}"
