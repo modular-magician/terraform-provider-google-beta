@@ -432,44 +432,6 @@ resource "google_data_loss_prevention_job_trigger" "publish_to_stackdriver" {
   }
 }
 ```
-## Example Usage - Dlp Job Trigger With Id
-
-
-```hcl
-resource "google_data_loss_prevention_job_trigger" "with_trigger_id" {
-  parent = "projects/my-project-name"
-  description = "Starting description"
-  display_name = "display"
-  trigger_id = "id-"
-
-  triggers {
-    schedule {
-      recurrence_period_duration = "86400s"
-    }
-  }
-
-  inspect_job {
-    inspect_template_name = "fake"
-    actions {
-      save_findings {
-        output_config {
-          table {
-            project_id = "project"
-            dataset_id = "dataset123"
-          }
-        }
-      }
-    }
-    storage_config {
-      cloud_storage_options {
-        file_set {
-          url = "gs://mybucket/directory/"
-        }
-      }
-    }
-  }
-}
-```
 
 ## Argument Reference
 
@@ -519,12 +481,6 @@ The following arguments are supported:
   (Optional)
   User set display name of the job trigger.
 
-* `trigger_id` -
-  (Optional)
-  The trigger id can contain uppercase and lowercase letters, numbers, and hyphens;
-  that is, it must match the regular expression: [a-zA-Z\d-_]+.
-  The maximum length is 100 characters. Can be empty to allow the system to generate one.
-
 * `status` -
   (Optional)
   Whether the trigger is currently active.
@@ -540,7 +496,7 @@ The following arguments are supported:
 <a name="nested_inspect_job"></a>The `inspect_job` block supports:
 
 * `inspect_template_name` -
-  (Optional)
+  (Required)
   The name of the template to run when this job is triggered.
 
 * `inspect_config` -
@@ -554,7 +510,7 @@ The following arguments are supported:
   Structure is [documented below](#nested_storage_config).
 
 * `actions` -
-  (Optional)
+  (Required)
   A task to execute on the completion of a job.
   Structure is [documented below](#nested_actions).
 
@@ -641,19 +597,6 @@ The following arguments are supported:
   (Optional)
   Version of the information type to use. By default, the version is set to stable
 
-* `sensitivity_score` -
-  (Optional)
-  Optional custom sensitivity for this InfoType. This only applies to data profiling.
-  Structure is [documented below](#nested_sensitivity_score).
-
-
-<a name="nested_sensitivity_score"></a>The `sensitivity_score` block supports:
-
-* `score` -
-  (Required)
-  The sensitivity score applied to the resource.
-  Possible values are: `SENSITIVITY_LOW`, `SENSITIVITY_MODERATE`, `SENSITIVITY_HIGH`.
-
 <a name="nested_info_types"></a>The `info_types` block supports:
 
 * `name` -
@@ -664,19 +607,6 @@ The following arguments are supported:
 * `version` -
   (Optional)
   Version of the information type to use. By default, the version is set to stable
-
-* `sensitivity_score` -
-  (Optional)
-  Optional custom sensitivity for this InfoType. This only applies to data profiling.
-  Structure is [documented below](#nested_sensitivity_score).
-
-
-<a name="nested_sensitivity_score"></a>The `sensitivity_score` block supports:
-
-* `score` -
-  (Required)
-  The sensitivity score applied to the resource.
-  Possible values are: `SENSITIVITY_LOW`, `SENSITIVITY_MODERATE`, `SENSITIVITY_HIGH`.
 
 <a name="nested_rule_set"></a>The `rule_set` block supports:
 
@@ -701,19 +631,6 @@ The following arguments are supported:
 * `version` -
   (Optional)
   Version of the information type to use. By default, the version is set to stable.
-
-* `sensitivity_score` -
-  (Optional)
-  Optional custom sensitivity for this InfoType. This only applies to data profiling.
-  Structure is [documented below](#nested_sensitivity_score).
-
-
-<a name="nested_sensitivity_score"></a>The `sensitivity_score` block supports:
-
-* `score` -
-  (Required)
-  The sensitivity score applied to the resource.
-  Possible values are: `SENSITIVITY_LOW`, `SENSITIVITY_MODERATE`, `SENSITIVITY_HIGH`.
 
 <a name="nested_rules"></a>The `rules` block supports:
 
@@ -872,19 +789,6 @@ The following arguments are supported:
   (Optional)
   Version of the information type to use. By default, the version is set to stable.
 
-* `sensitivity_score` -
-  (Optional)
-  Optional custom sensitivity for this InfoType. This only applies to data profiling.
-  Structure is [documented below](#nested_sensitivity_score).
-
-
-<a name="nested_sensitivity_score"></a>The `sensitivity_score` block supports:
-
-* `score` -
-  (Required)
-  The sensitivity score applied to the resource.
-  Possible values are: `SENSITIVITY_LOW`, `SENSITIVITY_MODERATE`, `SENSITIVITY_HIGH`.
-
 <a name="nested_exclude_by_hotword"></a>The `exclude_by_hotword` block supports:
 
 * `hotword_regex` -
@@ -946,11 +850,6 @@ The following arguments are supported:
   If set to EXCLUSION_TYPE_EXCLUDE this infoType will not cause a finding to be returned. It still can be used for rules matching.
   Possible values are: `EXCLUSION_TYPE_EXCLUDE`.
 
-* `sensitivity_score` -
-  (Optional)
-  Optional custom sensitivity for this InfoType. This only applies to data profiling.
-  Structure is [documented below](#nested_sensitivity_score).
-
 * `regex` -
   (Optional)
   Regular expression which defines the rule.
@@ -981,26 +880,6 @@ The following arguments are supported:
 * `version` -
   (Optional)
   Version of the information type to use. By default, the version is set to stable.
-
-* `sensitivity_score` -
-  (Optional)
-  Optional custom sensitivity for this InfoType. This only applies to data profiling.
-  Structure is [documented below](#nested_sensitivity_score).
-
-
-<a name="nested_sensitivity_score"></a>The `sensitivity_score` block supports:
-
-* `score` -
-  (Required)
-  The sensitivity score applied to the resource.
-  Possible values are: `SENSITIVITY_LOW`, `SENSITIVITY_MODERATE`, `SENSITIVITY_HIGH`.
-
-<a name="nested_sensitivity_score"></a>The `sensitivity_score` block supports:
-
-* `score` -
-  (Required)
-  The sensitivity score applied to the resource.
-  Possible values are: `SENSITIVITY_LOW`, `SENSITIVITY_MODERATE`, `SENSITIVITY_HIGH`.
 
 <a name="nested_regex"></a>The `regex` block supports:
 
@@ -1168,7 +1047,7 @@ The following arguments are supported:
   List of file type groups to include in the scan. If empty, all files are scanned and available data
   format processors are applied. In addition, the binary content of the selected files is always scanned as well.
   Images are scanned only as binary if the specified region does not support image inspection and no fileTypes were specified.
-  Each value may be one of: `BINARY_FILE`, `TEXT_FILE`, `IMAGE`, `WORD`, `PDF`, `AVRO`, `CSV`, `TSV`, `POWERPOINT`, `EXCEL`.
+  Each value may be one of: `BINARY_FILE`, `TEXT_FILE`, `IMAGE`, `WORD`, `PDF`, `AVRO`, `CSV`, `TSV`.
 
 * `sample_method` -
   (Optional)

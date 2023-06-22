@@ -23,7 +23,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
 func TestAccBigQueryJob_bigqueryJobQueryExample(t *testing.T) {
@@ -51,7 +50,7 @@ func TestAccBigQueryJob_bigqueryJobQueryExample(t *testing.T) {
 }
 
 func testAccBigQueryJob_bigqueryJobQueryExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_bigquery_table" "foo" {
   deletion_protection = false
   dataset_id = google_bigquery_dataset.bar.dataset_id
@@ -117,7 +116,7 @@ func TestAccBigQueryJob_bigqueryJobQueryTableReferenceExample(t *testing.T) {
 }
 
 func testAccBigQueryJob_bigqueryJobQueryTableReferenceExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_bigquery_table" "foo" {
   deletion_protection = false
   dataset_id = google_bigquery_dataset.bar.dataset_id
@@ -185,7 +184,7 @@ func TestAccBigQueryJob_bigqueryJobLoadExample(t *testing.T) {
 }
 
 func testAccBigQueryJob_bigqueryJobLoadExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_bigquery_table" "foo" {
   deletion_protection = false
   dataset_id = google_bigquery_dataset.bar.dataset_id
@@ -253,7 +252,7 @@ func TestAccBigQueryJob_bigqueryJobLoadGeojsonExample(t *testing.T) {
 }
 
 func testAccBigQueryJob_bigqueryJobLoadGeojsonExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 locals {
   project = "%{project}" # Google Cloud Platform Project ID
 }
@@ -340,7 +339,7 @@ func TestAccBigQueryJob_bigqueryJobLoadParquetExample(t *testing.T) {
 }
 
 func testAccBigQueryJob_bigqueryJobLoadParquetExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_storage_bucket" "test" {
   name                        = "tf_test_job_load%{random_suffix}_bucket"
   location                    = "US"
@@ -423,7 +422,7 @@ func TestAccBigQueryJob_bigqueryJobLoadTableReferenceExample(t *testing.T) {
 }
 
 func testAccBigQueryJob_bigqueryJobLoadTableReferenceExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_bigquery_table" "foo" {
   deletion_protection = false
   dataset_id = google_bigquery_dataset.bar.dataset_id
@@ -489,7 +488,7 @@ func TestAccBigQueryJob_bigqueryJobCopyExample(t *testing.T) {
 }
 
 func testAccBigQueryJob_bigqueryJobCopyExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_bigquery_table" "source" {
   deletion_protection = false
   count = length(google_bigquery_dataset.source)
@@ -644,7 +643,7 @@ func TestAccBigQueryJob_bigqueryJobCopyTableReferenceExample(t *testing.T) {
 }
 
 func testAccBigQueryJob_bigqueryJobCopyTableReferenceExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_bigquery_table" "source" {
   deletion_protection = false
   count = length(google_bigquery_dataset.source)
@@ -792,7 +791,7 @@ func TestAccBigQueryJob_bigqueryJobExtractExample(t *testing.T) {
 }
 
 func testAccBigQueryJob_bigqueryJobExtractExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_bigquery_table" "source-one" {
   deletion_protection = false
   dataset_id = google_bigquery_dataset.source-one.dataset_id
@@ -876,7 +875,7 @@ func TestAccBigQueryJob_bigqueryJobExtractTableReferenceExample(t *testing.T) {
 }
 
 func testAccBigQueryJob_bigqueryJobExtractTableReferenceExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_bigquery_table" "source-one" {
   deletion_protection = false
   dataset_id = google_bigquery_dataset.source-one.dataset_id

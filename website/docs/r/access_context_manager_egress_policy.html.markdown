@@ -14,12 +14,18 @@
 # ----------------------------------------------------------------------------
 subcategory: "Access Context Manager (VPC Service Controls)"
 description: |-
-  This resource has been deprecated, please refer to ServicePerimeterEgressPolicy.
+  EgressPolicies match requests based on egressFrom and egressTo stanzas.
 ---
 
 # google\_access\_context\_manager\_egress\_policy
 
-This resource has been deprecated, please refer to ServicePerimeterEgressPolicy.
+EgressPolicies match requests based on egressFrom and egressTo stanzas.
+For an EgressPolicy to match, both egressFrom and egressTo stanzas must be matched.
+If an EgressPolicy matches a request, the request is allowed to span the ServicePerimeter
+boundary. For example, an EgressPolicy can be used to allow VMs on networks
+within the ServicePerimeter to access a defined set of projects outside the
+perimeter in certain contexts (e.g. to read data from a Cloud Storage bucket
+or query against a BigQuery dataset).
 
 
 To get more information about EgressPolicy, see:

@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	tpgstorage "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/storage"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -116,7 +115,7 @@ func testAccStorageNotificationDestroyProducer(t *testing.T) func(s *terraform.S
 				continue
 			}
 
-			bucket, notificationID := tpgstorage.ResourceStorageNotificationParseID(rs.Primary.ID)
+			bucket, notificationID := resourceStorageNotificationParseID(rs.Primary.ID)
 
 			_, err := config.NewStorageClient(config.UserAgent).Notifications.Get(bucket, notificationID).Do()
 			if err == nil {
@@ -141,7 +140,7 @@ func testAccCheckStorageNotificationExists(t *testing.T, resource string, notifi
 
 		config := GoogleProviderConfig(t)
 
-		bucket, notificationID := tpgstorage.ResourceStorageNotificationParseID(rs.Primary.ID)
+		bucket, notificationID := resourceStorageNotificationParseID(rs.Primary.ID)
 
 		found, err := config.NewStorageClient(config.UserAgent).Notifications.Get(bucket, notificationID).Do()
 		if err != nil {

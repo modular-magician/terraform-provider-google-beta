@@ -50,14 +50,14 @@ func TestAccDataLossPreventionStoredInfoType_dlpStoredInfoTypeBasicExample(t *te
 				ResourceName:            "google_data_loss_prevention_stored_info_type.basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"stored_info_type_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionStoredInfoType_dlpStoredInfoTypeBasicExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_stored_info_type" "basic" {
 	parent = "projects/%{project}"
 	description = "Description"
@@ -91,14 +91,14 @@ func TestAccDataLossPreventionStoredInfoType_dlpStoredInfoTypeDictionaryExample(
 				ResourceName:            "google_data_loss_prevention_stored_info_type.dictionary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"stored_info_type_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionStoredInfoType_dlpStoredInfoTypeDictionaryExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_stored_info_type" "dictionary" {
 	parent = "projects/%{project}"
 	description = "Description"
@@ -133,14 +133,14 @@ func TestAccDataLossPreventionStoredInfoType_dlpStoredInfoTypeLargeCustomDiction
 				ResourceName:            "google_data_loss_prevention_stored_info_type.large",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"stored_info_type_id", "parent"},
+				ImportStateVerifyIgnore: []string{"parent"},
 			},
 		},
 	})
 }
 
 func testAccDataLossPreventionStoredInfoType_dlpStoredInfoTypeLargeCustomDictionaryExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_data_loss_prevention_stored_info_type" "large" {
 	parent = "projects/%{project}"
 	description = "Description"
@@ -166,48 +166,6 @@ resource "google_storage_bucket_object" "object" {
   name   = "tf-test-tf-test-object%{random_suffix}"
   bucket = google_storage_bucket.bucket.name
   source = "./test-fixtures/dlp/words.txt"
-}
-`, context)
-}
-
-func TestAccDataLossPreventionStoredInfoType_dlpStoredInfoTypeWithIdExample(t *testing.T) {
-	t.Parallel()
-
-	context := map[string]interface{}{
-		"project":       acctest.GetTestProjectFromEnv(),
-		"random_suffix": RandString(t, 10),
-	}
-
-	VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckDataLossPreventionStoredInfoTypeDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccDataLossPreventionStoredInfoType_dlpStoredInfoTypeWithIdExample(context),
-			},
-			{
-				ResourceName:            "google_data_loss_prevention_stored_info_type.with_stored_info_type_id",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"stored_info_type_id", "parent"},
-			},
-		},
-	})
-}
-
-func testAccDataLossPreventionStoredInfoType_dlpStoredInfoTypeWithIdExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
-resource "google_data_loss_prevention_stored_info_type" "with_stored_info_type_id" {
-  parent = "projects/%{project}"
-  description = "Description"
-  display_name = "Displayname"
-  stored_info_type_id = "tf-test-id-%{random_suffix}"
-
-  regex {
-    pattern = "patient"
-    group_indexes = [2]
-  }
 }
 `, context)
 }

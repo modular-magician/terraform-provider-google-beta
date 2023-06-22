@@ -9,11 +9,48 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
+
+func TestProjectServiceServiceValidateFunc(t *testing.T) {
+	cases := map[string]struct {
+		val                   interface{}
+		ExpectValidationError bool
+	}{
+		"ignoredProjectService": {
+			val:                   "dataproc-control.googleapis.com",
+			ExpectValidationError: true,
+		},
+		"bannedProjectService": {
+			val:                   "bigquery-json.googleapis.com",
+			ExpectValidationError: true,
+		},
+		"third party API": {
+			val:                   "whatever.example.com",
+			ExpectValidationError: false,
+		},
+		"not a domain": {
+			val:                   "monitoring",
+			ExpectValidationError: true,
+		},
+		"not a string": {
+			val:                   5,
+			ExpectValidationError: true,
+		},
+	}
+
+	for tn, tc := range cases {
+		_, errs := validateProjectServiceService(tc.val, "service")
+		if tc.ExpectValidationError && len(errs) == 0 {
+			t.Errorf("bad: %s, %q passed validation but was expected to fail", tn, tc.val)
+		}
+		if !tc.ExpectValidationError && len(errs) > 0 {
+			t.Errorf("bad: %s, %q failed validation but was expected to pass. errs: %q", tn, tc.val, errs)
+		}
+	}
+}
 
 // Test that services can be enabled and disabled on a project
 func TestAccProjectService_basic(t *testing.T) {
@@ -143,12 +180,12 @@ func TestAccProjectService_handleNotFound(t *testing.T) {
 func TestAccProjectService_renamedService(t *testing.T) {
 	t.Parallel()
 
-	if len(resourcemanager.RenamedServices) == 0 {
+	if len(renamedServices) == 0 {
 		t.Skip()
 	}
 
 	var newName string
-	for _, new := range resourcemanager.RenamedServices {
+	for _, new := range renamedServices {
 		newName = new
 	}
 

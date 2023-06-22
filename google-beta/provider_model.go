@@ -83,7 +83,6 @@ type ProviderModel struct {
 	GameServicesCustomEndpoint             types.String `tfsdk:"game_services_custom_endpoint"`
 	GKEBackupCustomEndpoint                types.String `tfsdk:"gke_backup_custom_endpoint"`
 	GKEHubCustomEndpoint                   types.String `tfsdk:"gke_hub_custom_endpoint"`
-	GKEHub2CustomEndpoint                  types.String `tfsdk:"gke_hub2_custom_endpoint"`
 	GkeonpremCustomEndpoint                types.String `tfsdk:"gkeonprem_custom_endpoint"`
 	HealthcareCustomEndpoint               types.String `tfsdk:"healthcare_custom_endpoint"`
 	IAM2CustomEndpoint                     types.String `tfsdk:"iam2_custom_endpoint"`
@@ -123,7 +122,6 @@ type ProviderModel struct {
 	TagsCustomEndpoint                     types.String `tfsdk:"tags_custom_endpoint"`
 	TPUCustomEndpoint                      types.String `tfsdk:"tpu_custom_endpoint"`
 	VertexAICustomEndpoint                 types.String `tfsdk:"vertex_ai_custom_endpoint"`
-	VmwareengineCustomEndpoint             types.String `tfsdk:"vmwareengine_custom_endpoint"`
 	VPCAccessCustomEndpoint                types.String `tfsdk:"vpc_access_custom_endpoint"`
 	WorkflowsCustomEndpoint                types.String `tfsdk:"workflows_custom_endpoint"`
 	WorkstationsCustomEndpoint             types.String `tfsdk:"workstations_custom_endpoint"`

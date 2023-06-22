@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -193,7 +192,7 @@ func getStatePrimaryResource(s *terraform.State, res, expectedID string) (*terra
 	if !ok {
 		return nil, fmt.Errorf("Not found: %s", res)
 	}
-	if expectedID != "" && !resourcemanager.CompareProjectName("", resource.Primary.Attributes["id"], expectedID, nil) {
+	if expectedID != "" && !compareProjectName("", resource.Primary.Attributes["id"], expectedID, nil) {
 		return nil, fmt.Errorf("Expected project %q to match ID %q in state", resource.Primary.ID, expectedID)
 	}
 	return resource.Primary, nil
@@ -248,7 +247,7 @@ func testAccProjectExistingPolicy(t *testing.T, pid string) resource.TestCheckFu
 	return func(s *terraform.State) error {
 		c := GoogleProviderConfig(t)
 		var err error
-		OriginalPolicy, err := resourcemanager.GetProjectIamPolicy(pid, c)
+		OriginalPolicy, err := getProjectIamPolicy(pid, c)
 		if err != nil {
 			return fmt.Errorf("Failed to retrieve IAM Policy for project %q: %s", pid, err)
 		}

@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -216,7 +215,7 @@ func testAccCheckGoogleProjectOrganizationPolicyDestroyProducer(t *testing.T) fu
 			}
 
 			projectId := canonicalProjectId(rs.Primary.Attributes["project"])
-			constraint := resourcemanager.CanonicalOrgPolicyConstraint(rs.Primary.Attributes["constraint"])
+			constraint := canonicalOrgPolicyConstraint(rs.Primary.Attributes["constraint"])
 			policy, err := config.NewResourceManagerClient(config.UserAgent).Projects.GetOrgPolicy(projectId, &cloudresourcemanager.GetOrgPolicyRequest{
 				Constraint: constraint,
 			}).Do()

@@ -59,7 +59,7 @@ func TestAccApigeeInstance_apigeeInstanceBasicTestExample(t *testing.T) {
 }
 
 func testAccApigeeInstance_apigeeInstanceBasicTestExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_project" "project" {
   project_id      = "tf-test%{random_suffix}"
   name            = "tf-test%{random_suffix}"
@@ -151,7 +151,7 @@ func TestAccApigeeInstance_apigeeInstanceCidrRangeTestExample(t *testing.T) {
 }
 
 func testAccApigeeInstance_apigeeInstanceCidrRangeTestExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_project" "project" {
   project_id      = "tf-test%{random_suffix}"
   name            = "tf-test%{random_suffix}"
@@ -244,7 +244,7 @@ func TestAccApigeeInstance_apigeeInstanceIpRangeTestExample(t *testing.T) {
 }
 
 func testAccApigeeInstance_apigeeInstanceIpRangeTestExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_project" "project" {
   project_id      = "tf-test%{random_suffix}"
   name            = "tf-test%{random_suffix}"
@@ -337,7 +337,7 @@ func TestAccApigeeInstance_apigeeInstanceFullTestExample(t *testing.T) {
 }
 
 func testAccApigeeInstance_apigeeInstanceFullTestExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_project" "project" {
   provider = google-beta
 
@@ -495,7 +495,7 @@ func TestAccApigeeInstance_apigeeInstanceServiceAttachmentBasicTestExample(t *te
 }
 
 func testAccApigeeInstance_apigeeInstanceServiceAttachmentBasicTestExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_project" "project" {
   project_id      = "tf-test%{random_suffix}"
   name            = "tf-test%{random_suffix}"
@@ -654,7 +654,7 @@ resource "google_apigee_instance" "apigee_instance" {
   name                 = "tf-test%{random_suffix}"
   location             = "us-central1"
   org_id               = google_apigee_organization.apigee_org.id
-  consumer_accept_list = [google_project.project.number]
+  consumer_accept_list = [123456, google_project.project.number]
 }
 `, context)
 }

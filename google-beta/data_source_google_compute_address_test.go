@@ -7,7 +7,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
@@ -57,7 +56,7 @@ func TestComputeAddressIdParsing(t *testing.T) {
 	}
 
 	for tn, tc := range cases {
-		addressId, err := compute.ParseComputeAddressId(tc.ImportId, tc.Config)
+		addressId, err := parseComputeAddressId(tc.ImportId, tc.Config)
 
 		if tc.ExpectedError && err == nil {
 			t.Fatalf("bad: %s, expected an error", tn)
@@ -70,8 +69,8 @@ func TestComputeAddressIdParsing(t *testing.T) {
 			t.Fatalf("bad: %s, err: %#v", tn, err)
 		}
 
-		if addressId.CanonicalId() != tc.ExpectedCanonicalId {
-			t.Fatalf("bad: %s, expected canonical id to be `%s` but is `%s`", tn, tc.ExpectedCanonicalId, addressId.CanonicalId())
+		if addressId.canonicalId() != tc.ExpectedCanonicalId {
+			t.Fatalf("bad: %s, expected canonical id to be `%s` but is `%s`", tn, tc.ExpectedCanonicalId, addressId.canonicalId())
 		}
 	}
 }
@@ -157,7 +156,7 @@ func testAccCheckDataSourceComputeAddressDestroy(t *testing.T, name string) reso
 
 			config := GoogleProviderConfig(t)
 
-			addressId, err := compute.ParseComputeAddressId(rs.Primary.ID, nil)
+			addressId, err := parseComputeAddressId(rs.Primary.ID, nil)
 			if err != nil {
 				return err
 			}

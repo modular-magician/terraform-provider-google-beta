@@ -13,7 +13,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/storage"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -374,7 +373,7 @@ func TestAccStorageObjectAcl_noOwner(t *testing.T) {
 
 func testAccCheckGoogleStorageObjectAcl(t *testing.T, bucket, object, roleEntityS string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		roleEntity, _ := storage.GetRoleEntityPair(roleEntityS)
+		roleEntity, _ := getRoleEntityPair(roleEntityS)
 		config := GoogleProviderConfig(t)
 
 		res, err := config.NewStorageClient(config.UserAgent).ObjectAccessControls.Get(bucket,
@@ -394,7 +393,7 @@ func testAccCheckGoogleStorageObjectAcl(t *testing.T, bucket, object, roleEntity
 
 func testAccCheckGoogleStorageObjectAclDelete(t *testing.T, bucket, object, roleEntityS string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		roleEntity, _ := storage.GetRoleEntityPair(roleEntityS)
+		roleEntity, _ := getRoleEntityPair(roleEntityS)
 		config := GoogleProviderConfig(t)
 
 		_, err := config.NewStorageClient(config.UserAgent).ObjectAccessControls.Get(bucket,

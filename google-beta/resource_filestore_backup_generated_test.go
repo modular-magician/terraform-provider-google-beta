@@ -56,7 +56,7 @@ func TestAccFilestoreBackup_filestoreBackupBasicExample(t *testing.T) {
 }
 
 func testAccFilestoreBackup_filestoreBackupBasicExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 
 resource "google_filestore_instance" "instance" {
   name = "tf-test-tf-fs-inst%{random_suffix}"
@@ -119,7 +119,7 @@ func testAccCheckFilestoreBackupDestroyProducer(t *testing.T) func(s *terraform.
 				Project:              billingProject,
 				RawURL:               url,
 				UserAgent:            config.UserAgent,
-				ErrorAbortPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.Is429QuotaError},
+				ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsNotFilestoreQuotaError},
 			})
 			if err == nil {
 				return fmt.Errorf("FilestoreBackup still exists at %s", url)

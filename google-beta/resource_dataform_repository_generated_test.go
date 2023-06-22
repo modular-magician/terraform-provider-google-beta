@@ -56,7 +56,7 @@ func TestAccDataformRepository_dataformRepositoryExample(t *testing.T) {
 }
 
 func testAccDataformRepository_dataformRepositoryExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
   name = "my/repository%{random_suffix}"
@@ -86,12 +86,6 @@ resource "google_dataform_repository" "dataform_respository" {
       url = google_sourcerepo_repository.git_repository.url
       default_branch = "main"
       authentication_token_secret_version = google_secret_manager_secret_version.secret_version.id
-  }
-
-  workspace_compilation_overrides {
-    default_database = "database"
-    schema_suffix = "_suffix"
-    table_prefix = "prefix_"
   }
 }
 `, context)

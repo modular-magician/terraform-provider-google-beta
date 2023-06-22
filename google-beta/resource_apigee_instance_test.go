@@ -5,7 +5,6 @@ package google
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/apigee"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 )
 
@@ -108,7 +107,7 @@ func (tc *ApigeeInstanceDiffSuppressTestCase) Test(t *testing.T) {
 	}
 
 	for key := range keysHavingDiff {
-		actual := apigee.ProjectListDiffSuppressFunc(mockResourceDiff)
+		actual := ProjectListDiffSuppressFunc(mockResourceDiff)
 		if actual != keySuppressionMap[key] {
 			t.Errorf("Test %s: expected key `%s` to be suppressed", tc.Name, key)
 		}

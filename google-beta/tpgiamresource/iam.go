@@ -68,13 +68,10 @@ func iamPolicyReadWithRetry(updater ResourceIamUpdater) (*cloudresourcemanager.P
 
 	log.Printf("[DEBUG] Retrieving policy for %s\n", updater.DescribeResource())
 	var policy *cloudresourcemanager.Policy
-	err := transport_tpg.Retry(transport_tpg.RetryOptions{
-		RetryFunc: func() (perr error) {
-			policy, perr = updater.GetResourceIamPolicy()
-			return perr
-		},
-		Timeout: 10 * time.Minute,
-	})
+	err := transport_tpg.RetryTime(func() (perr error) {
+		policy, perr = updater.GetResourceIamPolicy()
+		return perr
+	}, 10)
 	if err != nil {
 		return nil, err
 	}

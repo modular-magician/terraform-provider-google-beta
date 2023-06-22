@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/bigtable"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -318,7 +317,7 @@ func testAccBigtableColumnFamilyExists(t *testing.T, table_name_space, family st
 		if err != nil {
 			return fmt.Errorf("Error retrieving table. Could not find %s in %s.", rs.Primary.Attributes["name"], rs.Primary.Attributes["instance_name"])
 		}
-		for _, data := range bigtable.FlattenColumnFamily(table.Families) {
+		for _, data := range flattenColumnFamily(table.Families) {
 			if data["family"] != family {
 				return fmt.Errorf("Error checking column family. Could not find column family %s in %s.", family, rs.Primary.Attributes["name"])
 			}

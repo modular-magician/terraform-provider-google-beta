@@ -56,7 +56,7 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerFilenameExample(t *testing.T) {
 }
 
 func testAccCloudBuildTrigger_cloudbuildTriggerFilenameExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_cloudbuild_trigger" "filename-trigger" {
   location = "us-central1"
 
@@ -101,7 +101,7 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerBuildExample(t *testing.T) {
 }
 
 func testAccCloudBuildTrigger_cloudbuildTriggerBuildExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_cloudbuild_trigger" "build-trigger" {
   location = "global"
 
@@ -203,7 +203,7 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerServiceAccountExample(t *testing.
 }
 
 func testAccCloudBuildTrigger_cloudbuildTriggerServiceAccountExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 data "google_project" "project" {}
 
 resource "google_cloudbuild_trigger" "service-account-trigger" {
@@ -264,7 +264,7 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerPubsubConfigExample(t *testing.T)
 }
 
 func testAccCloudBuildTrigger_cloudbuildTriggerPubsubConfigExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 
 resource "google_pubsub_topic" "mytopic" {
   name = "mytopic"
@@ -327,7 +327,7 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerWebhookConfigExample(t *testing.T
 }
 
 func testAccCloudBuildTrigger_cloudbuildTriggerWebhookConfigExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 
 resource "google_secret_manager_secret" "webhook_trigger_secret_key" {
   secret_id = "webhook_trigger-secret-key-1"
@@ -415,7 +415,7 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerManualExample(t *testing.T) {
 }
 
 func testAccCloudBuildTrigger_cloudbuildTriggerManualExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 
 resource "google_cloudbuild_trigger" "manual-trigger" {
   name        = "manual-build"
@@ -441,72 +441,6 @@ resource "google_cloudbuild_trigger" "manual-trigger" {
   }
    
   
-}
-`, context)
-}
-
-func TestAccCloudBuildTrigger_cloudbuildTriggerRepoExample(t *testing.T) {
-	t.Parallel()
-
-	context := map[string]interface{}{
-		"installation_id": 31300675,
-		"pat_secret":      "projects/gcb-terraform-creds/secrets/github-pat/versions/latest",
-		"repo_uri":        "https://github.com/gcb-repos-robot/tf-demo.git",
-		"random_suffix":   RandString(t, 10),
-	}
-
-	VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: ProtoV5ProviderBetaFactories(t),
-		CheckDestroy:             testAccCheckCloudBuildTriggerDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccCloudBuildTrigger_cloudbuildTriggerRepoExample(context),
-			},
-			{
-				ResourceName:            "google_cloudbuild_trigger.repo-trigger",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
-			},
-		},
-	})
-}
-
-func testAccCloudBuildTrigger_cloudbuildTriggerRepoExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
-resource "google_cloudbuildv2_connection" "my-connection" {
-  provider = google-beta
-  location = "us-central1"
-  name = "my-connection"
-
-  github_config {
-    app_installation_id = %{installation_id}
-    authorizer_credential {
-      oauth_token_secret_version = "%{pat_secret}"
-    }
-  }
-}
-
-resource "google_cloudbuildv2_repository" "my-repository" {
-  provider = google-beta
-  name = "my-repo"
-  parent_connection = google_cloudbuildv2_connection.my-connection.id
-  remote_uri = "%{repo_uri}"
-}
-
-resource "google_cloudbuild_trigger" "repo-trigger" {
-  provider = google-beta
-  location = "us-central1"
-
-  repository_event_config {
-    repository = google_cloudbuildv2_repository.my-repository.id
-    push {
-      branch = "feature-.*"
-    }
-  }
-
-  filename = "cloudbuild.yaml"
 }
 `, context)
 }
@@ -537,7 +471,7 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerBitbucketServerPushExample(t *tes
 }
 
 func testAccCloudBuildTrigger_cloudbuildTriggerBitbucketServerPushExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_cloudbuild_trigger" "bbs-push-trigger" {
   name        = "terraform-bbs-push-trigger"
   location    = "us-central1"
@@ -583,7 +517,7 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerBitbucketServerPullRequestExample
 }
 
 func testAccCloudBuildTrigger_cloudbuildTriggerBitbucketServerPullRequestExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_cloudbuild_trigger" "bbs-pull-request-trigger" {
   name        = "terraform-bbs-pull-request-trigger"
   location    = "us-central1"
@@ -630,7 +564,7 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerAllowFailureExample(t *testing.T)
 }
 
 func testAccCloudBuildTrigger_cloudbuildTriggerAllowFailureExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_cloudbuild_trigger" "allow-failure-trigger" {
   location = "global"
 
@@ -726,7 +660,7 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerAllowExitCodesExample(t *testing.
 }
 
 func testAccCloudBuildTrigger_cloudbuildTriggerAllowExitCodesExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_cloudbuild_trigger" "allow-exit-codes-trigger" {
   location = "global"
 
@@ -825,7 +759,7 @@ func TestAccCloudBuildTrigger_cloudbuildTriggerPubsubWithRepoExample(t *testing.
 }
 
 func testAccCloudBuildTrigger_cloudbuildTriggerPubsubWithRepoExample(context map[string]interface{}) string {
-	return tpgresource.Nprintf(`
+	return Nprintf(`
 resource "google_cloudbuildv2_connection" "my-connection" {
   provider = google-beta
   location = "us-central1"
