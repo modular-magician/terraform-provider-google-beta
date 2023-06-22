@@ -677,6 +677,34 @@ resource "google_compute_url_map" "urlmap" {
       service = google_compute_backend_service.user-backend.id
       priority = 2
     }
+
+    route_rules {
+      match_rules {
+        path_template_match = "/xyzwebservices/v2/xyz/users/*/orders/*"
+      }
+      url_redirect {
+        hostRedirect = "mysite2.com"
+      }
+    }
+  }
+
+  test {
+    service = google_compute_backend_bucket.static.id
+    host    = "mysite.com"
+    path    = "/xyzwebservices/v2/xyz/users/123/carts/456"
+    expected_output_url = "http://mysite.com/123-456"
+    service = google_compute_backend_service.cart-backend.id
+  }
+
+  test {
+    host    = "mysite.com"
+    path    = "/xyzwebservices/v2/xyz/users/123/orders/456"
+    headers {
+      name  = "X-Test-Header"
+      value = "my-value"
+    }
+    expected_output_url = "http://mysite2.com/xyzwebservices/v2/xyz/users/123/orders/456"
+    expected_redirect_response_code = 301
   }
 }
 
@@ -2424,6 +2452,40 @@ The following arguments are supported:
 * `service` -
   (Required)
   The backend service or backend bucket link that should be matched by this test.
+
+* `headers` -
+  (Optional)
+  HTTP headers for this request. If headers contains a host header, then host must also match the header value.
+  Structure is [documented below](#nested_headers).
+
+* `expected_output_url` -
+  (Required)
+  The expected output URL evaluated by the load balancer containing the scheme, host, path and query parameters.
+  For rules that forward requests to backends, the test passes only when expectedOutputUrl matches the request
+  forwarded by the load balancer to backends. For rules with urlRewrite, the test verifies that the forwarded
+  request matches hostRewrite and pathPrefixRewrite in the urlRewrite action. When service is specified,
+  expectedOutputUrl`s scheme is ignored.
+  For rules with urlRedirect, the test passes only if expectedOutputUrl matches the URL in the load balancer's
+  redirect response. If urlRedirect specifies httpsRedirect, the test passes only if the scheme in
+  expectedOutputUrl is also set to HTTPS. If urlRedirect specifies stripQuery, the test passes only if
+  expectedOutputUrl does not contain any query parameters.
+  expectedOutputUrl is optional when service is specified.
+
+* `expected_redirect_response_code` -
+  (Required)
+  For rules with urlRedirect, the test passes only if expectedRedirectResponseCode matches the HTTP status code in load balancer's redirect response.
+  expectedRedirectResponseCode cannot be set when service is set.
+
+
+<a name="nested_headers"></a>The `headers` block supports:
+
+* `name` -
+  (Required)
+  Header name.
+
+* `value` -
+  (Required)
+  Header value.
 
 <a name="nested_default_url_redirect"></a>The `default_url_redirect` block supports:
 
