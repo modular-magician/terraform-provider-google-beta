@@ -139,6 +139,28 @@ resource "google_gke_hub_feature" "feature" {
   provider = google-beta
 }
 ```
+## Example Usage - Disable Fleet Observability
+
+
+```hcl
+resource "google_gke_hub_feature" "feature" {
+  name = "fleetobservability"
+  location = "global"
+  spec {
+    fleetobservability {
+      logging_config {
+        default_config {
+          mode = "MODE_UNSPECIFIED"
+        }
+        fleet_scope_logs_config {
+          mode = "MODE_UNSPECIFIED"
+        }
+      }
+    }
+  }
+  provider = google-beta
+}
+```
 
 ## Argument Reference
 
