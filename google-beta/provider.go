@@ -81,6 +81,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/identityplatform"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/logging"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/looker"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/memcache"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/mlengine"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/monitoring"
@@ -581,6 +582,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
+			"looker_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
 			"memcache_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -1048,9 +1054,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		})
 }
 
-// Generated resources: 352
+// Generated resources: 353
 // Generated IAM resources: 228
-// Total generated resources: 580
+// Total generated resources: 581
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1489,6 +1495,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_logging_linked_dataset":                                  logging.ResourceLoggingLinkedDataset(),
 			"google_logging_log_view":                                        logging.ResourceLoggingLogView(),
 			"google_logging_metric":                                          logging.ResourceLoggingMetric(),
+			"google_looker_instance":                                         looker.ResourceLookerInstance(),
 			"google_memcache_instance":                                       memcache.ResourceMemcacheInstance(),
 			"google_ml_engine_model":                                         mlengine.ResourceMLEngineModel(),
 			"google_monitoring_alert_policy":                                 monitoring.ResourceMonitoringAlertPolicy(),
@@ -1953,6 +1960,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.IdentityPlatformBasePath = d.Get("identity_platform_custom_endpoint").(string)
 	config.KMSBasePath = d.Get("kms_custom_endpoint").(string)
 	config.LoggingBasePath = d.Get("logging_custom_endpoint").(string)
+	config.LookerBasePath = d.Get("looker_custom_endpoint").(string)
 	config.MemcacheBasePath = d.Get("memcache_custom_endpoint").(string)
 	config.MLEngineBasePath = d.Get("ml_engine_custom_endpoint").(string)
 	config.MonitoringBasePath = d.Get("monitoring_custom_endpoint").(string)
