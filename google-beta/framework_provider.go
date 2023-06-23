@@ -111,6 +111,7 @@ type frameworkProvider struct {
 	FilestoreBasePath                string
 	FirebaseBasePath                 string
 	FirebaseDatabaseBasePath         string
+	FirebaseExtensionsBasePath       string
 	FirebaseHostingBasePath          string
 	FirebaseStorageBasePath          string
 	FirestoreBasePath                string
@@ -548,6 +549,12 @@ func (p *frameworkProvider) Schema(_ context.Context, _ provider.SchemaRequest, 
 				},
 			},
 			"firebase_database_custom_endpoint": &schema.StringAttribute{
+				Optional: true,
+				Validators: []validator.String{
+					transport_tpg.CustomEndpointValidator(),
+				},
+			},
+			"firebase_extensions_custom_endpoint": &schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
 					transport_tpg.CustomEndpointValidator(),
