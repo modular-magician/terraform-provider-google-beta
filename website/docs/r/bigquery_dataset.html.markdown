@@ -14,12 +14,12 @@
 # ----------------------------------------------------------------------------
 subcategory: "BigQuery"
 description: |-
-  Datasets allow you to organize and control access to your tables.
+  Datasets allows you to organize and control access to your tables.
 ---
 
 # google\_bigquery\_dataset
 
-Datasets allow you to organize and control access to your tables.
+Datasets allows you to organize and control access to your tables.
 
 
 To get more information about Dataset, see:
