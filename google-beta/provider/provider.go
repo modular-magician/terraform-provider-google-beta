@@ -1732,7 +1732,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_storage_bucket_acl":                     storage.ResourceStorageBucketAcl(),
 			"google_storage_bucket_object":                  storage.ResourceStorageBucketObject(),
 			"google_storage_object_acl":                     storage.ResourceStorageObjectAcl(),
-			"google_storage_default_object_acl":             storage.ResourceStorageDefaultObjectAcl(),
 			"google_storage_notification":                   storage.ResourceStorageNotification(),
 			"google_storage_transfer_job":                   storagetransfer.ResourceStorageTransferJob(),
 			"google_tags_location_tag_binding":              tags.ResourceTagsLocationTagBinding(),
