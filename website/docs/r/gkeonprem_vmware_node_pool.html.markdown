@@ -290,6 +290,11 @@ The following arguments are supported:
   Node Pool autoscaling config for the node pool.
   Structure is [documented below](#nested_node_pool_autoscaling).
 
+* `upgrade_policy` -
+  (Optional)
+  Upgrade policy for the node pool.
+  Structure is [documented below](#nested_upgrade_policy).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -303,6 +308,16 @@ The following arguments are supported:
 * `max_replicas` -
   (Required)
   Maximum number of replicas in the NodePool.
+
+<a name="nested_upgrade_policy"></a>The `upgrade_policy` block supports:
+
+* `independent` -
+  (Optional)
+  Specify the intent to upgrade the node pool with or without the control
+  plane upgrade.
+  Defaults to false i.e. upgrade the node pool with control plane upgrade.
+  Set this to true to upgrade or downgrade the node pool independently from
+  the control plane.
 
 ## Attributes Reference
 

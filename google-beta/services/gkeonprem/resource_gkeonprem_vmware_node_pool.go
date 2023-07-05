@@ -226,6 +226,25 @@ with dashes (-), underscores (_), dots (.), and alphanumerics between.`,
 					},
 				},
 			},
+			"upgrade_policy": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Upgrade policy for the node pool.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"independent": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `Specify the intent to upgrade the node pool with or without the control
+plane upgrade.
+Defaults to false i.e. upgrade the node pool with control plane upgrade.
+Set this to true to upgrade or downgrade the node pool independently from
+the control plane.`,
+						},
+					},
+				},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -365,6 +384,12 @@ func resourceGkeonpremVmwareNodePoolCreate(d *schema.ResourceData, meta interfac
 		return err
 	} else if v, ok := d.GetOkExists("config"); !tpgresource.IsEmptyValue(reflect.ValueOf(configProp)) && (ok || !reflect.DeepEqual(v, configProp)) {
 		obj["config"] = configProp
+	}
+	upgrade_policyProp, err := expandGkeonpremVmwareNodePoolUpgradePolicy(d.Get("upgrade_policy"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("upgrade_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(upgrade_policyProp)) && (ok || !reflect.DeepEqual(v, upgrade_policyProp)) {
+		obj["upgrade_policy"] = upgrade_policyProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareClusters/{{vmware_cluster}}/vmwareNodePools?vmware_node_pool_id={{name}}")
@@ -507,6 +532,9 @@ func resourceGkeonpremVmwareNodePoolRead(d *schema.ResourceData, meta interface{
 	if err := d.Set("on_prem_version", flattenGkeonpremVmwareNodePoolOnPremVersion(res["onPremVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VmwareNodePool: %s", err)
 	}
+	if err := d.Set("upgrade_policy", flattenGkeonpremVmwareNodePoolUpgradePolicy(res["upgrade_policy"], d, config)); err != nil {
+		return fmt.Errorf("Error reading VmwareNodePool: %s", err)
+	}
 
 	return nil
 }
@@ -551,6 +579,12 @@ func resourceGkeonpremVmwareNodePoolUpdate(d *schema.ResourceData, meta interfac
 	} else if v, ok := d.GetOkExists("config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, configProp)) {
 		obj["config"] = configProp
 	}
+	upgrade_policyProp, err := expandGkeonpremVmwareNodePoolUpgradePolicy(d.Get("upgrade_policy"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("upgrade_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, upgrade_policyProp)) {
+		obj["upgrade_policy"] = upgrade_policyProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareClusters/{{vmware_cluster}}/vmwareNodePools/{{name}}")
 	if err != nil {
@@ -574,6 +608,10 @@ func resourceGkeonpremVmwareNodePoolUpdate(d *schema.ResourceData, meta interfac
 
 	if d.HasChange("config") {
 		updateMask = append(updateMask, "config")
+	}
+
+	if d.HasChange("upgrade_policy") {
+		updateMask = append(updateMask, "upgrade_policy")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1030,6 +1068,23 @@ func flattenGkeonpremVmwareNodePoolOnPremVersion(v interface{}, d *schema.Resour
 	return v
 }
 
+func flattenGkeonpremVmwareNodePoolUpgradePolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["independent"] =
+		flattenGkeonpremVmwareNodePoolUpgradePolicyIndependent(original["independent"], d, config)
+	return []interface{}{transformed}
+}
+func flattenGkeonpremVmwareNodePoolUpgradePolicyIndependent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandGkeonpremVmwareNodePoolDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1312,5 +1367,28 @@ func expandGkeonpremVmwareNodePoolConfigVsphereConfigTagsTag(v interface{}, d tp
 }
 
 func expandGkeonpremVmwareNodePoolConfigEnableLoadBalancer(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandGkeonpremVmwareNodePoolUpgradePolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedIndependent, err := expandGkeonpremVmwareNodePoolUpgradePolicyIndependent(original["independent"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIndependent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["independent"] = transformedIndependent
+	}
+
+	return transformed, nil
+}
+
+func expandGkeonpremVmwareNodePoolUpgradePolicyIndependent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
