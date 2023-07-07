@@ -117,7 +117,8 @@ var (
 	}
 )
 
-const resourceDataprocGoogleProvidedLabelPrefix = "labels.goog-dataproc"
+const resourceDataprocGoogleLabelPrefix = "goog-dataproc"
+const resourceDataprocGoogleProvidedLabelPrefix = "labels." + resourceDataprocGoogleLabelPrefix
 
 func resourceDataprocLabelDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
 	if strings.HasPrefix(k, resourceDataprocGoogleProvidedLabelPrefix) && new == "" {
@@ -161,6 +162,15 @@ func ResourceDataprocCluster() *schema.Resource {
 			Create: schema.DefaultTimeout(45 * time.Minute),
 			Update: schema.DefaultTimeout(45 * time.Minute),
 			Delete: schema.DefaultTimeout(45 * time.Minute),
+		},
+
+		SchemaVersion: 1,
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    resourceDataprocClusterResourceV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: ResourceDataprocClusterStateUpgradeV0,
+				Version: 0,
+			},
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -216,13 +226,17 @@ func ResourceDataprocCluster() *schema.Resource {
 			},
 
 			"labels": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				// GCP automatically adds labels
-				DiffSuppressFunc: resourceDataprocLabelDiffSuppress,
-				Computed:         true,
-				Description:      `The list of labels (key/value pairs) to be applied to instances in the cluster. GCP generates some itself including goog-dataproc-cluster-name which is the name of the cluster.`,
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: `The list of the labels (key/value pairs) configured on the resource and to be applied to instances in the cluster.`,
+			},
+
+			"effective_labels": {
+				Type:        schema.TypeMap,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Computed:    true,
+				Description: `The list of labels (key/value pairs) to be applied to instances in the cluster. GCP generates some itself including goog-dataproc-cluster-name which is the name of the cluster.`,
 			},
 
 			"virtual_cluster_config": {
@@ -2084,8 +2098,23 @@ func resourceDataprocClusterRead(d *schema.ResourceData, meta interface{}) error
 	if err := d.Set("region", region); err != nil {
 		return fmt.Errorf("Error setting region: %s", err)
 	}
-	if err := d.Set("labels", cluster.Labels); err != nil {
-		return fmt.Errorf("Error setting labels: %s", err)
+
+	clusterLabels := make(map[string]interface{})
+
+	if v, ok := d.GetOk("labels"); ok {
+		if cluster.Labels != nil {
+			for k := range v.(map[string]interface{}) {
+				clusterLabels[k] = cluster.Labels[k]
+			}
+		}
+
+		if err := d.Set("labels", clusterLabels); err != nil {
+			return fmt.Errorf("Error setting labels: %s", err)
+		}
+	}
+
+	if err := d.Set("effective_labels", cluster.Labels); err != nil {
+		return fmt.Errorf("Error setting effective_labels: %s", err)
 	}
 
 	var cfg []map[string]interface{}
