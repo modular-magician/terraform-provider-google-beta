@@ -16,7 +16,7 @@
 //
 // ----------------------------------------------------------------------------
 
-package google
+package compute_test
 
 import (
 	"context"
@@ -33,35 +33,36 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-func TestAccComputeNetworkFirewallPolicyRule_GlobalNetSecRuleHandWritten(t *testing.T) {
+func TestAccComputeRegionNetworkFirewallPolicyRule_RegionalNetSecRuleHandWritten(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
 		"org_id":        envvar.GetTestOrgFromEnv(t),
 		"project_name":  envvar.GetTestProjectFromEnv(),
+		"region":        envvar.GetTestRegionFromEnv(),
 		"service_acct":  envvar.GetTestServiceAccountFromEnv(t),
-		"random_suffix": RandString(t, 10),
+		"random_suffix": acctest.RandString(t, 10),
 	}
 
-	VcrTest(t, resource.TestCase{
+	acctest.VcrTest(t, resource.TestCase{
 		PreCheck: func() { acctest.AccTestPreCheck(t) },
 
-		ProtoV5ProviderFactories: ProtoV5ProviderBetaFactories(t),
-		CheckDestroy:             testAccCheckComputeNetworkFirewallPolicyRuleDestroyProducer(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckComputeRegionNetworkFirewallPolicyRuleDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccComputeNetworkFirewallPolicyRule_GlobalNetSecRuleHandWritten(context),
+				Config: testAccComputeRegionNetworkFirewallPolicyRule_RegionalNetSecRuleHandWritten(context),
 			},
 			{
-				ResourceName:      "google_compute_network_firewall_policy_rule.primary",
+				ResourceName:      "google_compute_region_network_firewall_policy_rule.primary",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccComputeNetworkFirewallPolicyRule_GlobalNetSecRuleHandWrittenUpdate0(context),
+				Config: testAccComputeRegionNetworkFirewallPolicyRule_RegionalNetSecRuleHandWrittenUpdate0(context),
 			},
 			{
-				ResourceName:      "google_compute_network_firewall_policy_rule.primary",
+				ResourceName:      "google_compute_region_network_firewall_policy_rule.primary",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -69,29 +70,30 @@ func TestAccComputeNetworkFirewallPolicyRule_GlobalNetSecRuleHandWritten(t *test
 	})
 }
 
-func testAccComputeNetworkFirewallPolicyRule_GlobalNetSecRuleHandWritten(context map[string]interface{}) string {
+func testAccComputeRegionNetworkFirewallPolicyRule_RegionalNetSecRuleHandWritten(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_network_security_address_group" "basic_global_networksecurity_address_group" {
+resource "google_network_security_address_group" "basic_regional_networksecurity_address_group" {
   provider = google-beta
 
   name        = "tf-test-policy%{random_suffix}"
   parent      = "projects/%{project_name}"
-  description = "Sample global networksecurity_address_group"
-  location    = "global"
+  description = "Sample regional networksecurity_address_group"
+  location    = "%{region}"
   items       = ["208.80.154.224/32"]
   type        = "IPV4"
   capacity    = 100
 }
 
-resource "google_compute_network_firewall_policy" "basic_network_firewall_policy" {
+resource "google_compute_region_network_firewall_policy" "basic_regional_network_firewall_policy" {
   provider = google-beta
 
   name        = "tf-test-policy%{random_suffix}"
-  description = "Sample global network firewall policy"
+  description = "Sample regional network firewall policy"
   project     = "%{project_name}"
+  region      = "%{region}"
 }
 
-resource "google_compute_network_firewall_policy_rule" "primary" {
+resource "google_compute_region_network_firewall_policy_rule" "primary" {
   provider = google-beta
 
   action                  = "allow"
@@ -99,26 +101,27 @@ resource "google_compute_network_firewall_policy_rule" "primary" {
   direction               = "INGRESS"
   disabled                = false
   enable_logging          = true
-  firewall_policy         = google_compute_network_firewall_policy.basic_network_firewall_policy.name
+  firewall_policy         = google_compute_region_network_firewall_policy.basic_regional_network_firewall_policy.name
   priority                = 1000
+  region                  = "%{region}"
   rule_name               = "test-rule"
   target_service_accounts = ["%{service_acct}"]
 
   match {
     src_ip_ranges = ["10.100.0.1/32"]
-    src_fqdns = ["google.com"]
+    src_fqdns = ["example.com"]
     src_region_codes = ["US"]
     src_threat_intelligences = ["iplist-known-malicious-ips"]
-
-    src_secure_tags {
-      name = "tagValues/${google_tags_tag_value.basic_value.name}"
-    }
 
     layer4_configs {
       ip_protocol = "all"
     }
+
+    src_secure_tags {
+      name = "tagValues/${google_tags_tag_value.basic_value.name}"
+    }
     
-    src_address_groups = [google_network_security_address_group.basic_global_networksecurity_address_group.id]
+    src_address_groups = [google_network_security_address_group.basic_regional_networksecurity_address_group.id]
   }
 }
 
@@ -135,6 +138,7 @@ resource "google_tags_tag_key" "basic_key" {
   parent      = "organizations/%{org_id}"
   purpose     = "GCE_FIREWALL"
   short_name  = "tf-test-tagkey%{random_suffix}"
+
   purpose_data = {
     network = "%{project_name}/${google_compute_network.basic_network.name}"
   }
@@ -151,29 +155,30 @@ resource "google_tags_tag_value" "basic_value" {
 `, context)
 }
 
-func testAccComputeNetworkFirewallPolicyRule_GlobalNetSecRuleHandWrittenUpdate0(context map[string]interface{}) string {
+func testAccComputeRegionNetworkFirewallPolicyRule_RegionalNetSecRuleHandWrittenUpdate0(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_network_security_address_group" "basic_global_networksecurity_address_group" {
+resource "google_network_security_address_group" "basic_regional_networksecurity_address_group" {
   provider = google-beta
 
   name        = "tf-test-policy%{random_suffix}"
   parent      = "projects/%{project_name}"
-  description = "Sample global networksecurity_address_group. Update"
-  location    = "global"
+  description = "Sample regional networksecurity_address_group. Update"
+  location    = "%{region}"
   items       = ["208.80.154.224/32"]
   type        = "IPV4"
   capacity    = 100
 }
 
-resource "google_compute_network_firewall_policy" "basic_network_firewall_policy" {
+resource "google_compute_region_network_firewall_policy" "basic_regional_network_firewall_policy" {
   provider = google-beta
 
   name        = "tf-test-policy%{random_suffix}"
-  description = "Sample global network firewall policy"
+  description = "Sample regional network firewall policy"
   project     = "%{project_name}"
+  region      = "%{region}"
 }
 
-resource "google_compute_network_firewall_policy_rule" "primary" {
+resource "google_compute_region_network_firewall_policy_rule" "primary" {
   provider = google-beta
 
   action          = "deny"
@@ -181,8 +186,9 @@ resource "google_compute_network_firewall_policy_rule" "primary" {
   direction       = "EGRESS"
   disabled        = true
   enable_logging  = false
-  firewall_policy = google_compute_network_firewall_policy.basic_network_firewall_policy.name
+  firewall_policy = google_compute_region_network_firewall_policy.basic_regional_network_firewall_policy.name
   priority        = 1000
+  region          = "%{region}"
   rule_name       = "updated-test-rule"
 
   match {
@@ -196,8 +202,7 @@ resource "google_compute_network_firewall_policy_rule" "primary" {
       ports       = ["123"]
     }
     
-    dest_address_groups = [google_network_security_address_group.basic_global_networksecurity_address_group.id]
-
+    dest_address_groups = [google_network_security_address_group.basic_regional_networksecurity_address_group.id]
   }
 
   target_secure_tags {
@@ -224,7 +229,6 @@ resource "google_tags_tag_key" "basic_key" {
   }
 }
 
-
 resource "google_tags_tag_value" "basic_value" {
   provider = google-beta
 
@@ -236,17 +240,17 @@ resource "google_tags_tag_value" "basic_value" {
 `, context)
 }
 
-func testAccCheckComputeNetworkFirewallPolicyRuleDestroyProducer(t *testing.T) func(s *terraform.State) error {
+func testAccCheckComputeRegionNetworkFirewallPolicyRuleDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
-			if rs.Type != "rs.google_compute_network_firewall_policy_rule" {
+			if rs.Type != "rs.google_compute_region_network_firewall_policy_rule" {
 				continue
 			}
 			if strings.HasPrefix(name, "data.") {
 				continue
 			}
 
-			config := GoogleProviderConfig(t)
+			config := acctest.GoogleProviderConfig(t)
 
 			billingProject := ""
 			if config.BillingProject != "" {
@@ -261,6 +265,7 @@ func testAccCheckComputeNetworkFirewallPolicyRuleDestroyProducer(t *testing.T) f
 				Disabled:       dcl.Bool(rs.Primary.Attributes["disabled"] == "true"),
 				EnableLogging:  dcl.Bool(rs.Primary.Attributes["enable_logging"] == "true"),
 				Project:        dcl.StringOrNil(rs.Primary.Attributes["project"]),
+				Location:       dcl.StringOrNil(rs.Primary.Attributes["region"]),
 				RuleName:       dcl.String(rs.Primary.Attributes["rule_name"]),
 				Kind:           dcl.StringOrNil(rs.Primary.Attributes["kind"]),
 			}
@@ -268,7 +273,7 @@ func testAccCheckComputeNetworkFirewallPolicyRuleDestroyProducer(t *testing.T) f
 			client := transport_tpg.NewDCLComputeClient(config, config.UserAgent, billingProject, 0)
 			_, err := client.GetNetworkFirewallPolicyRule(context.Background(), obj)
 			if err == nil {
-				return fmt.Errorf("google_compute_network_firewall_policy_rule still exists %v", obj)
+				return fmt.Errorf("google_compute_region_network_firewall_policy_rule still exists %v", obj)
 			}
 		}
 		return nil
