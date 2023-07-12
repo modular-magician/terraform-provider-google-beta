@@ -86,6 +86,7 @@ func TestAccComputeRegionSslCertificate_regionSslCertificateRandomProviderExampl
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckComputeRegionSslCertificateDestroyProducer(t),
 		Steps: []resource.TestStep{

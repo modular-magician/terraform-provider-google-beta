@@ -43,6 +43,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionCloudResourceExample(
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckBigqueryConnectionConnectionDestroyProducer(t),
 		Steps: []resource.TestStep{
@@ -86,6 +87,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionBasicExample(t *testi
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckBigqueryConnectionConnectionDestroyProducer(t),
 		Steps: []resource.TestStep{
@@ -163,6 +165,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionFullExample(t *testin
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckBigqueryConnectionConnectionDestroyProducer(t),
 		Steps: []resource.TestStep{
@@ -239,6 +242,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionAwsExample(t *testing
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckBigqueryConnectionConnectionDestroyProducer(t),
 		Steps: []resource.TestStep{
@@ -284,6 +288,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionAzureExample(t *testi
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckBigqueryConnectionConnectionDestroyProducer(t),
 		Steps: []resource.TestStep{
@@ -328,6 +333,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionCloudspannerExample(t
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckBigqueryConnectionConnectionDestroyProducer(t),
 		Steps: []resource.TestStep{
@@ -371,6 +377,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionCloudspannerAnalytics
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckBigqueryConnectionConnectionDestroyProducer(t),
 		Steps: []resource.TestStep{

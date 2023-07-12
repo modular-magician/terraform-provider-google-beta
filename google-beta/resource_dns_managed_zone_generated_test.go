@@ -170,6 +170,7 @@ func TestAccDNSManagedZone_dnsManagedZoneBasicExample(t *testing.T) {
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckDNSManagedZoneDestroyProducer(t),
 		Steps: []resource.TestStep{

@@ -45,6 +45,7 @@ func TestAccDatastreamStream_datastreamStreamBasicExample(t *testing.T) {
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckDatastreamStreamDestroyProducer(t),
 		Steps: []resource.TestStep{
@@ -208,6 +209,7 @@ func TestAccDatastreamStream_datastreamStreamFullExample(t *testing.T) {
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckDatastreamStreamDestroyProducer(t),
 		Steps: []resource.TestStep{
@@ -438,6 +440,7 @@ func TestAccDatastreamStream_datastreamStreamPostgresqlBigqueryDatasetIdExample(
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckDatastreamStreamDestroyProducer(t),
 		Steps: []resource.TestStep{
@@ -581,6 +584,7 @@ func TestAccDatastreamStream_datastreamStreamBigqueryExample(t *testing.T) {
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckDatastreamStreamDestroyProducer(t),
 		Steps: []resource.TestStep{

@@ -130,6 +130,7 @@ func TestAccComputeManagedSslCertificate_managedSslCertificateRecreationExample(
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckComputeManagedSslCertificateDestroyProducer(t),
 		Steps: []resource.TestStep{

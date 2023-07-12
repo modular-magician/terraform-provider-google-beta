@@ -26,14 +26,16 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-func TestAccBigqueryReservationCapacityCommitment_bigqueryReservationCapacityCommitmentBasicExample(t *testing.T) {
+func TestAccPublicCAAcmeRegistration_publicCaAcmeRegistrationExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
+		"project":       envvar.GetTestProjectFromEnv(),
 		"random_suffix": acctest.RandString(t, 10),
 	}
 
@@ -45,45 +47,48 @@ func TestAccBigqueryReservationCapacityCommitment_bigqueryReservationCapacityCom
 			"time":   {},
 			"tls":    {},
 		},
-		CheckDestroy: testAccCheckBigqueryReservationCapacityCommitmentDestroyProducer(t),
+		CheckDestroy: testAccCheckPublicCAAcmeRegistrationDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBigqueryReservationCapacityCommitment_bigqueryReservationCapacityCommitmentBasicExample(context),
-			},
-			{
-				ResourceName:            "google_bigquery_capacity_commitment.commitment",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"capacity_commitment_id", "location", "enforce_single_admin_project_per_org"},
+				Config: testAccPublicCAAcmeRegistration_publicCaAcmeRegistrationExample(context),
 			},
 		},
 	})
 }
 
-func testAccBigqueryReservationCapacityCommitment_bigqueryReservationCapacityCommitmentBasicExample(context map[string]interface{}) string {
+func testAccPublicCAAcmeRegistration_publicCaAcmeRegistrationExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_bigquery_capacity_commitment" "commitment" {
-	capacity_commitment_id = "capacity-tf-test%{random_suffix}"
-
-	location   = "us-west2"
-	slot_count = 100
-	plan       = "FLEX_FLAT_RATE"
-	edition    = "ENTERPRISE"
+resource "tls_private_key" "default" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
 }
 
-resource "time_sleep" "wait_61_seconds" {
-	depends_on = [google_bigquery_capacity_commitment.commitment]
-    
-	# Only needed for CI tests to be able to tear down the commitment once it's expired
-    create_duration = "61s"
+resource "google_public_ca_external_account_key" "account_key" {
+  project = "%{project}"
+}
+
+data "google_client_openid_userinfo" "user" {}
+
+resource "google_public_ca_acme_registration" "test" {
+  depends_on = [
+    tls_private_key.default,
+    data.google_client_openid_userinfo.user,
+    google_public_ca_external_account_key.account_key
+  ]
+  name            = "test"
+  email           = data.google_client_openid_userinfo.user.email
+  private_key_pem = tls_private_key.default.private_key_pem_pkcs8
+  eab_key_id      = google_public_ca_external_account_key.account_key.key_id
+  eab_hmac_key    = google_public_ca_external_account_key.account_key.b64_mac_key
+  project         = "%{project}"
 }
 `, context)
 }
 
-func testAccCheckBigqueryReservationCapacityCommitmentDestroyProducer(t *testing.T) func(s *terraform.State) error {
+func testAccCheckPublicCAAcmeRegistrationDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
-			if rs.Type != "google_bigquery_capacity_commitment" {
+			if rs.Type != "google_public_ca_acme_registration" {
 				continue
 			}
 			if strings.HasPrefix(name, "data.") {
@@ -92,7 +97,7 @@ func testAccCheckBigqueryReservationCapacityCommitmentDestroyProducer(t *testing
 
 			config := acctest.GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{BigqueryReservationBasePath}}projects/{{project}}/locations/{{location}}/capacityCommitments/{{capacity_commitment_id}}")
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{PublicCABasePath}}projects/{{project}}/locations/global/acmeRegistrations/{{name}}/{{name}}")
 			if err != nil {
 				return err
 			}
@@ -111,7 +116,7 @@ func testAccCheckBigqueryReservationCapacityCommitmentDestroyProducer(t *testing
 				UserAgent: config.UserAgent,
 			})
 			if err == nil {
-				return fmt.Errorf("BigqueryReservationCapacityCommitment still exists at %s", url)
+				return fmt.Errorf("PublicCAAcmeRegistration still exists at %s", url)
 			}
 		}
 

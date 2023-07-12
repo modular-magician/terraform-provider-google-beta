@@ -47,6 +47,7 @@ func TestAccVmwareengineNetwork_vmwareEngineNetworkLegacyExample(t *testing.T) {
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		CheckDestroy: testAccCheckVmwareengineNetworkDestroyProducer(t),
 		Steps: []resource.TestStep{

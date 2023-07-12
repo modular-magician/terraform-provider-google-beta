@@ -40,6 +40,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseExample(t *testing.T) {
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		Steps: []resource.TestStep{
 			{
@@ -104,6 +105,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseDatastoreModeExample(t *testing.T
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 			"time":   {},
+			"tls":    {},
 		},
 		Steps: []resource.TestStep{
 			{
