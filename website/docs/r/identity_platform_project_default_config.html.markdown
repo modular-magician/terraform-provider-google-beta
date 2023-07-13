@@ -53,6 +53,32 @@ resource "google_identity_platform_project_default_config" "default" {
             }
         }
     }
+
+    blocking_functions {
+        triggers {
+            "beforeSignIn" = {
+                function_uri = "new_uri-before-sign-in"
+            }
+        }
+
+        forward_inbound_credentials {
+            refresh_token = true
+            access_token = true
+            id_token = true
+        }
+    }
+
+    quota {
+        sign_up_quota_config {
+            quota = 1000
+        }
+    }
+
+    authorized_domains = [
+        "localhost",
+        ".firebaseapp.com",
+        ".web.app",
+    ]
 }
 ```
 
@@ -69,6 +95,20 @@ The following arguments are supported:
   (Optional)
   Configuration related to local sign in methods.
   Structure is [documented below](#nested_sign_in).
+
+* `blocking_functions` -
+  (Optional)
+  Configuration related to blocking functions.
+  Structure is [documented below](#nested_blocking_functions).
+
+* `quota` -
+  (Optional)
+  Configuration related to quotas.
+  Structure is [documented below](#nested_quota).
+
+* `authorized_domains` -
+  (Optional)
+  List of domains authorized for OAuth redirects.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -150,6 +190,67 @@ The following arguments are supported:
 * `memory_cost` -
   (Output)
   Memory cost for hash calculation. Used by scrypt and other similar password derivation algorithms. See https://tools.ietf.org/html/rfc7914 for explanation of field.
+
+<a name="nested_blocking_functions"></a>The `blocking_functions` block supports:
+
+* `triggers` -
+  (Required)
+  Map of Trigger to event type. Key should be one of the supported event types: "beforeCreate", "beforeSignIn".
+  Structure is [documented below](#nested_triggers).
+
+* `forward_inbound_credentials` -
+  (Optional)
+  The user credentials to include in the JWT payload that is sent to the registered Blocking Functions.
+  Structure is [documented below](#nested_forward_inbound_credentials).
+
+
+<a name="nested_triggers"></a>The `triggers` block supports:
+
+* `event_type` - (Required) The identifier for this object. Format specified above.
+
+* `function_uri` -
+  (Required)
+  HTTP URI trigger for the Cloud Function.
+
+* `update_time` -
+  (Output)
+  When the trigger was changed.
+
+<a name="nested_forward_inbound_credentials"></a>The `forward_inbound_credentials` block supports:
+
+* `id_token` -
+  (Optional)
+  Whether to pass the user's OIDC identity provider's ID token.
+
+* `access_token` -
+  (Optional)
+  Whether to pass the user's OAuth identity provider's access token.
+
+* `refresh_token` -
+  (Optional)
+  Whether to pass the user's OAuth identity provider's refresh token.
+
+<a name="nested_quota"></a>The `quota` block supports:
+
+* `sign_up_quota_config` -
+  (Optional)
+  Quota for the Signup endpoint, if overwritten. Signup quota is measured in sign ups per project per hour per IP.
+  Structure is [documented below](#nested_sign_up_quota_config).
+
+
+<a name="nested_sign_up_quota_config"></a>The `sign_up_quota_config` block supports:
+
+* `quota` -
+  (Optional)
+  Corresponds to the 'refill_token_count' field in QuotaServer config.
+
+* `start_time` -
+  (Optional)
+  When this quota will take affect.
+
+* `quota_duration` -
+  (Optional)
+  How long this quota will be active for.
 
 ## Attributes Reference
 
