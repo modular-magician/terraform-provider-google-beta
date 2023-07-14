@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -46,11 +47,10 @@ func ResourceMonitoringMonitoredProject() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"metrics_scope": {
-				Type:             schema.TypeString,
-				Required:         true,
-				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareResourceNames,
-				Description:      `Required. The resource name of the existing Metrics Scope that will monitor this project. Example: locations/global/metricsScopes/{SCOPING_PROJECT_ID_OR_NUMBER}`,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: `Required. The resource name of the existing Metrics Scope that will monitor this project. Example: locations/global/metricsScopes/{SCOPING_PROJECT_ID_OR_NUMBER}`,
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -92,6 +92,7 @@ func resourceMonitoringMonitoredProjectCreate(d *schema.ResourceData, meta inter
 	if err != nil {
 		return err
 	}
+	url = strings.ReplaceAll(url, "projects/projects/", "projects/")
 
 	log.Printf("[DEBUG] Creating new MonitoredProject: %#v", obj)
 	billingProject := ""
@@ -102,14 +103,13 @@ func resourceMonitoringMonitoredProjectCreate(d *schema.ResourceData, meta inter
 	}
 
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:               config,
-		Method:               "POST",
-		Project:              billingProject,
-		RawURL:               url,
-		UserAgent:            userAgent,
-		Body:                 obj,
-		Timeout:              d.Timeout(schema.TimeoutCreate),
-		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsMonitoringPermissionError},
+		Config:    config,
+		Method:    "POST",
+		Project:   billingProject,
+		RawURL:    url,
+		UserAgent: userAgent,
+		Body:      obj,
+		Timeout:   d.Timeout(schema.TimeoutCreate),
 	})
 	if err != nil {
 		return fmt.Errorf("Error creating MonitoredProject: %s", err)
@@ -120,6 +120,7 @@ func resourceMonitoringMonitoredProjectCreate(d *schema.ResourceData, meta inter
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
+	id = strings.ReplaceAll(id, "projects/projects/", "projects/")
 	d.SetId(id)
 
 	log.Printf("[DEBUG] Finished creating MonitoredProject %q: %#v", d.Id(), res)
@@ -138,6 +139,7 @@ func resourceMonitoringMonitoredProjectRead(d *schema.ResourceData, meta interfa
 	if err != nil {
 		return err
 	}
+	url = strings.ReplaceAll(url, "projects/projects/", "projects/")
 
 	billingProject := ""
 
@@ -146,20 +148,12 @@ func resourceMonitoringMonitoredProjectRead(d *schema.ResourceData, meta interfa
 		billingProject = bp
 	}
 
-	metricsScope := d.Get("metrics_scope").(string)
-	metricsScope = tpgresource.GetResourceNameFromSelfLink(metricsScope)
-	d.Set("metrics_scope", metricsScope)
-	url, err = tpgresource.ReplaceVars(d, config, "{{MonitoringBasePath}}v1/locations/global/metricsScopes/{{metrics_scope}}")
-	if err != nil {
-		return err
-	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:               config,
-		Method:               "GET",
-		Project:              billingProject,
-		RawURL:               url,
-		UserAgent:            userAgent,
-		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsMonitoringPermissionError},
+		Config:    config,
+		Method:    "GET",
+		Project:   billingProject,
+		RawURL:    url,
+		UserAgent: userAgent,
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("MonitoringMonitoredProject %q", d.Id()))
@@ -212,6 +206,7 @@ func resourceMonitoringMonitoredProjectDelete(d *schema.ResourceData, meta inter
 	if err != nil {
 		return err
 	}
+	url = strings.ReplaceAll(url, "projects/projects/", "projects/")
 
 	var obj map[string]interface{}
 	log.Printf("[DEBUG] Deleting MonitoredProject %q", d.Id())
@@ -222,14 +217,13 @@ func resourceMonitoringMonitoredProjectDelete(d *schema.ResourceData, meta inter
 	}
 
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:               config,
-		Method:               "DELETE",
-		Project:              billingProject,
-		RawURL:               url,
-		UserAgent:            userAgent,
-		Body:                 obj,
-		Timeout:              d.Timeout(schema.TimeoutDelete),
-		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsMonitoringPermissionError},
+		Config:    config,
+		Method:    "DELETE",
+		Project:   billingProject,
+		RawURL:    url,
+		UserAgent: userAgent,
+		Body:      obj,
+		Timeout:   d.Timeout(schema.TimeoutDelete),
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "MonitoredProject")
@@ -253,6 +247,7 @@ func resourceMonitoringMonitoredProjectImport(d *schema.ResourceData, meta inter
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
+	id = strings.ReplaceAll(id, "projects/projects/", "projects/")
 	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
@@ -275,7 +270,6 @@ func resourceMonitoringMonitoredProjectEncoder(d *schema.ResourceData, meta inte
 	name = tpgresource.GetResourceNameFromSelfLink(name)
 	metricsScope := d.Get("metrics_scope").(string)
 	metricsScope = tpgresource.GetResourceNameFromSelfLink(metricsScope)
-	d.Set("metrics_scope", metricsScope)
 	obj["name"] = fmt.Sprintf("locations/global/metricsScopes/%s/projects/%s", metricsScope, name)
 	return obj, nil
 }
