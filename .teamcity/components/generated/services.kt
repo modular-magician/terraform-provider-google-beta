@@ -56,6 +56,7 @@ var services = mapOf(
         "dns" to "Dns",
         "documentai" to "Documentai",
         "essentialcontacts" to "Essentialcontacts",
+        "eventarc" to "Eventarc",
         "filestore" to "Filestore",
         "firebase" to "Firebase",
         "firebasedatabase" to "Firebasedatabase",
