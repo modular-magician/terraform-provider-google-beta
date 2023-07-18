@@ -192,6 +192,11 @@ func Provider() *schema.Provider {
 				Optional: true,
 			},
 
+			"universe_domain": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
 			"scopes": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -1846,6 +1851,10 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 
 	if v, ok := d.GetOk("request_reason"); ok {
 		config.RequestReason = v.(string)
+	}
+
+	if v, ok := d.GetOk("universe_domain"); ok {
+		config.UniverseDomain = v.(string)
 	}
 
 	// Check for primary credentials in config. Note that if neither is set, ADCs

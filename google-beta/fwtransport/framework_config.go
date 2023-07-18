@@ -44,6 +44,7 @@ type FrameworkProviderConfig struct {
 	RequestBatcherServiceUsage *transport_tpg.RequestBatcher
 	Scopes                     []string
 	TokenSource                oauth2.TokenSource
+	UniverseDomain             types.String
 	UserAgent                  string
 	UserProjectOverride        bool
 
