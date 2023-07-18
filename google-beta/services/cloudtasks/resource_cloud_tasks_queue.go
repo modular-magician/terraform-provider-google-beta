@@ -28,6 +28,7 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
 
 func suppressOmittedMaxDuration(_, old, new string, _ *schema.ResourceData) bool {
@@ -233,6 +234,12 @@ default and means that no operations are logged.`,
 					},
 				},
 			},
+			"state": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"PAUSED", "RUNNING", "STATE_UNSPECIFIED", ""}),
+				Description:  `The state for the job. Set to 'PAUSED' to pause the job. Possible values: ["PAUSED", "RUNNING", "STATE_UNSPECIFIED"]`,
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -281,6 +288,12 @@ func resourceCloudTasksQueueCreate(d *schema.ResourceData, meta interface{}) err
 		return err
 	} else if v, ok := d.GetOkExists("stackdriver_logging_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(stackdriverLoggingConfigProp)) && (ok || !reflect.DeepEqual(v, stackdriverLoggingConfigProp)) {
 		obj["stackdriverLoggingConfig"] = stackdriverLoggingConfigProp
+	}
+	stateProp, err := expandCloudTasksQueueState(d.Get("state"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("state"); !tpgresource.IsEmptyValue(reflect.ValueOf(stateProp)) && (ok || !reflect.DeepEqual(v, stateProp)) {
+		obj["state"] = stateProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{CloudTasksBasePath}}projects/{{project}}/locations/{{location}}/queues")
@@ -382,6 +395,9 @@ func resourceCloudTasksQueueRead(d *schema.ResourceData, meta interface{}) error
 	if err := d.Set("stackdriver_logging_config", flattenCloudTasksQueueStackdriverLoggingConfig(res["stackdriverLoggingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Queue: %s", err)
 	}
+	if err := d.Set("state", flattenCloudTasksQueueState(res["state"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Queue: %s", err)
+	}
 
 	return nil
 }
@@ -426,6 +442,12 @@ func resourceCloudTasksQueueUpdate(d *schema.ResourceData, meta interface{}) err
 	} else if v, ok := d.GetOkExists("stackdriver_logging_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, stackdriverLoggingConfigProp)) {
 		obj["stackdriverLoggingConfig"] = stackdriverLoggingConfigProp
 	}
+	stateProp, err := expandCloudTasksQueueState(d.Get("state"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("state"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, stateProp)) {
+		obj["state"] = stateProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{CloudTasksBasePath}}projects/{{project}}/locations/{{location}}/queues/{{name}}")
 	if err != nil {
@@ -449,6 +471,10 @@ func resourceCloudTasksQueueUpdate(d *schema.ResourceData, meta interface{}) err
 
 	if d.HasChange("stackdriver_logging_config") {
 		updateMask = append(updateMask, "stackdriverLoggingConfig")
+	}
+
+	if d.HasChange("state") {
+		updateMask = append(updateMask, "state")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -711,6 +737,10 @@ func flattenCloudTasksQueueStackdriverLoggingConfigSamplingRatio(v interface{}, 
 	return v
 }
 
+func flattenCloudTasksQueueState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandCloudTasksQueueName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/queues/{{name}}")
 }
@@ -903,5 +933,9 @@ func expandCloudTasksQueueStackdriverLoggingConfig(v interface{}, d tpgresource.
 }
 
 func expandCloudTasksQueueStackdriverLoggingConfigSamplingRatio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudTasksQueueState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

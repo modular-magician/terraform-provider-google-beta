@@ -121,6 +121,41 @@ resource "google_cloud_tasks_queue" "advanced_configuration" {
 `, context)
 }
 
+func TestAccCloudTasksQueue_cloudTasksQueuePausedExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckCloudTasksQueueDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCloudTasksQueue_cloudTasksQueuePausedExample(context),
+			},
+			{
+				ResourceName:            "google_cloud_tasks_queue.paused_queue",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location"},
+			},
+		},
+	})
+}
+
+func testAccCloudTasksQueue_cloudTasksQueuePausedExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_cloud_tasks_queue" "paused_queue" {
+  name = "tf-test-cloud-tasks-paused-queue-test%{random_suffix}"
+  location = "us-central1"
+  state = "PAUSED"
+}
+`, context)
+}
+
 func testAccCheckCloudTasksQueueDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

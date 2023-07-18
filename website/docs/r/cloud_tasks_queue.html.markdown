@@ -79,6 +79,21 @@ resource "google_cloud_tasks_queue" "advanced_configuration" {
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=cloud_tasks_queue_paused&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Cloud Tasks Queue Paused
+
+
+```hcl
+resource "google_cloud_tasks_queue" "paused_queue" {
+  name = "cloud-tasks-paused-queue-test"
+  location = "us-central1"
+  state = "PAUSED"
+}
+```
 
 ## Argument Reference
 
@@ -123,6 +138,11 @@ The following arguments are supported:
   (Optional)
   Configuration options for writing logs to Stackdriver Logging.
   Structure is [documented below](#nested_stackdriver_logging_config).
+
+* `state` -
+  (Optional)
+  The state for the job. Set to `PAUSED` to pause the job.
+  Possible values are: `PAUSED`, `RUNNING`, `STATE_UNSPECIFIED`.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
