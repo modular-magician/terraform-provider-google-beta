@@ -88,7 +88,7 @@ resource "google_compute_network" "apigee_network" {
 }
 
 resource "google_compute_global_address" "apigee_range" {
-  name          = "tf-test-apigee-range%{random_suffix}"
+  name          = "apigee-range"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16

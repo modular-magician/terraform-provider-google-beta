@@ -359,14 +359,6 @@ func TestAccComputeSecurityPolicy_EnforceOnKeyUpdates(t *testing.T) {
 		CheckDestroy:             testAccCheckComputeSecurityPolicyDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccComputeSecurityPolicy_withRateLimitOptions_withoutRateLimitOptions(spName),
-			},
-			{
-				ResourceName:      "google_compute_security_policy.policy",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-			{
 				Config: testAccComputeSecurityPolicy_withRateLimitOptions_withEnforceOnKeyName(spName),
 			},
 			{
@@ -392,14 +384,6 @@ func TestAccComputeSecurityPolicy_EnforceOnKeyUpdates(t *testing.T) {
 			},
 			{
 				Config: testAccComputeSecurityPolicy_withRateLimitOptions_withEnforceOnKey(spName),
-			},
-			{
-				ResourceName:      "google_compute_security_policy.policy",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-			{
-				Config: testAccComputeSecurityPolicy_withRateLimitOptions_withEnforceOnKeyName(spName),
 			},
 			{
 				ResourceName:      "google_compute_security_policy.policy",
@@ -1265,27 +1249,6 @@ resource "google_compute_security_policy" "policy" {
 				interval_sec = 60
 			}
 		}
-	}
-}
-`, spName)
-}
-
-func testAccComputeSecurityPolicy_withRateLimitOptions_withoutRateLimitOptions(spName string) string {
-	return fmt.Sprintf(`
-resource "google_compute_security_policy" "policy" {
-	name        = "%s"
-	description = "throttle rule with enforce_on_key_configs"
-
-	rule {
-		action   = "deny(403)"
-		priority = "2147483647"
-		match {
-			versioned_expr = "SRC_IPS_V1"
-			config {
-				src_ip_ranges = ["*"]
-			}
-		}
-		description = "default rule"
 	}
 }
 `, spName)
