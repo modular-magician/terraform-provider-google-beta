@@ -30,12 +30,12 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-func suppressOmittedMaxDuration(k, old, new string, d *schema.ResourceData) bool {
+func suppressOmittedMaxDuration(_, old, new string, _ *schema.ResourceData) bool {
 	if old == "" && new == "0s" {
 		log.Printf("[INFO] max retry is 0s and api omitted field, suppressing diff")
 		return true
 	}
-	return tpgresource.DurationDiffSuppress(k, old, new, d)
+	return false
 }
 
 func ResourceCloudTasksQueue() *schema.Resource {
@@ -175,10 +175,9 @@ the default.
 -1 indicates unlimited attempts.`,
 						},
 						"max_backoff": {
-							Type:             schema.TypeString,
-							Computed:         true,
-							Optional:         true,
-							DiffSuppressFunc: tpgresource.DurationDiffSuppress,
+							Type:     schema.TypeString,
+							Computed: true,
+							Optional: true,
 							Description: `A task will be scheduled for retry between minBackoff and
 maxBackoff duration after it fails, if the queue's RetryConfig
 specifies that the task should be retried.`,
@@ -207,10 +206,9 @@ made and the task will be deleted.
 If zero, then the task age is unlimited.`,
 						},
 						"min_backoff": {
-							Type:             schema.TypeString,
-							Computed:         true,
-							Optional:         true,
-							DiffSuppressFunc: tpgresource.DurationDiffSuppress,
+							Type:     schema.TypeString,
+							Computed: true,
+							Optional: true,
 							Description: `A task will be scheduled for retry between minBackoff and
 maxBackoff duration after it fails, if the queue's RetryConfig
 specifies that the task should be retried.`,

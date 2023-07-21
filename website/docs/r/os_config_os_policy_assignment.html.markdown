@@ -1,10 +1,8 @@
-subcategory: "OS Config"
+subcategory: "OS Config" description: |-
 
-description: |-
-    OS policy assignment is an API resource that is used to apply a set of OS policies to a dynamically targeted group of Compute Engine VM instances.
----
+## OS policy assignment is an API resource that is used to apply a set of OS policies to a dynamically targeted group of Compute Engine VM instances.
 
-# google_os_config_os_policy_assignment
+# google\_os\_config\_os\_policy\_assignment
 
 OS policy assignment is an API resource that is used to apply a set of OS
 policies to a dynamically targeted group of Compute Engine VM instances. An OS
@@ -552,7 +550,8 @@ The following arguments are supported:
 *   `path` - (Required) The absolute path of the file within the VM.
 
 *   `state` - (Required) Desired state of the file. Possible values are:
-    `DESIRED_STATE_UNSPECIFIED`, `PRESENT`, `ABSENT`, `CONTENTS_MATCH`.
+    `DESIRED_STATE_UNSPECIFIED`, `PRESENT`, `ABSENT`,
+    `CONTENTS_MATCH`.
 
 *   `permissions` - (Output) Consists of three octal digits which represent, in
     order, the permissions of the owner, group, and other users for the file
