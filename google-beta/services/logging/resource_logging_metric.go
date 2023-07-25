@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -569,6 +570,49 @@ func resourceLoggingMetricUpdate(d *schema.ResourceData, meta interface{}) error
 	}
 
 	log.Printf("[DEBUG] Updating Metric %q: %#v", d.Id(), obj)
+	updateMask := []string{}
+
+	if d.HasChange("name") {
+		updateMask = append(updateMask, "name")
+	}
+
+	if d.HasChange("description") {
+		updateMask = append(updateMask, "description")
+	}
+
+	if d.HasChange("bucket_name") {
+		updateMask = append(updateMask, "bucketName")
+	}
+
+	if d.HasChange("disabled") {
+		updateMask = append(updateMask, "disabled")
+	}
+
+	if d.HasChange("filter") {
+		updateMask = append(updateMask, "filter")
+	}
+
+	if d.HasChange("metric_descriptor") {
+		updateMask = append(updateMask, "metricDescriptor")
+	}
+
+	if d.HasChange("label_extractors") {
+		updateMask = append(updateMask, "labelExtractors")
+	}
+
+	if d.HasChange("value_extractor") {
+		updateMask = append(updateMask, "valueExtractor")
+	}
+
+	if d.HasChange("bucket_options") {
+		updateMask = append(updateMask, "bucketOptions")
+	}
+	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
+	// won't set it
+	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
+	if err != nil {
+		return err
+	}
 
 	// err == nil indicates that the billing_project value was found
 	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
