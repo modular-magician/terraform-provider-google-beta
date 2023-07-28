@@ -302,6 +302,22 @@ The possible values for this attribute are:
 - v1 or v1beta2: uses the push format defined in the v1 Pub/Sub API.`,
 							Elem: &schema.Schema{Type: schema.TypeString},
 						},
+						"no_wrapper": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `When set, the payload to the push endpoint is not wrapped.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"write_metadata": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Description: `When true, writes the Pub/Sub message metadata to x-goog-pubsub-<KEY>:<VAL> headers of the HTTP request.
+Writes the Pub/Sub message attributes to <KEY>:<VAL> headers of the HTTP request.`,
+									},
+								},
+							},
+						},
 						"oidc_token": {
 							Type:     schema.TypeList,
 							Optional: true,
@@ -950,6 +966,8 @@ func flattenPubsubSubscriptionPushConfig(v interface{}, d *schema.ResourceData, 
 		flattenPubsubSubscriptionPushConfigPushEndpoint(original["pushEndpoint"], d, config)
 	transformed["attributes"] =
 		flattenPubsubSubscriptionPushConfigAttributes(original["attributes"], d, config)
+	transformed["no_wrapper"] =
+		flattenPubsubSubscriptionPushConfigNoWrapper(original["noWrapper"], d, config)
 	return []interface{}{transformed}
 }
 func flattenPubsubSubscriptionPushConfigOidcToken(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -980,6 +998,20 @@ func flattenPubsubSubscriptionPushConfigPushEndpoint(v interface{}, d *schema.Re
 }
 
 func flattenPubsubSubscriptionPushConfigAttributes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenPubsubSubscriptionPushConfigNoWrapper(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	transformed := make(map[string]interface{})
+	transformed["write_metadata"] =
+		flattenPubsubSubscriptionPushConfigNoWrapperWriteMetadata(original["writeMetadata"], d, config)
+	return []interface{}{transformed}
+}
+func flattenPubsubSubscriptionPushConfigNoWrapperWriteMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1216,6 +1248,13 @@ func expandPubsubSubscriptionPushConfig(v interface{}, d tpgresource.TerraformRe
 		transformed["attributes"] = transformedAttributes
 	}
 
+	transformedNoWrapper, err := expandPubsubSubscriptionPushConfigNoWrapper(original["no_wrapper"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["noWrapper"] = transformedNoWrapper
+	}
+
 	return transformed, nil
 }
 
@@ -1266,6 +1305,34 @@ func expandPubsubSubscriptionPushConfigAttributes(v interface{}, d tpgresource.T
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandPubsubSubscriptionPushConfigNoWrapper(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedWriteMetadata, err := expandPubsubSubscriptionPushConfigNoWrapperWriteMetadata(original["write_metadata"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedWriteMetadata); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["writeMetadata"] = transformedWriteMetadata
+	}
+
+	return transformed, nil
+}
+
+func expandPubsubSubscriptionPushConfigNoWrapperWriteMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandPubsubSubscriptionAckDeadlineSeconds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
