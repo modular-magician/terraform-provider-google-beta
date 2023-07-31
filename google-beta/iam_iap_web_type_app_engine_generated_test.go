@@ -32,11 +32,10 @@ func TestAccIapWebTypeAppEngineIamBindingGenerated(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix":   acctest.RandString(t, 10),
-		"role":            "roles/iap.httpsResourceAccessor",
-		"project_id":      fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
-		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+		"role":          "roles/iap.httpsResourceAccessor",
+		"project_id":    fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
+		"org_id":        envvar.GetTestOrgFromEnv(t),
 
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
@@ -80,11 +79,10 @@ func TestAccIapWebTypeAppEngineIamMemberGenerated(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix":   acctest.RandString(t, 10),
-		"role":            "roles/iap.httpsResourceAccessor",
-		"project_id":      fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
-		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+		"role":          "roles/iap.httpsResourceAccessor",
+		"project_id":    fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
+		"org_id":        envvar.GetTestOrgFromEnv(t),
 
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
@@ -119,11 +117,10 @@ func TestAccIapWebTypeAppEngineIamPolicyGenerated(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix":   acctest.RandString(t, 10),
-		"role":            "roles/iap.httpsResourceAccessor",
-		"project_id":      fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
-		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+		"role":          "roles/iap.httpsResourceAccessor",
+		"project_id":    fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
+		"org_id":        envvar.GetTestOrgFromEnv(t),
 
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
@@ -167,11 +164,10 @@ func TestAccIapWebTypeAppEngineIamBindingGenerated_withCondition(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix":   acctest.RandString(t, 10),
-		"role":            "roles/iap.httpsResourceAccessor",
-		"project_id":      fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
-		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+		"role":          "roles/iap.httpsResourceAccessor",
+		"project_id":    fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
+		"org_id":        envvar.GetTestOrgFromEnv(t),
 
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
@@ -207,11 +203,10 @@ func TestAccIapWebTypeAppEngineIamBindingGenerated_withAndWithoutCondition(t *te
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix":   acctest.RandString(t, 10),
-		"role":            "roles/iap.httpsResourceAccessor",
-		"project_id":      fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
-		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+		"role":          "roles/iap.httpsResourceAccessor",
+		"project_id":    fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
+		"org_id":        envvar.GetTestOrgFromEnv(t),
 
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
@@ -257,11 +252,10 @@ func TestAccIapWebTypeAppEngineIamMemberGenerated_withCondition(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix":   acctest.RandString(t, 10),
-		"role":            "roles/iap.httpsResourceAccessor",
-		"project_id":      fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
-		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+		"role":          "roles/iap.httpsResourceAccessor",
+		"project_id":    fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
+		"org_id":        envvar.GetTestOrgFromEnv(t),
 
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
@@ -297,11 +291,10 @@ func TestAccIapWebTypeAppEngineIamMemberGenerated_withAndWithoutCondition(t *tes
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix":   acctest.RandString(t, 10),
-		"role":            "roles/iap.httpsResourceAccessor",
-		"project_id":      fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
-		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+		"role":          "roles/iap.httpsResourceAccessor",
+		"project_id":    fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
+		"org_id":        envvar.GetTestOrgFromEnv(t),
 
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
@@ -347,11 +340,10 @@ func TestAccIapWebTypeAppEngineIamPolicyGenerated_withCondition(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix":   acctest.RandString(t, 10),
-		"role":            "roles/iap.httpsResourceAccessor",
-		"project_id":      fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
-		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+		"role":          "roles/iap.httpsResourceAccessor",
+		"project_id":    fmt.Sprintf("tf-test%s", acctest.RandString(t, 10)),
+		"org_id":        envvar.GetTestOrgFromEnv(t),
 
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
@@ -397,7 +389,6 @@ resource "google_project" "project" {
   name       = "%{project_id}"
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
-  billing_account = "%{billing_account}"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -435,7 +426,6 @@ resource "google_project" "project" {
   name       = "%{project_id}"
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
-  billing_account = "%{billing_account}"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -487,7 +477,6 @@ resource "google_project" "project" {
   name       = "%{project_id}"
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
-  billing_account = "%{billing_account}"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -527,7 +516,6 @@ resource "google_project" "project" {
   name       = "%{project_id}"
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
-  billing_account = "%{billing_account}"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -565,7 +553,6 @@ resource "google_project" "project" {
   name       = "%{project_id}"
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
-  billing_account = "%{billing_account}"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -603,7 +590,6 @@ resource "google_project" "project" {
   name       = "%{project_id}"
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
-  billing_account = "%{billing_account}"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -646,7 +632,6 @@ resource "google_project" "project" {
   name       = "%{project_id}"
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
-  billing_account = "%{billing_account}"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -709,7 +694,6 @@ resource "google_project" "project" {
   name       = "%{project_id}"
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
-  billing_account = "%{billing_account}"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -752,7 +736,6 @@ resource "google_project" "project" {
   name       = "%{project_id}"
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
-  billing_account = "%{billing_account}"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -815,7 +798,6 @@ resource "google_project" "project" {
   name       = "%{project_id}"
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
-  billing_account = "%{billing_account}"
 }
 
 resource "time_sleep" "wait_60_seconds" {

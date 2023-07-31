@@ -326,7 +326,6 @@ resource "google_compute_region_backend_service" "default" {
     tracking_mode                                = "PER_SESSION"
     connection_persistence_on_unhealthy_backends = "NEVER_PERSIST"
     idle_timeout_sec                             = 60
-    enable_strong_affinity                       = true
   }
 }
 
@@ -512,10 +511,6 @@ The following arguments are supported:
   The default is HTTP. **NOTE**: HTTP2 is only valid for beta HTTP/2 load balancer
   types and may result in errors if used with the GA API.
   Possible values are: `HTTP`, `HTTPS`, `HTTP2`, `SSL`, `TCP`, `UDP`, `GRPC`, `UNSPECIFIED`.
-
-* `security_policy` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
-  The security policy associated with this backend service.
 
 * `session_affinity` -
   (Optional)
@@ -1062,10 +1057,6 @@ The following arguments are supported:
   generally not recommended to use this mode overriding the default.
   Default value is `DEFAULT_FOR_PROTOCOL`.
   Possible values are: `DEFAULT_FOR_PROTOCOL`, `NEVER_PERSIST`, `ALWAYS_PERSIST`.
-
-* `enable_strong_affinity` -
-  (Optional)
-  Enable Strong Session Affinity for Network Load Balancing. This option is not available publicly.
 
 <a name="nested_log_config"></a>The `log_config` block supports:
 

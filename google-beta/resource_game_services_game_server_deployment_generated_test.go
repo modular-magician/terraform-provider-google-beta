@@ -30,7 +30,7 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-func TestAccAlloydbInstance_alloydbInstanceBasicExample(t *testing.T) {
+func TestAccGameServicesGameServerDeployment_gameServiceDeploymentBasicExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -40,71 +40,34 @@ func TestAccAlloydbInstance_alloydbInstanceBasicExample(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckAlloydbInstanceDestroyProducer(t),
+		CheckDestroy:             testAccCheckGameServicesGameServerDeploymentDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAlloydbInstance_alloydbInstanceBasicExample(context),
+				Config: testAccGameServicesGameServerDeployment_gameServiceDeploymentBasicExample(context),
 			},
 			{
-				ResourceName:            "google_alloydb_instance.default",
+				ResourceName:            "google_game_services_game_server_deployment.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"display_name", "cluster", "instance_id", "reconciling", "update_time"},
+				ImportStateVerifyIgnore: []string{"deployment_id", "location"},
 			},
 		},
 	})
 }
 
-func testAccAlloydbInstance_alloydbInstanceBasicExample(context map[string]interface{}) string {
+func testAccGameServicesGameServerDeployment_gameServiceDeploymentBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_alloydb_instance" "default" {
-  cluster       = google_alloydb_cluster.default.name
-  instance_id   = "tf-test-alloydb-instance%{random_suffix}"
-  instance_type = "PRIMARY"
-
-  machine_config {
-    cpu_count = 2
-  }
-
-  depends_on = [google_service_networking_connection.vpc_connection]
-}
-
-resource "google_alloydb_cluster" "default" {
-  cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
-  location   = "us-central1"
-  network    = google_compute_network.default.id
-
-  initial_user {
-    password = "tf-test-alloydb-cluster%{random_suffix}"
-  }
-}
-
-data "google_project" "project" {}
-
-resource "google_compute_network" "default" {
-  name = "tf-test-alloydb-cluster%{random_suffix}"
-}
-
-resource "google_compute_global_address" "private_ip_alloc" {
-  name          =  "tf-test-alloydb-cluster%{random_suffix}"
-  address_type  = "INTERNAL"
-  purpose       = "VPC_PEERING"
-  prefix_length = 16
-  network       = google_compute_network.default.id
-}
-
-resource "google_service_networking_connection" "vpc_connection" {
-  network                 = google_compute_network.default.id
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
+resource "google_game_services_game_server_deployment" "default" {
+  deployment_id  = "tf-test-tf-test-deployment%{random_suffix}"
+  description = "a deployment description"
 }
 `, context)
 }
 
-func testAccCheckAlloydbInstanceDestroyProducer(t *testing.T) func(s *terraform.State) error {
+func testAccCheckGameServicesGameServerDeploymentDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
-			if rs.Type != "google_alloydb_instance" {
+			if rs.Type != "google_game_services_game_server_deployment" {
 				continue
 			}
 			if strings.HasPrefix(name, "data.") {
@@ -113,7 +76,7 @@ func testAccCheckAlloydbInstanceDestroyProducer(t *testing.T) func(s *terraform.
 
 			config := acctest.GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{AlloydbBasePath}}{{cluster}}/instances/{{instance_id}}")
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{GameServicesBasePath}}projects/{{project}}/locations/{{location}}/gameServerDeployments/{{deployment_id}}")
 			if err != nil {
 				return err
 			}
@@ -132,7 +95,7 @@ func testAccCheckAlloydbInstanceDestroyProducer(t *testing.T) func(s *terraform.
 				UserAgent: config.UserAgent,
 			})
 			if err == nil {
-				return fmt.Errorf("AlloydbInstance still exists at %s", url)
+				return fmt.Errorf("GameServicesGameServerDeployment still exists at %s", url)
 			}
 		}
 
