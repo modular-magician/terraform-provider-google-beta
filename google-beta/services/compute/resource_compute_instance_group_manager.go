@@ -19,6 +19,25 @@ import (
 	compute "google.golang.org/api/compute/v0.beta"
 )
 
+func EmptyOrAllowedListSuppress(vals []string) schema.SchemaDiffSuppressFunc {
+	return func(k, old, new string, d *schema.ResourceData) bool {
+		return (old == "" && contains(vals, new)) || (new == "" && contains(vals, old)) || (new == old)
+	}
+}
+
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+func EmptyNewSuppress(k, old, new string, d *schema.ResourceData) bool {
+	return (old == "1" && new == "0") || (old == new)
+}
+
 func ResourceComputeInstanceGroupManager() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceComputeInstanceGroupManagerCreate,
@@ -233,11 +252,12 @@ func ResourceComputeInstanceGroupManager() *schema.Resource {
 						},
 
 						"max_surge_fixed": {
-							Type:          schema.TypeInt,
-							Optional:      true,
-							Computed:      true,
-							ConflictsWith: []string{"update_policy.0.max_surge_percent"},
-							Description:   `The maximum number of instances that can be created above the specified targetSize during the update process. Conflicts with max_surge_percent. If neither is set, defaults to 1`,
+							Type:             schema.TypeInt,
+							Optional:         true,
+							Computed:         true,
+							DiffSuppressFunc: EmptyNewSuppress,
+							ConflictsWith:    []string{"update_policy.0.max_surge_percent"},
+							Description:      `The maximum number of instances that can be created above the specified targetSize during the update process. Conflicts with max_surge_percent. If neither is set, defaults to 1`,
 						},
 
 						"max_surge_percent": {
@@ -274,7 +294,7 @@ func ResourceComputeInstanceGroupManager() *schema.Resource {
 							Type:             schema.TypeString,
 							Optional:         true,
 							ValidateFunc:     validation.StringInSlice([]string{"RECREATE", "SUBSTITUTE", ""}, false),
-							DiffSuppressFunc: tpgresource.EmptyOrDefaultStringSuppress("SUBSTITUTE"),
+							DiffSuppressFunc: EmptyOrAllowedListSuppress([]string{"RECREATE", "SUBSTITUTE"}),
 							Description:      `The instance replacement method for managed instance groups. Valid values are: "RECREATE", "SUBSTITUTE". If SUBSTITUTE (default), the group replaces VM instances with new instances that have randomly generated names. If RECREATE, instance names are preserved.  You must also set max_unavailable_fixed or max_unavailable_percent to be greater than 0.`,
 						},
 					},
@@ -1215,8 +1235,12 @@ func expandUpdatePolicy(configured []interface{}) *compute.InstanceGroupManagerU
 				NullFields: []string{"Fixed"},
 			}
 		} else {
+			v := 1 // conditioanl default
+			if data["max_surge_fixed"] != nil {
+				v = data["max_surge_fixed"].(int)
+			}
 			updatePolicy.MaxSurge = &compute.FixedOrPercent{
-				Fixed: int64(data["max_surge_fixed"].(int)),
+				Fixed: int64(v),
 				// allow setting this value to 0
 				ForceSendFields: []string{"Fixed"},
 				NullFields:      []string{"Percent"},
