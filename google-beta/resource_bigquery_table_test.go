@@ -369,22 +369,8 @@ func TestAccBigQueryTable_WithViewAndSchema(t *testing.T) {
 		CheckDestroy:             testAccCheckBigQueryTableDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBigQueryTableWithViewAndSchema(datasetID, tableID, "table description1"),
-			},
-			{
-				ResourceName:            "google_bigquery_table.test",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection"},
-			},
-			{
-				Config: testAccBigQueryTableWithViewAndSchema(datasetID, tableID, "table description2"),
-			},
-			{
-				ResourceName:            "google_bigquery_table.test",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection"},
+				Config:      testAccBigQueryTableWithViewAndSchema(datasetID, tableID, "table description"),
+				ExpectError: regexp.MustCompile("\"view\": conflicts with schema"),
 			},
 		},
 	})
@@ -489,6 +475,48 @@ func TestAccBigQueryTable_MaterializedView_DailyTimePartioning_Update(t *testing
 	})
 }
 
+func TestAccBigQueryTable_MaterializedView_WithSchema(t *testing.T) {
+	t.Parallel()
+
+	datasetID := fmt.Sprintf("tf_test_%s", RandString(t, 10))
+	tableID := fmt.Sprintf("tf_test_%s", RandString(t, 10))
+	materializedViewID := fmt.Sprintf("tf_test_%s", RandString(t, 10))
+	query := fmt.Sprintf("SELECT some_int FROM `%s.%s`", datasetID, tableID)
+
+	VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckBigQueryTableDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccBigQueryTableWithMatViewAndSchema(datasetID, tableID, materializedViewID, query),
+				ExpectError: regexp.MustCompile("\"materialized_view\": conflicts with schema"),
+			},
+		},
+	})
+}
+
+func TestAccBigQueryTable_MaterializedView_WithView(t *testing.T) {
+	t.Parallel()
+
+	datasetID := fmt.Sprintf("tf_test_%s", RandString(t, 10))
+	tableID := fmt.Sprintf("tf_test_%s", RandString(t, 10))
+	materializedViewID := fmt.Sprintf("tf_test_%s", RandString(t, 10))
+	query := fmt.Sprintf("SELECT some_int FROM `%s.%s`", datasetID, tableID)
+
+	VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckBigQueryTableDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccBigQueryTableWithMatViewAndView(datasetID, tableID, materializedViewID, query),
+				ExpectError: regexp.MustCompile("\"materialized_view\": conflicts with view"),
+			},
+		},
+	})
+}
+
 func TestAccBigQueryExternalDataTable_parquet(t *testing.T) {
 	t.Parallel()
 
@@ -583,6 +611,36 @@ func TestAccBigQueryExternalDataTable_CSV(t *testing.T) {
 			{
 				Config: testAccBigQueryTableFromGCS(datasetID, tableID, bucketName, objectName, TEST_CSV, "CSV", ""),
 				Check:  testAccCheckBigQueryExtData(t, ""),
+			},
+		},
+	})
+}
+
+func TestAccBigQueryExternalDataTable_CSV_WithSchema_InvalidSchemas(t *testing.T) {
+	t.Parallel()
+
+	bucketName := testBucketName(t)
+	objectName := fmt.Sprintf("tf_test_%s.csv", RandString(t, 10))
+
+	datasetID := fmt.Sprintf("tf_test_%s", RandString(t, 10))
+	tableID := fmt.Sprintf("tf_test_%s", RandString(t, 10))
+
+	VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckBigQueryTableDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccBigQueryTableFromGCSWithExternalDataConfigSchema(datasetID, tableID, bucketName, objectName, TEST_SIMPLE_CSV, TEST_INVALID_SCHEMA_NOT_JSON),
+				ExpectError: regexp.MustCompile("contains an invalid JSON"),
+			},
+			{
+				Config:      testAccBigQueryTableFromGCSWithExternalDataConfigSchema(datasetID, tableID, bucketName, objectName, TEST_SIMPLE_CSV, TEST_INVALID_SCHEMA_NOT_JSON_LIST),
+				ExpectError: regexp.MustCompile("\"schema\" is not a JSON array"),
+			},
+			{
+				Config:      testAccBigQueryTableFromGCSWithExternalDataConfigSchema(datasetID, tableID, bucketName, objectName, TEST_SIMPLE_CSV, TEST_INVALID_SCHEMA_JSON_LIST_WITH_NULL_ELEMENT),
+				ExpectError: regexp.MustCompile("\"schema\" contains a nil element"),
 			},
 		},
 	})
@@ -914,6 +972,35 @@ func TestAccBigQueryTable_emptySchema(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+		},
+	})
+}
+
+func TestAccBigQueryTable_invalidSchemas(t *testing.T) {
+	t.Parallel()
+	// Not an acceptance test.
+	acctest.SkipIfVcr(t)
+
+	datasetID := fmt.Sprintf("tf_test_%s", RandString(t, 10))
+	tableID := fmt.Sprintf("tf_test_%s", RandString(t, 10))
+
+	VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckBigQueryTableDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccBigQueryTableWithSchema(datasetID, tableID, TEST_INVALID_SCHEMA_NOT_JSON),
+				ExpectError: regexp.MustCompile("contains an invalid JSON"),
+			},
+			{
+				Config:      testAccBigQueryTableWithSchema(datasetID, tableID, TEST_INVALID_SCHEMA_NOT_JSON_LIST),
+				ExpectError: regexp.MustCompile("\"schema\" is not a JSON array"),
+			},
+			{
+				Config:      testAccBigQueryTableWithSchema(datasetID, tableID, TEST_INVALID_SCHEMA_JSON_LIST_WITH_NULL_ELEMENT),
+				ExpectError: regexp.MustCompile("\"schema\" contains a nil element"),
 			},
 		},
 	})
@@ -1497,6 +1584,103 @@ resource "google_bigquery_table" "mv_test" {
 `, datasetID, tableID, mViewID, enable_refresh, refresh_interval, query)
 }
 
+func testAccBigQueryTableWithMatViewAndSchema(datasetID, tableID, mViewID, query string) string {
+	return fmt.Sprintf(`
+resource "google_bigquery_dataset" "test" {
+  dataset_id = "%s"
+}
+
+resource "google_bigquery_table" "test" {
+  deletion_protection = false
+  table_id   = "%s"
+  dataset_id = google_bigquery_dataset.test.dataset_id
+
+  schema     = <<EOH
+[
+  {
+    "name": "some_int",
+    "type": "INTEGER"
+  }
+]
+EOH
+
+}
+
+resource "google_bigquery_table" "mv_test" {
+  deletion_protection = false
+  table_id   = "%s"
+  dataset_id = google_bigquery_dataset.test.dataset_id
+
+  materialized_view {
+    enable_refresh = true
+    refresh_interval_ms = 360000
+    query          = "%s"
+  }
+
+  schema     = <<EOH
+[
+  {
+    "description": "special new description with capital letter Z",
+    "name": "some_int",
+    "type": "INTEGER"
+  }
+]
+EOH
+
+  depends_on = [
+    google_bigquery_table.test,
+  ]
+}
+`, datasetID, tableID, mViewID, query)
+}
+
+func testAccBigQueryTableWithMatViewAndView(datasetID, tableID, mViewID, query string) string {
+	return fmt.Sprintf(`
+resource "google_bigquery_dataset" "test" {
+  dataset_id = "%s"
+}
+
+resource "google_bigquery_table" "test" {
+  deletion_protection = false
+  table_id   = "%s"
+  dataset_id = google_bigquery_dataset.test.dataset_id
+
+  schema     = <<EOH
+[
+  {
+    "name": "some_int",
+    "type": "INTEGER"
+  }
+]
+EOH
+
+}
+
+resource "google_bigquery_table" "mv_test" {
+  deletion_protection = false
+  table_id   = "%s"
+  dataset_id = google_bigquery_dataset.test.dataset_id
+
+  view {
+    query = <<SQL
+select "val1" as col1, "val2" as col2
+SQL
+    use_legacy_sql = false
+  }
+
+  materialized_view {
+    enable_refresh = true
+    refresh_interval_ms = 360000
+    query          = "%s"
+  }
+
+  depends_on = [
+    google_bigquery_table.test,
+  ]
+}
+`, datasetID, tableID, mViewID, query)
+}
+
 func testAccBigQueryTableUpdated(datasetID, tableID string) string {
 	return fmt.Sprintf(`
 resource "google_bigquery_dataset" "test" {
@@ -1986,6 +2170,45 @@ resource "google_bigquery_table" "test" {
 `, datasetID, bucketName, objectName, content, tableID, schema)
 }
 
+func testAccBigQueryTableFromGCSWithExternalDataConfigSchema(datasetID, tableID, bucketName, objectName, content, schema string) string {
+	return fmt.Sprintf(`
+resource "google_bigquery_dataset" "test" {
+  dataset_id = "%s"
+}
+resource "google_storage_bucket" "test" {
+  name          = "%s"
+  location      = "US"
+  force_destroy = true
+}
+resource "google_storage_bucket_object" "test" {
+  name    = "%s"
+  content = <<EOF
+%s
+EOF
+  bucket = google_storage_bucket.test.name
+}
+resource "google_bigquery_table" "test" {
+  deletion_protection = false
+  table_id   = "%s"
+  dataset_id = google_bigquery_dataset.test.dataset_id
+  external_data_configuration {
+    autodetect    = false
+    source_format = "CSV"
+    csv_options {
+      encoding = "UTF-8"
+      quote = ""
+    }
+    source_uris = [
+      "gs://${google_storage_bucket.test.name}/${google_storage_bucket_object.test.name}",
+    ]
+    schema = <<EOF
+    %s
+    EOF
+  }
+}
+`, datasetID, bucketName, objectName, content, tableID, schema)
+}
+
 func testAccBigQueryTableFromGCSWithSchema_UpdatAllowQuotedNewlines(datasetID, tableID, bucketName, objectName, content, schema string) string {
 	return fmt.Sprintf(`
 resource "google_bigquery_dataset" "test" {
@@ -2438,6 +2661,23 @@ resource "google_bigquery_table" "test" {
 `, datasetID, tableID)
 }
 
+func testAccBigQueryTableWithSchema(datasetID, tableID, schema string) string {
+	return fmt.Sprintf(`
+resource "google_bigquery_dataset" "test" {
+  dataset_id = "%s"
+}
+
+resource "google_bigquery_table" "test" {
+  deletion_protection = false
+  table_id   = "%s"
+  dataset_id = google_bigquery_dataset.test.dataset_id
+	schema = <<EOF
+  %s
+  EOF
+}
+`, datasetID, tableID, schema)
+}
+
 var TEST_CSV = `lifelock,LifeLock,,web,Tempe,AZ,1-May-07,6850000,USD,b
 lifelock,LifeLock,,web,Tempe,AZ,1-Oct-06,6000000,USD,a
 lifelock,LifeLock,,web,Tempe,AZ,1-Jan-08,25000000,USD,c
@@ -2461,6 +2701,25 @@ var TEST_SIMPLE_CSV_SCHEMA = `[
       "name": "product",
       "type": "STRING"
     },
+    {
+      "name": "price",
+      "type": "INT64"
+    }
+  ]`
+var TEST_INVALID_SCHEMA_NOT_JSON = `
+	not a valid table schema
+	`
+var TEST_INVALID_SCHEMA_NOT_JSON_LIST = `
+    {
+      "name": "country",
+      "type": "STRING"
+    }`
+var TEST_INVALID_SCHEMA_JSON_LIST_WITH_NULL_ELEMENT = `[
+    {
+      "name": "country",
+      "type": "STRING"
+    },
+    null,
     {
       "name": "price",
       "type": "INT64"

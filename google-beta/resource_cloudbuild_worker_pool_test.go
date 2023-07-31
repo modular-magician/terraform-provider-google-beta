@@ -99,7 +99,6 @@ func TestAccCloudbuildWorkerPool_withNetwork(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
 		"project":       envvar.GetTestProjectFromEnv(),
-		"network_name":  acctest.BootstrapSharedTestNetwork(t, "cloudbuild-workerpool"),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -121,9 +120,15 @@ func TestAccCloudbuildWorkerPool_withNetwork(t *testing.T) {
 
 func testAccCloudbuildWorkerPool_withNetwork(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+resource "google_project_service" "servicenetworking" {
+  service = "servicenetworking.googleapis.com"
+  disable_on_destroy = false
+}
 
-data "google_compute_network" "network" {
-  name = "%{network_name}"
+resource "google_compute_network" "network" {
+  name                    = "tf-test-network%{random_suffix}"
+  auto_create_subnetworks = false
+  depends_on = [google_project_service.servicenetworking]
 }
 
 resource "google_compute_global_address" "worker_range" {
@@ -131,13 +136,14 @@ resource "google_compute_global_address" "worker_range" {
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16
-  network       = data.google_compute_network.network.id
+  network       = google_compute_network.network.id
 }
 
 resource "google_service_networking_connection" "worker_pool_conn" {
-  network                 = data.google_compute_network.network.id
+  network                 = google_compute_network.network.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.worker_range.name]
+  depends_on              = [google_project_service.servicenetworking]
 }
 
 resource "google_cloudbuild_worker_pool" "pool" {
@@ -149,7 +155,7 @@ resource "google_cloudbuild_worker_pool" "pool" {
 		no_external_ip = false
 	}
 	network_config {
-		peered_network = data.google_compute_network.network.id
+		peered_network = google_compute_network.network.id
 		peered_network_ip_range = "/29"
 	}
 	depends_on = [google_service_networking_connection.worker_pool_conn]
