@@ -5641,7 +5641,7 @@ resource "google_compute_instance" "foobar" {
 `, instance, instance)
 }
 
-// Set fields that require stopping the instance: machine_type, min_cpu_platform, and service_account
+// Set fields that require stopping the instance: name, machine_type, min_cpu_platform, and service_account
 func testAccComputeInstance_stopInstanceToUpdate(instance string) string {
 	return fmt.Sprintf(`
 data "google_compute_image" "my_image" {
@@ -5678,7 +5678,7 @@ resource "google_compute_instance" "foobar" {
 `, instance)
 }
 
-// Update fields that require stopping the instance: machine_type, min_cpu_platform, and service_account
+// Update new values for fields that require stopping the instance: name, machine_type, min_cpu_platform, and service_account
 func testAccComputeInstance_stopInstanceToUpdate2(instance string) string {
 	return fmt.Sprintf(`
 data "google_compute_image" "my_image" {
@@ -5687,7 +5687,7 @@ data "google_compute_image" "my_image" {
 }
 
 resource "google_compute_instance" "foobar" {
-  name         = "%s"
+  name         = "%s-new"
   machine_type = "n1-standard-2"   // can't be e2 because of min_cpu_platform
   zone         = "us-central1-a"
 
@@ -5714,7 +5714,7 @@ resource "google_compute_instance" "foobar" {
 `, instance)
 }
 
-// Remove fields that require stopping the instance: min_cpu_platform and service_account (machine_type is Required)
+// Remove fields that require stopping the instance: min_cpu_platform and service_account (name and machine_type are required)
 func testAccComputeInstance_stopInstanceToUpdate3(instance string) string {
 	return fmt.Sprintf(`
 data "google_compute_image" "my_image" {
@@ -5723,7 +5723,7 @@ data "google_compute_image" "my_image" {
 }
 
 resource "google_compute_instance" "foobar" {
-  name         = "%s"
+  name         = "%s-new"
   machine_type = "n1-standard-2"   // can't be e2 because of min_cpu_platform
   zone         = "us-central1-a"
 
