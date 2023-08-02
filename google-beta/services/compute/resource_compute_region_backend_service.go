@@ -455,6 +455,11 @@ unhealthy backends regardless of protocol and session affinity. It is
 generally not recommended to use this mode overriding the default. Default value: "DEFAULT_FOR_PROTOCOL" Possible values: ["DEFAULT_FOR_PROTOCOL", "NEVER_PERSIST", "ALWAYS_PERSIST"]`,
 							Default: "DEFAULT_FOR_PROTOCOL",
 						},
+						"enable_strong_affinity": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: `Enable Strong Session Affinity for Network Load Balancing. This option is not available publicly.`,
+						},
 						"idle_timeout_sec": {
 							Type:     schema.TypeInt,
 							Computed: true,
@@ -957,6 +962,12 @@ types and may result in errors if used with the GA API. Possible values: ["HTTP"
 				Description: `The Region in which the created backend service should reside.
 If it is not provided, the provider region is used.`,
 			},
+			"security_policy": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				Description:      `The security policy associated with this backend service.`,
+			},
 			"session_affinity": {
 				Type:         schema.TypeString,
 				Computed:     true,
@@ -1270,6 +1281,12 @@ func resourceComputeRegionBackendServiceCreate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("protocol"); !tpgresource.IsEmptyValue(reflect.ValueOf(protocolProp)) && (ok || !reflect.DeepEqual(v, protocolProp)) {
 		obj["protocol"] = protocolProp
 	}
+	securityPolicyProp, err := expandComputeRegionBackendServiceSecurityPolicy(d.Get("security_policy"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("security_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(securityPolicyProp)) && (ok || !reflect.DeepEqual(v, securityPolicyProp)) {
+		obj["securityPolicy"] = securityPolicyProp
+	}
 	sessionAffinityProp, err := expandComputeRegionBackendServiceSessionAffinity(d.Get("session_affinity"), d, config)
 	if err != nil {
 		return err
@@ -1365,6 +1382,44 @@ func resourceComputeRegionBackendServiceCreate(d *schema.ResourceData, meta inte
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create RegionBackendService: %s", err)
+	}
+
+	// security_policy isn't set by Create
+	if v, ok := d.GetOkExists("security_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, securityPolicyProp)) {
+		err = resourceComputeRegionBackendServiceRead(d, meta)
+		if err != nil {
+			return err
+		}
+
+		obj := make(map[string]interface{})
+		securityPolicyProp, err := expandComputeRegionBackendServiceSecurityPolicy(v, d, config)
+		if err != nil {
+			return err
+		}
+		obj["security_policy"] = securityPolicyProp
+
+		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/backendServices/{{name}}/setSecurityPolicy")
+		if err != nil {
+			return err
+		}
+
+		res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "POST",
+			Project:   project,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+		})
+
+		if err != nil {
+			return fmt.Errorf("Error adding SecurityPolicy to RegionBackendService %q: %s", d.Id(), err)
+		}
+
+		err = ComputeOperationWaitTime(config, res, project, "Updating RegionBackendService SecurityPolicy", userAgent, d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return err
+		}
 	}
 
 	log.Printf("[DEBUG] Finished creating RegionBackendService %q: %#v", d.Id(), res)
@@ -1491,6 +1546,9 @@ func resourceComputeRegionBackendServiceRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading RegionBackendService: %s", err)
 	}
 	if err := d.Set("protocol", flattenComputeRegionBackendServiceProtocol(res["protocol"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionBackendService: %s", err)
+	}
+	if err := d.Set("security_policy", flattenComputeRegionBackendServiceSecurityPolicy(res["securityPolicy"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionBackendService: %s", err)
 	}
 	if err := d.Set("session_affinity", flattenComputeRegionBackendServiceSessionAffinity(res["sessionAffinity"], d, config)); err != nil {
@@ -1728,6 +1786,52 @@ func resourceComputeRegionBackendServiceUpdate(d *schema.ResourceData, meta inte
 	if err != nil {
 		return err
 	}
+	d.Partial(true)
+
+	if d.HasChange("security_policy") {
+		obj := make(map[string]interface{})
+
+		securityPolicyProp, err := expandComputeRegionBackendServiceSecurityPolicy(d.Get("security_policy"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("security_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, securityPolicyProp)) {
+			obj["securityPolicy"] = securityPolicyProp
+		}
+
+		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/backendServices/{{name}}/setSecurityPolicy")
+		if err != nil {
+			return err
+		}
+
+		// err == nil indicates that the billing_project value was found
+		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "POST",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+		})
+		if err != nil {
+			return fmt.Errorf("Error updating RegionBackendService %q: %s", d.Id(), err)
+		} else {
+			log.Printf("[DEBUG] Finished updating RegionBackendService %q: %#v", d.Id(), res)
+		}
+
+		err = ComputeOperationWaitTime(
+			config, res, project, "Updating RegionBackendService", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return err
+		}
+	}
+
+	d.Partial(false)
 
 	return resourceComputeRegionBackendServiceRead(d, meta)
 }
@@ -2867,6 +2971,10 @@ func flattenComputeRegionBackendServiceProtocol(v interface{}, d *schema.Resourc
 	return v
 }
 
+func flattenComputeRegionBackendServiceSecurityPolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeRegionBackendServiceSessionAffinity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -2886,6 +2994,8 @@ func flattenComputeRegionBackendServiceConnectionTrackingPolicy(v interface{}, d
 		flattenComputeRegionBackendServiceConnectionTrackingPolicyTrackingMode(original["trackingMode"], d, config)
 	transformed["connection_persistence_on_unhealthy_backends"] =
 		flattenComputeRegionBackendServiceConnectionTrackingPolicyConnectionPersistenceOnUnhealthyBackends(original["connectionPersistenceOnUnhealthyBackends"], d, config)
+	transformed["enable_strong_affinity"] =
+		flattenComputeRegionBackendServiceConnectionTrackingPolicyEnableStrongAffinity(original["enableStrongAffinity"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeRegionBackendServiceConnectionTrackingPolicyIdleTimeoutSec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2910,6 +3020,10 @@ func flattenComputeRegionBackendServiceConnectionTrackingPolicyTrackingMode(v in
 }
 
 func flattenComputeRegionBackendServiceConnectionTrackingPolicyConnectionPersistenceOnUnhealthyBackends(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeRegionBackendServiceConnectionTrackingPolicyEnableStrongAffinity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -3916,6 +4030,10 @@ func expandComputeRegionBackendServiceProtocol(v interface{}, d tpgresource.Terr
 	return v, nil
 }
 
+func expandComputeRegionBackendServiceSecurityPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandComputeRegionBackendServiceSessionAffinity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -3950,6 +4068,13 @@ func expandComputeRegionBackendServiceConnectionTrackingPolicy(v interface{}, d 
 		transformed["connectionPersistenceOnUnhealthyBackends"] = transformedConnectionPersistenceOnUnhealthyBackends
 	}
 
+	transformedEnableStrongAffinity, err := expandComputeRegionBackendServiceConnectionTrackingPolicyEnableStrongAffinity(original["enable_strong_affinity"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableStrongAffinity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableStrongAffinity"] = transformedEnableStrongAffinity
+	}
+
 	return transformed, nil
 }
 
@@ -3962,6 +4087,10 @@ func expandComputeRegionBackendServiceConnectionTrackingPolicyTrackingMode(v int
 }
 
 func expandComputeRegionBackendServiceConnectionTrackingPolicyConnectionPersistenceOnUnhealthyBackends(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeRegionBackendServiceConnectionTrackingPolicyEnableStrongAffinity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
