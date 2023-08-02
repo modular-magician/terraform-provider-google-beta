@@ -38,13 +38,6 @@ resource "google_privateca_ca_pool" "default" {
   name = "my-pool"
   location = "us-central1"
   tier = "ENTERPRISE"
-  publishing_options {
-    publish_ca_cert = true
-    publish_crl = true
-  }
-  labels = {
-    foo = "bar"
-  }
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
@@ -251,18 +244,18 @@ The following arguments are supported:
 <a name="nested_elliptic_curve"></a>The `elliptic_curve` block supports:
 
 * `signature_algorithm` -
-  (Required)
-  The algorithm used.
+  (Optional)
+  A signature algorithm that must be used. If this is omitted, any EC-based signature algorithm will be allowed.
   Possible values are: `ECDSA_P256`, `ECDSA_P384`, `EDDSA_25519`.
 
 <a name="nested_allowed_issuance_modes"></a>The `allowed_issuance_modes` block supports:
 
 * `allow_csr_based_issuance` -
-  (Required)
+  (Optional)
   When true, allows callers to create Certificates by specifying a CSR.
 
 * `allow_config_based_issuance` -
-  (Required)
+  (Optional)
   When true, allows callers to create Certificates by specifying a CertificateConfig.
 
 <a name="nested_identity_constraints"></a>The `identity_constraints` block supports:
@@ -321,12 +314,12 @@ The following arguments are supported:
   "Authority Information Access" extension in the certificate.
 
 * `ca_options` -
-  (Required)
+  (Optional)
   Describes values that are relevant in a CA certificate.
   Structure is [documented below](#nested_ca_options).
 
 * `key_usage` -
-  (Required)
+  (Optional)
   Indicates the intended use for keys that correspond to a certificate.
   Structure is [documented below](#nested_key_usage).
 
@@ -390,12 +383,12 @@ The following arguments are supported:
 <a name="nested_key_usage"></a>The `key_usage` block supports:
 
 * `base_key_usage` -
-  (Required)
+  (Optional)
   Describes high-level ways in which a key may be used.
   Structure is [documented below](#nested_base_key_usage).
 
 * `extended_key_usage` -
-  (Required)
+  (Optional)
   Describes high-level ways in which a key may be used.
   Structure is [documented below](#nested_extended_key_usage).
 
@@ -540,13 +533,13 @@ The following arguments are supported:
 <a name="nested_publishing_options"></a>The `publishing_options` block supports:
 
 * `publish_ca_cert` -
-  (Required)
+  (Optional)
   When true, publishes each CertificateAuthority's CA certificate and includes its URL in the "Authority Information Access"
   X.509 extension in all issued Certificates. If this is false, the CA certificate will not be published and the corresponding
   X.509 extension will not be written in issued certificates.
 
 * `publish_crl` -
-  (Required)
+  (Optional)
   When true, publishes each CertificateAuthority's CRL and includes its URL in the "CRL Distribution Points" X.509 extension
   in all issued Certificates. If this is false, CRLs will not be published and the corresponding X.509 extension will not
   be written in issued certificates. CRLs will expire 7 days from their creation. However, we will rebuild daily. CRLs are

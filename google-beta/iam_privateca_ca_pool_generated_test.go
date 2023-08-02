@@ -333,13 +333,6 @@ resource "google_privateca_ca_pool" "default" {
   name = "tf-test-my-pool%{random_suffix}"
   location = "us-central1"
   tier = "ENTERPRISE"
-  publishing_options {
-    publish_ca_cert = true
-    publish_crl = true
-  }
-  labels = {
-    foo = "bar"
-  }
 }
 
 resource "google_privateca_ca_pool_iam_member" "foo" {
@@ -356,13 +349,6 @@ resource "google_privateca_ca_pool" "default" {
   name = "tf-test-my-pool%{random_suffix}"
   location = "us-central1"
   tier = "ENTERPRISE"
-  publishing_options {
-    publish_ca_cert = true
-    publish_crl = true
-  }
-  labels = {
-    foo = "bar"
-  }
 }
 
 data "google_iam_policy" "foo" {
@@ -392,13 +378,6 @@ resource "google_privateca_ca_pool" "default" {
   name = "tf-test-my-pool%{random_suffix}"
   location = "us-central1"
   tier = "ENTERPRISE"
-  publishing_options {
-    publish_ca_cert = true
-    publish_crl = true
-  }
-  labels = {
-    foo = "bar"
-  }
 }
 
 data "google_iam_policy" "foo" {
@@ -417,13 +396,6 @@ resource "google_privateca_ca_pool" "default" {
   name = "tf-test-my-pool%{random_suffix}"
   location = "us-central1"
   tier = "ENTERPRISE"
-  publishing_options {
-    publish_ca_cert = true
-    publish_crl = true
-  }
-  labels = {
-    foo = "bar"
-  }
 }
 
 resource "google_privateca_ca_pool_iam_binding" "foo" {
@@ -440,13 +412,6 @@ resource "google_privateca_ca_pool" "default" {
   name = "tf-test-my-pool%{random_suffix}"
   location = "us-central1"
   tier = "ENTERPRISE"
-  publishing_options {
-    publish_ca_cert = true
-    publish_crl = true
-  }
-  labels = {
-    foo = "bar"
-  }
 }
 
 resource "google_privateca_ca_pool_iam_binding" "foo" {
@@ -463,13 +428,6 @@ resource "google_privateca_ca_pool" "default" {
   name = "tf-test-my-pool%{random_suffix}"
   location = "us-central1"
   tier = "ENTERPRISE"
-  publishing_options {
-    publish_ca_cert = true
-    publish_crl = true
-  }
-  labels = {
-    foo = "bar"
-  }
 }
 
 resource "google_privateca_ca_pool_iam_binding" "foo" {
@@ -491,13 +449,6 @@ resource "google_privateca_ca_pool" "default" {
   name = "tf-test-my-pool%{random_suffix}"
   location = "us-central1"
   tier = "ENTERPRISE"
-  publishing_options {
-    publish_ca_cert = true
-    publish_crl = true
-  }
-  labels = {
-    foo = "bar"
-  }
 }
 
 resource "google_privateca_ca_pool_iam_binding" "foo" {
@@ -537,13 +488,6 @@ resource "google_privateca_ca_pool" "default" {
   name = "tf-test-my-pool%{random_suffix}"
   location = "us-central1"
   tier = "ENTERPRISE"
-  publishing_options {
-    publish_ca_cert = true
-    publish_crl = true
-  }
-  labels = {
-    foo = "bar"
-  }
 }
 
 resource "google_privateca_ca_pool_iam_member" "foo" {
@@ -565,13 +509,6 @@ resource "google_privateca_ca_pool" "default" {
   name = "tf-test-my-pool%{random_suffix}"
   location = "us-central1"
   tier = "ENTERPRISE"
-  publishing_options {
-    publish_ca_cert = true
-    publish_crl = true
-  }
-  labels = {
-    foo = "bar"
-  }
 }
 
 resource "google_privateca_ca_pool_iam_member" "foo" {
@@ -611,13 +548,6 @@ resource "google_privateca_ca_pool" "default" {
   name = "tf-test-my-pool%{random_suffix}"
   location = "us-central1"
   tier = "ENTERPRISE"
-  publishing_options {
-    publish_ca_cert = true
-    publish_crl = true
-  }
-  labels = {
-    foo = "bar"
-  }
 }
 
 data "google_iam_policy" "foo" {

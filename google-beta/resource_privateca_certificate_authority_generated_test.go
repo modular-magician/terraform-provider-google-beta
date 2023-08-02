@@ -73,9 +73,6 @@ resource "google_privateca_certificate_authority" "default" {
         organization = "HashiCorp"
         common_name = "my-certificate-authority"
       }
-      subject_alt_name {
-        dns_names = ["hashicorp.com"]
-      }
     }
     x509_config {
       ca_options {

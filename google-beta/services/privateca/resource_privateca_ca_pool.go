@@ -85,12 +85,12 @@ running 'gcloud privateca locations list'.`,
 								Schema: map[string]*schema.Schema{
 									"allow_config_based_issuance": {
 										Type:        schema.TypeBool,
-										Required:    true,
+										Optional:    true,
 										Description: `When true, allows callers to create Certificates by specifying a CertificateConfig.`,
 									},
 									"allow_csr_based_issuance": {
 										Type:        schema.TypeBool,
-										Required:    true,
+										Optional:    true,
 										Description: `When true, allows callers to create Certificates by specifying a CSR.`,
 									},
 								},
@@ -112,9 +112,9 @@ Otherwise, any key may be used.`,
 											Schema: map[string]*schema.Schema{
 												"signature_algorithm": {
 													Type:         schema.TypeString,
-													Required:     true,
-													ValidateFunc: verify.ValidateEnum([]string{"ECDSA_P256", "ECDSA_P384", "EDDSA_25519"}),
-													Description:  `The algorithm used. Possible values: ["ECDSA_P256", "ECDSA_P384", "EDDSA_25519"]`,
+													Optional:     true,
+													ValidateFunc: verify.ValidateEnum([]string{"ECDSA_P256", "ECDSA_P384", "EDDSA_25519", ""}),
+													Description:  `A signature algorithm that must be used. If this is omitted, any EC-based signature algorithm will be allowed. Possible values: ["ECDSA_P256", "ECDSA_P384", "EDDSA_25519"]`,
 												},
 											},
 										},
@@ -154,9 +154,56 @@ issuance request will fail.`,
 							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"additional_extensions": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Specifies an X.509 extension, which may be used in different parts of X.509 objects like certificates, CSRs, and CRLs.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"critical": {
+													Type:     schema.TypeBool,
+													Required: true,
+													Description: `Indicates whether or not this extension is critical (i.e., if the client does not know how to
+handle this extension, the client should consider this to be an error).`,
+												},
+												"object_id": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `Describes values that are relevant in a CA certificate.`,
+													MaxItems:    1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"object_id_path": {
+																Type:        schema.TypeList,
+																Required:    true,
+																Description: `An ObjectId specifies an object identifier (OID). These provide context and describe types in ASN.1 messages.`,
+																Elem: &schema.Schema{
+																	Type: schema.TypeInt,
+																},
+															},
+														},
+													},
+												},
+												"value": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `The value of this X.509 extension. A base64-encoded string.`,
+												},
+											},
+										},
+									},
+									"aia_ocsp_servers": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `Describes Online Certificate Status Protocol (OCSP) endpoint addresses that appear in the
+"Authority Information Access" extension in the certificate.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
 									"ca_options": {
 										Type:        schema.TypeList,
-										Required:    true,
+										Optional:    true,
 										Description: `Describes values that are relevant in a CA certificate.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
@@ -190,14 +237,14 @@ the max path length will be omitted from the CA certificate.`,
 									},
 									"key_usage": {
 										Type:        schema.TypeList,
-										Required:    true,
+										Optional:    true,
 										Description: `Indicates the intended use for keys that correspond to a certificate.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"base_key_usage": {
 													Type:        schema.TypeList,
-													Required:    true,
+													Optional:    true,
 													Description: `Describes high-level ways in which a key may be used.`,
 													MaxItems:    1,
 													Elem: &schema.Resource{
@@ -252,7 +299,7 @@ the max path length will be omitted from the CA certificate.`,
 												},
 												"extended_key_usage": {
 													Type:        schema.TypeList,
-													Required:    true,
+													Optional:    true,
 													Description: `Describes high-level ways in which a key may be used.`,
 													MaxItems:    1,
 													Elem: &schema.Resource{
@@ -308,53 +355,6 @@ the max path length will be omitted from the CA certificate.`,
 													},
 												},
 											},
-										},
-									},
-									"additional_extensions": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: `Specifies an X.509 extension, which may be used in different parts of X.509 objects like certificates, CSRs, and CRLs.`,
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"critical": {
-													Type:     schema.TypeBool,
-													Required: true,
-													Description: `Indicates whether or not this extension is critical (i.e., if the client does not know how to
-handle this extension, the client should consider this to be an error).`,
-												},
-												"object_id": {
-													Type:        schema.TypeList,
-													Required:    true,
-													Description: `Describes values that are relevant in a CA certificate.`,
-													MaxItems:    1,
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"object_id_path": {
-																Type:        schema.TypeList,
-																Required:    true,
-																Description: `An ObjectId specifies an object identifier (OID). These provide context and describe types in ASN.1 messages.`,
-																Elem: &schema.Schema{
-																	Type: schema.TypeInt,
-																},
-															},
-														},
-													},
-												},
-												"value": {
-													Type:        schema.TypeString,
-													Required:    true,
-													Description: `The value of this X.509 extension. A base64-encoded string.`,
-												},
-											},
-										},
-									},
-									"aia_ocsp_servers": {
-										Type:     schema.TypeList,
-										Optional: true,
-										Description: `Describes Online Certificate Status Protocol (OCSP) endpoint addresses that appear in the
-"Authority Information Access" extension in the certificate.`,
-										Elem: &schema.Schema{
-											Type: schema.TypeString,
 										},
 									},
 									"name_constraints": {
@@ -561,21 +561,6 @@ An object containing a list of "key": value pairs. Example: { "name": "wrench", 
 				MaxItems:         1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"publish_ca_cert": {
-							Type:     schema.TypeBool,
-							Required: true,
-							Description: `When true, publishes each CertificateAuthority's CA certificate and includes its URL in the "Authority Information Access"
-X.509 extension in all issued Certificates. If this is false, the CA certificate will not be published and the corresponding
-X.509 extension will not be written in issued certificates.`,
-						},
-						"publish_crl": {
-							Type:     schema.TypeBool,
-							Required: true,
-							Description: `When true, publishes each CertificateAuthority's CRL and includes its URL in the "CRL Distribution Points" X.509 extension
-in all issued Certificates. If this is false, CRLs will not be published and the corresponding X.509 extension will not
-be written in issued certificates. CRLs will expire 7 days from their creation. However, we will rebuild daily. CRLs are
-also rebuilt shortly after a certificate is revoked.`,
-						},
 						"encoding_format": {
 							Type:         schema.TypeString,
 							Optional:     true,
@@ -583,6 +568,21 @@ also rebuilt shortly after a certificate is revoked.`,
 							Description: `Specifies the encoding format of each CertificateAuthority's CA
 certificate and CRLs. If this is omitted, CA certificates and CRLs
 will be published in PEM. Possible values: ["PEM", "DER"]`,
+						},
+						"publish_ca_cert": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `When true, publishes each CertificateAuthority's CA certificate and includes its URL in the "Authority Information Access"
+X.509 extension in all issued Certificates. If this is false, the CA certificate will not be published and the corresponding
+X.509 extension will not be written in issued certificates.`,
+						},
+						"publish_crl": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `When true, publishes each CertificateAuthority's CRL and includes its URL in the "CRL Distribution Points" X.509 extension
+in all issued Certificates. If this is false, CRLs will not be published and the corresponding X.509 extension will not
+be written in issued certificates. CRLs will expire 7 days from their creation. However, we will rebuild daily. CRLs are
+also rebuilt shortly after a certificate is revoked.`,
 						},
 					},
 				},
