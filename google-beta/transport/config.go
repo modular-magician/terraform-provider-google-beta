@@ -217,6 +217,7 @@ type Config struct {
 	ComputeBasePath                  string
 	ContainerAnalysisBasePath        string
 	ContainerAttachedBasePath        string
+	ContainerAwsBasePath             string
 	DatabaseMigrationServiceBasePath string
 	DataCatalogBasePath              string
 	DataformBasePath                 string
@@ -303,7 +304,6 @@ type Config struct {
 	TagsLocationBasePath      string
 
 	// dcl
-	ContainerAwsBasePath   string
 	ContainerAzureBasePath string
 
 	RequestBatcherServiceUsage *RequestBatcher
@@ -344,6 +344,7 @@ const CloudTasksBasePathKey = "CloudTasks"
 const ComputeBasePathKey = "Compute"
 const ContainerAnalysisBasePathKey = "ContainerAnalysis"
 const ContainerAttachedBasePathKey = "ContainerAttached"
+const ContainerAwsBasePathKey = "ContainerAws"
 const DatabaseMigrationServiceBasePathKey = "DatabaseMigrationService"
 const DataCatalogBasePathKey = "DataCatalog"
 const DataformBasePathKey = "Dataform"
@@ -425,7 +426,6 @@ const IamCredentialsBasePathKey = "IamCredentials"
 const ResourceManagerV3BasePathKey = "ResourceManagerV3"
 const ServiceNetworkingBasePathKey = "ServiceNetworking"
 const BigtableAdminBasePathKey = "BigtableAdmin"
-const ContainerAwsBasePathKey = "ContainerAws"
 const ContainerAzureBasePathKey = "ContainerAzure"
 const TagsLocationBasePathKey = "TagsLocation"
 
@@ -465,6 +465,7 @@ var DefaultBasePaths = map[string]string{
 	ComputeBasePathKey:                  "https://compute.googleapis.com/compute/beta/",
 	ContainerAnalysisBasePathKey:        "https://containeranalysis.googleapis.com/v1beta1/",
 	ContainerAttachedBasePathKey:        "https://{{location}}-gkemulticloud.googleapis.com/v1/",
+	ContainerAwsBasePathKey:             "https://{{location}}-gkemulticloud.googleapis.com/v1/",
 	DatabaseMigrationServiceBasePathKey: "https://datamigration.googleapis.com/v1/",
 	DataCatalogBasePathKey:              "https://datacatalog.googleapis.com/v1beta1/",
 	DataformBasePathKey:                 "https://dataform.googleapis.com/v1beta1/",
@@ -546,7 +547,6 @@ var DefaultBasePaths = map[string]string{
 	ResourceManagerV3BasePathKey:        "https://cloudresourcemanager.googleapis.com/v3/",
 	ServiceNetworkingBasePathKey:        "https://servicenetworking.googleapis.com/v1/",
 	BigtableAdminBasePathKey:            "https://bigtableadmin.googleapis.com/v2/",
-	ContainerAwsBasePathKey:             "https://{{location}}-gkemulticloud.googleapis.com/v1/",
 	ContainerAzureBasePathKey:           "https://{{location}}-gkemulticloud.googleapis.com/v1/",
 	TagsLocationBasePathKey:             "https://{{location}}-cloudresourcemanager.googleapis.com/v3/",
 }
@@ -784,6 +784,11 @@ func HandleSDKDefaults(d *schema.ResourceData) error {
 		d.Set("container_attached_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_CONTAINER_ATTACHED_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[ContainerAttachedBasePathKey]))
+	}
+	if d.Get("container_aws_custom_endpoint") == "" {
+		d.Set("container_aws_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_CONTAINER_AWS_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[ContainerAwsBasePathKey]))
 	}
 	if d.Get("database_migration_service_custom_endpoint") == "" {
 		d.Set("database_migration_service_custom_endpoint", MultiEnvDefault([]string{
@@ -1204,12 +1209,6 @@ func HandleSDKDefaults(d *schema.ResourceData) error {
 		d.Set(TagsLocationCustomEndpointEntryKey, MultiEnvDefault([]string{
 			"GOOGLE_TAGS_LOCATION_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[TagsLocationBasePathKey]))
-	}
-
-	if d.Get(ContainerAwsCustomEndpointEntryKey) == "" {
-		d.Set(ContainerAwsCustomEndpointEntryKey, MultiEnvDefault([]string{
-			"GOOGLE_CONTAINERAWS_CUSTOM_ENDPOINT",
-		}, DefaultBasePaths[ContainerAwsBasePathKey]))
 	}
 
 	if d.Get(ContainerAzureCustomEndpointEntryKey) == "" {
@@ -2039,6 +2038,7 @@ func ConfigureBasePaths(c *Config) {
 	c.ComputeBasePath = DefaultBasePaths[ComputeBasePathKey]
 	c.ContainerAnalysisBasePath = DefaultBasePaths[ContainerAnalysisBasePathKey]
 	c.ContainerAttachedBasePath = DefaultBasePaths[ContainerAttachedBasePathKey]
+	c.ContainerAwsBasePath = DefaultBasePaths[ContainerAwsBasePathKey]
 	c.DatabaseMigrationServiceBasePath = DefaultBasePaths[DatabaseMigrationServiceBasePathKey]
 	c.DataCatalogBasePath = DefaultBasePaths[DataCatalogBasePathKey]
 	c.DataformBasePath = DefaultBasePaths[DataformBasePathKey]

@@ -30,12 +30,12 @@ import (
 )
 
 func init() {
-	sweeper.AddTestSweepers("ContainerAwsCluster", testSweepContainerAwsCluster)
+	sweeper.AddTestSweepers("ContainerAwsNodePool", testSweepContainerAwsNodePool)
 }
 
 // At the time of writing, the CI only passes us-central1 as the region
-func testSweepContainerAwsCluster(region string) error {
-	resourceName := "ContainerAwsCluster"
+func testSweepContainerAwsNodePool(region string) error {
+	resourceName := "ContainerAwsNodePool"
 	log.Printf("[INFO][SWEEPER_LOG] Starting sweeper for %s", resourceName)
 
 	config, err := sweeper.SharedConfigForRegion(region)
@@ -64,7 +64,7 @@ func testSweepContainerAwsCluster(region string) error {
 		},
 	}
 
-	listTemplate := strings.Split("https://{{location}}-gkemulticloud.googleapis.com/v1/projects/{{project}}/locations/{{location}}/awsClusters", "?")[0]
+	listTemplate := strings.Split("https://{{location}}-gkemulticloud.googleapis.com/v1/projects/{{project}}/locations/{{location}}/awsClusters/{{cluster}}/awsNodePools", "?")[0]
 	listUrl, err := tpgresource.ReplaceVars(d, config, listTemplate)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
@@ -83,7 +83,7 @@ func testSweepContainerAwsCluster(region string) error {
 		return nil
 	}
 
-	resourceList, ok := res["clusters"]
+	resourceList, ok := res["nodePools"]
 	if !ok {
 		log.Printf("[INFO][SWEEPER_LOG] Nothing found in response.")
 		return nil
@@ -108,7 +108,7 @@ func testSweepContainerAwsCluster(region string) error {
 			continue
 		}
 
-		deleteTemplate := "https://{{location}}-gkemulticloud.googleapis.com/v1/projects/{{project}}/locations/{{location}}/awsClusters/{{name}}"
+		deleteTemplate := "https://{{location}}-gkemulticloud.googleapis.com/v1/projects/{{project}}/locations/{{location}}/awsClusters/{{cluster}}/awsNodePools/{{name}}"
 		deleteUrl, err := tpgresource.ReplaceVars(d, config, deleteTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing delete url: %s", err)

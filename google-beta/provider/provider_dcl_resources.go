@@ -27,7 +27,6 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudbuildv2"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/clouddeploy"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/containeraws"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/containerazure"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataplex"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataproc"
@@ -58,8 +57,6 @@ var dclResources = map[string]*schema.Resource{
 	"google_compute_region_network_firewall_policy_association": compute.ResourceComputeRegionNetworkFirewallPolicyAssociation(),
 	"google_compute_network_firewall_policy_rule":               compute.ResourceComputeNetworkFirewallPolicyRule(),
 	"google_compute_region_network_firewall_policy_rule":        compute.ResourceComputeRegionNetworkFirewallPolicyRule(),
-	"google_container_aws_cluster":                              containeraws.ResourceContainerAwsCluster(),
-	"google_container_aws_node_pool":                            containeraws.ResourceContainerAwsNodePool(),
 	"google_container_azure_client":                             containerazure.ResourceContainerAzureClient(),
 	"google_container_azure_cluster":                            containerazure.ResourceContainerAzureCluster(),
 	"google_container_azure_node_pool":                          containerazure.ResourceContainerAzureNodePool(),

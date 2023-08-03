@@ -58,6 +58,7 @@ type ProviderModel struct {
 	ComputeCustomEndpoint                  types.String `tfsdk:"compute_custom_endpoint"`
 	ContainerAnalysisCustomEndpoint        types.String `tfsdk:"container_analysis_custom_endpoint"`
 	ContainerAttachedCustomEndpoint        types.String `tfsdk:"container_attached_custom_endpoint"`
+	ContainerAwsCustomEndpoint             types.String `tfsdk:"container_aws_custom_endpoint"`
 	DatabaseMigrationServiceCustomEndpoint types.String `tfsdk:"database_migration_service_custom_endpoint"`
 	DataCatalogCustomEndpoint              types.String `tfsdk:"data_catalog_custom_endpoint"`
 	DataformCustomEndpoint                 types.String `tfsdk:"dataform_custom_endpoint"`
@@ -144,7 +145,6 @@ type ProviderModel struct {
 	TagsLocationCustomEndpoint      types.String `tfsdk:"tags_location_custom_endpoint"`
 
 	// dcl
-	ContainerAwsCustomEndpoint   types.String `tfsdk:"container_aws_custom_endpoint"`
 	ContainerAzureCustomEndpoint types.String `tfsdk:"container_azure_custom_endpoint"`
 
 	// dcl generated

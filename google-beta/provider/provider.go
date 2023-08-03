@@ -46,6 +46,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/containeranalysis"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/containerattached"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/containeraws"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/databasemigrationservice"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/datacatalog"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataform"
@@ -121,7 +122,6 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/composer"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/container"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/containeraws"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/containerazure"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataflow"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicenetworking"
@@ -399,6 +399,11 @@ func Provider() *schema.Provider {
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
 			"container_attached_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
+			"container_aws_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
@@ -777,7 +782,6 @@ func Provider() *schema.Provider {
 			transport_tpg.TagsLocationCustomEndpointEntryKey:      transport_tpg.TagsLocationCustomEndpointEntry,
 
 			// dcl
-			transport_tpg.ContainerAwsCustomEndpointEntryKey:   transport_tpg.ContainerAwsCustomEndpointEntry,
 			transport_tpg.ContainerAzureCustomEndpointEntryKey: transport_tpg.ContainerAzureCustomEndpointEntry,
 		},
 
@@ -1061,9 +1065,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		})
 }
 
-// Generated resources: 358
+// Generated resources: 360
 // Generated IAM resources: 231
-// Total generated resources: 589
+// Total generated resources: 591
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1328,6 +1332,8 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_container_analysis_note_iam_policy":                      tpgiamresource.ResourceIamPolicy(containeranalysis.ContainerAnalysisNoteIamSchema, containeranalysis.ContainerAnalysisNoteIamUpdaterProducer, containeranalysis.ContainerAnalysisNoteIdParseFunc),
 			"google_container_analysis_occurrence":                           containeranalysis.ResourceContainerAnalysisOccurrence(),
 			"google_container_attached_cluster":                              containerattached.ResourceContainerAttachedCluster(),
+			"google_container_aws_cluster":                                   containeraws.ResourceContainerAwsCluster(),
+			"google_container_aws_node_pool":                                 containeraws.ResourceContainerAwsNodePool(),
 			"google_database_migration_service_connection_profile":           databasemigrationservice.ResourceDatabaseMigrationServiceConnectionProfile(),
 			"google_data_catalog_entry":                                      datacatalog.ResourceDataCatalogEntry(),
 			"google_data_catalog_entry_group":                                datacatalog.ResourceDataCatalogEntryGroup(),
@@ -1940,6 +1946,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.ComputeBasePath = d.Get("compute_custom_endpoint").(string)
 	config.ContainerAnalysisBasePath = d.Get("container_analysis_custom_endpoint").(string)
 	config.ContainerAttachedBasePath = d.Get("container_attached_custom_endpoint").(string)
+	config.ContainerAwsBasePath = d.Get("container_aws_custom_endpoint").(string)
 	config.DatabaseMigrationServiceBasePath = d.Get("database_migration_service_custom_endpoint").(string)
 	config.DataCatalogBasePath = d.Get("data_catalog_custom_endpoint").(string)
 	config.DataformBasePath = d.Get("dataform_custom_endpoint").(string)
@@ -2028,7 +2035,6 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.TagsLocationBasePath = d.Get(transport_tpg.TagsLocationCustomEndpointEntryKey).(string)
 
 	// dcl
-	config.ContainerAwsBasePath = d.Get(transport_tpg.ContainerAwsCustomEndpointEntryKey).(string)
 	config.ContainerAzureBasePath = d.Get(transport_tpg.ContainerAzureCustomEndpointEntryKey).(string)
 
 	stopCtx, ok := schema.StopContext(ctx)
