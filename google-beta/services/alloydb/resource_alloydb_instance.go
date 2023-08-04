@@ -67,8 +67,8 @@ func ResourceAlloydbInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"PRIMARY", "READ_POOL"}),
-				Description:  `The type of the instance. If the instance type is READ_POOL, provide the associated PRIMARY instance in the 'depends_on' meta-data attribute. Possible values: ["PRIMARY", "READ_POOL"]`,
+				ValidateFunc: verify.ValidateEnum([]string{"PRIMARY", "SECONDARY", "READ_POOL"}),
+				Description:  `The type of the instance. If the instance type is READ_POOL, provide the associated PRIMARY instance in the 'depends_on' meta-data attribute. Possible values: ["PRIMARY", "SECONDARY", "READ_POOL"]`,
 			},
 			"annotations": {
 				Type:        schema.TypeMap,
@@ -259,6 +259,12 @@ func resourceAlloydbInstanceCreate(d *schema.ResourceData, meta interface{}) err
 		billingProject = bp
 	}
 
+	if d.Get("instance_type").(string) == "SECONDARY" {
+		url, err = tpgresource.ReplaceVars(d, config, "{{AlloydbBasePath}}{{cluster}}/instances:createsecondary?instanceId={{instance_id}}")
+		if err != nil {
+			return err
+		}
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",

@@ -79,6 +79,98 @@ resource "google_service_networking_connection" "vpc_connection" {
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=alloydb_instance_cross_region_replication&cloudshell_image=gcr.io%2Fgraphite-cloud-shell-images%2Fterraform%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Alloydb Instance Cross Region Replication
+
+
+```hcl
+resource "google_alloydb_instance" "default" {
+  cluster       = google_alloydb_cluster.default.name
+  instance_id   = "alloydb-instance"
+  instance_type = "PRIMARY"
+
+  machine_config {
+    cpu_count = 2
+  }
+
+  depends_on = [
+    google_service_networking_connection.vpc_connection, 
+    google_alloydb_cluster.default
+  ]
+}
+
+resource "google_alloydb_instance" "default-secondary" {
+  cluster       = google_alloydb_cluster.default-secondary.name
+  instance_id   = "alloydb-instance-secondary"
+  instance_type = "SECONDARY"
+
+  machine_config {
+    cpu_count = 2
+  }
+
+  depends_on = [
+    google_service_networking_connection.vpc_connection, 
+    google_alloydb_cluster.default-secondary,
+    google_alloydb_instance.default
+  ]
+}
+
+resource "google_alloydb_cluster" "default" {
+  cluster_id = "alloydb-cluster"
+  location   = "us-central1"
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+
+  initial_user {
+    password = "alloydb-cluster"
+  }
+
+  labels = {
+    test = "alloydb-cluster"
+  }
+}
+
+resource "google_alloydb_cluster" "default-secondary" {
+  cluster_id = "alloydb-cluster-secondary"
+  location   = "us-east1"
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+  
+  create_secondary = true
+
+  secondary_config {
+    primary_cluster_name = google_alloydb_cluster.default.name
+  }
+
+  labels = {
+    test = "alloydb-cluster-secondary"
+  }
+
+  depends_on = [google_alloydb_cluster.default]
+}
+
+data "google_project" "project" {}
+
+resource "google_compute_network" "default" {
+  name = "alloydb-network"
+}
+
+resource "google_compute_global_address" "private_ip_alloc" {
+  name          =  "alloydb-cluster"
+  address_type  = "INTERNAL"
+  purpose       = "VPC_PEERING"
+  prefix_length = 16
+  network       = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+}
+
+resource "google_service_networking_connection" "vpc_connection" {
+  network                 = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
+}
+```
 
 ## Argument Reference
 
@@ -88,7 +180,7 @@ The following arguments are supported:
 * `instance_type` -
   (Required)
   The type of the instance. If the instance type is READ_POOL, provide the associated PRIMARY instance in the `depends_on` meta-data attribute.
-  Possible values are: `PRIMARY`, `READ_POOL`.
+  Possible values are: `PRIMARY`, `SECONDARY`, `READ_POOL`.
 
 * `cluster` -
   (Required)

@@ -102,6 +102,118 @@ resource "google_service_networking_connection" "vpc_connection" {
 `, context)
 }
 
+func TestAccAlloydbInstance_alloydbInstanceCrossRegionReplicationExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckAlloydbInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAlloydbInstance_alloydbInstanceCrossRegionReplicationExample(context),
+			},
+			{
+				ResourceName:            "google_alloydb_instance.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"display_name", "cluster", "instance_id", "reconciling", "update_time"},
+			},
+		},
+	})
+}
+
+func testAccAlloydbInstance_alloydbInstanceCrossRegionReplicationExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_alloydb_instance" "default" {
+  cluster       = google_alloydb_cluster.default.name
+  instance_id   = "tf-test-alloydb-instance%{random_suffix}"
+  instance_type = "PRIMARY"
+
+  machine_config {
+    cpu_count = 2
+  }
+
+  depends_on = [
+    google_service_networking_connection.vpc_connection, 
+    google_alloydb_cluster.default
+  ]
+}
+
+resource "google_alloydb_instance" "default-secondary" {
+  cluster       = google_alloydb_cluster.default-secondary.name
+  instance_id   = "tf-test-alloydb-instance-secondary%{random_suffix}"
+  instance_type = "SECONDARY"
+
+  machine_config {
+    cpu_count = 2
+  }
+
+  depends_on = [
+    google_service_networking_connection.vpc_connection, 
+    google_alloydb_cluster.default-secondary,
+    google_alloydb_instance.default
+  ]
+}
+
+resource "google_alloydb_cluster" "default" {
+  cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
+  location   = "us-central1"
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+
+  initial_user {
+    password = "tf-test-alloydb-cluster%{random_suffix}"
+  }
+
+  labels = {
+    test = "tf-test-alloydb-cluster%{random_suffix}"
+  }
+}
+
+resource "google_alloydb_cluster" "default-secondary" {
+  cluster_id = "tf-test-alloydb-cluster-secondary%{random_suffix}"
+  location   = "us-east1"
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+  
+  create_secondary = true
+
+  secondary_config {
+    primary_cluster_name = google_alloydb_cluster.default.name
+  }
+
+  labels = {
+    test = "tf-test-alloydb-cluster-secondary%{random_suffix}"
+  }
+
+  depends_on = [google_alloydb_cluster.default]
+}
+
+data "google_project" "project" {}
+
+resource "google_compute_network" "default" {
+  name = "tf-test-alloydb-network%{random_suffix}"
+}
+
+resource "google_compute_global_address" "private_ip_alloc" {
+  name          =  "tf-test-alloydb-cluster%{random_suffix}"
+  address_type  = "INTERNAL"
+  purpose       = "VPC_PEERING"
+  prefix_length = 16
+  network       = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+}
+
+resource "google_service_networking_connection" "vpc_connection" {
+  network                 = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
+}
+`, context)
+}
+
 func testAccCheckAlloydbInstanceDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

@@ -245,6 +245,11 @@ If not set, defaults to 14 days.`,
 					},
 				},
 			},
+			"create_secondary": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: `Creates cluster as a secondary cluster`,
+			},
 			"display_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -292,6 +297,22 @@ If not set, defaults to 14 days.`,
 				Optional:    true,
 				Description: `User-defined labels for the alloydb cluster.`,
 				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"secondary_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Cross Region replication config specific to SECONDARY cluster.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"primary_cluster_name": {
+							Type:             schema.TypeString,
+							Required:         true,
+							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+							Description:      `The name of the primary cluster name with the format: projects/{project}/locations/{region}/clusters/{clusterId}.`,
+						},
+					},
+				},
 			},
 			"backup_source": {
 				Type:        schema.TypeList,
@@ -412,6 +433,23 @@ If not set, defaults to 14 days.`,
 				Computed:    true,
 				Description: `The name of the cluster resource.`,
 			},
+			"primary_config": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: `Cross Region replication config specific to PRIMARY cluster.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"secondary_cluster_names": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: `Names of the clusters that are replicating from this cluster.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
 			"uid": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -466,6 +504,12 @@ func resourceAlloydbClusterCreate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("initial_user"); !tpgresource.IsEmptyValue(reflect.ValueOf(initialUserProp)) && (ok || !reflect.DeepEqual(v, initialUserProp)) {
 		obj["initialUser"] = initialUserProp
 	}
+	secondaryConfigProp, err := expandAlloydbClusterSecondaryConfig(d.Get("secondary_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("secondary_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(secondaryConfigProp)) && (ok || !reflect.DeepEqual(v, secondaryConfigProp)) {
+		obj["secondaryConfig"] = secondaryConfigProp
+	}
 	continuousBackupConfigProp, err := expandAlloydbClusterContinuousBackupConfig(d.Get("continuous_backup_config"), d, config)
 	if err != nil {
 		return err
@@ -498,6 +542,12 @@ func resourceAlloydbClusterCreate(d *schema.ResourceData, meta interface{}) erro
 		billingProject = bp
 	}
 
+	if d.Get("create_secondary").(bool) {
+		url, err = tpgresource.ReplaceVars(d, config, "{{AlloydbBasePath}}projects/{{project}}/locations/{{location}}/clusters:createsecondary?clusterId={{cluster_id}}")
+		if err != nil {
+			return err
+		}
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -600,6 +650,12 @@ func resourceAlloydbClusterRead(d *schema.ResourceData, meta interface{}) error 
 	if err := d.Set("database_version", flattenAlloydbClusterDatabaseVersion(res["databaseVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+	if err := d.Set("primary_config", flattenAlloydbClusterPrimaryConfig(res["primaryConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Cluster: %s", err)
+	}
+	if err := d.Set("secondary_config", flattenAlloydbClusterSecondaryConfig(res["secondaryConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Cluster: %s", err)
+	}
 	if err := d.Set("continuous_backup_config", flattenAlloydbClusterContinuousBackupConfig(res["continuousBackupConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
@@ -662,6 +718,12 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("initial_user"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, initialUserProp)) {
 		obj["initialUser"] = initialUserProp
 	}
+	secondaryConfigProp, err := expandAlloydbClusterSecondaryConfig(d.Get("secondary_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("secondary_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, secondaryConfigProp)) {
+		obj["secondaryConfig"] = secondaryConfigProp
+	}
 	continuousBackupConfigProp, err := expandAlloydbClusterContinuousBackupConfig(d.Get("continuous_backup_config"), d, config)
 	if err != nil {
 		return err
@@ -701,6 +763,10 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 
 	if d.HasChange("initial_user") {
 		updateMask = append(updateMask, "initialUser")
+	}
+
+	if d.HasChange("secondary_config") {
+		updateMask = append(updateMask, "secondaryConfig")
 	}
 
 	if d.HasChange("continuous_backup_config") {
@@ -939,6 +1005,43 @@ func flattenAlloydbClusterDisplayName(v interface{}, d *schema.ResourceData, con
 
 func flattenAlloydbClusterDatabaseVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func flattenAlloydbClusterPrimaryConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["secondary_cluster_names"] =
+		flattenAlloydbClusterPrimaryConfigSecondaryClusterNames(original["secondaryClusterNames"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbClusterPrimaryConfigSecondaryClusterNames(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbClusterSecondaryConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["primary_cluster_name"] =
+		flattenAlloydbClusterSecondaryConfigPrimaryClusterName(original["primaryClusterName"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbClusterSecondaryConfigPrimaryClusterName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	return tpgresource.ConvertSelfLinkToV1(v.(string))
 }
 
 func flattenAlloydbClusterContinuousBackupConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1331,6 +1434,29 @@ func expandAlloydbClusterInitialUserUser(v interface{}, d tpgresource.TerraformR
 }
 
 func expandAlloydbClusterInitialUserPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterSecondaryConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPrimaryClusterName, err := expandAlloydbClusterSecondaryConfigPrimaryClusterName(original["primary_cluster_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPrimaryClusterName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["primaryClusterName"] = transformedPrimaryClusterName
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbClusterSecondaryConfigPrimaryClusterName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
