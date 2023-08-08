@@ -74,6 +74,7 @@ func configureTestBasePaths(c *transport_tpg.Config, url string) {
 	c.DNSBasePath = url
 	c.DocumentAIBasePath = url
 	c.DocumentAIWarehouseBasePath = url
+	c.EdgecontainerBasePath = url
 	c.EssentialContactsBasePath = url
 	c.FilestoreBasePath = url
 	c.FirebaseBasePath = url

@@ -65,6 +65,7 @@ var services = mapOf(
         "dns" to "Dns",
         "documentai" to "Documentai",
         "documentaiwarehouse" to "Documentaiwarehouse",
+        "edgecontainer" to "Edgecontainer",
         "essentialcontacts" to "Essentialcontacts",
         "eventarc" to "Eventarc",
         "filestore" to "Filestore",

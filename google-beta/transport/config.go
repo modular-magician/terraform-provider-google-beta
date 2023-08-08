@@ -234,6 +234,7 @@ type Config struct {
 	DNSBasePath                      string
 	DocumentAIBasePath               string
 	DocumentAIWarehouseBasePath      string
+	EdgecontainerBasePath            string
 	EssentialContactsBasePath        string
 	FilestoreBasePath                string
 	FirebaseBasePath                 string
@@ -364,6 +365,7 @@ const DialogflowCXBasePathKey = "DialogflowCX"
 const DNSBasePathKey = "DNS"
 const DocumentAIBasePathKey = "DocumentAI"
 const DocumentAIWarehouseBasePathKey = "DocumentAIWarehouse"
+const EdgecontainerBasePathKey = "Edgecontainer"
 const EssentialContactsBasePathKey = "EssentialContacts"
 const FilestoreBasePathKey = "Filestore"
 const FirebaseBasePathKey = "Firebase"
@@ -488,6 +490,7 @@ var DefaultBasePaths = map[string]string{
 	DNSBasePathKey:                      "https://dns.googleapis.com/dns/v1beta2/",
 	DocumentAIBasePathKey:               "https://{{location}}-documentai.googleapis.com/v1/",
 	DocumentAIWarehouseBasePathKey:      "https://contentwarehouse.googleapis.com/v1/",
+	EdgecontainerBasePathKey:            "https://edgecontainer.googleapis.com/v1/",
 	EssentialContactsBasePathKey:        "https://essentialcontacts.googleapis.com/v1/",
 	FilestoreBasePathKey:                "https://file.googleapis.com/v1beta1/",
 	FirebaseBasePathKey:                 "https://firebase.googleapis.com/v1beta1/",
@@ -878,6 +881,11 @@ func HandleSDKDefaults(d *schema.ResourceData) error {
 		d.Set("document_ai_warehouse_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_DOCUMENT_AI_WAREHOUSE_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[DocumentAIWarehouseBasePathKey]))
+	}
+	if d.Get("edgecontainer_custom_endpoint") == "" {
+		d.Set("edgecontainer_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_EDGECONTAINER_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[EdgecontainerBasePathKey]))
 	}
 	if d.Get("essential_contacts_custom_endpoint") == "" {
 		d.Set("essential_contacts_custom_endpoint", MultiEnvDefault([]string{
@@ -2080,6 +2088,7 @@ func ConfigureBasePaths(c *Config) {
 	c.DNSBasePath = DefaultBasePaths[DNSBasePathKey]
 	c.DocumentAIBasePath = DefaultBasePaths[DocumentAIBasePathKey]
 	c.DocumentAIWarehouseBasePath = DefaultBasePaths[DocumentAIWarehouseBasePathKey]
+	c.EdgecontainerBasePath = DefaultBasePaths[EdgecontainerBasePathKey]
 	c.EssentialContactsBasePath = DefaultBasePaths[EssentialContactsBasePathKey]
 	c.FilestoreBasePath = DefaultBasePaths[FilestoreBasePathKey]
 	c.FirebaseBasePath = DefaultBasePaths[FirebaseBasePathKey]
