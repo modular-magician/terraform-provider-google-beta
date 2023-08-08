@@ -235,9 +235,25 @@ resources that the zone is visible from.`,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"gke_clusters": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `The list of Google Kubernetes Engine clusters that can see this zone.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"gke_cluster_name": {
+										Type:     schema.TypeString,
+										Required: true,
+										Description: `The resource name of the cluster to bind this ManagedZone to.
+This should be specified in the format like
+'projects/*/locations/*/clusters/*'`,
+									},
+								},
+							},
+						},
 						"networks": {
 							Type:     schema.TypeSet,
-							Required: true,
+							Optional: true,
 							Description: `The list of VPC networks that can see this zone. Until the provider updates to use the Terraform 0.12 SDK in a future release, you
 may experience issues with this resource while updating. If you've defined a 'networks' block and
 add another 'networks' block while keeping the old block, Terraform will see an incorrect diff
@@ -255,22 +271,6 @@ blocks in an update and then apply another update adding all of them back simult
 								var buf bytes.Buffer
 								schema.SerializeResourceForHash(&buf, raw, dnsManagedZonePrivateVisibilityConfigNetworksSchema())
 								return tpgresource.Hashcode(buf.String())
-							},
-						},
-						"gke_clusters": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Description: `The list of Google Kubernetes Engine clusters that can see this zone.`,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"gke_cluster_name": {
-										Type:     schema.TypeString,
-										Required: true,
-										Description: `The resource name of the cluster to bind this ManagedZone to.
-This should be specified in the format like
-'projects/*/locations/*/clusters/*'`,
-									},
-								},
 							},
 						},
 					},

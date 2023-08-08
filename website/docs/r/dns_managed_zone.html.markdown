@@ -453,7 +453,7 @@ The following arguments are supported:
   Structure is [documented below](#nested_gke_clusters).
 
 * `networks` -
-  (Required)
+  (Optional)
   The list of VPC networks that can see this zone. Until the provider updates to use the Terraform 0.12 SDK in a future release, you
   may experience issues with this resource while updating. If you've defined a `networks` block and
   add another `networks` block while keeping the old block, Terraform will see an incorrect diff
