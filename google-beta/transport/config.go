@@ -167,6 +167,7 @@ type Config struct {
 	Region                             string
 	BillingProject                     string
 	Zone                               string
+	UniverseDomain                     string
 	Scopes                             []string
 	BatchingConfig                     *BatchingConfig
 	UserProjectOverride                bool
