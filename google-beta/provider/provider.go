@@ -1086,9 +1086,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		})
 }
 
-// Generated resources: 364
+// Generated resources: 366
 // Generated IAM resources: 234
-// Total generated resources: 598
+// Total generated resources: 600
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1316,6 +1316,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_compute_region_network_endpoint_group":                   compute.ResourceComputeRegionNetworkEndpointGroup(),
 			"google_compute_region_per_instance_config":                      compute.ResourceComputeRegionPerInstanceConfig(),
 			"google_compute_region_security_policy":                          compute.ResourceComputeRegionSecurityPolicy(),
+			"google_compute_region_security_policy_rule":                     compute.ResourceComputeRegionSecurityPolicyRule(),
 			"google_compute_region_ssl_certificate":                          compute.ResourceComputeRegionSslCertificate(),
 			"google_compute_region_ssl_policy":                               compute.ResourceComputeRegionSslPolicy(),
 			"google_compute_region_target_http_proxy":                        compute.ResourceComputeRegionTargetHttpProxy(),
@@ -1476,6 +1477,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_gke_hub_feature_iam_binding":                             tpgiamresource.ResourceIamBinding(gkehub2.GKEHub2FeatureIamSchema, gkehub2.GKEHub2FeatureIamUpdaterProducer, gkehub2.GKEHub2FeatureIdParseFunc),
 			"google_gke_hub_feature_iam_member":                              tpgiamresource.ResourceIamMember(gkehub2.GKEHub2FeatureIamSchema, gkehub2.GKEHub2FeatureIamUpdaterProducer, gkehub2.GKEHub2FeatureIdParseFunc),
 			"google_gke_hub_feature_iam_policy":                              tpgiamresource.ResourceIamPolicy(gkehub2.GKEHub2FeatureIamSchema, gkehub2.GKEHub2FeatureIamUpdaterProducer, gkehub2.GKEHub2FeatureIdParseFunc),
+			"google_gke_hub_membership_rbac_role_binding":                    gkehub2.ResourceGKEHub2MembershipRBACRoleBinding(),
 			"google_gkeonprem_bare_metal_admin_cluster":                      gkeonprem.ResourceGkeonpremBareMetalAdminCluster(),
 			"google_gkeonprem_bare_metal_cluster":                            gkeonprem.ResourceGkeonpremBareMetalCluster(),
 			"google_gkeonprem_bare_metal_node_pool":                          gkeonprem.ResourceGkeonpremBareMetalNodePool(),
