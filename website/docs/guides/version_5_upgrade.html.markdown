@@ -190,6 +190,12 @@ These two unsupported fields were introduced incorrectly. They are now removed.
 
 This unsupported field was introduced incorrectly. It is now removed.
 
+## Resource: `google_dataplex_datascan`
+
+### `dataQualityResult` and `dataProfileResult` output fields are now removed 
+
+`dataQualityResult` and `dataProfileResult` were output-only fields which listed results for the latest job created under a Datascan. These were problematic fields that are unlikely to be relevant in a Terraform context. Removing them reduces the likelihood of additional parsing errors, and reduces maintenance overhead for the API surface.
+
 ## Resource: `google_compute_router_nat`
 
 ### `enable_endpoint_independent_mapping` now defaults to API's default value which is `FALSE`
@@ -269,3 +275,13 @@ Previously, `google_firebase_web_app` deletions default to `ABANDON`, which mean
 ### `metric.filter` now defaults to `resource.type = gce_instance`
 
 Previously, `metric.filter` doesn't have the defult value and causes a UI error.
+
+## Resource: `google_privateca_certificate`
+
+### `config_values` is now removed
+
+Deprecated in favor of field `x509_description`. It is now removed.
+
+### `pem_certificates` is now removed
+
+Deprecated in favor of field `pem_certificate_chain`. It is now removed.
