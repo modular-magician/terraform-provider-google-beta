@@ -1055,6 +1055,7 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_storage_bucket_iam_policy":                       tpgiamresource.DataSourceIamPolicy(storage.StorageBucketIamSchema, storage.StorageBucketIamUpdaterProducer),
 			"google_tags_tag_key_iam_policy":                         tpgiamresource.DataSourceIamPolicy(tags.TagsTagKeyIamSchema, tags.TagsTagKeyIamUpdaterProducer),
 			"google_tags_tag_value_iam_policy":                       tpgiamresource.DataSourceIamPolicy(tags.TagsTagValueIamSchema, tags.TagsTagValueIamUpdaterProducer),
+			"google_vertex_ai_endpoint_iam_policy":                   tpgiamresource.DataSourceIamPolicy(vertexai.VertexAIEndpointIamSchema, vertexai.VertexAIEndpointIamUpdaterProducer),
 			"google_vertex_ai_featurestore_iam_policy":               tpgiamresource.DataSourceIamPolicy(vertexai.VertexAIFeaturestoreIamSchema, vertexai.VertexAIFeaturestoreIamUpdaterProducer),
 			"google_vertex_ai_featurestore_entitytype_iam_policy":    tpgiamresource.DataSourceIamPolicy(vertexai.VertexAIFeaturestoreEntitytypeIamSchema, vertexai.VertexAIFeaturestoreEntitytypeIamUpdaterProducer),
 			"google_workstations_workstation_iam_policy":             tpgiamresource.DataSourceIamPolicy(workstations.WorkstationsWorkstationIamSchema, workstations.WorkstationsWorkstationIamUpdaterProducer),
@@ -1087,8 +1088,8 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 }
 
 // Generated resources: 366
-// Generated IAM resources: 234
-// Total generated resources: 600
+// Generated IAM resources: 237
+// Total generated resources: 603
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1670,6 +1671,9 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_tpu_node":                                                tpu.ResourceTPUNode(),
 			"google_vertex_ai_dataset":                                       vertexai.ResourceVertexAIDataset(),
 			"google_vertex_ai_endpoint":                                      vertexai.ResourceVertexAIEndpoint(),
+			"google_vertex_ai_endpoint_iam_binding":                          tpgiamresource.ResourceIamBinding(vertexai.VertexAIEndpointIamSchema, vertexai.VertexAIEndpointIamUpdaterProducer, vertexai.VertexAIEndpointIdParseFunc),
+			"google_vertex_ai_endpoint_iam_member":                           tpgiamresource.ResourceIamMember(vertexai.VertexAIEndpointIamSchema, vertexai.VertexAIEndpointIamUpdaterProducer, vertexai.VertexAIEndpointIdParseFunc),
+			"google_vertex_ai_endpoint_iam_policy":                           tpgiamresource.ResourceIamPolicy(vertexai.VertexAIEndpointIamSchema, vertexai.VertexAIEndpointIamUpdaterProducer, vertexai.VertexAIEndpointIdParseFunc),
 			"google_vertex_ai_featurestore":                                  vertexai.ResourceVertexAIFeaturestore(),
 			"google_vertex_ai_featurestore_iam_binding":                      tpgiamresource.ResourceIamBinding(vertexai.VertexAIFeaturestoreIamSchema, vertexai.VertexAIFeaturestoreIamUpdaterProducer, vertexai.VertexAIFeaturestoreIdParseFunc),
 			"google_vertex_ai_featurestore_iam_member":                       tpgiamresource.ResourceIamMember(vertexai.VertexAIFeaturestoreIamSchema, vertexai.VertexAIFeaturestoreIamUpdaterProducer, vertexai.VertexAIFeaturestoreIdParseFunc),
