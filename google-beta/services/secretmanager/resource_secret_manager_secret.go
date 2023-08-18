@@ -18,6 +18,7 @@
 package secretmanager
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"reflect"
@@ -47,6 +48,16 @@ func ResourceSecretManagerSecret() *schema.Resource {
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 
+		SchemaVersion: 1,
+
+		StateUpgraders: []schema.StateUpgrader{
+			{
+				Type:    resourceSecretManagerSecretResourceV0().CoreConfigSchema().ImpliedType(),
+				Upgrade: ResourceSecretManagerSecretUpgradeV0,
+				Version: 0,
+			},
+		},
+
 		Schema: map[string]*schema.Schema{
 			"replication": {
 				Type:     schema.TypeList,
@@ -58,10 +69,32 @@ after the Secret has been created.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"automatic": {
-							Type:         schema.TypeBool,
-							Optional:     true,
-							ForceNew:     true,
-							Description:  `The Secret will automatically be replicated without any restrictions.`,
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `The Secret will automatically be replicated without any restrictions.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"customer_managed_encryption": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `The customer-managed encryption configuration of the Secret.
+If no configuration is provided, Google-managed default
+encryption is used.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"kms_key_name": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `The resource name of the Cloud KMS CryptoKey used to encrypt secret payloads.`,
+												},
+											},
+										},
+									},
+								},
+							},
 							ExactlyOneOf: []string{"replication.0.automatic", "replication.0.user_managed"},
 						},
 						"user_managed": {
@@ -477,6 +510,24 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 	if err != nil {
 		return err
 	}
+	replicationProp, err := expandSecretManagerSecretReplication(d.Get("replication"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("replication"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, replicationProp)) {
+		obj["replication"] = replicationProp
+	}
+
+	if d.HasChange("replication") {
+		updateMask = append(updateMask, "replication")
+	}
+
+	// Refreshing updateMask after adding extra schema entries
+	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
+	if err != nil {
+		return err
+	}
+
+	log.Printf("[DEBUG] Update URL %q: %v", d.Id(), url)
 
 	// err == nil indicates that the billing_project value was found
 	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
@@ -599,7 +650,30 @@ func flattenSecretManagerSecretReplication(v interface{}, d *schema.ResourceData
 	return []interface{}{transformed}
 }
 func flattenSecretManagerSecretReplicationAutomatic(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v != nil
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	transformed := make(map[string]interface{})
+	transformed["customer_managed_encryption"] =
+		flattenSecretManagerSecretReplicationAutomaticCustomerManagedEncryption(original["customerManagedEncryption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenSecretManagerSecretReplicationAutomaticCustomerManagedEncryption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["kms_key_name"] =
+		flattenSecretManagerSecretReplicationAutomaticCustomerManagedEncryptionKmsKeyName(original["kmsKeyName"], d, config)
+	return []interface{}{transformed}
+}
+func flattenSecretManagerSecretReplicationAutomaticCustomerManagedEncryptionKmsKeyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenSecretManagerSecretReplicationUserManaged(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -738,7 +812,7 @@ func expandSecretManagerSecretReplication(v interface{}, d tpgresource.Terraform
 	transformedAutomatic, err := expandSecretManagerSecretReplicationAutomatic(original["automatic"], d, config)
 	if err != nil {
 		return nil, err
-	} else if val := reflect.ValueOf(transformedAutomatic); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+	} else {
 		transformed["automatic"] = transformedAutomatic
 	}
 
@@ -753,11 +827,50 @@ func expandSecretManagerSecretReplication(v interface{}, d tpgresource.Terraform
 }
 
 func expandSecretManagerSecretReplicationAutomatic(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil || !v.(bool) {
+	l := v.([]interface{})
+	if len(l) == 0 {
 		return nil, nil
 	}
 
-	return struct{}{}, nil
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedCustomerManagedEncryption, err := expandSecretManagerSecretReplicationAutomaticCustomerManagedEncryption(original["customer_managed_encryption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomerManagedEncryption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customerManagedEncryption"] = transformedCustomerManagedEncryption
+	}
+
+	return transformed, nil
+}
+
+func expandSecretManagerSecretReplicationAutomaticCustomerManagedEncryption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedKmsKeyName, err := expandSecretManagerSecretReplicationAutomaticCustomerManagedEncryptionKmsKeyName(original["kms_key_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedKmsKeyName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["kmsKeyName"] = transformedKmsKeyName
+	}
+
+	return transformed, nil
+}
+
+func expandSecretManagerSecretReplicationAutomaticCustomerManagedEncryptionKmsKeyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandSecretManagerSecretReplicationUserManaged(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -901,4 +1014,54 @@ func expandSecretManagerSecretRotationNextRotationTime(v interface{}, d tpgresou
 
 func expandSecretManagerSecretRotationRotationPeriod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceSecretManagerSecretResourceV0() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"replication": {
+				Type:     schema.TypeList,
+				Required: true,
+				ForceNew: true,
+				Description: `The replication policy of the secret data attached to the Secret. It cannot be changed
+after the Secret has been created.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"automatic": {
+							Type:         schema.TypeBool,
+							Optional:     true,
+							ForceNew:     true,
+							Description:  `The Secret will automatically be replicated without any restrictions.`,
+							ExactlyOneOf: []string{"replication.0.automatic", "replication.0.user_managed"},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func ResourceSecretManagerSecretUpgradeV0(ctx context.Context, rawState map[string]any, meta any) (map[string]any, error) {
+	replicationOld := rawState["replication"]
+	// To handle the case where replication is not present in the state file.
+	// As the replication field is required, replication must be present in the
+	// rawState but kept this check just in case such scenario occurs.
+	if replicationOld == nil || len(replicationOld.([]interface{})) == 0 {
+		log.Print("[DEBUG] Error while migrating the state because replication is nil in the state file")
+		return rawState, fmt.Errorf("cannot migrate state as replication is nil in state file")
+	}
+
+	replicationInternalMap := replicationOld.([]interface{})[0].(map[string]interface{})
+
+	replicationNew := make([]interface{}, 1)
+
+	interMap := make(map[string]interface{})
+	interMap["automatic"] = []interface{}{}
+	interMap["user_managed"] = replicationInternalMap["user_managed"]
+	replicationNew[0] = interMap
+
+	rawState["replication"] = replicationNew
+
+	return rawState, nil
 }
