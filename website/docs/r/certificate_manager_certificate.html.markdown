@@ -90,7 +90,7 @@ resource "google_certificate_manager_certificate" "default" {
 
 # creating certificate_issuance_config to use it in the managed certificate
 resource "google_certificate_manager_certificate_issuance_config" "issuanceconfig" {
-  name    = "issuanceconfigtestterraform"
+  name    = "issuance-config"
   description = "sample description for the certificate issuanceConfigs"
   certificate_authority_config {
     certificate_authority_service_config {
@@ -104,7 +104,7 @@ resource "google_certificate_manager_certificate_issuance_config" "issuanceconfi
 }
   
 resource "google_privateca_ca_pool" "pool" {
-  name     = "my-ca-pool"
+  name     = "ca-pool"
   location = "us-central1"
   tier     = "ENTERPRISE"
 }
@@ -112,7 +112,7 @@ resource "google_privateca_ca_pool" "pool" {
 resource "google_privateca_certificate_authority" "ca_authority" {
   location = "us-central1"
   pool = google_privateca_ca_pool.pool.name
-  certificate_authority_id = "my-ca"
+  certificate_authority_id = "ca-authority"
   config {
     subject_config {
       subject {
@@ -160,10 +160,10 @@ resource "google_privateca_certificate_authority" "ca_authority" {
 resource "google_certificate_manager_certificate" "default" {
   name        = "self-managed-cert"
   description = "Global cert"
-  scope       = "EDGE_CACHE"
+  scope       = "ALL_REGIONS"
   self_managed {
-    pem_certificate = file("test-fixtures/certificatemanager/cert.pem")
-    pem_private_key = file("test-fixtures/certificatemanager/private-key.pem")
+    pem_certificate = file("test-fixtures/cert.pem")
+    pem_private_key = file("test-fixtures/private-key.pem")
   }
 }
 ```
@@ -181,8 +181,8 @@ resource "google_certificate_manager_certificate" "default" {
   description = "Regional cert"
   location    = "us-central1"
   self_managed {
-    pem_certificate = file("test-fixtures/certificatemanager/cert.pem")
-    pem_private_key = file("test-fixtures/certificatemanager/private-key.pem")
+    pem_certificate = file("test-fixtures/cert.pem")
+    pem_private_key = file("test-fixtures/private-key.pem")
   }
 }
 ```
@@ -217,7 +217,8 @@ The following arguments are supported:
   If unsure, choose this option.
   EDGE_CACHE: Certificates with scope EDGE_CACHE are special-purposed certificates,
   served from non-core Google data centers.
-  Currently allowed only for managed certificates.
+  ALL_REGIONS: Certificates with ALL_REGIONS scope are served from all GCP regions (You can only use ALL_REGIONS with global certs).
+  see https://cloud.google.com/compute/docs/regions-zones
 
 * `self_managed` -
   (Optional)
@@ -245,14 +246,18 @@ The following arguments are supported:
 
 * `certificate_pem` -
   (Optional, Deprecated)
-  **Deprecated** The certificate chain in PEM-encoded form.
+  The certificate chain in PEM-encoded form.
   Leaf certificate comes first, followed by intermediate ones if any.
   **Note**: This property is sensitive and will not be displayed in the plan.
 
+  ~> **Warning:** `certificate_pem` is deprecated and will be removed in a future major release. Use `pem_certificate` instead.
+
 * `private_key_pem` -
   (Optional, Deprecated)
-  **Deprecated** The private key of the leaf certificate in PEM-encoded form.
+  The private key of the leaf certificate in PEM-encoded form.
   **Note**: This property is sensitive and will not be displayed in the plan.
+
+  ~> **Warning:** `private_key_pem` is deprecated and will be removed in a future major release. Use `pem_private_key` instead.
 
 * `pem_certificate` -
   (Optional)
