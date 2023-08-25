@@ -1087,9 +1087,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		})
 }
 
-// Generated resources: 369
+// Generated resources: 370
 // Generated IAM resources: 234
-// Total generated resources: 603
+// Total generated resources: 604
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1613,6 +1613,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_pubsub_lite_reservation":                                 pubsublite.ResourcePubsubLiteReservation(),
 			"google_pubsub_lite_subscription":                                pubsublite.ResourcePubsubLiteSubscription(),
 			"google_pubsub_lite_topic":                                       pubsublite.ResourcePubsubLiteTopic(),
+			"google_redis_cluster":                                           redis.ResourceRedisCluster(),
 			"google_redis_instance":                                          redis.ResourceRedisInstance(),
 			"google_resource_manager_lien":                                   resourcemanager.ResourceResourceManagerLien(),
 			"google_runtimeconfig_config_iam_binding":                        tpgiamresource.ResourceIamBinding(runtimeconfig.RuntimeConfigConfigIamSchema, runtimeconfig.RuntimeConfigConfigIamUpdaterProducer, runtimeconfig.RuntimeConfigConfigIdParseFunc),
