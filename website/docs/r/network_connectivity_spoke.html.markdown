@@ -130,6 +130,10 @@ The `instances` block supports:
   (Optional)
   The URIs of linked Router appliance resources
   
+* `linked_vpc_network` -
+  (Optional)
+  VPC network that is associated with the spoke.
+  
 * `linked_vpn_tunnels` -
   (Optional)
   The URIs of linked VPN tunnel resources
@@ -159,6 +163,16 @@ The `linked_router_appliance_instances` block supports:
 * `site_to_site_data_transfer` -
   (Required)
   A value that controls whether site-to-site data transfer is enabled for these resources. Note that data transfer is available only in supported locations.
+    
+The `linked_vpc_network` block supports:
+    
+* `exclude_export_ranges` -
+  (Optional)
+  IP ranges encompassing the subnets to be excluded from peering.
+    
+* `uri` -
+  (Required)
+  The URI of the VPC network resource.
     
 The `linked_vpn_tunnels` block supports:
     
