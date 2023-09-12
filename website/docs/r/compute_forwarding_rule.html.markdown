@@ -1302,6 +1302,45 @@ resource "google_compute_subnetwork" "default" {
   network       = google_compute_network.default.id
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=forwarding_rule_service_directory_registration&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Forwarding Rule Service Directory Registration
+
+
+```hcl
+resource "google_compute_forwarding_rule" "default" {
+  name       = "default"
+  port_range = "80"
+  target     = google_compute_target_pool.default.id
+  service_directory_registrations {
+    service = google_service_directory_service.default.service_id
+    service_directory_region = "us-central1"
+    namespace = google_service_directory_namespace.default.namespace_id
+  }
+}
+
+resource "google_service_directory_namespace" "default" {
+  namespace_id = "example-namespace"
+  location     = "us-central1"
+}
+
+resource "google_service_directory_service" "default" {
+  service_id = "example-service"
+  namespace  = google_service_directory_namespace.default.id
+
+  metadata = {
+    stage  = "prod"
+    region = "us-central1"
+  }
+}
+
+resource "google_compute_target_pool" "default" {
+  name = "target-pool"
+}
+```
 
 ## Argument Reference
 
@@ -1577,6 +1616,10 @@ The following arguments are supported:
 * `service` -
   (Optional)
   Service Directory service to register the forwarding rule under.
+
+* `service_directory_region` -
+  (Optional)
+  [Optional] Service Directory region to register this global forwarding rule under. Default to "us-central1". Only used for PSC for Google APIs. All PSC for Google APIs Forwarding Rules on the same network should use the same Service Directory region.
 
 ## Attributes Reference
 

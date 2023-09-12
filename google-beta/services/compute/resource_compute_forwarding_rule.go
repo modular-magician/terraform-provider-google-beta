@@ -368,6 +368,12 @@ Currently, only supports a single Service Directory resource.`,
 							ForceNew:    true,
 							Description: `Service Directory service to register the forwarding rule under.`,
 						},
+						"service_directory_region": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `[Optional] Service Directory region to register this global forwarding rule under. Default to "us-central1". Only used for PSC for Google APIs. All PSC for Google APIs Forwarding Rules on the same network should use the same Service Directory region.`,
+						},
 					},
 				},
 			},
@@ -1267,8 +1273,9 @@ func flattenComputeForwardingRuleServiceDirectoryRegistrations(v interface{}, d 
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"namespace": flattenComputeForwardingRuleServiceDirectoryRegistrationsNamespace(original["namespace"], d, config),
-			"service":   flattenComputeForwardingRuleServiceDirectoryRegistrationsService(original["service"], d, config),
+			"namespace":                flattenComputeForwardingRuleServiceDirectoryRegistrationsNamespace(original["namespace"], d, config),
+			"service":                  flattenComputeForwardingRuleServiceDirectoryRegistrationsService(original["service"], d, config),
+			"service_directory_region": flattenComputeForwardingRuleServiceDirectoryRegistrationsServiceDirectoryRegion(original["serviceDirectoryRegion"], d, config),
 		})
 	}
 	return transformed
@@ -1278,6 +1285,10 @@ func flattenComputeForwardingRuleServiceDirectoryRegistrationsNamespace(v interf
 }
 
 func flattenComputeForwardingRuleServiceDirectoryRegistrationsService(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeForwardingRuleServiceDirectoryRegistrationsServiceDirectoryRegion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1477,6 +1488,13 @@ func expandComputeForwardingRuleServiceDirectoryRegistrations(v interface{}, d t
 			transformed["service"] = transformedService
 		}
 
+		transformedServiceDirectoryRegion, err := expandComputeForwardingRuleServiceDirectoryRegistrationsServiceDirectoryRegion(original["service_directory_region"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedServiceDirectoryRegion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["serviceDirectoryRegion"] = transformedServiceDirectoryRegion
+		}
+
 		req = append(req, transformed)
 	}
 	return req, nil
@@ -1487,6 +1505,10 @@ func expandComputeForwardingRuleServiceDirectoryRegistrationsNamespace(v interfa
 }
 
 func expandComputeForwardingRuleServiceDirectoryRegistrationsService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeForwardingRuleServiceDirectoryRegistrationsServiceDirectoryRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

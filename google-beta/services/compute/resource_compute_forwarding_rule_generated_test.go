@@ -1562,6 +1562,65 @@ resource "google_compute_subnetwork" "default" {
 `, context)
 }
 
+func TestAccComputeForwardingRule_forwardingRuleServiceDirectoryRegistrationExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeForwardingRuleDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeForwardingRule_forwardingRuleServiceDirectoryRegistrationExample(context),
+			},
+			{
+				ResourceName:            "google_compute_forwarding_rule.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"backend_service", "network", "subnetwork", "no_automate_dns_zone", "region"},
+			},
+		},
+	})
+}
+
+func testAccComputeForwardingRule_forwardingRuleServiceDirectoryRegistrationExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_forwarding_rule" "default" {
+  name       = "default"
+  port_range = "80"
+  target     = google_compute_target_pool.default.id
+  service_directory_registrations {
+    service = google_service_directory_service.default.service_id
+    service_directory_region = "us-central1"
+    namespace = google_service_directory_namespace.default.namespace_id
+  }
+}
+
+resource "google_service_directory_namespace" "default" {
+  namespace_id = "example-namespace"
+  location     = "us-central1"
+}
+
+resource "google_service_directory_service" "default" {
+  service_id = "example-service"
+  namespace  = google_service_directory_namespace.default.id
+
+  metadata = {
+    stage  = "prod"
+    region = "us-central1"
+  }
+}
+
+resource "google_compute_target_pool" "default" {
+  name = "tf-test-target-pool%{random_suffix}"
+}
+`, context)
+}
+
 func testAccCheckComputeForwardingRuleDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
