@@ -69,6 +69,12 @@ func ResourceAlloydbCluster() *schema.Resource {
 
 "projects/{projectNumber}/global/networks/{network_id}".`,
 			},
+			"annotations": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: `Annotations to allow client tools to store small amount of arbitrary data. This is distinct from labels.`,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 			"automated_backup_policy": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -535,6 +541,12 @@ func resourceAlloydbClusterCreate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("automated_backup_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(automatedBackupPolicyProp)) && (ok || !reflect.DeepEqual(v, automatedBackupPolicyProp)) {
 		obj["automatedBackupPolicy"] = automatedBackupPolicyProp
 	}
+	annotationsProp, err := expandAlloydbClusterAnnotations(d.Get("annotations"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(annotationsProp)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
+		obj["annotations"] = annotationsProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{AlloydbBasePath}}projects/{{project}}/locations/{{location}}/clusters?clusterId={{cluster_id}}")
 	if err != nil {
@@ -702,6 +714,9 @@ func resourceAlloydbClusterRead(d *schema.ResourceData, meta interface{}) error 
 	if err := d.Set("migration_source", flattenAlloydbClusterMigrationSource(res["migrationSource"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+	if err := d.Set("annotations", flattenAlloydbClusterAnnotations(res["annotations"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Cluster: %s", err)
+	}
 
 	return nil
 }
@@ -764,6 +779,12 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("automated_backup_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, automatedBackupPolicyProp)) {
 		obj["automatedBackupPolicy"] = automatedBackupPolicyProp
 	}
+	annotationsProp, err := expandAlloydbClusterAnnotations(d.Get("annotations"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
+		obj["annotations"] = annotationsProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{AlloydbBasePath}}projects/{{project}}/locations/{{location}}/clusters/{{cluster_id}}")
 	if err != nil {
@@ -799,6 +820,10 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 
 	if d.HasChange("automated_backup_policy") {
 		updateMask = append(updateMask, "automatedBackupPolicy")
+	}
+
+	if d.HasChange("annotations") {
+		updateMask = append(updateMask, "annotations")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1348,6 +1373,10 @@ func flattenAlloydbClusterMigrationSourceSourceType(v interface{}, d *schema.Res
 	return v
 }
 
+func flattenAlloydbClusterAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandAlloydbClusterLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
@@ -1792,4 +1821,15 @@ func expandAlloydbClusterAutomatedBackupPolicyQuantityBasedRetentionCount(v inte
 
 func expandAlloydbClusterAutomatedBackupPolicyEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandAlloydbClusterAnnotations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }

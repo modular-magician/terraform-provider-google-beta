@@ -249,6 +249,10 @@ The following arguments are supported:
   The automated backup policy for this cluster. AutomatedBackupPolicy is disabled by default.
   Structure is [documented below](#nested_automated_backup_policy).
 
+* `annotations` -
+  (Optional)
+  Annotations to allow client tools to store small amount of arbitrary data. This is distinct from labels.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
