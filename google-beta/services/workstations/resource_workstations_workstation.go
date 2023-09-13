@@ -49,6 +49,7 @@ func ResourceWorkstationsWorkstation() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
+			tpgresource.SetAnnotationsDiff,
 			tpgresource.DefaultProviderProject,
 		),
 
@@ -98,6 +99,12 @@ func ResourceWorkstationsWorkstation() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `Time when this resource was created.`,
+			},
+			"effective_annotations": {
+				Type:        schema.TypeMap,
+				Computed:    true,
+				Description: `All of annotations (key/value pairs) present on the resource in GCP, including the annotations configured through Terraform, other clients and services.`,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"host": {
 				Type:     schema.TypeString,
@@ -152,10 +159,10 @@ func resourceWorkstationsWorkstationCreate(d *schema.ResourceData, meta interfac
 	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
-	annotationsProp, err := expandWorkstationsWorkstationAnnotations(d.Get("annotations"), d, config)
+	annotationsProp, err := expandWorkstationsWorkstationEffectiveAnnotations(d.Get("effective_annotations"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(annotationsProp)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
+	} else if v, ok := d.GetOkExists("effective_annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(annotationsProp)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
 		obj["annotations"] = annotationsProp
 	}
 
@@ -277,6 +284,9 @@ func resourceWorkstationsWorkstationRead(d *schema.ResourceData, meta interface{
 	if err := d.Set("state", flattenWorkstationsWorkstationState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Workstation: %s", err)
 	}
+	if err := d.Set("effective_annotations", flattenWorkstationsWorkstationEffectiveAnnotations(res["annotations"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Workstation: %s", err)
+	}
 
 	return nil
 }
@@ -309,10 +319,10 @@ func resourceWorkstationsWorkstationUpdate(d *schema.ResourceData, meta interfac
 	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
-	annotationsProp, err := expandWorkstationsWorkstationAnnotations(d.Get("annotations"), d, config)
+	annotationsProp, err := expandWorkstationsWorkstationEffectiveAnnotations(d.Get("effective_annotations"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
+	} else if v, ok := d.GetOkExists("effective_annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
 		obj["annotations"] = annotationsProp
 	}
 
@@ -332,7 +342,7 @@ func resourceWorkstationsWorkstationUpdate(d *schema.ResourceData, meta interfac
 		updateMask = append(updateMask, "labels")
 	}
 
-	if d.HasChange("annotations") {
+	if d.HasChange("effective_annotations") {
 		updateMask = append(updateMask, "annotations")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
@@ -464,7 +474,18 @@ func flattenWorkstationsWorkstationLabels(v interface{}, d *schema.ResourceData,
 }
 
 func flattenWorkstationsWorkstationAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	if v == nil {
+		return v
+	}
+
+	transformed := make(map[string]interface{})
+	if l, ok := d.GetOkExists("annotations"); ok {
+		for k := range l.(map[string]interface{}) {
+			transformed[k] = v.(map[string]interface{})[k]
+		}
+	}
+
+	return transformed
 }
 
 func flattenWorkstationsWorkstationCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -476,6 +497,10 @@ func flattenWorkstationsWorkstationHost(v interface{}, d *schema.ResourceData, c
 }
 
 func flattenWorkstationsWorkstationState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenWorkstationsWorkstationEffectiveAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -494,7 +519,7 @@ func expandWorkstationsWorkstationLabels(v interface{}, d tpgresource.TerraformR
 	return m, nil
 }
 
-func expandWorkstationsWorkstationAnnotations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandWorkstationsWorkstationEffectiveAnnotations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
