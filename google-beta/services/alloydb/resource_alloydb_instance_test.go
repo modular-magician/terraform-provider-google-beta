@@ -12,10 +12,9 @@ import (
 func TestAccAlloydbInstance_update(t *testing.T) {
 	t.Parallel()
 
-	random_suffix := acctest.RandString(t, 10)
 	context := map[string]interface{}{
-		"random_suffix": random_suffix,
-		"network_name":  "tf-test-alloydb-network" + random_suffix,
+		"random_suffix": acctest.RandString(t, 10),
+		"network_name":  acctest.BootstrapSharedTestNetwork(t, "alloydbinstance-update"),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -66,7 +65,7 @@ resource "google_alloydb_instance" "default" {
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network    = google_compute_network.default.id
+  network    = data.google_compute_network.default.id
 
   initial_user {
     password = "tf-test-alloydb-cluster%{random_suffix}"
@@ -76,7 +75,7 @@ resource "google_alloydb_cluster" "default" {
 data "google_project" "project" {
 }
 
-resource "google_compute_network" "default" {
+data "google_compute_network" "default" {
   name = "%{network_name}"
 }
 
@@ -85,11 +84,11 @@ resource "google_compute_global_address" "private_ip_alloc" {
   address_type  = "INTERNAL"
   purpose       = "VPC_PEERING"
   prefix_length = 16
-  network       = google_compute_network.default.id
+  network       = data.google_compute_network.default.id
 }
 
 resource "google_service_networking_connection" "vpc_connection" {
-  network                 = google_compute_network.default.id
+  network                 = data.google_compute_network.default.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }
@@ -102,7 +101,7 @@ func TestAccAlloydbInstance_createInstanceWithMandatoryFields(t *testing.T) {
 
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
-		"network_name":  "tf-test-" + acctest.RandString(t, 10),
+		"network_name":  acctest.BootstrapSharedTestNetwork(t, "alloydbinstance-mandatory"),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -130,12 +129,12 @@ resource "google_alloydb_instance" "default" {
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network    = google_compute_network.default.id
+  network    = data.google_compute_network.default.id
 }
 
 data "google_project" "project" {}
 
-resource "google_compute_network" "default" {
+data "google_compute_network" "default" {
   name = "%{network_name}"
 }
 
@@ -144,11 +143,11 @@ resource "google_compute_global_address" "private_ip_alloc" {
   address_type  = "INTERNAL"
   purpose       = "VPC_PEERING"
   prefix_length = 16
-  network       = google_compute_network.default.id
+  network       = data.google_compute_network.default.id
 }
 
 resource "google_service_networking_connection" "vpc_connection" {
-  network                 = google_compute_network.default.id
+  network                 = data.google_compute_network.default.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }
@@ -161,7 +160,7 @@ func TestAccAlloydbInstance_createInstanceWithMaximumFields(t *testing.T) {
 
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
-		"network_name":  "tf-test-" + acctest.RandString(t, 10),
+		"network_name":  acctest.BootstrapSharedTestNetwork(t, "alloydbinstance-maximum"),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -208,12 +207,12 @@ resource "google_alloydb_instance" "default" {
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network    = google_compute_network.default.id
+  network    = data.google_compute_network.default.id
 }
 
 data "google_project" "project" {}
 
-resource "google_compute_network" "default" {
+data "google_compute_network" "default" {
   name = "%{network_name}"
 }
 
@@ -222,11 +221,11 @@ resource "google_compute_global_address" "private_ip_alloc" {
   address_type  = "INTERNAL"
   purpose       = "VPC_PEERING"
   prefix_length = 16
-  network       = google_compute_network.default.id
+  network       = data.google_compute_network.default.id
 }
 
 resource "google_service_networking_connection" "vpc_connection" {
-  network                 = google_compute_network.default.id
+  network                 = data.google_compute_network.default.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }
@@ -239,7 +238,7 @@ func TestAccAlloydbInstance_createPrimaryAndReadPoolInstance(t *testing.T) {
 
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
-		"network_name":  "tf-test-" + acctest.RandString(t, 10),
+		"network_name":  acctest.BootstrapSharedTestNetwork(t, "alloydbinstance-readpool"),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -276,12 +275,12 @@ resource "google_alloydb_instance" "read_pool" {
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network    = google_compute_network.default.id
+  network    = data.google_compute_network.default.id
 }
 
 data "google_project" "project" {}
 
-resource "google_compute_network" "default" {
+data "google_compute_network" "default" {
   name = "%{network_name}"
 }
 
@@ -290,11 +289,11 @@ resource "google_compute_global_address" "private_ip_alloc" {
   address_type  = "INTERNAL"
   purpose       = "VPC_PEERING"
   prefix_length = 16
-  network       = google_compute_network.default.id
+  network       = data.google_compute_network.default.id
 }
 
 resource "google_service_networking_connection" "vpc_connection" {
-  network                 = google_compute_network.default.id
+  network                 = data.google_compute_network.default.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }
@@ -307,7 +306,7 @@ func TestAccAlloydbInstance_updateDatabaseFlagInPrimaryInstance(t *testing.T) {
 
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
-		"network_name":  "tf-test-" + acctest.RandString(t, 10),
+		"network_name":  acctest.BootstrapSharedTestNetwork(t, "alloydbinstance-updatedb"),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -345,12 +344,12 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network    = google_compute_network.default.id
+  network    = data.google_compute_network.default.id
 }
 
 data "google_project" "project" {}
 
-resource "google_compute_network" "default" {
+data "google_compute_network" "default" {
   name = "%{network_name}"
 }
 
@@ -359,11 +358,11 @@ resource "google_compute_global_address" "private_ip_alloc" {
   address_type  = "INTERNAL"
   purpose       = "VPC_PEERING"
   prefix_length = 16
-  network       = google_compute_network.default.id
+  network       = data.google_compute_network.default.id
 }
 
 resource "google_service_networking_connection" "vpc_connection" {
-  network                 = google_compute_network.default.id
+  network                 = data.google_compute_network.default.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }
@@ -385,12 +384,12 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network    = google_compute_network.default.id
+  network    = data.google_compute_network.default.id
 }
 
 data "google_project" "project" {}
 
-resource "google_compute_network" "default" {
+data "google_compute_network" "default" {
   name = "%{network_name}"
 }
 
@@ -399,11 +398,11 @@ resource "google_compute_global_address" "private_ip_alloc" {
   address_type  = "INTERNAL"
   purpose       = "VPC_PEERING"
   prefix_length = 16
-  network       = google_compute_network.default.id
+  network       = data.google_compute_network.default.id
 }
 
 resource "google_service_networking_connection" "vpc_connection" {
-  network                 = google_compute_network.default.id
+  network                 = data.google_compute_network.default.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }

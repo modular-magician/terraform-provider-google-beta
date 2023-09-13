@@ -34,6 +34,7 @@ func TestAccMemcacheInstance_memcacheInstanceBasicExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
+		"network_name":  acctest.BootstrapSharedTestNetwork(t, "memcache-instance-basic"),
 		"random_suffix": acctest.RandString(t, 10),
 	}
 
@@ -65,8 +66,8 @@ func testAccMemcacheInstance_memcacheInstanceBasicExample(context map[string]int
 // If this network hasn't been created and you are using this example in your
 // config, add an additional network resource or change
 // this from "data"to "resource"
-resource "google_compute_network" "memcache_network" {
-  name = "tf-test-test-network%{random_suffix}"
+data "google_compute_network" "memcache_network" {
+  name = "%{network_name}"
 }
 
 resource "google_compute_global_address" "service_range" {
@@ -74,11 +75,11 @@ resource "google_compute_global_address" "service_range" {
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16
-  network       = google_compute_network.memcache_network.id
+  network       = data.google_compute_network.memcache_network.id
 }
 
 resource "google_service_networking_connection" "private_service_connection" {
-  network                 = google_compute_network.memcache_network.id
+  network                 = data.google_compute_network.memcache_network.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.service_range.name]
 }

@@ -225,6 +225,7 @@ func TestAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceCo
 	t.Parallel()
 
 	context := map[string]interface{}{
+		"network_name":  acctest.BootstrapSharedTestNetwork(t, "profile-alloydb"),
 		"random_suffix": acctest.RandString(t, 10),
 	}
 
@@ -251,8 +252,8 @@ func testAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceCo
 data "google_project" "project" {
 }
 
-resource "google_compute_network" "default" {
-  name = "tf-test-vpc-network%{random_suffix}"
+data "google_compute_network" "default" {
+  name = "%{network_name}"
 }
 
 resource "google_compute_global_address" "private_ip_alloc" {
@@ -260,11 +261,11 @@ resource "google_compute_global_address" "private_ip_alloc" {
   address_type  = "INTERNAL"
   purpose       = "VPC_PEERING"
   prefix_length = 16
-  network       = google_compute_network.default.id
+  network       = data.google_compute_network.default.id
 }
 
 resource "google_service_networking_connection" "vpc_connection" {
-  network                 = google_compute_network.default.id
+  network                 = data.google_compute_network.default.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }
@@ -284,7 +285,7 @@ resource "google_database_migration_service_connection_profile" "alloydbprofile"
         user = "alloyuser%{random_suffix}"
         password = "alloypass%{random_suffix}"
       }
-      vpc_network = google_compute_network.default.id
+      vpc_network = data.google_compute_network.default.id
       labels  = { 
         alloyfoo = "alloybar" 
       }
