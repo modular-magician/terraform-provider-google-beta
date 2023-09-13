@@ -46,9 +46,10 @@ func TestAccNetworkManagementConnectivityTest_networkManagementConnectivityTestI
 				Config: testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestInstancesExample(context),
 			},
 			{
-				ResourceName:      "google_network_management_connectivity_test.instance-test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_network_management_connectivity_test.instance-test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
 			},
 		},
 	})
@@ -130,9 +131,10 @@ func TestAccNetworkManagementConnectivityTest_networkManagementConnectivityTestA
 				Config: testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestAddressesExample(context),
 			},
 			{
-				ResourceName:      "google_network_management_connectivity_test.address-test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_network_management_connectivity_test.address-test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
 			},
 		},
 	})

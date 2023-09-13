@@ -53,7 +53,7 @@ func TestAccVertexAIFeaturestoreEntitytype_vertexAiFeaturestoreEntitytypeExample
 				ResourceName:            "google_vertex_ai_featurestore_entitytype.entity",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "etag", "featurestore"},
+				ImportStateVerifyIgnore: []string{"name", "etag", "labels", "terraform_labels", "featurestore"},
 			},
 		},
 	})
@@ -125,7 +125,7 @@ func TestAccVertexAIFeaturestoreEntitytype_vertexAiFeaturestoreEntitytypeWithBet
 				ResourceName:            "google_vertex_ai_featurestore_entitytype.entity",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "etag", "featurestore"},
+				ImportStateVerifyIgnore: []string{"name", "etag", "labels", "terraform_labels", "featurestore"},
 			},
 		},
 	})

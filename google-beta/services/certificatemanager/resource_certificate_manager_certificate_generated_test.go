@@ -49,7 +49,7 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"self_managed", "name", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "self_managed", "terraform_labels", "name", "location"},
 			},
 		},
 	})
@@ -107,7 +107,7 @@ func TestAccCertificateManagerCertificate_certificateManagerGoogleManagedCertifi
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"self_managed", "name", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "self_managed", "terraform_labels", "name", "location"},
 			},
 		},
 	})
@@ -210,7 +210,7 @@ func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertifica
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"self_managed", "name", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "self_managed", "terraform_labels", "name", "location"},
 			},
 		},
 	})
@@ -249,7 +249,7 @@ func TestAccCertificateManagerCertificate_certificateManagerSelfManagedCertifica
 				ResourceName:            "google_certificate_manager_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"self_managed", "name", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "self_managed", "terraform_labels", "name", "location"},
 			},
 		},
 	})

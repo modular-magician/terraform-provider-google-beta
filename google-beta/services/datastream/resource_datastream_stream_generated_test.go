@@ -55,7 +55,7 @@ func TestAccDatastreamStream_datastreamStreamBasicExample(t *testing.T) {
 				ResourceName:            "google_datastream_stream.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"stream_id", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "stream_id", "location"},
 			},
 		},
 	})
@@ -218,7 +218,7 @@ func TestAccDatastreamStream_datastreamStreamFullExample(t *testing.T) {
 				ResourceName:            "google_datastream_stream.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"stream_id", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "stream_id", "location"},
 			},
 		},
 	})
@@ -448,7 +448,7 @@ func TestAccDatastreamStream_datastreamStreamPostgresqlBigqueryDatasetIdExample(
 				ResourceName:            "google_datastream_stream.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"stream_id", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "stream_id", "location"},
 			},
 		},
 	})
@@ -591,7 +591,7 @@ func TestAccDatastreamStream_datastreamStreamBigqueryExample(t *testing.T) {
 				ResourceName:            "google_datastream_stream.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"stream_id", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "stream_id", "location"},
 			},
 		},
 	})

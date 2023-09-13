@@ -49,7 +49,7 @@ func TestAccNetworkServicesEdgeCacheKeyset_networkServicesEdgeCacheKeysetBasicEx
 				ResourceName:            "google_network_services_edge_cache_keyset.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "name"},
 			},
 		},
 	})
@@ -92,7 +92,7 @@ func TestAccNetworkServicesEdgeCacheKeyset_networkServicesEdgeCacheKeysetDualTok
 				ResourceName:            "google_network_services_edge_cache_keyset.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "name"},
 			},
 		},
 	})

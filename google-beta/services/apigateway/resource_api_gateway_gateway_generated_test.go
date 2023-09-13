@@ -49,7 +49,7 @@ func TestAccApiGatewayGateway_apigatewayGatewayBasicExample(t *testing.T) {
 				ResourceName:            "google_api_gateway_gateway.api_gw",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"region", "gateway_id"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "region", "gateway_id"},
 			},
 		},
 	})
@@ -105,7 +105,7 @@ func TestAccApiGatewayGateway_apigatewayGatewayFullExample(t *testing.T) {
 				ResourceName:            "google_api_gateway_gateway.api_gw",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"region", "gateway_id"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "region", "gateway_id"},
 			},
 		},
 	})

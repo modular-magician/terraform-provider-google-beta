@@ -49,7 +49,7 @@ func TestAccFilestoreInstance_filestoreInstanceBasicExample(t *testing.T) {
 				ResourceName:            "google_filestore_instance.instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "zone", "location"},
+				ImportStateVerifyIgnore: []string{"name", "labels", "terraform_labels", "zone", "location"},
 			},
 		},
 	})
@@ -94,7 +94,7 @@ func TestAccFilestoreInstance_filestoreInstanceFullExample(t *testing.T) {
 				ResourceName:            "google_filestore_instance.instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "zone", "location"},
+				ImportStateVerifyIgnore: []string{"name", "labels", "terraform_labels", "zone", "location"},
 			},
 		},
 	})

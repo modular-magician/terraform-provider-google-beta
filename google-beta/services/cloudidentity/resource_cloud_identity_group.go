@@ -24,6 +24,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
@@ -47,6 +48,10 @@ func ResourceCloudIdentityGroup() *schema.Resource {
 			Update: schema.DefaultTimeout(20 * time.Minute),
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
+
+		CustomizeDiff: customdiff.All(
+			tpgresource.SetLabelsDiff,
+		),
 
 		Schema: map[string]*schema.Schema{
 			"group_key": {
@@ -139,11 +144,24 @@ for possible values. Default value: "EMPTY" Possible values: ["INITIAL_GROUP_CON
 				Computed:    true,
 				Description: `The time when the Group was created.`,
 			},
+			"effective_labels": {
+				Type:        schema.TypeMap,
+				Computed:    true,
+				Description: `All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.`,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `Resource name of the Group in the format: groups/{group_id}, where group_id
 is the unique ID assigned to the Group.`,
+			},
+			"terraform_labels": {
+				Type:     schema.TypeMap,
+				Computed: true,
+				Description: `The combination of labels configured directly on the resource
+ and default labels configured on the provider.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 			"update_time": {
 				Type:        schema.TypeString,
@@ -187,10 +205,10 @@ func resourceCloudIdentityGroupCreate(d *schema.ResourceData, meta interface{}) 
 	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
-	labelsProp, err := expandCloudIdentityGroupLabels(d.Get("labels"), d, config)
+	labelsProp, err := expandCloudIdentityGroupEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 
@@ -347,6 +365,12 @@ func resourceCloudIdentityGroupRead(d *schema.ResourceData, meta interface{}) er
 	if err := d.Set("labels", flattenCloudIdentityGroupLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
+	if err := d.Set("terraform_labels", flattenCloudIdentityGroupTerraformLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Group: %s", err)
+	}
+	if err := d.Set("effective_labels", flattenCloudIdentityGroupEffectiveLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Group: %s", err)
+	}
 
 	return nil
 }
@@ -373,10 +397,10 @@ func resourceCloudIdentityGroupUpdate(d *schema.ResourceData, meta interface{}) 
 	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
-	labelsProp, err := expandCloudIdentityGroupLabels(d.Get("labels"), d, config)
+	labelsProp, err := expandCloudIdentityGroupEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
 
@@ -396,7 +420,7 @@ func resourceCloudIdentityGroupUpdate(d *schema.ResourceData, meta interface{}) 
 		updateMask = append(updateMask, "description")
 	}
 
-	if d.HasChange("labels") {
+	if d.HasChange("effective_labels") {
 		updateMask = append(updateMask, "labels")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
@@ -548,6 +572,36 @@ func flattenCloudIdentityGroupUpdateTime(v interface{}, d *schema.ResourceData, 
 }
 
 func flattenCloudIdentityGroupLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+
+	transformed := make(map[string]interface{})
+	if l, ok := d.GetOkExists("labels"); ok {
+		for k := range l.(map[string]interface{}) {
+			transformed[k] = v.(map[string]interface{})[k]
+		}
+	}
+
+	return transformed
+}
+
+func flattenCloudIdentityGroupTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+
+	transformed := make(map[string]interface{})
+	if l, ok := d.GetOkExists("terraform_labels"); ok {
+		for k := range l.(map[string]interface{}) {
+			transformed[k] = v.(map[string]interface{})[k]
+		}
+	}
+
+	return transformed
+}
+
+func flattenCloudIdentityGroupEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -597,7 +651,7 @@ func expandCloudIdentityGroupDescription(v interface{}, d tpgresource.TerraformR
 	return v, nil
 }
 
-func expandCloudIdentityGroupLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandCloudIdentityGroupEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}

@@ -49,7 +49,7 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigBasicExample(t *testi
 				ResourceName:            "google_workstations_workstation_config.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"workstation_config_id", "workstation_cluster_id", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "workstation_config_id", "workstation_cluster_id", "location"},
 			},
 		},
 	})
@@ -126,7 +126,7 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigContainerExample(t *t
 				ResourceName:            "google_workstations_workstation_config.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"workstation_config_id", "workstation_cluster_id", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "workstation_config_id", "workstation_cluster_id", "location"},
 			},
 		},
 	})
@@ -209,7 +209,7 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigPersistentDirectories
 				ResourceName:            "google_workstations_workstation_config.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"workstation_config_id", "workstation_cluster_id", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "workstation_config_id", "workstation_cluster_id", "location"},
 			},
 		},
 	})
@@ -297,7 +297,7 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigSourceSnapshotExample
 				ResourceName:            "google_workstations_workstation_config.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"workstation_config_id", "workstation_cluster_id", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "workstation_config_id", "workstation_cluster_id", "location"},
 			},
 		},
 	})
@@ -379,7 +379,7 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigShieldedInstanceConfi
 				ResourceName:            "google_workstations_workstation_config.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"workstation_config_id", "workstation_cluster_id", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "workstation_config_id", "workstation_cluster_id", "location"},
 			},
 		},
 	})
@@ -457,7 +457,7 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigAcceleratorsExample(t
 				ResourceName:            "google_workstations_workstation_config.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"workstation_config_id", "workstation_cluster_id", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "workstation_config_id", "workstation_cluster_id", "location"},
 			},
 		},
 	})
@@ -535,7 +535,7 @@ func TestAccWorkstationsWorkstationConfig_workstationConfigEncryptionKeyExample(
 				ResourceName:            "google_workstations_workstation_config.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"workstation_config_id", "workstation_cluster_id", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "workstation_config_id", "workstation_cluster_id", "location"},
 			},
 		},
 	})

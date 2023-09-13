@@ -49,6 +49,7 @@ func ResourceSecretManagerSecret() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
+			tpgresource.SetLabelsDiff,
 			tpgresource.DefaultProviderProject,
 		),
 
@@ -231,11 +232,24 @@ An object containing a list of "key": value pairs. Example:
 				Computed:    true,
 				Description: `The time at which the Secret was created.`,
 			},
+			"effective_labels": {
+				Type:        schema.TypeMap,
+				Computed:    true,
+				Description: `All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.`,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `The resource name of the Secret. Format:
 'projects/{{project}}/secrets/{{secret_id}}'`,
+			},
+			"terraform_labels": {
+				Type:     schema.TypeMap,
+				Computed: true,
+				Description: `The combination of labels configured directly on the resource
+ and default labels configured on the provider.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -256,12 +270,6 @@ func resourceSecretManagerSecretCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	obj := make(map[string]interface{})
-	labelsProp, err := expandSecretManagerSecretLabels(d.Get("labels"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
-	}
 	annotationsProp, err := expandSecretManagerSecretAnnotations(d.Get("annotations"), d, config)
 	if err != nil {
 		return err
@@ -303,6 +311,12 @@ func resourceSecretManagerSecretCreate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("rotation"); !tpgresource.IsEmptyValue(reflect.ValueOf(rotationProp)) && (ok || !reflect.DeepEqual(v, rotationProp)) {
 		obj["rotation"] = rotationProp
+	}
+	labelsProp, err := expandSecretManagerSecretEffectiveLabels(d.Get("effective_labels"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+		obj["labels"] = labelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{SecretManagerBasePath}}projects/{{project}}/secrets?secretId={{secret_id}}")
@@ -419,6 +433,12 @@ func resourceSecretManagerSecretRead(d *schema.ResourceData, meta interface{}) e
 	if err := d.Set("rotation", flattenSecretManagerSecretRotation(res["rotation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Secret: %s", err)
 	}
+	if err := d.Set("terraform_labels", flattenSecretManagerSecretTerraformLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Secret: %s", err)
+	}
+	if err := d.Set("effective_labels", flattenSecretManagerSecretEffectiveLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Secret: %s", err)
+	}
 
 	return nil
 }
@@ -439,12 +459,6 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 	billingProject = project
 
 	obj := make(map[string]interface{})
-	labelsProp, err := expandSecretManagerSecretLabels(d.Get("labels"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
-	}
 	annotationsProp, err := expandSecretManagerSecretAnnotations(d.Get("annotations"), d, config)
 	if err != nil {
 		return err
@@ -475,6 +489,12 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("rotation"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, rotationProp)) {
 		obj["rotation"] = rotationProp
 	}
+	labelsProp, err := expandSecretManagerSecretEffectiveLabels(d.Get("effective_labels"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+		obj["labels"] = labelsProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{SecretManagerBasePath}}projects/{{project}}/secrets/{{secret_id}}")
 	if err != nil {
@@ -483,10 +503,6 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 
 	log.Printf("[DEBUG] Updating Secret %q: %#v", d.Id(), obj)
 	updateMask := []string{}
-
-	if d.HasChange("labels") {
-		updateMask = append(updateMask, "labels")
-	}
 
 	if d.HasChange("annotations") {
 		updateMask = append(updateMask, "annotations")
@@ -506,6 +522,10 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("rotation") {
 		updateMask = append(updateMask, "rotation")
+	}
+
+	if d.HasChange("effective_labels") {
+		updateMask = append(updateMask, "labels")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -630,7 +650,18 @@ func flattenSecretManagerSecretCreateTime(v interface{}, d *schema.ResourceData,
 }
 
 func flattenSecretManagerSecretLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	if v == nil {
+		return v
+	}
+
+	transformed := make(map[string]interface{})
+	if l, ok := d.GetOkExists("labels"); ok {
+		for k := range l.(map[string]interface{}) {
+			transformed[k] = v.(map[string]interface{})[k]
+		}
+	}
+
+	return transformed
 }
 
 func flattenSecretManagerSecretAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -762,15 +793,23 @@ func flattenSecretManagerSecretRotationRotationPeriod(v interface{}, d *schema.R
 	return v
 }
 
-func expandSecretManagerSecretLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func flattenSecretManagerSecretTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
-		return map[string]string{}, nil
+		return v
 	}
-	m := make(map[string]string)
-	for k, val := range v.(map[string]interface{}) {
-		m[k] = val.(string)
+
+	transformed := make(map[string]interface{})
+	if l, ok := d.GetOkExists("terraform_labels"); ok {
+		for k := range l.(map[string]interface{}) {
+			transformed[k] = v.(map[string]interface{})[k]
+		}
 	}
-	return m, nil
+
+	return transformed
+}
+
+func flattenSecretManagerSecretEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func expandSecretManagerSecretAnnotations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
@@ -970,4 +1009,15 @@ func expandSecretManagerSecretRotationNextRotationTime(v interface{}, d tpgresou
 
 func expandSecretManagerSecretRotationRotationPeriod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandSecretManagerSecretEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }

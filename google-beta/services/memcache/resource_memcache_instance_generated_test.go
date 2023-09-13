@@ -49,7 +49,7 @@ func TestAccMemcacheInstance_memcacheInstanceBasicExample(t *testing.T) {
 				ResourceName:            "google_memcache_instance.instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "region"},
+				ImportStateVerifyIgnore: []string{"name", "labels", "terraform_labels", "region"},
 			},
 		},
 	})

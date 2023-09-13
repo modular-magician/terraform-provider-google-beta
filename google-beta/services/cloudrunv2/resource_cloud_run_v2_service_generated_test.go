@@ -49,7 +49,7 @@ func TestAccCloudRunV2Service_cloudrunv2ServiceBasicExample(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_service.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "annotations", "location"},
+				ImportStateVerifyIgnore: []string{"name", "labels", "annotations", "terraform_labels", "location"},
 			},
 		},
 	})
@@ -91,7 +91,7 @@ func TestAccCloudRunV2Service_cloudrunv2ServiceSqlExample(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_service.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "annotations", "location"},
+				ImportStateVerifyIgnore: []string{"name", "labels", "annotations", "terraform_labels", "location"},
 			},
 		},
 	})
@@ -200,7 +200,7 @@ func TestAccCloudRunV2Service_cloudrunv2ServiceVpcaccessExample(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_service.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "annotations", "location"},
+				ImportStateVerifyIgnore: []string{"name", "labels", "annotations", "terraform_labels", "location"},
 			},
 		},
 	})
@@ -265,7 +265,7 @@ func TestAccCloudRunV2Service_cloudrunv2ServiceProbesExample(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_service.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "annotations", "location"},
+				ImportStateVerifyIgnore: []string{"name", "labels", "annotations", "terraform_labels", "location"},
 			},
 		},
 	})
@@ -319,7 +319,7 @@ func TestAccCloudRunV2Service_cloudrunv2ServiceSecretExample(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_service.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "annotations", "location"},
+				ImportStateVerifyIgnore: []string{"name", "labels", "annotations", "terraform_labels", "location"},
 			},
 		},
 	})
@@ -398,7 +398,7 @@ func TestAccCloudRunV2Service_cloudrunv2ServiceMulticontainerExample(t *testing.
 				ResourceName:            "google_cloud_run_v2_service.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "annotations", "location"},
+				ImportStateVerifyIgnore: []string{"name", "labels", "annotations", "terraform_labels", "location"},
 			},
 		},
 	})

@@ -50,7 +50,7 @@ func TestAccGKEHubMembership_gkehubMembershipBasicExample(t *testing.T) {
 				ResourceName:            "google_gke_hub_membership.membership",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"membership_id"},
+				ImportStateVerifyIgnore: []string{"membership_id", "labels", "terraform_labels"},
 			},
 		},
 	})
@@ -95,7 +95,7 @@ func TestAccGKEHubMembership_gkehubMembershipIssuerExample(t *testing.T) {
 				ResourceName:            "google_gke_hub_membership.membership",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"membership_id"},
+				ImportStateVerifyIgnore: []string{"membership_id", "labels", "terraform_labels"},
 			},
 		},
 	})

@@ -49,7 +49,7 @@ func TestAccNetworkServicesGateway_networkServicesGatewayBasicExample(t *testing
 				ResourceName:            "google_network_services_gateway.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "name", "location"},
 			},
 		},
 	})
@@ -85,7 +85,7 @@ func TestAccNetworkServicesGateway_networkServicesGatewayAdvancedExample(t *test
 				ResourceName:            "google_network_services_gateway.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "name", "location"},
 			},
 		},
 	})
@@ -125,7 +125,7 @@ func TestAccNetworkServicesGateway_networkServicesGatewaySecureWebProxyExample(t
 				ResourceName:            "google_network_services_gateway.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "location", "delete_swg_autogen_router_on_destroy"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "name", "location", "delete_swg_autogen_router_on_destroy"},
 			},
 		},
 	})
@@ -217,7 +217,7 @@ func TestAccNetworkServicesGateway_networkServicesGatewayMultipleSwpSameNetworkE
 				ResourceName:            "google_network_services_gateway.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "location", "delete_swg_autogen_router_on_destroy"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "name", "location", "delete_swg_autogen_router_on_destroy"},
 			},
 		},
 	})

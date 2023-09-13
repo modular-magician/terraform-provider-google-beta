@@ -49,7 +49,7 @@ func TestAccVertexAITensorboard_vertexAiTensorboardExample(t *testing.T) {
 				ResourceName:            "google_vertex_ai_tensorboard.tensorboard",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"region", "project"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "region", "project"},
 			},
 		},
 	})
@@ -89,7 +89,7 @@ func TestAccVertexAITensorboard_vertexAiTensorboardFullExample(t *testing.T) {
 				ResourceName:            "google_vertex_ai_tensorboard.tensorboard",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"region", "project"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "region", "project"},
 			},
 		},
 	})

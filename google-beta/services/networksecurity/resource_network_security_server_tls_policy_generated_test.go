@@ -49,7 +49,7 @@ func TestAccNetworkSecurityServerTlsPolicy_networkSecurityServerTlsPolicyBasicEx
 				ResourceName:            "google_network_security_server_tls_policy.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "name", "location"},
 			},
 		},
 	})
@@ -110,7 +110,7 @@ func TestAccNetworkSecurityServerTlsPolicy_networkSecurityServerTlsPolicyAdvance
 				ResourceName:            "google_network_security_server_tls_policy.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "name", "location"},
 			},
 		},
 	})
@@ -153,7 +153,7 @@ func TestAccNetworkSecurityServerTlsPolicy_networkSecurityServerTlsPolicyServerC
 				ResourceName:            "google_network_security_server_tls_policy.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name", "location"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "name", "location"},
 			},
 		},
 	})

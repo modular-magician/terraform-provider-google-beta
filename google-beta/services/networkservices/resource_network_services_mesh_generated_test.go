@@ -49,7 +49,7 @@ func TestAccNetworkServicesMesh_networkServicesMeshBasicExample(t *testing.T) {
 				ResourceName:            "google_network_services_mesh.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "name"},
 			},
 		},
 	})
@@ -88,7 +88,7 @@ func TestAccNetworkServicesMesh_networkServicesMeshNoPortExample(t *testing.T) {
 				ResourceName:            "google_network_services_mesh.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "name"},
 			},
 		},
 	})

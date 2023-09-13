@@ -49,7 +49,7 @@ func TestAccRedisInstance_redisInstanceBasicExample(t *testing.T) {
 				ResourceName:            "google_redis_instance.cache",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"reserved_ip_range", "region"},
+				ImportStateVerifyIgnore: []string{"labels", "reserved_ip_range", "terraform_labels", "region"},
 			},
 		},
 	})
@@ -84,7 +84,7 @@ func TestAccRedisInstance_redisInstanceFullExample(t *testing.T) {
 				ResourceName:            "google_redis_instance.cache",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"reserved_ip_range", "region"},
+				ImportStateVerifyIgnore: []string{"labels", "reserved_ip_range", "terraform_labels", "region"},
 			},
 		},
 	})
@@ -158,7 +158,7 @@ func TestAccRedisInstance_redisInstanceFullWithPersistenceConfigExample(t *testi
 				ResourceName:            "google_redis_instance.cache-persis",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"reserved_ip_range", "region"},
+				ImportStateVerifyIgnore: []string{"labels", "reserved_ip_range", "terraform_labels", "region"},
 			},
 		},
 	})
@@ -200,7 +200,7 @@ func TestAccRedisInstance_redisInstancePrivateServiceExample(t *testing.T) {
 				ResourceName:            "google_redis_instance.cache",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"reserved_ip_range", "region"},
+				ImportStateVerifyIgnore: []string{"labels", "reserved_ip_range", "terraform_labels", "region"},
 			},
 		},
 	})
@@ -274,7 +274,7 @@ func TestAccRedisInstance_redisInstanceMrrExample(t *testing.T) {
 				ResourceName:            "google_redis_instance.cache",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"reserved_ip_range", "region"},
+				ImportStateVerifyIgnore: []string{"labels", "reserved_ip_range", "terraform_labels", "region"},
 			},
 		},
 	})

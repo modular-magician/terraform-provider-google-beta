@@ -50,7 +50,7 @@ func TestAccVertexAIIndexEndpoint_vertexAiIndexEndpointExample(t *testing.T) {
 				ResourceName:            "google_vertex_ai_index_endpoint.index_endpoint",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"etag", "region"},
+				ImportStateVerifyIgnore: []string{"etag", "labels", "terraform_labels", "region"},
 			},
 		},
 	})
