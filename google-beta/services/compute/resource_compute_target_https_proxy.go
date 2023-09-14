@@ -788,11 +788,7 @@ func expandComputeTargetHttpsProxySslCertificates(v interface{}, d tpgresource.T
 		if raw == nil {
 			return nil, fmt.Errorf("Invalid value for ssl_certificates: nil")
 		}
-		f, err := tpgresource.ParseGlobalFieldValue("sslCertificates", raw.(string), "project", d, config, true)
-		if err != nil {
-			return nil, fmt.Errorf("Invalid value for ssl_certificates: %s", err)
-		}
-		req = append(req, f.RelativeLink())
+		req = append(req, raw.(string))
 	}
 	return req, nil
 }
