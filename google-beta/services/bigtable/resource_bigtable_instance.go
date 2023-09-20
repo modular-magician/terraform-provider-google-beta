@@ -420,6 +420,7 @@ func flattenBigtableCluster(c *bigtable.ClusterInfo) map[string]interface{} {
 		"cluster_id":   c.Name,
 		"storage_type": storageType,
 		"kms_key_name": c.KMSKeyName,
+		"state":        c.State,
 	}
 	if c.AutoscalingConfig != nil {
 		cluster["autoscaling_config"] = make([]map[string]interface{}, 1)
@@ -545,6 +546,10 @@ func resourceBigtableInstanceUniqueClusterID(_ context.Context, diff *schema.Res
 	for i := 0; i < newCount.(int); i++ {
 		_, newId := diff.GetChange(fmt.Sprintf("cluster.%d.cluster_id", i))
 		clusterID := newId.(string)
+		// In case clusterID is empty, it is probably computed and this validation will be wrong.
+		if clusterID == "" {
+			continue
+		}
 		if clusters[clusterID] {
 			return fmt.Errorf("duplicated cluster_id: %q", clusterID)
 		}
@@ -654,8 +659,9 @@ func resourceBigtableInstanceClusterReorderTypeList(_ context.Context, diff *sch
 			}
 		}
 
+		currentState, _ := diff.GetChange(fmt.Sprintf("cluster.%d.state", i))
 		oST, nST := diff.GetChange(fmt.Sprintf("cluster.%d.storage_type", i))
-		if oST != nST {
+		if oST != nST && currentState.(string) != "CREATING" {
 			err := diff.ForceNew(fmt.Sprintf("cluster.%d.storage_type", i))
 			if err != nil {
 				return fmt.Errorf("Error setting cluster diff: %s", err)
