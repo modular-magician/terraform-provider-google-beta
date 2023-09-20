@@ -66,6 +66,11 @@ The following arguments are supported:
   (Optional)
   Whether to enable email link user authentication.
 
+* `monitoring` -
+  (Optional)
+  Configuration related to monitoring project activity.
+  Structure is [documented below](#nested_monitoring).
+
 * `disable_auth` -
   (Optional)
   Whether authentication is disabled for the tenant. If true, the users under
@@ -75,6 +80,20 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+
+<a name="nested_monitoring"></a>The `monitoring` block supports:
+
+* `request_logging` -
+  (Optional)
+  Configuration for logging requests made to this project to Stackdriver Logging.
+  Structure is [documented below](#nested_request_logging).
+
+
+<a name="nested_request_logging"></a>The `request_logging` block supports:
+
+* `enabled` -
+  (Optional)
+  Whether logging is enabled for this project or not.
 
 ## Attributes Reference
 

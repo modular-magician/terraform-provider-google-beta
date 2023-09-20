@@ -112,6 +112,16 @@ The following arguments are supported:
   (Optional)
   Whether anonymous users will be auto-deleted after a period of 30 days
 
+* `multi_tenant` -
+  (Optional)
+  Configuration related to multi-tenant functionality.
+  Structure is [documented below](#nested_multi_tenant).
+
+* `monitoring` -
+  (Optional)
+  Configuration related to monitoring project activity.
+  Structure is [documented below](#nested_monitoring).
+
 * `sign_in` -
   (Optional)
   Configuration related to local sign in methods.
@@ -134,6 +144,32 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+
+<a name="nested_multi_tenant"></a>The `multi_tenant` block supports:
+
+* `allow_tenants` -
+  (Optional)
+  Whether this project can have tenants or not.
+
+* `default_tenant_location` -
+  (Optional)
+  The default cloud parent org or folder that the tenant project should be created under.
+  The parent resource name should be in the format of "/", such as "folders/123" or "organizations/456".
+  If the value is not set, the tenant will be created under the same organization or folder as the agent project.
+
+<a name="nested_monitoring"></a>The `monitoring` block supports:
+
+* `request_logging` -
+  (Optional)
+  Configuration for logging requests made to this project to Stackdriver Logging.
+  Structure is [documented below](#nested_request_logging).
+
+
+<a name="nested_request_logging"></a>The `request_logging` block supports:
+
+* `enabled` -
+  (Optional)
+  Whether logging is enabled for this project or not.
 
 <a name="nested_sign_in"></a>The `sign_in` block supports:
 

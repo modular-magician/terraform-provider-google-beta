@@ -170,3 +170,203 @@ resource "google_identity_platform_config" "default" {
 }
 `, context)
 }
+
+func TestAccIdentityPlatformConfig_identityPlatformConfigMonitoringExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"org_id":        envvar.GetTestOrgFromEnv(t),
+		"billing_acct":  envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccIdentityPlatformConfig_identityPlatformConfigMonitoringExample(context),
+			},
+			{
+				ResourceName:      "google_identity_platform_config.default",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccIdentityPlatformConfig_identityPlatformConfigMonitoringExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_project" "default" {
+  project_id = "tf-test%{random_suffix}"
+  name       = "tf-test%{random_suffix}"
+  org_id     = "%{org_id}"
+  billing_account =  "%{billing_acct}"
+  labels = {
+    firebase = "enabled"
+  }
+}
+
+resource "google_project_service" "identitytoolkit" {
+  project = google_project.default.project_id
+  service = "identitytoolkit.googleapis.com"
+}
+
+resource "google_identity_platform_config" "default" {
+  project = google_project.default.project_id
+  autodelete_anonymous_users = true
+
+  monitoring {
+    request_logging {
+      enabled = true
+    }
+  }
+
+  depends_on = [
+    google_project_service.identitytoolkit
+  ]
+}
+`, context)
+}
+
+func TestAccIdentityPlatformConfig_identityPlatformConfigMultiTenantExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"org_id":        envvar.GetTestOrgFromEnv(t),
+		"billing_acct":  envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccIdentityPlatformConfig_identityPlatformConfigMultiTenantExample(context),
+			},
+			{
+				ResourceName:      "google_identity_platform_config.default",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccIdentityPlatformConfig_identityPlatformConfigMultiTenantExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_project" "default" {
+  project_id = "tf-test%{random_suffix}"
+  name       = "tf-test%{random_suffix}"
+  org_id     = "%{org_id}"
+  billing_account =  "%{billing_acct}"
+  labels = {
+    firebase = "enabled"
+  }
+}
+
+resource "google_project_service" "identitytoolkit" {
+  project = google_project.default.project_id
+  service = "identitytoolkit.googleapis.com"
+}
+
+resource "google_identity_platform_config" "default" {
+  project = google_project.default.project_id
+
+  multi_tenant {
+    allow_tenants = true
+    default_tenant_location = "organizations/%{org_id}"
+  }
+
+  depends_on = [
+    google_project_service.identitytoolkit
+  ]
+}
+
+resource "google_identity_platform_tenant" "default" {
+  project = google_project.default.project_id
+
+  display_name          = "tenant"
+  allow_password_signup = true
+
+  depends_on = [
+    google_identity_platform_config.default
+  ]
+}
+`, context)
+}
+
+func TestAccIdentityPlatformConfig_identityPlatformConfigMultiTenantMonitoringExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"org_id":        envvar.GetTestOrgFromEnv(t),
+		"billing_acct":  envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccIdentityPlatformConfig_identityPlatformConfigMultiTenantMonitoringExample(context),
+			},
+			{
+				ResourceName:      "google_identity_platform_config.default",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccIdentityPlatformConfig_identityPlatformConfigMultiTenantMonitoringExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_project" "default" {
+  project_id = "tf-test%{random_suffix}"
+  name       = "tf-test%{random_suffix}"
+  org_id     = "%{org_id}"
+  billing_account =  "%{billing_acct}"
+  labels = {
+    firebase = "enabled"
+  }
+}
+
+resource "google_project_service" "identitytoolkit" {
+  project = google_project.default.project_id
+  service = "identitytoolkit.googleapis.com"
+}
+
+resource "google_identity_platform_config" "default" {
+  project = google_project.default.project_id
+
+  multi_tenant {
+    allow_tenants = true
+  }
+
+  depends_on = [
+    google_project_service.identitytoolkit
+  ]
+}
+
+resource "google_identity_platform_tenant" "default" {
+  project = google_project.default.project_id
+
+  display_name          = "tenant"
+  allow_password_signup = true
+
+  monitoring {
+    request_logging {
+      enabled = true
+    }
+  }
+
+  depends_on = [
+    google_identity_platform_config.default
+  ]
+}
+`, context)
+}

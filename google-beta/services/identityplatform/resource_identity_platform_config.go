@@ -120,6 +120,54 @@ func ResourceIdentityPlatformConfig() *schema.Resource {
 					},
 				},
 			},
+			"monitoring": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				Description: `Configuration related to monitoring project activity.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"request_logging": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration for logging requests made to this project to Stackdriver Logging.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `Whether logging is enabled for this project or not.`,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"multi_tenant": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Configuration related to multi-tenant functionality.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"allow_tenants": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: `Whether this project can have tenants or not.`,
+						},
+						"default_tenant_location": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The default cloud parent org or folder that the tenant project should be created under.
+The parent resource name should be in the format of "/", such as "folders/123" or "organizations/456".
+If the value is not set, the tenant will be created under the same organization or folder as the agent project.`,
+						},
+					},
+				},
+			},
 			"quota": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -382,6 +430,12 @@ func resourceIdentityPlatformConfigRead(d *schema.ResourceData, meta interface{}
 	if err := d.Set("autodelete_anonymous_users", flattenIdentityPlatformConfigAutodeleteAnonymousUsers(res["autodeleteAnonymousUsers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+	if err := d.Set("multi_tenant", flattenIdentityPlatformConfigMultiTenant(res["multiTenant"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Config: %s", err)
+	}
+	if err := d.Set("monitoring", flattenIdentityPlatformConfigMonitoring(res["monitoring"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Config: %s", err)
+	}
 	if err := d.Set("sign_in", flattenIdentityPlatformConfigSignIn(res["signIn"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
@@ -420,6 +474,18 @@ func resourceIdentityPlatformConfigUpdate(d *schema.ResourceData, meta interface
 	} else if v, ok := d.GetOkExists("autodelete_anonymous_users"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, autodeleteAnonymousUsersProp)) {
 		obj["autodeleteAnonymousUsers"] = autodeleteAnonymousUsersProp
 	}
+	multiTenantProp, err := expandIdentityPlatformConfigMultiTenant(d.Get("multi_tenant"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("multi_tenant"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, multiTenantProp)) {
+		obj["multiTenant"] = multiTenantProp
+	}
+	monitoringProp, err := expandIdentityPlatformConfigMonitoring(d.Get("monitoring"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("monitoring"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, monitoringProp)) {
+		obj["monitoring"] = monitoringProp
+	}
 	signInProp, err := expandIdentityPlatformConfigSignIn(d.Get("sign_in"), d, config)
 	if err != nil {
 		return err
@@ -455,6 +521,14 @@ func resourceIdentityPlatformConfigUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("autodelete_anonymous_users") {
 		updateMask = append(updateMask, "autodeleteAnonymousUsers")
+	}
+
+	if d.HasChange("multi_tenant") {
+		updateMask = append(updateMask, "multiTenant")
+	}
+
+	if d.HasChange("monitoring") {
+		updateMask = append(updateMask, "monitoring")
 	}
 
 	if d.HasChange("sign_in") {
@@ -537,6 +611,59 @@ func flattenIdentityPlatformConfigName(v interface{}, d *schema.ResourceData, co
 }
 
 func flattenIdentityPlatformConfigAutodeleteAnonymousUsers(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIdentityPlatformConfigMultiTenant(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["allow_tenants"] =
+		flattenIdentityPlatformConfigMultiTenantAllowTenants(original["allowTenants"], d, config)
+	transformed["default_tenant_location"] =
+		flattenIdentityPlatformConfigMultiTenantDefaultTenantLocation(original["defaultTenantLocation"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIdentityPlatformConfigMultiTenantAllowTenants(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIdentityPlatformConfigMultiTenantDefaultTenantLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIdentityPlatformConfigMonitoring(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["request_logging"] =
+		flattenIdentityPlatformConfigMonitoringRequestLogging(original["requestLogging"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIdentityPlatformConfigMonitoringRequestLogging(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enabled"] =
+		flattenIdentityPlatformConfigMonitoringRequestLoggingEnabled(original["enabled"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIdentityPlatformConfigMonitoringRequestLoggingEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -823,6 +950,82 @@ func flattenIdentityPlatformConfigAuthorizedDomains(v interface{}, d *schema.Res
 }
 
 func expandIdentityPlatformConfigAutodeleteAnonymousUsers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIdentityPlatformConfigMultiTenant(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAllowTenants, err := expandIdentityPlatformConfigMultiTenantAllowTenants(original["allow_tenants"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowTenants); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowTenants"] = transformedAllowTenants
+	}
+
+	transformedDefaultTenantLocation, err := expandIdentityPlatformConfigMultiTenantDefaultTenantLocation(original["default_tenant_location"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDefaultTenantLocation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["defaultTenantLocation"] = transformedDefaultTenantLocation
+	}
+
+	return transformed, nil
+}
+
+func expandIdentityPlatformConfigMultiTenantAllowTenants(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIdentityPlatformConfigMultiTenantDefaultTenantLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIdentityPlatformConfigMonitoring(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedRequestLogging, err := expandIdentityPlatformConfigMonitoringRequestLogging(original["request_logging"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRequestLogging); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["requestLogging"] = transformedRequestLogging
+	}
+
+	return transformed, nil
+}
+
+func expandIdentityPlatformConfigMonitoringRequestLogging(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnabled, err := expandIdentityPlatformConfigMonitoringRequestLoggingEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	return transformed, nil
+}
+
+func expandIdentityPlatformConfigMonitoringRequestLoggingEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
