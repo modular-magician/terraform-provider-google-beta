@@ -18,6 +18,7 @@
 package secretmanager
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"reflect"
@@ -30,6 +31,32 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
+
+// Prevent ForceNew when upgrading replication.automatic -> replication.auto
+func secretManagerSecretAutoCustomizeDiff(_ context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+	oAutomatic, nAutomatic := diff.GetChange("replication.0.automatic")
+	_, nAuto := diff.GetChange("replication.0.auto")
+	autoLen := len(nAuto.([]interface{}))
+
+	// Do not ForceNew if we are removing "automatic" while adding "auto"
+	if oAutomatic == true && nAutomatic == false && autoLen > 0 {
+		return nil
+	}
+
+	if diff.HasChange("replication.0.automatic") {
+		if err := diff.ForceNew("replication.0.automatic"); err != nil {
+			return err
+		}
+	}
+
+	if diff.HasChange("replication.0.auto") {
+		if err := diff.ForceNew("replication.0.auto"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
 
 func ResourceSecretManagerSecret() *schema.Resource {
 	return &schema.Resource{
@@ -49,8 +76,8 @@ func ResourceSecretManagerSecret() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
+			secretManagerSecretAutoCustomizeDiff,
 			tpgresource.SetLabelsDiff,
-			tpgresource.SetAnnotationsDiff,
 			tpgresource.DefaultProviderProject,
 		),
 
@@ -255,12 +282,6 @@ An object containing a list of "key": value pairs. Example:
 				Computed:    true,
 				Description: `The time at which the Secret was created.`,
 			},
-			"effective_annotations": {
-				Type:        schema.TypeMap,
-				Computed:    true,
-				Description: `All of annotations (key/value pairs) present on the resource in GCP, including the annotations configured through Terraform, other clients and services.`,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-			},
 			"effective_labels": {
 				Type:        schema.TypeMap,
 				Computed:    true,
@@ -299,6 +320,12 @@ func resourceSecretManagerSecretCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	obj := make(map[string]interface{})
+	annotationsProp, err := expandSecretManagerSecretAnnotations(d.Get("annotations"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(annotationsProp)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
+		obj["annotations"] = annotationsProp
+	}
 	versionAliasesProp, err := expandSecretManagerSecretVersionAliases(d.Get("version_aliases"), d, config)
 	if err != nil {
 		return err
@@ -340,12 +367,6 @@ func resourceSecretManagerSecretCreate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
-	}
-	annotationsProp, err := expandSecretManagerSecretEffectiveAnnotations(d.Get("effective_annotations"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("effective_annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(annotationsProp)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
-		obj["annotations"] = annotationsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{SecretManagerBasePath}}projects/{{project}}/secrets?secretId={{secret_id}}")
@@ -468,9 +489,6 @@ func resourceSecretManagerSecretRead(d *schema.ResourceData, meta interface{}) e
 	if err := d.Set("effective_labels", flattenSecretManagerSecretEffectiveLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Secret: %s", err)
 	}
-	if err := d.Set("effective_annotations", flattenSecretManagerSecretEffectiveAnnotations(res["annotations"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Secret: %s", err)
-	}
 
 	return nil
 }
@@ -491,6 +509,12 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 	billingProject = project
 
 	obj := make(map[string]interface{})
+	annotationsProp, err := expandSecretManagerSecretAnnotations(d.Get("annotations"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
+		obj["annotations"] = annotationsProp
+	}
 	versionAliasesProp, err := expandSecretManagerSecretVersionAliases(d.Get("version_aliases"), d, config)
 	if err != nil {
 		return err
@@ -521,12 +545,6 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
-	annotationsProp, err := expandSecretManagerSecretEffectiveAnnotations(d.Get("effective_annotations"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("effective_annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
-		obj["annotations"] = annotationsProp
-	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{SecretManagerBasePath}}projects/{{project}}/secrets/{{secret_id}}")
 	if err != nil {
@@ -535,6 +553,10 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 
 	log.Printf("[DEBUG] Updating Secret %q: %#v", d.Id(), obj)
 	updateMask := []string{}
+
+	if d.HasChange("annotations") {
+		updateMask = append(updateMask, "annotations")
+	}
 
 	if d.HasChange("version_aliases") {
 		updateMask = append(updateMask, "versionAliases")
@@ -554,10 +576,6 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("effective_labels") {
 		updateMask = append(updateMask, "labels")
-	}
-
-	if d.HasChange("effective_annotations") {
-		updateMask = append(updateMask, "annotations")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -697,18 +715,7 @@ func flattenSecretManagerSecretLabels(v interface{}, d *schema.ResourceData, con
 }
 
 func flattenSecretManagerSecretAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-
-	transformed := make(map[string]interface{})
-	if l, ok := d.GetOkExists("annotations"); ok {
-		for k := range l.(map[string]interface{}) {
-			transformed[k] = v.(map[string]interface{})[k]
-		}
-	}
-
-	return transformed
+	return v
 }
 
 func flattenSecretManagerSecretVersionAliases(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -878,8 +885,15 @@ func flattenSecretManagerSecretEffectiveLabels(v interface{}, d *schema.Resource
 	return v
 }
 
-func flattenSecretManagerSecretEffectiveAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+func expandSecretManagerSecretAnnotations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }
 
 func expandSecretManagerSecretVersionAliases(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
@@ -1110,17 +1124,6 @@ func expandSecretManagerSecretRotationRotationPeriod(v interface{}, d tpgresourc
 }
 
 func expandSecretManagerSecretEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
-	if v == nil {
-		return map[string]string{}, nil
-	}
-	m := make(map[string]string)
-	for k, val := range v.(map[string]interface{}) {
-		m[k] = val.(string)
-	}
-	return m, nil
-}
-
-func expandSecretManagerSecretEffectiveAnnotations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
