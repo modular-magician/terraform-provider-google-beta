@@ -1113,9 +1113,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		})
 }
 
-// Generated resources: 380
+// Generated resources: 379
 // Generated IAM resources: 237
-// Total generated resources: 617
+// Total generated resources: 616
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1571,7 +1571,6 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_identity_platform_default_supported_idp_config":          identityplatform.ResourceIdentityPlatformDefaultSupportedIdpConfig(),
 			"google_identity_platform_inbound_saml_config":                   identityplatform.ResourceIdentityPlatformInboundSamlConfig(),
 			"google_identity_platform_oauth_idp_config":                      identityplatform.ResourceIdentityPlatformOauthIdpConfig(),
-			"google_identity_platform_project_default_config":                identityplatform.ResourceIdentityPlatformProjectDefaultConfig(),
 			"google_identity_platform_tenant":                                identityplatform.ResourceIdentityPlatformTenant(),
 			"google_identity_platform_tenant_default_supported_idp_config":   identityplatform.ResourceIdentityPlatformTenantDefaultSupportedIdpConfig(),
 			"google_identity_platform_tenant_inbound_saml_config":            identityplatform.ResourceIdentityPlatformTenantInboundSamlConfig(),
