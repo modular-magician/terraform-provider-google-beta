@@ -103,22 +103,22 @@ func TestFrameworkProvider_LoadAndValidateFramework_project(t *testing.T) {
 			ExpectedConfigStructValue: types.StringNull(),
 		},
 		// Handling empty strings in config
-		"when project is set as an empty string the empty string is used and not ignored": {
+		"when project is set as an empty string the field is treated as if it's unset, without error": {
 			ConfigValues: fwmodels.ProviderModel{
 				Project: types.StringValue(""),
 			},
-			ExpectedDataModelValue:    types.StringValue(""),
-			ExpectedConfigStructValue: types.StringValue(""),
+			ExpectedDataModelValue:    types.StringNull(),
+			ExpectedConfigStructValue: types.StringNull(),
 		},
-		"when project is set as an empty string, the empty string is not ignored in favor of an environment variable": {
+		"when project is set as an empty string an environment variable will be used": {
 			ConfigValues: fwmodels.ProviderModel{
 				Project: types.StringValue(""),
 			},
 			EnvVariables: map[string]string{
 				"GOOGLE_PROJECT": "project-from-GOOGLE_PROJECT",
 			},
-			ExpectedDataModelValue:    types.StringValue(""),
-			ExpectedConfigStructValue: types.StringValue(""),
+			ExpectedDataModelValue:    types.StringValue("project-from-GOOGLE_PROJECT"),
+			ExpectedConfigStructValue: types.StringValue("project-from-GOOGLE_PROJECT"),
 		},
 		// Handling unknown values
 		"when project is an unknown value, the provider treats it as if it's unset and uses an environment variable instead": {
@@ -265,15 +265,15 @@ func TestFrameworkProvider_LoadAndValidateFramework_credentials(t *testing.T) {
 			},
 			ExpectedDataModelValue: types.StringNull(),
 		},
-		// Error states
-		"when credentials is set to an empty string in the config the value isn't ignored and results in an error": {
+		// Handling empty strings in config
+		"when credentials is set to an empty string in the config (and access_token unset), GOOGLE_APPLICATION_CREDENTIALS is used": {
 			ConfigValues: fwmodels.ProviderModel{
 				Credentials: types.StringValue(""),
 			},
 			EnvVariables: map[string]string{
 				"GOOGLE_APPLICATION_CREDENTIALS": transport_tpg.TestFakeCredentialsPath, // needs to be a path to a file when used by code
 			},
-			ExpectError: true,
+			ExpectedDataModelValue: types.StringNull(),
 		},
 		// NOTE: these tests can't run in Cloud Build due to ADC locating credentials despite `GOOGLE_APPLICATION_CREDENTIALS` being unset
 		// See https://cloud.google.com/docs/authentication/application-default-credentials#search_order
@@ -434,22 +434,22 @@ func TestFrameworkProvider_LoadAndValidateFramework_billingProject(t *testing.T)
 			ExpectedConfigStructValue: types.StringNull(),
 		},
 		// Handling empty strings in config
-		"when billing_project is set as an empty string the empty string is used and not ignored": {
+		"when billing_project is set as an empty string the field is treated as if it's unset, without error": {
 			ConfigValues: fwmodels.ProviderModel{
 				BillingProject: types.StringValue(""),
 			},
-			ExpectedDataModelValue:    types.StringValue(""),
-			ExpectedConfigStructValue: types.StringValue(""),
+			ExpectedDataModelValue:    types.StringNull(),
+			ExpectedConfigStructValue: types.StringNull(),
 		},
-		"when billing_project is set as an empty string, the empty string is not ignored in favor of an environment variable": {
+		"when billing_project is set as an empty string an environment variable will be used": {
 			ConfigValues: fwmodels.ProviderModel{
 				BillingProject: types.StringValue(""),
 			},
 			EnvVariables: map[string]string{
 				"GOOGLE_BILLING_PROJECT": "billing-project-from-env",
 			},
-			ExpectedDataModelValue:    types.StringValue(""),
-			ExpectedConfigStructValue: types.StringValue(""),
+			ExpectedDataModelValue:    types.StringValue("billing-project-from-env"),
+			ExpectedConfigStructValue: types.StringValue("billing-project-from-env"),
 		},
 	}
 
@@ -548,22 +548,22 @@ func TestFrameworkProvider_LoadAndValidateFramework_region(t *testing.T) {
 			ExpectedConfigStructValue: types.StringNull(),
 		},
 		// Handling empty strings in config
-		"when region is set as an empty string the empty string is used and not ignored": {
+		"when region is set as an empty string the field is treated as if it's unset, without error": {
 			ConfigValues: fwmodels.ProviderModel{
 				Region: types.StringValue(""),
 			},
-			ExpectedDataModelValue:    types.StringValue(""),
-			ExpectedConfigStructValue: types.StringValue(""),
+			ExpectedDataModelValue:    types.StringNull(),
+			ExpectedConfigStructValue: types.StringNull(),
 		},
-		"when region is set as an empty string, the empty string is not ignored in favor of an environment variable": {
+		"when region is set as an empty string an environment variable will be used": {
 			ConfigValues: fwmodels.ProviderModel{
 				Region: types.StringValue(""),
 			},
 			EnvVariables: map[string]string{
 				"GOOGLE_REGION": "region-from-env",
 			},
-			ExpectedDataModelValue:    types.StringValue(""),
-			ExpectedConfigStructValue: types.StringValue(""),
+			ExpectedDataModelValue:    types.StringValue("region-from-env"),
+			ExpectedConfigStructValue: types.StringValue("region-from-env"),
 		},
 		// Handling unknown values
 		"when region is an unknown value, the provider treats it as if it's unset and uses an environment variable instead": {
@@ -698,22 +698,22 @@ func TestFrameworkProvider_LoadAndValidateFramework_zone(t *testing.T) {
 			ExpectedConfigStructValue: types.StringNull(),
 		},
 		// Handling empty strings in config
-		"when zone is set as an empty string the empty string is used and not ignored": {
+		"when zone is set as an empty string the field is treated as if it's unset, without error": {
 			ConfigValues: fwmodels.ProviderModel{
 				Zone: types.StringValue(""),
 			},
-			ExpectedDataModelValue:    types.StringValue(""),
-			ExpectedConfigStructValue: types.StringValue(""),
+			ExpectedDataModelValue:    types.StringNull(),
+			ExpectedConfigStructValue: types.StringNull(),
 		},
-		"when zone is set as an empty string, the empty string is not ignored in favor of an environment variable": {
+		"when zone is set as an empty string an environment variable will be used": {
 			ConfigValues: fwmodels.ProviderModel{
 				Zone: types.StringValue(""),
 			},
 			EnvVariables: map[string]string{
 				"GOOGLE_ZONE": "zone-from-env",
 			},
-			ExpectedDataModelValue:    types.StringValue(""),
-			ExpectedConfigStructValue: types.StringValue(""),
+			ExpectedDataModelValue:    types.StringValue("zone-from-env"),
+			ExpectedConfigStructValue: types.StringValue("zone-from-env"),
 		},
 		// Handling unknown values
 		"when zone is an unknown value, the provider treats it as if it's unset and uses an environment variable instead": {
@@ -815,20 +815,21 @@ func TestFrameworkProvider_LoadAndValidateFramework_accessToken(t *testing.T) {
 			ExpectedDataModelValue: types.StringNull(),
 		},
 		// Handling empty strings in config
-		"when access_token is set as an empty string the empty string is used and not ignored": {
+		"when access_token is set as an empty string the field is treated as if it's unset, without error (as long as credentials supplied in its absence)": {
 			ConfigValues: fwmodels.ProviderModel{
 				AccessToken: types.StringValue(""),
+				Credentials: types.StringValue(transport_tpg.TestFakeCredentialsPath),
 			},
-			ExpectedDataModelValue: types.StringValue(""),
+			ExpectedDataModelValue: types.StringNull(),
 		},
-		"when access_token is set as an empty string, the empty string is not ignored in favor of an environment variable": {
+		"when access_token is set as an empty string in the config, an environment variable is used": {
 			ConfigValues: fwmodels.ProviderModel{
 				AccessToken: types.StringValue(""),
 			},
 			EnvVariables: map[string]string{
 				"GOOGLE_OAUTH_ACCESS_TOKEN": "value-from-GOOGLE_OAUTH_ACCESS_TOKEN",
 			},
-			ExpectedDataModelValue: types.StringValue(""),
+			ExpectedDataModelValue: types.StringValue("value-from-GOOGLE_OAUTH_ACCESS_TOKEN"),
 		},
 		// Handling unknown values
 		"when access_token is an unknown value, the provider treats it as if it's unset and uses an environment variable instead": {
@@ -1057,20 +1058,20 @@ func TestFrameworkProvider_LoadAndValidateFramework_impersonateServiceAccount(t 
 			ExpectedDataModelValue: types.StringNull(),
 		},
 		// Handling empty strings in config
-		"when impersonate_service_account is set as an empty string the empty string is used and not ignored": {
+		"when impersonate_service_account is set as an empty string the field is treated as if it's unset, without error": {
 			ConfigValues: fwmodels.ProviderModel{
 				ImpersonateServiceAccount: types.StringValue(""),
 			},
-			ExpectedDataModelValue: types.StringValue(""),
+			ExpectedDataModelValue: types.StringNull(),
 		},
-		"when impersonate_service_account is set as an empty string, the empty string is not ignored in favor of an environment variable": {
+		"when impersonate_service_account is set as an empty string in the config, an environment variable is used": {
 			ConfigValues: fwmodels.ProviderModel{
 				ImpersonateServiceAccount: types.StringValue(""),
 			},
 			EnvVariables: map[string]string{
 				"GOOGLE_IMPERSONATE_SERVICE_ACCOUNT": "value-from-env@example.com",
 			},
-			ExpectedDataModelValue: types.StringValue(""),
+			ExpectedDataModelValue: types.StringValue("value-from-env@example.com"),
 		},
 		// Handling unknown values
 		"when impersonate_service_account is an unknown value, the provider treats it as if it's unset and uses an environment variable instead": {
@@ -1161,9 +1162,9 @@ func TestFrameworkProvider_LoadAndValidateFramework_impersonateServiceAccountDel
 			ExpectedNull: true,
 		},
 		// Handling empty values in config
-		"when impersonate_service_account_delegates is set as an empty array, that value isn't ignored": {
+		"when impersonate_service_account_delegates is set as an empty array the field is treated as if it's unset, without error": {
 			ImpersonateServiceAccountDelegatesValue: []string{},
-			ExpectedDataModelValue:                  []string{},
+			ExpectedDataModelValue:                  nil,
 		},
 		// Handling unknown values
 		"when impersonate_service_account_delegates is an unknown value, the provider treats it as if it's unset, without error": {
@@ -1370,20 +1371,20 @@ func TestFrameworkProvider_LoadAndValidateFramework_requestReason(t *testing.T) 
 			ExpectedDataModelValue: types.StringNull(),
 		},
 		// Handling empty strings in config
-		"when request_reason is set as an empty string, the empty string is not ignored in favor of an environment variable": {
+		"when request_reason is set as an empty string in the config it is overridden by environment variables": {
 			ConfigValues: fwmodels.ProviderModel{
 				RequestReason: types.StringValue(""),
 			},
 			EnvVariables: map[string]string{
 				"CLOUDSDK_CORE_REQUEST_REASON": "foo",
 			},
-			ExpectedDataModelValue: types.StringValue(""),
+			ExpectedDataModelValue: types.StringValue("foo"),
 		},
-		"when request_reason is set as an empty string the empty string is used and not ignored": {
+		"when request_reason is set as an empty string in the config the field is treated as if it's unset, without error": {
 			ConfigValues: fwmodels.ProviderModel{
 				RequestReason: types.StringValue(""),
 			},
-			ExpectedDataModelValue: types.StringValue(""),
+			ExpectedDataModelValue: types.StringNull(),
 		},
 		// Handling unknown values
 		"when request_reason is an unknown value, the provider treats it as if it's unset and uses an environment variable instead": {
@@ -1465,18 +1466,19 @@ func TestFrameworkProvider_LoadAndValidateFramework_requestTimeout(t *testing.T)
 			},
 			ExpectError: true,
 		},
-		"when request_timeout is set as an empty string, the empty string isn't ignored and an error will occur": {
-			ConfigValues: fwmodels.ProviderModel{
-				RequestTimeout: types.StringValue(""),
-			},
-			ExpectError: true,
-		},
 		// In the SDK version of the provider config code, this scenario results in a value of "0s"
 		// instead of "120s", but the final 'effective' value is also "120s"
 		// See : https://github.com/hashicorp/terraform-provider-google/blob/09cb850ee64bcd78e4457df70905530c1ed75f19/google/transport/config.go#L1228-L1233
 		"when request_timeout is unset in the config, the default value is 120s.": {
 			ConfigValues: fwmodels.ProviderModel{
 				RequestTimeout: types.StringNull(),
+			},
+			ExpectedDataModelValue: types.StringValue("120s"),
+		},
+		// Handling empty strings in config
+		"when request_timeout is set as an empty string, the default value is 120s.": {
+			ConfigValues: fwmodels.ProviderModel{
+				RequestTimeout: types.StringValue(""),
 			},
 			ExpectedDataModelValue: types.StringValue("120s"),
 		},
@@ -1583,6 +1585,13 @@ func TestFrameworkProvider_LoadAndValidateFramework_batching(t *testing.T) {
 			ExpectEnableBatchingValue: types.BoolValue(true),
 			ExpectSendAfterValue:      types.StringValue("3s"),
 		},
+		// Handling empty strings in config
+		"when batching is configured with send_after as an empty string, send_after will be set to a default value": {
+			EnableBatchingValue:       types.BoolValue(true),
+			SendAfterValue:            types.StringValue(""),
+			ExpectEnableBatchingValue: types.BoolValue(true),
+			ExpectSendAfterValue:      types.StringValue("10s"), // When batching block is present but has missing arguments inside, default is 10s
+		},
 		// Handling unknown values
 		"when batching is an unknown value, the provider treats it as if it's unset (align to SDK behaviour)": {
 			SetBatchingAsUnknown:      true,
@@ -1602,11 +1611,6 @@ func TestFrameworkProvider_LoadAndValidateFramework_batching(t *testing.T) {
 			ExpectSendAfterValue:      types.StringValue("45s"),
 		},
 		// Error states
-		"when batching is configured with send_after as an empty string, the empty string is not ignored and results in an error": {
-			EnableBatchingValue: types.BoolValue(true),
-			SendAfterValue:      types.StringValue(""),
-			ExpectError:         true,
-		},
 		"if batching is configured with send_after as an invalid value, there's an error": {
 			SendAfterValue: types.StringValue("invalid value"),
 			ExpectError:    true,
