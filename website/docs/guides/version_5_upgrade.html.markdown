@@ -516,11 +516,27 @@ resource "google_firestore_database" "default" {
 ### `deletion_policy` now defaults to `DELETE`
 
 Previously, `google_firebase_web_app` deletions default to `ABANDON`, which means to only stop tracking the WebApp in Terraform. The actual app is not deleted from the Firebase project. If you are relying on this behavior, set `deletion_policy` to `ABANDON` explicitly in the new version.
+
 ## Resource: `google_compute_autoscaler` (beta)
 
 ### `metric.filter` now defaults to `resource.type = gce_instance`
 
 Previously, `metric.filter` doesn't have the defult value and causes a UI error.
+
+## Resource: `google_monitoring_dashboard`
+
+### `dashboard_json` suppresses removal diffs more aggressively
+
+To prevent permanent diffs from default values, Terraform will now attempt to suppress diffs where the value is returned in the JSON
+string but doesn't exist in the configuration. Consequently, legitmate remove-only diffs will also be suppressed.
+For Terraform to detect the diff, JSON key removals must also be accompanied by a non-removal change (trivial or not).
+
+## Resource: `google_monitoring_metric_descriptor`
+
+### Changing `labels` now triggers replacement
+
+Previously, attempting to update `labels` failed and created a permadiff. The `labels` 
+field is now immutable without destroying and recreating the resource.
 
 ## Resource: `google_privateca_certificate`
 
@@ -669,6 +685,11 @@ resource "google_secret_manager_secret" "my-secret" {
 
 `reconcile_connections` previously defaults to true. Now it will default from the API.
 
+### Retyped `consumer_accept_lists` to SET from ARRAY
+
+Previously, `consumer_accept_lists` was a list, making it order-dependent. It is now a set.
+
+If you were relying on accessing an individual flag by index (for example, `google_compute_service_attachment.consumer_accept_lists.0.project_id_or_num`), then that will now need to by hash (for example, `google_compute_service_attachment.consumer_accept_lists.<some-hash>.project_id_or_num`).
 
 ## Resource: `google_dataflow_flex_template_job`
 
