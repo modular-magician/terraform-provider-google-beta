@@ -258,6 +258,20 @@ This resource provides the following
 
 Device can be imported using any of these accepted formats:
 
+* `{{registry}}/devices/{{name}}`
+
+
+In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import Device using one of the formats above. For example:
+
+```tf
+import {
+  id = "{{registry}}/devices/{{name}}"
+  to = google_cloudiot_device.default
+}
+```
+
+When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), Device can be imported using one of the formats above. For example:
+
 ```
 $ terraform import google_cloudiot_device.default {{registry}}/devices/{{name}}
 ```

@@ -213,6 +213,23 @@ This resource provides the following
 
 DeviceRegistry can be imported using any of these accepted formats:
 
+* `{{project}}/locations/{{region}}/registries/{{name}}`
+* `{{project}}/{{region}}/{{name}}`
+* `{{region}}/{{name}}`
+* `{{name}}`
+
+
+In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import DeviceRegistry using one of the formats above. For example:
+
+```tf
+import {
+  id = "{{project}}/locations/{{region}}/registries/{{name}}"
+  to = google_cloudiot_registry.default
+}
+```
+
+When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), DeviceRegistry can be imported using one of the formats above. For example:
+
 ```
 $ terraform import google_cloudiot_registry.default {{project}}/locations/{{region}}/registries/{{name}}
 $ terraform import google_cloudiot_registry.default {{project}}/{{region}}/{{name}}

@@ -132,6 +132,22 @@ This resource provides the following
 
 GameServerDeploymentRollout can be imported using any of these accepted formats:
 
+* `projects/{{project}}/locations/global/gameServerDeployments/{{deployment_id}}/rollout`
+* `{{project}}/{{deployment_id}}`
+* `{{deployment_id}}`
+
+
+In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import GameServerDeploymentRollout using one of the formats above. For example:
+
+```tf
+import {
+  id = "projects/{{project}}/locations/global/gameServerDeployments/{{deployment_id}}/rollout"
+  to = google_game_services_game_server_deployment_rollout.default
+}
+```
+
+When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), GameServerDeploymentRollout can be imported using one of the formats above. For example:
+
 ```
 $ terraform import google_game_services_game_server_deployment_rollout.default projects/{{project}}/locations/global/gameServerDeployments/{{deployment_id}}/rollout
 $ terraform import google_game_services_game_server_deployment_rollout.default {{project}}/{{deployment_id}}

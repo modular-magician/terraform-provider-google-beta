@@ -204,6 +204,22 @@ This resource provides the following
 
 GameServerConfig can be imported using any of these accepted formats:
 
+* `projects/{{project}}/locations/{{location}}/gameServerDeployments/{{deployment_id}}/configs/{{config_id}}`
+* `{{project}}/{{location}}/{{deployment_id}}/{{config_id}}`
+* `{{location}}/{{deployment_id}}/{{config_id}}`
+
+
+In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import GameServerConfig using one of the formats above. For example:
+
+```tf
+import {
+  id = "projects/{{project}}/locations/{{location}}/gameServerDeployments/{{deployment_id}}/configs/{{config_id}}"
+  to = google_game_services_game_server_config.default
+}
+```
+
+When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), GameServerConfig can be imported using one of the formats above. For example:
+
 ```
 $ terraform import google_game_services_game_server_config.default projects/{{project}}/locations/{{location}}/gameServerDeployments/{{deployment_id}}/configs/{{config_id}}
 $ terraform import google_game_services_game_server_config.default {{project}}/{{location}}/{{deployment_id}}/{{config_id}}
