@@ -16,7 +16,7 @@ import (
 	"google.golang.org/api/cloudresourcemanager/v1"
 )
 
-var iamBindingSchema = map[string]*schema.Schema{
+var IamBindingSchema = map[string]*schema.Schema{
 	"role": {
 		Type:     schema.TypeString,
 		Required: true,
@@ -78,11 +78,13 @@ func ResourceIamBinding(parentSpecificSchema map[string]*schema.Schema, newUpdat
 		// resource is used.
 		DeprecationMessage: settings.DeprecationMessage,
 
-		Schema: tpgresource.MergeSchemas(iamBindingSchema, parentSpecificSchema),
+		Schema: tpgresource.MergeSchemas(IamBindingSchema, parentSpecificSchema),
 		Importer: &schema.ResourceImporter{
 			State: iamBindingImport(newUpdaterFunc, resourceIdParser),
 		},
-		UseJSONNumber: true,
+		UseJSONNumber:  true,
+		SchemaVersion:  settings.SchemaVersion,
+		StateUpgraders: settings.StateUpgraders,
 	}
 }
 

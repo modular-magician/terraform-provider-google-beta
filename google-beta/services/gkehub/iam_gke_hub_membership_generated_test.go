@@ -142,6 +142,7 @@ resource "google_gke_hub_membership" "membership" {
 
 resource "google_gke_hub_membership_iam_member" "foo" {
   project = google_gke_hub_membership.membership.project
+  location = google_gke_hub_membership.membership.location
   membership_id = google_gke_hub_membership.membership.membership_id
   role = "%{role}"
   member = "user:admin@hashicorptest.com"
@@ -175,12 +176,14 @@ data "google_iam_policy" "foo" {
 
 resource "google_gke_hub_membership_iam_policy" "foo" {
   project = google_gke_hub_membership.membership.project
+  location = google_gke_hub_membership.membership.location
   membership_id = google_gke_hub_membership.membership.membership_id
   policy_data = data.google_iam_policy.foo.policy_data
 }
 
 data "google_gke_hub_membership_iam_policy" "foo" {
   project = google_gke_hub_membership.membership.project
+  location = google_gke_hub_membership.membership.location
   membership_id = google_gke_hub_membership.membership.membership_id
   depends_on = [
     google_gke_hub_membership_iam_policy.foo
@@ -211,6 +214,7 @@ data "google_iam_policy" "foo" {
 
 resource "google_gke_hub_membership_iam_policy" "foo" {
   project = google_gke_hub_membership.membership.project
+  location = google_gke_hub_membership.membership.location
   membership_id = google_gke_hub_membership.membership.membership_id
   policy_data = data.google_iam_policy.foo.policy_data
 }
@@ -236,6 +240,7 @@ resource "google_gke_hub_membership" "membership" {
 
 resource "google_gke_hub_membership_iam_binding" "foo" {
   project = google_gke_hub_membership.membership.project
+  location = google_gke_hub_membership.membership.location
   membership_id = google_gke_hub_membership.membership.membership_id
   role = "%{role}"
   members = ["user:admin@hashicorptest.com"]
@@ -262,6 +267,7 @@ resource "google_gke_hub_membership" "membership" {
 
 resource "google_gke_hub_membership_iam_binding" "foo" {
   project = google_gke_hub_membership.membership.project
+  location = google_gke_hub_membership.membership.location
   membership_id = google_gke_hub_membership.membership.membership_id
   role = "%{role}"
   members = ["user:admin@hashicorptest.com", "user:gterraformtest1@gmail.com"]

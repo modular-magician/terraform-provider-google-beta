@@ -187,7 +187,9 @@ func ResourceIamMember(parentSpecificSchema map[string]*schema.Schema, newUpdate
 		Importer: &schema.ResourceImporter{
 			State: iamMemberImport(newUpdaterFunc, resourceIdParser),
 		},
-		UseJSONNumber: true,
+		UseJSONNumber:  true,
+		SchemaVersion:  settings.SchemaVersion,
+		StateUpgraders: settings.StateUpgraders,
 	}
 }
 

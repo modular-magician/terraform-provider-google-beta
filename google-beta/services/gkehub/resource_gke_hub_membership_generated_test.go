@@ -50,7 +50,7 @@ func TestAccGKEHubMembership_gkehubMembershipBasicExample(t *testing.T) {
 				ResourceName:            "google_gke_hub_membership.membership",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"membership_id"},
+				ImportStateVerifyIgnore: []string{"membership_id", "location"},
 			},
 		},
 	})
@@ -95,7 +95,7 @@ func TestAccGKEHubMembership_gkehubMembershipIssuerExample(t *testing.T) {
 				ResourceName:            "google_gke_hub_membership.membership",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"membership_id"},
+				ImportStateVerifyIgnore: []string{"membership_id", "location"},
 			},
 		},
 	})
@@ -138,7 +138,7 @@ func testAccCheckGKEHubMembershipDestroyProducer(t *testing.T) func(s *terraform
 
 			config := acctest.GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{GKEHubBasePath}}projects/{{project}}/locations/global/memberships/{{membership_id}}")
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{GKEHubBasePath}}projects/{{project}}/locations/{{location}}/memberships/{{membership_id}}")
 			if err != nil {
 				return err
 			}

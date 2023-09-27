@@ -113,6 +113,11 @@ The following arguments are supported:
   https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
   Structure is [documented below](#nested_authority).
 
+* `location` -
+  (Optional)
+  Location of the membership.
+  The default value is `global`.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -146,7 +151,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/locations/global/memberships/{{membership_id}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/memberships/{{membership_id}}`
 
 * `name` -
   The unique identifier of the membership.
@@ -167,9 +172,9 @@ This resource provides the following
 Membership can be imported using any of these accepted formats:
 
 ```
-$ terraform import google_gke_hub_membership.default projects/{{project}}/locations/global/memberships/{{membership_id}}
-$ terraform import google_gke_hub_membership.default {{project}}/{{membership_id}}
-$ terraform import google_gke_hub_membership.default {{membership_id}}
+$ terraform import google_gke_hub_membership.default projects/{{project}}/locations/{{location}}/memberships/{{membership_id}}
+$ terraform import google_gke_hub_membership.default {{project}}/{{location}}/{{membership_id}}
+$ terraform import google_gke_hub_membership.default {{location}}/{{membership_id}}
 ```
 
 ## User Project Overrides
