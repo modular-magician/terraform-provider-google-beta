@@ -215,6 +215,7 @@ resource "google_database_migration_service_connection_profile" "postgresprofile
       ca_certificate = google_sql_ssl_cert.sql_client_cert.server_ca_cert
     }
     cloud_sql_id = "tf-test-my-database%{random_suffix}"
+    static_ip_connectivity {}
   }
   depends_on = [google_sql_user.sqldb_user]
 }

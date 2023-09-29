@@ -498,6 +498,22 @@ This field is not returned on request, and the value is encrypted when stored in
 							Optional:    true,
 							Description: `If the source is a Cloud SQL database, use this field to provide the Cloud SQL instance ID of the source.`,
 						},
+						"private_service_connect_connectivity": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `A service attachment that exposes the database, and has the following format: projects/{project}/regions/{region}/serviceAttachments/{service_attachment_name}`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"service_attachment": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `URI of the service attachment.`,
+									},
+								},
+							},
+							ConflictsWith: []string{"postgresql.0.static_ip_connectivity"},
+						},
 						"ssl": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -538,6 +554,18 @@ If this field is used then the 'clientCertificate' field is mandatory.`,
 									},
 								},
 							},
+						},
+						"static_ip_connectivity": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `This type has no fields.
+
+The source database will allow incoming connections from the public IP of the destination database, default configuration.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{},
+							},
+							ConflictsWith: []string{"postgresql.0.private_service_connect_connectivity"},
 						},
 						"network_architecture": {
 							Type:        schema.TypeString,
@@ -1201,6 +1229,10 @@ func flattenDatabaseMigrationServiceConnectionProfilePostgresql(v interface{}, d
 		flattenDatabaseMigrationServiceConnectionProfilePostgresqlCloudSqlId(original["cloudSqlId"], d, config)
 	transformed["network_architecture"] =
 		flattenDatabaseMigrationServiceConnectionProfilePostgresqlNetworkArchitecture(original["networkArchitecture"], d, config)
+	transformed["static_ip_connectivity"] =
+		flattenDatabaseMigrationServiceConnectionProfilePostgresqlStaticIpConnectivity(original["staticIpConnectivity"], d, config)
+	transformed["private_service_connect_connectivity"] =
+		flattenDatabaseMigrationServiceConnectionProfilePostgresqlPrivateServiceConnectConnectivity(original["privateServiceConnectConnectivity"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDatabaseMigrationServiceConnectionProfilePostgresqlHost(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1276,6 +1308,31 @@ func flattenDatabaseMigrationServiceConnectionProfilePostgresqlCloudSqlId(v inte
 }
 
 func flattenDatabaseMigrationServiceConnectionProfilePostgresqlNetworkArchitecture(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfilePostgresqlStaticIpConnectivity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
+}
+
+func flattenDatabaseMigrationServiceConnectionProfilePostgresqlPrivateServiceConnectConnectivity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["service_attachment"] =
+		flattenDatabaseMigrationServiceConnectionProfilePostgresqlPrivateServiceConnectConnectivityServiceAttachment(original["serviceAttachment"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatabaseMigrationServiceConnectionProfilePostgresqlPrivateServiceConnectConnectivityServiceAttachment(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1858,6 +1915,20 @@ func expandDatabaseMigrationServiceConnectionProfilePostgresql(v interface{}, d 
 		transformed["networkArchitecture"] = transformedNetworkArchitecture
 	}
 
+	transformedStaticIpConnectivity, err := expandDatabaseMigrationServiceConnectionProfilePostgresqlStaticIpConnectivity(original["static_ip_connectivity"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedStaticIpConnectivity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["staticIpConnectivity"] = transformedStaticIpConnectivity
+	}
+
+	transformedPrivateServiceConnectConnectivity, err := expandDatabaseMigrationServiceConnectionProfilePostgresqlPrivateServiceConnectConnectivity(original["private_service_connect_connectivity"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPrivateServiceConnectConnectivity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["privateServiceConnectConnectivity"] = transformedPrivateServiceConnectConnectivity
+	}
+
 	return transformed, nil
 }
 
@@ -1942,6 +2013,44 @@ func expandDatabaseMigrationServiceConnectionProfilePostgresqlCloudSqlId(v inter
 }
 
 func expandDatabaseMigrationServiceConnectionProfilePostgresqlNetworkArchitecture(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfilePostgresqlStaticIpConnectivity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfilePostgresqlPrivateServiceConnectConnectivity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedServiceAttachment, err := expandDatabaseMigrationServiceConnectionProfilePostgresqlPrivateServiceConnectConnectivityServiceAttachment(original["service_attachment"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedServiceAttachment); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["serviceAttachment"] = transformedServiceAttachment
+	}
+
+	return transformed, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfilePostgresqlPrivateServiceConnectConnectivityServiceAttachment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

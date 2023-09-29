@@ -179,6 +179,7 @@ resource "google_database_migration_service_connection_profile" "postgresprofile
       ca_certificate = google_sql_ssl_cert.sql_client_cert.server_ca_cert
     }
     cloud_sql_id = "my-database"
+    static_ip_connectivity {}
   }
   depends_on = [google_sql_user.sqldb_user]
 }
@@ -392,6 +393,16 @@ The following arguments are supported:
   (Output)
   Output only. If the source is a Cloud SQL database, this field indicates the network architecture it's associated with.
 
+* `static_ip_connectivity` -
+  (Optional)
+  This type has no fields.
+  The source database will allow incoming connections from the public IP of the destination database, default configuration.
+
+* `private_service_connect_connectivity` -
+  (Optional)
+  A service attachment that exposes the database, and has the following format: projects/{project}/regions/{region}/serviceAttachments/{service_attachment_name}
+  Structure is [documented below](#nested_private_service_connect_connectivity).
+
 
 <a name="nested_ssl"></a>The `ssl` block supports:
 
@@ -416,6 +427,12 @@ The following arguments are supported:
   Required. Input only. The x509 PEM-encoded certificate of the CA that signed the source database server's certificate.
   The replica will use this certificate to verify it's connecting to the right host.
   **Note**: This property is sensitive and will not be displayed in the plan.
+
+<a name="nested_private_service_connect_connectivity"></a>The `private_service_connect_connectivity` block supports:
+
+* `service_attachment` -
+  (Required)
+  URI of the service attachment.
 
 <a name="nested_cloudsql"></a>The `cloudsql` block supports:
 
