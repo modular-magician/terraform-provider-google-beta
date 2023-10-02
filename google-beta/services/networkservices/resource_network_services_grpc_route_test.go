@@ -38,6 +38,15 @@ func TestAccNetworkServicesGrpcRoute_update(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
 			},
+			{
+				Config: testAccNetworkServicesGrpcRoute_update2(grpcRouteName),
+			},
+			{
+				ResourceName:            "google_network_services_grpc_route.foobar",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+			},
 		},
 	})
 }
@@ -56,6 +65,7 @@ func testAccNetworkServicesGrpcRoute_basic(grpcRouteName string) string {
         headers {
           key = "key"
           value = "value"
+          type  = "TYPE_UNSPECIFIED"
         }
       }
       action {
@@ -90,6 +100,48 @@ func testAccNetworkServicesGrpcRoute_basic(grpcRouteName string) string {
 }
 
 func testAccNetworkServicesGrpcRoute_update(grpcRouteName string) string {
+	return fmt.Sprintf(`
+  resource "google_network_services_grpc_route" "foobar" {
+    name                   = "%s"
+    labels                 = {
+      foo = "bar"
+    }
+    description             = "updated description"
+    hostnames               = ["example"]
+    rules                   {
+      matches {
+        headers {
+          key = "key"
+          value = "value"
+          type  = "TYPE_UNSPECIFIED"
+        }
+      }
+      action {
+        retry_policy {
+            retry_conditions = ["cancelled"]
+            num_retries = 2
+        }
+      }
+    }
+    rules                   {
+      matches {
+        headers {
+          key = "key1"
+          value = "value1"
+        }
+      }
+      action {
+        retry_policy {
+            retry_conditions = ["connect-failure"]
+            num_retries = 1
+        }
+      }
+    }
+  }
+`, grpcRouteName)
+}
+
+func testAccNetworkServicesGrpcRoute_update2(grpcRouteName string) string {
 	return fmt.Sprintf(`
   resource "google_network_services_grpc_route" "foobar" {
     name                   = "%s"

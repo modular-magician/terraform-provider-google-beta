@@ -190,9 +190,10 @@ func ResourceNetworkServicesGrpcRoute() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"headers": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: `Specifies a list of HTTP request headers to match against.`,
+										Type:             schema.TypeList,
+										Optional:         true,
+										DiffSuppressFunc: tpgresource.ListStringsSuppress([]string{"TYPE_UNSPECIFIED", "EXACT", ""}),
+										Description:      `Specifies a list of HTTP request headers to match against.`,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"key": {
