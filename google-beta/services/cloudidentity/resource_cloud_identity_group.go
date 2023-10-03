@@ -90,15 +90,37 @@ and must be in the form of 'identitysources/{identity_source_id}'.`,
 			"labels": {
 				Type:     schema.TypeMap,
 				Required: true,
-				Description: `One or more label entries that apply to the Group. Currently supported labels contain a key with an empty value.
+				Description: `Required. One or more label entries that apply to the Group.
+[Currently supported labels] contain a key with an empty value.
 
-Google Groups are the default type of group and have a label with a key of cloudidentity.googleapis.com/groups.discussion_forum and an empty value.
+* Google Groups are the default type of group and have a label with a key of
+'"cloudidentity.googleapis.com/groups.discussion_forum"' and an empty value.
 
-Existing Google Groups can have an additional label with a key of cloudidentity.googleapis.com/groups.security and an empty value added to them. This is an immutable change and the security label cannot be removed once added.
+* Existing Google Groups can have an additional label with a key of
+'"cloudidentity.googleapis.com/groups.security"' and an empty value added to
+them. Adding the Security label to a group makes it a [security group]. This
+action is permanent and adds security features, but doesn’t remove any other
+features of the original group.
 
-Dynamic groups have a label with a key of cloudidentity.googleapis.com/groups.dynamic.
+* [Dynamic groups] have a label with a key of
+'"cloudidentity.googleapis.com/groups.dynamic"' automatically added by the API.
 
-Identity-mapped groups for Cloud Search have a label with a key of system/groups/external and an empty value.`,
+* [Identity-mapped groups] for Cloud Search have a label with a key of
+'"system/groups/external"' and an empty value.
+
+**Note**: The Identity API may add additional labels that were not provided in
+  your config. If terraform plan shows a diff where a label is added, you can
+  add it to your config or apply the 'lifecycle.ignore_changes' rule to the
+  labels field.
+
+[Currently supported labels]:
+  https://cloud.google.com/identity/docs/reference/rest/v1/groups#Group.FIELDS.labels
+[security group]:
+  https://support.google.com/a/answer/10607394
+[Dynamic groups]:
+  https://cloud.google.com/identity/docs/concepts/overview-dynamic-groups
+[Identity-mapped groups]:
+  https://cloud.google.com/identity/docs/groups#group-types`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 			"parent": {
@@ -121,6 +143,82 @@ Must not be longer than 4,096 characters.`,
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: `The display name of the Group.`,
+			},
+			"dynamic_group_metadata": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Dynamic group metadata like queries and status.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"queries": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Memberships will be the union of all queries. Only one entry with USER resource is currently supported. Customers can create up to 100 dynamic groups.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"query": {
+										Type:     schema.TypeString,
+										Required: true,
+										Description: `Query that determines the memberships of the dynamic group.
+
+Examples:
+
+  * All users with at least one organizations.department of engineering.
+
+    '''
+    user.organizations.exists(org, org.department=='engineering')
+    '''
+
+  * All users with at least one location that has area of foo and building_id of bar.
+
+    '''
+    user.locations.exists(loc, loc.area=='foo' && loc.building_id=='bar')
+    '''
+
+  * All users with any variation of the name John Doe (case-insensitive queries add
+    equalsIgnoreCase() to the value being queried).
+
+    '''
+    user.name.value.equalsIgnoreCase('jOhn DoE')
+    '''
+
+**Note:** When using this field, Identity API will add
+'"cloudidentity.googleapis.com/groups.dynamic"' to this group's labels.`,
+									},
+									"resource_type": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"USER"}),
+										Description:  `Resource type for the Dynamic Group Query Possible values: ["USER"]`,
+									},
+								},
+							},
+						},
+						"status": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: `The current status of a dynamic group along with timestamp.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"status": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: `Status of the dynamic group.`,
+									},
+									"status_time": {
+										Type:     schema.TypeString,
+										Computed: true,
+										Description: `The latest time at which the dynamic group is guaranteed to be in the given status. If status is UP_TO_DATE, the latest time at which the dynamic group was confirmed to be up-to-date. If status is UPDATING_MEMBERSHIPS, the time at which dynamic group was created.
+
+A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".`,
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 			"initial_group_config": {
 				Type:         schema.TypeString,
@@ -193,6 +291,12 @@ func resourceCloudIdentityGroupCreate(d *schema.ResourceData, meta interface{}) 
 	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
 		obj["labels"] = labelsProp
 	}
+	dynamicGroupMetadataProp, err := expandCloudIdentityGroupDynamicGroupMetadata(d.Get("dynamic_group_metadata"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("dynamic_group_metadata"); !tpgresource.IsEmptyValue(reflect.ValueOf(dynamicGroupMetadataProp)) && (ok || !reflect.DeepEqual(v, dynamicGroupMetadataProp)) {
+		obj["dynamicGroupMetadata"] = dynamicGroupMetadataProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{CloudIdentityBasePath}}groups?initialGroupConfig={{initial_group_config}}")
 	if err != nil {
@@ -207,6 +311,14 @@ func resourceCloudIdentityGroupCreate(d *schema.ResourceData, meta interface{}) 
 		billingProject = bp
 	}
 
+	// We're not allowed to set this label ourselves, but it does appear in the
+	// return value. Our solution is to hide it for the initial POST then put it
+	// back for diff purposes.
+	dynamic_label := "cloudidentity.googleapis.com/groups.dynamic"
+	dynamic_value, is_dynamic := labelsProp[dynamic_label]
+	if is_dynamic {
+		delete(labelsProp, dynamic_label)
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -247,6 +359,9 @@ func resourceCloudIdentityGroupCreate(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error setting name: %s", err)
 	}
 	d.SetId(name.(string))
+	if is_dynamic {
+		labelsProp[dynamic_label] = dynamic_value
+	}
 
 	err = transport_tpg.PollingWaitTime(resourceCloudIdentityGroupPollRead(d, meta), transport_tpg.PollCheckForExistenceWith403, "Creating Group", d.Timeout(schema.TimeoutCreate), 10)
 	if err != nil {
@@ -345,6 +460,9 @@ func resourceCloudIdentityGroupRead(d *schema.ResourceData, meta interface{}) er
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
 	if err := d.Set("labels", flattenCloudIdentityGroupLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Group: %s", err)
+	}
+	if err := d.Set("dynamic_group_metadata", flattenCloudIdentityGroupDynamicGroupMetadata(res["dynamicGroupMetadata"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Group: %s", err)
 	}
 
@@ -551,6 +669,71 @@ func flattenCloudIdentityGroupLabels(v interface{}, d *schema.ResourceData, conf
 	return v
 }
 
+func flattenCloudIdentityGroupDynamicGroupMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["queries"] =
+		flattenCloudIdentityGroupDynamicGroupMetadataQueries(original["queries"], d, config)
+	transformed["status"] =
+		flattenCloudIdentityGroupDynamicGroupMetadataStatus(original["status"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCloudIdentityGroupDynamicGroupMetadataQueries(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"resource_type": flattenCloudIdentityGroupDynamicGroupMetadataQueriesResourceType(original["resourceType"], d, config),
+			"query":         flattenCloudIdentityGroupDynamicGroupMetadataQueriesQuery(original["query"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenCloudIdentityGroupDynamicGroupMetadataQueriesResourceType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCloudIdentityGroupDynamicGroupMetadataQueriesQuery(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCloudIdentityGroupDynamicGroupMetadataStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["status"] =
+		flattenCloudIdentityGroupDynamicGroupMetadataStatusStatus(original["status"], d, config)
+	transformed["status_time"] =
+		flattenCloudIdentityGroupDynamicGroupMetadataStatusStatusTime(original["statusTime"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCloudIdentityGroupDynamicGroupMetadataStatusStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCloudIdentityGroupDynamicGroupMetadataStatusStatusTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandCloudIdentityGroupGroupKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
@@ -606,4 +789,101 @@ func expandCloudIdentityGroupLabels(v interface{}, d tpgresource.TerraformResour
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandCloudIdentityGroupDynamicGroupMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedQueries, err := expandCloudIdentityGroupDynamicGroupMetadataQueries(original["queries"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedQueries); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["queries"] = transformedQueries
+	}
+
+	transformedStatus, err := expandCloudIdentityGroupDynamicGroupMetadataStatus(original["status"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedStatus); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["status"] = transformedStatus
+	}
+
+	return transformed, nil
+}
+
+func expandCloudIdentityGroupDynamicGroupMetadataQueries(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedResourceType, err := expandCloudIdentityGroupDynamicGroupMetadataQueriesResourceType(original["resource_type"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedResourceType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["resourceType"] = transformedResourceType
+		}
+
+		transformedQuery, err := expandCloudIdentityGroupDynamicGroupMetadataQueriesQuery(original["query"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedQuery); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["query"] = transformedQuery
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandCloudIdentityGroupDynamicGroupMetadataQueriesResourceType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudIdentityGroupDynamicGroupMetadataQueriesQuery(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudIdentityGroupDynamicGroupMetadataStatus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedStatus, err := expandCloudIdentityGroupDynamicGroupMetadataStatusStatus(original["status"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedStatus); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["status"] = transformedStatus
+	}
+
+	transformedStatusTime, err := expandCloudIdentityGroupDynamicGroupMetadataStatusStatusTime(original["status_time"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedStatusTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["statusTime"] = transformedStatusTime
+	}
+
+	return transformed, nil
+}
+
+func expandCloudIdentityGroupDynamicGroupMetadataStatusStatus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCloudIdentityGroupDynamicGroupMetadataStatusStatusTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
