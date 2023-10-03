@@ -87,6 +87,10 @@ resource "google_data_fusion_instance_iam_member" "member" {
 The following arguments are supported:
 
 * `name` - (Required) Used to find the parent resource to bind the IAM policy to
+* `zone` - (Optional) Name of the zone in which the Data Fusion instance will be created. Only DEVELOPER instances use this field.
+ Used to find the parent resource to bind the IAM policy to. If not specified,
+  the value will be parsed from the identifier of the parent resource. If no zone is provided in the parent identifier and no
+  zone is specified, it is taken from the provider configuration.
 * `region` - (Optional) The region of the Data Fusion instance.
  Used to find the parent resource to bind the IAM policy to. If not specified,
   the value will be parsed from the identifier of the parent resource. If no region is provided in the parent identifier and no

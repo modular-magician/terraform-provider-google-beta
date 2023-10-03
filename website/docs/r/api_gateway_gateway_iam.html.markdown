@@ -92,6 +92,7 @@ resource "google_api_gateway_gateway_iam_member" "member" {
 
 The following arguments are supported:
 
+* `gateway` - (Required) Used to find the parent resource to bind the IAM policy to
 * `region` - (Optional) The region of the gateway for the API.
  Used to find the parent resource to bind the IAM policy to. If not specified,
   the value will be parsed from the identifier of the parent resource. If no region is provided in the parent identifier and no

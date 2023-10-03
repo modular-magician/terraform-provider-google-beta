@@ -136,6 +136,7 @@ resource "google_iap_web_type_compute_iam_member" "member" {
 
 The following arguments are supported:
 
+* `project` - (Required) Used to find the parent resource to bind the IAM policy to
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the project will be parsed from the identifier of the parent resource. If no project is provided in the parent identifier and no project is specified, the provider project is used.

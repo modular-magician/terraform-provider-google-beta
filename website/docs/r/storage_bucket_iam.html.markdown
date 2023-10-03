@@ -136,6 +136,12 @@ resource "google_storage_bucket_iam_member" "member" {
 
 The following arguments are supported:
 
+* `location` - (Optional) (Computed) The location of the bucket. Object data for objects in the bucket
+resides in physical storage within this region. Defaults to US. See
+the developer's guide for the authoritative list.
+ Used to find the parent resource to bind the IAM policy to. If not specified,
+  the value will be parsed from the identifier of the parent resource. If no location is provided in the parent identifier and no
+  location is specified, it is taken from the provider configuration.
 * `bucket` - (Required) Used to find the parent resource to bind the IAM policy to
 
 * `member/members` - (Required) Identities that will be granted the privilege in `role`.
