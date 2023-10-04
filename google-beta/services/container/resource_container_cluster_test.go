@@ -3936,6 +3936,40 @@ func TestAccContainerCluster_withGatewayApiConfig(t *testing.T) {
 	})
 }
 
+func TestAccContainerCluster_withClusterNetworkPerformanceConfig(t *testing.T) {
+	t.Parallel()
+	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccContainerCluster_withClusterNetworkPerformanceConfig(clusterName, "TEST_TIER"),
+				ExpectError: regexp.MustCompile(`expected cluster_network_performance_config\.0\.totalEgressBandwidthTier to be one of \[TIER_UNSPECIFIED TIER_1\], got TEST_TIER`),
+			},
+			{
+				Config: testAccContainerCluster_withClusterNetworkPerformanceConfig(clusterName, "TIER_UNSPECIFIED"),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"min_master_version"},
+			},
+			{
+				Config: testAccContainerCluster_withClusterNetworkPerformanceConfig(clusterName, "TIER_1"),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"min_master_version"},
+			},
+		},
+	})
+}
+
 func TestAccContainerCluster_withTPUConfig(t *testing.T) {
 	t.Parallel()
 
@@ -7968,6 +8002,24 @@ resource "google_container_cluster" "primary" {
 `, clusterName, gatewayApiChannel)
 }
 
+func testAccContainerCluster_withClusterNetworkPerformanceConfig(clusterName string, clusterNetworkPerformanceTier string) string {
+	return fmt.Sprintf(`
+data "google_container_engine_versions" "uscentral1a" {
+  location = "us-central1-a"
+}
+
+resource "google_container_cluster" "primary" {
+	name               = "%s"
+	location           = "us-central1-f"
+	initial_node_count = 1
+	min_master_version = data.google_container_engine_versions.uscentral1a.release_channel_latest_version["STABLE"]
+	cluster_network_performance_config {
+		totalEgressBandwidthTier = "%s"
+	}
+}
+`, clusterName, clusterNetworkPerformanceTier)
+}
+
 func testAccContainerCluster_withIdentityServiceConfigEnabled(name string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "primary" {
@@ -8465,7 +8517,7 @@ resource "google_compute_resource_policy" "policy" {
 resource "google_container_cluster" "cluster" {
   name               = "%s"
   location           = "us-central1-a"
-  
+
   node_pool {
     name               = "%s"
     initial_node_count = 2

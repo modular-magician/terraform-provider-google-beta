@@ -129,7 +129,7 @@ the cluster. Unless this field is set to false in Terraform state, a
 * `addons_config` - (Optional) The configuration for addons supported by GKE.
     Structure is [documented below](#nested_addons_config).
 
-* `allow_net_admin` - (Optional) Enable NET_ADMIN for the cluster. Defaults to 
+* `allow_net_admin` - (Optional) Enable NET_ADMIN for the cluster. Defaults to
 `false`. This field should only be enabled for Autopilot clusters (`enable_autopilot`
 set to `true`).
 
@@ -371,7 +371,8 @@ subnetwork in which the cluster's instances are launched.
 
 * `gateway_api_config` - (Optional)
   Configuration for [GKE Gateway API controller](https://cloud.google.com/kubernetes-engine/docs/concepts/gateway-api). Structure is [documented below](#nested_gateway_api_config).
-
+* `cluster_network_performance_config` - (Optional)
+  Configuration of [all network bandwidth tiers](https://cloud.google.com/kubernetes-engine/docs/how-to/using-tier-1). Structure is [documented below](#nested_cluster_network_performance_config).
 * `protect_config` - (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Enable/Disable Protect API features for the cluster. Structure is [documented below](#nested_protect_config).
 
@@ -732,7 +733,7 @@ Default value is `IPV4`.
 Possible values are `IPV4` and `IPV4_IPV6`.
 
 * `additional_pod_ranges_config` - (Optional) The configuration for additional pod secondary ranges at
-the cluster level. Used for Autopilot clusters and Standard clusters with which control of the 
+the cluster level. Used for Autopilot clusters and Standard clusters with which control of the
 secondary Pod IP address assignment to node pools isn't needed. Structure is [documented below](#nested_additional_pod_ranges_config).
 
 
@@ -1261,6 +1262,10 @@ linux_node_config {
 <a name="nested_gateway_api_config"></a>The `gateway_api_config` block supports:
 
 * `channel` - (Required) Which Gateway Api channel should be used. `CHANNEL_DISABLED`, `CHANNEL_EXPERIMENTAL` or `CHANNEL_STANDARD`.
+
+<a name="nested_cluster_network_performance_config"></a>The `cluster_network_performance_config` block supports:
+
+* `totalEgressBandwidthTier` - (Required) Specifies the total network bandwidth tier for the NodePool. `TIER_UNSPECIFIED` or `TIER_1`.
 
 <a name="nested_protect_config"></a>The `protect_config` block supports:
 
