@@ -33,8 +33,6 @@ A data source can be used to retrieve policy data in advent you do not need crea
 ~> **Note:** `google_compute_backend_bucket_iam_binding` resources **can be** used in conjunction with `google_compute_backend_bucket_iam_member` resources **only if** they do not grant privilege to the same role.
 
 
-~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
 
 
 ## google\_compute\_backend\_bucket\_iam\_policy
