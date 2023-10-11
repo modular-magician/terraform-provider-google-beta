@@ -85,6 +85,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/iamworkforcepool"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/iap"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/identityplatform"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/integrationconnectors"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/logging"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/looker"
@@ -616,6 +617,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
+			"integration_connectors_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
 			"kms_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -1125,9 +1131,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		})
 }
 
-// Generated resources: 393
+// Generated resources: 394
 // Generated IAM resources: 237
-// Total generated resources: 630
+// Total generated resources: 631
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1598,6 +1604,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_identity_platform_tenant_default_supported_idp_config":   identityplatform.ResourceIdentityPlatformTenantDefaultSupportedIdpConfig(),
 			"google_identity_platform_tenant_inbound_saml_config":            identityplatform.ResourceIdentityPlatformTenantInboundSamlConfig(),
 			"google_identity_platform_tenant_oauth_idp_config":               identityplatform.ResourceIdentityPlatformTenantOauthIdpConfig(),
+			"google_integration_connectors_connection":                       integrationconnectors.ResourceIntegrationConnectorsConnection(),
 			"google_kms_crypto_key":                                          kms.ResourceKMSCryptoKey(),
 			"google_kms_crypto_key_version":                                  kms.ResourceKMSCryptoKeyVersion(),
 			"google_kms_key_ring":                                            kms.ResourceKMSKeyRing(),
@@ -2089,6 +2096,7 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.IAMWorkforcePoolBasePath = d.Get("iam_workforce_pool_custom_endpoint").(string)
 	config.IapBasePath = d.Get("iap_custom_endpoint").(string)
 	config.IdentityPlatformBasePath = d.Get("identity_platform_custom_endpoint").(string)
+	config.IntegrationConnectorsBasePath = d.Get("integration_connectors_custom_endpoint").(string)
 	config.KMSBasePath = d.Get("kms_custom_endpoint").(string)
 	config.LoggingBasePath = d.Get("logging_custom_endpoint").(string)
 	config.LookerBasePath = d.Get("looker_custom_endpoint").(string)
