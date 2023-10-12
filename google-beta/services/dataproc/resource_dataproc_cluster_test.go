@@ -62,13 +62,14 @@ func TestAccDataprocCluster_basic(t *testing.T) {
 
 	var cluster dataproc.Cluster
 	rnd := acctest.RandString(t, 10)
+	subnetName := acctest.BootstrapSubnet(t, "tf-test-subnet", "dataproc-network")
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckDataprocClusterDestroy(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataprocCluster_basic(rnd),
+				Config: testAccDataprocCluster_basic(rnd, subnetName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.basic", &cluster),
 
@@ -1100,13 +1101,23 @@ resource "google_dataproc_cluster" "basic" {
 `, rnd)
 }
 
-func testAccDataprocCluster_basic(rnd string) string {
+func testAccDataprocCluster_basic(rnd, subnetName string) string {
 	return fmt.Sprintf(`
 resource "google_dataproc_cluster" "basic" {
   name   = "tf-test-dproc-%s"
   region = "us-central1"
+  cluster_config {
+    gce_cluster_config {
+      zone = "us-central1-a"
+      subnetwork = data.google_compute_subnetwork.dataproc_subnetwork.name
+    }
+  }
 }
-`, rnd)
+
+data "google_compute_subnetwork" "dataproc_subnetwork" {
+  name   = "%s"
+}
+`, rnd, subnetName)
 }
 
 func testAccCheckDataprocGkeClusterNodePoolsHaveRoles(cluster *dataproc.Cluster, roles ...string) func(s *terraform.State) error {
