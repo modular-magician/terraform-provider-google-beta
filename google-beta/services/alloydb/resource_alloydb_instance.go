@@ -60,7 +60,7 @@ func ResourceAlloydbInstance() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
-				Description: `Identifies the alloydb cluster. Must be in the format
+				Description: `Identifies the alloydb cluster. Must be in the format meep
 'projects/{project}/locations/{location}/clusters/{cluster_id}'`,
 			},
 			"instance_id": {

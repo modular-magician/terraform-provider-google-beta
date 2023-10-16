@@ -92,7 +92,7 @@ The following arguments are supported:
 
 * `cluster` -
   (Required)
-  Identifies the alloydb cluster. Must be in the format
+  Identifies the alloydb cluster. Must be in the format meep
   'projects/{project}/locations/{location}/clusters/{cluster_id}'
 
 * `instance_id` -
