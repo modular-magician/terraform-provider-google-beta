@@ -80,7 +80,7 @@ resource "google_memcache_instance" "instance" {
 
   maintenance_policy {
     weekly_maintenance_window {
-      day      = "SATURDAY"
+      day      = "SUNDAY"
       duration = "14400s"
       start_time {
         hours = 0
