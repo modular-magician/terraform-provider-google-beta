@@ -722,6 +722,8 @@ func resourceAlloydbInstanceImport(d *schema.ResourceData, meta interface{}) ([]
 	}
 	d.SetId(id)
 
+	// This is a test change to ensure vcr runs
+
 	return []*schema.ResourceData{d}, nil
 }
 
