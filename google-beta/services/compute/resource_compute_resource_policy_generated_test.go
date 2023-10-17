@@ -172,7 +172,7 @@ func TestAccComputeResourcePolicy_resourcePolicyPlacementPolicyMaxDistanceExampl
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeResourcePolicyDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -193,7 +193,7 @@ func testAccComputeResourcePolicy_resourcePolicyPlacementPolicyMaxDistanceExampl
 resource "google_compute_resource_policy" "baz" {
   name   = "tf-test-gce-policy%{random_suffix}"
   region = "us-central1"
-  provider = google-beta
+  provider = google
   group_placement_policy {
     vm_count = 2
     collocation = "COLLOCATED"

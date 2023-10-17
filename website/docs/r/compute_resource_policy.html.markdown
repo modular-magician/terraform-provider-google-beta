@@ -111,7 +111,7 @@ resource "google_compute_resource_policy" "baz" {
 resource "google_compute_resource_policy" "baz" {
   name   = "gce-policy"
   region = "us-central1"
-  provider = google-beta
+  provider = google
   group_placement_policy {
     vm_count = 2
     collocation = "COLLOCATED"
@@ -384,7 +384,7 @@ The following arguments are supported:
   Possible values are: `COLLOCATED`.
 
 * `max_distance` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Specifies the number of max logical switches.
 
 <a name="nested_instance_schedule_policy"></a>The `instance_schedule_policy` block supports:
