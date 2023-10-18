@@ -1496,20 +1496,6 @@ func expandNotebooksRuntimeVirtualMachine(v interface{}, d tpgresource.Terraform
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedInstanceName, err := expandNotebooksRuntimeVirtualMachineInstanceName(original["instance_name"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedInstanceName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["instanceName"] = transformedInstanceName
-	}
-
-	transformedInstanceId, err := expandNotebooksRuntimeVirtualMachineInstanceId(original["instance_id"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedInstanceId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["instanceId"] = transformedInstanceId
-	}
-
 	transformedVirtualMachineConfig, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfig(original["virtual_machine_config"], d, config)
 	if err != nil {
 		return nil, err
@@ -1520,14 +1506,6 @@ func expandNotebooksRuntimeVirtualMachine(v interface{}, d tpgresource.Terraform
 	return transformed, nil
 }
 
-func expandNotebooksRuntimeVirtualMachineInstanceName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNotebooksRuntimeVirtualMachineInstanceId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandNotebooksRuntimeVirtualMachineVirtualMachineConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
@@ -1536,13 +1514,6 @@ func expandNotebooksRuntimeVirtualMachineVirtualMachineConfig(v interface{}, d t
 	raw := l[0]
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
-
-	transformedZone, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfigZone(original["zone"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedZone); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["zone"] = transformedZone
-	}
 
 	transformedMachineType, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfigMachineType(original["machine_type"], d, config)
 	if err != nil {
@@ -1652,10 +1623,6 @@ func expandNotebooksRuntimeVirtualMachineVirtualMachineConfig(v interface{}, d t
 	return transformed, nil
 }
 
-func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigMachineType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1669,41 +1636,6 @@ func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDisk(v interfac
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedAutoDelete, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskAutoDelete(original["auto_delete"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedAutoDelete); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["autoDelete"] = transformedAutoDelete
-	}
-
-	transformedBoot, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskBoot(original["boot"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedBoot); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["boot"] = transformedBoot
-	}
-
-	transformedDeviceName, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskDeviceName(original["device_name"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedDeviceName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["deviceName"] = transformedDeviceName
-	}
-
-	transformedGuestOsFeatures, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskGuestOsFeatures(original["guest_os_features"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedGuestOsFeatures); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["guestOsFeatures"] = transformedGuestOsFeatures
-	}
-
-	transformedIndex, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskIndex(original["index"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedIndex); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["index"] = transformedIndex
-	}
-
 	transformedInitializeParams, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskInitializeParams(original["initialize_params"], d, config)
 	if err != nil {
 		return nil, err
@@ -1716,20 +1648,6 @@ func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDisk(v interfac
 		return nil, err
 	} else if val := reflect.ValueOf(transformedInterface); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["interface"] = transformedInterface
-	}
-
-	transformedKind, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskKind(original["kind"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedKind); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["kind"] = transformedKind
-	}
-
-	transformedLicenses, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskLicenses(original["licenses"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedLicenses); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["licenses"] = transformedLicenses
 	}
 
 	transformedMode, err := expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskMode(original["mode"], d, config)
@@ -1754,26 +1672,6 @@ func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDisk(v interfac
 	}
 
 	return transformed, nil
-}
-
-func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskAutoDelete(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskBoot(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskDeviceName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskGuestOsFeatures(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskIndex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskInitializeParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1851,14 +1749,6 @@ func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskInitializeP
 }
 
 func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskInterface(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskKind(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNotebooksRuntimeVirtualMachineVirtualMachineConfigDataDiskLicenses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2093,13 +1983,6 @@ func expandNotebooksRuntimeAccessConfig(v interface{}, d tpgresource.TerraformRe
 		transformed["runtimeOwner"] = transformedRuntimeOwner
 	}
 
-	transformedProxyUri, err := expandNotebooksRuntimeAccessConfigProxyUri(original["proxy_uri"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedProxyUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["proxyUri"] = transformedProxyUri
-	}
-
 	return transformed, nil
 }
 
@@ -2108,10 +1991,6 @@ func expandNotebooksRuntimeAccessConfigAccessType(v interface{}, d tpgresource.T
 }
 
 func expandNotebooksRuntimeAccessConfigRuntimeOwner(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNotebooksRuntimeAccessConfigProxyUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2157,13 +2036,6 @@ func expandNotebooksRuntimeSoftwareConfig(v interface{}, d tpgresource.Terraform
 		return nil, err
 	} else if val := reflect.ValueOf(transformedInstallGpuDriver); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["installGpuDriver"] = transformedInstallGpuDriver
-	}
-
-	transformedUpgradeable, err := expandNotebooksRuntimeSoftwareConfigUpgradeable(original["upgradeable"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedUpgradeable); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["upgradeable"] = transformedUpgradeable
 	}
 
 	transformedCustomGpuDriverPath, err := expandNotebooksRuntimeSoftwareConfigCustomGpuDriverPath(original["custom_gpu_driver_path"], d, config)
@@ -2214,10 +2086,6 @@ func expandNotebooksRuntimeSoftwareConfigIdleShutdownTimeout(v interface{}, d tp
 }
 
 func expandNotebooksRuntimeSoftwareConfigInstallGpuDriver(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandNotebooksRuntimeSoftwareConfigUpgradeable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

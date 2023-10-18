@@ -1220,13 +1220,6 @@ func expandMemcacheInstanceMemcacheParameters(v interface{}, d tpgresource.Terra
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedId, err := expandMemcacheInstanceMemcacheParametersId(original["id"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["id"] = transformedId
-	}
-
 	transformedParams, err := expandMemcacheInstanceMemcacheParametersParams(original["params"], d, config)
 	if err != nil {
 		return nil, err
@@ -1235,10 +1228,6 @@ func expandMemcacheInstanceMemcacheParameters(v interface{}, d tpgresource.Terra
 	}
 
 	return transformed, nil
-}
-
-func expandMemcacheInstanceMemcacheParametersId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandMemcacheInstanceMemcacheParametersParams(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
@@ -1261,20 +1250,6 @@ func expandMemcacheInstanceMaintenancePolicy(v interface{}, d tpgresource.Terraf
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedCreateTime, err := expandMemcacheInstanceMaintenancePolicyCreateTime(original["create_time"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedCreateTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["createTime"] = transformedCreateTime
-	}
-
-	transformedUpdateTime, err := expandMemcacheInstanceMaintenancePolicyUpdateTime(original["update_time"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedUpdateTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["updateTime"] = transformedUpdateTime
-	}
-
 	transformedDescription, err := expandMemcacheInstanceMaintenancePolicyDescription(original["description"], d, config)
 	if err != nil {
 		return nil, err
@@ -1290,14 +1265,6 @@ func expandMemcacheInstanceMaintenancePolicy(v interface{}, d tpgresource.Terraf
 	}
 
 	return transformed, nil
-}
-
-func expandMemcacheInstanceMaintenancePolicyCreateTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandMemcacheInstanceMaintenancePolicyUpdateTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandMemcacheInstanceMaintenancePolicyDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

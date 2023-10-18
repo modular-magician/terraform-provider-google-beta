@@ -3796,13 +3796,6 @@ func expandComputeRegionBackendServiceIap(v interface{}, d tpgresource.Terraform
 		transformed["oauth2ClientSecret"] = transformedOauth2ClientSecret
 	}
 
-	transformedOauth2ClientSecretSha256, err := expandComputeRegionBackendServiceIapOauth2ClientSecretSha256(original["oauth2_client_secret_sha256"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedOauth2ClientSecretSha256); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["oauth2ClientSecretSha256"] = transformedOauth2ClientSecretSha256
-	}
-
 	return transformed, nil
 }
 
@@ -3811,10 +3804,6 @@ func expandComputeRegionBackendServiceIapOauth2ClientId(v interface{}, d tpgreso
 }
 
 func expandComputeRegionBackendServiceIapOauth2ClientSecret(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeRegionBackendServiceIapOauth2ClientSecretSha256(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

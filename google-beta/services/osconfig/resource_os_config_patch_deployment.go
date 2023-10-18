@@ -3050,20 +3050,6 @@ func expandOSConfigPatchDeploymentRecurringSchedule(v interface{}, d tpgresource
 		transformed["timeOfDay"] = transformedTimeOfDay
 	}
 
-	transformedLastExecuteTime, err := expandOSConfigPatchDeploymentRecurringScheduleLastExecuteTime(original["last_execute_time"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedLastExecuteTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["lastExecuteTime"] = transformedLastExecuteTime
-	}
-
-	transformedNextExecuteTime, err := expandOSConfigPatchDeploymentRecurringScheduleNextExecuteTime(original["next_execute_time"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedNextExecuteTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["nextExecuteTime"] = transformedNextExecuteTime
-	}
-
 	transformedWeekly, err := expandOSConfigPatchDeploymentRecurringScheduleWeekly(original["weekly"], d, config)
 	if err != nil {
 		return nil, err
@@ -3176,14 +3162,6 @@ func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDaySeconds(v interface{
 }
 
 func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDayNanos(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandOSConfigPatchDeploymentRecurringScheduleLastExecuteTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandOSConfigPatchDeploymentRecurringScheduleNextExecuteTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

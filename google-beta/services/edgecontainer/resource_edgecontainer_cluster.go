@@ -1611,21 +1611,10 @@ func expandEdgecontainerClusterFleet(v interface{}, d tpgresource.TerraformResou
 		transformed["project"] = transformedProject
 	}
 
-	transformedMembership, err := expandEdgecontainerClusterFleetMembership(original["membership"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedMembership); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["membership"] = transformedMembership
-	}
-
 	return transformed, nil
 }
 
 func expandEdgecontainerClusterFleetProject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandEdgecontainerClusterFleetMembership(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1666,13 +1655,6 @@ func expandEdgecontainerClusterNetworking(v interface{}, d tpgresource.Terraform
 		transformed["servicesIpv6CidrBlocks"] = transformedServicesIpv6CidrBlocks
 	}
 
-	transformedNetworkType, err := expandEdgecontainerClusterNetworkingNetworkType(original["network_type"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedNetworkType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["networkType"] = transformedNetworkType
-	}
-
 	return transformed, nil
 }
 
@@ -1689,10 +1671,6 @@ func expandEdgecontainerClusterNetworkingClusterIpv6CidrBlocks(v interface{}, d 
 }
 
 func expandEdgecontainerClusterNetworkingServicesIpv6CidrBlocks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandEdgecontainerClusterNetworkingNetworkType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2022,73 +2000,10 @@ func expandEdgecontainerClusterControlPlaneEncryption(v interface{}, d tpgresour
 		transformed["kmsKey"] = transformedKmsKey
 	}
 
-	transformedKmsKeyActiveVersion, err := expandEdgecontainerClusterControlPlaneEncryptionKmsKeyActiveVersion(original["kms_key_active_version"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedKmsKeyActiveVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["kmsKeyActiveVersion"] = transformedKmsKeyActiveVersion
-	}
-
-	transformedKmsKeyState, err := expandEdgecontainerClusterControlPlaneEncryptionKmsKeyState(original["kms_key_state"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedKmsKeyState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["kmsKeyState"] = transformedKmsKeyState
-	}
-
-	transformedKmsStatus, err := expandEdgecontainerClusterControlPlaneEncryptionKmsStatus(original["kms_status"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedKmsStatus); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["kmsStatus"] = transformedKmsStatus
-	}
-
 	return transformed, nil
 }
 
 func expandEdgecontainerClusterControlPlaneEncryptionKmsKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandEdgecontainerClusterControlPlaneEncryptionKmsKeyActiveVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandEdgecontainerClusterControlPlaneEncryptionKmsKeyState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandEdgecontainerClusterControlPlaneEncryptionKmsStatus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedCode, err := expandEdgecontainerClusterControlPlaneEncryptionKmsStatusCode(original["code"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["code"] = transformedCode
-	}
-
-	transformedMessage, err := expandEdgecontainerClusterControlPlaneEncryptionKmsStatusMessage(original["message"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedMessage); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["message"] = transformedMessage
-	}
-
-	return transformed, nil
-}
-
-func expandEdgecontainerClusterControlPlaneEncryptionKmsStatusCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandEdgecontainerClusterControlPlaneEncryptionKmsStatusMessage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

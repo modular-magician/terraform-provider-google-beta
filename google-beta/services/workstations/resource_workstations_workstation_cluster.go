@@ -808,20 +808,6 @@ func expandWorkstationsWorkstationClusterPrivateClusterConfig(v interface{}, d t
 		transformed["enablePrivateEndpoint"] = transformedEnablePrivateEndpoint
 	}
 
-	transformedClusterHostname, err := expandWorkstationsWorkstationClusterPrivateClusterConfigClusterHostname(original["cluster_hostname"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedClusterHostname); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["clusterHostname"] = transformedClusterHostname
-	}
-
-	transformedServiceAttachmentUri, err := expandWorkstationsWorkstationClusterPrivateClusterConfigServiceAttachmentUri(original["service_attachment_uri"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedServiceAttachmentUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["serviceAttachmentUri"] = transformedServiceAttachmentUri
-	}
-
 	transformedAllowedProjects, err := expandWorkstationsWorkstationClusterPrivateClusterConfigAllowedProjects(original["allowed_projects"], d, config)
 	if err != nil {
 		return nil, err
@@ -833,14 +819,6 @@ func expandWorkstationsWorkstationClusterPrivateClusterConfig(v interface{}, d t
 }
 
 func expandWorkstationsWorkstationClusterPrivateClusterConfigEnablePrivateEndpoint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandWorkstationsWorkstationClusterPrivateClusterConfigClusterHostname(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandWorkstationsWorkstationClusterPrivateClusterConfigServiceAttachmentUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -1315,13 +1315,6 @@ func expandComputeRegionDiskDiskEncryptionKey(v interface{}, d tpgresource.Terra
 		transformed["rawKey"] = transformedRawKey
 	}
 
-	transformedSha256, err := expandComputeRegionDiskDiskEncryptionKeySha256(original["sha256"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSha256); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["sha256"] = transformedSha256
-	}
-
 	transformedKmsKeyName, err := expandComputeRegionDiskDiskEncryptionKeyKmsKeyName(original["kms_key_name"], d, config)
 	if err != nil {
 		return nil, err
@@ -1333,10 +1326,6 @@ func expandComputeRegionDiskDiskEncryptionKey(v interface{}, d tpgresource.Terra
 }
 
 func expandComputeRegionDiskDiskEncryptionKeyRawKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeRegionDiskDiskEncryptionKeySha256(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1375,13 +1364,6 @@ func expandComputeRegionDiskSourceSnapshotEncryptionKey(v interface{}, d tpgreso
 		transformed["kmsKeyName"] = transformedKmsKeyName
 	}
 
-	transformedSha256, err := expandComputeRegionDiskSourceSnapshotEncryptionKeySha256(original["sha256"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSha256); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["sha256"] = transformedSha256
-	}
-
 	return transformed, nil
 }
 
@@ -1390,10 +1372,6 @@ func expandComputeRegionDiskSourceSnapshotEncryptionKeyRawKey(v interface{}, d t
 }
 
 func expandComputeRegionDiskSourceSnapshotEncryptionKeyKmsKeyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeRegionDiskSourceSnapshotEncryptionKeySha256(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

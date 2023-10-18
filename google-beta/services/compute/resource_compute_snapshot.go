@@ -857,13 +857,6 @@ func expandComputeSnapshotSnapshotEncryptionKey(v interface{}, d tpgresource.Ter
 		transformed["rawKey"] = transformedRawKey
 	}
 
-	transformedSha256, err := expandComputeSnapshotSnapshotEncryptionKeySha256(original["sha256"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSha256); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["sha256"] = transformedSha256
-	}
-
 	transformedKmsKeySelfLink, err := expandComputeSnapshotSnapshotEncryptionKeyKmsKeySelfLink(original["kms_key_self_link"], d, config)
 	if err != nil {
 		return nil, err
@@ -882,10 +875,6 @@ func expandComputeSnapshotSnapshotEncryptionKey(v interface{}, d tpgresource.Ter
 }
 
 func expandComputeSnapshotSnapshotEncryptionKeyRawKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeSnapshotSnapshotEncryptionKeySha256(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

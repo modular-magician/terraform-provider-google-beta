@@ -934,20 +934,6 @@ func expandVmwareenginePrivateCloudNetworkConfig(v interface{}, d tpgresource.Te
 		transformed["vmwareEngineNetwork"] = transformedVmwareEngineNetwork
 	}
 
-	transformedVmwareEngineNetworkCanonical, err := expandVmwareenginePrivateCloudNetworkConfigVmwareEngineNetworkCanonical(original["vmware_engine_network_canonical"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedVmwareEngineNetworkCanonical); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["vmwareEngineNetworkCanonical"] = transformedVmwareEngineNetworkCanonical
-	}
-
-	transformedManagementIpAddressLayoutVersion, err := expandVmwareenginePrivateCloudNetworkConfigManagementIpAddressLayoutVersion(original["management_ip_address_layout_version"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedManagementIpAddressLayoutVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["managementIpAddressLayoutVersion"] = transformedManagementIpAddressLayoutVersion
-	}
-
 	return transformed, nil
 }
 
@@ -956,14 +942,6 @@ func expandVmwareenginePrivateCloudNetworkConfigManagementCidr(v interface{}, d 
 }
 
 func expandVmwareenginePrivateCloudNetworkConfigVmwareEngineNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandVmwareenginePrivateCloudNetworkConfigVmwareEngineNetworkCanonical(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandVmwareenginePrivateCloudNetworkConfigManagementIpAddressLayoutVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

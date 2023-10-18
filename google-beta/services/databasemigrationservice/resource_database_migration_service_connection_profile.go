@@ -2048,13 +2048,6 @@ func expandDatabaseMigrationServiceConnectionProfileMysql(v interface{}, d tpgre
 		transformed["password"] = transformedPassword
 	}
 
-	transformedPasswordSet, err := expandDatabaseMigrationServiceConnectionProfileMysqlPasswordSet(original["password_set"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPasswordSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["passwordSet"] = transformedPasswordSet
-	}
-
 	transformedSsl, err := expandDatabaseMigrationServiceConnectionProfileMysqlSsl(original["ssl"], d, config)
 	if err != nil {
 		return nil, err
@@ -2088,10 +2081,6 @@ func expandDatabaseMigrationServiceConnectionProfileMysqlPassword(v interface{},
 	return v, nil
 }
 
-func expandDatabaseMigrationServiceConnectionProfileMysqlPasswordSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandDatabaseMigrationServiceConnectionProfileMysqlSsl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
@@ -2100,13 +2089,6 @@ func expandDatabaseMigrationServiceConnectionProfileMysqlSsl(v interface{}, d tp
 	raw := l[0]
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
-
-	transformedType, err := expandDatabaseMigrationServiceConnectionProfileMysqlSslType(original["type"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["type"] = transformedType
-	}
 
 	transformedClientKey, err := expandDatabaseMigrationServiceConnectionProfileMysqlSslClientKey(original["client_key"], d, config)
 	if err != nil {
@@ -2130,10 +2112,6 @@ func expandDatabaseMigrationServiceConnectionProfileMysqlSsl(v interface{}, d tp
 	}
 
 	return transformed, nil
-}
-
-func expandDatabaseMigrationServiceConnectionProfileMysqlSslType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandDatabaseMigrationServiceConnectionProfileMysqlSslClientKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2189,13 +2167,6 @@ func expandDatabaseMigrationServiceConnectionProfilePostgresql(v interface{}, d 
 		transformed["password"] = transformedPassword
 	}
 
-	transformedPasswordSet, err := expandDatabaseMigrationServiceConnectionProfilePostgresqlPasswordSet(original["password_set"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPasswordSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["passwordSet"] = transformedPasswordSet
-	}
-
 	transformedSsl, err := expandDatabaseMigrationServiceConnectionProfilePostgresqlSsl(original["ssl"], d, config)
 	if err != nil {
 		return nil, err
@@ -2208,13 +2179,6 @@ func expandDatabaseMigrationServiceConnectionProfilePostgresql(v interface{}, d 
 		return nil, err
 	} else if val := reflect.ValueOf(transformedCloudSqlId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["cloudSqlId"] = transformedCloudSqlId
-	}
-
-	transformedNetworkArchitecture, err := expandDatabaseMigrationServiceConnectionProfilePostgresqlNetworkArchitecture(original["network_architecture"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedNetworkArchitecture); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["networkArchitecture"] = transformedNetworkArchitecture
 	}
 
 	return transformed, nil
@@ -2236,10 +2200,6 @@ func expandDatabaseMigrationServiceConnectionProfilePostgresqlPassword(v interfa
 	return v, nil
 }
 
-func expandDatabaseMigrationServiceConnectionProfilePostgresqlPasswordSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandDatabaseMigrationServiceConnectionProfilePostgresqlSsl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
@@ -2248,13 +2208,6 @@ func expandDatabaseMigrationServiceConnectionProfilePostgresqlSsl(v interface{},
 	raw := l[0]
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
-
-	transformedType, err := expandDatabaseMigrationServiceConnectionProfilePostgresqlSslType(original["type"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["type"] = transformedType
-	}
 
 	transformedClientKey, err := expandDatabaseMigrationServiceConnectionProfilePostgresqlSslClientKey(original["client_key"], d, config)
 	if err != nil {
@@ -2280,10 +2233,6 @@ func expandDatabaseMigrationServiceConnectionProfilePostgresqlSsl(v interface{},
 	return transformed, nil
 }
 
-func expandDatabaseMigrationServiceConnectionProfilePostgresqlSslType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandDatabaseMigrationServiceConnectionProfilePostgresqlSslClientKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -2297,10 +2246,6 @@ func expandDatabaseMigrationServiceConnectionProfilePostgresqlSslCaCertificate(v
 }
 
 func expandDatabaseMigrationServiceConnectionProfilePostgresqlCloudSqlId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatabaseMigrationServiceConnectionProfilePostgresqlNetworkArchitecture(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2339,13 +2284,6 @@ func expandDatabaseMigrationServiceConnectionProfileOracle(v interface{}, d tpgr
 		return nil, err
 	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["password"] = transformedPassword
-	}
-
-	transformedPasswordSet, err := expandDatabaseMigrationServiceConnectionProfileOraclePasswordSet(original["password_set"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPasswordSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["passwordSet"] = transformedPasswordSet
 	}
 
 	transformedDatabaseService, err := expandDatabaseMigrationServiceConnectionProfileOracleDatabaseService(original["database_service"], d, config)
@@ -2402,10 +2340,6 @@ func expandDatabaseMigrationServiceConnectionProfileOraclePassword(v interface{}
 	return v, nil
 }
 
-func expandDatabaseMigrationServiceConnectionProfileOraclePasswordSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandDatabaseMigrationServiceConnectionProfileOracleDatabaseService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -2418,13 +2352,6 @@ func expandDatabaseMigrationServiceConnectionProfileOracleSsl(v interface{}, d t
 	raw := l[0]
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
-
-	transformedType, err := expandDatabaseMigrationServiceConnectionProfileOracleSslType(original["type"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["type"] = transformedType
-	}
 
 	transformedClientKey, err := expandDatabaseMigrationServiceConnectionProfileOracleSslClientKey(original["client_key"], d, config)
 	if err != nil {
@@ -2448,10 +2375,6 @@ func expandDatabaseMigrationServiceConnectionProfileOracleSsl(v interface{}, d t
 	}
 
 	return transformed, nil
-}
-
-func expandDatabaseMigrationServiceConnectionProfileOracleSslType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandDatabaseMigrationServiceConnectionProfileOracleSslClientKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2580,13 +2503,6 @@ func expandDatabaseMigrationServiceConnectionProfileCloudsql(v interface{}, d tp
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedCloudSqlId, err := expandDatabaseMigrationServiceConnectionProfileCloudsqlCloudSqlId(original["cloud_sql_id"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedCloudSqlId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["cloudSqlId"] = transformedCloudSqlId
-	}
-
 	transformedSettings, err := expandDatabaseMigrationServiceConnectionProfileCloudsqlSettings(original["settings"], d, config)
 	if err != nil {
 		return nil, err
@@ -2594,25 +2510,7 @@ func expandDatabaseMigrationServiceConnectionProfileCloudsql(v interface{}, d tp
 		transformed["settings"] = transformedSettings
 	}
 
-	transformedPrivateIp, err := expandDatabaseMigrationServiceConnectionProfileCloudsqlPrivateIp(original["private_ip"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPrivateIp); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["privateIp"] = transformedPrivateIp
-	}
-
-	transformedPublicIp, err := expandDatabaseMigrationServiceConnectionProfileCloudsqlPublicIp(original["public_ip"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPublicIp); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["publicIp"] = transformedPublicIp
-	}
-
 	return transformed, nil
-}
-
-func expandDatabaseMigrationServiceConnectionProfileCloudsqlCloudSqlId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandDatabaseMigrationServiceConnectionProfileCloudsqlSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2713,13 +2611,6 @@ func expandDatabaseMigrationServiceConnectionProfileCloudsqlSettings(v interface
 		return nil, err
 	} else if val := reflect.ValueOf(transformedRootPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["rootPassword"] = transformedRootPassword
-	}
-
-	transformedRootPasswordSet, err := expandDatabaseMigrationServiceConnectionProfileCloudsqlSettingsRootPasswordSet(original["root_password_set"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedRootPasswordSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["rootPasswordSet"] = transformedRootPasswordSet
 	}
 
 	transformedCollation, err := expandDatabaseMigrationServiceConnectionProfileCloudsqlSettingsCollation(original["collation"], d, config)
@@ -2919,10 +2810,6 @@ func expandDatabaseMigrationServiceConnectionProfileCloudsqlSettingsRootPassword
 	return v, nil
 }
 
-func expandDatabaseMigrationServiceConnectionProfileCloudsqlSettingsRootPasswordSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandDatabaseMigrationServiceConnectionProfileCloudsqlSettingsCollation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -2932,14 +2819,6 @@ func expandDatabaseMigrationServiceConnectionProfileCloudsqlSettingsCmekKeyName(
 }
 
 func expandDatabaseMigrationServiceConnectionProfileCloudsqlSettingsEdition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatabaseMigrationServiceConnectionProfileCloudsqlPrivateIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatabaseMigrationServiceConnectionProfileCloudsqlPublicIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -3036,13 +2915,6 @@ func expandDatabaseMigrationServiceConnectionProfileAlloydbSettingsInitialUser(v
 		transformed["password"] = transformedPassword
 	}
 
-	transformedPasswordSet, err := expandDatabaseMigrationServiceConnectionProfileAlloydbSettingsInitialUserPasswordSet(original["password_set"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPasswordSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["passwordSet"] = transformedPasswordSet
-	}
-
 	return transformed, nil
 }
 
@@ -3051,10 +2923,6 @@ func expandDatabaseMigrationServiceConnectionProfileAlloydbSettingsInitialUserUs
 }
 
 func expandDatabaseMigrationServiceConnectionProfileAlloydbSettingsInitialUserPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatabaseMigrationServiceConnectionProfileAlloydbSettingsInitialUserPasswordSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -3110,13 +2978,6 @@ func expandDatabaseMigrationServiceConnectionProfileAlloydbSettingsPrimaryInstan
 		transformed["labels"] = transformedLabels
 	}
 
-	transformedPrivateIp, err := expandDatabaseMigrationServiceConnectionProfileAlloydbSettingsPrimaryInstanceSettingsPrivateIp(original["private_ip"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPrivateIp); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["privateIp"] = transformedPrivateIp
-	}
-
 	return transformed, nil
 }
 
@@ -3167,10 +3028,6 @@ func expandDatabaseMigrationServiceConnectionProfileAlloydbSettingsPrimaryInstan
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func expandDatabaseMigrationServiceConnectionProfileAlloydbSettingsPrimaryInstanceSettingsPrivateIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandDatabaseMigrationServiceConnectionProfileEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {

@@ -1736,13 +1736,6 @@ func expandRedisInstancePersistenceConfig(v interface{}, d tpgresource.Terraform
 		transformed["rdbSnapshotPeriod"] = transformedRdbSnapshotPeriod
 	}
 
-	transformedRdbNextSnapshotTime, err := expandRedisInstancePersistenceConfigRdbNextSnapshotTime(original["rdb_next_snapshot_time"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedRdbNextSnapshotTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["rdbNextSnapshotTime"] = transformedRdbNextSnapshotTime
-	}
-
 	transformedRdbSnapshotStartTime, err := expandRedisInstancePersistenceConfigRdbSnapshotStartTime(original["rdb_snapshot_start_time"], d, config)
 	if err != nil {
 		return nil, err
@@ -1761,10 +1754,6 @@ func expandRedisInstancePersistenceConfigRdbSnapshotPeriod(v interface{}, d tpgr
 	return v, nil
 }
 
-func expandRedisInstancePersistenceConfigRdbNextSnapshotTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandRedisInstancePersistenceConfigRdbSnapshotStartTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1777,20 +1766,6 @@ func expandRedisInstanceMaintenancePolicy(v interface{}, d tpgresource.Terraform
 	raw := l[0]
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
-
-	transformedCreateTime, err := expandRedisInstanceMaintenancePolicyCreateTime(original["create_time"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedCreateTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["createTime"] = transformedCreateTime
-	}
-
-	transformedUpdateTime, err := expandRedisInstanceMaintenancePolicyUpdateTime(original["update_time"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedUpdateTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["updateTime"] = transformedUpdateTime
-	}
 
 	transformedDescription, err := expandRedisInstanceMaintenancePolicyDescription(original["description"], d, config)
 	if err != nil {
@@ -1807,14 +1782,6 @@ func expandRedisInstanceMaintenancePolicy(v interface{}, d tpgresource.Terraform
 	}
 
 	return transformed, nil
-}
-
-func expandRedisInstanceMaintenancePolicyCreateTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandRedisInstanceMaintenancePolicyUpdateTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandRedisInstanceMaintenancePolicyDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1838,13 +1805,6 @@ func expandRedisInstanceMaintenancePolicyWeeklyMaintenanceWindow(v interface{}, 
 			transformed["day"] = transformedDay
 		}
 
-		transformedDuration, err := expandRedisInstanceMaintenancePolicyWeeklyMaintenanceWindowDuration(original["duration"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedDuration); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["duration"] = transformedDuration
-		}
-
 		transformedStartTime, err := expandRedisInstanceMaintenancePolicyWeeklyMaintenanceWindowStartTime(original["start_time"], d, config)
 		if err != nil {
 			return nil, err
@@ -1858,10 +1818,6 @@ func expandRedisInstanceMaintenancePolicyWeeklyMaintenanceWindow(v interface{}, 
 }
 
 func expandRedisInstanceMaintenancePolicyWeeklyMaintenanceWindowDay(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandRedisInstanceMaintenancePolicyWeeklyMaintenanceWindowDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

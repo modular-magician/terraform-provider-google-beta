@@ -670,32 +670,10 @@ func expandEdgecontainerNodePoolLocalDiskEncryption(v interface{}, d tpgresource
 		transformed["kmsKey"] = transformedKmsKey
 	}
 
-	transformedKmsKeyActiveVersion, err := expandEdgecontainerNodePoolLocalDiskEncryptionKmsKeyActiveVersion(original["kms_key_active_version"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedKmsKeyActiveVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["kmsKeyActiveVersion"] = transformedKmsKeyActiveVersion
-	}
-
-	transformedKmsKeyState, err := expandEdgecontainerNodePoolLocalDiskEncryptionKmsKeyState(original["kms_key_state"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedKmsKeyState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["kmsKeyState"] = transformedKmsKeyState
-	}
-
 	return transformed, nil
 }
 
 func expandEdgecontainerNodePoolLocalDiskEncryptionKmsKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandEdgecontainerNodePoolLocalDiskEncryptionKmsKeyActiveVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandEdgecontainerNodePoolLocalDiskEncryptionKmsKeyState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -933,13 +933,6 @@ func expandComputeReservationSpecificReservation(v interface{}, d tpgresource.Te
 		transformed["count"] = transformedCount
 	}
 
-	transformedInUseCount, err := expandComputeReservationSpecificReservationInUseCount(original["in_use_count"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedInUseCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["inUseCount"] = transformedInUseCount
-	}
-
 	transformedInstanceProperties, err := expandComputeReservationSpecificReservationInstanceProperties(original["instance_properties"], d, config)
 	if err != nil {
 		return nil, err
@@ -951,10 +944,6 @@ func expandComputeReservationSpecificReservation(v interface{}, d tpgresource.Te
 }
 
 func expandComputeReservationSpecificReservationCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeReservationSpecificReservationInUseCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

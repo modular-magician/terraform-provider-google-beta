@@ -740,20 +740,6 @@ func expandBeyondcorpAppConnectionGateway(v interface{}, d tpgresource.Terraform
 		transformed["type"] = transformedType
 	}
 
-	transformedUri, err := expandBeyondcorpAppConnectionGatewayUri(original["uri"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["uri"] = transformedUri
-	}
-
-	transformedIngressPort, err := expandBeyondcorpAppConnectionGatewayIngressPort(original["ingress_port"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedIngressPort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["ingressPort"] = transformedIngressPort
-	}
-
 	return transformed, nil
 }
 
@@ -762,14 +748,6 @@ func expandBeyondcorpAppConnectionGatewayAppGateway(v interface{}, d tpgresource
 }
 
 func expandBeyondcorpAppConnectionGatewayType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandBeyondcorpAppConnectionGatewayUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandBeyondcorpAppConnectionGatewayIngressPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

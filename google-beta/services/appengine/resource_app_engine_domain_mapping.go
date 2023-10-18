@@ -570,13 +570,6 @@ func expandAppEngineDomainMappingSslSettings(v interface{}, d tpgresource.Terraf
 		transformed["sslManagementType"] = transformedSslManagementType
 	}
 
-	transformedPendingManagedCertificateId, err := expandAppEngineDomainMappingSslSettingsPendingManagedCertificateId(original["pending_managed_certificate_id"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPendingManagedCertificateId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["pendingManagedCertificateId"] = transformedPendingManagedCertificateId
-	}
-
 	return transformed, nil
 }
 
@@ -585,10 +578,6 @@ func expandAppEngineDomainMappingSslSettingsCertificateId(v interface{}, d tpgre
 }
 
 func expandAppEngineDomainMappingSslSettingsSslManagementType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAppEngineDomainMappingSslSettingsPendingManagedCertificateId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

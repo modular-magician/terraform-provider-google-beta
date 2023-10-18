@@ -1912,21 +1912,10 @@ func expandDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputTrigge
 		transformed["name"] = transformedName
 	}
 
-	transformedDisplayName, err := expandDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputTriggeredIntentDisplayName(original["display_name"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedDisplayName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["displayName"] = transformedDisplayName
-	}
-
 	return transformed, nil
 }
 
 func expandDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputTriggeredIntentName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputTriggeredIntentDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1946,21 +1935,10 @@ func expandDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputCurren
 		transformed["name"] = transformedName
 	}
 
-	transformedDisplayName, err := expandDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputCurrentPageDisplayName(original["display_name"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedDisplayName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["displayName"] = transformedDisplayName
-	}
-
 	return transformed, nil
 }
 
 func expandDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputCurrentPageName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDialogflowCXTestCaseTestCaseConversationTurnsVirtualAgentOutputCurrentPageDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

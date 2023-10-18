@@ -497,13 +497,6 @@ func expandComputeHaVpnGatewayVpnInterfaces(v interface{}, d tpgresource.Terrafo
 			transformed["id"] = transformedId
 		}
 
-		transformedIpAddress, err := expandComputeHaVpnGatewayVpnInterfacesIpAddress(original["ip_address"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedIpAddress); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["ipAddress"] = transformedIpAddress
-		}
-
 		transformedInterconnectAttachment, err := expandComputeHaVpnGatewayVpnInterfacesInterconnectAttachment(original["interconnect_attachment"], d, config)
 		if err != nil {
 			return nil, err
@@ -517,10 +510,6 @@ func expandComputeHaVpnGatewayVpnInterfaces(v interface{}, d tpgresource.Terrafo
 }
 
 func expandComputeHaVpnGatewayVpnInterfacesId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeHaVpnGatewayVpnInterfacesIpAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

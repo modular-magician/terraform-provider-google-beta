@@ -593,13 +593,6 @@ func expandBinaryAuthorizationAttestorAttestationAuthorityNote(v interface{}, d 
 		transformed["publicKeys"] = transformedPublicKeys
 	}
 
-	transformedDelegationServiceAccountEmail, err := expandBinaryAuthorizationAttestorAttestationAuthorityNoteDelegationServiceAccountEmail(original["delegation_service_account_email"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedDelegationServiceAccountEmail); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["delegationServiceAccountEmail"] = transformedDelegationServiceAccountEmail
-	}
-
 	return transformed, nil
 }
 
@@ -703,9 +696,5 @@ func expandBinaryAuthorizationAttestorAttestationAuthorityNotePublicKeysPkixPubl
 }
 
 func expandBinaryAuthorizationAttestorAttestationAuthorityNotePublicKeysPkixPublicKeySignatureAlgorithm(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandBinaryAuthorizationAttestorAttestationAuthorityNoteDelegationServiceAccountEmail(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

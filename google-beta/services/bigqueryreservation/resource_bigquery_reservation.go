@@ -580,13 +580,6 @@ func expandBigqueryReservationReservationAutoscale(v interface{}, d tpgresource.
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedCurrentSlots, err := expandBigqueryReservationReservationAutoscaleCurrentSlots(original["current_slots"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedCurrentSlots); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["currentSlots"] = transformedCurrentSlots
-	}
-
 	transformedMaxSlots, err := expandBigqueryReservationReservationAutoscaleMaxSlots(original["max_slots"], d, config)
 	if err != nil {
 		return nil, err
@@ -595,10 +588,6 @@ func expandBigqueryReservationReservationAutoscale(v interface{}, d tpgresource.
 	}
 
 	return transformed, nil
-}
-
-func expandBigqueryReservationReservationAutoscaleCurrentSlots(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandBigqueryReservationReservationAutoscaleMaxSlots(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

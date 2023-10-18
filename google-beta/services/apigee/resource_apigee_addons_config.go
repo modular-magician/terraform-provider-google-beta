@@ -646,21 +646,10 @@ func expandApigeeAddonsConfigAddonsConfigApiSecurityConfig(v interface{}, d tpgr
 		transformed["enabled"] = transformedEnabled
 	}
 
-	transformedExpiresAt, err := expandApigeeAddonsConfigAddonsConfigApiSecurityConfigExpiresAt(original["expires_at"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedExpiresAt); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["expiresAt"] = transformedExpiresAt
-	}
-
 	return transformed, nil
 }
 
 func expandApigeeAddonsConfigAddonsConfigApiSecurityConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandApigeeAddonsConfigAddonsConfigApiSecurityConfigExpiresAt(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -680,20 +669,9 @@ func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfig(v interface{},
 		transformed["enabled"] = transformedEnabled
 	}
 
-	transformedExpiresAt, err := expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigExpiresAt(original["expires_at"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedExpiresAt); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["expiresAt"] = transformedExpiresAt
-	}
-
 	return transformed, nil
 }
 
 func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigExpiresAt(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

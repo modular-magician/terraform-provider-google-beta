@@ -3848,13 +3848,6 @@ func expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatab
 			transformed["dataType"] = transformedDataType
 		}
 
-		transformedLength, err := expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(original["length"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedLength); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["length"] = transformedLength
-		}
-
 		transformedCollation, err := expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsCollation(original["collation"], d, config)
 		if err != nil {
 			return nil, err
@@ -3893,10 +3886,6 @@ func expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatab
 }
 
 func expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigMysqlSourceConfigIncludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -4025,13 +4014,6 @@ func expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatab
 			transformed["dataType"] = transformedDataType
 		}
 
-		transformedLength, err := expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(original["length"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedLength); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["length"] = transformedLength
-		}
-
 		transformedCollation, err := expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsCollation(original["collation"], d, config)
 		if err != nil {
 			return nil, err
@@ -4070,10 +4052,6 @@ func expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatab
 }
 
 func expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigMysqlSourceConfigExcludeObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -4269,55 +4247,6 @@ func expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSch
 			transformed["dataType"] = transformedDataType
 		}
 
-		transformedLength, err := expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsLength(original["length"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedLength); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["length"] = transformedLength
-		}
-
-		transformedPrecision, err := expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsPrecision(original["precision"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedPrecision); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["precision"] = transformedPrecision
-		}
-
-		transformedScale, err := expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsScale(original["scale"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedScale); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["scale"] = transformedScale
-		}
-
-		transformedEncoding, err := expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsEncoding(original["encoding"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedEncoding); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["encoding"] = transformedEncoding
-		}
-
-		transformedPrimaryKey, err := expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsPrimaryKey(original["primary_key"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedPrimaryKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["primaryKey"] = transformedPrimaryKey
-		}
-
-		transformedNullable, err := expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsNullable(original["nullable"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedNullable); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["nullable"] = transformedNullable
-		}
-
-		transformedOrdinalPosition, err := expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsOrdinalPosition(original["ordinal_position"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedOrdinalPosition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["ordinalPosition"] = transformedOrdinalPosition
-		}
-
 		req = append(req, transformed)
 	}
 	return req, nil
@@ -4328,34 +4257,6 @@ func expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSch
 }
 
 func expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsPrecision(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsScale(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsEncoding(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsPrimaryKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsNullable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigIncludeObjectsOracleSchemasOracleTablesOracleColumnsOrdinalPosition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -4468,55 +4369,6 @@ func expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSch
 			transformed["dataType"] = transformedDataType
 		}
 
-		transformedLength, err := expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsLength(original["length"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedLength); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["length"] = transformedLength
-		}
-
-		transformedPrecision, err := expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsPrecision(original["precision"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedPrecision); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["precision"] = transformedPrecision
-		}
-
-		transformedScale, err := expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsScale(original["scale"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedScale); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["scale"] = transformedScale
-		}
-
-		transformedEncoding, err := expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsEncoding(original["encoding"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedEncoding); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["encoding"] = transformedEncoding
-		}
-
-		transformedPrimaryKey, err := expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsPrimaryKey(original["primary_key"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedPrimaryKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["primaryKey"] = transformedPrimaryKey
-		}
-
-		transformedNullable, err := expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsNullable(original["nullable"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedNullable); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["nullable"] = transformedNullable
-		}
-
-		transformedOrdinalPosition, err := expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsOrdinalPosition(original["ordinal_position"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedOrdinalPosition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["ordinalPosition"] = transformedOrdinalPosition
-		}
-
 		req = append(req, transformed)
 	}
 	return req, nil
@@ -4527,34 +4379,6 @@ func expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSch
 }
 
 func expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsPrecision(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsScale(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsEncoding(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsPrimaryKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsNullable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigOracleSourceConfigExcludeObjectsOracleSchemasOracleTablesOracleColumnsOrdinalPosition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -4757,27 +4581,6 @@ func expandDatastreamStreamSourceConfigPostgresqlSourceConfigIncludeObjectsPostg
 			transformed["dataType"] = transformedDataType
 		}
 
-		transformedLength, err := expandDatastreamStreamSourceConfigPostgresqlSourceConfigIncludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsLength(original["length"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedLength); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["length"] = transformedLength
-		}
-
-		transformedPrecision, err := expandDatastreamStreamSourceConfigPostgresqlSourceConfigIncludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsPrecision(original["precision"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedPrecision); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["precision"] = transformedPrecision
-		}
-
-		transformedScale, err := expandDatastreamStreamSourceConfigPostgresqlSourceConfigIncludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsScale(original["scale"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedScale); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["scale"] = transformedScale
-		}
-
 		transformedPrimaryKey, err := expandDatastreamStreamSourceConfigPostgresqlSourceConfigIncludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsPrimaryKey(original["primary_key"], d, config)
 		if err != nil {
 			return nil, err
@@ -4809,18 +4612,6 @@ func expandDatastreamStreamSourceConfigPostgresqlSourceConfigIncludeObjectsPostg
 }
 
 func expandDatastreamStreamSourceConfigPostgresqlSourceConfigIncludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigPostgresqlSourceConfigIncludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigPostgresqlSourceConfigIncludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsPrecision(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigPostgresqlSourceConfigIncludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsScale(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -4945,27 +4736,6 @@ func expandDatastreamStreamSourceConfigPostgresqlSourceConfigExcludeObjectsPostg
 			transformed["dataType"] = transformedDataType
 		}
 
-		transformedLength, err := expandDatastreamStreamSourceConfigPostgresqlSourceConfigExcludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsLength(original["length"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedLength); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["length"] = transformedLength
-		}
-
-		transformedPrecision, err := expandDatastreamStreamSourceConfigPostgresqlSourceConfigExcludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsPrecision(original["precision"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedPrecision); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["precision"] = transformedPrecision
-		}
-
-		transformedScale, err := expandDatastreamStreamSourceConfigPostgresqlSourceConfigExcludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsScale(original["scale"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedScale); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["scale"] = transformedScale
-		}
-
 		transformedPrimaryKey, err := expandDatastreamStreamSourceConfigPostgresqlSourceConfigExcludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsPrimaryKey(original["primary_key"], d, config)
 		if err != nil {
 			return nil, err
@@ -4997,18 +4767,6 @@ func expandDatastreamStreamSourceConfigPostgresqlSourceConfigExcludeObjectsPostg
 }
 
 func expandDatastreamStreamSourceConfigPostgresqlSourceConfigExcludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigPostgresqlSourceConfigExcludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigPostgresqlSourceConfigExcludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsPrecision(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamSourceConfigPostgresqlSourceConfigExcludeObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsScale(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -5461,13 +5219,6 @@ func expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTab
 			transformed["dataType"] = transformedDataType
 		}
 
-		transformedLength, err := expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(original["length"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedLength); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["length"] = transformedLength
-		}
-
 		transformedCollation, err := expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsCollation(original["collation"], d, config)
 		if err != nil {
 			return nil, err
@@ -5506,10 +5257,6 @@ func expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTab
 }
 
 func expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamBackfillAllMysqlExcludedObjectsMysqlDatabasesMysqlTablesMysqlColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -5638,27 +5385,6 @@ func expandDatastreamStreamBackfillAllPostgresqlExcludedObjectsPostgresqlSchemas
 			transformed["dataType"] = transformedDataType
 		}
 
-		transformedLength, err := expandDatastreamStreamBackfillAllPostgresqlExcludedObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsLength(original["length"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedLength); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["length"] = transformedLength
-		}
-
-		transformedPrecision, err := expandDatastreamStreamBackfillAllPostgresqlExcludedObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsPrecision(original["precision"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedPrecision); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["precision"] = transformedPrecision
-		}
-
-		transformedScale, err := expandDatastreamStreamBackfillAllPostgresqlExcludedObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsScale(original["scale"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedScale); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["scale"] = transformedScale
-		}
-
 		transformedPrimaryKey, err := expandDatastreamStreamBackfillAllPostgresqlExcludedObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsPrimaryKey(original["primary_key"], d, config)
 		if err != nil {
 			return nil, err
@@ -5690,18 +5416,6 @@ func expandDatastreamStreamBackfillAllPostgresqlExcludedObjectsPostgresqlSchemas
 }
 
 func expandDatastreamStreamBackfillAllPostgresqlExcludedObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamBackfillAllPostgresqlExcludedObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamBackfillAllPostgresqlExcludedObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsPrecision(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamBackfillAllPostgresqlExcludedObjectsPostgresqlSchemasPostgresqlTablesPostgresqlColumnsScale(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -5826,55 +5540,6 @@ func expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTa
 			transformed["dataType"] = transformedDataType
 		}
 
-		transformedLength, err := expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsLength(original["length"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedLength); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["length"] = transformedLength
-		}
-
-		transformedPrecision, err := expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsPrecision(original["precision"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedPrecision); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["precision"] = transformedPrecision
-		}
-
-		transformedScale, err := expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsScale(original["scale"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedScale); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["scale"] = transformedScale
-		}
-
-		transformedEncoding, err := expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsEncoding(original["encoding"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedEncoding); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["encoding"] = transformedEncoding
-		}
-
-		transformedPrimaryKey, err := expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsPrimaryKey(original["primary_key"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedPrimaryKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["primaryKey"] = transformedPrimaryKey
-		}
-
-		transformedNullable, err := expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsNullable(original["nullable"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedNullable); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["nullable"] = transformedNullable
-		}
-
-		transformedOrdinalPosition, err := expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsOrdinalPosition(original["ordinal_position"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedOrdinalPosition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["ordinalPosition"] = transformedOrdinalPosition
-		}
-
 		req = append(req, transformed)
 	}
 	return req, nil
@@ -5885,34 +5550,6 @@ func expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTa
 }
 
 func expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsDataType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsPrecision(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsScale(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsEncoding(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsPrimaryKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsNullable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamStreamBackfillAllOracleExcludedObjectsOracleSchemasOracleTablesOracleColumnsOrdinalPosition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

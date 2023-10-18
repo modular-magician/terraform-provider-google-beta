@@ -982,13 +982,6 @@ func expandIdentityPlatformConfigSignIn(v interface{}, d tpgresource.TerraformRe
 		transformed["allowDuplicateEmails"] = transformedAllowDuplicateEmails
 	}
 
-	transformedHashConfig, err := expandIdentityPlatformConfigSignInHashConfig(original["hash_config"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedHashConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["hashConfig"] = transformedHashConfig
-	}
-
 	return transformed, nil
 }
 
@@ -1094,73 +1087,6 @@ func expandIdentityPlatformConfigSignInAllowDuplicateEmails(v interface{}, d tpg
 	return v, nil
 }
 
-func expandIdentityPlatformConfigSignInHashConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedAlgorithm, err := expandIdentityPlatformConfigSignInHashConfigAlgorithm(original["algorithm"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedAlgorithm); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["algorithm"] = transformedAlgorithm
-	}
-
-	transformedSignerKey, err := expandIdentityPlatformConfigSignInHashConfigSignerKey(original["signer_key"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSignerKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["signerKey"] = transformedSignerKey
-	}
-
-	transformedSaltSeparator, err := expandIdentityPlatformConfigSignInHashConfigSaltSeparator(original["salt_separator"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSaltSeparator); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["saltSeparator"] = transformedSaltSeparator
-	}
-
-	transformedRounds, err := expandIdentityPlatformConfigSignInHashConfigRounds(original["rounds"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedRounds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["rounds"] = transformedRounds
-	}
-
-	transformedMemoryCost, err := expandIdentityPlatformConfigSignInHashConfigMemoryCost(original["memory_cost"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedMemoryCost); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["memoryCost"] = transformedMemoryCost
-	}
-
-	return transformed, nil
-}
-
-func expandIdentityPlatformConfigSignInHashConfigAlgorithm(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIdentityPlatformConfigSignInHashConfigSignerKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIdentityPlatformConfigSignInHashConfigSaltSeparator(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIdentityPlatformConfigSignInHashConfigRounds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIdentityPlatformConfigSignInHashConfigMemoryCost(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandIdentityPlatformConfigBlockingFunctions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
@@ -1203,13 +1129,6 @@ func expandIdentityPlatformConfigBlockingFunctionsTriggers(v interface{}, d tpgr
 			transformed["functionUri"] = transformedFunctionUri
 		}
 
-		transformedUpdateTime, err := expandIdentityPlatformConfigBlockingFunctionsTriggersUpdateTime(original["update_time"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedUpdateTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["updateTime"] = transformedUpdateTime
-		}
-
 		transformedEventType, err := tpgresource.ExpandString(original["event_type"], d, config)
 		if err != nil {
 			return nil, err
@@ -1220,10 +1139,6 @@ func expandIdentityPlatformConfigBlockingFunctionsTriggers(v interface{}, d tpgr
 }
 
 func expandIdentityPlatformConfigBlockingFunctionsTriggersFunctionUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIdentityPlatformConfigBlockingFunctionsTriggersUpdateTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

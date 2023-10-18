@@ -1999,13 +1999,6 @@ func expandComputeDiskSourceImageEncryptionKey(v interface{}, d tpgresource.Terr
 		transformed["rawKey"] = transformedRawKey
 	}
 
-	transformedSha256, err := expandComputeDiskSourceImageEncryptionKeySha256(original["sha256"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSha256); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["sha256"] = transformedSha256
-	}
-
 	transformedKmsKeySelfLink, err := expandComputeDiskSourceImageEncryptionKeyKmsKeySelfLink(original["kms_key_self_link"], d, config)
 	if err != nil {
 		return nil, err
@@ -2024,10 +2017,6 @@ func expandComputeDiskSourceImageEncryptionKey(v interface{}, d tpgresource.Terr
 }
 
 func expandComputeDiskSourceImageEncryptionKeyRawKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeDiskSourceImageEncryptionKeySha256(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2062,13 +2051,6 @@ func expandComputeDiskDiskEncryptionKey(v interface{}, d tpgresource.TerraformRe
 		transformed["rsaEncryptedKey"] = transformedRsaEncryptedKey
 	}
 
-	transformedSha256, err := expandComputeDiskDiskEncryptionKeySha256(original["sha256"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSha256); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["sha256"] = transformedSha256
-	}
-
 	transformedKmsKeySelfLink, err := expandComputeDiskDiskEncryptionKeyKmsKeySelfLink(original["kms_key_self_link"], d, config)
 	if err != nil {
 		return nil, err
@@ -2091,10 +2073,6 @@ func expandComputeDiskDiskEncryptionKeyRawKey(v interface{}, d tpgresource.Terra
 }
 
 func expandComputeDiskDiskEncryptionKeyRsaEncryptedKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeDiskDiskEncryptionKeySha256(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2137,13 +2115,6 @@ func expandComputeDiskSourceSnapshotEncryptionKey(v interface{}, d tpgresource.T
 		transformed["kmsKeyName"] = transformedKmsKeySelfLink
 	}
 
-	transformedSha256, err := expandComputeDiskSourceSnapshotEncryptionKeySha256(original["sha256"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSha256); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["sha256"] = transformedSha256
-	}
-
 	transformedKmsKeyServiceAccount, err := expandComputeDiskSourceSnapshotEncryptionKeyKmsKeyServiceAccount(original["kms_key_service_account"], d, config)
 	if err != nil {
 		return nil, err
@@ -2159,10 +2130,6 @@ func expandComputeDiskSourceSnapshotEncryptionKeyRawKey(v interface{}, d tpgreso
 }
 
 func expandComputeDiskSourceSnapshotEncryptionKeyKmsKeySelfLink(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeDiskSourceSnapshotEncryptionKeySha256(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

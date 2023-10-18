@@ -1364,25 +1364,11 @@ func expandDatastreamConnectionProfileMysqlProfileSslConfig(v interface{}, d tpg
 		transformed["clientKey"] = transformedClientKey
 	}
 
-	transformedClientKeySet, err := expandDatastreamConnectionProfileMysqlProfileSslConfigClientKeySet(original["client_key_set"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedClientKeySet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["clientKeySet"] = transformedClientKeySet
-	}
-
 	transformedClientCertificate, err := expandDatastreamConnectionProfileMysqlProfileSslConfigClientCertificate(original["client_certificate"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedClientCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["clientCertificate"] = transformedClientCertificate
-	}
-
-	transformedClientCertificateSet, err := expandDatastreamConnectionProfileMysqlProfileSslConfigClientCertificateSet(original["client_certificate_set"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedClientCertificateSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["clientCertificateSet"] = transformedClientCertificateSet
 	}
 
 	transformedCaCertificate, err := expandDatastreamConnectionProfileMysqlProfileSslConfigCaCertificate(original["ca_certificate"], d, config)
@@ -1392,13 +1378,6 @@ func expandDatastreamConnectionProfileMysqlProfileSslConfig(v interface{}, d tpg
 		transformed["caCertificate"] = transformedCaCertificate
 	}
 
-	transformedCaCertificateSet, err := expandDatastreamConnectionProfileMysqlProfileSslConfigCaCertificateSet(original["ca_certificate_set"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedCaCertificateSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["caCertificateSet"] = transformedCaCertificateSet
-	}
-
 	return transformed, nil
 }
 
@@ -1406,23 +1385,11 @@ func expandDatastreamConnectionProfileMysqlProfileSslConfigClientKey(v interface
 	return v, nil
 }
 
-func expandDatastreamConnectionProfileMysqlProfileSslConfigClientKeySet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandDatastreamConnectionProfileMysqlProfileSslConfigClientCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandDatastreamConnectionProfileMysqlProfileSslConfigClientCertificateSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandDatastreamConnectionProfileMysqlProfileSslConfigCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDatastreamConnectionProfileMysqlProfileSslConfigCaCertificateSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

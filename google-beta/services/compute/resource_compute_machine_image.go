@@ -466,13 +466,6 @@ func expandComputeMachineImageMachineImageEncryptionKey(v interface{}, d tpgreso
 		transformed["rawKey"] = transformedRawKey
 	}
 
-	transformedSha256, err := expandComputeMachineImageMachineImageEncryptionKeySha256(original["sha256"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSha256); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["sha256"] = transformedSha256
-	}
-
 	transformedKmsKeyName, err := expandComputeMachineImageMachineImageEncryptionKeyKmsKeyName(original["kms_key_name"], d, config)
 	if err != nil {
 		return nil, err
@@ -491,10 +484,6 @@ func expandComputeMachineImageMachineImageEncryptionKey(v interface{}, d tpgreso
 }
 
 func expandComputeMachineImageMachineImageEncryptionKeyRawKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeMachineImageMachineImageEncryptionKeySha256(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

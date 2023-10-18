@@ -1637,32 +1637,10 @@ func expandLookerInstanceEncryptionConfig(v interface{}, d tpgresource.Terraform
 		transformed["kmsKeyName"] = transformedKmsKeyName
 	}
 
-	transformedKmsKeyState, err := expandLookerInstanceEncryptionConfigKmsKeyState(original["kms_key_state"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedKmsKeyState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["kmsKeyState"] = transformedKmsKeyState
-	}
-
-	transformedKmsKeyNameVersion, err := expandLookerInstanceEncryptionConfigKmsKeyNameVersion(original["kms_key_name_version"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedKmsKeyNameVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["kmsKeyNameVersion"] = transformedKmsKeyNameVersion
-	}
-
 	return transformed, nil
 }
 
 func expandLookerInstanceEncryptionConfigKmsKeyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandLookerInstanceEncryptionConfigKmsKeyState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandLookerInstanceEncryptionConfigKmsKeyNameVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

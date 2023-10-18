@@ -696,13 +696,6 @@ func expandIdentityPlatformTenantInboundSamlConfigSpConfig(v interface{}, d tpgr
 		transformed["callbackUri"] = transformedCallbackUri
 	}
 
-	transformedSpCertificates, err := expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificates(original["sp_certificates"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSpCertificates); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["spCertificates"] = transformedSpCertificates
-	}
-
 	return transformed, nil
 }
 
@@ -711,31 +704,5 @@ func expandIdentityPlatformTenantInboundSamlConfigSpConfigSpEntityId(v interface
 }
 
 func expandIdentityPlatformTenantInboundSamlConfigSpConfigCallbackUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificates(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	req := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		if raw == nil {
-			continue
-		}
-		original := raw.(map[string]interface{})
-		transformed := make(map[string]interface{})
-
-		transformedX509Certificate, err := expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificatesX509Certificate(original["x509_certificate"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedX509Certificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["x509Certificate"] = transformedX509Certificate
-		}
-
-		req = append(req, transformed)
-	}
-	return req, nil
-}
-
-func expandIdentityPlatformTenantInboundSamlConfigSpConfigSpCertificatesX509Certificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

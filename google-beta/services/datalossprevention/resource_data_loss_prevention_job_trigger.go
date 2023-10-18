@@ -4695,21 +4695,10 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesSto
 		transformed["name"] = transformedName
 	}
 
-	transformedCreateTime, err := expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredTypeCreateTime(original["create_time"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedCreateTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["createTime"] = transformedCreateTime
-	}
-
 	return transformed, nil
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredTypeName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredTypeCreateTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

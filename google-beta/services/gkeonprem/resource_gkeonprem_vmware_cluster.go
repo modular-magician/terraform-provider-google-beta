@@ -2487,13 +2487,6 @@ func expandGkeonpremVmwareClusterControlPlaneNode(v interface{}, d tpgresource.T
 		transformed["autoResizeConfig"] = transformedAutoResizeConfig
 	}
 
-	transformedVsphereConfig, err := expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfig(original["vsphere_config"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedVsphereConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["vsphereConfig"] = transformedVsphereConfig
-	}
-
 	return transformed, nil
 }
 
@@ -2529,40 +2522,6 @@ func expandGkeonpremVmwareClusterControlPlaneNodeAutoResizeConfig(v interface{},
 }
 
 func expandGkeonpremVmwareClusterControlPlaneNodeAutoResizeConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedDatastore, err := expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfigDatastore(original["datastore"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedDatastore); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["datastore"] = transformedDatastore
-	}
-
-	transformedStoragePolicyName, err := expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfigStoragePolicyName(original["storage_policy_name"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedStoragePolicyName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["storagePolicyName"] = transformedStoragePolicyName
-	}
-
-	return transformed, nil
-}
-
-func expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfigDatastore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfigStoragePolicyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2647,13 +2606,6 @@ func expandGkeonpremVmwareClusterNetworkConfig(v interface{}, d tpgresource.Terr
 		return nil, err
 	} else if val := reflect.ValueOf(transformedDhcpIpConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["dhcpIpConfig"] = transformedDhcpIpConfig
-	}
-
-	transformedVcenterNetwork, err := expandGkeonpremVmwareClusterNetworkConfigVcenterNetwork(original["vcenter_network"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedVcenterNetwork); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["vcenterNetwork"] = transformedVcenterNetwork
 	}
 
 	transformedHostConfig, err := expandGkeonpremVmwareClusterNetworkConfigHostConfig(original["host_config"], d, config)
@@ -2801,10 +2753,6 @@ func expandGkeonpremVmwareClusterNetworkConfigDhcpIpConfig(v interface{}, d tpgr
 }
 
 func expandGkeonpremVmwareClusterNetworkConfigDhcpIpConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandGkeonpremVmwareClusterNetworkConfigVcenterNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -3398,13 +3346,6 @@ func expandGkeonpremVmwareClusterVcenter(v interface{}, d tpgresource.TerraformR
 		transformed["caCertData"] = transformedCaCertData
 	}
 
-	transformedAddress, err := expandGkeonpremVmwareClusterVcenterAddress(original["address"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedAddress); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["address"] = transformedAddress
-	}
-
 	transformedStoragePolicyName, err := expandGkeonpremVmwareClusterVcenterStoragePolicyName(original["storage_policy_name"], d, config)
 	if err != nil {
 		return nil, err
@@ -3436,10 +3377,6 @@ func expandGkeonpremVmwareClusterVcenterFolder(v interface{}, d tpgresource.Terr
 }
 
 func expandGkeonpremVmwareClusterVcenterCaCertData(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandGkeonpremVmwareClusterVcenterAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

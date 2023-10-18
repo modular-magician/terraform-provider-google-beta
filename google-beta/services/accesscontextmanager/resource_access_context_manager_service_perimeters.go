@@ -1820,20 +1820,6 @@ func expandAccessContextManagerServicePerimetersServicePerimeters(v interface{},
 			transformed["description"] = transformedDescription
 		}
 
-		transformedCreateTime, err := expandAccessContextManagerServicePerimetersServicePerimetersCreateTime(original["create_time"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedCreateTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["createTime"] = transformedCreateTime
-		}
-
-		transformedUpdateTime, err := expandAccessContextManagerServicePerimetersServicePerimetersUpdateTime(original["update_time"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedUpdateTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["updateTime"] = transformedUpdateTime
-		}
-
 		transformedPerimeterType, err := expandAccessContextManagerServicePerimetersServicePerimetersPerimeterType(original["perimeter_type"], d, config)
 		if err != nil {
 			return nil, err
@@ -1876,14 +1862,6 @@ func expandAccessContextManagerServicePerimetersServicePerimetersTitle(v interfa
 }
 
 func expandAccessContextManagerServicePerimetersServicePerimetersDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAccessContextManagerServicePerimetersServicePerimetersCreateTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandAccessContextManagerServicePerimetersServicePerimetersUpdateTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -1042,21 +1042,10 @@ func expandIAMWorkforcePoolWorkforcePoolProviderOidcClientSecretValue(v interfac
 		transformed["plainText"] = transformedPlainText
 	}
 
-	transformedThumbprint, err := expandIAMWorkforcePoolWorkforcePoolProviderOidcClientSecretValueThumbprint(original["thumbprint"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedThumbprint); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["thumbprint"] = transformedThumbprint
-	}
-
 	return transformed, nil
 }
 
 func expandIAMWorkforcePoolWorkforcePoolProviderOidcClientSecretValuePlainText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIAMWorkforcePoolWorkforcePoolProviderOidcClientSecretValueThumbprint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

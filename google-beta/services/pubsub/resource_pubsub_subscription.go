@@ -1479,13 +1479,6 @@ func expandPubsubSubscriptionCloudStorageConfig(v interface{}, d tpgresource.Ter
 		transformed["maxBytes"] = transformedMaxBytes
 	}
 
-	transformedState, err := expandPubsubSubscriptionCloudStorageConfigState(original["state"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["state"] = transformedState
-	}
-
 	transformedAvroConfig, err := expandPubsubSubscriptionCloudStorageConfigAvroConfig(original["avro_config"], d, config)
 	if err != nil {
 		return nil, err
@@ -1513,10 +1506,6 @@ func expandPubsubSubscriptionCloudStorageConfigMaxDuration(v interface{}, d tpgr
 }
 
 func expandPubsubSubscriptionCloudStorageConfigMaxBytes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandPubsubSubscriptionCloudStorageConfigState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

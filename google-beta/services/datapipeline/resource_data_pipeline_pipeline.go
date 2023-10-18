@@ -2121,13 +2121,6 @@ func expandDataPipelinePipelineScheduleInfo(v interface{}, d tpgresource.Terrafo
 		transformed["timeZone"] = transformedTimeZone
 	}
 
-	transformedNextJobTime, err := expandDataPipelinePipelineScheduleInfoNextJobTime(original["next_job_time"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedNextJobTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["nextJobTime"] = transformedNextJobTime
-	}
-
 	return transformed, nil
 }
 
@@ -2136,10 +2129,6 @@ func expandDataPipelinePipelineScheduleInfoSchedule(v interface{}, d tpgresource
 }
 
 func expandDataPipelinePipelineScheduleInfoTimeZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDataPipelinePipelineScheduleInfoNextJobTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

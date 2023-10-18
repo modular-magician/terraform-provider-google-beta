@@ -3700,13 +3700,6 @@ func expandCloudBuildTriggerPubsubConfig(v interface{}, d tpgresource.TerraformR
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedSubscription, err := expandCloudBuildTriggerPubsubConfigSubscription(original["subscription"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSubscription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["subscription"] = transformedSubscription
-	}
-
 	transformedTopic, err := expandCloudBuildTriggerPubsubConfigTopic(original["topic"], d, config)
 	if err != nil {
 		return nil, err
@@ -3721,18 +3714,7 @@ func expandCloudBuildTriggerPubsubConfig(v interface{}, d tpgresource.TerraformR
 		transformed["service_account_email"] = transformedServiceAccountEmail
 	}
 
-	transformedState, err := expandCloudBuildTriggerPubsubConfigState(original["state"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["state"] = transformedState
-	}
-
 	return transformed, nil
-}
-
-func expandCloudBuildTriggerPubsubConfigSubscription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandCloudBuildTriggerPubsubConfigTopic(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -3740,10 +3722,6 @@ func expandCloudBuildTriggerPubsubConfigTopic(v interface{}, d tpgresource.Terra
 }
 
 func expandCloudBuildTriggerPubsubConfigServiceAccountEmail(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudBuildTriggerPubsubConfigState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -3763,21 +3741,10 @@ func expandCloudBuildTriggerWebhookConfig(v interface{}, d tpgresource.Terraform
 		transformed["secret"] = transformedSecret
 	}
 
-	transformedState, err := expandCloudBuildTriggerWebhookConfigState(original["state"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["state"] = transformedState
-	}
-
 	return transformed, nil
 }
 
 func expandCloudBuildTriggerWebhookConfigSecret(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudBuildTriggerWebhookConfigState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -4464,13 +4431,6 @@ func expandCloudBuildTriggerBuildArtifactsObjects(v interface{}, d tpgresource.T
 		transformed["paths"] = transformedPaths
 	}
 
-	transformedTiming, err := expandCloudBuildTriggerBuildArtifactsObjectsTiming(original["timing"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedTiming); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["timing"] = transformedTiming
-	}
-
 	return transformed, nil
 }
 
@@ -4479,40 +4439,6 @@ func expandCloudBuildTriggerBuildArtifactsObjectsLocation(v interface{}, d tpgre
 }
 
 func expandCloudBuildTriggerBuildArtifactsObjectsPaths(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudBuildTriggerBuildArtifactsObjectsTiming(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedStartTime, err := expandCloudBuildTriggerBuildArtifactsObjectsTimingStartTime(original["start_time"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedStartTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["startTime"] = transformedStartTime
-	}
-
-	transformedEndTime, err := expandCloudBuildTriggerBuildArtifactsObjectsTimingEndTime(original["end_time"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedEndTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["endTime"] = transformedEndTime
-	}
-
-	return transformed, nil
-}
-
-func expandCloudBuildTriggerBuildArtifactsObjectsTimingStartTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudBuildTriggerBuildArtifactsObjectsTimingEndTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

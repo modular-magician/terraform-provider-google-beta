@@ -788,13 +788,6 @@ func expandDataCatalogTagTemplateFields(v interface{}, d tpgresource.TerraformRe
 		original := raw.(map[string]interface{})
 		transformed := make(map[string]interface{})
 
-		transformedName, err := expandDataCatalogTagTemplateFieldsName(original["name"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["name"] = transformedName
-		}
-
 		transformedDisplayName, err := expandDataCatalogTagTemplateFieldsDisplayName(original["display_name"], d, config)
 		if err != nil {
 			return nil, err
@@ -837,10 +830,6 @@ func expandDataCatalogTagTemplateFields(v interface{}, d tpgresource.TerraformRe
 		m[transformedFieldId] = transformed
 	}
 	return m, nil
-}
-
-func expandDataCatalogTagTemplateFieldsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandDataCatalogTagTemplateFieldsDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

@@ -926,13 +926,6 @@ func expandBigqueryConnectionConnectionCloudSql(v interface{}, d tpgresource.Ter
 		transformed["type"] = transformedType
 	}
 
-	transformedServiceAccountId, err := expandBigqueryConnectionConnectionCloudSqlServiceAccountId(original["service_account_id"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedServiceAccountId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["serviceAccountId"] = transformedServiceAccountId
-	}
-
 	return transformed, nil
 }
 
@@ -982,10 +975,6 @@ func expandBigqueryConnectionConnectionCloudSqlType(v interface{}, d tpgresource
 	return v, nil
 }
 
-func expandBigqueryConnectionConnectionCloudSqlServiceAccountId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
 func expandBigqueryConnectionConnectionAws(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
@@ -1021,21 +1010,10 @@ func expandBigqueryConnectionConnectionAwsAccessRole(v interface{}, d tpgresourc
 		transformed["iamRoleId"] = transformedIamRoleId
 	}
 
-	transformedIdentity, err := expandBigqueryConnectionConnectionAwsAccessRoleIdentity(original["identity"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedIdentity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["identity"] = transformedIdentity
-	}
-
 	return transformed, nil
 }
 
 func expandBigqueryConnectionConnectionAwsAccessRoleIamRoleId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandBigqueryConnectionConnectionAwsAccessRoleIdentity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1047,27 +1025,6 @@ func expandBigqueryConnectionConnectionAzure(v interface{}, d tpgresource.Terraf
 	raw := l[0]
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
-
-	transformedApplication, err := expandBigqueryConnectionConnectionAzureApplication(original["application"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedApplication); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["application"] = transformedApplication
-	}
-
-	transformedClientId, err := expandBigqueryConnectionConnectionAzureClientId(original["client_id"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedClientId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["clientId"] = transformedClientId
-	}
-
-	transformedObjectId, err := expandBigqueryConnectionConnectionAzureObjectId(original["object_id"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedObjectId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["objectId"] = transformedObjectId
-	}
 
 	transformedCustomerTenantId, err := expandBigqueryConnectionConnectionAzureCustomerTenantId(original["customer_tenant_id"], d, config)
 	if err != nil {
@@ -1083,33 +1040,7 @@ func expandBigqueryConnectionConnectionAzure(v interface{}, d tpgresource.Terraf
 		transformed["federatedApplicationClientId"] = transformedFederatedApplicationClientId
 	}
 
-	transformedRedirectUri, err := expandBigqueryConnectionConnectionAzureRedirectUri(original["redirect_uri"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedRedirectUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["redirectUri"] = transformedRedirectUri
-	}
-
-	transformedIdentity, err := expandBigqueryConnectionConnectionAzureIdentity(original["identity"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedIdentity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["identity"] = transformedIdentity
-	}
-
 	return transformed, nil
-}
-
-func expandBigqueryConnectionConnectionAzureApplication(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandBigqueryConnectionConnectionAzureClientId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandBigqueryConnectionConnectionAzureObjectId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandBigqueryConnectionConnectionAzureCustomerTenantId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -1117,14 +1048,6 @@ func expandBigqueryConnectionConnectionAzureCustomerTenantId(v interface{}, d tp
 }
 
 func expandBigqueryConnectionConnectionAzureFederatedApplicationClientId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandBigqueryConnectionConnectionAzureRedirectUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandBigqueryConnectionConnectionAzureIdentity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1178,22 +1101,9 @@ func expandBigqueryConnectionConnectionCloudResource(v interface{}, d tpgresourc
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
 	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedServiceAccountId, err := expandBigqueryConnectionConnectionCloudResourceServiceAccountId(original["service_account_id"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedServiceAccountId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["serviceAccountId"] = transformedServiceAccountId
-	}
-
 	return transformed, nil
-}
-
-func expandBigqueryConnectionConnectionCloudResourceServiceAccountId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func resourceBigqueryConnectionConnectionEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {

@@ -563,13 +563,6 @@ func expandComputeNodeTemplateNodeTypeFlexibility(v interface{}, d tpgresource.T
 		transformed["memory"] = transformedMemory
 	}
 
-	transformedLocalSsd, err := expandComputeNodeTemplateNodeTypeFlexibilityLocalSsd(original["local_ssd"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedLocalSsd); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["localSsd"] = transformedLocalSsd
-	}
-
 	return transformed, nil
 }
 
@@ -578,10 +571,6 @@ func expandComputeNodeTemplateNodeTypeFlexibilityCpus(v interface{}, d tpgresour
 }
 
 func expandComputeNodeTemplateNodeTypeFlexibilityMemory(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeNodeTemplateNodeTypeFlexibilityLocalSsd(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

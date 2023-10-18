@@ -622,13 +622,6 @@ func expandIdentityPlatformProjectDefaultConfigSignIn(v interface{}, d tpgresour
 		transformed["allowDuplicateEmails"] = transformedAllowDuplicateEmails
 	}
 
-	transformedHashConfig, err := expandIdentityPlatformProjectDefaultConfigSignInHashConfig(original["hash_config"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedHashConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["hashConfig"] = transformedHashConfig
-	}
-
 	return transformed, nil
 }
 
@@ -731,72 +724,5 @@ func expandIdentityPlatformProjectDefaultConfigSignInAnonymousEnabled(v interfac
 }
 
 func expandIdentityPlatformProjectDefaultConfigSignInAllowDuplicateEmails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIdentityPlatformProjectDefaultConfigSignInHashConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedAlgorithm, err := expandIdentityPlatformProjectDefaultConfigSignInHashConfigAlgorithm(original["algorithm"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedAlgorithm); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["algorithm"] = transformedAlgorithm
-	}
-
-	transformedSignerKey, err := expandIdentityPlatformProjectDefaultConfigSignInHashConfigSignerKey(original["signer_key"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSignerKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["signerKey"] = transformedSignerKey
-	}
-
-	transformedSaltSeparator, err := expandIdentityPlatformProjectDefaultConfigSignInHashConfigSaltSeparator(original["salt_separator"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSaltSeparator); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["saltSeparator"] = transformedSaltSeparator
-	}
-
-	transformedRounds, err := expandIdentityPlatformProjectDefaultConfigSignInHashConfigRounds(original["rounds"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedRounds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["rounds"] = transformedRounds
-	}
-
-	transformedMemoryCost, err := expandIdentityPlatformProjectDefaultConfigSignInHashConfigMemoryCost(original["memory_cost"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedMemoryCost); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["memoryCost"] = transformedMemoryCost
-	}
-
-	return transformed, nil
-}
-
-func expandIdentityPlatformProjectDefaultConfigSignInHashConfigAlgorithm(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIdentityPlatformProjectDefaultConfigSignInHashConfigSignerKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIdentityPlatformProjectDefaultConfigSignInHashConfigSaltSeparator(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIdentityPlatformProjectDefaultConfigSignInHashConfigRounds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIdentityPlatformProjectDefaultConfigSignInHashConfigMemoryCost(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

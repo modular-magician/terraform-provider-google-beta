@@ -546,13 +546,6 @@ func expandApigeeEnvironmentNodeConfig(v interface{}, d tpgresource.TerraformRes
 		transformed["maxNodeCount"] = transformedMaxNodeCount
 	}
 
-	transformedCurrentAggregateNodeCount, err := expandApigeeEnvironmentNodeConfigCurrentAggregateNodeCount(original["current_aggregate_node_count"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedCurrentAggregateNodeCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["currentAggregateNodeCount"] = transformedCurrentAggregateNodeCount
-	}
-
 	return transformed, nil
 }
 
@@ -561,9 +554,5 @@ func expandApigeeEnvironmentNodeConfigMinNodeCount(v interface{}, d tpgresource.
 }
 
 func expandApigeeEnvironmentNodeConfigMaxNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandApigeeEnvironmentNodeConfigCurrentAggregateNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

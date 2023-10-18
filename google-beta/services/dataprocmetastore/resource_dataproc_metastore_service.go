@@ -1552,13 +1552,6 @@ func expandDataprocMetastoreServiceNetworkConfigConsumers(v interface{}, d tpgre
 		original := raw.(map[string]interface{})
 		transformed := make(map[string]interface{})
 
-		transformedEndpointUri, err := expandDataprocMetastoreServiceNetworkConfigConsumersEndpointUri(original["endpoint_uri"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedEndpointUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["endpointUri"] = transformedEndpointUri
-		}
-
 		transformedSubnetwork, err := expandDataprocMetastoreServiceNetworkConfigConsumersSubnetwork(original["subnetwork"], d, config)
 		if err != nil {
 			return nil, err
@@ -1569,10 +1562,6 @@ func expandDataprocMetastoreServiceNetworkConfigConsumers(v interface{}, d tpgre
 		req = append(req, transformed)
 	}
 	return req, nil
-}
-
-func expandDataprocMetastoreServiceNetworkConfigConsumersEndpointUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandDataprocMetastoreServiceNetworkConfigConsumersSubnetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

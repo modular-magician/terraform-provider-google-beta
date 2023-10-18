@@ -880,34 +880,6 @@ func expandCloudRunDomainMappingMetadata(v interface{}, d tpgresource.TerraformR
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedGeneration, err := expandCloudRunDomainMappingMetadataGeneration(original["generation"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedGeneration); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["generation"] = transformedGeneration
-	}
-
-	transformedResourceVersion, err := expandCloudRunDomainMappingMetadataResourceVersion(original["resource_version"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedResourceVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["resourceVersion"] = transformedResourceVersion
-	}
-
-	transformedSelfLink, err := expandCloudRunDomainMappingMetadataSelfLink(original["self_link"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSelfLink); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["selfLink"] = transformedSelfLink
-	}
-
-	transformedUid, err := expandCloudRunDomainMappingMetadataUid(original["uid"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedUid); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["uid"] = transformedUid
-	}
-
 	transformedNamespace, err := expandCloudRunDomainMappingMetadataNamespace(original["namespace"], d, config)
 	if err != nil {
 		return nil, err
@@ -930,22 +902,6 @@ func expandCloudRunDomainMappingMetadata(v interface{}, d tpgresource.TerraformR
 	}
 
 	return transformed, nil
-}
-
-func expandCloudRunDomainMappingMetadataGeneration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudRunDomainMappingMetadataResourceVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudRunDomainMappingMetadataSelfLink(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandCloudRunDomainMappingMetadataUid(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandCloudRunDomainMappingMetadataNamespace(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

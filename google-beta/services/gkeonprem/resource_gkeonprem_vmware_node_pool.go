@@ -1169,13 +1169,6 @@ func expandGkeonpremVmwareNodePoolConfig(v interface{}, d tpgresource.TerraformR
 		transformed["labels"] = transformedLabels
 	}
 
-	transformedVsphereConfig, err := expandGkeonpremVmwareNodePoolConfigVsphereConfig(original["vsphere_config"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedVsphereConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["vsphereConfig"] = transformedVsphereConfig
-	}
-
 	transformedEnableLoadBalancer, err := expandGkeonpremVmwareNodePoolConfigEnableLoadBalancer(original["enable_load_balancer"], d, config)
 	if err != nil {
 		return nil, err
@@ -1267,73 +1260,6 @@ func expandGkeonpremVmwareNodePoolConfigLabels(v interface{}, d tpgresource.Terr
 		m[k] = val.(string)
 	}
 	return m, nil
-}
-
-func expandGkeonpremVmwareNodePoolConfigVsphereConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedDatastore, err := expandGkeonpremVmwareNodePoolConfigVsphereConfigDatastore(original["datastore"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedDatastore); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["datastore"] = transformedDatastore
-	}
-
-	transformedTags, err := expandGkeonpremVmwareNodePoolConfigVsphereConfigTags(original["tags"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedTags); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["tags"] = transformedTags
-	}
-
-	return transformed, nil
-}
-
-func expandGkeonpremVmwareNodePoolConfigVsphereConfigDatastore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandGkeonpremVmwareNodePoolConfigVsphereConfigTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	req := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		if raw == nil {
-			continue
-		}
-		original := raw.(map[string]interface{})
-		transformed := make(map[string]interface{})
-
-		transformedCategory, err := expandGkeonpremVmwareNodePoolConfigVsphereConfigTagsCategory(original["category"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedCategory); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["category"] = transformedCategory
-		}
-
-		transformedTag, err := expandGkeonpremVmwareNodePoolConfigVsphereConfigTagsTag(original["tag"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedTag); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["tag"] = transformedTag
-		}
-
-		req = append(req, transformed)
-	}
-	return req, nil
-}
-
-func expandGkeonpremVmwareNodePoolConfigVsphereConfigTagsCategory(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandGkeonpremVmwareNodePoolConfigVsphereConfigTagsTag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandGkeonpremVmwareNodePoolConfigEnableLoadBalancer(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

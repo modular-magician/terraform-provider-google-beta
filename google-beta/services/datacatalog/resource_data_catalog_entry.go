@@ -884,53 +884,9 @@ func expandDataCatalogEntryGcsFilesetSpec(v interface{}, d tpgresource.Terraform
 		transformed["filePatterns"] = transformedFilePatterns
 	}
 
-	transformedSampleGcsFileSpecs, err := expandDataCatalogEntryGcsFilesetSpecSampleGcsFileSpecs(original["sample_gcs_file_specs"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSampleGcsFileSpecs); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["sampleGcsFileSpecs"] = transformedSampleGcsFileSpecs
-	}
-
 	return transformed, nil
 }
 
 func expandDataCatalogEntryGcsFilesetSpecFilePatterns(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDataCatalogEntryGcsFilesetSpecSampleGcsFileSpecs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	req := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		if raw == nil {
-			continue
-		}
-		original := raw.(map[string]interface{})
-		transformed := make(map[string]interface{})
-
-		transformedFilePath, err := expandDataCatalogEntryGcsFilesetSpecSampleGcsFileSpecsFilePath(original["file_path"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedFilePath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["filePath"] = transformedFilePath
-		}
-
-		transformedSizeBytes, err := expandDataCatalogEntryGcsFilesetSpecSampleGcsFileSpecsSizeBytes(original["size_bytes"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedSizeBytes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["sizeBytes"] = transformedSizeBytes
-		}
-
-		req = append(req, transformed)
-	}
-	return req, nil
-}
-
-func expandDataCatalogEntryGcsFilesetSpecSampleGcsFileSpecsFilePath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandDataCatalogEntryGcsFilesetSpecSampleGcsFileSpecsSizeBytes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
