@@ -53,10 +53,19 @@ func ResourceTagsTagBinding() *schema.Resource {
 				Description: `The full resource name of the resource the TagValue is bound to. E.g. //cloudresourcemanager.googleapis.com/projects/123`,
 			},
 			"tag_value": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `The TagValue of the TagBinding. Must be of the form tagValues/456.`,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Description:  `The TagValue of the TagBinding. Must be of the form tagValues/456.`,
+				ExactlyOneOf: []string{"tag_value_namespaced_name", "tag_value"},
+			},
+			"tag_value_namespaced_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `The namespaced name for the TagValue of the TagBinding. Must be in the format {parent_id}/{tag_key_short_name}/{shortName}.
+For methods that support TagValue namespaced name, only one of tagValueNamespacedName or tagValue may be filled. Requests with both fields will be rejected.`,
+				ExactlyOneOf: []string{"tag_value_namespaced_name", "tag_value"},
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -81,6 +90,12 @@ func resourceTagsTagBindingCreate(d *schema.ResourceData, meta interface{}) erro
 		return err
 	} else if v, ok := d.GetOkExists("parent"); !tpgresource.IsEmptyValue(reflect.ValueOf(parentProp)) && (ok || !reflect.DeepEqual(v, parentProp)) {
 		obj["parent"] = parentProp
+	}
+	tagValueNamespacedNameProp, err := expandNestedTagsTagBindingTagValueNamespacedName(d.Get("tag_value_namespaced_name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tag_value_namespaced_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(tagValueNamespacedNameProp)) && (ok || !reflect.DeepEqual(v, tagValueNamespacedNameProp)) {
+		obj["tagValueNamespacedName"] = tagValueNamespacedNameProp
 	}
 	tagValueProp, err := expandNestedTagsTagBindingTagValue(d.Get("tag_value"), d, config)
 	if err != nil {
@@ -216,6 +231,9 @@ func resourceTagsTagBindingRead(d *schema.ResourceData, meta interface{}) error 
 	if err := d.Set("parent", flattenNestedTagsTagBindingParent(res["parent"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagBinding: %s", err)
 	}
+	if err := d.Set("tag_value_namespaced_name", flattenNestedTagsTagBindingTagValueNamespacedName(res["tagValueNamespacedName"], d, config)); err != nil {
+		return fmt.Errorf("Error reading TagBinding: %s", err)
+	}
 	if err := d.Set("tag_value", flattenNestedTagsTagBindingTagValue(res["tagValue"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagBinding: %s", err)
 	}
@@ -314,11 +332,19 @@ func flattenNestedTagsTagBindingParent(v interface{}, d *schema.ResourceData, co
 	return v
 }
 
+func flattenNestedTagsTagBindingTagValueNamespacedName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenNestedTagsTagBindingTagValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
 func expandNestedTagsTagBindingParent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNestedTagsTagBindingTagValueNamespacedName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
