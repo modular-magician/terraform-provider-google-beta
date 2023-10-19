@@ -858,7 +858,7 @@ func TestAccComputeInstanceTemplate_withScratchDisk(t *testing.T) {
 	})
 }
 
-func TestAccComputeInstanceTemplate_with18TbScratchDisk(t *testing.T) {
+func TestAccComputeInstanceTemplate_with24TbScratchDisk(t *testing.T) {
 	t.Parallel()
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -866,7 +866,7 @@ func TestAccComputeInstanceTemplate_with18TbScratchDisk(t *testing.T) {
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccComputeInstanceTemplate_with18TbScratchDisk(acctest.RandString(t, 10)),
+				Config: testAccComputeInstanceTemplate_with24TbScratchDisk(acctest.RandString(t, 10)),
 			},
 			{
 				ResourceName:            "google_compute_instance_template.foobar",
@@ -2102,7 +2102,7 @@ data "google_compute_image" "my_image" {
 }
 resource "google_compute_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
-  machine_type   = "n1-standard-1"   // can't be e2 because of local-ssd
+  machine_type   = "n2-standard-2"
   can_ip_forward = false
   disk {
     source_image = data.google_compute_image.my_image.name
@@ -2129,7 +2129,7 @@ resource "google_compute_instance_template" "foobar" {
 `, suffix)
 }
 
-func testAccComputeInstanceTemplate_with18TbScratchDisk(suffix string) string {
+func testAccComputeInstanceTemplate_with24TbScratchDisk(suffix string) string {
 	return fmt.Sprintf(`
 data "google_compute_image" "my_image" {
 	family  = "centos-7"
@@ -2138,12 +2138,26 @@ data "google_compute_image" "my_image" {
 
 resource "google_compute_instance_template" "foobar" {
   name           = "tf-test-instance-template-%s"
-  machine_type   = "n2-standard-16"
+  machine_type   = "n2-standard-2"
   can_ip_forward = false
   disk {
     source_image = data.google_compute_image.my_image.name
     auto_delete  = true
     boot         = true
+  }
+  disk {
+    auto_delete  = true
+    disk_size_gb = 3000
+    type         = "SCRATCH"
+    disk_type    = "local-ssd"
+    interface    = "NVME"
+  }
+  disk {
+    auto_delete  = true
+    disk_size_gb = 3000
+    type         = "SCRATCH"
+    disk_type    = "local-ssd"
+    interface    = "NVME"
   }
   disk {
     auto_delete  = true
