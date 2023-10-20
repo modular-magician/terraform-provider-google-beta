@@ -35,7 +35,6 @@ func ResourceComputeAttachedDisk() *schema.Resource {
 
 		CustomizeDiff: customdiff.All(
 			tpgresource.DefaultProviderProject,
-			tpgresource.DefaultProviderZone,
 		),
 
 		Schema: map[string]*schema.Schema{
