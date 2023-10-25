@@ -51,6 +51,47 @@ resource "google_firebaserules_ruleset" "firestore" {
 }
 
 ```
+## Example Usage - firestore_secondary_release
+Creates a Firebase Rules Release for a non-default Firestore database
+```hcl
+resource "google_firebaserules_release" "primary" {
+  provider     = google-beta
+  name         = "cloud.firestore/${google_firestore_database.secondary.name}"
+  ruleset_name = "projects/my-project-name/rulesets/${google_firebaserules_ruleset.firestore.name}"
+  project      = "my-project-name"
+
+  lifecycle {
+    replace_triggered_by = [
+      google_firebaserules_ruleset.firestore
+    ]
+  }
+}
+
+# Provision a non-default Firestore database.
+resource "google_firestore_database" "secondary" {
+  project     = "my-project-name"
+  name        = "{{database}"
+  location_id = "us-west1"
+  type        = "FIRESTORE_NATIVE"
+}
+
+# Create a ruleset of Firebase Security Rules from a local file.
+resource "google_firebaserules_ruleset" "firestore" {
+  provider = google-beta
+  project  = "my-project-name"
+  source {
+    files {
+      name    = "firestore.rules"
+      content = "service cloud.firestore {match /databases/{database}/documents { match /{document=**} { allow read, write: if false; } } }"
+    }
+  }
+
+  depends_on = [
+    google_firestore_database.secondary
+  ]
+}
+
+```
 ## Example Usage - storage_release
 Creates a Firebase Rules Release for a Storage bucket
 ```hcl

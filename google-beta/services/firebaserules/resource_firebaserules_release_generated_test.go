@@ -57,6 +57,32 @@ func TestAccFirebaserulesRelease_FirestoreReleaseHandWritten(t *testing.T) {
 		},
 	})
 }
+func TestAccFirebaserulesRelease_FirestoreSecondaryReleaseHandWritten(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"project_name":  envvar.GetTestProjectFromEnv(),
+		"region":        envvar.GetTestRegionFromEnv(),
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck: func() { acctest.AccTestPreCheck(t) },
+
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckFirebaserulesReleaseDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFirebaserulesRelease_FirestoreSecondaryReleaseHandWritten(context),
+			},
+			{
+				ResourceName:      "google_firebaserules_release.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
 func TestAccFirebaserulesRelease_StorageReleaseHandWritten(t *testing.T) {
 	t.Parallel()
 
@@ -107,6 +133,48 @@ resource "google_firebaserules_ruleset" "firestore" {
   }
 
   project = "%{project_name}"
+}
+
+`, context)
+}
+
+func testAccFirebaserulesRelease_FirestoreSecondaryReleaseHandWritten(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_firebaserules_release" "primary" {
+  provider     = google-beta
+  name         = "cloud.firestore/${google_firestore_database.secondary.name}"
+  ruleset_name = "projects/%{project_name}/rulesets/${google_firebaserules_ruleset.firestore.name}"
+  project      = "%{project_name}"
+
+  lifecycle {
+    replace_triggered_by = [
+      google_firebaserules_ruleset.firestore
+    ]
+  }
+}
+
+# Provision a non-default Firestore database.
+resource "google_firestore_database" "secondary" {
+  project     = "%{project_name}"
+  name        = "{{database}"
+  location_id = "%{region}"
+  type        = "FIRESTORE_NATIVE"
+}
+
+# Create a ruleset of Firebase Security Rules from a local file.
+resource "google_firebaserules_ruleset" "firestore" {
+  provider = google-beta
+  project  = "%{project_name}"
+  source {
+    files {
+      name    = "firestore.rules"
+      content = "service cloud.firestore {match /databases/{database}/documents { match /{document=**} { allow read, write: if false; } } }"
+    }
+  }
+
+  depends_on = [
+    google_firestore_database.secondary
+  ]
 }
 
 `, context)
