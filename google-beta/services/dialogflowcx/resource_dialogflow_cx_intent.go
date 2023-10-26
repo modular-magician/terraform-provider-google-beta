@@ -71,7 +71,8 @@ func ResourceDialogflowCXIntent() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Description: `Indicates whether this is a fallback intent. Currently only default fallback intent is allowed in the agent, which is added upon agent creation.
-Adding training phrases to fallback intent is useful in the case of requests that are mistakenly matched, since training phrases assigned to fallback intents act as negative examples that triggers no-match event.`,
+Adding training phrases to fallback intent is useful in the case of requests that are mistakenly matched, since training phrases assigned to fallback intents act as negative examples that triggers no-match event.
+To manage the fallback intent, set 'name = "00000000-0000-0000-0000-000000000001"'.`,
 			},
 			"labels": {
 				Type:     schema.TypeMap,
@@ -92,6 +93,16 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				Description: `The language of the following fields in intent:
 Intent.training_phrases.parts.text
 If not specified, the agent's default language is used. Many languages are supported. Note: languages must be enabled in the agent before they can be used.`,
+			},
+			"name": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional: true,
+				ForceNew: true,
+				Description: `The unique identifier of the intent. You should not be setting it most of the time.
+Setting it to the special value '00000000-0000-0000-0000-000000000000' marks this resource as the [Default Welcome Intent](https://cloud.google.com/dialogflow/cx/docs/concept/intent#welcome). When you create an agent, a Default Welcome Intent is created automatically. The Default Welcome Intent cannot be deleted; deleting the corresponding 'google_dialogflow_cx_intent' resource does nothing to the underlying GCP resources.
+Setting it to the special value '00000000-0000-0000-0000-000000000001' marks this resource as the [Default Negative Intent](https://cloud.google.com/dialogflow/cx/docs/concept/intent#negative). When you create an agent, a Default Negative Intent is created automatically. The Default Negative Intent cannot be deleted; deleting the corresponding 'google_dialogflow_cx_intent' resource does nothing to the underlying GCP resources.
+Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/intents/<Intent ID>.`,
 			},
 			"parameters": {
 				Type:        schema.TypeList,
@@ -188,12 +199,6 @@ Part.text is set to a part of the phrase that you want to annotate, and the para
 				Description: `All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.`,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
-			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Description: `The unique identifier of the intent.
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/intents/<Intent ID>.`,
-			},
 			"terraform_labels": {
 				Type:     schema.TypeMap,
 				Computed: true,
@@ -214,6 +219,12 @@ func resourceDialogflowCXIntentCreate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	obj := make(map[string]interface{})
+	nameProp, err := expandDialogflowCXIntentName(d.Get("name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+		obj["name"] = nameProp
+	}
 	displayNameProp, err := expandDialogflowCXIntentDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
@@ -290,6 +301,21 @@ func resourceDialogflowCXIntentCreate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
+
+	// if the user's set a name (e.g. for a default object) "Update" instead of "Create"
+	objName, _ := d.Get("name").(string)
+	if objName != "" {
+		// Store the ID
+		id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/intents/{{name}}")
+		if err != nil {
+			return fmt.Errorf("Error constructing id: %s", err)
+		}
+		d.SetId(id)
+
+		// and defer to the Update method:
+		log.Printf("[DEBUG] Updating default DialogflowCXIntent")
+		return resourceDialogflowCXIntentUpdate(d, meta)
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -302,12 +328,21 @@ func resourceDialogflowCXIntentCreate(d *schema.ResourceData, meta interface{}) 
 	if err != nil {
 		return fmt.Errorf("Error creating Intent: %s", err)
 	}
+
+	// Store the ID now
+	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/intents/{{name}}")
+	if err != nil {
+		return fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
+
+	// "name" is not output-only so the code to set it doesn't get generated; do it ourselves:
 	if err := d.Set("name", flattenDialogflowCXIntentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
 	}
 
-	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/intents/{{name}}")
+	// Re-store the ID now
+	id, err = tpgresource.ReplaceVars(d, config, "{{parent}}/intents/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -567,6 +602,14 @@ func resourceDialogflowCXIntentDelete(d *schema.ResourceData, meta interface{}) 
 	}
 
 	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
+
+	// if it's a default object Dialogflow creates for you, skip deletion
+	objName, _ := d.Get("name").(string)
+	if objName == "00000000-0000-0000-0000-000000000000" || objName == "00000000-0000-0000-0000-000000000001" {
+		// we can't delete these resources so do nothing
+		log.Printf("[DEBUG] Not deleting default DialogflowCXIntent")
+		return nil
+	}
 	log.Printf("[DEBUG] Deleting Intent %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
@@ -789,6 +832,10 @@ func flattenDialogflowCXIntentEffectiveLabels(v interface{}, d *schema.ResourceD
 
 func flattenDialogflowCXIntentLanguageCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func expandDialogflowCXIntentName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandDialogflowCXIntentDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

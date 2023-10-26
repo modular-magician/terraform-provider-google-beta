@@ -377,6 +377,15 @@ Flow.transition_routes.trigger_fulfillment.messages
 Flow.transition_routes.trigger_fulfillment.conditional_cases
 If not specified, the agent's default language is used. Many languages are supported. Note: languages must be enabled in the agent before they can be used.`,
 			},
+			"name": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional: true,
+				ForceNew: true,
+				Description: `The unique identifier of the flow. You should not be setting it most of the time.
+Setting it to the special value '00000000-0000-0000-0000-000000000000' marks this resource as the [Default Start Flow](https://cloud.google.com/dialogflow/cx/docs/concept/flow#start). When you create an agent, a Default Start Flow is created automatically. The Default Start Flow cannot be deleted; deleting the corresponding 'google_dialogflow_cx_flow' resource does nothing to the underlying GCP resources.
+Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.`,
+			},
 			"nlu_settings": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -681,12 +690,6 @@ You may set this, for example:
 					},
 				},
 			},
-			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Description: `The unique identifier of the flow.
-Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.`,
-			},
 		},
 		UseJSONNumber: true,
 	}
@@ -700,6 +703,12 @@ func resourceDialogflowCXFlowCreate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	obj := make(map[string]interface{})
+	nameProp, err := expandDialogflowCXFlowName(d.Get("name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+		obj["name"] = nameProp
+	}
 	displayNameProp, err := expandDialogflowCXFlowDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
 		return err
@@ -776,6 +785,21 @@ func resourceDialogflowCXFlowCreate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
+
+	// if the user's set a name (e.g. for a default object) "Update" instead of "Create"
+	objName, _ := d.Get("name").(string)
+	if objName != "" {
+		// Store the ID
+		id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/flows/{{name}}")
+		if err != nil {
+			return fmt.Errorf("Error constructing id: %s", err)
+		}
+		d.SetId(id)
+
+		// and defer to the Update method:
+		log.Printf("[DEBUG] Updating default DialogflowCXFlow")
+		return resourceDialogflowCXFlowUpdate(d, meta)
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -788,12 +812,21 @@ func resourceDialogflowCXFlowCreate(d *schema.ResourceData, meta interface{}) er
 	if err != nil {
 		return fmt.Errorf("Error creating Flow: %s", err)
 	}
+
+	// Store the ID now
+	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/flows/{{name}}")
+	if err != nil {
+		return fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
+
+	// "name" is not output-only so the code to set it doesn't get generated; do it ourselves:
 	if err := d.Set("name", flattenDialogflowCXFlowName(res["name"], d, config)); err != nil {
 		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
 	}
 
-	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "{{parent}}/flows/{{name}}")
+	// Re-store the ID now
+	id, err = tpgresource.ReplaceVars(d, config, "{{parent}}/flows/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -1047,6 +1080,14 @@ func resourceDialogflowCXFlowDelete(d *schema.ResourceData, meta interface{}) er
 	}
 
 	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
+
+	// if it's a default object Dialogflow creates for you, skip deletion
+	objName, _ := d.Get("name").(string)
+	if objName == "00000000-0000-0000-0000-000000000000" || objName == "00000000-0000-0000-0000-000000000001" {
+		// we can't delete these resources so do nothing
+		log.Printf("[DEBUG] Not deleting default DialogflowCXFlow")
+		return nil
+	}
 	log.Printf("[DEBUG] Deleting Flow %q", d.Id())
 
 	// err == nil indicates that the billing_project value was found
@@ -1863,6 +1904,10 @@ func flattenDialogflowCXFlowAdvancedSettingsDtmfSettingsFinishDigit(v interface{
 
 func flattenDialogflowCXFlowLanguageCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func expandDialogflowCXFlowName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandDialogflowCXFlowDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

@@ -29,6 +29,78 @@ To get more information about Flow, see:
     * [Official Documentation](https://cloud.google.com/dialogflow/cx/docs)
 
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=dialogflowcx_flow_basic&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Dialogflowcx Flow Basic
+
+
+```hcl
+resource "google_dialogflow_cx_agent" "agent" {
+  display_name               = "dialogflowcx-agent"
+  location                   = "global"
+  default_language_code      = "en"
+  supported_language_codes   = ["fr", "de", "es"]
+  time_zone                  = "America/New_York"
+  description                = "Example description."
+  avatar_uri                 = "https://cloud.google.com/_static/images/cloud/icons/favicons/onecloud/super_cloud.png"
+  enable_stackdriver_logging = true
+  enable_spell_correction    = true
+  speech_to_text_settings {
+    enable_speech_adaptation = true
+  }
+}
+
+
+resource "google_dialogflow_cx_flow" "basic_flow" {
+  parent       = google_dialogflow_cx_agent.agent.id
+  display_name = "MyFlow"
+  description  = "Test Flow"
+
+  nlu_settings {
+    classification_threshold = 0.3
+    model_type               = "MODEL_TYPE_STANDARD"
+  }
+
+  event_handlers {
+    event = "custom-event"
+    trigger_fulfillment {
+      return_partial_responses = false
+      messages {
+        text {
+          text = ["I didn't get that. Can you say it again?"]
+        }
+      }
+    }
+  }
+
+  event_handlers {
+    event = "sys.no-match-default"
+    trigger_fulfillment {
+      return_partial_responses = false
+      messages {
+        text {
+          text = ["Sorry, could you say that again?"]
+        }
+      }
+    }
+  }
+
+  event_handlers {
+    event = "sys.no-input-default"
+    trigger_fulfillment {
+      return_partial_responses = false
+      messages {
+        text {
+          text = ["One more time?"]
+        }
+      }
+    }
+  }
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=dialogflowcx_flow_full&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
@@ -333,6 +405,12 @@ The following arguments are supported:
 
 - - -
 
+
+* `name` -
+  (Optional)
+  The unique identifier of the flow. You should not be setting it most of the time.
+  Setting it to the special value `00000000-0000-0000-0000-000000000000` marks this resource as the [Default Start Flow](https://cloud.google.com/dialogflow/cx/docs/concept/flow#start). When you create an agent, a Default Start Flow is created automatically. The Default Start Flow cannot be deleted; deleting the corresponding `google_dialogflow_cx_flow` resource does nothing to the underlying GCP resources.
+  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.
 
 * `description` -
   (Optional)
@@ -810,10 +888,6 @@ The following arguments are supported:
 In addition to the arguments listed above, the following computed attributes are exported:
 
 * `id` - an identifier for the resource with format `{{parent}}/flows/{{name}}`
-
-* `name` -
-  The unique identifier of the flow.
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/flows/<Flow ID>.
 
 
 ## Timeouts

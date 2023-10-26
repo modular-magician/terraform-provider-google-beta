@@ -99,6 +99,13 @@ The following arguments are supported:
 - - -
 
 
+* `name` -
+  (Optional)
+  The unique identifier of the intent. You should not be setting it most of the time.
+  Setting it to the special value `00000000-0000-0000-0000-000000000000` marks this resource as the [Default Welcome Intent](https://cloud.google.com/dialogflow/cx/docs/concept/intent#welcome). When you create an agent, a Default Welcome Intent is created automatically. The Default Welcome Intent cannot be deleted; deleting the corresponding `google_dialogflow_cx_intent` resource does nothing to the underlying GCP resources.
+  Setting it to the special value `00000000-0000-0000-0000-000000000001` marks this resource as the [Default Negative Intent](https://cloud.google.com/dialogflow/cx/docs/concept/intent#negative). When you create an agent, a Default Negative Intent is created automatically. The Default Negative Intent cannot be deleted; deleting the corresponding `google_dialogflow_cx_intent` resource does nothing to the underlying GCP resources.
+  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/intents/<Intent ID>.
+
 * `training_phrases` -
   (Optional)
   The collection of training phrases the agent is trained on to identify the intent.
@@ -119,6 +126,7 @@ The following arguments are supported:
   (Optional)
   Indicates whether this is a fallback intent. Currently only default fallback intent is allowed in the agent, which is added upon agent creation.
   Adding training phrases to fallback intent is useful in the case of requests that are mistakenly matched, since training phrases assigned to fallback intents act as negative examples that triggers no-match event.
+  To manage the fallback intent, set `name = "00000000-0000-0000-0000-000000000001"`.
 
 * `labels` -
   (Optional)
@@ -202,10 +210,6 @@ The following arguments are supported:
 In addition to the arguments listed above, the following computed attributes are exported:
 
 * `id` - an identifier for the resource with format `{{parent}}/intents/{{name}}`
-
-* `name` -
-  The unique identifier of the intent.
-  Format: projects/<Project ID>/locations/<Location ID>/agents/<Agent ID>/intents/<Intent ID>.
 
 * `terraform_labels` -
   The combination of labels configured directly on the resource
