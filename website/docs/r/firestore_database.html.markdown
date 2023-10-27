@@ -187,6 +187,10 @@ resource "google_firestore_database" "database" {
   # Then delete the database resource and apply the changes again.
   delete_protection_state           = "DELETE_PROTECTION_ENABLED"
 
+  # Enables deletion of the database on destory.
+  # By default the database is just abandoned and not deleted on destroy.
+  deletion_policy = "DELETE"
+
   depends_on = [google_project_service.firestore]
 }
 ```
@@ -248,6 +252,12 @@ The following arguments are supported:
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
+
+* `deletion_policy` - (Optional) The deletion policy for the database. Setting `ABANDON` allows the resource
+to be abandoned rather than deleted. Setting `DELETE` will delete the resource
+on destroy. Default is `ABANDON`. Possible values are:
+  * DELETE
+  * ABANDON
 
 
 ## Attributes Reference

@@ -18,12 +18,17 @@
 package firestore_test
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
+	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func TestAccFirestoreDatabase_firestoreDefaultDatabaseExample(t *testing.T) {
@@ -41,6 +46,7 @@ func TestAccFirestoreDatabase_firestoreDefaultDatabaseExample(t *testing.T) {
 			"random": {},
 			"time":   {},
 		},
+		CheckDestroy: testAccCheckFirestoreDatabaseDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccFirestoreDatabase_firestoreDefaultDatabaseExample(context),
@@ -103,6 +109,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseExample(t *testing.T) {
 			"random": {},
 			"time":   {},
 		},
+		CheckDestroy: testAccCheckFirestoreDatabaseDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccFirestoreDatabase_firestoreDatabaseExample(context),
@@ -169,6 +176,7 @@ func TestAccFirestoreDatabase_firestoreDefaultDatabaseInDatastoreModeExample(t *
 			"random": {},
 			"time":   {},
 		},
+		CheckDestroy: testAccCheckFirestoreDatabaseDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccFirestoreDatabase_firestoreDefaultDatabaseInDatastoreModeExample(context),
@@ -232,6 +240,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseInDatastoreModeExample(t *testing
 			"random": {},
 			"time":   {},
 		},
+		CheckDestroy: testAccCheckFirestoreDatabaseDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccFirestoreDatabase_firestoreDatabaseInDatastoreModeExample(context),
@@ -280,4 +289,43 @@ resource "google_firestore_database" "database" {
   depends_on = [google_project_service.firestore]
 }
 `, context)
+}
+
+func testAccCheckFirestoreDatabaseDestroyProducer(t *testing.T) func(s *terraform.State) error {
+	return func(s *terraform.State) error {
+		for name, rs := range s.RootModule().Resources {
+			if rs.Type != "google_firestore_database" {
+				continue
+			}
+			if strings.HasPrefix(name, "data.") {
+				continue
+			}
+
+			config := acctest.GoogleProviderConfig(t)
+
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{FirestoreBasePath}}projects/{{project}}/databases/{{name}}")
+			if err != nil {
+				return err
+			}
+
+			billingProject := ""
+
+			if config.BillingProject != "" {
+				billingProject = config.BillingProject
+			}
+
+			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+				Config:    config,
+				Method:    "GET",
+				Project:   billingProject,
+				RawURL:    url,
+				UserAgent: config.UserAgent,
+			})
+			if err == nil {
+				return fmt.Errorf("FirestoreDatabase still exists at %s", url)
+			}
+		}
+
+		return nil
+	}
 }
