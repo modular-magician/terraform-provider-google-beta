@@ -1138,9 +1138,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		})
 }
 
-// Generated resources: 394
+// Generated resources: 395
 // Generated IAM resources: 240
-// Total generated resources: 634
+// Total generated resources: 635
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1238,6 +1238,7 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_bigquery_analytics_hub_listing_iam_binding":              tpgiamresource.ResourceIamBinding(bigqueryanalyticshub.BigqueryAnalyticsHubListingIamSchema, bigqueryanalyticshub.BigqueryAnalyticsHubListingIamUpdaterProducer, bigqueryanalyticshub.BigqueryAnalyticsHubListingIdParseFunc),
 			"google_bigquery_analytics_hub_listing_iam_member":               tpgiamresource.ResourceIamMember(bigqueryanalyticshub.BigqueryAnalyticsHubListingIamSchema, bigqueryanalyticshub.BigqueryAnalyticsHubListingIamUpdaterProducer, bigqueryanalyticshub.BigqueryAnalyticsHubListingIdParseFunc),
 			"google_bigquery_analytics_hub_listing_iam_policy":               tpgiamresource.ResourceIamPolicy(bigqueryanalyticshub.BigqueryAnalyticsHubListingIamSchema, bigqueryanalyticshub.BigqueryAnalyticsHubListingIamUpdaterProducer, bigqueryanalyticshub.BigqueryAnalyticsHubListingIdParseFunc),
+			"google_bigquery_analytics_hub_subscription":                     bigqueryanalyticshub.ResourceBigqueryAnalyticsHubSubscription(),
 			"google_bigquery_connection":                                     bigqueryconnection.ResourceBigqueryConnectionConnection(),
 			"google_bigquery_connection_iam_binding":                         tpgiamresource.ResourceIamBinding(bigqueryconnection.BigqueryConnectionConnectionIamSchema, bigqueryconnection.BigqueryConnectionConnectionIamUpdaterProducer, bigqueryconnection.BigqueryConnectionConnectionIdParseFunc),
 			"google_bigquery_connection_iam_member":                          tpgiamresource.ResourceIamMember(bigqueryconnection.BigqueryConnectionConnectionIamSchema, bigqueryconnection.BigqueryConnectionConnectionIamUpdaterProducer, bigqueryconnection.BigqueryConnectionConnectionIdParseFunc),
