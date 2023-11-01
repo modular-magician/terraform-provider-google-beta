@@ -27,7 +27,7 @@ func TestAccUniverseDomainDisk(t *testing.T) {
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeDiskDestroyProducer(t),
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccUniverseDomain_basic_disk(universeDomain),
 			},
 		},
@@ -42,7 +42,7 @@ func TestAccDefaultUniverseDomainDisk(t *testing.T) {
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeDiskDestroyProducer(t),
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccUniverseDomain_basic_disk(universeDomain),
 			},
 		},
