@@ -30,7 +30,7 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-func TestAccTpuV2Vm_tpuV2VmBasicExample(t *testing.T) {
+func TestAccTpuV2Vm_tpuV2VmBasicTestExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -43,7 +43,7 @@ func TestAccTpuV2Vm_tpuV2VmBasicExample(t *testing.T) {
 		CheckDestroy:             testAccCheckTpuV2VmDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTpuV2Vm_tpuV2VmBasicExample(context),
+				Config: testAccTpuV2Vm_tpuV2VmBasicTestExample(context),
 			},
 			{
 				ResourceName:            "google_tpu_v2_vm.tpu",
@@ -55,7 +55,7 @@ func TestAccTpuV2Vm_tpuV2VmBasicExample(t *testing.T) {
 	})
 }
 
-func testAccTpuV2Vm_tpuV2VmBasicExample(context map[string]interface{}) string {
+func testAccTpuV2Vm_tpuV2VmBasicTestExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 data "google_tpu_v2_runtime_versions" "available" {
   provider = google-beta
@@ -68,6 +68,10 @@ resource "google_tpu_v2_vm" "tpu" {
   zone = "us-central1-c"
 
   runtime_version = "tpu-vm-tf-2.13.0"
+
+  scheduling_config {
+    preemptible = true
+  }
 }
 `, context)
 }
