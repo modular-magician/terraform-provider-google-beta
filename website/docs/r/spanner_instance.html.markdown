@@ -166,36 +166,10 @@ This must be set to true if you created a backup manually in the console.
 
 <a name="nested_autoscaling_limits"></a>The `autoscaling_limits` block supports:
 
-* `min_limit` -
-  (Optional)
-  Specifies the minimum compute capacity for the instance.
-  Structure is [documented below](#nested_min_limit).
-
-* `max_limit` -
-  (Optional)
-  Specifies the maximum compute capacity for the instance.
-  The maximum compute capacity should be less than or equal to 10X the minimum compute capacity.
-  Structure is [documented below](#nested_max_limit).
-
-
-<a name="nested_min_limit"></a>The `min_limit` block supports:
-
-* `min_nodes` -
-  (Optional)
-  Specifies minimum number of processing units allocated to the instance.
-  If set, this number should be greater than or equal to 1.
-
 * `min_processing_units` -
   (Optional)
   Specifies minimum number of processing units allocated to the instance.
   If set, this number should be multiples of 1000.
-
-<a name="nested_max_limit"></a>The `max_limit` block supports:
-
-* `max_nodes` -
-  (Optional)
-  Specifies maximum number of nodes allocated to the instance.
-  If set, this number should be greater than or equal to min_nodes.
 
 * `max_processing_units` -
   (Optional)
