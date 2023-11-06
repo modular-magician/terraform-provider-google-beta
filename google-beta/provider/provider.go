@@ -109,6 +109,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/runtimeconfig"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/secretmanager"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/securesourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/securitycenter"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/securityscanner"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicedirectory"
@@ -733,6 +734,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
+			"secure_source_manager_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
 			"security_center_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -1099,6 +1105,7 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_pubsub_topic_iam_policy":                         tpgiamresource.DataSourceIamPolicy(pubsub.PubsubTopicIamSchema, pubsub.PubsubTopicIamUpdaterProducer),
 			"google_runtimeconfig_config_iam_policy":                 tpgiamresource.DataSourceIamPolicy(runtimeconfig.RuntimeConfigConfigIamSchema, runtimeconfig.RuntimeConfigConfigIamUpdaterProducer),
 			"google_secret_manager_secret_iam_policy":                tpgiamresource.DataSourceIamPolicy(secretmanager.SecretManagerSecretIamSchema, secretmanager.SecretManagerSecretIamUpdaterProducer),
+			"google_secure_source_manager_instance_iam_policy":       tpgiamresource.DataSourceIamPolicy(securesourcemanager.SecureSourceManagerInstanceIamSchema, securesourcemanager.SecureSourceManagerInstanceIamUpdaterProducer),
 			"google_scc_source_iam_policy":                           tpgiamresource.DataSourceIamPolicy(securitycenter.SecurityCenterSourceIamSchema, securitycenter.SecurityCenterSourceIamUpdaterProducer),
 			"google_service_directory_namespace_iam_policy":          tpgiamresource.DataSourceIamPolicy(servicedirectory.ServiceDirectoryNamespaceIamSchema, servicedirectory.ServiceDirectoryNamespaceIamUpdaterProducer),
 			"google_service_directory_service_iam_policy":            tpgiamresource.DataSourceIamPolicy(servicedirectory.ServiceDirectoryServiceIamSchema, servicedirectory.ServiceDirectoryServiceIamUpdaterProducer),
@@ -1139,9 +1146,9 @@ func DatasourceMapWithErrors() (map[string]*schema.Resource, error) {
 		})
 }
 
-// Generated resources: 394
-// Generated IAM resources: 240
-// Total generated resources: 634
+// Generated resources: 395
+// Generated IAM resources: 243
+// Total generated resources: 638
 func ResourceMap() map[string]*schema.Resource {
 	resourceMap, _ := ResourceMapWithErrors()
 	return resourceMap
@@ -1701,6 +1708,10 @@ func ResourceMapWithErrors() (map[string]*schema.Resource, error) {
 			"google_secret_manager_secret_iam_member":                        tpgiamresource.ResourceIamMember(secretmanager.SecretManagerSecretIamSchema, secretmanager.SecretManagerSecretIamUpdaterProducer, secretmanager.SecretManagerSecretIdParseFunc),
 			"google_secret_manager_secret_iam_policy":                        tpgiamresource.ResourceIamPolicy(secretmanager.SecretManagerSecretIamSchema, secretmanager.SecretManagerSecretIamUpdaterProducer, secretmanager.SecretManagerSecretIdParseFunc),
 			"google_secret_manager_secret_version":                           secretmanager.ResourceSecretManagerSecretVersion(),
+			"google_secure_source_manager_instance":                          securesourcemanager.ResourceSecureSourceManagerInstance(),
+			"google_secure_source_manager_instance_iam_binding":              tpgiamresource.ResourceIamBinding(securesourcemanager.SecureSourceManagerInstanceIamSchema, securesourcemanager.SecureSourceManagerInstanceIamUpdaterProducer, securesourcemanager.SecureSourceManagerInstanceIdParseFunc),
+			"google_secure_source_manager_instance_iam_member":               tpgiamresource.ResourceIamMember(securesourcemanager.SecureSourceManagerInstanceIamSchema, securesourcemanager.SecureSourceManagerInstanceIamUpdaterProducer, securesourcemanager.SecureSourceManagerInstanceIdParseFunc),
+			"google_secure_source_manager_instance_iam_policy":               tpgiamresource.ResourceIamPolicy(securesourcemanager.SecureSourceManagerInstanceIamSchema, securesourcemanager.SecureSourceManagerInstanceIamUpdaterProducer, securesourcemanager.SecureSourceManagerInstanceIdParseFunc),
 			"google_scc_folder_custom_module":                                securitycenter.ResourceSecurityCenterFolderCustomModule(),
 			"google_scc_mute_config":                                         securitycenter.ResourceSecurityCenterMuteConfig(),
 			"google_scc_notification_config":                                 securitycenter.ResourceSecurityCenterNotificationConfig(),
@@ -2166,6 +2177,7 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.ResourceManagerBasePath = d.Get("resource_manager_custom_endpoint").(string)
 	config.RuntimeConfigBasePath = d.Get("runtime_config_custom_endpoint").(string)
 	config.SecretManagerBasePath = d.Get("secret_manager_custom_endpoint").(string)
+	config.SecureSourceManagerBasePath = d.Get("secure_source_manager_custom_endpoint").(string)
 	config.SecurityCenterBasePath = d.Get("security_center_custom_endpoint").(string)
 	config.SecurityScannerBasePath = d.Get("security_scanner_custom_endpoint").(string)
 	config.ServiceDirectoryBasePath = d.Get("service_directory_custom_endpoint").(string)
