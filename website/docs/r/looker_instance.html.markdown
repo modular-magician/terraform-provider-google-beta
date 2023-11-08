@@ -120,7 +120,7 @@ resource "google_looker_instance" "looker-instance" {
     allowed_email_domains = ["google.com"]
   }
   encryption_config {
-    kms_key_name = "looker-kms-key"
+    kms_key_name = "projects/YOURPROJECT/locations/LOCATION/keyRings/KEYRING/cryptoKeys/looker-kms-key"
   }
   maintenance_window {
     day_of_week = "THURSDAY"
@@ -179,7 +179,7 @@ resource "google_compute_network" "looker_network" {
 }
 
 resource "google_kms_crypto_key_iam_member" "crypto_key" {
-  crypto_key_id = "looker-kms-key"
+  crypto_key_id = "projects/YOURPROJECT/locations/LOCATION/keyRings/KEYRING/cryptoKeys/looker-kms-key"
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
   member        = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-looker.iam.gserviceaccount.com"
 }
@@ -194,6 +194,21 @@ The following arguments are supported:
   (Required)
   The ID of the instance or a fully qualified identifier for the instance.
 
+* `oauth_config` -
+  (Required)
+  Looker Instance OAuth login settings.
+  Structure is [documented below](#nested_oauth_config).
+
+
+<a name="nested_oauth_config"></a>The `oauth_config` block supports:
+
+* `client_id` -
+  (Required)
+  The client ID for the Oauth config.
+
+* `client_secret` -
+  (Required)
+  The client secret for the Oauth config.
 
 - - -
 
@@ -228,11 +243,6 @@ The following arguments are supported:
   your instance to be restarted during updates, which will temporarily
   disrupt service.
   Structure is [documented below](#nested_maintenance_window).
-
-* `oauth_config` -
-  (Optional)
-  Looker Instance OAuth login settings.
-  Structure is [documented below](#nested_oauth_config).
 
 * `platform_edition` -
   (Optional)
@@ -408,16 +418,6 @@ The following arguments are supported:
 * `nanos` -
   (Optional)
   Fractions of seconds in nanoseconds. Must be from 0 to 999,999,999.
-
-<a name="nested_oauth_config"></a>The `oauth_config` block supports:
-
-* `client_id` -
-  (Required)
-  The client ID for the Oauth config.
-
-* `client_secret` -
-  (Required)
-  The client secret for the Oauth config.
 
 <a name="nested_user_metadata"></a>The `user_metadata` block supports:
 
