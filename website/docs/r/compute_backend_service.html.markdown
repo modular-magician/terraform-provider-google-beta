@@ -429,6 +429,11 @@ The following arguments are supported:
   Settings for enabling Cloud Identity Aware Proxy
   Structure is [documented below](#nested_iap).
 
+* `ip_address_selection_policy` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Specifies preference of traffic to the backend (from the proxy and from the client for proxyless gRPC).
+  Possible values are: `IPV4_ONLY`, `PREFER_IPV6`, `IPV6_ONLY`.
+
 * `load_balancing_scheme` -
   (Optional)
   Indicates whether the backend service will be used with internal or
