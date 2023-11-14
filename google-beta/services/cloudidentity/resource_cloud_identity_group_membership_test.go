@@ -455,6 +455,9 @@ resource "google_cloud_identity_group_membership" "cloud_identity_group_membersh
 
   roles {
     name = "MEMBER"
+	expiry_detail {
+      expire_time = "2214-10-02T15:01:23Z"
+    }
   }
 }
 `, context)
