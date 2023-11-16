@@ -69,6 +69,22 @@ resource "google_tpu_v2_vm" "tpu" {
 
   runtime_version = "tpu-vm-tf-2.13.0"
 }
+
+resource "google_compute_subnetwork" "subnet" {
+  provider = google-beta
+
+  name          = "tf-test-tpu-subnet%{random_suffix}"
+  ip_cidr_range = "10.0.0.0/16"
+  region        = "us-central1"
+  network       = google_compute_network.network.id
+}
+
+resource "google_compute_network" "network" {
+  provider = google-beta
+
+  name                    = "tf-test-tpu-net%{random_suffix}"
+  auto_create_subnetworks = false
+}
 `, context)
 }
 

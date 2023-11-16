@@ -51,6 +51,22 @@ resource "google_tpu_v2_vm" "tpu" {
 
   runtime_version = "tpu-vm-tf-2.13.0"
 }
+
+resource "google_compute_subnetwork" "subnet" {
+  provider = google-beta
+
+  name          = "tpu-subnet"
+  ip_cidr_range = "10.0.0.0/16"
+  region        = "us-central1"
+  network       = google_compute_network.network.id
+}
+
+resource "google_compute_network" "network" {
+  provider = google-beta
+
+  name                    = "tpu-net"
+  auto_create_subnetworks = false
+}
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=tpu_v2_vm_full&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
