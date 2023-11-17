@@ -1243,7 +1243,7 @@ func resourceComputeRegionBackendServiceCreate(d *schema.ResourceData, meta inte
 	iapProp, err := expandComputeRegionBackendServiceIap(d.Get("iap"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("iap"); ok || !reflect.DeepEqual(v, iapProp) {
+	} else if v, ok := d.GetOkExists("iap"); !tpgresource.IsEmptyValue(reflect.ValueOf(iapProp)) && (ok || !reflect.DeepEqual(v, iapProp)) {
 		obj["iap"] = iapProp
 	}
 	loadBalancingSchemeProp, err := expandComputeRegionBackendServiceLoadBalancingScheme(d.Get("load_balancing_scheme"), d, config)
@@ -1665,7 +1665,7 @@ func resourceComputeRegionBackendServiceUpdate(d *schema.ResourceData, meta inte
 	iapProp, err := expandComputeRegionBackendServiceIap(d.Get("iap"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("iap"); ok || !reflect.DeepEqual(v, iapProp) {
+	} else if v, ok := d.GetOkExists("iap"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, iapProp)) {
 		obj["iap"] = iapProp
 	}
 	loadBalancingSchemeProp, err := expandComputeRegionBackendServiceLoadBalancingScheme(d.Get("load_balancing_scheme"), d, config)
