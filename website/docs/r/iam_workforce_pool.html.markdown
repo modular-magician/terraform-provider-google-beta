@@ -53,7 +53,7 @@ resource "google_iam_workforce_pool" "example" {
   display_name      = "Display name"
   description       = "A sample workforce pool."
   disabled          = false
-  session_duration  = "7200s"
+  session_duration  = "3600s"
 }
 ```
 
