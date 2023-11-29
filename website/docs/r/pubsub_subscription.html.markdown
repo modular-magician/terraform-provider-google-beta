@@ -541,6 +541,11 @@ The following arguments are supported:
   `data` field as the HTTP body for delivery.
   Structure is [documented below](#nested_no_wrapper).
 
+* `pubsub_wrapper` -
+  (Optional)
+  When set, the payload to the push endpoint is in the form of the JSON representation of a PubsubMessage.
+  Structure is [documented below](#nested_pubsub_wrapper).
+
 
 <a name="nested_oidc_token"></a>The `oidc_token` block supports:
 
@@ -567,6 +572,13 @@ The following arguments are supported:
   When true, writes the Pub/Sub message metadata to
   `x-goog-pubsub-<KEY>:<VAL>` headers of the HTTP request. Writes the
   Pub/Sub message attributes to `<KEY>:<VAL>` headers of the HTTP request.
+
+<a name="nested_pubsub_wrapper"></a>The `pubsub_wrapper` block supports:
+
+* `write_metadata` -
+  (Required)
+  When true, writes the Pub/Sub message metadata to `x-goog-pubsub-<KEY>:<VAL>`` headers of the HTTP request.
+  Writes the Pub/Sub message attributes to `<KEY>:<VAL>` headers of the HTTP request.
 
 <a name="nested_expiration_policy"></a>The `expiration_policy` block supports:
 
