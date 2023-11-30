@@ -18,6 +18,7 @@ description: |-
 ---
 
 # google\_identity\_platform\_project\_default\_config
+~> **Warning:** Deprecated. Use the `google_identity_platform_config` resource instead. It contains a more comprehensive list of fields, and was created before google_identity_platform_project_default_config` was added.
 
 There is no persistent data associated with this resource.
 

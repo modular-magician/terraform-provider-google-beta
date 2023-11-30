@@ -52,9 +52,7 @@ func ResourceIdentityPlatformProjectDefaultConfig() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
-		DeprecationMessage: "Deprecated. Use the `google_identity_platform_config` resource instead. " +
-			"It contains a more comprehensive list of fields, and was created before " +
-			"`google_identity_platform_project_default_config` was added.",
+		DeprecationMessage: "Deprecated. Use the `google_identity_platform_config` resource instead. It contains a more comprehensive list of fields, and was created before google_identity_platform_project_default_config` was added.",
 
 		Schema: map[string]*schema.Schema{
 			"sign_in": {
