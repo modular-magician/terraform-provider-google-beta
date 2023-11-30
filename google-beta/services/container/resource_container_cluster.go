@@ -2042,6 +2042,23 @@ func ResourceContainerCluster() *schema.Resource {
 					},
 				},
 			},
+			"cluster_network_performance_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: `Configuration of all network bandwidth tiers.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"total_egress_bandwidth_tier": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringInSlice([]string{"TIER_UNSPECIFIED", "TIER_1"}, false),
+							Description:  `Node network tier.`,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -2186,6 +2203,7 @@ func resourceContainerClusterCreate(d *schema.ResourceData, meta interface{}) er
 			EnableL4ilbSubsetting:     d.Get("enable_l4_ilb_subsetting").(bool),
 			DnsConfig:                 expandDnsConfig(d.Get("dns_config")),
 			GatewayApiConfig:          expandGatewayApiConfig(d.Get("gateway_api_config")),
+			NetworkPerformanceConfig:  expandNetworkPerformanceConfig(d.Get("cluster_network_performance_config")),
 			EnableMultiNetworking:     d.Get("enable_multi_networking").(bool),
 			EnableFqdnNetworkPolicy:   d.Get("enable_fqdn_network_policy").(bool),
 		},
@@ -2781,6 +2799,9 @@ func resourceContainerClusterRead(d *schema.ResourceData, meta interface{}) erro
 		return err
 	}
 	if err := d.Set("fleet", flattenFleet(cluster.Fleet)); err != nil {
+		return err
+	}
+	if err := d.Set("cluster_network_performance_config", flattenNetworkPerformanceConfig(cluster.NetworkConfig.NetworkPerformanceConfig)); err != nil {
 		return err
 	}
 	if err := d.Set("enable_k8s_beta_apis", flattenEnableK8sBetaApis(cluster.EnableK8sBetaApis)); err != nil {
@@ -3919,6 +3940,24 @@ func resourceContainerClusterUpdate(d *schema.ResourceData, meta interface{}) er
 			return err
 		}
 		log.Printf("[INFO] GKE cluster %s fleet config has been updated", d.Id())
+	}
+
+	if d.HasChange("cluster_network_performance_config") {
+		if cnpc, ok := d.GetOk("cluster_network_performance_config"); ok {
+			req := &container.UpdateClusterRequest{
+				Update: &container.ClusterUpdate{
+					DesiredNetworkPerformanceConfig: expandNetworkPerformanceConfig(cnpc),
+				},
+			}
+
+			updateF := updateFunc(req, "updating GKE Cluster Network Performance Config")
+			// Call update serially.
+			if err := transport_tpg.LockedCall(lockKey, updateF); err != nil {
+				return err
+			}
+
+			log.Printf("[INFO] GKE cluster %s Cluster Network Performance Config has been updated", d.Id())
+		}
 	}
 
 	if d.HasChange("enable_k8s_beta_apis") {
@@ -5133,6 +5172,18 @@ func expandEnableK8sBetaApis(configured interface{}, enabledAPIs []string) *cont
 	return result
 }
 
+func expandNetworkPerformanceConfig(configured interface{}) *container.ClusterNetworkPerformanceConfig {
+	l := configured.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil
+	}
+
+	config := l[0].(map[string]interface{})
+	return &container.ClusterNetworkPerformanceConfig{
+		TotalEgressBandwidthTier: config["total_egress_bandwidth_tier"].(string),
+	}
+}
+
 func expandContainerClusterLoggingConfig(configured interface{}) *container.LoggingConfig {
 	l := configured.([]interface{})
 	if len(l) == 0 {
@@ -5932,6 +5983,17 @@ func flattenFleet(c *container.Fleet) []map[string]interface{} {
 			"project":        c.Project,
 			"membership":     c.Membership,
 			"pre_registered": c.PreRegistered,
+		},
+	}
+}
+
+func flattenNetworkPerformanceConfig(c *container.ClusterNetworkPerformanceConfig) []map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return []map[string]interface{}{
+		{
+			"total_egress_bandwidth_tier": c.TotalEgressBandwidthTier,
 		},
 	}
 }
