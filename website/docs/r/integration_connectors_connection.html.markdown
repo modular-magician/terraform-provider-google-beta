@@ -881,10 +881,6 @@ The following arguments are supported:
   (Optional)
   port number
 
-* `service_attachment` -
-  (Optional)
-  Service Attachment
-
 * `host` -
   (Optional)
   Host

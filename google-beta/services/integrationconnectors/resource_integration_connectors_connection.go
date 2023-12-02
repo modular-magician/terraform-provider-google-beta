@@ -541,11 +541,6 @@ Will be empty string if google managed.`,
 													Optional:    true,
 													Description: `port number`,
 												},
-												"service_attachment": {
-													Type:        schema.TypeString,
-													Optional:    true,
-													Description: `Service Attachment`,
-												},
 											},
 										},
 									},
@@ -2664,9 +2659,8 @@ func flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestination
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"port":               flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationPort(original["port"], d, config),
-			"service_attachment": flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationServiceAttachment(original["serviceAttachment"], d, config),
-			"host":               flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationHost(original["host"], d, config),
+			"port": flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationPort(original["port"], d, config),
+			"host": flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationHost(original["host"], d, config),
 		})
 	}
 	return transformed
@@ -2686,10 +2680,6 @@ func flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestination
 	}
 
 	return v // let terraform core handle it otherwise
-}
-
-func flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationServiceAttachment(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
 }
 
 func flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationHost(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -4348,13 +4338,6 @@ func expandIntegrationConnectorsConnectionEventingConfigRegistrationDestinationC
 			transformed["port"] = transformedPort
 		}
 
-		transformedServiceAttachment, err := expandIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationServiceAttachment(original["service_attachment"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedServiceAttachment); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["serviceAttachment"] = transformedServiceAttachment
-		}
-
 		transformedHost, err := expandIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationHost(original["host"], d, config)
 		if err != nil {
 			return nil, err
@@ -4368,10 +4351,6 @@ func expandIntegrationConnectorsConnectionEventingConfigRegistrationDestinationC
 }
 
 func expandIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationServiceAttachment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
