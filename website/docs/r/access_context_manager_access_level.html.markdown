@@ -76,6 +76,10 @@ The following arguments are supported:
   (Required)
   Human readable title. Must be unique within the Policy.
 
+* `description` -
+  (Required)
+  Description of the AccessLevel and its use. Does not affect behavior.
+
 * `parent` -
   (Required)
   The AccessPolicy this AccessLevel lives in.
@@ -90,10 +94,6 @@ The following arguments are supported:
 
 - - -
 
-
-* `description` -
-  (Optional)
-  Description of the AccessLevel and its use. Does not affect behavior.
 
 * `basic` -
   (Optional)

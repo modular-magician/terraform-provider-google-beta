@@ -49,6 +49,11 @@ func ResourceAccessContextManagerAccessLevel() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"description": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: `Description of the AccessLevel and its use. Does not affect behavior.`,
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -313,11 +318,6 @@ custom access levels - https://cloud.google.com/access-context-manager/docs/cust
 					},
 				},
 				ConflictsWith: []string{"basic"},
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `Description of the AccessLevel and its use. Does not affect behavior.`,
 			},
 		},
 		UseJSONNumber: true,
