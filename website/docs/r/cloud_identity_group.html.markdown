@@ -53,6 +53,31 @@ resource "google_cloud_identity_group" "cloud_identity_group_basic" {
   }
 }
 ```
+## Example Usage - Cloud Identity Groups Dynamic
+
+
+```hcl
+resource "google_cloud_identity_group" "cloud_identity_groups_dynamic" {
+  display_name         = "my-identity-dynamic-group"
+
+  parent = "customers/A01b123xz"
+
+  group_key {
+    id = "my-identity-dynamic-group@example.com"
+  }
+
+  labels = {
+    "cloudidentity.googleapis.com/groups.discussion_forum" = ""
+  }
+
+  dynamic_group_metadata {
+    queries {
+      resource_type = "USER"
+      query         = "user.addresses.exists(ad, ad.locality=='Sunnyvale')"
+    }
+  }
+}
+```
 
 ## Argument Reference
 
@@ -76,7 +101,7 @@ The following arguments are supported:
   One or more label entries that apply to the Group. Currently supported labels contain a key with an empty value.
   Google Groups are the default type of group and have a label with a key of cloudidentity.googleapis.com/groups.discussion_forum and an empty value.
   Existing Google Groups can have an additional label with a key of cloudidentity.googleapis.com/groups.security and an empty value added to them. This is an immutable change and the security label cannot be removed once added.
-  Dynamic groups have a label with a key of cloudidentity.googleapis.com/groups.dynamic.
+  Dynamic groups have a label with a key of cloudidentity.googleapis.com/groups.dynamic automatically added by the API when creating a group with 'dynamicGroupMetadata'.
   Identity-mapped groups for Cloud Search have a label with a key of system/groups/external and an empty value.
 
 
@@ -112,6 +137,11 @@ The following arguments are supported:
   An extended description to help users determine the purpose of a Group.
   Must not be longer than 4,096 characters.
 
+* `dynamic_group_metadata` -
+  (Optional)
+  Dynamic group metadata like queries and status.
+  Structure is [documented below](#nested_dynamic_group_metadata).
+
 * `initial_group_config` -
   (Optional)
   The initial configuration options for creating a Group.
@@ -121,6 +151,63 @@ The following arguments are supported:
   Default value is `EMPTY`.
   Possible values are: `INITIAL_GROUP_CONFIG_UNSPECIFIED`, `WITH_INITIAL_OWNER`, `EMPTY`.
 
+
+<a name="nested_dynamic_group_metadata"></a>The `dynamic_group_metadata` block supports:
+
+* `queries` -
+  (Optional)
+  Memberships will be the union of all queries. Only one entry with USER resource is currently supported. Customers can create up to 100 dynamic groups.
+  Structure is [documented below](#nested_queries).
+
+* `status` -
+  (Output)
+  The current status of a dynamic group along with timestamp.
+  Structure is [documented below](#nested_status).
+
+
+<a name="nested_queries"></a>The `queries` block supports:
+
+* `resource_type` -
+  (Required)
+  Resource type for the Dynamic Group Query.
+  Possible values are: `USER`.
+
+* `query` -
+  (Required)
+  Query that determines the memberships of the dynamic group.
+  Examples:
+    * All users with at least one organizations.department of engineering.
+      ```
+      user.organizations.exists(org, org.department=='engineering')
+      ```
+    * All users with at least one location that has area of foo and building_id of bar.
+      ```
+      user.locations.exists(loc, loc.area=='foo' && loc.building_id=='bar')
+      ```
+    * All users with any variation of the name John Doe (case-insensitive queries add
+      equalsIgnoreCase() to the value being queried).
+      ```
+      user.name.value.equalsIgnoreCase('jOhn DoE')
+      ```
+  **Note:** When using this field, Identity API will add
+  `"cloudidentity.googleapis.com/groups.dynamic"` to this group's labels.
+
+<a name="nested_status"></a>The `status` block contains:
+
+* `status` -
+  (Output)
+  Status of the dynamic group.
+
+* `status_time` -
+  (Output)
+  The latest time at which the dynamic group is guaranteed to be in
+  the given status. If status is UP_TO_DATE, the latest time at
+  which the dynamic group was confirmed to be up-to-date. If status
+  is UPDATING_MEMBERSHIPS, the time at which dynamic group was
+  created.
+   A timestamp in RFC3339 UTC "Zulu" format, with nanosecond
+   resolution and up to nine fractional digits.
+   Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
 
 ## Attributes Reference
 
