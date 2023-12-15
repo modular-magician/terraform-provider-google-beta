@@ -271,6 +271,65 @@ resource "google_bigquery_connection" "connection" {
 `, context)
 }
 
+func TestAccBigqueryConnectionConnection_bigqueryConnectionKmsExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"kms_key_name":  acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"random": {},
+			"time":   {},
+		},
+		CheckDestroy: testAccCheckBigqueryConnectionConnectionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBigqueryConnectionConnection_bigqueryConnectionKmsExample(context),
+			},
+			{
+				ResourceName:            "google_bigquery_connection.connection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location"},
+			},
+		},
+	})
+}
+
+func testAccBigqueryConnectionConnection_bigqueryConnectionKmsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_bigquery_connection" "connection" {
+   connection_id = "tf-test-my-connection%{random_suffix}"
+   location      = "aws-us-east-1"
+   friendly_name = "👋"
+   description   = "a riveting description"
+   kms_key_name  = "%{kms_key_name}"
+   aws { 
+      access_role {
+         iam_role_id =  "arn:aws:iam::999999999999:role/omnirole%{random_suffix}"
+      }
+   }
+
+  depends_on = [
+    google_kms_crypto_key_iam_member.crypto_key
+  ]
+}
+
+resource "google_kms_crypto_key_iam_member" "crypto_key" {
+   crypto_key_id = "%{kms_key_name}"
+   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+   member        = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-artifactregistry.iam.gserviceaccount.com"
+ }
+ 
+ data "google_project" "project" {}
+`, context)
+}
+
 func TestAccBigqueryConnectionConnection_bigqueryConnectionAzureExample(t *testing.T) {
 	t.Parallel()
 

@@ -174,6 +174,40 @@ resource "google_bigquery_connection" "connection" {
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=bigquery_connection_kms&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Bigquery Connection Kms
+
+
+```hcl
+resource "google_bigquery_connection" "connection" {
+   connection_id = "my-connection"
+   location      = "aws-us-east-1"
+   friendly_name = "👋"
+   description   = "a riveting description"
+   kms_key_name  = "kms-key"
+   aws { 
+      access_role {
+         iam_role_id =  "arn:aws:iam::999999999999:role/omnirole"
+      }
+   }
+
+  depends_on = [
+    google_kms_crypto_key_iam_member.crypto_key
+  ]
+}
+
+resource "google_kms_crypto_key_iam_member" "crypto_key" {
+   crypto_key_id = "kms-key"
+   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+   member        = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-artifactregistry.iam.gserviceaccount.com"
+ }
+ 
+ data "google_project" "project" {}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=bigquery_connection_azure&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
@@ -309,6 +343,10 @@ The following arguments are supported:
 * `description` -
   (Optional)
   A descriptive description for the connection
+
+* `kms_key_name` -
+  (Optional)
+  The Cloud KMS key that is used for encryption. Example: projects/[kms_project_id]/locations/[region]/keyRings/[key_region]/cryptoKeys/[key].
 
 * `cloud_sql` -
   (Optional)
