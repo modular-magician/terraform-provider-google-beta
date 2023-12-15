@@ -134,6 +134,7 @@ creation time.`,
 			},
 			"ipv6_access_type": {
 				Type:         schema.TypeString,
+				Computed:     true,
 				Optional:     true,
 				ValidateFunc: verify.ValidateEnum([]string{"EXTERNAL", "INTERNAL", ""}),
 				Description: `The access type of IPv6 address this subnet holds. It's immutable and can only be specified during creation
