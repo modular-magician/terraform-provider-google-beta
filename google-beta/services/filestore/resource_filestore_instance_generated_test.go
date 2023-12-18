@@ -75,6 +75,51 @@ resource "google_filestore_instance" "instance" {
 `, context)
 }
 
+func TestAccFilestoreInstance_filestoreInstanceBasicIpv6Example(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckFilestoreInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFilestoreInstance_filestoreInstanceBasicIpv6Example(context),
+			},
+			{
+				ResourceName:            "google_filestore_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"name", "zone", "location", "labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccFilestoreInstance_filestoreInstanceBasicIpv6Example(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_filestore_instance" "instance" {
+  name     = "tf-test-test-instance%{random_suffix}"
+  location = "us-central1-b"
+  tier     = "BASIC_HDD"
+
+  file_shares {
+    capacity_gb = 1024
+    name        = "share1"
+  }
+
+  networks {
+    network = "default"
+    modes   = ["MODE_IPV6"]
+  }
+}
+`, context)
+}
+
 func TestAccFilestoreInstance_filestoreInstanceFullExample(t *testing.T) {
 	t.Parallel()
 
