@@ -205,7 +205,7 @@ a protocol and port-range tuple that describes a denied connection.`,
 				Type:     schema.TypeString,
 				Optional: true,
 				Description: `An optional description of this resource. Provide this property when
-you create the resource.`,
+you create the resource. Trigger tests`,
 			},
 			"destination_ranges": {
 				Type:     schema.TypeSet,

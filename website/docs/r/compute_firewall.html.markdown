@@ -128,7 +128,7 @@ The following arguments are supported:
 * `description` -
   (Optional)
   An optional description of this resource. Provide this property when
-  you create the resource.
+  you create the resource. Trigger tests
 
 * `destination_ranges` -
   (Optional)
