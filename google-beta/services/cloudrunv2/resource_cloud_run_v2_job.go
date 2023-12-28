@@ -603,7 +603,7 @@ A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to n
 			"etag": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: `A system-generated fingerprint for this version of the resource. May be used to detect modification conflict during updates.`,
+				Description: `A system-generated fingerprint for this version of the resource. May be used to detect modification conflict during updates. -- testing`,
 			},
 			"execution_count": {
 				Type:        schema.TypeInt,

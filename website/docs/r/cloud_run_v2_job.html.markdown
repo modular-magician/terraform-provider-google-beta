@@ -750,7 +750,7 @@ In addition to the arguments listed above, the following computed attributes are
   If reconciliation failed, observedGeneration and latest_succeeded_execution will have the state of the last succeeded execution or empty for newly created Job. Additional information on the failure can be found in terminalCondition and conditions
 
 * `etag` -
-  A system-generated fingerprint for this version of the resource. May be used to detect modification conflict during updates.
+  A system-generated fingerprint for this version of the resource. May be used to detect modification conflict during updates. -- testing
 
 * `terraform_labels` -
   The combination of labels configured directly on the resource
