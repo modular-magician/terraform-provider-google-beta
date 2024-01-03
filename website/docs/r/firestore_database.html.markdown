@@ -34,19 +34,6 @@ To get more information about Database, see:
 * How-to Guides
     * [Official Documentation](https://cloud.google.com/firestore/docs/)
 
-## Example Usage - Firestore Default Database
-
-
-```hcl
-resource "google_firestore_database" "database" {
-  project                 = "my-project-name"
-  name                    = "(default)"
-  location_id             = "nam5"
-  type                    = "FIRESTORE_NATIVE"
-  delete_protection_state = "DELETE_PROTECTION_ENABLED"
-  deletion_policy         = "DELETE"
-}
-```
 ## Example Usage - Firestore Database
 
 
