@@ -77,6 +77,11 @@ resource "google_vmwareengine_private_cloud" "vmw-engine-pc" {
       custom_core_count = 32
     }
   }
+
+  # Ignore changes to type for TIME_LIMITED Private Clouds
+  lifecycle {
+    ignore_changes = [type]
+  }
 }
 
 resource "google_vmwareengine_network" "pc-nw" {
@@ -184,6 +189,7 @@ The following arguments are supported:
 * `type` -
   (Optional)
   Initial type of the private cloud.
+  **Note:** Set `lifecycle.ignore_changes = [type]` when upgrading a TIME_LIMITED PC to STANDARD by increasing its node count.
   Default value is `STANDARD`.
   Possible values are: `STANDARD`, `TIME_LIMITED`.
 

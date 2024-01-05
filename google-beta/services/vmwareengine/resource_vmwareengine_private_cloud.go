@@ -168,8 +168,10 @@ the form: projects/{project_number}/locations/{location}/vmwareEngineNetworks/{v
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: verify.ValidateEnum([]string{"STANDARD", "TIME_LIMITED", ""}),
-				Description:  `Initial type of the private cloud. Default value: "STANDARD" Possible values: ["STANDARD", "TIME_LIMITED"]`,
-				Default:      "STANDARD",
+				Description: `Initial type of the private cloud.
+
+**Note:** Set 'lifecycle.ignore_changes = [type]' when upgrading a TIME_LIMITED PC to STANDARD by increasing its node count. Default value: "STANDARD" Possible values: ["STANDARD", "TIME_LIMITED"]`,
+				Default: "STANDARD",
 			},
 			"hcx": {
 				Type:        schema.TypeList,
@@ -445,6 +447,9 @@ func resourceVmwareenginePrivateCloudRead(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error reading PrivateCloud: %s", err)
 	}
 	if err := d.Set("vcenter", flattenVmwareenginePrivateCloudVcenter(res["vcenter"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PrivateCloud: %s", err)
+	}
+	if err := d.Set("type", flattenVmwareenginePrivateCloudType(res["type"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateCloud: %s", err)
 	}
 
@@ -929,6 +934,10 @@ func flattenVmwareenginePrivateCloudVcenterState(v interface{}, d *schema.Resour
 }
 
 func flattenVmwareenginePrivateCloudVcenterFqdn(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenVmwareenginePrivateCloudType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
