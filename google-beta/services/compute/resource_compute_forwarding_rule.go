@@ -212,7 +212,6 @@ must be omitted for all other load balancer types.`,
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
 				Description: `An optional description of this resource. Provide this property when
 you create the resource.`,
 			},
@@ -955,6 +954,54 @@ func resourceComputeForwardingRuleUpdate(d *schema.ResourceData, meta interface{
 
 	d.Partial(true)
 
+	if d.HasChange("description") || d.HasChange("allow_global_access") {
+		obj := make(map[string]interface{})
+
+		descriptionProp, err := expandComputeForwardingRuleDescription(d.Get("description"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+			obj["description"] = descriptionProp
+		}
+		allowGlobalAccessProp, err := expandComputeForwardingRuleAllowGlobalAccess(d.Get("allow_global_access"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("allow_global_access"); ok || !reflect.DeepEqual(v, allowGlobalAccessProp) {
+			obj["allowGlobalAccess"] = allowGlobalAccessProp
+		}
+
+		url, err := tpgresource.ReplaceVarsForId(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/forwardingRules/{{name}}")
+		if err != nil {
+			return err
+		}
+
+		// err == nil indicates that the billing_project value was found
+		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+		})
+		if err != nil {
+			return fmt.Errorf("Error updating ForwardingRule %q: %s", d.Id(), err)
+		} else {
+			log.Printf("[DEBUG] Finished updating ForwardingRule %q: %#v", d.Id(), res)
+		}
+
+		err = ComputeOperationWaitTime(
+			config, res, tpgresource.GetResourceNameFromSelfLink(project), "Updating ForwardingRule", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return err
+		}
+	}
 	if d.HasChange("target") {
 		obj := make(map[string]interface{})
 
@@ -978,48 +1025,6 @@ func resourceComputeForwardingRuleUpdate(d *schema.ResourceData, meta interface{
 		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 			Config:    config,
 			Method:    "POST",
-			Project:   billingProject,
-			RawURL:    url,
-			UserAgent: userAgent,
-			Body:      obj,
-			Timeout:   d.Timeout(schema.TimeoutUpdate),
-		})
-		if err != nil {
-			return fmt.Errorf("Error updating ForwardingRule %q: %s", d.Id(), err)
-		} else {
-			log.Printf("[DEBUG] Finished updating ForwardingRule %q: %#v", d.Id(), res)
-		}
-
-		err = ComputeOperationWaitTime(
-			config, res, tpgresource.GetResourceNameFromSelfLink(project), "Updating ForwardingRule", userAgent,
-			d.Timeout(schema.TimeoutUpdate))
-		if err != nil {
-			return err
-		}
-	}
-	if d.HasChange("allow_global_access") {
-		obj := make(map[string]interface{})
-
-		allowGlobalAccessProp, err := expandComputeForwardingRuleAllowGlobalAccess(d.Get("allow_global_access"), d, config)
-		if err != nil {
-			return err
-		} else if v, ok := d.GetOkExists("allow_global_access"); ok || !reflect.DeepEqual(v, allowGlobalAccessProp) {
-			obj["allowGlobalAccess"] = allowGlobalAccessProp
-		}
-
-		url, err := tpgresource.ReplaceVarsForId(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/forwardingRules/{{name}}")
-		if err != nil {
-			return err
-		}
-
-		// err == nil indicates that the billing_project value was found
-		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-			billingProject = bp
-		}
-
-		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-			Config:    config,
-			Method:    "PATCH",
 			Project:   billingProject,
 			RawURL:    url,
 			UserAgent: userAgent,
