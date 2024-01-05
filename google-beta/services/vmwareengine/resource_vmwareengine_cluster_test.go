@@ -90,7 +90,7 @@ resource "google_vmwareengine_private_cloud" "cluster-pc" {
     cluster_id = "tf-test-mgmt-cluster%{random_suffix}"
     node_type_configs {
       node_type_id = "standard-72"
-      node_count   = 3
+      node_count   = 1
     }
   }
 }
@@ -101,7 +101,7 @@ resource "google_vmwareengine_cluster" "vmw-engine-ext-cluster" {
   node_type_configs {
     node_type_id = "standard-72"
     node_count   = %{node_count}
-		custom_core_count = 32
+    custom_core_count = 32
   }
 }
 
