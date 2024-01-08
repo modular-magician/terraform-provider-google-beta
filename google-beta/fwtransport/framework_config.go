@@ -149,6 +149,7 @@ type FrameworkProviderConfig struct {
 	RedisBasePath                    string
 	ResourceManagerBasePath          string
 	RuntimeConfigBasePath            string
+	SearchAndConversationBasePath    string
 	SecretManagerBasePath            string
 	SecureSourceManagerBasePath      string
 	SecurityCenterBasePath           string
@@ -308,6 +309,7 @@ func (p *FrameworkProviderConfig) LoadAndValidateFramework(ctx context.Context, 
 	p.RedisBasePath = data.RedisCustomEndpoint.ValueString()
 	p.ResourceManagerBasePath = data.ResourceManagerCustomEndpoint.ValueString()
 	p.RuntimeConfigBasePath = data.RuntimeConfigCustomEndpoint.ValueString()
+	p.SearchAndConversationBasePath = data.SearchAndConversationCustomEndpoint.ValueString()
 	p.SecretManagerBasePath = data.SecretManagerCustomEndpoint.ValueString()
 	p.SecureSourceManagerBasePath = data.SecureSourceManagerCustomEndpoint.ValueString()
 	p.SecurityCenterBasePath = data.SecurityCenterCustomEndpoint.ValueString()
@@ -1239,6 +1241,14 @@ func (p *FrameworkProviderConfig) HandleDefaults(ctx context.Context, data *fwmo
 		}, transport_tpg.DefaultBasePaths[transport_tpg.RuntimeConfigBasePathKey])
 		if customEndpoint != nil {
 			data.RuntimeConfigCustomEndpoint = types.StringValue(customEndpoint.(string))
+		}
+	}
+	if data.SearchAndConversationCustomEndpoint.IsNull() {
+		customEndpoint := transport_tpg.MultiEnvDefault([]string{
+			"GOOGLE_SEARCH_AND_CONVERSATION_CUSTOM_ENDPOINT",
+		}, transport_tpg.DefaultBasePaths[transport_tpg.SearchAndConversationBasePathKey])
+		if customEndpoint != nil {
+			data.SearchAndConversationCustomEndpoint = types.StringValue(customEndpoint.(string))
 		}
 	}
 	if data.SecretManagerCustomEndpoint.IsNull() {

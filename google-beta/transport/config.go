@@ -284,6 +284,7 @@ type Config struct {
 	RedisBasePath                    string
 	ResourceManagerBasePath          string
 	RuntimeConfigBasePath            string
+	SearchAndConversationBasePath    string
 	SecretManagerBasePath            string
 	SecureSourceManagerBasePath      string
 	SecurityCenterBasePath           string
@@ -425,6 +426,7 @@ const PubsubLiteBasePathKey = "PubsubLite"
 const RedisBasePathKey = "Redis"
 const ResourceManagerBasePathKey = "ResourceManager"
 const RuntimeConfigBasePathKey = "RuntimeConfig"
+const SearchAndConversationBasePathKey = "SearchAndConversation"
 const SecretManagerBasePathKey = "SecretManager"
 const SecureSourceManagerBasePathKey = "SecureSourceManager"
 const SecurityCenterBasePathKey = "SecurityCenter"
@@ -560,6 +562,7 @@ var DefaultBasePaths = map[string]string{
 	RedisBasePathKey:                    "https://redis.googleapis.com/v1beta1/",
 	ResourceManagerBasePathKey:          "https://cloudresourcemanager.googleapis.com/v1/",
 	RuntimeConfigBasePathKey:            "https://runtimeconfig.googleapis.com/v1beta1/",
+	SearchAndConversationBasePathKey:    "https://discoveryengine.googleapis.com/v1alpha/",
 	SecretManagerBasePathKey:            "https://secretmanager.googleapis.com/v1/",
 	SecureSourceManagerBasePathKey:      "https://securesourcemanager.googleapis.com/v1/",
 	SecurityCenterBasePathKey:           "https://securitycenter.googleapis.com/v1/",
@@ -1152,6 +1155,11 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 		d.Set("runtime_config_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_RUNTIME_CONFIG_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[RuntimeConfigBasePathKey]))
+	}
+	if d.Get("search_and_conversation_custom_endpoint") == "" {
+		d.Set("search_and_conversation_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_SEARCH_AND_CONVERSATION_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[SearchAndConversationBasePathKey]))
 	}
 	if d.Get("secret_manager_custom_endpoint") == "" {
 		d.Set("secret_manager_custom_endpoint", MultiEnvDefault([]string{
@@ -2241,6 +2249,7 @@ func ConfigureBasePaths(c *Config) {
 	c.RedisBasePath = DefaultBasePaths[RedisBasePathKey]
 	c.ResourceManagerBasePath = DefaultBasePaths[ResourceManagerBasePathKey]
 	c.RuntimeConfigBasePath = DefaultBasePaths[RuntimeConfigBasePathKey]
+	c.SearchAndConversationBasePath = DefaultBasePaths[SearchAndConversationBasePathKey]
 	c.SecretManagerBasePath = DefaultBasePaths[SecretManagerBasePathKey]
 	c.SecureSourceManagerBasePath = DefaultBasePaths[SecureSourceManagerBasePathKey]
 	c.SecurityCenterBasePath = DefaultBasePaths[SecurityCenterBasePathKey]
