@@ -31,17 +31,19 @@ func TestAccIdentityPlatformConfig_update(t *testing.T) {
 				Config: testAccIdentityPlatformConfig_basic(context),
 			},
 			{
-				ResourceName:      "google_identity_platform_config.basic",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_identity_platform_config.basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"client", "mfa", "monitoring"},
 			},
 			{
 				Config: testAccIdentityPlatformConfig_update(context),
 			},
 			{
-				ResourceName:      "google_identity_platform_config.basic",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_identity_platform_config.basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"client", "mfa", "monitoring"},
 			},
 		},
 	})
@@ -92,6 +94,35 @@ resource "google_identity_platform_config" "basic" {
       ]
     }
   }
+
+  client {
+    permissions {
+      disabled_user_deletion = true
+      disabled_user_signup   = true
+    }
+  }
+
+  mfa {
+    enabled_providers = ["PHONE_SMS"]
+    provider_configs {
+      state = "ENABLED"
+      totp_provider_config {
+        adjacent_intervals = 3
+      }
+    }
+    state = "ENABLED"
+  }
+
+  monitoring {
+    request_logging {
+      enabled = true
+    }
+  }
+
+  multi_tenant {
+    allow_tenants           = true
+    default_tenant_location = "organizations/%{org_id}"
+  }
 }
 `, context)
 }
@@ -139,6 +170,14 @@ resource "google_identity_platform_config" "basic" {
         "NZ",
       ]
     }
+  }
+
+  mfa {
+    enabled_providers = ["PHONE_SMS"]
+    provider_configs {
+      state = "ENABLED"
+    }
+    state = "DISABLED"
   }
 }
 `, context)
