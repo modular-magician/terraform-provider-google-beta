@@ -1594,6 +1594,18 @@ func ResourceContainerCluster() *schema.Resource {
 				ConflictsWith: []string{"enable_autopilot"},
 			},
 
+			"enable_confidential_storage_override_for_default_node_pool": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: `If true, updates the default node pool to set "enable_confidential_storage" flag; use confidential mode compatible machine type:"n2-standard-2" and disk-type:"hyperdisk-balanced". The configurations changes are made only if node pool/node config is not defined during cluster creation.`,
+			},
+
+			"boot_disk_kms_key_override_for_default_node_pool": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `If provided, the key is used for default node pool boot disk encryption only if node pool/ node config is not define during cluster creation`,
+			},
+
 			"private_cluster_config": {
 				Type:             schema.TypeList,
 				MaxItems:         1,
@@ -2283,6 +2295,15 @@ func resourceContainerClusterCreate(d *schema.ResourceData, meta interface{}) er
 		// Node Configs have default values that are set in the expand function,
 		// but can only be set if node pools are unspecified.
 		cluster.NodeConfig = expandNodeConfig([]interface{}{})
+		if v, ok := d.GetOk("enable_confidential_storage_override_for_default_node_pool"); ok {
+			cluster.NodeConfig.EnableConfidentialStorage = v.(bool)
+			// Add default compatible disk and machine types for confidential storage
+			cluster.NodeConfig.DiskType = "hyperdisk-balanced"
+			cluster.NodeConfig.MachineType = "n2-standard-2"
+		}
+		if v, ok := d.GetOk("boot_disk_kms_key_override_for_default_node_pool"); ok {
+			cluster.NodeConfig.BootDiskKmsKey = v.(string)
+		}
 	}
 
 	if v, ok := d.GetOk("node_pool_defaults"); ok {
