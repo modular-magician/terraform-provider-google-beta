@@ -26,6 +26,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
@@ -34,7 +35,8 @@ func TestAccTpuV2Vm_tpuV2VmBasicExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"vm_runtime_version": envvar.GetTestTpuV2VmRuntimeVersionFromEnv(t),
+		"random_suffix":      acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -67,7 +69,7 @@ resource "google_tpu_v2_vm" "tpu" {
   name = "tf-test-test-tpu%{random_suffix}"
   zone = "us-central1-c"
 
-  runtime_version = "tpu-vm-tf-2.13.0"
+  runtime_version = "%{vm_runtime_version}"
 }
 `, context)
 }
@@ -76,7 +78,8 @@ func TestAccTpuV2Vm_tpuV2VmFullExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"vm_runtime_version": envvar.GetTestTpuV2VmRuntimeVersionFromEnv(t),
+		"random_suffix":      acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -118,7 +121,7 @@ resource "google_tpu_v2_vm" "tpu" {
   zone = "us-central1-c"
   description = "Text description of the TPU."
 
-  runtime_version  = "tpu-vm-tf-2.13.0"
+  runtime_version  = "%{vm_runtime_version}"
 
   accelerator_config {
     type     = "V2"

@@ -9,13 +9,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 )
 
 func TestAccTpuV2Vm_update(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"random_suffix":   acctest.RandString(t, 10),
+		"runtime_version": envvar.GetTestTpuV2VmRuntimeVersionFromEnv(t),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -63,7 +65,7 @@ resource "google_tpu_v2_vm" "tpu" {
   zone        = "us-central1-c"
   description = "Text description of the TPU."
 
-  runtime_version  = "tpu-vm-tf-2.13.0"
+  runtime_version  = "%{runtime_version}"
   accelerator_type = "v2-8"
 
   scheduling_config {
@@ -113,7 +115,7 @@ resource "google_tpu_v2_vm" "tpu" {
   zone        = "us-central1-c"
   description = "Text description of the TPU updated."
 
-  runtime_version  = "tpu-vm-tf-2.13.0"
+  runtime_version  = "%{runtime_version}"
   accelerator_type = "v2-8"
 
   scheduling_config {
