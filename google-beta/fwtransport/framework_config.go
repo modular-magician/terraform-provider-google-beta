@@ -154,6 +154,7 @@ type FrameworkProviderConfig struct {
 	SecretManagerBasePath            string
 	SecureSourceManagerBasePath      string
 	SecurityCenterBasePath           string
+	SecuritypostureBasePath          string
 	SecurityScannerBasePath          string
 	ServiceDirectoryBasePath         string
 	ServiceManagementBasePath        string
@@ -315,6 +316,7 @@ func (p *FrameworkProviderConfig) LoadAndValidateFramework(ctx context.Context, 
 	p.SecretManagerBasePath = data.SecretManagerCustomEndpoint.ValueString()
 	p.SecureSourceManagerBasePath = data.SecureSourceManagerCustomEndpoint.ValueString()
 	p.SecurityCenterBasePath = data.SecurityCenterCustomEndpoint.ValueString()
+	p.SecuritypostureBasePath = data.SecuritypostureCustomEndpoint.ValueString()
 	p.SecurityScannerBasePath = data.SecurityScannerCustomEndpoint.ValueString()
 	p.ServiceDirectoryBasePath = data.ServiceDirectoryCustomEndpoint.ValueString()
 	p.ServiceManagementBasePath = data.ServiceManagementCustomEndpoint.ValueString()
@@ -1283,6 +1285,14 @@ func (p *FrameworkProviderConfig) HandleDefaults(ctx context.Context, data *fwmo
 		}, transport_tpg.DefaultBasePaths[transport_tpg.SecurityCenterBasePathKey])
 		if customEndpoint != nil {
 			data.SecurityCenterCustomEndpoint = types.StringValue(customEndpoint.(string))
+		}
+	}
+	if data.SecuritypostureCustomEndpoint.IsNull() {
+		customEndpoint := transport_tpg.MultiEnvDefault([]string{
+			"GOOGLE_SECURITYPOSTURE_CUSTOM_ENDPOINT",
+		}, transport_tpg.DefaultBasePaths[transport_tpg.SecuritypostureBasePathKey])
+		if customEndpoint != nil {
+			data.SecuritypostureCustomEndpoint = types.StringValue(customEndpoint.(string))
 		}
 	}
 	if data.SecurityScannerCustomEndpoint.IsNull() {
