@@ -134,6 +134,12 @@ The elements are of the form "KEY=VALUE" for the environment variable "KEY" bein
 				},
 			},
 			"disable_tcp_connections": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `Disables support for plain TCP connections in the workstation. By default the service supports TCP connections via a websocket relay. Setting this option to true disables that relay, which prevents the usage
+of services that require plain tcp connections, such as ssh. When enabled, all communication must occur over https or wss.`,
+			},
+			"disable_tcp_connections": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: `Disables support for plain TCP connections in the workstation. By default the service supports TCP connections via a websocket relay. Setting this option to true disables that relay, which prevents the usage of services that require plain tcp connections, such as ssh. When enabled, all communication must occur over https or wss.`,
@@ -533,6 +539,12 @@ func resourceWorkstationsWorkstationConfigCreate(d *schema.ResourceData, meta in
 	} else if v, ok := d.GetOkExists("enable_audit_agent"); !tpgresource.IsEmptyValue(reflect.ValueOf(enableAuditAgentProp)) && (ok || !reflect.DeepEqual(v, enableAuditAgentProp)) {
 		obj["enableAuditAgent"] = enableAuditAgentProp
 	}
+	disableTcpConnectionsProp, err := expandWorkstationsWorkstationConfigDisableTcpConnections(d.Get("disable_tcp_connections"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("disable_tcp_connections"); !tpgresource.IsEmptyValue(reflect.ValueOf(disableTcpConnectionsProp)) && (ok || !reflect.DeepEqual(v, disableTcpConnectionsProp)) {
+		obj["disableTcpConnections"] = disableTcpConnectionsProp
+	}
 	hostProp, err := expandWorkstationsWorkstationConfigHost(d.Get("host"), d, config)
 	if err != nil {
 		return err
@@ -700,6 +712,9 @@ func resourceWorkstationsWorkstationConfigRead(d *schema.ResourceData, meta inte
 	if err := d.Set("replica_zones", flattenWorkstationsWorkstationConfigReplicaZones(res["replicaZones"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationConfig: %s", err)
 	}
+	if err := d.Set("disable_tcp_connections", flattenWorkstationsWorkstationConfigDisableTcpConnections(res["disableTcpConnections"], d, config)); err != nil {
+		return fmt.Errorf("Error reading WorkstationConfig: %s", err)
+	}
 	if err := d.Set("host", flattenWorkstationsWorkstationConfigHost(res["host"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WorkstationConfig: %s", err)
 	}
@@ -780,6 +795,12 @@ func resourceWorkstationsWorkstationConfigUpdate(d *schema.ResourceData, meta in
 	} else if v, ok := d.GetOkExists("enable_audit_agent"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enableAuditAgentProp)) {
 		obj["enableAuditAgent"] = enableAuditAgentProp
 	}
+	disableTcpConnectionsProp, err := expandWorkstationsWorkstationConfigDisableTcpConnections(d.Get("disable_tcp_connections"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("disable_tcp_connections"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, disableTcpConnectionsProp)) {
+		obj["disableTcpConnections"] = disableTcpConnectionsProp
+	}
 	hostProp, err := expandWorkstationsWorkstationConfigHost(d.Get("host"), d, config)
 	if err != nil {
 		return err
@@ -843,6 +864,10 @@ func resourceWorkstationsWorkstationConfigUpdate(d *schema.ResourceData, meta in
 
 	if d.HasChange("enable_audit_agent") {
 		updateMask = append(updateMask, "enableAuditAgent")
+	}
+
+	if d.HasChange("disable_tcp_connections") {
+		updateMask = append(updateMask, "disableTcpConnections")
 	}
 
 	if d.HasChange("host") {
@@ -1057,6 +1082,10 @@ func flattenWorkstationsWorkstationConfigRunningTimeout(v interface{}, d *schema
 }
 
 func flattenWorkstationsWorkstationConfigReplicaZones(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenWorkstationsWorkstationConfigDisableTcpConnections(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1505,6 +1534,10 @@ func expandWorkstationsWorkstationConfigReplicaZones(v interface{}, d tpgresourc
 }
 
 func expandWorkstationsWorkstationConfigEnableAuditAgent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandWorkstationsWorkstationConfigDisableTcpConnections(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

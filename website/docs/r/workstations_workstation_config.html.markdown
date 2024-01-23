@@ -83,6 +83,8 @@ resource "google_workstations_workstation_config" "default" {
     label-one = "value-one"
   }
 
+  disable_tcp_connections = false
+
   labels = {
     "label" = "key"
   }
@@ -549,6 +551,11 @@ The following arguments are supported:
 * `enable_audit_agent` -
   (Optional)
   Whether to enable Linux `auditd` logging on the workstation. When enabled, a service account must also be specified that has `logging.buckets.write` permission on the project. Operating system audit logging is distinct from Cloud Audit Logs.
+
+* `disable_tcp_connections` -
+  (Optional)
+  Disables support for plain TCP connections in the workstation. By default the service supports TCP connections via a websocket relay. Setting this option to true disables that relay, which prevents the usage
+  of services that require plain tcp connections, such as ssh. When enabled, all communication must occur over https or wss.
 
 * `host` -
   (Optional)

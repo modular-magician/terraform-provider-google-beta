@@ -101,6 +101,8 @@ resource "google_workstations_workstation_config" "default" {
     label-one = "value-one"
   }
 
+  disable_tcp_connections = false
+
   labels = {
     "label" = "key"
   }
