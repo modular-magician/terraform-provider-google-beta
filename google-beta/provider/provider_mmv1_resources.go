@@ -425,9 +425,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 426
+// Generated resources: 427
 // Generated IAM resources: 255
-// Total generated resources: 681
+// Total generated resources: 682
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                         accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                   accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -654,6 +654,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_compute_region_disk_iam_policy":                          tpgiamresource.ResourceIamPolicy(compute.ComputeRegionDiskIamSchema, compute.ComputeRegionDiskIamUpdaterProducer, compute.ComputeRegionDiskIdParseFunc),
 	"google_compute_region_disk_resource_policy_attachment":          compute.ResourceComputeRegionDiskResourcePolicyAttachment(),
 	"google_compute_region_health_check":                             compute.ResourceComputeRegionHealthCheck(),
+	"google_compute_region_network_endpoint":                         compute.ResourceComputeRegionNetworkEndpoint(),
 	"google_compute_region_network_endpoint_group":                   compute.ResourceComputeRegionNetworkEndpointGroup(),
 	"google_compute_region_network_firewall_policy":                  compute.ResourceComputeRegionNetworkFirewallPolicy(),
 	"google_compute_region_per_instance_config":                      compute.ResourceComputeRegionPerInstanceConfig(),
