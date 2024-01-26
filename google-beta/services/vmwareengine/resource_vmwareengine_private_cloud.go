@@ -447,6 +447,9 @@ func resourceVmwareenginePrivateCloudRead(d *schema.ResourceData, meta interface
 	if err := d.Set("vcenter", flattenVmwareenginePrivateCloudVcenter(res["vcenter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateCloud: %s", err)
 	}
+	if err := d.Set("type", flattenVmwareenginePrivateCloudType(res["type"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PrivateCloud: %s", err)
+	}
 
 	return nil
 }
@@ -930,6 +933,19 @@ func flattenVmwareenginePrivateCloudVcenterState(v interface{}, d *schema.Resour
 
 func flattenVmwareenginePrivateCloudVcenterFqdn(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func flattenVmwareenginePrivateCloudType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// We don't read the value from the API into state because the value can change due to outside influence
+	// We only record the value present when the resource was created.
+
+	// Return the value set in the config
+	if val, ok := d.GetOkExists("type"); ok {
+		return val
+	}
+
+	// Return the API default if type is unset in the config
+	return "STANDARD"
 }
 
 func expandVmwareenginePrivateCloudDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
