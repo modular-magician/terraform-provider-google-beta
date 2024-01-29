@@ -32,7 +32,7 @@ To get more information about LogView, see:
 
 
 ```hcl
-resource "google_logging_project_bucket_config" "logging_log_view" {
+resource "google_logging_project_bucket_config" "my-log-bucket" {
     project        = "my-project-name"
     location       = "global"
     retention_days = 30
@@ -40,8 +40,8 @@ resource "google_logging_project_bucket_config" "logging_log_view" {
 }
 
 resource "google_logging_log_view" "logging_log_view" {
-  name        = "my-view"
-  bucket      = google_logging_project_bucket_config.logging_log_view.id
+  name        = "my-log-view"
+  bucket      = google_logging_project_bucket_config.my-log-bucket.id
   description = "A logging view configured with Terraform"
   filter      = "SOURCE(\"projects/myproject\") AND resource.type = \"gce_instance\" AND LOG_ID(\"stdout\")"
 }

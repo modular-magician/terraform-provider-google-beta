@@ -59,7 +59,7 @@ func TestAccLoggingLogView_loggingLogViewBasicExample(t *testing.T) {
 
 func testAccLoggingLogView_loggingLogViewBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_logging_project_bucket_config" "logging_log_view" {
+resource "google_logging_project_bucket_config" "tf-test-my-log-bucket%{random_suffix}" {
     project        = "%{project}"
     location       = "global"
     retention_days = 30
@@ -67,8 +67,8 @@ resource "google_logging_project_bucket_config" "logging_log_view" {
 }
 
 resource "google_logging_log_view" "logging_log_view" {
-  name        = "tf-test-my-view%{random_suffix}"
-  bucket      = google_logging_project_bucket_config.logging_log_view.id
+  name        = "tf-test-my-log-view%{random_suffix}"
+  bucket      = google_logging_project_bucket_config.tf-test-my-log-bucket%{random_suffix}.id
   description = "A logging view configured with Terraform"
   filter      = "SOURCE(\"projects/myproject\") AND resource.type = \"gce_instance\" AND LOG_ID(\"stdout\")"
 }
@@ -103,7 +103,7 @@ func TestAccLoggingLogView_loggingLogViewLongNameExample(t *testing.T) {
 
 func testAccLoggingLogView_loggingLogViewLongNameExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_logging_project_bucket_config" "logging_log_view" {
+resource "google_logging_project_bucket_config" "tf-test-my-log-bucket%{random_suffix}" {
     project        = "%{project}"
     location       = "global"
     retention_days = 30
@@ -112,7 +112,7 @@ resource "google_logging_project_bucket_config" "logging_log_view" {
 
 resource "google_logging_log_view" "logging_log_view" {
   name        = "projects/%{project}/locations/global/buckets/_Default/views/tf-test-view%{random_suffix}"
-  bucket      = google_logging_project_bucket_config.logging_log_view.id
+  bucket      = google_logging_project_bucket_config.tf-test-my-log-bucket%{random_suffix}.id
   description = "A logging view configured with Terraform"
   filter      = "SOURCE(\"projects/myproject\") AND resource.type = \"gce_instance\" AND LOG_ID(\"stdout\")"
 }
