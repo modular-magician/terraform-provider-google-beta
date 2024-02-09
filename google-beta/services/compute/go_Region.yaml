@@ -1,0 +1,147 @@
+# the license inside this block applies to this file
+# Copyright 2024 Google Inc.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+name: 'Region'
+kind: 'compute#region'
+description: |
+	Represents a Region resource. A region is a specific geographical
+location where you can run your resources. Each region has one or more
+zones
+
+exclude: true
+readonly: true
+docs:
+base_url: 'projects/{{project}}/regions'
+has_self_link: true
+timeouts:
+	insert_minutes: 20
+	update_minutes: 20
+	delete_minutes: 20
+collection_url_key: 'items'
+custom_code:
+parameters:
+properties:
+	- name: 'creationTimestamp'
+		type: Time
+		description: 'Creation timestamp in RFC3339 text format.'
+		output: true
+		update_verb: ''
+		key_expander: ''
+	- name: 'deprecated'
+		type: NestedObject
+		description: 'The deprecation state of this resource.'
+		output: true
+		update_verb: ''
+		key_expander: ''
+		properties:
+    	- name: 'deleted'
+    		type: Time
+    		description: 'An optional RFC3339 timestamp on or after which the deprecation state
+    of this resource will be changed to DELETED.'
+    		key_expander: ''
+    	- name: 'deprecated'
+    		type: Time
+    		description: 'An optional RFC3339 timestamp on or after which the deprecation state
+    of this resource will be changed to DEPRECATED.'
+    		output: true
+    		key_expander: ''
+    	- name: 'obsolete'
+    		type: Time
+    		description: 'An optional RFC3339 timestamp on or after which the deprecation state
+    of this resource will be changed to OBSOLETE.'
+    		output: true
+    		key_expander: ''
+    	- name: 'replacement'
+    		type: String
+    		description: 'The URL of the suggested replacement for a deprecated resource. The
+    suggested replacement resource must be the same kind of resource as
+    the deprecated resource.'
+    		output: true
+    		key_expander: ''
+    	- name: 'state'
+    		type: Enum
+    		description: 'The deprecation state of this resource. This can be DEPRECATED,
+    OBSOLETE, or DELETED. Operations which create a new resource using a
+    DEPRECATED resource will return successfully, but with a warning
+    indicating the deprecated resource and recommending its replacement.
+    Operations which use OBSOLETE or DELETED resources will be rejected
+    and result in an error.'
+    		output: true
+    		key_expander: ''
+    		values:
+    			- 'DEPRECATED'
+    			- 'OBSOLETE'
+    			- 'DELETED'
+	- name: 'description'
+		type: String
+		description: 'An optional description of this resource.'
+		output: true
+		update_verb: ''
+		key_expander: ''
+	- name: 'id'
+		type: Integer
+		description: 'The unique identifier for the resource.'
+		output: true
+		update_verb: ''
+		key_expander: ''
+	- name: 'name'
+		type: String
+		description: 'Name of the resource.'
+		update_verb: ''
+		key_expander: ''
+	- name: 'quotas'
+		type: Array
+		description: 'Quotas assigned to this region.'
+		output: true
+		update_verb: ''
+		key_expander: ''
+		item_type: NestedObject
+			properties:
+      	- name: 'metric'
+      		type: String
+      		description: 'Name of the quota metric.'
+      		output: true
+      		key_expander: ''
+      	- name: 'limit'
+      		type: Double
+      		description: 'Quota limit for this metric.'
+      		output: true
+      		key_expander: ''
+      	- name: 'usage'
+      		type: Double
+      		description: 'Current usage of this metric.'
+      		output: true
+      		key_expander: ''
+      	- name: 'owner'
+      		type: String
+      		description: 'Owning resource. This is the resource on which this quota is applied.'
+      		output: true
+      		key_expander: ''
+	- name: 'status'
+		type: Enum
+		description: 'Status of the region, either UP or DOWN.'
+		output: true
+		update_verb: ''
+		key_expander: ''
+		values:
+			- 'UP'
+			- 'DOWN'
+	- name: 'zones'
+		type: Array
+		description: 'List of zones within the region'
+		output: true
+		update_verb: ''
+		key_expander: ''
+			item_type: Api::Type::String

@@ -1,0 +1,428 @@
+# the license inside this block applies to this file
+# Copyright 2024 Google Inc.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+name: 'Instance'
+description: |
+	A Workbench instance.
+docs:
+id_format: 'projects/{{project}}/locations/{{location}}/instances/{{name}}'
+base_url: 'projects/{{project}}/locations/{{location}}/instances'
+self_link: 'projects/{{project}}/locations/{{location}}/instances/{{name}}'
+create_url: 'projects/{{project}}/locations/{{location}}/instances?instanceId={{name}}'
+update_verb: 'PATCH'
+update_mask: true
+import_format:
+		- 'projects/{{project}}/locations/{{location}}/instances/{{name}}'
+timeouts:
+	insert_minutes: 10
+	update_minutes: 20
+	delete_minutes: 20
+autogen_async: true
+async:
+	operation: 
+		base_url: '{{op_id}}'
+		path: 'name'
+		wait_ms: '1000'
+	result: 
+		path: 'response'
+		resource_inside_response: true
+	error: 
+		path: 'error'
+		message: 'message'
+iam_policy:
+		method_name_separator: ':'
+		parent_resource_attribute: 'name'
+		base_url: 'projects/{{project}}/locations/{{location}}/instances/{{name}}'
+		import_format:
+			- 'projects/{{project}}/locations/{{location}}/instances/{{name}}'
+			- '{{name}}'
+custom_code:
+		constants: 'templates/terraform/constants/workbench_instance.go'
+		post_create: 'templates/terraform/post_create/workbench_instance.go.erb'
+		pre_update: 'templates/terraform/pre_update/workbench_instance.go.erb'
+		post_update: 'templates/terraform/post_update/workbench_instance.go.erb'
+examples:
+	- name: 'workbench_instance_basic'
+		primary_resource_id: 'instance'
+		primary_resource_name: 'instance'
+		vars:
+			- instance_name: 'workbench-instance'
+	- name: 'workbench_instance_basic_gpu'
+		primary_resource_id: 'instance'
+		primary_resource_name: 'instance'
+		vars:
+			- instance_name: 'workbench-instance'
+		ignore_read_extra:
+			- 'gce_setup.0.vm_image'
+	- name: 'workbench_instance_labels'
+		primary_resource_id: 'instance'
+		primary_resource_name: 'instance'
+		vars:
+			- instance_name: 'workbench-instance'
+			- network_name: 'wbi-test-default'
+		test_env_vars:
+			- service_account: 'SERVICE_ACCT'
+	- name: 'workbench_instance_full'
+		primary_resource_id: 'instance'
+		primary_resource_name: 'instance'
+		vars:
+			- instance_name: 'workbench-instance'
+			- network_name: 'wbi-test-default'
+			- key_name: 'my-crypto-key'
+		test_env_vars:
+			- service_account: 'SERVICE_ACCT'
+		test_vars_overrides:
+			- 'key_name': 'acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name'
+		ignore_read_extra:
+			- 'gce_setup.0.vm_image'
+			- 'gce_setup.0.boot_disk.0.disk_encryption'
+			- 'gce_setup.0.boot_disk.0.disk_type'
+			- 'gce_setup.0.boot_disk.0.kms_key'
+			- 'gce_setup.0.data_disks.0.disk_encryption'
+			- 'gce_setup.0.data_disks.0.disk_type'
+			- 'gce_setup.0.data_disks.0.kms_key'
+parameters:
+	- name: 'location'
+		type: String
+		description: 'Part of `parent`. See documentation of `projectsId`.'
+		url_param_only: true
+		required: true
+		immutable: true
+	- name: 'instanceId'
+		type: String
+		description: 'Required. User-defined unique ID of this instance.'
+		url_param_only: true
+		immutable: true
+properties:
+	- name: 'name'
+		type: String
+		description: 'The name of this workbench instance. Format: `projects/{project_id}/locations/{location}/instances/{instance_id}`'
+		pattern: 'v2/projects/{{project}}/locations/{{location}}/instances/{{name}}'
+		url_param_only: true
+		required: true
+		immutable: true
+		custom_flatten: 'templates/terraform/custom_flatten/name_from_self_link.erb'
+	- name: 'gceSetup'
+		type: NestedObject
+		description: 'The definition of how to configure a VM instance outside of Resources and Identity.'
+		default_from_api: true
+		properties:
+    	- name: 'machineType'
+    		type: String
+    		description: 'Optional. The machine type of the VM instance. https://cloud.google.com/compute/docs/machine-resource'
+    		pattern: 'projects/{{project}}/zones/{{location}}/machineTypes/{{name}}'
+    		default_from_api: true
+    		diff_suppress_func: 'tpgresource.CompareSelfLinkOrResourceName'
+    		custom_flatten: 'templates/terraform/custom_flatten/name_from_self_link.erb'
+    	- name: 'acceleratorConfigs'
+    		type: Array
+    		description: 'The hardware accelerators used on this instance. If you use accelerators, make sure that your configuration has
+    [enough vCPUs and memory to support the `machine_type` you have selected](https://cloud.google.com/compute/docs/gpus/#gpus-list).
+    Currently supports only one accelerator configuration.'
+    		item_type: NestedObject
+    			properties:
+                	- name: 'type'
+                		type: Enum
+                		description: 'Optional. Type of this accelerator.'
+                		values:
+                			- 'NVIDIA_TESLA_P100'
+                			- 'NVIDIA_TESLA_V100'
+                			- 'NVIDIA_TESLA_P4'
+                			- 'NVIDIA_TESLA_T4'
+                			- 'NVIDIA_TESLA_A100'
+                			- 'NVIDIA_A100_80GB'
+                			- 'NVIDIA_L4'
+                			- 'NVIDIA_TESLA_T4_VWS'
+                			- 'NVIDIA_TESLA_P100_VWS'
+                			- 'NVIDIA_TESLA_P4_VWS'
+                			- ''
+                	- name: 'coreCount'
+                		type: String
+                		description: 'Optional. Count of cores of this accelerator.'
+    	- name: 'serviceAccounts'
+    		type: Array
+    		description: 'The service account that serves as an identity for the VM instance. Currently supports only one service account.'
+    		immutable: true
+    		default_from_api: true
+    		item_type: NestedObject
+    			properties:
+                	- name: 'email'
+                		type: String
+                		description: 'Optional. Email address of the service account.'
+                		immutable: true
+                		default_from_api: true
+                	- name: 'scopes'
+                		type: Array
+                		description: 'Output only. The list of scopes to be made available for this
+                service account. Set by the CLH to https://www.googleapis.com/auth/cloud-platform'
+                		output: true
+                			item_type: Api::Type::String
+    	- name: 'vmImage'
+    		type: NestedObject
+    		description: 'Definition of a custom Compute Engine virtual machine image for starting
+    a workbench instance with the environment installed directly on the VM.'
+    		immutable: true
+    		default_from_api: true
+    		custom_flatten: 'templates/terraform/custom_flatten/workbench_instance_vm_image_flatten.go.erb'
+    		properties:
+            	- name: 'project'
+            		type: String
+            		description: 'The name of the Google Cloud project that this VM image belongs to.
+            Format: {project_id}'
+            		immutable: true
+            	- name: 'name'
+            		type: String
+            		description: 'Optional. Use VM image name to find the image.'
+            		immutable: true
+            		exactly_one_of:
+            			- 'vm_image.0.name'
+            			- 'vm_image.0.family'
+            	- name: 'family'
+            		type: String
+            		description: 'Optional. Use this VM image family to find the image; the newest
+            image in this family will be used.'
+            		immutable: true
+            		exactly_one_of:
+            			- 'vm_image.0.name'
+            			- 'vm_image.0.family'
+    	- name: 'bootDisk'
+    		type: NestedObject
+    		description: 'The definition of a boot disk.'
+    		immutable: true
+    		default_from_api: true
+    		properties:
+            	- name: 'diskSizeGb'
+            		type: String
+            		description: 'Optional. The size of the boot disk in GB attached to this instance,
+            up to a maximum of 64000 GB (64 TB). If not specified, this defaults to the
+            recommended value of 150GB.'
+            		immutable: true
+            		default_from_api: true
+            	- name: 'diskType'
+            		type: Enum
+            		description: 'Optional. Indicates the type of the disk.'
+            		immutable: true
+            		default_from_api: true
+            		custom_flatten: 'templates/terraform/custom_flatten/workbench_instance_boot_disk_type_flatten.go.erb'
+            		values:
+            			- 'PD_STANDARD'
+            			- 'PD_SSD'
+            			- 'PD_BALANCED'
+            			- 'PD_EXTREME'
+            			- ''
+            	- name: 'diskEncryption'
+            		type: Enum
+            		description: 'Optional. Input only. Disk encryption method used on the boot and
+            data disks, defaults to GMEK.'
+            		immutable: true
+            		default_from_api: true
+            		custom_flatten: 'templates/terraform/custom_flatten/workbench_instance_boot_disk_encryption_flatten.go.erb'
+            		values:
+            			- 'GMEK'
+            			- 'CMEK'
+            			- ''
+            	- name: 'kmsKey'
+            		type: String
+            		description: ''Optional. Input only. The KMS key used to encrypt the disks, only
+            applicable if disk_encryption is CMEK. Format: `projects/{project_id}/locations/{location}/keyRings/{key_ring_id}/cryptoKeys/{key_id}`
+            Learn more about using your own encryption keys.''
+            		immutable: true
+            		custom_flatten: 'templates/terraform/custom_flatten/workbench_instance_boot_disk_kms_flatten.go.erb'
+    	- name: 'dataDisks'
+    		type: Array
+    		description: 'Data disks attached to the VM instance. Currently supports only one data disk.'
+    		immutable: true
+    		default_from_api: true
+    		item_type: NestedObject
+    			properties:
+                	- name: 'diskSizeGb'
+                		type: String
+                		description: 'Optional. The size of the disk in GB attached to this VM instance,
+                up to a maximum of 64000 GB (64 TB). If not specified, this defaults to
+                100.'
+                		immutable: true
+                		default_from_api: true
+                	- name: 'diskType'
+                		type: Enum
+                		description: 'Optional. Input only. Indicates the type of the disk.'
+                		immutable: true
+                		custom_flatten: 'templates/terraform/custom_flatten/workbench_instance_data_disk_type_flatten.go.erb'
+                		values:
+                			- 'PD_STANDARD'
+                			- 'PD_SSD'
+                			- 'PD_BALANCED'
+                			- 'PD_EXTREME'
+                			- ''
+                	- name: 'diskEncryption'
+                		type: Enum
+                		description: 'Optional. Input only. Disk encryption method used on the boot
+                and data disks, defaults to GMEK.'
+                		immutable: true
+                		default_from_api: true
+                		custom_flatten: 'templates/terraform/custom_flatten/workbench_instance_data_disk_encryption_flatten.go.erb'
+                		values:
+                			- 'GMEK'
+                			- 'CMEK'
+                			- ''
+                	- name: 'kmsKey'
+                		type: String
+                		description: ''Optional. Input only. The KMS key used to encrypt the disks,
+                only applicable if disk_encryption is CMEK. Format: `projects/{project_id}/locations/{location}/keyRings/{key_ring_id}/cryptoKeys/{key_id}`
+                Learn more about using your own encryption keys.''
+                		immutable: true
+                		custom_flatten: 'templates/terraform/custom_flatten/workbench_instance_data_disk_kms_flatten.go.erb'
+    		max_size: 1
+    	- name: 'networkInterfaces'
+    		type: Array
+    		description: 'The network interfaces for the VM. Supports only one interface.'
+    		immutable: true
+    		default_from_api: true
+    		item_type: NestedObject
+    			properties:
+                	- name: 'network'
+                		type: String
+                		description: 'Optional. The name of the VPC that this VM instance is in.'
+                		immutable: true
+                		default_from_api: true
+                		diff_suppress_func: 'tpgresource.CompareSelfLinkRelativePaths'
+                		custom_expand: 'templates/terraform/custom_expand/network_full_url.erb'
+                	- name: 'subnet'
+                		type: String
+                		description: 'Optional. The name of the subnet that this VM instance is in.'
+                		immutable: true
+                		default_from_api: true
+                		diff_suppress_func: 'tpgresource.CompareSelfLinkRelativePaths'
+                	- name: 'nicType'
+                		type: Enum
+                		description: 'Optional. The type of vNIC to be used on this interface. This
+                may be gVNIC or VirtioNet.'
+                		immutable: true
+                		values:
+                			- 'VIRTIO_NET'
+                			- 'GVNIC'
+                			- ''
+    	- name: 'disablePublicIp'
+    		type: Boolean
+    		description: 'Optional. If true, no external IP will be assigned to this VM instance.'
+    		immutable: true
+    		default_from_api: true
+    	- name: 'tags'
+    		type: Array
+    		description: 'Optional. The Compute Engine tags to add to instance (see [Tagging
+    instances](https://cloud.google.com/compute/docs/label-or-tag-resources#tags)).'
+    		immutable: true
+    		default_from_api: true
+    		diff_suppress_func: 'WorkbenchInstanceTagsDiffSuppress'
+    			item_type: Api::Type::String
+    	- name: 'metadata'
+    		type: KeyValuePairs
+    		description: 'Optional. Custom metadata to apply to this instance.'
+    		default_from_api: true
+    		diff_suppress_func: 'WorkbenchInstanceMetadataDiffSuppress'
+    	- name: 'enableIpForwarding'
+    		type: Boolean
+    		description: 'Optional. Flag to enable ip forwarding or not, default false/off.
+    https://cloud.google.com/vpc/docs/using-routes#canipforward'
+    		immutable: true
+	- name: 'proxyUri'
+		type: String
+		description: 'Output only. The proxy endpoint that is used to access the Jupyter notebook.'
+		output: true
+	- name: 'instanceOwners'
+		type: Array
+		description: ''Optional. Input only. The owner of this instance after creation. Format:
+`alias@example.com` Currently supports one owner only. If not specified, all of
+the service account users of your VM instance''s service account can use the instance.''
+		immutable: true
+		ignore_read: true
+			item_type: Api::Type::String
+	- name: 'creator'
+		type: String
+		description: 'Output only. Email address of entity that sent original CreateInstance request.'
+		output: true
+	- name: 'state'
+		type: String
+		description: 'Output only. The state of this instance.'
+		output: true
+	- name: 'upgradeHistory'
+		type: Array
+		description: 'Output only. The upgrade history of this instance.'
+		output: true
+		item_type: NestedObject
+			properties:
+      	- name: 'snapshot'
+      		type: String
+      		description: 'Optional. The snapshot of the boot disk of this workbench instance before upgrade.'
+      	- name: 'vmImage'
+      		type: String
+      		description: 'Optional. The VM image before this instance upgrade.'
+      	- name: 'containerImage'
+      		type: String
+      		description: 'Optional. The container image before this instance upgrade.'
+      	- name: 'framework'
+      		type: String
+      		description: 'Optional. The framework of this workbench instance.'
+      	- name: 'version'
+      		type: String
+      		description: 'Optional. The version of the workbench instance before this upgrade.'
+      	- name: 'state'
+      		type: String
+      		description: 'Output only. The state of this instance upgrade history entry.'
+      		output: true
+      	- name: 'createTime'
+      		type: String
+      		description: 'An RFC3339 timestamp in UTC time. This in the format of yyyy-MM-ddTHH:mm:ss.SSSZ.
+      The milliseconds portion (".SSS") is optional.'
+      	- name: 'action'
+      		type: String
+      		description: 'Optional. Action. Rolloback or Upgrade.'
+      	- name: 'targetVersion'
+      		type: String
+      		description: 'Optional. Target VM Version, like m63.'
+	- name: 'healthState'
+		type: String
+		description: 'Output only. Instance health_state.'
+		output: true
+	- name: 'healthInfo'
+		type: NestedObject
+		description: ''Output only. Additional information about instance health. Example:
+healthInfo": { "docker_proxy_agent_status": "1", "docker_status": "1", "jupyterlab_api_status":
+"-1", "jupyterlab_status": "-1", "updated": "2020-10-18 09:40:03.573409" }''
+		output: true
+		properties:
+	- name: 'createTime'
+		type: String
+		description: 'An RFC3339 timestamp in UTC time. This in the format of yyyy-MM-ddTHH:mm:ss.SSSZ.
+The milliseconds portion (".SSS") is optional.'
+		output: true
+	- name: 'updateTime'
+		type: String
+		description: 'An RFC3339 timestamp in UTC time. This in the format of yyyy-MM-ddTHH:mm:ss.SSSZ.
+The milliseconds portion (".SSS") is optional.'
+		output: true
+	- name: 'disableProxyAccess'
+		type: Boolean
+		description: 'Optional. If true, the workbench instance will not register with the proxy.'
+		immutable: true
+	- name: 'labels'
+		type: KeyValueLabels
+		description: 'Optional. Labels to apply to this instance. These can be later modified
+by the UpdateInstance method.
+
+
+**Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
+Please refer to the field `effective_labels` for all of the labels present on the resource.'
+		immutable: false
+		diff_suppress_func: 'WorkbenchInstanceLabelsDiffSuppress'
