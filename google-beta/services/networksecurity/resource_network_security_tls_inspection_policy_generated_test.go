@@ -39,7 +39,7 @@ func TestAccNetworkSecurityTlsInspectionPolicy_networkSecurityTlsInspectionPolic
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckNetworkSecurityTlsInspectionPolicyDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
