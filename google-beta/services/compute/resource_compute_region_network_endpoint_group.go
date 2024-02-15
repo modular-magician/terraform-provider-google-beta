@@ -346,25 +346,25 @@ func resourceComputeRegionNetworkEndpointGroupCreate(d *schema.ResourceData, met
 	cloudRunProp, err := expandComputeRegionNetworkEndpointGroupCloudRun(d.Get("cloud_run"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("cloud_run"); !tpgresource.IsEmptyValue(reflect.ValueOf(cloudRunProp)) && (ok || !reflect.DeepEqual(v, cloudRunProp)) {
+	} else if v, ok := d.GetOkExists("cloud_run"); ok || !reflect.DeepEqual(v, cloudRunProp) {
 		obj["cloudRun"] = cloudRunProp
 	}
 	appEngineProp, err := expandComputeRegionNetworkEndpointGroupAppEngine(d.Get("app_engine"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("app_engine"); !tpgresource.IsEmptyValue(reflect.ValueOf(appEngineProp)) && (ok || !reflect.DeepEqual(v, appEngineProp)) {
+	} else if v, ok := d.GetOkExists("app_engine"); ok || !reflect.DeepEqual(v, appEngineProp) {
 		obj["appEngine"] = appEngineProp
 	}
 	cloudFunctionProp, err := expandComputeRegionNetworkEndpointGroupCloudFunction(d.Get("cloud_function"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("cloud_function"); !tpgresource.IsEmptyValue(reflect.ValueOf(cloudFunctionProp)) && (ok || !reflect.DeepEqual(v, cloudFunctionProp)) {
+	} else if v, ok := d.GetOkExists("cloud_function"); ok || !reflect.DeepEqual(v, cloudFunctionProp) {
 		obj["cloudFunction"] = cloudFunctionProp
 	}
 	serverlessDeploymentProp, err := expandComputeRegionNetworkEndpointGroupServerlessDeployment(d.Get("serverless_deployment"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("serverless_deployment"); !tpgresource.IsEmptyValue(reflect.ValueOf(serverlessDeploymentProp)) && (ok || !reflect.DeepEqual(v, serverlessDeploymentProp)) {
+	} else if v, ok := d.GetOkExists("serverless_deployment"); ok || !reflect.DeepEqual(v, serverlessDeploymentProp) {
 		obj["serverlessDeployment"] = serverlessDeploymentProp
 	}
 	regionProp, err := expandComputeRegionNetworkEndpointGroupRegion(d.Get("region"), d, config)
@@ -617,9 +617,6 @@ func flattenComputeRegionNetworkEndpointGroupCloudRun(v interface{}, d *schema.R
 		return nil
 	}
 	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
 	transformed := make(map[string]interface{})
 	transformed["service"] =
 		flattenComputeRegionNetworkEndpointGroupCloudRunService(original["service"], d, config)
@@ -672,9 +669,6 @@ func flattenComputeRegionNetworkEndpointGroupCloudFunction(v interface{}, d *sch
 		return nil
 	}
 	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
 	transformed := make(map[string]interface{})
 	transformed["function"] =
 		flattenComputeRegionNetworkEndpointGroupCloudFunctionFunction(original["function"], d, config)
@@ -763,8 +757,13 @@ func expandComputeRegionNetworkEndpointGroupSubnetwork(v interface{}, d tpgresou
 
 func expandComputeRegionNetworkEndpointGroupCloudRun(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
+	if len(l) == 0 {
 		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
 	}
 	raw := l[0]
 	original := raw.(map[string]interface{})
@@ -858,8 +857,13 @@ func expandComputeRegionNetworkEndpointGroupAppEngineUrlMask(v interface{}, d tp
 
 func expandComputeRegionNetworkEndpointGroupCloudFunction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
+	if len(l) == 0 {
 		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
 	}
 	raw := l[0]
 	original := raw.(map[string]interface{})
