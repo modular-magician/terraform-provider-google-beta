@@ -19,7 +19,7 @@ description: |-
 
 # google\_alloydb\_backup
 
-An AlloyDB Backup.
+An AlloyDB Backup. Updated.
 
 
 To get more information about Backup, see:
