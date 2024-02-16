@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/metaschema"
@@ -15,6 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/functions"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/fwmodels"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/fwtransport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dns"
@@ -27,6 +29,7 @@ import (
 // Ensure the implementation satisfies the expected interfaces
 var (
 	_ provider.ProviderWithMetaSchema = &FrameworkProvider{}
+	_ provider.ProviderWithFunctions  = &FrameworkProvider{}
 )
 
 // New is a helper function to simplify provider server and testing implementation.
@@ -1031,4 +1034,15 @@ func (p *FrameworkProvider) DataSources(_ context.Context) []func() datasource.D
 // Resources defines the resources implemented in the provider.
 func (p *FrameworkProvider) Resources(_ context.Context) []func() resource.Resource {
 	return nil
+}
+
+// Functions defines the provider functions implemented in the provider.
+func (p *FrameworkProvider) Functions(_ context.Context) []func() function.Function {
+	return []func() function.Function{
+		functions.NewLocationFromIdFunction,
+		functions.NewProjectFromIdFunction,
+		functions.NewRegionFromIdFunction,
+		functions.NewNameFromIdFunction,
+		functions.NewZoneFromIdFunction,
+	}
 }
