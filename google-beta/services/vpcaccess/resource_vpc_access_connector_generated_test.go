@@ -93,23 +93,18 @@ func TestAccVPCAccessConnector_vpcAccessConnectorSharedVpcExample(t *testing.T) 
 func testAccVPCAccessConnector_vpcAccessConnectorSharedVpcExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_vpc_access_connector" "connector" {
-  name          = "tf-test-vpc-con%{random_suffix}"
+  name = "tf-test-vpc-con%{random_suffix}"
   subnet {
-    name = google_compute_subnetwork.custom_test.name
+    name       = google_compute_subnetwork.custom_test.name
+    project_id = "host-project-id"
   }
   machine_type = "e2-standard-4"
 }
 
-resource "google_compute_subnetwork" "custom_test" {
-  name          = "tf-test-vpc-con%{random_suffix}"
-  ip_cidr_range = "10.2.0.0/28"
-  region        = "us-central1"
-  network       = google_compute_network.custom_test.id
-}
-
-resource "google_compute_network" "custom_test" {
-  name                    = "tf-test-vpc-con%{random_suffix}"
-  auto_create_subnetworks = false
+data "google_compute_subnetwork" "custom_test" {
+  name    = "tf-test-vpc-con%{random_suffix}"
+  project = "host-project-id"
+  region  = var.region
 }
 `, context)
 }
