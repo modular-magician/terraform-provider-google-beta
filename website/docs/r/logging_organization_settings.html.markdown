@@ -33,11 +33,12 @@ To get more information about OrganizationSettings, see:
 
 ```hcl
 resource "google_logging_organization_settings" "example" {
-  disable_default_sink = true
-  kms_key_name         = "kms-key"
-  organization         = "123456789"
-  storage_location     = "us-central1"
-  depends_on           = [ google_kms_crypto_key_iam_member.iam ]
+  disable_default_sink.  = true
+  kms_key_name           = "kms-key"
+  organization           = "123456789"
+  storage_location       = "us-central1"
+  kms_service_account_id = data.google_logging_organization_settings.settings.logging_service_account_id
+  depends_on             = [ google_kms_crypto_key_iam_member.iam ]
 }
 
 data "google_logging_organization_settings" "settings" {
@@ -68,6 +69,10 @@ The following arguments are supported:
   (Optional)
   The resource name for the configured Cloud KMS key.
 
+* `kms_service_account_id` -
+  (Optional)
+  The service account that will be used by the Log Router to access your Cloud KMS key. This can be modified only once to migrate from the legacy CMEK service account to the logging service account as described in [Migrate CMEK SA](https://cloud.google.com/logging/docs/routing/troubleshoot-cmek-orgs#migrate-cmek-sa).
+
 * `storage_location` -
   (Optional)
   The storage location that Cloud Logging will use to create new resources when a location is needed but not explicitly provided.
@@ -85,9 +90,6 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `name` -
   The resource name of the settings.
-
-* `kms_service_account_id` -
-  The service account that will be used by the Log Router to access your Cloud KMS key.
 
 * `logging_service_account_id` -
   The service account for the given container. Sinks use this service account as their writerIdentity if no custom service account is provided.

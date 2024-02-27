@@ -65,16 +65,17 @@ func ResourceLoggingFolderSettings() *schema.Resource {
 				Optional:    true,
 				Description: `The resource name for the configured Cloud KMS key.`,
 			},
+			"kms_service_account_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				Description: `The service account that will be used by the Log Router to access your Cloud KMS key. This can be modified only once to migrate from the legacy CMEK service account to the logging service account as described in [Migrate CMEK SA](https://cloud.google.com/logging/docs/routing/troubleshoot-cmek-orgs#migrate-cmek-sa).`,
+			},
 			"storage_location": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Optional:    true,
 				Description: `The storage location that Cloud Logging will use to create new resources when a location is needed but not explicitly provided.`,
-			},
-			"kms_service_account_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `The service account that will be used by the Log Router to access your Cloud KMS key.`,
 			},
 			"logging_service_account_id": {
 				Type:        schema.TypeString,
@@ -105,6 +106,12 @@ func resourceLoggingFolderSettingsCreate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("kms_key_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(kmsKeyNameProp)) && (ok || !reflect.DeepEqual(v, kmsKeyNameProp)) {
 		obj["kmsKeyName"] = kmsKeyNameProp
 	}
+	kmsServiceAccountIdProp, err := expandLoggingFolderSettingsKmsServiceAccountId(d.Get("kms_service_account_id"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("kms_service_account_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(kmsServiceAccountIdProp)) && (ok || !reflect.DeepEqual(v, kmsServiceAccountIdProp)) {
+		obj["kmsServiceAccountId"] = kmsServiceAccountIdProp
+	}
 	storageLocationProp, err := expandLoggingFolderSettingsStorageLocation(d.Get("storage_location"), d, config)
 	if err != nil {
 		return err
@@ -118,7 +125,7 @@ func resourceLoggingFolderSettingsCreate(d *schema.ResourceData, meta interface{
 		obj["disableDefaultSink"] = disableDefaultSinkProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{LoggingBasePath}}folders/{{folder}}/settings?updateMask=disableDefaultSink,storageLocation,kmsKeyName")
+	url, err := tpgresource.ReplaceVars(d, config, "{{LoggingBasePath}}folders/{{folder}}/settings?updateMask=disableDefaultSink,storageLocation,kmsKeyName,kmsServiceAccountId")
 	if err != nil {
 		return err
 	}
@@ -227,6 +234,12 @@ func resourceLoggingFolderSettingsUpdate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("kms_key_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, kmsKeyNameProp)) {
 		obj["kmsKeyName"] = kmsKeyNameProp
 	}
+	kmsServiceAccountIdProp, err := expandLoggingFolderSettingsKmsServiceAccountId(d.Get("kms_service_account_id"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("kms_service_account_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, kmsServiceAccountIdProp)) {
+		obj["kmsServiceAccountId"] = kmsServiceAccountIdProp
+	}
 	storageLocationProp, err := expandLoggingFolderSettingsStorageLocation(d.Get("storage_location"), d, config)
 	if err != nil {
 		return err
@@ -240,7 +253,7 @@ func resourceLoggingFolderSettingsUpdate(d *schema.ResourceData, meta interface{
 		obj["disableDefaultSink"] = disableDefaultSinkProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{LoggingBasePath}}folders/{{folder}}/settings?updateMask=disableDefaultSink,storageLocation,kmsKeyName")
+	url, err := tpgresource.ReplaceVars(d, config, "{{LoggingBasePath}}folders/{{folder}}/settings?updateMask=disableDefaultSink,storageLocation,kmsKeyName,kmsServiceAccountId")
 	if err != nil {
 		return err
 	}
@@ -324,6 +337,10 @@ func flattenLoggingFolderSettingsLoggingServiceAccountId(v interface{}, d *schem
 }
 
 func expandLoggingFolderSettingsKmsKeyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandLoggingFolderSettingsKmsServiceAccountId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
