@@ -221,6 +221,7 @@ type Config struct {
 	CloudIdsBasePath                 string
 	CloudRunBasePath                 string
 	CloudRunV2BasePath               string
+	CloudRunV3BasePath               string
 	CloudSchedulerBasePath           string
 	CloudTasksBasePath               string
 	ComputeBasePath                  string
@@ -367,6 +368,7 @@ const CloudIdentityBasePathKey = "CloudIdentity"
 const CloudIdsBasePathKey = "CloudIds"
 const CloudRunBasePathKey = "CloudRun"
 const CloudRunV2BasePathKey = "CloudRunV2"
+const CloudRunV3BasePathKey = "CloudRunV3"
 const CloudSchedulerBasePathKey = "CloudScheduler"
 const CloudTasksBasePathKey = "CloudTasks"
 const ComputeBasePathKey = "Compute"
@@ -507,6 +509,7 @@ var DefaultBasePaths = map[string]string{
 	CloudIdsBasePathKey:                 "https://ids.googleapis.com/v1/",
 	CloudRunBasePathKey:                 "https://{{location}}-run.googleapis.com/",
 	CloudRunV2BasePathKey:               "https://run.googleapis.com/v2/",
+	CloudRunV3BasePathKey:               "https://run.googleapis.com/v3/",
 	CloudSchedulerBasePathKey:           "https://cloudscheduler.googleapis.com/v1/",
 	CloudTasksBasePathKey:               "https://cloudtasks.googleapis.com/v2/",
 	ComputeBasePathKey:                  "https://compute.googleapis.com/compute/beta/",
@@ -849,6 +852,11 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 		d.Set("cloud_run_v2_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_CLOUD_RUN_V2_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[CloudRunV2BasePathKey]))
+	}
+	if d.Get("cloud_run_v3_custom_endpoint") == "" {
+		d.Set("cloud_run_v3_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_CLOUD_RUN_V3_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[CloudRunV3BasePathKey]))
 	}
 	if d.Get("cloud_scheduler_custom_endpoint") == "" {
 		d.Set("cloud_scheduler_custom_endpoint", MultiEnvDefault([]string{
@@ -2223,6 +2231,7 @@ func ConfigureBasePaths(c *Config) {
 	c.CloudIdsBasePath = DefaultBasePaths[CloudIdsBasePathKey]
 	c.CloudRunBasePath = DefaultBasePaths[CloudRunBasePathKey]
 	c.CloudRunV2BasePath = DefaultBasePaths[CloudRunV2BasePathKey]
+	c.CloudRunV3BasePath = DefaultBasePaths[CloudRunV3BasePathKey]
 	c.CloudSchedulerBasePath = DefaultBasePaths[CloudSchedulerBasePathKey]
 	c.CloudTasksBasePath = DefaultBasePaths[CloudTasksBasePathKey]
 	c.ComputeBasePath = DefaultBasePaths[ComputeBasePathKey]

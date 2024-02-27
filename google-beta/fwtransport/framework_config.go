@@ -84,6 +84,7 @@ type FrameworkProviderConfig struct {
 	CloudIdsBasePath                 string
 	CloudRunBasePath                 string
 	CloudRunV2BasePath               string
+	CloudRunV3BasePath               string
 	CloudSchedulerBasePath           string
 	CloudTasksBasePath               string
 	ComputeBasePath                  string
@@ -248,6 +249,7 @@ func (p *FrameworkProviderConfig) LoadAndValidateFramework(ctx context.Context, 
 	p.CloudIdsBasePath = data.CloudIdsCustomEndpoint.ValueString()
 	p.CloudRunBasePath = data.CloudRunCustomEndpoint.ValueString()
 	p.CloudRunV2BasePath = data.CloudRunV2CustomEndpoint.ValueString()
+	p.CloudRunV3BasePath = data.CloudRunV3CustomEndpoint.ValueString()
 	p.CloudSchedulerBasePath = data.CloudSchedulerCustomEndpoint.ValueString()
 	p.CloudTasksBasePath = data.CloudTasksCustomEndpoint.ValueString()
 	p.ComputeBasePath = data.ComputeCustomEndpoint.ValueString()
@@ -729,6 +731,14 @@ func (p *FrameworkProviderConfig) HandleDefaults(ctx context.Context, data *fwmo
 		}, transport_tpg.DefaultBasePaths[transport_tpg.CloudRunV2BasePathKey])
 		if customEndpoint != nil {
 			data.CloudRunV2CustomEndpoint = types.StringValue(customEndpoint.(string))
+		}
+	}
+	if data.CloudRunV3CustomEndpoint.IsNull() {
+		customEndpoint := transport_tpg.MultiEnvDefault([]string{
+			"GOOGLE_CLOUD_RUN_V3_CUSTOM_ENDPOINT",
+		}, transport_tpg.DefaultBasePaths[transport_tpg.CloudRunV3BasePathKey])
+		if customEndpoint != nil {
+			data.CloudRunV3CustomEndpoint = types.StringValue(customEndpoint.(string))
 		}
 	}
 	if data.CloudSchedulerCustomEndpoint.IsNull() {

@@ -61,6 +61,7 @@ type ProviderModel struct {
 	CloudIdsCustomEndpoint                 types.String `tfsdk:"cloud_ids_custom_endpoint"`
 	CloudRunCustomEndpoint                 types.String `tfsdk:"cloud_run_custom_endpoint"`
 	CloudRunV2CustomEndpoint               types.String `tfsdk:"cloud_run_v2_custom_endpoint"`
+	CloudRunV3CustomEndpoint               types.String `tfsdk:"cloud_run_v3_custom_endpoint"`
 	CloudSchedulerCustomEndpoint           types.String `tfsdk:"cloud_scheduler_custom_endpoint"`
 	CloudTasksCustomEndpoint               types.String `tfsdk:"cloud_tasks_custom_endpoint"`
 	ComputeCustomEndpoint                  types.String `tfsdk:"compute_custom_endpoint"`

@@ -40,6 +40,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudids"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudrun"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudrunv2"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudrunv3"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudscheduler"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudtasks"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"

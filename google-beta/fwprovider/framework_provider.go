@@ -341,6 +341,12 @@ func (p *FrameworkProvider) Schema(_ context.Context, _ provider.SchemaRequest, 
 					transport_tpg.CustomEndpointValidator(),
 				},
 			},
+			"cloud_run_v3_custom_endpoint": &schema.StringAttribute{
+				Optional: true,
+				Validators: []validator.String{
+					transport_tpg.CustomEndpointValidator(),
+				},
+			},
 			"cloud_scheduler_custom_endpoint": &schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
