@@ -432,9 +432,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 444
+// Generated resources: 445
 // Generated IAM resources: 264
-// Total generated resources: 708
+// Total generated resources: 709
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                         accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                   accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -933,6 +933,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_integration_connectors_endpoint_attachment":              integrationconnectors.ResourceIntegrationConnectorsEndpointAttachment(),
 	"google_kms_crypto_key":                                          kms.ResourceKMSCryptoKey(),
 	"google_kms_crypto_key_version":                                  kms.ResourceKMSCryptoKeyVersion(),
+	"google_kms_ekm_connection":                                      kms.ResourceKMSEkmConnection(),
 	"google_kms_key_ring":                                            kms.ResourceKMSKeyRing(),
 	"google_kms_key_ring_import_job":                                 kms.ResourceKMSKeyRingImportJob(),
 	"google_kms_secret_ciphertext":                                   kms.ResourceKMSSecretCiphertext(),
