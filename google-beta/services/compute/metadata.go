@@ -12,6 +12,7 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
+// force generation
 // Since the google compute API uses optimistic locking, there is a chance
 // we need to resubmit our updated metadata. To do this, you need to provide
 // an update function that attempts to submit your metadata
