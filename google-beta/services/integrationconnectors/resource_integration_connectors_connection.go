@@ -528,7 +528,7 @@ Will be empty string if google managed.`,
 									"destination": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: `destinations for the connection`,
+										Description: `destinations for eventing configuration`,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"host": {
@@ -552,7 +552,7 @@ Will be empty string if google managed.`,
 									"key": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: `Key for the connection`,
+										Description: `Key for the Registration Destination Config`,
 									},
 								},
 							},
@@ -743,10 +743,69 @@ Will be empty string if google managed.`,
 								},
 							},
 						},
+						"dead_letter_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Dead letter config for eventing`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"project_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Project which has the topic given.`,
+									},
+									"topic": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Topic to push events which couldn't be processed.`,
+									},
+								},
+							},
+						},
 						"enrichment_enabled": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Description: `Enrichment Enabled.`,
+						},
+						"proxy_destination_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Proxy for Eventing auto-registration.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"destination": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `destinations for eventing configuration`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"host": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: `Host`,
+												},
+												"port": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `port number`,
+												},
+												"service_attachment": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: `Service Attachment`,
+												},
+											},
+										},
+									},
+									"key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Key for the Registration Destination Config`,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -2624,6 +2683,10 @@ func flattenIntegrationConnectorsConnectionEventingConfig(v interface{}, d *sche
 	transformed := make(map[string]interface{})
 	transformed["registration_destination_config"] =
 		flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfig(original["registrationDestinationConfig"], d, config)
+	transformed["proxy_destination_config"] =
+		flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfig(original["proxyDestinationConfig"], d, config)
+	transformed["dead_letter_config"] =
+		flattenIntegrationConnectorsConnectionEventingConfigDeadLetterConfig(original["deadLetterConfig"], d, config)
 	transformed["auth_config"] =
 		flattenIntegrationConnectorsConnectionEventingConfigAuthConfig(original["authConfig"], d, config)
 	transformed["additional_variable"] =
@@ -2693,6 +2756,93 @@ func flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestination
 }
 
 func flattenIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationHost(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["key"] =
+		flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigKey(original["key"], d, config)
+	transformed["destination"] =
+		flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestination(original["destinations"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestination(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"port":               flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationPort(original["port"], d, config),
+			"service_attachment": flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationServiceAttachment(original["serviceAttachment"], d, config),
+			"host":               flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationHost(original["host"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationPort(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationServiceAttachment(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationHost(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationConnectorsConnectionEventingConfigDeadLetterConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["topic"] =
+		flattenIntegrationConnectorsConnectionEventingConfigDeadLetterConfigTopic(original["topic"], d, config)
+	transformed["project_id"] =
+		flattenIntegrationConnectorsConnectionEventingConfigDeadLetterConfigProjectId(original["projectId"], d, config)
+	return []interface{}{transformed}
+}
+func flattenIntegrationConnectorsConnectionEventingConfigDeadLetterConfigTopic(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenIntegrationConnectorsConnectionEventingConfigDeadLetterConfigProjectId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -4277,6 +4427,20 @@ func expandIntegrationConnectorsConnectionEventingConfig(v interface{}, d tpgres
 		transformed["registrationDestinationConfig"] = transformedRegistrationDestinationConfig
 	}
 
+	transformedProxyDestinationConfig, err := expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfig(original["proxy_destination_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProxyDestinationConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["proxyDestinationConfig"] = transformedProxyDestinationConfig
+	}
+
+	transformedDeadLetterConfig, err := expandIntegrationConnectorsConnectionEventingConfigDeadLetterConfig(original["dead_letter_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDeadLetterConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["deadLetterConfig"] = transformedDeadLetterConfig
+	}
+
 	transformedAuthConfig, err := expandIntegrationConnectorsConnectionEventingConfigAuthConfig(original["auth_config"], d, config)
 	if err != nil {
 		return nil, err
@@ -4376,6 +4540,118 @@ func expandIntegrationConnectorsConnectionEventingConfigRegistrationDestinationC
 }
 
 func expandIntegrationConnectorsConnectionEventingConfigRegistrationDestinationConfigDestinationHost(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedKey, err := expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigKey(original["key"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["key"] = transformedKey
+	}
+
+	transformedDestination, err := expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestination(original["destination"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDestination); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["destinations"] = transformedDestination
+	}
+
+	return transformed, nil
+}
+
+func expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestination(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedPort, err := expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationPort(original["port"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["port"] = transformedPort
+		}
+
+		transformedServiceAttachment, err := expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationServiceAttachment(original["service_attachment"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedServiceAttachment); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["serviceAttachment"] = transformedServiceAttachment
+		}
+
+		transformedHost, err := expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationHost(original["host"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedHost); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["host"] = transformedHost
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationServiceAttachment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationConnectorsConnectionEventingConfigProxyDestinationConfigDestinationHost(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationConnectorsConnectionEventingConfigDeadLetterConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedTopic, err := expandIntegrationConnectorsConnectionEventingConfigDeadLetterConfigTopic(original["topic"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTopic); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["topic"] = transformedTopic
+	}
+
+	transformedProjectId, err := expandIntegrationConnectorsConnectionEventingConfigDeadLetterConfigProjectId(original["project_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProjectId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["projectId"] = transformedProjectId
+	}
+
+	return transformed, nil
+}
+
+func expandIntegrationConnectorsConnectionEventingConfigDeadLetterConfigTopic(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIntegrationConnectorsConnectionEventingConfigDeadLetterConfigProjectId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -298,6 +298,17 @@ resource "google_integration_connectors_connection" "zendeskconnection" {
           port = 80
         }
     }
+    proxy_destination_config {
+      key = "proxy_destination_config"
+      destination {
+          host = "https://proxy.zendesk.com"
+          port = 80
+        }
+    }
+    dead_letter_config{
+      topic = "test-topic"
+      project_id = "test-project-id"
+    }
     auth_config {
       auth_type = "USER_PASSWORD"
       auth_key = "sampleAuthKey"

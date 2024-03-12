@@ -258,6 +258,17 @@ resource "google_integration_connectors_connection" "zendeskconnection" {
           port = 80
         }
     }
+    proxy_destination_config {
+      key = "proxy_destination_config"
+      destination {
+          host = "https://proxy.zendesk.com"
+          port = 80
+        }
+    }
+    dead_letter_config{
+      topic = "test-topic"
+      project_id = "test-project-id"
+    }
     auth_config {
       auth_type = "USER_PASSWORD"
       auth_key = "sampleAuthKey"
@@ -848,6 +859,16 @@ The following arguments are supported:
   registrationDestinationConfig
   Structure is [documented below](#nested_registration_destination_config).
 
+* `proxy_destination_config` -
+  (Optional)
+  Proxy for Eventing auto-registration.
+  Structure is [documented below](#nested_proxy_destination_config).
+
+* `dead_letter_config` -
+  (Optional)
+  Dead letter config for eventing
+  Structure is [documented below](#nested_dead_letter_config).
+
 * `auth_config` -
   (Optional)
   authConfig for Eventing Configuration.
@@ -867,11 +888,11 @@ The following arguments are supported:
 
 * `key` -
   (Optional)
-  Key for the connection
+  Key for the Registration Destination Config
 
 * `destination` -
   (Optional)
-  destinations for the connection
+  destinations for eventing configuration
   Structure is [documented below](#nested_destination).
 
 
@@ -888,6 +909,42 @@ The following arguments are supported:
 * `host` -
   (Optional)
   Host
+
+<a name="nested_proxy_destination_config"></a>The `proxy_destination_config` block supports:
+
+* `key` -
+  (Optional)
+  Key for the Registration Destination Config
+
+* `destination` -
+  (Optional)
+  destinations for eventing configuration
+  Structure is [documented below](#nested_destination).
+
+
+<a name="nested_destination"></a>The `destination` block supports:
+
+* `port` -
+  (Optional)
+  port number
+
+* `service_attachment` -
+  (Optional)
+  Service Attachment
+
+* `host` -
+  (Optional)
+  Host
+
+<a name="nested_dead_letter_config"></a>The `dead_letter_config` block supports:
+
+* `topic` -
+  (Optional)
+  Topic to push events which couldn't be processed.
+
+* `project_id` -
+  (Optional)
+  Project which has the topic given.
 
 <a name="nested_auth_config"></a>The `auth_config` block supports:
 
