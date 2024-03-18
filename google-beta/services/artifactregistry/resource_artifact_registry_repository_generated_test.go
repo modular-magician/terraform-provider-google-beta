@@ -417,7 +417,7 @@ resource "google_artifact_registry_repository" "my-repo" {
 `, context)
 }
 
-func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCustomExample(t *testing.T) {
+func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteDockerhubAuthExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -430,7 +430,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCustomExa
 		CheckDestroy:             testAccCheckArtifactRegistryRepositoryDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCustomExample(context),
+				Config: testAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteDockerhubAuthExample(context),
 			},
 			{
 				ResourceName:            "google_artifact_registry_repository.my-repo",
@@ -442,7 +442,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCustomExa
 	})
 }
 
-func testAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCustomExample(context map[string]interface{}) string {
+func testAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteDockerhubAuthExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 data "google_project" "project" {}
 
@@ -474,6 +474,77 @@ resource "google_artifact_registry_repository" "my-repo" {
     description = "docker hub with custom credentials"
     docker_repository {
       public_repository = "DOCKER_HUB"
+    }
+    upstream_credentials {
+      username_password_credentials {
+        username = "tf-test-remote-username%{random_suffix}"
+        password_secret_version = google_secret_manager_secret_version.tf-test-example-custom-remote-secret%{random_suffix}_version.name
+      }
+    }
+  }
+}
+`, context)
+}
+
+func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCustomDockerhubAuthExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckArtifactRegistryRepositoryDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCustomDockerhubAuthExample(context),
+			},
+			{
+				ResourceName:            "google_artifact_registry_repository.my-repo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"repository_id", "location", "labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCustomDockerhubAuthExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "project" {}
+
+resource "google_secret_manager_secret" "tf-test-example-custom-remote-secret%{random_suffix}" {
+  secret_id = "tf-test-example-secret%{random_suffix}"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "tf-test-example-custom-remote-secret%{random_suffix}_version" {
+  secret = google_secret_manager_secret.tf-test-example-custom-remote-secret%{random_suffix}.id
+  secret_data = "tf-test-remote-password%{random_suffix}"
+}
+
+resource "google_secret_manager_secret_iam_member" "secret-access" {
+  secret_id = google_secret_manager_secret.tf-test-example-custom-remote-secret%{random_suffix}.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-artifactregistry.iam.gserviceaccount.com"
+}
+
+resource "google_artifact_registry_repository" "my-repo" {
+  location      = "us-central1"
+  repository_id = "tf-test-example-custom-remote%{random_suffix}"
+  description   = "example remote docker repository with credentials%{random_suffix}"
+  format        = "DOCKER"
+  mode          = "REMOTE_REPOSITORY"
+  remote_repository_config {
+    description = "custom uri docker hub with auth credentials"
+    docker_repository {
+      custom_repository {
+        uri = "tf-test-https://registry-1.docker.io%{random_suffix}"
+      }
     }
     upstream_credentials {
       username_password_credentials {

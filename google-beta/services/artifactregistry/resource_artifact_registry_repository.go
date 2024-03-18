@@ -312,6 +312,24 @@ snapshot versions.`,
 							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"custom_repository": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Settings for a remote repository with a custom uri.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"uri": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													ForceNew:    true,
+													Description: `Specific uri to the registry, e.g. '"http://deb.debian.org/debian/dists/buster"'`,
+												},
+											},
+										},
+										ExactlyOneOf: []string{"remote_repository_config.0.apt_repository.0.custom_repository"},
+									},
 									"public_repository": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -322,14 +340,14 @@ snapshot versions.`,
 											Schema: map[string]*schema.Schema{
 												"repository_base": {
 													Type:         schema.TypeString,
-													Required:     true,
+													Optional:     true,
 													ForceNew:     true,
-													ValidateFunc: verify.ValidateEnum([]string{"DEBIAN", "UBUNTU"}),
+													ValidateFunc: verify.ValidateEnum([]string{"DEBIAN", "UBUNTU", ""}),
 													Description:  `A common public repository base for Apt, e.g. '"debian/dists/buster"' Possible values: ["DEBIAN", "UBUNTU"]`,
 												},
 												"repository_path": {
 													Type:        schema.TypeString,
-													Required:    true,
+													Optional:    true,
 													ForceNew:    true,
 													Description: `Specific repository from the base.`,
 												},
@@ -354,6 +372,24 @@ snapshot versions.`,
 							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"custom_repository": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Settings for a remote repository with a custom uri.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"uri": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													ForceNew:    true,
+													Description: `Specific uri to the registry, e.g. '"https://registry-1.docker.io"'`,
+												},
+											},
+										},
+										ExactlyOneOf: []string{"remote_repository_config.0.docker_repository.0.custom_repository"},
+									},
 									"public_repository": {
 										Type:         schema.TypeString,
 										Optional:     true,
@@ -375,6 +411,24 @@ snapshot versions.`,
 							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"custom_repository": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Settings for a remote repository with a custom uri.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"uri": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													ForceNew:    true,
+													Description: `Specific uri to the registry, e.g. '"https://repo.maven.apache.org/maven2"'`,
+												},
+											},
+										},
+										ExactlyOneOf: []string{"remote_repository_config.0.maven_repository.0.custom_repository"},
+									},
 									"public_repository": {
 										Type:         schema.TypeString,
 										Optional:     true,
@@ -396,6 +450,24 @@ snapshot versions.`,
 							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"custom_repository": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Settings for a remote repository with a custom uri.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"uri": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													ForceNew:    true,
+													Description: `Specific uri to the registry, e.g. '"https://registry.npmjs.org"'`,
+												},
+											},
+										},
+										ExactlyOneOf: []string{"remote_repository_config.0.npm_repository.0.custom_repository"},
+									},
 									"public_repository": {
 										Type:         schema.TypeString,
 										Optional:     true,
@@ -417,6 +489,24 @@ snapshot versions.`,
 							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"custom_repository": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Settings for a remote repository with a custom uri.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"uri": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													ForceNew:    true,
+													Description: `Specific uri to the registry, e.g. '"https://pypi.io"'`,
+												},
+											},
+										},
+										ExactlyOneOf: []string{"remote_repository_config.0.python_repository.0.custom_repository"},
+									},
 									"public_repository": {
 										Type:         schema.TypeString,
 										Optional:     true,
@@ -474,6 +564,24 @@ remote repository. Must be in the format of
 							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"custom_repository": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Settings for a remote repository with a custom uri.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"uri": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													ForceNew:    true,
+													Description: `Specific uri to the registry, e.g. '"https://dl.rockylinux.org/pub/rocky/9/BaseOS/x86_64/os"'`,
+												},
+											},
+										},
+										ExactlyOneOf: []string{"remote_repository_config.0.yum_repository.0.custom_repository"},
+									},
 									"public_repository": {
 										Type:        schema.TypeList,
 										Optional:    true,
@@ -484,14 +592,14 @@ remote repository. Must be in the format of
 											Schema: map[string]*schema.Schema{
 												"repository_base": {
 													Type:         schema.TypeString,
-													Required:     true,
+													Optional:     true,
 													ForceNew:     true,
-													ValidateFunc: verify.ValidateEnum([]string{"CENTOS", "CENTOS_DEBUG", "CENTOS_VAULT", "CENTOS_STREAM", "ROCKY", "EPEL"}),
+													ValidateFunc: verify.ValidateEnum([]string{"CENTOS", "CENTOS_DEBUG", "CENTOS_VAULT", "CENTOS_STREAM", "ROCKY", "EPEL", ""}),
 													Description:  `A common public repository base for Yum. Possible values: ["CENTOS", "CENTOS_DEBUG", "CENTOS_VAULT", "CENTOS_STREAM", "ROCKY", "EPEL"]`,
 												},
 												"repository_path": {
 													Type:        schema.TypeString,
-													Required:    true,
+													Optional:    true,
 													ForceNew:    true,
 													Description: `Specific repository from the base, e.g. '"centos/8-stream/BaseOS/x86_64/os"'`,
 												},
@@ -1320,6 +1428,8 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigAptRepository(v inte
 	transformed := make(map[string]interface{})
 	transformed["public_repository"] =
 		flattenArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryPublicRepository(original["publicRepository"], d, config)
+	transformed["custom_repository"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryCustomRepository(original["customRepository"], d, config)
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryPublicRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1345,6 +1455,23 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryPublicR
 	return v
 }
 
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryCustomRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["uri"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryCustomRepositoryUri(original["uri"], d, config)
+	return []interface{}{transformed}
+}
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryCustomRepositoryUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1356,9 +1483,28 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepository(v i
 	transformed := make(map[string]interface{})
 	transformed["public_repository"] =
 		flattenArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryPublicRepository(original["publicRepository"], d, config)
+	transformed["custom_repository"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryCustomRepository(original["customRepository"], d, config)
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryPublicRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryCustomRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["uri"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryCustomRepositoryUri(original["uri"], d, config)
+	return []interface{}{transformed}
+}
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryCustomRepositoryUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1373,9 +1519,28 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepository(v in
 	transformed := make(map[string]interface{})
 	transformed["public_repository"] =
 		flattenArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryPublicRepository(original["publicRepository"], d, config)
+	transformed["custom_repository"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryCustomRepository(original["customRepository"], d, config)
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryPublicRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryCustomRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["uri"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryCustomRepositoryUri(original["uri"], d, config)
+	return []interface{}{transformed}
+}
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryCustomRepositoryUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1390,9 +1555,28 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepository(v inte
 	transformed := make(map[string]interface{})
 	transformed["public_repository"] =
 		flattenArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryPublicRepository(original["publicRepository"], d, config)
+	transformed["custom_repository"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryCustomRepository(original["customRepository"], d, config)
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryPublicRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryCustomRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["uri"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryCustomRepositoryUri(original["uri"], d, config)
+	return []interface{}{transformed}
+}
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryCustomRepositoryUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1407,9 +1591,28 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepository(v i
 	transformed := make(map[string]interface{})
 	transformed["public_repository"] =
 		flattenArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryPublicRepository(original["publicRepository"], d, config)
+	transformed["custom_repository"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryCustomRepository(original["customRepository"], d, config)
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryPublicRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryCustomRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["uri"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryCustomRepositoryUri(original["uri"], d, config)
+	return []interface{}{transformed}
+}
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryCustomRepositoryUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1424,6 +1627,8 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigYumRepository(v inte
 	transformed := make(map[string]interface{})
 	transformed["public_repository"] =
 		flattenArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryPublicRepository(original["publicRepository"], d, config)
+	transformed["custom_repository"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryCustomRepository(original["customRepository"], d, config)
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryPublicRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1446,6 +1651,23 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryPublicR
 }
 
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryPublicRepositoryRepositoryPath(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryCustomRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["uri"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryCustomRepositoryUri(original["uri"], d, config)
+	return []interface{}{transformed}
+}
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryCustomRepositoryUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1901,6 +2123,13 @@ func expandArtifactRegistryRepositoryRemoteRepositoryConfigAptRepository(v inter
 		transformed["publicRepository"] = transformedPublicRepository
 	}
 
+	transformedCustomRepository, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryCustomRepository(original["custom_repository"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomRepository); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customRepository"] = transformedCustomRepository
+	}
+
 	return transformed, nil
 }
 
@@ -1938,6 +2167,29 @@ func expandArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryPublicRe
 	return v, nil
 }
 
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryCustomRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedUri, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryCustomRepositoryUri(original["uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["uri"] = transformedUri
+	}
+
+	return transformed, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigAptRepositoryCustomRepositoryUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
@@ -1954,10 +2206,40 @@ func expandArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepository(v in
 		transformed["publicRepository"] = transformedPublicRepository
 	}
 
+	transformedCustomRepository, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryCustomRepository(original["custom_repository"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomRepository); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customRepository"] = transformedCustomRepository
+	}
+
 	return transformed, nil
 }
 
 func expandArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryPublicRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryCustomRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedUri, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryCustomRepositoryUri(original["uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["uri"] = transformedUri
+	}
+
+	return transformed, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryCustomRepositoryUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1977,10 +2259,40 @@ func expandArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepository(v int
 		transformed["publicRepository"] = transformedPublicRepository
 	}
 
+	transformedCustomRepository, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryCustomRepository(original["custom_repository"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomRepository); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customRepository"] = transformedCustomRepository
+	}
+
 	return transformed, nil
 }
 
 func expandArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryPublicRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryCustomRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedUri, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryCustomRepositoryUri(original["uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["uri"] = transformedUri
+	}
+
+	return transformed, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryCustomRepositoryUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2000,10 +2312,40 @@ func expandArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepository(v inter
 		transformed["publicRepository"] = transformedPublicRepository
 	}
 
+	transformedCustomRepository, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryCustomRepository(original["custom_repository"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomRepository); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customRepository"] = transformedCustomRepository
+	}
+
 	return transformed, nil
 }
 
 func expandArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryPublicRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryCustomRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedUri, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryCustomRepositoryUri(original["uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["uri"] = transformedUri
+	}
+
+	return transformed, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryCustomRepositoryUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2023,10 +2365,40 @@ func expandArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepository(v in
 		transformed["publicRepository"] = transformedPublicRepository
 	}
 
+	transformedCustomRepository, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryCustomRepository(original["custom_repository"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomRepository); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customRepository"] = transformedCustomRepository
+	}
+
 	return transformed, nil
 }
 
 func expandArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryPublicRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryCustomRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedUri, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryCustomRepositoryUri(original["uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["uri"] = transformedUri
+	}
+
+	return transformed, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryCustomRepositoryUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2044,6 +2416,13 @@ func expandArtifactRegistryRepositoryRemoteRepositoryConfigYumRepository(v inter
 		return nil, err
 	} else if val := reflect.ValueOf(transformedPublicRepository); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["publicRepository"] = transformedPublicRepository
+	}
+
+	transformedCustomRepository, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryCustomRepository(original["custom_repository"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCustomRepository); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["customRepository"] = transformedCustomRepository
 	}
 
 	return transformed, nil
@@ -2080,6 +2459,29 @@ func expandArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryPublicRe
 }
 
 func expandArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryPublicRepositoryRepositoryPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryCustomRepository(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedUri, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryCustomRepositoryUri(original["uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["uri"] = transformedUri
+	}
+
+	return transformed, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigYumRepositoryCustomRepositoryUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -255,11 +255,11 @@ resource "google_artifact_registry_repository" "my-repo" {
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=artifact_registry_repository_remote_custom&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=artifact_registry_repository_remote_dockerhub_auth&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
-## Example Usage - Artifact Registry Repository Remote Custom
+## Example Usage - Artifact Registry Repository Remote Dockerhub Auth
 
 
 ```hcl
@@ -293,6 +293,57 @@ resource "google_artifact_registry_repository" "my-repo" {
     description = "docker hub with custom credentials"
     docker_repository {
       public_repository = "DOCKER_HUB"
+    }
+    upstream_credentials {
+      username_password_credentials {
+        username = "remote-username"
+        password_secret_version = google_secret_manager_secret_version.example-custom-remote-secret_version.name
+      }
+    }
+  }
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=artifact_registry_repository_remote_custom_dockerhub_auth&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Artifact Registry Repository Remote Custom Dockerhub Auth
+
+
+```hcl
+data "google_project" "project" {}
+
+resource "google_secret_manager_secret" "example-custom-remote-secret" {
+  secret_id = "example-secret"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "example-custom-remote-secret_version" {
+  secret = google_secret_manager_secret.example-custom-remote-secret.id
+  secret_data = "remote-password"
+}
+
+resource "google_secret_manager_secret_iam_member" "secret-access" {
+  secret_id = google_secret_manager_secret.example-custom-remote-secret.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-artifactregistry.iam.gserviceaccount.com"
+}
+
+resource "google_artifact_registry_repository" "my-repo" {
+  location      = "us-central1"
+  repository_id = "example-custom-remote"
+  description   = "example remote docker repository with credentials"
+  format        = "DOCKER"
+  mode          = "REMOTE_REPOSITORY"
+  remote_repository_config {
+    description = "custom uri docker hub with auth credentials"
+    docker_repository {
+      custom_repository {
+        uri = "https://registry-1.docker.io"
+      }
     }
     upstream_credentials {
       username_password_credentials {
@@ -547,17 +598,28 @@ The following arguments are supported:
   One of the publicly available Apt repositories supported by Artifact Registry.
   Structure is [documented below](#nested_public_repository).
 
+* `custom_repository` -
+  (Optional)
+  Settings for a remote repository with a custom uri.
+  Structure is [documented below](#nested_custom_repository).
+
 
 <a name="nested_public_repository"></a>The `public_repository` block supports:
 
 * `repository_base` -
-  (Required)
+  (Optional)
   A common public repository base for Apt, e.g. `"debian/dists/buster"`
   Possible values are: `DEBIAN`, `UBUNTU`.
 
 * `repository_path` -
-  (Required)
+  (Optional)
   Specific repository from the base.
+
+<a name="nested_custom_repository"></a>The `custom_repository` block supports:
+
+* `uri` -
+  (Optional)
+  Specific uri to the registry, e.g. `"http://deb.debian.org/debian/dists/buster"`
 
 <a name="nested_docker_repository"></a>The `docker_repository` block supports:
 
@@ -567,6 +629,18 @@ The following arguments are supported:
   Default value is `DOCKER_HUB`.
   Possible values are: `DOCKER_HUB`.
 
+* `custom_repository` -
+  (Optional)
+  Settings for a remote repository with a custom uri.
+  Structure is [documented below](#nested_custom_repository).
+
+
+<a name="nested_custom_repository"></a>The `custom_repository` block supports:
+
+* `uri` -
+  (Optional)
+  Specific uri to the registry, e.g. `"https://registry-1.docker.io"`
+
 <a name="nested_maven_repository"></a>The `maven_repository` block supports:
 
 * `public_repository` -
@@ -574,6 +648,18 @@ The following arguments are supported:
   Address of the remote repository.
   Default value is `MAVEN_CENTRAL`.
   Possible values are: `MAVEN_CENTRAL`.
+
+* `custom_repository` -
+  (Optional)
+  Settings for a remote repository with a custom uri.
+  Structure is [documented below](#nested_custom_repository).
+
+
+<a name="nested_custom_repository"></a>The `custom_repository` block supports:
+
+* `uri` -
+  (Optional)
+  Specific uri to the registry, e.g. `"https://repo.maven.apache.org/maven2"`
 
 <a name="nested_npm_repository"></a>The `npm_repository` block supports:
 
@@ -583,6 +669,18 @@ The following arguments are supported:
   Default value is `NPMJS`.
   Possible values are: `NPMJS`.
 
+* `custom_repository` -
+  (Optional)
+  Settings for a remote repository with a custom uri.
+  Structure is [documented below](#nested_custom_repository).
+
+
+<a name="nested_custom_repository"></a>The `custom_repository` block supports:
+
+* `uri` -
+  (Optional)
+  Specific uri to the registry, e.g. `"https://registry.npmjs.org"`
+
 <a name="nested_python_repository"></a>The `python_repository` block supports:
 
 * `public_repository` -
@@ -591,6 +689,18 @@ The following arguments are supported:
   Default value is `PYPI`.
   Possible values are: `PYPI`.
 
+* `custom_repository` -
+  (Optional)
+  Settings for a remote repository with a custom uri.
+  Structure is [documented below](#nested_custom_repository).
+
+
+<a name="nested_custom_repository"></a>The `custom_repository` block supports:
+
+* `uri` -
+  (Optional)
+  Specific uri to the registry, e.g. `"https://pypi.io"`
+
 <a name="nested_yum_repository"></a>The `yum_repository` block supports:
 
 * `public_repository` -
@@ -598,17 +708,28 @@ The following arguments are supported:
   One of the publicly available Yum repositories supported by Artifact Registry.
   Structure is [documented below](#nested_public_repository).
 
+* `custom_repository` -
+  (Optional)
+  Settings for a remote repository with a custom uri.
+  Structure is [documented below](#nested_custom_repository).
+
 
 <a name="nested_public_repository"></a>The `public_repository` block supports:
 
 * `repository_base` -
-  (Required)
+  (Optional)
   A common public repository base for Yum.
   Possible values are: `CENTOS`, `CENTOS_DEBUG`, `CENTOS_VAULT`, `CENTOS_STREAM`, `ROCKY`, `EPEL`.
 
 * `repository_path` -
-  (Required)
+  (Optional)
   Specific repository from the base, e.g. `"centos/8-stream/BaseOS/x86_64/os"`
+
+<a name="nested_custom_repository"></a>The `custom_repository` block supports:
+
+* `uri` -
+  (Optional)
+  Specific uri to the registry, e.g. `"https://dl.rockylinux.org/pub/rocky/9/BaseOS/x86_64/os"`
 
 <a name="nested_upstream_credentials"></a>The `upstream_credentials` block supports:
 
