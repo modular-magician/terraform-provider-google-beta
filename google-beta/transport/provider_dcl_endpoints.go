@@ -19,6 +19,8 @@
 package transport
 
 import (
+	"strings"
+
 	framework_schema "github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -212,15 +214,25 @@ func ConfigureDCLCustomEndpointAttributesFramework(frameworkSchema *framework_sc
 }
 
 func ProviderDCLConfigure(d *schema.ResourceData, config *Config) interface{} {
-	config.ApikeysBasePath = d.Get(ApikeysEndpointEntryKey).(string)
+	// networkConnectivity uses mmv1 basePath, assuredworkloads has a location variable in the basepath, can't be defined here.
+	config.ApikeysBasePath = "https://apikeys.googleapis.com/v2/"
 	config.AssuredWorkloadsBasePath = d.Get(AssuredWorkloadsEndpointEntryKey).(string)
-	config.CloudBuildWorkerPoolBasePath = d.Get(CloudBuildWorkerPoolEndpointEntryKey).(string)
-	config.CloudResourceManagerBasePath = d.Get(CloudResourceManagerEndpointEntryKey).(string)
-	config.EventarcBasePath = d.Get(EventarcEndpointEntryKey).(string)
-	config.FirebaserulesBasePath = d.Get(FirebaserulesEndpointEntryKey).(string)
-	config.GKEHubFeatureBasePath = d.Get(GKEHubFeatureEndpointEntryKey).(string)
-	config.NetworkConnectivityBasePath = d.Get(NetworkConnectivityEndpointEntryKey).(string)
-	config.RecaptchaEnterpriseBasePath = d.Get(RecaptchaEnterpriseEndpointEntryKey).(string)
-	config.CloudBuildWorkerPoolBasePath = d.Get(CloudBuildWorkerPoolEndpointEntryKey).(string)
+	config.CloudBuildWorkerPoolBasePath = "https://cloudbuild.googleapis.com/v1/"
+	config.CloudResourceManagerBasePath = "https://cloudresourcemanager.googleapis.com/"
+	config.EventarcBasePath = "https://eventarc.googleapis.com/v1/"
+	config.FirebaserulesBasePath = "https://firebaserules.googleapis.com/v1/"
+	config.GKEHubFeatureBasePath = "https://gkehub.googleapis.com/v1beta1/"
+	config.RecaptchaEnterpriseBasePath = "https://recaptchaenterprise.googleapis.com/v1/"
+
+	if config.UniverseDomain != "" && config.UniverseDomain != "googleapis.com" {
+		config.ApikeysBasePath = strings.ReplaceAll(config.ApikeysBasePath, "googleapis.com", config.UniverseDomain)
+		config.AssuredWorkloadsBasePath = strings.ReplaceAll(config.AssuredWorkloadsBasePath, "googleapis.com", config.UniverseDomain)
+		config.CloudBuildWorkerPoolBasePath = strings.ReplaceAll(config.CloudBuildWorkerPoolBasePath, "googleapis.com", config.UniverseDomain)
+		config.CloudResourceManagerBasePath = strings.ReplaceAll(config.CloudResourceManagerBasePath, "googleapis.com", config.UniverseDomain)
+		config.EventarcBasePath = strings.ReplaceAll(config.EventarcBasePath, "googleapis.com", config.UniverseDomain)
+		config.FirebaserulesBasePath = strings.ReplaceAll(config.FirebaserulesBasePath, "googleapis.com", config.UniverseDomain)
+		config.GKEHubFeatureBasePath = strings.ReplaceAll(config.GKEHubFeatureBasePath, "googleapis.com", config.UniverseDomain)
+		config.RecaptchaEnterpriseBasePath = strings.ReplaceAll(config.RecaptchaEnterpriseBasePath, "googleapis.com", config.UniverseDomain)
+	}
 	return config
 }
