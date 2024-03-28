@@ -174,7 +174,7 @@ func resourceNetworkSecurityFirewallEndpointAssociationCreate(d *schema.Resource
 		obj["labels"] = labelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkSecurityBasePath}}{{parent}}/locations/{{location}}/firewallEndpointAssociations?firewallEndpointId={{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkSecurityBasePath}}{{parent}}/locations/{{location}}/firewallEndpointAssociations?firewallEndpointAssociationId={{name}}")
 	if err != nil {
 		return err
 	}
