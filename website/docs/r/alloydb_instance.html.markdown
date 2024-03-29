@@ -78,6 +78,70 @@ resource "google_service_networking_connection" "vpc_connection" {
   reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_working_dir=alloydb_instance_public_ip&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&open_in_editor=main.tf&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Alloydb Instance Public Ip
+
+
+```hcl
+resource "google_alloydb_instance" "public_ip_instance" {
+  provider      = google-beta
+  
+  cluster       = google_alloydb_cluster.public_ip_instance.name
+  instance_id   = "alloydb-instance"
+  instance_type = "PRIMARY"
+
+  machine_config {
+    cpu_count = 2
+  }
+  
+  network_config {
+    enable_public_ip = true
+  }
+
+  depends_on = [google_service_networking_connection.vpc_connection]
+}
+
+resource "google_alloydb_cluster" "public_ip_instance" {
+  provider   = google-beta
+
+  cluster_id = "alloydb-cluster"
+  location   = "us-central1"
+  network    = google_compute_network.default.id
+
+  initial_user {
+    password = "alloydb-cluster"
+  }
+}
+
+data "google_project" "project" {
+  provider   = google-beta
+}
+
+resource "google_compute_network" "default" {
+  provider = google-beta
+  name     = "alloydb-network"
+}
+
+resource "google_compute_global_address" "private_ip_alloc" {
+  provider      = google-beta
+  name          =  "alloydb-cluster"
+  address_type  = "INTERNAL"
+  purpose       = "VPC_PEERING"
+  prefix_length = 16
+  network       = google_compute_network.default.id
+}
+
+resource "google_service_networking_connection" "vpc_connection" {
+  provider                = google-beta
+  network                 = google_compute_network.default.id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip_alloc.name]
+}
+```
 ## Example Usage - Alloydb Secondary Instance Basic
 
 
@@ -242,6 +306,11 @@ The following arguments are supported:
   Client connection specific configurations.
   Structure is [documented below](#nested_client_connection_config).
 
+* `network_config` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Metadata related to network configuration.
+  Structure is [documented below](#nested_network_config).
+
 
 <a name="nested_query_insights_config"></a>The `query_insights_config` block supports:
 
@@ -292,6 +361,24 @@ The following arguments are supported:
   SSL mode. Specifies client-server SSL/TLS connection behavior.
   Possible values are: `ENCRYPTED_ONLY`, `ALLOW_UNENCRYPTED_AND_ENCRYPTED`.
 
+<a name="nested_network_config"></a>The `network_config` block supports:
+
+* `enable_public_ip` -
+  (Optional)
+  Enables inbound public IP address.
+
+* `authorized_external_networks` -
+  (Optional)
+  list of external networks authorized to access the instance.
+  Structure is [documented below](#nested_authorized_external_networks).
+
+
+<a name="nested_authorized_external_networks"></a>The `authorized_external_networks` block supports:
+
+* `cidr_range` -
+  (Optional)
+  The IP range in CIDR notation that is allowed to access the instance.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -318,6 +405,9 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `ip_address` -
   The IP address for the Instance. This is the connection endpoint for an end-user application.
+
+* `public_ip_address` -
+  The public IP address for the Instance, if `network_config.enable_public_ip` is set to true.
 
 * `terraform_labels` -
   The combination of labels configured directly on the resource

@@ -180,6 +180,36 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 					},
 				},
 			},
+			"network_config": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				Description: `Metadata related to network configuration.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"authorized_external_networks": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `list of external networks authorized to access the instance.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"cidr_range": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The IP range in CIDR notation that is allowed to access the instance.`,
+									},
+								},
+							},
+						},
+						"enable_public_ip": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: `Enables inbound public IP address.`,
+						},
+					},
+				},
+			},
 			"query_insights_config": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -252,6 +282,11 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `The name of the instance resource.`,
+			},
+			"public_ip_address": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The public IP address for the Instance, if 'network_config.enable_public_ip' is set to true.`,
 			},
 			"reconciling": {
 				Type:        schema.TypeBool,
@@ -348,6 +383,12 @@ func resourceAlloydbInstanceCreate(d *schema.ResourceData, meta interface{}) err
 	} else if v, ok := d.GetOkExists("client_connection_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(clientConnectionConfigProp)) && (ok || !reflect.DeepEqual(v, clientConnectionConfigProp)) {
 		obj["clientConnectionConfig"] = clientConnectionConfigProp
 	}
+	networkConfigProp, err := expandAlloydbInstanceNetworkConfig(d.Get("network_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("network_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(networkConfigProp)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
+		obj["networkConfig"] = networkConfigProp
+	}
 	labelsProp, err := expandAlloydbInstanceEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -379,6 +420,19 @@ func resourceAlloydbInstanceCreate(d *schema.ResourceData, meta interface{}) err
 	if instanceType := d.Get("instance_type"); instanceType == "SECONDARY" {
 		url = strings.Replace(url, "instances?instanceId", "instances:createsecondary?instanceId", 1)
 	}
+
+	if val, ok := obj["networkConfig"]; ok {
+		networkConfig := val.(map[string]interface{})
+		if val, ok = networkConfig["enablePublicIp"]; ok {
+			// public IPs can only be enabled after creation
+			// we will temporarily remove it from the creation request, and update
+			// the value in post_create
+			delete(networkConfig, "enablePublicIp")
+		}
+		if val, ok = networkConfig["authorizedExternalNetworks"]; ok {
+			delete(networkConfig, "authorizedExternalNetworks")
+		}
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -407,6 +461,48 @@ func resourceAlloydbInstanceCreate(d *schema.ResourceData, meta interface{}) err
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create Instance: %s", err)
+	}
+
+	networkConfigProp, err = expandAlloydbInstanceNetworkConfig(d.Get("network_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("network_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(networkConfigProp)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
+		// an instance cannot be created with public IP addresses, so we need to PATCH the instance
+		// after its created
+		url, err := tpgresource.ReplaceVars(d, config, "{{AlloydbBasePath}}{{cluster}}/instances/{{instance_id}}")
+		if err != nil {
+			return err
+		}
+		log.Printf("[DEBUG] Updating network configuration for alloyDB instance %q", d.Id())
+		obj = make(map[string]interface{})
+		obj["networkConfig"] = networkConfigProp
+
+		url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": "networkConfig"})
+		if err != nil {
+			return err
+		}
+
+		patchRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+		})
+
+		if err != nil {
+			return fmt.Errorf("Error updating network configuration for alloydb instance %q: %s", d.Id(), err)
+		}
+
+		err = AlloydbOperationWaitTime(
+			config, patchRes, project, "Creating Instance", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+
+		if err != nil {
+			return fmt.Errorf("Error updating network configuration for alloydb instance %q: %s", d.Id(), err)
+		}
 	}
 
 	log.Printf("[DEBUG] Finished creating Instance %q: %#v", d.Id(), res)
@@ -495,6 +591,12 @@ func resourceAlloydbInstanceRead(d *schema.ResourceData, meta interface{}) error
 	if err := d.Set("client_connection_config", flattenAlloydbInstanceClientConnectionConfig(res["clientConnectionConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	if err := d.Set("network_config", flattenAlloydbInstanceNetworkConfig(res["networkConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err := d.Set("public_ip_address", flattenAlloydbInstancePublicIpAddress(res["publicIpAddress"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
 	if err := d.Set("terraform_labels", flattenAlloydbInstanceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
@@ -567,6 +669,12 @@ func resourceAlloydbInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 	} else if v, ok := d.GetOkExists("client_connection_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, clientConnectionConfigProp)) {
 		obj["clientConnectionConfig"] = clientConnectionConfigProp
 	}
+	networkConfigProp, err := expandAlloydbInstanceNetworkConfig(d.Get("network_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("network_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
+		obj["networkConfig"] = networkConfigProp
+	}
 	labelsProp, err := expandAlloydbInstanceEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -618,6 +726,10 @@ func resourceAlloydbInstanceUpdate(d *schema.ResourceData, meta interface{}) err
 
 	if d.HasChange("client_connection_config") {
 		updateMask = append(updateMask, "clientConnectionConfig")
+	}
+
+	if d.HasChange("network_config") {
+		updateMask = append(updateMask, "networkConfig")
 	}
 
 	if d.HasChange("effective_labels") {
@@ -987,6 +1099,51 @@ func flattenAlloydbInstanceClientConnectionConfigSslConfigSslMode(v interface{},
 	return v
 }
 
+func flattenAlloydbInstanceNetworkConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enable_public_ip"] =
+		flattenAlloydbInstanceNetworkConfigEnablePublicIp(original["enablePublicIp"], d, config)
+	transformed["authorized_external_networks"] =
+		flattenAlloydbInstanceNetworkConfigAuthorizedExternalNetworks(original["authorizedExternalNetworks"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbInstanceNetworkConfigEnablePublicIp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceNetworkConfigAuthorizedExternalNetworks(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"cidr_range": flattenAlloydbInstanceNetworkConfigAuthorizedExternalNetworksCidrRange(original["cidrRange"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAlloydbInstanceNetworkConfigAuthorizedExternalNetworksCidrRange(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePublicIpAddress(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenAlloydbInstanceTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1189,6 +1346,62 @@ func expandAlloydbInstanceClientConnectionConfigSslConfig(v interface{}, d tpgre
 }
 
 func expandAlloydbInstanceClientConnectionConfigSslConfigSslMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceNetworkConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnablePublicIp, err := expandAlloydbInstanceNetworkConfigEnablePublicIp(original["enable_public_ip"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnablePublicIp); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enablePublicIp"] = transformedEnablePublicIp
+	}
+
+	transformedAuthorizedExternalNetworks, err := expandAlloydbInstanceNetworkConfigAuthorizedExternalNetworks(original["authorized_external_networks"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAuthorizedExternalNetworks); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["authorizedExternalNetworks"] = transformedAuthorizedExternalNetworks
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbInstanceNetworkConfigEnablePublicIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceNetworkConfigAuthorizedExternalNetworks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedCidrRange, err := expandAlloydbInstanceNetworkConfigAuthorizedExternalNetworksCidrRange(original["cidr_range"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCidrRange); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["cidrRange"] = transformedCidrRange
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAlloydbInstanceNetworkConfigAuthorizedExternalNetworksCidrRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
