@@ -26,6 +26,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
@@ -155,7 +156,9 @@ func TestAccComputeRegionNetworkEndpointGroup_regionNetworkEndpointGroupAppengin
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"org_id":          envvar.GetTestOrgFromEnv(t),
+		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
+		"random_suffix":   acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -170,7 +173,7 @@ func TestAccComputeRegionNetworkEndpointGroup_regionNetworkEndpointGroupAppengin
 				ResourceName:            "google_compute_region_network_endpoint_group.appengine_neg",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"network", "subnetwork", "region"},
+				ImportStateVerifyIgnore: []string{"network", "subnetwork", "region", "noop_on_destroy", "deployment.0.zip"},
 			},
 		},
 	})
@@ -179,19 +182,53 @@ func TestAccComputeRegionNetworkEndpointGroup_regionNetworkEndpointGroupAppengin
 func testAccComputeRegionNetworkEndpointGroup_regionNetworkEndpointGroupAppengineExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 // App Engine Example
-resource "google_compute_region_network_endpoint_group" "appengine_neg" {
-  name                  = "tf-test-appengine-neg%{random_suffix}"
+resource "google_project" "my_project" {
+ name = "tf-test-appeng-flex%{random_suffix}"
+ project_id = "tf-test-appeng-flex%{random_suffix}"
+ org_id = "%{org_id}"
+ billing_account = "%{billing_account}"
+}
+
+resource "google_app_engine_application" "app" {
+  project     = google_project.my_project.project_id
+  location_id = "us-central"
+}
+
+data "google_app_engine_default_service_account" "default" {
+}
+
+resource "google_project_iam_member" "gae_api" {
+  project = google_project.my_project.project_id
+  role    = "roles/compute.networkUser"
+  member  = "serviceAccount:${data.google_app_engine_default_service_account.default.email}"
+}
+
+resource "google_project_iam_member" "logs_writer" {
+  project = google_project.my_project.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${data.google_app_engine_default_service_account.default.email}"
+}
+
+resource "google_project_iam_member" "storage_viewer" {
+  project = google_project.my_project.project_id
+  role    = "roles/storage.objectViewer"
+  member  = "serviceAccount:${data.google_app_engine_default_service_account.default.email}"
+}
+
+resource "google_compute_region_network_endpoint_group" "test-neg" {
+  name                  = "test-neg"
   network_endpoint_type = "SERVERLESS"
   region                = "us-central1"
   app_engine {
-    service = google_app_engine_flexible_app_version.appengine_neg.service
-    version = google_app_engine_flexible_app_version.appengine_neg.version_id
+    service = google_app_engine_flexible_app_version.tf-test-appengine-version%{random_suffix}.service
+    version = google_app_engine_flexible_app_version.tf-test-appengine-version%{random_suffix}.version_id
   }
 }
 
-resource "google_app_engine_flexible_app_version" "appengine_neg" {
+resource "google_app_engine_flexible_app_version" "tf-test-appengine-version%{random_suffix}" {
   version_id = "v1"
-  service    = "appengine-network-endpoint-group"
+  project    = google_project_iam_member.gae_api.project
+  service    = "default"
   runtime    = "nodejs"
 
   entrypoint {
@@ -200,7 +237,7 @@ resource "google_app_engine_flexible_app_version" "appengine_neg" {
 
   deployment {
     zip {
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.appengine_neg.name}/${google_storage_bucket_object.appengine_neg.name}"
+      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.object.name}"
     }
   }
 
@@ -235,17 +272,19 @@ resource "google_app_engine_flexible_app_version" "appengine_neg" {
     }
   }
 
-  delete_service_on_destroy = true
+  noop_on_destroy = true
 }
 
-resource "google_storage_bucket" "appengine_neg" {
-  name     = "tf-test-appengine-neg%{random_suffix}"
+resource "google_storage_bucket" "bucket" {
+  project  = google_project.my_project.project_id
+  name     = "tf-test-appengine-static-content%{random_suffix}"
   location = "US"
+  uniform_bucket_level_access = true
 }
 
-resource "google_storage_bucket_object" "appengine_neg" {
+resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
-  bucket = google_storage_bucket.appengine_neg.name
+  bucket = google_storage_bucket.bucket.name
   source = "./test-fixtures/hello-world.zip"
 }
 `, context)
