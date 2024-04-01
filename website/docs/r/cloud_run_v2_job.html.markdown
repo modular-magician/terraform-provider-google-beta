@@ -183,7 +183,7 @@ resource "google_cloud_run_v2_job" "default" {
         image = "us-docker.pkg.dev/cloudrun/container/hello"
       }
       vpc_access{
-        connector = google_vpc_access_connector.connector.id
+        connector = google_vpc_access_connector.connector.name
         egress = "ALL_TRAFFIC"
       }
     }
@@ -643,7 +643,7 @@ The following arguments are supported:
 
 * `connector` -
   (Optional)
-  VPC Access connector name. Format: projects/{project}/locations/{location}/connectors/{connector}, where {project} can be project id or number.
+  VPC Access connector name.
 
 * `egress` -
   (Optional)

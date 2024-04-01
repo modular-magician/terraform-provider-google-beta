@@ -264,7 +264,7 @@ resource "google_cloud_run_v2_service" "default" {
       image = "us-docker.pkg.dev/cloudrun/container/hello"
     }
     vpc_access{
-      connector = google_vpc_access_connector.connector.id
+      connector = google_vpc_access_connector.connector.name
       egress = "ALL_TRAFFIC"
     }
   }

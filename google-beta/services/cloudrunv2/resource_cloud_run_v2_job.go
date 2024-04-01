@@ -415,7 +415,7 @@ A duration in seconds with up to nine fractional digits, ending with 's'. Exampl
 												"connector": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: `VPC Access connector name. Format: projects/{project}/locations/{location}/connectors/{connector}, where {project} can be project id or number.`,
+													Description: `VPC Access connector name.`,
 												},
 												"egress": {
 													Type:         schema.TypeString,
