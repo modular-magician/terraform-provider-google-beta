@@ -91,7 +91,7 @@ var schemaBlueGreenSettings = &schema.Schema{
 		Schema: map[string]*schema.Schema{
 			"standard_rollout_policy": {
 				Type:        schema.TypeList,
-				Required:    true,
+				Optional:    true,
 				MaxItems:    1,
 				Description: `Standard rollout policy is the default policy for blue-green.`,
 				Elem: &schema.Resource{
@@ -116,6 +116,15 @@ var schemaBlueGreenSettings = &schema.Schema{
 							Description: `Soak time after each batch gets drained.`,
 						},
 					},
+				},
+			},
+			"autoscaled_rollout_policy": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: `Autoscaled rollout policy for blue-green.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{},
 				},
 			},
 			"node_pool_soak_duration": {
@@ -1062,6 +1071,11 @@ func expandNodePool(d *schema.ResourceData, prefix string) (*container.NodePool,
 
 				np.UpgradeSettings.BlueGreenSettings.StandardRolloutPolicy = standardRolloutPolicy
 			}
+
+			if v, ok := blueGreenSettingsConfig["autoscaled_rollout_policy"]; ok && v.([]interface{}) != nil {
+				autoscaledRolloutPolicy := &container.AutoscaledRolloutPolicy{}
+				np.UpgradeSettings.BlueGreenSettings.AutoscaledRolloutPolicy = autoscaledRolloutPolicy
+			}
 		}
 	}
 
@@ -1082,14 +1096,24 @@ func flattenNodePoolStandardRolloutPolicy(rp *container.StandardRolloutPolicy) [
 	}
 }
 
+func flattenNodePoolAutoscaledRolloutPolicy(rp *container.AutoscaledRolloutPolicy) []map[string]interface{} {
+	if rp == nil {
+		return nil
+	}
+	return []map[string]interface{}{
+		{},
+	}
+}
+
 func flattenNodePoolBlueGreenSettings(bg *container.BlueGreenSettings) []map[string]interface{} {
 	if bg == nil {
 		return nil
 	}
 	return []map[string]interface{}{
 		{
-			"node_pool_soak_duration": bg.NodePoolSoakDuration,
-			"standard_rollout_policy": flattenNodePoolStandardRolloutPolicy(bg.StandardRolloutPolicy),
+			"node_pool_soak_duration":   bg.NodePoolSoakDuration,
+			"standard_rollout_policy":   flattenNodePoolStandardRolloutPolicy(bg.StandardRolloutPolicy),
+			"autoscaled_rollout_policy": flattenNodePoolAutoscaledRolloutPolicy(bg.AutoscaledRolloutPolicy),
 		},
 	}
 }
@@ -2040,6 +2064,10 @@ func nodePoolUpdate(d *schema.ResourceData, meta interface{}, nodePoolInfo *Node
 						}
 					}
 					blueGreenSettings.StandardRolloutPolicy = standardRolloutPolicy
+				}
+
+				if _, ok := blueGreenSettingsConfig["autoscaled_rollout_policy"]; ok {
+					return fmt.Errorf("Autoscaled rollout policy may not be changed, to disable, configure standard rollout policy.")
 				}
 				upgradeSettings.BlueGreenSettings = blueGreenSettings
 			}

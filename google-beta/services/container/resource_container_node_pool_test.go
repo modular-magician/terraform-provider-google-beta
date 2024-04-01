@@ -909,6 +909,31 @@ func TestAccContainerNodePool_withUpgradeSettings(t *testing.T) {
 	})
 }
 
+func TestAccContainerNodePool_withUpgradeSettingsAutoscaledRolloutPolicy(t *testing.T) {
+	t.Parallel()
+
+	cluster := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
+	np := fmt.Sprintf("tf-test-np-%s", acctest.RandString(t, 10))
+	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
+	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerNodePool_withUpgradeSettingsWithAutoscaledRolloutPolicy(cluster, np, networkName, subnetworkName),
+			},
+			{
+				ResourceName:      "google_container_node_pool.with_upgrade_settings",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func TestAccContainerNodePool_withGPU(t *testing.T) {
 	t.Parallel()
 
@@ -3458,6 +3483,41 @@ resource "google_container_node_pool" "with_upgrade_settings" {
   %s
 }
 `, clusterName, networkName, subnetworkName, nodePoolName, makeUpgradeSettings(maxSurge, maxUnavailable, strategy, nodePoolSoakDuration, batchNodeCount, batchPercentage, batchSoakDuration))
+}
+
+func testAccContainerNodePool_withUpgradeSettingsWithAutoscaledRolloutPolicy(clusterName, nodePoolName, networkName, subnetworkName string) string {
+	return fmt.Sprintf(`
+data "google_container_engine_versions" "central1" {
+  location = "us-central1"
+}
+
+resource "google_container_cluster" "cluster" {
+  name               = "%s"
+  location           = "us-central1"
+  initial_node_count = 1
+  min_master_version = "${data.google_container_engine_versions.central1.latest_master_version}"
+  deletion_protection = false
+  network    = "%s"
+  subnetwork    = "%s"
+}
+
+resource "google_container_node_pool" "with_upgrade_settings" {
+  name = "%s"
+  location = "us-central1"
+  cluster = "${google_container_cluster.cluster.name}"
+  initial_node_count = 1
+  autoscaling {
+	min_node_count = 1
+	max_node_count = 2
+  }
+  upgrade_settings {
+	strategy = "BLUE_GREEN"
+	blue_green_settings {
+		autoscaled_rollout_policy {}
+	}
+  }
+}
+`, clusterName, networkName, subnetworkName, nodePoolName)
 }
 
 func testAccContainerNodePool_withGPU(cluster, np, networkName, subnetworkName string) string {
