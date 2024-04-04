@@ -208,6 +208,73 @@ func TestAccComputeRouterPeer_Ipv6Basic(t *testing.T) {
 	})
 }
 
+func TestAccComputeRouterPeer_Ipv4Basic(t *testing.T) {
+	t.Parallel()
+
+	routerName := fmt.Sprintf("tf-test-router-%s", acctest.RandString(t, 10))
+	resourceName := "google_compute_router_peer.foobar"
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckComputeRouterPeerDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeRouterPeerIpv4(routerName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeRouterPeerExists(
+						t, resourceName),
+					resource.TestCheckResourceAttr(resourceName, "enable_ipv4", "true"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccComputeRouterPeer_UpdateIpv4(t *testing.T) {
+	t.Parallel()
+
+	routerName := fmt.Sprintf("tf-test-router-%s", acctest.RandString(t, 10))
+	resourceName := "google_compute_router_peer.foobar"
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckComputeRouterPeerDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeRouterPeerIpv4(routerName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeRouterPeerExists(
+						t, resourceName),
+					resource.TestCheckResourceAttr(resourceName, "enable_ipv6", "true"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccComputeRouterPeerUpdateIpv4Address(routerName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeRouterPeerExists(
+						t, resourceName),
+					resource.TestCheckResourceAttr(resourceName, "enable_ipv4", "true"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func TestAccComputeRouterPeer_UpdateIpv6Address(t *testing.T) {
 	t.Parallel()
 
@@ -606,6 +673,17 @@ func testAccComputeRouterPeerWithMd5AuthKey(routerName string) string {
     router             = google_compute_router.foobar.name
     vpn_gateway_interface           = 0
   }
+
+  resource "google_compute_vpn_tunnel" "foobar1" {
+    name               = "%s1"
+    region             = google_compute_subnetwork.foobar.region
+    vpn_gateway = google_compute_ha_vpn_gateway.foobar.id
+    peer_external_gateway           = google_compute_external_vpn_gateway.external_gateway.id
+    peer_external_gateway_interface = 0  
+    shared_secret      = "unguessable"
+    router             = google_compute_router.foobar.name
+    vpn_gateway_interface           = 1
+  }
   
   resource "google_compute_router_interface" "foobar" {
     name       = "%s"
@@ -619,7 +697,7 @@ func testAccComputeRouterPeerWithMd5AuthKey(routerName string) string {
     name       = "%s1"
     router     = google_compute_router.foobar.name
     region     = google_compute_router.foobar.region
-    vpn_tunnel = google_compute_vpn_tunnel.foobar.name
+    vpn_tunnel = google_compute_vpn_tunnel.foobar1.name
     ip_range = "169.254.4.1/30"
     depends_on = [
       google_compute_router_interface.foobar
@@ -657,7 +735,7 @@ func testAccComputeRouterPeerWithMd5AuthKey(routerName string) string {
     ]
   }
 `, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName,
-		routerName)
+		routerName, routerName)
 }
 
 func testAccComputeRouterPeerWithMd5AuthKeyUpdate(routerName string) string {
@@ -714,6 +792,17 @@ func testAccComputeRouterPeerWithMd5AuthKeyUpdate(routerName string) string {
     router             = google_compute_router.foobar.name
     vpn_gateway_interface           = 0
   }
+
+  resource "google_compute_vpn_tunnel" "foobar1" {
+    name               = "%s1"
+    region             = google_compute_subnetwork.foobar.region
+    vpn_gateway = google_compute_ha_vpn_gateway.foobar.id
+    peer_external_gateway           = google_compute_external_vpn_gateway.external_gateway.id
+    peer_external_gateway_interface = 0  
+    shared_secret      = "unguessable"
+    router             = google_compute_router.foobar.name
+    vpn_gateway_interface           = 1
+  }
   
   resource "google_compute_router_interface" "foobar" {
     name       = "%s"
@@ -727,7 +816,7 @@ func testAccComputeRouterPeerWithMd5AuthKeyUpdate(routerName string) string {
     name       = "%s1"
     router     = google_compute_router.foobar.name
     region     = google_compute_router.foobar.region
-    vpn_tunnel = google_compute_vpn_tunnel.foobar.name
+    vpn_tunnel = google_compute_vpn_tunnel.foobar1.name
     ip_range = "169.254.4.1/30"
     depends_on = [
       google_compute_router_interface.foobar
@@ -765,7 +854,7 @@ func testAccComputeRouterPeerWithMd5AuthKeyUpdate(routerName string) string {
     ]
   }
 `, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName,
-		routerName)
+		routerName, routerName)
 }
 
 func testAccComputeRouterPeerKeepRouter(routerName string) string {
@@ -1399,8 +1488,8 @@ resource "google_compute_router_peer" "foobar" {
   peer_asn                  = 65515
   advertised_route_priority = 100
   interface                 = google_compute_router_interface.foobar.name
-
   enable_ipv6               = %v
+
 }
 `, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, enableIpv6)
 }
@@ -1475,10 +1564,181 @@ resource "google_compute_router_peer" "foobar" {
   peer_asn                  = 65515
   advertised_route_priority = 100
   interface                 = google_compute_router_interface.foobar.name
-
   enable_ipv6               = %v
   ipv6_nexthop_address      = "2600:2d00:0000:0002:0000:0000:0000:0001"
   peer_ipv6_nexthop_address = "2600:2d00:0:2::2"
 }
 `, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName, enableIpv6)
+}
+
+func testAccComputeRouterPeerIpv4(routerName string) string {
+	return fmt.Sprintf(`resource "google_compute_network" "foobar" {
+    provider = google-beta
+    name = "%s-net"
+    auto_create_subnetworks = false
+  }
+  
+  resource "google_compute_subnetwork" "foobar" {
+    provider = google-beta
+    name          = "%s-subnet"
+    network       = google_compute_network.foobar.self_link
+    ip_cidr_range = "10.0.0.0/16"
+    region        = "us-central1"
+    stack_type = "IPV4_IPV6"
+    ipv6_access_type = "EXTERNAL" 
+  }
+  
+  resource "google_compute_ha_vpn_gateway" "foobar" {
+    provider = google-beta
+    name    = "%s-gateway"
+    network = google_compute_network.foobar.self_link
+    region  = google_compute_subnetwork.foobar.region
+    stack_type = "IPV4_IPV6"
+  }
+  
+  resource "google_compute_external_vpn_gateway" "external_gateway" {
+    provider = google-beta
+    name            = "%s-external-gateway"
+    redundancy_type = "SINGLE_IP_INTERNALLY_REDUNDANT"
+    description     = "An externally managed VPN gateway"
+    interface {
+      id         = 0
+      ip_address = "8.8.8.8"
+    }
+  }
+  
+  resource "google_compute_router" "foobar" {
+    provider = google-beta
+    name    = "%s"
+    region  = google_compute_subnetwork.foobar.region
+    network = google_compute_network.foobar.self_link
+    bgp {
+      asn = 64514
+    }
+  }
+  
+  resource "google_compute_vpn_tunnel" "foobar" {
+    provider = google-beta
+    name               = "%s-tunnel"
+    region             = google_compute_subnetwork.foobar.region
+    vpn_gateway = google_compute_ha_vpn_gateway.foobar.id
+    peer_external_gateway           = google_compute_external_vpn_gateway.external_gateway.id
+    peer_external_gateway_interface = 0  
+    shared_secret      = "unguessable"
+    router             = google_compute_router.foobar.name
+    vpn_gateway_interface           = 0
+  }
+  
+  resource "google_compute_router_interface" "foobar" {
+    provider = google-beta
+    name       = "%s-interface"
+    router     = google_compute_router.foobar.name
+    region     = google_compute_router.foobar.region
+    vpn_tunnel = google_compute_vpn_tunnel.foobar.name
+    ip_range   = "fdff:1::1:1/126"
+  }
+  
+  resource "google_compute_router_peer" "foobar" {
+    provider = google-beta
+    name                      = "%s-peer"
+    router                    = google_compute_router.foobar.name
+    region                    = google_compute_router.foobar.region
+    peer_asn                  = 65515
+    advertised_route_priority = 100
+    interface                 = google_compute_router_interface.foobar.name
+    ip_address                = "fdff:1::1:1"
+    peer_ip_address           = "fdff:1::1:2"
+
+    enable_ipv4               = true
+    enable_ipv6               = true
+    ipv4_nexthop_address      = "169.254.1.1"
+    peer_ipv4_nexthop_address = "169.254.1.2"
+  }
+  `, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName)
+}
+
+func testAccComputeRouterPeerUpdateIpv4Address(routerName string) string {
+	return fmt.Sprintf(`resource "google_compute_network" "foobar" {
+    provider = google-beta
+    name = "%s-net"
+    auto_create_subnetworks = false
+  }
+  
+  resource "google_compute_subnetwork" "foobar" {
+    provider = google-beta
+    name          = "%s-subnet"
+    network       = google_compute_network.foobar.self_link
+    ip_cidr_range = "10.0.0.0/16"
+    region        = "us-central1"
+    stack_type = "IPV4_IPV6"
+    ipv6_access_type = "EXTERNAL" 
+  }
+  
+  resource "google_compute_ha_vpn_gateway" "foobar" {
+    provider = google-beta
+    name    = "%s-gateway"
+    network = google_compute_network.foobar.self_link
+    region  = google_compute_subnetwork.foobar.region
+    stack_type = "IPV4_IPV6"
+  }
+  
+  resource "google_compute_external_vpn_gateway" "external_gateway" {
+    provider = google-beta
+    name            = "%s-external-gateway"
+    redundancy_type = "SINGLE_IP_INTERNALLY_REDUNDANT"
+    description     = "An externally managed VPN gateway"
+    interface {
+      id         = 0
+      ip_address = "8.8.8.8"
+    }
+  }
+  
+  resource "google_compute_router" "foobar" {
+    provider = google-beta
+    name    = "%s"
+    region  = google_compute_subnetwork.foobar.region
+    network = google_compute_network.foobar.self_link
+    bgp {
+      asn = 64514
+    }
+  }
+  
+  resource "google_compute_vpn_tunnel" "foobar" {
+    provider = google-beta
+    name               = "%s-tunnel"
+    region             = google_compute_subnetwork.foobar.region
+    vpn_gateway = google_compute_ha_vpn_gateway.foobar.id
+    peer_external_gateway           = google_compute_external_vpn_gateway.external_gateway.id
+    peer_external_gateway_interface = 0  
+    shared_secret      = "unguessable"
+    router             = google_compute_router.foobar.name
+    vpn_gateway_interface           = 0
+  }
+  
+  resource "google_compute_router_interface" "foobar" {
+    provider = google-beta
+    name       = "%s-interface"
+    router     = google_compute_router.foobar.name
+    region     = google_compute_router.foobar.region
+    vpn_tunnel = google_compute_vpn_tunnel.foobar.name
+    ip_range   = "fdff:1::1:1/126"
+  }
+  
+  resource "google_compute_router_peer" "foobar" {
+    provider = google-beta
+    name                      = "%s-peer"
+    router                    = google_compute_router.foobar.name
+    region                    = google_compute_router.foobar.region
+    peer_asn                  = 65515
+    advertised_route_priority = 100
+    interface                 = google_compute_router_interface.foobar.name
+    ip_address                = "fdff:1::1:1"
+    peer_ip_address           = "fdff:1::1:2"
+
+    enable_ipv4               = true
+    enable_ipv6               = true
+    ipv4_nexthop_address      = "169.254.1.2"
+    peer_ipv4_nexthop_address = "169.254.1.1"
+  }
+  `, routerName, routerName, routerName, routerName, routerName, routerName, routerName, routerName)
 }
