@@ -346,6 +346,12 @@ snapshot versions.`,
 							ForceNew:    true,
 							Description: `The description of the remote source.`,
 						},
+						"disable_upstream_validation": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `If true, the remote repository upstream and upstream credentials will
+not be validated.`,
+						},
 						"docker_repository": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -1303,6 +1309,8 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfig(v interface{}, d *s
 		flattenArtifactRegistryRepositoryRemoteRepositoryConfigYumRepository(original["yumRepository"], d, config)
 	transformed["upstream_credentials"] =
 		flattenArtifactRegistryRepositoryRemoteRepositoryConfigUpstreamCredentials(original["upstreamCredentials"], d, config)
+	transformed["disable_upstream_validation"] =
+		flattenArtifactRegistryRepositoryRemoteRepositoryConfigDisableUpstreamValidation(original["disableUpstreamValidation"], d, config)
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1483,6 +1491,10 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigUpstreamCredentialsU
 
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigUpstreamCredentialsUsernamePasswordCredentialsPasswordSecretVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func flattenArtifactRegistryRepositoryRemoteRepositoryConfigDisableUpstreamValidation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("remote_repository_config.0.disable_upstream_validation")
 }
 
 func flattenArtifactRegistryRepositoryCleanupPolicyDryRun(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1878,6 +1890,13 @@ func expandArtifactRegistryRepositoryRemoteRepositoryConfig(v interface{}, d tpg
 		transformed["upstreamCredentials"] = transformedUpstreamCredentials
 	}
 
+	transformedDisableUpstreamValidation, err := expandArtifactRegistryRepositoryRemoteRepositoryConfigDisableUpstreamValidation(original["disable_upstream_validation"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDisableUpstreamValidation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["disableUpstreamValidation"] = transformedDisableUpstreamValidation
+	}
+
 	return transformed, nil
 }
 
@@ -2133,6 +2152,10 @@ func expandArtifactRegistryRepositoryRemoteRepositoryConfigUpstreamCredentialsUs
 }
 
 func expandArtifactRegistryRepositoryRemoteRepositoryConfigUpstreamCredentialsUsernamePasswordCredentialsPasswordSecretVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandArtifactRegistryRepositoryRemoteRepositoryConfigDisableUpstreamValidation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

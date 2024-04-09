@@ -291,6 +291,7 @@ resource "google_artifact_registry_repository" "my-repo" {
   mode          = "REMOTE_REPOSITORY"
   remote_repository_config {
     description = "docker hub with custom credentials"
+    disable_upstream_validation = true
     docker_repository {
       public_repository = "DOCKER_HUB"
     }
@@ -538,6 +539,11 @@ The following arguments are supported:
   (Optional)
   The credentials used to access the remote repository.
   Structure is [documented below](#nested_upstream_credentials).
+
+* `disable_upstream_validation` -
+  (Optional)
+  If true, the remote repository upstream and upstream credentials will
+  not be validated.
 
 
 <a name="nested_apt_repository"></a>The `apt_repository` block supports:

@@ -436,7 +436,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCustomExa
 				ResourceName:            "google_artifact_registry_repository.my-repo",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"repository_id", "location", "labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"repository_id", "location", "remote_repository_config.0.disable_upstream_validation", "labels", "terraform_labels"},
 			},
 		},
 	})
@@ -472,6 +472,7 @@ resource "google_artifact_registry_repository" "my-repo" {
   mode          = "REMOTE_REPOSITORY"
   remote_repository_config {
     description = "docker hub with custom credentials"
+    disable_upstream_validation = true
     docker_repository {
       public_repository = "DOCKER_HUB"
     }
