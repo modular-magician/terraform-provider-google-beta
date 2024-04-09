@@ -35,6 +35,7 @@ var sqlDatabaseAuthorizedNetWorkSchemaElem *schema.Resource = &schema.Resource{
 		"expiration_time": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
 		"name": {
 			Type:     schema.TypeString,
