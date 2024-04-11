@@ -853,7 +853,7 @@ Reserved names,"default", "latest", and any name with the prefix "ah-".`,
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: `Full path to the Version resource in the API. Example, "v1".`,
+				Description: `Full path to the Version resource in the API. Example: "v1".`,
 			},
 			"noop_on_destroy": {
 				Type:        schema.TypeBool,
