@@ -545,7 +545,7 @@ The following arguments are supported:
 * `labels` -
   (Optional)
   Labels with user-defined metadata.
-  This field may contain up to 64 entries. Label keys and values may be no
+  This field may contains up to 64 entries. Label keys and values may be no
   longer than 63 characters. Label keys must begin with a lowercase letter
   and may only contain lowercase letters, numeric characters, underscores,
   and dashes.
