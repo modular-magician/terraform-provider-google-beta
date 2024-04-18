@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"regexp"
@@ -29,6 +30,8 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 
+	"golang.org/x/net/http2"
+	"golang.org/x/net/nettest"
 	"golang.org/x/oauth2"
 	googleoauth "golang.org/x/oauth2/google"
 	appengine "google.golang.org/api/appengine/v1"
@@ -64,6 +67,7 @@ import (
 	"google.golang.org/api/storage/v1"
 	"google.golang.org/api/storagetransfer/v1"
 	"google.golang.org/api/transport"
+	apihttp "google.golang.org/api/transport/http"
 	"google.golang.org/grpc"
 )
 
@@ -1418,6 +1422,39 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 	return nil
 }
 
+// baseTransport returns the base HTTP transport. It starts with the
+// default transport and makes some tweaks to match best practices
+// from google-api-go-client, as well as ensuring that IPv6 does
+// not get used in environments that don't support it.
+func baseTransport() (http.RoundTripper, error) {
+	trans := http.DefaultTransport.(*http.Transport).Clone()
+	// Increase MaxIdleConnsPerHost due to reported performance issues under load in the
+	// GCS client.
+	trans.MaxIdleConnsPerHost = 100
+
+	// Configure the ReadIdleTimeout HTTP/2 option for the
+	// transport. This allows broken idle connections to be pruned more quickly,
+	// preventing the client from attempting to re-use connections that will no
+	// longer work. http2Trans is discarded after configuration.
+	http2Trans, err := http2.ConfigureTransports(trans)
+	if err != nil {
+		return trans, err
+	}
+	http2Trans.ReadIdleTimeout = time.Second * 31
+
+	// Override dialer so that we don't try IPv6 if it's not supported.
+	// https://github.com/golang/go/issues/25321
+	trans.DialContext = func(ctx context.Context, network string, addr string) (net.Conn, error) {
+		d := &net.Dialer{}
+		if !nettest.SupportsIPv6() {
+			return d.DialContext(ctx, "tcp4", addr)
+		}
+		return d.DialContext(ctx, network, addr)
+	}
+
+	return trans, nil
+}
+
 func (c *Config) LoadAndValidate(ctx context.Context) error {
 	if len(c.Scopes) == 0 {
 		c.Scopes = DefaultClientScopes
@@ -1434,8 +1471,13 @@ func (c *Config) LoadAndValidate(ctx context.Context) error {
 
 	cleanCtx := context.WithValue(ctx, oauth2.HTTPClient, cleanhttp.DefaultClient())
 
-	// 1. MTLS TRANSPORT/CLIENT - sets up proper auth headers
-	client, _, err := transport.NewHTTPClient(cleanCtx, option.WithTokenSource(tokenSource))
+	// 1. Set up base HTTP transport and configure token auth / API communication
+	base, err := baseTransport()
+	if err != nil {
+		return err
+	}
+
+	transport, err := apihttp.NewTransport(cleanCtx, base, option.WithTokenSource(tokenSource))
 	if err != nil {
 		return err
 	}
@@ -1447,7 +1489,7 @@ func (c *Config) LoadAndValidate(ctx context.Context) error {
 	}
 
 	// 2. Logging Transport - ensure we log HTTP requests to GCP APIs.
-	loggingTransport := logging.NewTransport("Google", client.Transport)
+	loggingTransport := logging.NewTransport("Google", transport)
 
 	// 3. Retry Transport - retries common temporary errors
 	// Keep order for wrapping logging so we log each retried request as well.
@@ -1468,8 +1510,8 @@ func (c *Config) LoadAndValidate(ctx context.Context) error {
 		headerTransport.Set("X-Goog-User-Project", c.BillingProject)
 	}
 
-	// Set final transport value.
-	client.Transport = headerTransport
+	// Create http client
+	client := &http.Client{Transport: headerTransport}
 
 	// This timeout is a timeout per HTTP request, not per logical operation.
 	client.Timeout = c.synchronousTimeout()
