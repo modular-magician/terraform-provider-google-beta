@@ -199,6 +199,80 @@ resource "google_eventarc_trigger" "primary" {
 `, context)
 }
 
+func TestAccEventarcTrigger_GKEDest(t *testing.T) {
+	t.Parallel()
+
+	region := envvar.GetTestRegionFromEnv()
+
+	context := map[string]interface{}{
+		"region":          region,
+		"random_suffix":   acctest.RandString(t, 10),
+		"project_name":    envvar.GetTestProjectFromEnv(),
+		"service_account": envvar.GetTestServiceAccountFromEnv(t),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckEventarcChannelTriggerDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccEventarcTrigger_createTriggerWithGKEDest(context),
+			},
+			{
+				ResourceName:      "google_eventarc_trigger.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccEventarcTrigger_createTriggerWithGKEDest(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "test_project" {
+	project_id  = "%{project_name}"
+}
+resource "google_container_cluster" "cluster" {
+  name               = "tf-test-gkecluster%{random_suffix}"
+  location           = "us-central1-a"
+  initial_node_count = 1
+  workload_identity_config {
+    workload_pool = "${data.google_project.test_project.project_id}.svc.id.goog"
+  }
+  deletion_protection = false
+}
+
+resource "google_eventarc_trigger" "primary" {
+	name = "tf-test-trigger%{random_suffix}"
+	location = "%{region}"
+	matching_criteria {
+		      attribute = "type"
+		      value = "google.cloud.audit.log.v1.written"
+		    }
+	matching_criteria {
+		      attribute = "serviceName"
+		      value = "storage.googleapis.com"
+		    }
+	matching_criteria {
+		      attribute = "methodName"
+		      value = "storage.objects.create"
+		    }
+	destination {
+		gke {
+		      cluster = google_container_cluster.cluster.id
+		      location = google_container_cluster.cluster.location
+		      namespace = "default"
+		      service = "kubernetes"
+		      path = "/"
+		}
+
+	}
+	service_account = "%{service_account}"
+
+}
+`, context)
+}
 func testAccCheckEventarcChannelTriggerDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
