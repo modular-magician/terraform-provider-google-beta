@@ -22,6 +22,37 @@ description: |-
 
 The Cloud Deploy `Target` resource
 
+## Example Usage - custom_target
+tests creating and updating a custom target
+```hcl
+resource "google_clouddeploy_target" "primary" {
+  location = "us-west1"
+  name     = "target"
+
+  custom_target {
+    custom_target_type = "projects/my-project-name/locations/us-west1/customTargetTypes/ctt"
+  }
+
+  deploy_parameters = {}
+  description       = "custom target description"
+  project           = "my-project-name"
+  require_approval  = false
+
+  annotations = {
+    my_first_annotation = "example-annotation-1"
+
+    my_second_annotation = "example-annotation-2"
+  }
+
+  labels = {
+    my_first_label = "example-label-1"
+
+    my_second_label = "example-label-2"
+  }
+}
+
+
+```
 ## Example Usage - multi_target
 tests creating and updating a multi-target
 ```hcl
@@ -157,6 +188,10 @@ Please refer to the field `effective_annotations` for all of the annotations pre
   (Optional)
   Information specifying an Anthos Cluster.
   
+* `custom_target` -
+  (Optional)
+  Optional. Information specifying a Custom Target.
+  
 * `deploy_parameters` -
   (Optional)
   Optional. The deploy parameters to use for this target.
@@ -203,6 +238,12 @@ The `anthos_cluster` block supports:
 * `membership` -
   (Optional)
   Membership of the GKE Hub-registered cluster to which to apply the Skaffold configuration. Format is `projects/{project}/locations/{location}/memberships/{membership_name}`.
+    
+The `custom_target` block supports:
+    
+* `custom_target_type` -
+  (Required)
+  Required. The name of the CustomTargetType. Format must be `projects/{project}/locations/{location}/customTargetTypes/{custom_target_type}`.
     
 The `execution_configs` block supports:
     

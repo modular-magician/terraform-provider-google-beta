@@ -33,6 +33,41 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
+func TestAccClouddeployTarget_CustomTarget(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"project_name":  envvar.GetTestProjectFromEnv(),
+		"region":        envvar.GetTestRegionFromEnv(),
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckClouddeployTargetDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClouddeployTarget_CustomTarget(context),
+			},
+			{
+				ResourceName:            "google_clouddeploy_target.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "annotations"},
+			},
+			{
+				Config: testAccClouddeployTarget_CustomTargetUpdate0(context),
+			},
+			{
+				ResourceName:            "google_clouddeploy_target.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "annotations"},
+			},
+		},
+	})
+}
 func TestAccClouddeployTarget_MultiTarget(t *testing.T) {
 	t.Parallel()
 
@@ -166,6 +201,70 @@ func TestAccClouddeployTarget_Target(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testAccClouddeployTarget_CustomTarget(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_clouddeploy_target" "primary" {
+  location = "%{region}"
+  name     = "tf-test-target%{random_suffix}"
+
+  custom_target {
+    custom_target_type = "projects/%{project_name}/locations/%{region}/customTargetTypes/ctt"
+  }
+
+  deploy_parameters = {}
+  description       = "custom target description"
+  project           = "%{project_name}"
+  require_approval  = false
+
+  annotations = {
+    my_first_annotation = "example-annotation-1"
+
+    my_second_annotation = "example-annotation-2"
+  }
+
+  labels = {
+    my_first_label = "example-label-1"
+
+    my_second_label = "example-label-2"
+  }
+}
+
+
+`, context)
+}
+
+func testAccClouddeployTarget_CustomTargetUpdate0(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_clouddeploy_target" "primary" {
+  location = "%{region}"
+  name     = "tf-test-target%{random_suffix}"
+
+  custom_target {
+    custom_target_type = "projects/%{project_name}/locations/%{region}/customTargetTypes/ctt"
+  }
+
+  deploy_parameters = {}
+  description       = "updated custom target description"
+  project           = "%{project_name}"
+  require_approval  = true
+
+  annotations = {
+    my_second_annotation = "updated-example-annotation-2"
+
+    my_third_annotation = "example-annotation-3"
+  }
+
+  labels = {
+    my_second_label = "updated-example-label-2"
+
+    my_third_label = "example-label-3"
+  }
+}
+
+
+`, context)
 }
 
 func testAccClouddeployTarget_MultiTarget(context map[string]interface{}) string {
