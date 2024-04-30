@@ -292,6 +292,11 @@ The following arguments are supported:
   Metadata related to network configuration.
   Structure is [documented below](#nested_network_config).
 
+* `psc_config` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  PscConfig contains PSC related configuration at a cluster level.
+  Structure is [documented below](#nested_psc_config).
+
 * `display_name` -
   (Optional)
   User-settable and human-readable display name for the Cluster.
@@ -379,6 +384,12 @@ Deleting a Secondary cluster with a secondary instance REQUIRES setting deletion
   (Optional)
   The name of the allocated IP range for the private IP AlloyDB cluster. For example: "google-managed-services-default".
   If set, the instance IPs for this cluster will be created in the allocated range.
+
+<a name="nested_psc_config"></a>The `psc_config` block supports:
+
+* `psc_enabled` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Create an instance that allows connections from Private Service Connect endpoints to the instance.
 
 <a name="nested_initial_user"></a>The `initial_user` block supports:
 

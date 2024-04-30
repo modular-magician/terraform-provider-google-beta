@@ -351,6 +351,11 @@ In addition to the arguments listed above, the following computed attributes are
   networkConfig.enablePublicIp is set to true. This is the connection
   endpoint for an end-user application.
 
+* `psc_instance_config` -
+  ([Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The configuration for Private Service Connect (PSC) for the instance.
+  Structure is [documented below](#nested_psc_instance_config).
+
 * `terraform_labels` -
   The combination of labels configured directly on the resource
    and default labels configured on the provider.
@@ -361,6 +366,20 @@ In addition to the arguments listed above, the following computed attributes are
 * `effective_annotations` -
   All of annotations (key/value pairs) present on the resource in GCP, including the annotations configured through Terraform, other clients and services.
 
+
+<a name="nested_psc_instance_config"></a>The `psc_instance_config` block contains:
+
+* `service_attachment_link` -
+  (Output, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The service attachment created when Private Service Connect (PSC) is enabled for the instance. The name of the resource will be in the format of projects/<alloydb-tenant-project-number>/regions/<region-name>/serviceAttachments/<service-attachment-name>
+
+* `allowed_consumer_projects` -
+  (Output, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  List of consumer projects that are allowed to create PSC endpoints to service-attachments to this instance.
+
+* `psc_dns_name` -
+  (Output, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The DNS name of the instance for PSC connectivity. Name convention: ...alloydb-psc.goog
 
 ## Timeouts
 

@@ -392,7 +392,7 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				Description: `The relative resource name of the VPC network on which the instance can be accessed. It is specified in the following form:
 
 "projects/{projectNumber}/global/networks/{network_id}".`,
-				ExactlyOneOf: []string{"network", "network_config.0.network"},
+				ExactlyOneOf: []string{"network", "network_config.0.network", "psc_config.0.psc_enabled"},
 			},
 			"network_config": {
 				Type:        schema.TypeList,
@@ -414,7 +414,24 @@ If set, the instance IPs for this cluster will be created in the allocated range
 							DiffSuppressFunc: tpgresource.ProjectNumberDiffSuppress,
 							Description: `The resource link for the VPC network in which cluster resources are created and from which they are accessible via Private IP. The network must belong to the same project as the cluster.
 It is specified in the form: "projects/{projectNumber}/global/networks/{network_id}".`,
-							ExactlyOneOf: []string{"network", "network_config.0.network"},
+							ExactlyOneOf: []string{"network", "network_config.0.network", "psc_config.0.psc_enabled"},
+						},
+					},
+				},
+			},
+			"psc_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `PscConfig contains PSC related configuration at a cluster level.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"psc_enabled": {
+							Type:         schema.TypeBool,
+							Optional:     true,
+							ForceNew:     true,
+							Description:  `Create an instance that allows connections from Private Service Connect endpoints to the instance.`,
+							ExactlyOneOf: []string{"network", "network_config.0.network", "psc_config.0.psc_enabled"},
 						},
 					},
 				},
@@ -671,6 +688,12 @@ func resourceAlloydbClusterCreate(d *schema.ResourceData, meta interface{}) erro
 		return err
 	} else if v, ok := d.GetOkExists("network_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(networkConfigProp)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
 		obj["networkConfig"] = networkConfigProp
+	}
+	pscConfigProp, err := expandAlloydbClusterPscConfig(d.Get("psc_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("psc_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(pscConfigProp)) && (ok || !reflect.DeepEqual(v, pscConfigProp)) {
+		obj["pscConfig"] = pscConfigProp
 	}
 	displayNameProp, err := expandAlloydbClusterDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
@@ -943,6 +966,9 @@ func resourceAlloydbClusterRead(d *schema.ResourceData, meta interface{}) error 
 	if err := d.Set("network_config", flattenAlloydbClusterNetworkConfig(res["networkConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+	if err := d.Set("psc_config", flattenAlloydbClusterPscConfig(res["pscConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Cluster: %s", err)
+	}
 	if err := d.Set("display_name", flattenAlloydbClusterDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
@@ -1028,6 +1054,12 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 		return err
 	} else if v, ok := d.GetOkExists("network_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, networkConfigProp)) {
 		obj["networkConfig"] = networkConfigProp
+	}
+	pscConfigProp, err := expandAlloydbClusterPscConfig(d.Get("psc_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("psc_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, pscConfigProp)) {
+		obj["pscConfig"] = pscConfigProp
 	}
 	displayNameProp, err := expandAlloydbClusterDisplayName(d.Get("display_name"), d, config)
 	if err != nil {
@@ -1115,6 +1147,10 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 
 	if d.HasChange("network_config") {
 		updateMask = append(updateMask, "networkConfig")
+	}
+
+	if d.HasChange("psc_config") {
+		updateMask = append(updateMask, "pscConfig")
 	}
 
 	if d.HasChange("display_name") {
@@ -1502,6 +1538,23 @@ func flattenAlloydbClusterNetworkConfigNetwork(v interface{}, d *schema.Resource
 }
 
 func flattenAlloydbClusterNetworkConfigAllocatedIpRange(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbClusterPscConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["psc_enabled"] =
+		flattenAlloydbClusterPscConfigPscEnabled(original["pscEnabled"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbClusterPscConfigPscEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2082,6 +2135,29 @@ func expandAlloydbClusterNetworkConfigNetwork(v interface{}, d tpgresource.Terra
 }
 
 func expandAlloydbClusterNetworkConfigAllocatedIpRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterPscConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPscEnabled, err := expandAlloydbClusterPscConfigPscEnabled(original["psc_enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPscEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pscEnabled"] = transformedPscEnabled
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbClusterPscConfigPscEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

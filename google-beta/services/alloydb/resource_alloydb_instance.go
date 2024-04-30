@@ -288,6 +288,37 @@ the same instance.`,
 				Computed:    true,
 				Description: `The name of the instance resource.`,
 			},
+			"psc_instance_config": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				Description: `The configuration for Private Service Connect (PSC) for the instance.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"allowed_consumer_projects": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Optional:    true,
+							Description: `List of consumer projects that are allowed to create PSC endpoints to service-attachments to this instance.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"psc_dns_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Optional:    true,
+							Description: `The DNS name of the instance for PSC connectivity. Name convention: ...alloydb-psc.goog`,
+						},
+						"service_attachment_link": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Optional:    true,
+							Description: `The service attachment created when Private Service Connect (PSC) is enabled for the instance. The name of the resource will be in the format of projects/<alloydb-tenant-project-number>/regions/<region-name>/serviceAttachments/<service-attachment-name>`,
+						},
+					},
+				},
+			},
 			"public_ip_address": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -610,6 +641,9 @@ func resourceAlloydbInstanceRead(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err := d.Set("public_ip_address", flattenAlloydbInstancePublicIpAddress(res["publicIpAddress"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err := d.Set("psc_instance_config", flattenAlloydbInstancePscInstanceConfig(res["pscInstanceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err := d.Set("terraform_labels", flattenAlloydbInstanceTerraformLabels(res["labels"], d, config)); err != nil {
@@ -1160,6 +1194,35 @@ func flattenAlloydbInstanceNetworkConfigEnablePublicIp(v interface{}, d *schema.
 }
 
 func flattenAlloydbInstancePublicIpAddress(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["service_attachment_link"] =
+		flattenAlloydbInstancePscInstanceConfigServiceAttachmentLink(original["serviceAttachmentLink"], d, config)
+	transformed["allowed_consumer_projects"] =
+		flattenAlloydbInstancePscInstanceConfigAllowedConsumerProjects(original["allowedConsumerProjects"], d, config)
+	transformed["psc_dns_name"] =
+		flattenAlloydbInstancePscInstanceConfigPscDnsName(original["pscDnsName"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbInstancePscInstanceConfigServiceAttachmentLink(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceConfigAllowedConsumerProjects(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstancePscInstanceConfigPscDnsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
