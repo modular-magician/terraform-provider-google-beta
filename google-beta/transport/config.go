@@ -295,6 +295,7 @@ type Config struct {
 	RedisBasePath                    string
 	ResourceManagerBasePath          string
 	RuntimeConfigBasePath            string
+	SecLMBasePath                    string
 	SecretManagerBasePath            string
 	SecureSourceManagerBasePath      string
 	SecurityCenterBasePath           string
@@ -446,6 +447,7 @@ const PubsubLiteBasePathKey = "PubsubLite"
 const RedisBasePathKey = "Redis"
 const ResourceManagerBasePathKey = "ResourceManager"
 const RuntimeConfigBasePathKey = "RuntimeConfig"
+const SecLMBasePathKey = "SecLM"
 const SecretManagerBasePathKey = "SecretManager"
 const SecureSourceManagerBasePathKey = "SecureSourceManager"
 const SecurityCenterBasePathKey = "SecurityCenter"
@@ -591,6 +593,7 @@ var DefaultBasePaths = map[string]string{
 	RedisBasePathKey:                    "https://redis.googleapis.com/v1beta1/",
 	ResourceManagerBasePathKey:          "https://cloudresourcemanager.googleapis.com/v1/",
 	RuntimeConfigBasePathKey:            "https://runtimeconfig.googleapis.com/v1beta1/",
+	SecLMBasePathKey:                    "https://seclm.googleapis.com/v1/",
 	SecretManagerBasePathKey:            "https://secretmanager.googleapis.com/v1/",
 	SecureSourceManagerBasePathKey:      "https://securesourcemanager.googleapis.com/v1/",
 	SecurityCenterBasePathKey:           "https://securitycenter.googleapis.com/v1/",
@@ -1234,6 +1237,11 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 		d.Set("runtime_config_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_RUNTIME_CONFIG_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[RuntimeConfigBasePathKey]))
+	}
+	if d.Get("sec_lm_custom_endpoint") == "" {
+		d.Set("sec_lm_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_SEC_LM_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[SecLMBasePathKey]))
 	}
 	if d.Get("secret_manager_custom_endpoint") == "" {
 		d.Set("secret_manager_custom_endpoint", MultiEnvDefault([]string{
@@ -2337,6 +2345,7 @@ func ConfigureBasePaths(c *Config) {
 	c.RedisBasePath = DefaultBasePaths[RedisBasePathKey]
 	c.ResourceManagerBasePath = DefaultBasePaths[ResourceManagerBasePathKey]
 	c.RuntimeConfigBasePath = DefaultBasePaths[RuntimeConfigBasePathKey]
+	c.SecLMBasePath = DefaultBasePaths[SecLMBasePathKey]
 	c.SecretManagerBasePath = DefaultBasePaths[SecretManagerBasePathKey]
 	c.SecureSourceManagerBasePath = DefaultBasePaths[SecureSourceManagerBasePathKey]
 	c.SecurityCenterBasePath = DefaultBasePaths[SecurityCenterBasePathKey]

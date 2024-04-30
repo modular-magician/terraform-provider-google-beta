@@ -680,6 +680,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
+			"sec_lm_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
 			"secret_manager_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -1119,6 +1124,7 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.RedisBasePath = d.Get("redis_custom_endpoint").(string)
 	config.ResourceManagerBasePath = d.Get("resource_manager_custom_endpoint").(string)
 	config.RuntimeConfigBasePath = d.Get("runtime_config_custom_endpoint").(string)
+	config.SecLMBasePath = d.Get("sec_lm_custom_endpoint").(string)
 	config.SecretManagerBasePath = d.Get("secret_manager_custom_endpoint").(string)
 	config.SecureSourceManagerBasePath = d.Get("secure_source_manager_custom_endpoint").(string)
 	config.SecurityCenterBasePath = d.Get("security_center_custom_endpoint").(string)

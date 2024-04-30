@@ -112,6 +112,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/redis"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/runtimeconfig"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/seclm"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/secretmanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/securesourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/securitycenter"
@@ -451,9 +452,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 462
+// Generated resources: 463
 // Generated IAM resources: 267
-// Total generated resources: 729
+// Total generated resources: 730
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                           accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                     accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1072,6 +1073,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_runtimeconfig_config_iam_binding":                          tpgiamresource.ResourceIamBinding(runtimeconfig.RuntimeConfigConfigIamSchema, runtimeconfig.RuntimeConfigConfigIamUpdaterProducer, runtimeconfig.RuntimeConfigConfigIdParseFunc),
 	"google_runtimeconfig_config_iam_member":                           tpgiamresource.ResourceIamMember(runtimeconfig.RuntimeConfigConfigIamSchema, runtimeconfig.RuntimeConfigConfigIamUpdaterProducer, runtimeconfig.RuntimeConfigConfigIdParseFunc),
 	"google_runtimeconfig_config_iam_policy":                           tpgiamresource.ResourceIamPolicy(runtimeconfig.RuntimeConfigConfigIamSchema, runtimeconfig.RuntimeConfigConfigIamUpdaterProducer, runtimeconfig.RuntimeConfigConfigIdParseFunc),
+	"google_sec_lm_workbench":                                          seclm.ResourceSecLMWorkbench(),
 	"google_secret_manager_secret":                                     secretmanager.ResourceSecretManagerSecret(),
 	"google_secret_manager_secret_iam_binding":                         tpgiamresource.ResourceIamBinding(secretmanager.SecretManagerSecretIamSchema, secretmanager.SecretManagerSecretIamUpdaterProducer, secretmanager.SecretManagerSecretIdParseFunc),
 	"google_secret_manager_secret_iam_member":                          tpgiamresource.ResourceIamMember(secretmanager.SecretManagerSecretIamSchema, secretmanager.SecretManagerSecretIamUpdaterProducer, secretmanager.SecretManagerSecretIdParseFunc),
