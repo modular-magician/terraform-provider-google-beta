@@ -91,6 +91,40 @@ func ResourceBigqueryAnalyticsHubDataExchange() *schema.Resource {
 				Optional:    true,
 				Description: `Email or URL of the primary point of contact of the data exchange.`,
 			},
+			"sharing_environment_config": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				Description: `Configurable data sharing environment option for a data exchange.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"dcr_exchange_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `Data Clean Room (DCR), used for privacy-safe and secured data sharing.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{},
+							},
+							ExactlyOneOf: []string{"sharing_environment_config.0.default_exchange_config", "sharing_environment_config.0.dcr_exchange_config"},
+						},
+						"default_exchange_config": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `Default Analytics Hub data exchange, used for secured data sharing.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{},
+							},
+							ExactlyOneOf: []string{"sharing_environment_config.0.default_exchange_config", "sharing_environment_config.0.dcr_exchange_config"},
+						},
+					},
+				},
+			},
 			"listing_count": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -150,6 +184,12 @@ func resourceBigqueryAnalyticsHubDataExchangeCreate(d *schema.ResourceData, meta
 		return err
 	} else if v, ok := d.GetOkExists("icon"); !tpgresource.IsEmptyValue(reflect.ValueOf(iconProp)) && (ok || !reflect.DeepEqual(v, iconProp)) {
 		obj["icon"] = iconProp
+	}
+	sharingEnvironmentConfigProp, err := expandBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfig(d.Get("sharing_environment_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("sharing_environment_config"); ok || !reflect.DeepEqual(v, sharingEnvironmentConfigProp) {
+		obj["sharingEnvironmentConfig"] = sharingEnvironmentConfigProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{BigqueryAnalyticsHubBasePath}}projects/{{project}}/locations/{{location}}/dataExchanges?data_exchange_id={{data_exchange_id}}")
@@ -264,6 +304,9 @@ func resourceBigqueryAnalyticsHubDataExchangeRead(d *schema.ResourceData, meta i
 	if err := d.Set("icon", flattenBigqueryAnalyticsHubDataExchangeIcon(res["icon"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataExchange: %s", err)
 	}
+	if err := d.Set("sharing_environment_config", flattenBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfig(res["sharingEnvironmentConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataExchange: %s", err)
+	}
 
 	return nil
 }
@@ -314,6 +357,12 @@ func resourceBigqueryAnalyticsHubDataExchangeUpdate(d *schema.ResourceData, meta
 	} else if v, ok := d.GetOkExists("icon"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, iconProp)) {
 		obj["icon"] = iconProp
 	}
+	sharingEnvironmentConfigProp, err := expandBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfig(d.Get("sharing_environment_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("sharing_environment_config"); ok || !reflect.DeepEqual(v, sharingEnvironmentConfigProp) {
+		obj["sharingEnvironmentConfig"] = sharingEnvironmentConfigProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{BigqueryAnalyticsHubBasePath}}projects/{{project}}/locations/{{location}}/dataExchanges/{{data_exchange_id}}")
 	if err != nil {
@@ -342,6 +391,10 @@ func resourceBigqueryAnalyticsHubDataExchangeUpdate(d *schema.ResourceData, meta
 
 	if d.HasChange("icon") {
 		updateMask = append(updateMask, "icon")
+	}
+
+	if d.HasChange("sharing_environment_config") {
+		updateMask = append(updateMask, "sharingEnvironmentConfig")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -489,6 +542,34 @@ func flattenBigqueryAnalyticsHubDataExchangeIcon(v interface{}, d *schema.Resour
 	return v
 }
 
+func flattenBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	transformed := make(map[string]interface{})
+	transformed["default_exchange_config"] =
+		flattenBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfigDefaultExchangeConfig(original["defaultExchangeConfig"], d, config)
+	transformed["dcr_exchange_config"] =
+		flattenBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfigDcrExchangeConfig(original["dcrExchangeConfig"], d, config)
+	return []interface{}{transformed}
+}
+func flattenBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfigDefaultExchangeConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
+}
+
+func flattenBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfigDcrExchangeConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
+}
+
 func expandBigqueryAnalyticsHubDataExchangeDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -507,4 +588,65 @@ func expandBigqueryAnalyticsHubDataExchangeDocumentation(v interface{}, d tpgres
 
 func expandBigqueryAnalyticsHubDataExchangeIcon(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedDefaultExchangeConfig, err := expandBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfigDefaultExchangeConfig(original["default_exchange_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["defaultExchangeConfig"] = transformedDefaultExchangeConfig
+	}
+
+	transformedDcrExchangeConfig, err := expandBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfigDcrExchangeConfig(original["dcr_exchange_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["dcrExchangeConfig"] = transformedDcrExchangeConfig
+	}
+
+	return transformed, nil
+}
+
+func expandBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfigDefaultExchangeConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
+}
+
+func expandBigqueryAnalyticsHubDataExchangeSharingEnvironmentConfigDcrExchangeConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
 }
