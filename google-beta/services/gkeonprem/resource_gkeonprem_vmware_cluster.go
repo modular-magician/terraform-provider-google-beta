@@ -264,6 +264,7 @@ full access to the cluster.`,
 			"enable_control_plane_v2": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				ForceNew:    true,
 				Description: `Enable control plane V2. Default to false.`,
 			},
 			"load_balancer": {
@@ -1292,12 +1293,6 @@ func resourceGkeonpremVmwareClusterUpdate(d *schema.ResourceData, meta interface
 	} else if v, ok := d.GetOkExists("authorization"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, authorizationProp)) {
 		obj["authorization"] = authorizationProp
 	}
-	enableControlPlaneV2Prop, err := expandGkeonpremVmwareClusterEnableControlPlaneV2(d.Get("enable_control_plane_v2"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("enable_control_plane_v2"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enableControlPlaneV2Prop)) {
-		obj["enableControlPlaneV2"] = enableControlPlaneV2Prop
-	}
 	disableBundledIngressProp, err := expandGkeonpremVmwareClusterDisableBundledIngress(d.Get("disable_bundled_ingress"), d, config)
 	if err != nil {
 		return err
@@ -1374,10 +1369,6 @@ func resourceGkeonpremVmwareClusterUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("authorization") {
 		updateMask = append(updateMask, "authorization")
-	}
-
-	if d.HasChange("enable_control_plane_v2") {
-		updateMask = append(updateMask, "enableControlPlaneV2")
 	}
 
 	if d.HasChange("disable_bundled_ingress") {
