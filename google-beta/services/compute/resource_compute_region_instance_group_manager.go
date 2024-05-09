@@ -92,6 +92,46 @@ func ResourceComputeRegionInstanceGroupManager() *schema.Resource {
 				},
 			},
 
+			"instance_flexibility_policy": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: `The flexibility policy for this managed instance group. Instance flexibility allowing MIG to create VMs from multiple types of machines. Instance flexibility configuration on MIG overrides instance template configuration.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"instance_selections": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: `Named instance selections configuring properties that the group will use when creating new VMs.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"name": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Instance selection name.`,
+									},
+
+									"rank": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Preference of this instance selection. Lower number means higher preference. MIG will first try to create a VM based on the machine-type with lowest rank and fallback to next rank based on availability. Machine types and instance selections with the same rank have the same preference.`,
+									},
+
+									"machine_types": {
+										Type:     schema.TypeSet,
+										Required: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+										Description: `Full machine-type names, e.g. "n1-standard-16"`,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -576,6 +616,7 @@ func resourceComputeRegionInstanceGroupManagerCreate(d *schema.ResourceData, met
 		TargetPools:                 tpgresource.ConvertStringSet(d.Get("target_pools").(*schema.Set)),
 		AutoHealingPolicies:         expandAutoHealingPolicies(d.Get("auto_healing_policies").([]interface{})),
 		Versions:                    expandVersions(d.Get("version").([]interface{})),
+		InstanceFlexibilityPolicy:   expandInstanceFlexibilityPolicy(d.Get("instance_flexibility_policy").([]any)),
 		UpdatePolicy:                expandRegionUpdatePolicy(d.Get("update_policy").([]interface{})),
 		InstanceLifecyclePolicy:     expandInstanceLifecyclePolicy(d.Get("instance_lifecycle_policy").([]interface{})),
 		AllInstancesConfig:          expandAllInstancesConfig(nil, d.Get("all_instances_config").([]interface{})),
@@ -766,6 +807,10 @@ func resourceComputeRegionInstanceGroupManagerRead(d *schema.ResourceData, meta 
 	if err := d.Set("version", flattenVersions(manager.Versions)); err != nil {
 		return err
 	}
+	if err := d.Set("instance_flexibility_policy", flattenInstanceFlexibilityPolicy(manager.InstanceFlexibilityPolicy)); err != nil {
+		return err
+	}
+
 	if err := d.Set("update_policy", flattenRegionUpdatePolicy(manager.UpdatePolicy)); err != nil {
 		return fmt.Errorf("Error setting update_policy in state: %s", err.Error())
 	}
@@ -839,6 +884,24 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 		change = true
 	}
 
+	var targetSizePatchUpdate bool
+	if d.HasChange("instance_flexibility_policy") {
+		instanceFlexibilityPolicy := d.Get("instance_flexibility_policy")
+		if instanceFlexibilityPolicy == nil || len(instanceFlexibilityPolicy.([]any)) == 0 {
+			updatedManager.NullFields = append(updatedManager.NullFields, "InstanceFlexibilityPolicy")
+		} else {
+			updatedManager.InstanceFlexibilityPolicy = expandInstanceFlexibilityPolicy(instanceFlexibilityPolicy.([]any))
+		}
+		change = true
+
+		// target size update should be done by patch instead of using resize
+		if d.HasChange("target_size") {
+			updatedManager.TargetSize = int64(d.Get("target_size").(int))
+			updatedManager.ForceSendFields = append(updatedManager.ForceSendFields, "TargetSize")
+			targetSizePatchUpdate = true
+		}
+	}
+
 	if d.HasChange("distribution_policy_target_shape") {
 		updatedManager.DistributionPolicy = expandDistributionPolicy(d)
 		change = true
@@ -909,7 +972,7 @@ func resourceComputeRegionInstanceGroupManagerUpdate(d *schema.ResourceData, met
 	}
 
 	// target size should use resize
-	if d.HasChange("target_size") {
+	if d.HasChange("target_size") && targetSizePatchUpdate == false {
 		d.Partial(true)
 		targetSize := int64(d.Get("target_size").(int))
 		op, err := config.NewComputeClient(userAgent).RegionInstanceGroupManagers.Resize(
