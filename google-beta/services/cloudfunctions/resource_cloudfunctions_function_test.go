@@ -408,7 +408,7 @@ func TestAccCloudFunctionsFunction_serviceAccountEmail(t *testing.T) {
 
 func TestAccCloudFunctionsFunction_vpcConnector(t *testing.T) {
 	t.Parallel()
-
+	// test
 	funcResourceName := "google_cloudfunctions_function.function"
 	functionName := fmt.Sprintf("tf-test-%s", acctest.RandString(t, 10))
 	bucketName := fmt.Sprintf("tf-test-bucket-%d", acctest.RandInt(t))
