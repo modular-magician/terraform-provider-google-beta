@@ -165,9 +165,6 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `id` - an identifier for the resource with format `{{parent}}/locations/{{location}}/securityProfiles/{{name}}`
 
-* `self_link` -
-  Server-defined URL of this resource.
-
 * `create_time` -
   Time the security profile was created in UTC.
 

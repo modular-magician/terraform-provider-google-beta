@@ -112,9 +112,6 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `id` - an identifier for the resource with format `{{parent}}/locations/{{location}}/firewallEndpointAssociations/{{name}}`
 
-* `self_link` -
-  Server-defined URL of this resource.
-
 * `create_time` -
   Time the firewall endpoint was created in UTC.
 

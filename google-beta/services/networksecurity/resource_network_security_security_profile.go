@@ -174,11 +174,6 @@ and threat overrides, the threat overrides action is applied.`,
 and may be sent on update and delete requests to ensure the client has an up-to-date
 value before proceeding.`,
 			},
-			"self_link": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Server-defined URL of this resource.`,
-			},
 			"terraform_labels": {
 				Type:     schema.TypeMap,
 				Computed: true,
@@ -312,9 +307,6 @@ func resourceNetworkSecuritySecurityProfileRead(d *schema.ResourceData, meta int
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("NetworkSecuritySecurityProfile %q", d.Id()))
 	}
 
-	if err := d.Set("self_link", flattenNetworkSecuritySecurityProfileSelfLink(res["selfLink"], d, config)); err != nil {
-		return fmt.Errorf("Error reading SecurityProfile: %s", err)
-	}
 	if err := d.Set("create_time", flattenNetworkSecuritySecurityProfileCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityProfile: %s", err)
 	}
@@ -506,10 +498,6 @@ func resourceNetworkSecuritySecurityProfileImport(d *schema.ResourceData, meta i
 	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
-}
-
-func flattenNetworkSecuritySecurityProfileSelfLink(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
 }
 
 func flattenNetworkSecuritySecurityProfileCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

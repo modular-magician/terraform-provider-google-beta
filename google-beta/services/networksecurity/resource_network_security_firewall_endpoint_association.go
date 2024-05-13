@@ -123,11 +123,6 @@ Format: projects/{project_id}.`,
 				Computed:    true,
 				Description: `Whether reconciling is in progress, recommended per https://google.aip.dev/128.`,
 			},
-			"self_link": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Server-defined URL of this resource.`,
-			},
 			"state": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -285,9 +280,6 @@ func resourceNetworkSecurityFirewallEndpointAssociationRead(d *schema.ResourceDa
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
 	if err := d.Set("disabled", flattenNetworkSecurityFirewallEndpointAssociationDisabled(res["disabled"], d, config)); err != nil {
-		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
-	}
-	if err := d.Set("self_link", flattenNetworkSecurityFirewallEndpointAssociationSelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpointAssociation: %s", err)
 	}
 	if err := d.Set("create_time", flattenNetworkSecurityFirewallEndpointAssociationCreateTime(res["createTime"], d, config)); err != nil {
@@ -522,10 +514,6 @@ func flattenNetworkSecurityFirewallEndpointAssociationLabels(v interface{}, d *s
 }
 
 func flattenNetworkSecurityFirewallEndpointAssociationDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenNetworkSecurityFirewallEndpointAssociationSelfLink(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
