@@ -115,11 +115,6 @@ fully configured. Format: projects/{project}/global/networks/{name}.`,
 				Computed:    true,
 				Description: `Whether reconciling is in progress, recommended per https://google.aip.dev/128.`,
 			},
-			"self_link": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Server-defined URL of this resource.`,
-			},
 			"state": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -247,9 +242,6 @@ func resourceNetworkSecurityFirewallEndpointRead(d *schema.ResourceData, meta in
 	}
 
 	if err := d.Set("labels", flattenNetworkSecurityFirewallEndpointLabels(res["labels"], d, config)); err != nil {
-		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
-	}
-	if err := d.Set("self_link", flattenNetworkSecurityFirewallEndpointSelfLink(res["selfLink"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FirewallEndpoint: %s", err)
 	}
 	if err := d.Set("create_time", flattenNetworkSecurityFirewallEndpointCreateTime(res["createTime"], d, config)); err != nil {
@@ -445,10 +437,6 @@ func flattenNetworkSecurityFirewallEndpointLabels(v interface{}, d *schema.Resou
 	}
 
 	return transformed
-}
-
-func flattenNetworkSecurityFirewallEndpointSelfLink(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
 }
 
 func flattenNetworkSecurityFirewallEndpointCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
