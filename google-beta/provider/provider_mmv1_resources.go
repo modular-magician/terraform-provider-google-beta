@@ -171,6 +171,7 @@ var handwrittenDatasources = map[string]*schema.Resource{
 	"google_cloudfunctions_function":                      cloudfunctions.DataSourceGoogleCloudFunctionsFunction(),
 	"google_cloudfunctions2_function":                     cloudfunctions2.DataSourceGoogleCloudFunctions2Function(),
 	"google_cloud_asset_resources_search_all":             cloudasset.DataSourceGoogleCloudAssetResourcesSearchAll(),
+	"google_cloud_asset_search_all_resources":             cloudasset.DataSourceGoogleCloudAssetSearchAllResources(),
 	"google_cloud_identity_groups":                        cloudidentity.DataSourceGoogleCloudIdentityGroups(),
 	"google_cloud_identity_group_memberships":             cloudidentity.DataSourceGoogleCloudIdentityGroupMemberships(),
 	"google_cloud_identity_group_lookup":                  cloudidentity.DataSourceGoogleCloudIdentityGroupLookup(),
@@ -451,9 +452,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 465
+// Generated resources: 466
 // Generated IAM resources: 267
-// Total generated resources: 732
+// Total generated resources: 733
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                           accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                     accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1027,6 +1028,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_network_services_gateway":                                  networkservices.ResourceNetworkServicesGateway(),
 	"google_network_services_grpc_route":                               networkservices.ResourceNetworkServicesGrpcRoute(),
 	"google_network_services_http_route":                               networkservices.ResourceNetworkServicesHttpRoute(),
+	"google_network_services_lb_traffic_extension":                     networkservices.ResourceNetworkServicesLbTrafficExtension(),
 	"google_network_services_mesh":                                     networkservices.ResourceNetworkServicesMesh(),
 	"google_network_services_service_binding":                          networkservices.ResourceNetworkServicesServiceBinding(),
 	"google_network_services_tcp_route":                                networkservices.ResourceNetworkServicesTcpRoute(),
