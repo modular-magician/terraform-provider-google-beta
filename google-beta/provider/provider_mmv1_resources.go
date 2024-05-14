@@ -452,9 +452,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 465
+// Generated resources: 466
 // Generated IAM resources: 267
-// Total generated resources: 732
+// Total generated resources: 733
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                           accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                     accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1122,6 +1122,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_spanner_instance":                                          spanner.ResourceSpannerInstance(),
 	"google_sql_database":                                              sql.ResourceSQLDatabase(),
 	"google_sql_source_representation_instance":                        sql.ResourceSQLSourceRepresentationInstance(),
+	"google_storage_anywhere_cache":                                    storage.ResourceStorageAnywhereCache(),
 	"google_storage_bucket_iam_binding":                                tpgiamresource.ResourceIamBinding(storage.StorageBucketIamSchema, storage.StorageBucketIamUpdaterProducer, storage.StorageBucketIdParseFunc),
 	"google_storage_bucket_iam_member":                                 tpgiamresource.ResourceIamMember(storage.StorageBucketIamSchema, storage.StorageBucketIamUpdaterProducer, storage.StorageBucketIdParseFunc),
 	"google_storage_bucket_iam_policy":                                 tpgiamresource.ResourceIamPolicy(storage.StorageBucketIamSchema, storage.StorageBucketIamUpdaterProducer, storage.StorageBucketIdParseFunc),
