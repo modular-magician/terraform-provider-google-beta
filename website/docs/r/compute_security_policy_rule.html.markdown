@@ -56,6 +56,26 @@ resource "google_compute_security_policy_rule" "policy_rule" {
   action          = "allow"
   preview         = true
 }
+
+resource "google_compute_security_policy_rule" "primary" {
+  security_policy = google_compute_security_policy.default.name
+  description     = "new rule"
+  priority        = 100
+  match {
+    versioned_expr = "SRC_IPS_V1"
+    config {
+      src_ip_ranges = ["10.10.0.0/16"]
+    }
+  }
+  action          = "allow"
+  preview         = true
+  rate_limit_options {
+    rate_limit_threshold {
+      count        = 10
+      interval_sec = 30
+    }
+  }
+}
 ```
 ## Example Usage - Security Policy Rule Default Rule
 
@@ -195,6 +215,12 @@ The following arguments are supported:
 * `preview` -
   (Optional)
   If set to true, the specified action is not enforced.
+
+* `rate_limit_options` -
+  (Optional)
+  Must be specified if the action is "rate_based_ban" or "throttle".
+  Cannot be specified for any other actions.
+  Structure is [documented below](#nested_rate_limit_options).
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -448,6 +474,24 @@ The following arguments are supported:
   HTTP_COOKIE -- Name of the HTTP cookie whose value is taken as the key value.
 
 <a name="nested_ban_threshold"></a>The `ban_threshold` block supports:
+
+* `count` -
+  (Optional)
+  Number of HTTP(S) requests for calculating the threshold.
+
+* `interval_sec` -
+  (Optional)
+  Interval over which the threshold is computed.
+
+<a name="nested_rate_limit_options"></a>The `rate_limit_options` block supports:
+
+* `rate_limit_threshold` -
+  (Optional)
+  Threshold at which to begin ratelimiting.
+  Structure is [documented below](#nested_rate_limit_threshold).
+
+
+<a name="nested_rate_limit_threshold"></a>The `rate_limit_threshold` block supports:
 
 * `count` -
   (Optional)

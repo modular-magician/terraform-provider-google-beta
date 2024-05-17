@@ -437,6 +437,37 @@ Valid options are deny(STATUS), where valid values for STATUS are 403, 404, 429,
 					},
 				},
 			},
+			"rate_limit_options": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `Must be specified if the action is "rate_based_ban" or "throttle".
+Cannot be specified for any other actions.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"rate_limit_threshold": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Threshold at which to begin ratelimiting.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"count": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Number of HTTP(S) requests for calculating the threshold.`,
+									},
+									"interval_sec": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Interval over which the threshold is computed.`,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -497,6 +528,12 @@ func resourceComputeSecurityPolicyRuleCreate(d *schema.ResourceData, meta interf
 		return err
 	} else if v, ok := d.GetOkExists("preview"); !tpgresource.IsEmptyValue(reflect.ValueOf(previewProp)) && (ok || !reflect.DeepEqual(v, previewProp)) {
 		obj["preview"] = previewProp
+	}
+	rateLimitOptionsProp, err := expandComputeSecurityPolicyRuleRateLimitOptions(d.Get("rate_limit_options"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("rate_limit_options"); !tpgresource.IsEmptyValue(reflect.ValueOf(rateLimitOptionsProp)) && (ok || !reflect.DeepEqual(v, rateLimitOptionsProp)) {
+		obj["rateLimitOptions"] = rateLimitOptionsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/securityPolicies/{{security_policy}}/addRule?priority={{priority}}")
@@ -618,6 +655,9 @@ func resourceComputeSecurityPolicyRuleRead(d *schema.ResourceData, meta interfac
 	if err := d.Set("preview", flattenComputeSecurityPolicyRulePreview(res["preview"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SecurityPolicyRule: %s", err)
 	}
+	if err := d.Set("rate_limit_options", flattenComputeSecurityPolicyRuleRateLimitOptions(res["rateLimitOptions"], d, config)); err != nil {
+		return fmt.Errorf("Error reading SecurityPolicyRule: %s", err)
+	}
 
 	return nil
 }
@@ -680,6 +720,12 @@ func resourceComputeSecurityPolicyRuleUpdate(d *schema.ResourceData, meta interf
 	} else if v, ok := d.GetOkExists("preview"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, previewProp)) {
 		obj["preview"] = previewProp
 	}
+	rateLimitOptionsProp, err := expandComputeSecurityPolicyRuleRateLimitOptions(d.Get("rate_limit_options"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("rate_limit_options"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, rateLimitOptionsProp)) {
+		obj["rateLimitOptions"] = rateLimitOptionsProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/securityPolicies/{{security_policy}}/patchRule?priority={{priority}}")
 	if err != nil {
@@ -724,6 +770,10 @@ func resourceComputeSecurityPolicyRuleUpdate(d *schema.ResourceData, meta interf
 
 	if d.HasChange("preview") {
 		updateMask = append(updateMask, "preview")
+	}
+
+	if d.HasChange("rate_limit_options") {
+		updateMask = append(updateMask, "rateLimitOptions")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1290,6 +1340,68 @@ func flattenComputeSecurityPolicyRulePreview(v interface{}, d *schema.ResourceDa
 	return v
 }
 
+func flattenComputeSecurityPolicyRuleRateLimitOptions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["rate_limit_threshold"] =
+		flattenComputeSecurityPolicyRuleRateLimitOptionsRateLimitThreshold(original["rateLimitThreshold"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeSecurityPolicyRuleRateLimitOptionsRateLimitThreshold(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["count"] =
+		flattenComputeSecurityPolicyRuleRateLimitOptionsRateLimitThresholdCount(original["count"], d, config)
+	transformed["interval_sec"] =
+		flattenComputeSecurityPolicyRuleRateLimitOptionsRateLimitThresholdIntervalSec(original["intervalSec"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeSecurityPolicyRuleRateLimitOptionsRateLimitThresholdCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenComputeSecurityPolicyRuleRateLimitOptionsRateLimitThresholdIntervalSec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
 func expandComputeSecurityPolicyRuleDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1852,5 +1964,58 @@ func expandComputeSecurityPolicyRuleRateLimitOptionsBanDurationSec(v interface{}
 }
 
 func expandComputeSecurityPolicyRulePreview(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeSecurityPolicyRuleRateLimitOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedRateLimitThreshold, err := expandComputeSecurityPolicyRuleRateLimitOptionsRateLimitThreshold(original["rate_limit_threshold"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRateLimitThreshold); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["rateLimitThreshold"] = transformedRateLimitThreshold
+	}
+
+	return transformed, nil
+}
+
+func expandComputeSecurityPolicyRuleRateLimitOptionsRateLimitThreshold(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedCount, err := expandComputeSecurityPolicyRuleRateLimitOptionsRateLimitThresholdCount(original["count"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["count"] = transformedCount
+	}
+
+	transformedIntervalSec, err := expandComputeSecurityPolicyRuleRateLimitOptionsRateLimitThresholdIntervalSec(original["interval_sec"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIntervalSec); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["intervalSec"] = transformedIntervalSec
+	}
+
+	return transformed, nil
+}
+
+func expandComputeSecurityPolicyRuleRateLimitOptionsRateLimitThresholdCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeSecurityPolicyRuleRateLimitOptionsRateLimitThresholdIntervalSec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
