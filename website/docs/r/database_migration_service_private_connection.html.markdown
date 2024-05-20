@@ -47,13 +47,16 @@ resource "google_database_migration_service_private_connection" "default" {
 	}
 
 	vpc_peering_config {
-		vpc_name = data.google_compute_network.default.id
-		subnet = "10.0.0.0/29"
+		vpc_name = data.google_compute_network.private_connection.id
+		subnet = "10.128.0.0/9"
 	}
+
+	depends_on = [google_compute_network.private_connection]
 }
 
-data "google_compute_network" "default" {
-  name = "my-network"
+resource "google_compute_network" "private_connection" {
+  name = "my-private-connection-network"
+  auto_create_subnetworks = true
 }
 ```
 
