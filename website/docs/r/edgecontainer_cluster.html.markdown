@@ -112,6 +112,63 @@ resource "google_edgecontainer_cluster" "default" {
 
 data "google_project" "project" {}
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=edgecontainer_cluster_with_maintenance_exclusion_windows&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Edgecontainer Cluster With Maintenance Exclusion Windows
+
+
+```hcl
+resource "google_edgecontainer_cluster" "default" {
+  name = "cluster-with-maintenance-exclusions"
+  location = "us-central1"
+
+  authorization {
+    admin_users {
+      username = "admin@hashicorptest.com"
+    }
+  }
+
+  networking {
+    cluster_ipv4_cidr_blocks = ["10.0.0.0/16"]
+    services_ipv4_cidr_blocks = ["10.1.0.0/16"]
+  }
+
+  fleet {
+    project = "projects/${data.google_project.project.number}"
+  }
+
+  maintenance_policy {
+    window {
+      recurring_window {
+        window {
+          start_time = "2023-01-01T08:00:00Z"
+          end_time = "2023-01-01T17:00:00Z"
+        }
+        recurrence = "FREQ=WEEKLY;BYDAY=SA"
+      }
+    }
+    maintenance_exclusions {
+      window {
+        start_time = "2023-01-01T08:00:00Z"
+        end_time = "2023-01-01T20:00:00Z"
+      }
+      id = "short-exclusion"
+    }
+    maintenance_exclusions {
+      window {
+        start_time = "2023-01-02T08:00:00Z"
+        end_time = "2023-01-13T08:00:00Z"
+      }
+      id = "long-exclusion"
+    }
+  }
+}
+
+data "google_project" "project" {}
+```
 ## Example Usage - Edgecontainer Local Control Plane Cluster
 
 
@@ -307,6 +364,13 @@ The following arguments are supported:
   Specifies the maintenance window in which maintenance may be performed.
   Structure is [documented below](#nested_window).
 
+* `maintenance_exclusions` -
+  (Optional)
+  Exclusions to automatic maintenance. Non-emergency maintenance should not occur
+  in these windows. Each exclusion has a unique name and may be active or expired.
+  The max number of maintenance exclusions allowed at a given time is 3.
+  Structure is [documented below](#nested_maintenance_exclusions).
+
 
 <a name="nested_window"></a>The `window` block supports:
 
@@ -328,6 +392,29 @@ The following arguments are supported:
   An RRULE (https://tools.ietf.org/html/rfc5545#section-3.8.5.3) for how
   this window recurs. They go on for the span of time between the start and
   end time.
+
+
+<a name="nested_window"></a>The `window` block supports:
+
+* `start_time` -
+  (Optional)
+  The time that the window first starts.
+
+* `end_time` -
+  (Optional)
+  The time that the window ends. The end time must take place after the
+  start time.
+
+<a name="nested_maintenance_exclusions"></a>The `maintenance_exclusions` block supports:
+
+* `window` -
+  (Optional)
+  Represents an arbitrary window of time.
+  Structure is [documented below](#nested_window).
+
+* `id` -
+  (Optional)
+  A unique (per cluster) id for the window.
 
 
 <a name="nested_window"></a>The `window` block supports:
