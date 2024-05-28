@@ -1232,6 +1232,7 @@ var handwrittenResources = map[string]*schema.Resource{
 	"google_cloudfunctions_function":                cloudfunctions.ResourceCloudFunctionsFunction(),
 	"google_composer_environment":                   composer.ResourceComposerEnvironment(),
 	"google_composer_user_workloads_secret":         composer.ResourceComposerUserWorkloadsSecret(),
+	"google_composer_user_workloads_config_map":     composer.ResourceComposerUserWorkloadsConfigMap(),
 	"google_compute_attached_disk":                  compute.ResourceComputeAttachedDisk(),
 	"google_compute_instance":                       compute.ResourceComputeInstance(),
 	"google_compute_disk_async_replication":         compute.ResourceComputeDiskAsyncReplication(),
