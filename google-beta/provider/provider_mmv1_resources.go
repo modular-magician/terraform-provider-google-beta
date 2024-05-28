@@ -421,6 +421,7 @@ var generatedIAMDatasources = map[string]*schema.Resource{
 	"google_endpoints_service_consumers_iam_policy":          tpgiamresource.DataSourceIamPolicy(servicemanagement.ServiceManagementServiceConsumersIamSchema, servicemanagement.ServiceManagementServiceConsumersIamUpdaterProducer),
 	"google_sourcerepo_repository_iam_policy":                tpgiamresource.DataSourceIamPolicy(sourcerepo.SourceRepoRepositoryIamSchema, sourcerepo.SourceRepoRepositoryIamUpdaterProducer),
 	"google_storage_bucket_iam_policy":                       tpgiamresource.DataSourceIamPolicy(storage.StorageBucketIamSchema, storage.StorageBucketIamUpdaterProducer),
+	"google_storage_managed_folder_iam_policy":               tpgiamresource.DataSourceIamPolicy(storage.StorageManagedFolderIamSchema, storage.StorageManagedFolderIamUpdaterProducer),
 	"google_tags_tag_key_iam_policy":                         tpgiamresource.DataSourceIamPolicy(tags.TagsTagKeyIamSchema, tags.TagsTagKeyIamUpdaterProducer),
 	"google_tags_tag_value_iam_policy":                       tpgiamresource.DataSourceIamPolicy(tags.TagsTagValueIamSchema, tags.TagsTagValueIamUpdaterProducer),
 	"google_vertex_ai_endpoint_iam_policy":                   tpgiamresource.DataSourceIamPolicy(vertexai.VertexAIEndpointIamSchema, vertexai.VertexAIEndpointIamUpdaterProducer),
@@ -457,9 +458,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 473
-// Generated IAM resources: 279
-// Total generated resources: 752
+// Generated resources: 474
+// Generated IAM resources: 282
+// Total generated resources: 756
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                           accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                     accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1153,6 +1154,10 @@ var generatedResources = map[string]*schema.Resource{
 	"google_storage_bucket_access_control":                             storage.ResourceStorageBucketAccessControl(),
 	"google_storage_default_object_access_control":                     storage.ResourceStorageDefaultObjectAccessControl(),
 	"google_storage_hmac_key":                                          storage.ResourceStorageHmacKey(),
+	"google_storage_managed_folder":                                    storage.ResourceStorageManagedFolder(),
+	"google_storage_managed_folder_iam_binding":                        tpgiamresource.ResourceIamBinding(storage.StorageManagedFolderIamSchema, storage.StorageManagedFolderIamUpdaterProducer, storage.StorageManagedFolderIdParseFunc),
+	"google_storage_managed_folder_iam_member":                         tpgiamresource.ResourceIamMember(storage.StorageManagedFolderIamSchema, storage.StorageManagedFolderIamUpdaterProducer, storage.StorageManagedFolderIdParseFunc),
+	"google_storage_managed_folder_iam_policy":                         tpgiamresource.ResourceIamPolicy(storage.StorageManagedFolderIamSchema, storage.StorageManagedFolderIamUpdaterProducer, storage.StorageManagedFolderIdParseFunc),
 	"google_storage_object_access_control":                             storage.ResourceStorageObjectAccessControl(),
 	"google_storage_insights_report_config":                            storageinsights.ResourceStorageInsightsReportConfig(),
 	"google_storage_transfer_agent_pool":                               storagetransfer.ResourceStorageTransferAgentPool(),
