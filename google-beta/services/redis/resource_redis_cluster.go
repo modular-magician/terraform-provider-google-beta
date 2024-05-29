@@ -124,6 +124,12 @@ https://cloud.google.com/memorystore/docs/cluster/supported-instance-configurati
 				Optional:    true,
 				Description: `Optional. The number of replica nodes per shard.`,
 			},
+			"test_missing_tests": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: `abcdefg`,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 			"transit_encryption_mode": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -323,6 +329,12 @@ func resourceRedisClusterCreate(d *schema.ResourceData, meta interface{}) error 
 	} else if v, ok := d.GetOkExists("redis_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(redisConfigsProp)) && (ok || !reflect.DeepEqual(v, redisConfigsProp)) {
 		obj["redisConfigs"] = redisConfigsProp
 	}
+	testMissingTestsProp, err := expandRedisClusterTestMissingTests(d.Get("test_missing_tests"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("test_missing_tests"); !tpgresource.IsEmptyValue(reflect.ValueOf(testMissingTestsProp)) && (ok || !reflect.DeepEqual(v, testMissingTestsProp)) {
+		obj["testMissingTests"] = testMissingTestsProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{RedisBasePath}}projects/{{project}}/locations/{{region}}/clusters?clusterId={{name}}")
 	if err != nil {
@@ -472,6 +484,9 @@ func resourceRedisClusterRead(d *schema.ResourceData, meta interface{}) error {
 	if err := d.Set("redis_configs", flattenRedisClusterRedisConfigs(res["redisConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+	if err := d.Set("test_missing_tests", flattenRedisClusterTestMissingTests(res["testMissingTests"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Cluster: %s", err)
+	}
 
 	return nil
 }
@@ -516,6 +531,12 @@ func resourceRedisClusterUpdate(d *schema.ResourceData, meta interface{}) error 
 	} else if v, ok := d.GetOkExists("redis_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, redisConfigsProp)) {
 		obj["redisConfigs"] = redisConfigsProp
 	}
+	testMissingTestsProp, err := expandRedisClusterTestMissingTests(d.Get("test_missing_tests"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("test_missing_tests"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, testMissingTestsProp)) {
+		obj["testMissingTests"] = testMissingTestsProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{RedisBasePath}}projects/{{project}}/locations/{{region}}/clusters/{{name}}")
 	if err != nil {
@@ -540,6 +561,10 @@ func resourceRedisClusterUpdate(d *schema.ResourceData, meta interface{}) error 
 
 	if d.HasChange("redis_configs") {
 		updateMask = append(updateMask, "redisConfigs")
+	}
+
+	if d.HasChange("test_missing_tests") {
+		updateMask = append(updateMask, "testMissingTests")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -906,6 +931,10 @@ func flattenRedisClusterRedisConfigs(v interface{}, d *schema.ResourceData, conf
 	return v
 }
 
+func flattenRedisClusterTestMissingTests(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandRedisClusterAuthorizationMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -953,6 +982,17 @@ func expandRedisClusterShardCount(v interface{}, d tpgresource.TerraformResource
 }
 
 func expandRedisClusterRedisConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
+func expandRedisClusterTestMissingTests(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}

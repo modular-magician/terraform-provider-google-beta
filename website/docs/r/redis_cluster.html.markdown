@@ -146,6 +146,10 @@ The following arguments are supported:
   Please check Memorystore documentation for the list of supported parameters:
   https://cloud.google.com/memorystore/docs/cluster/supported-instance-configurations
 
+* `test_missing_tests` -
+  (Optional)
+  abcdefg
+
 * `region` -
   (Optional)
   The name of the region of the Redis cluster.
