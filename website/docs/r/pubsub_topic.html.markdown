@@ -225,7 +225,6 @@ The following arguments are supported:
   Settings for ingestion from Amazon Kinesis Data Streams.
   Structure is [documented below](#nested_aws_kinesis).
 
-
 <a name="nested_aws_kinesis"></a>The `aws_kinesis` block supports:
 
 * `stream_arn` -

@@ -554,7 +554,6 @@ The following arguments are supported:
   If set, message data will be written to Cloud Storage in Avro format.
   Structure is [documented below](#nested_avro_config).
 
-
 <a name="nested_avro_config"></a>The `avro_config` block supports:
 
 * `write_metadata` -
@@ -601,7 +600,6 @@ The following arguments are supported:
   When set, the payload to the push endpoint is not wrapped.Sets the
   `data` field as the HTTP body for delivery.
   Structure is [documented below](#nested_no_wrapper).
-
 
 <a name="nested_oidc_token"></a>The `oidc_token` block supports:
 

@@ -132,14 +132,12 @@ and any messages with extra fields are not written and remain in the subscriptio
 							Optional: true,
 							Description: `When true, use the BigQuery table's schema as the columns to write to in BigQuery. Messages
 must be published in JSON format. Only one of use_topic_schema and use_table_schema can be set.`,
-							ConflictsWith: []string{},
 						},
 						"use_topic_schema": {
 							Type:     schema.TypeBool,
 							Optional: true,
 							Description: `When true, use the topic's schema as the columns to write to in BigQuery, if it exists.
 Only one of use_topic_schema and use_table_schema can be set.`,
-							ConflictsWith: []string{},
 						},
 						"write_metadata": {
 							Type:     schema.TypeBool,
