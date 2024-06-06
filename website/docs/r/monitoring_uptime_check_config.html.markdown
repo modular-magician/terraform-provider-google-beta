@@ -188,6 +188,49 @@ resource "google_monitoring_group" "check" {
   filter       = "resource.metadata.name=has_substring(\"foo\")"
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=uptime_check_config_cloud_run&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Uptime Check Config Cloud Run
+
+
+```hcl
+resource "google_monitoring_uptime_check_config" "cloud_run" {
+  display_name = "cloud-run-uptime-check"
+  timeout      = "60s"
+  user_labels  = {
+    example-key = "example-value"
+  }
+
+  http_check {
+    path = "some-path"
+    port = "443"
+  }
+
+  monitored_resource {
+    type = "cloud_run_revision"
+    labels = {
+      location     = google_cloud_run_v2_service.default.location
+      project_id   = google_cloud_run_v2_service.default.project
+      service_name = google_cloud_run_v2_service.default.name
+    }
+  }
+}
+
+resource "google_cloud_run_v2_service" "default" {
+  name     = "cloudrun-service"
+  location = "us-central1"
+  ingress = "INGRESS_TRAFFIC_ALL"
+  
+  template {
+    containers {
+      image = "us-docker.pkg.dev/cloudrun/container/hello"
+    }
+  }
+}
+```
 ## Example Usage - Uptime Check Config Synthetic Monitor
 
 
@@ -294,12 +337,12 @@ The following arguments are supported:
 
 * `monitored_resource` -
   (Optional)
-  The [monitored resource]
-  (https://cloud.google.com/monitoring/api/resources) associated with the
+  The [monitored resource](https://cloud.google.com/monitoring/api/resources) associated with the
   configuration. The following monitored resource types are supported for
   uptime checks:
   * `aws_ec2_instance`
   * `aws_elb_load_balancer`
+  * `cloud_run_revision`
   * `gae_app`
   * `gce_instance`
   * `k8s_service`

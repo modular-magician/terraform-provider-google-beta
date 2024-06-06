@@ -281,12 +281,12 @@ func ResourceMonitoringUptimeCheckConfig() *schema.Resource {
 				Type:     schema.TypeList,
 				Optional: true,
 				ForceNew: true,
-				Description: `The [monitored resource]
-(https://cloud.google.com/monitoring/api/resources) associated with the
+				Description: `The [monitored resource](https://cloud.google.com/monitoring/api/resources) associated with the
 configuration. The following monitored resource types are supported for
 uptime checks:
 * 'aws_ec2_instance'
 * 'aws_elb_load_balancer'
+* 'cloud_run_revision'
 * 'gae_app'
 * 'gce_instance'
 * 'k8s_service'
