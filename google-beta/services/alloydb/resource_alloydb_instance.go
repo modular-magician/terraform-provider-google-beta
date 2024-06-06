@@ -223,13 +223,12 @@ the same instance.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"allowed_consumer_projects": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Description: `List of consumer projects that are allowed to create PSC endpoints to service-attachments to this instance.
-These should be specified as project numbers only.`,
+							Type:             schema.TypeList,
+							Optional:         true,
+							DiffSuppressFunc: tpgresource.ProjectNumberDiffSuppressWithoutPrefix,
+							Description:      `List of consumer projects that are allowed to create PSC endpoints to service-attachments to this instance.`,
 							Elem: &schema.Schema{
-								Type:         schema.TypeString,
-								ValidateFunc: verify.ValidateRegexp(`^\d+$`),
+								Type: schema.TypeString,
 							},
 						},
 						"psc_dns_name": {

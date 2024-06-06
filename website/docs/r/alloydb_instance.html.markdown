@@ -315,7 +315,6 @@ The following arguments are supported:
 * `allowed_consumer_projects` -
   (Optional)
   List of consumer projects that are allowed to create PSC endpoints to service-attachments to this instance.
-  These should be specified as project numbers only.
 
 * `psc_dns_name` -
   (Output)
