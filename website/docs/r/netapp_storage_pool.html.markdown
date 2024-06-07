@@ -148,6 +148,14 @@ The following arguments are supported:
   When enabled, the volumes uses Active Directory as LDAP name service for UID/GID lookups. Required to enable extended group support for NFSv3,
   using security identifiers for NFSv4.1 or principal names for kerberized NFSv4.1.
 
+* `zone` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Specifies the active zone for regional storagePool.
+
+* `replica_zone` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Specifies the replica zone for regional storagePool.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
