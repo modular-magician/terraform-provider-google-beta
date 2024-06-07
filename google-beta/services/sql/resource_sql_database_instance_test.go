@@ -181,8 +181,8 @@ func TestAccSqlDatabaseInstance_deleteDefaultUserBeforeSubsequentApiCalls(t *tes
 
 	databaseName := "tf-test-" + acctest.RandString(t, 10)
 	testId := "sql-instance-clone-2"
-	addressName := acctest.BootstrapSharedTestGlobalAddress(t, testId)
-	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, testId)
+	addressName := acctest.BootstrapSharedTestGlobalAddress(t, testId, acctest.AddressWithPrefixLength(16))
+	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, testId, acctest.ServiceNetworkWithPrefixLength(16))
 
 	// 1. Create an instance.
 	// 2. Add a root@'%' user.
@@ -763,7 +763,7 @@ func TestAccSqlDatabaseInstance_withPrivateNetwork_withoutAllocatedIpRange(t *te
 	t.Parallel()
 
 	databaseName := "tf-test-" + acctest.RandString(t, 10)
-	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, "sql-instance-1")
+	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, "sql-instance-1", acctest.ServiceNetworkWithPrefixLength(16))
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -1003,12 +1003,12 @@ func TestAccSqlDatabaseInstance_withPrivateNetwork_withAllocatedIpRange(t *testi
 	databaseName := "tf-test-" + acctest.RandString(t, 10)
 
 	testId := "sql-instance-allocated-1"
-	addressName := acctest.BootstrapSharedTestGlobalAddress(t, testId)
-	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, testId)
+	addressName := acctest.BootstrapSharedTestGlobalAddress(t, testId, acctest.AddressWithPrefixLength(16))
+	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, testId, acctest.ServiceNetworkWithPrefixLength(16))
 
 	updateTestId := "sql-instance-allocated-update-1"
-	addressName_update := acctest.BootstrapSharedTestGlobalAddress(t, updateTestId)
-	networkName_update := acctest.BootstrapSharedServiceNetworkingConnection(t, updateTestId)
+	addressName_update := acctest.BootstrapSharedTestGlobalAddress(t, updateTestId, acctest.AddressWithPrefixLength(16))
+	networkName_update := acctest.BootstrapSharedServiceNetworkingConnection(t, updateTestId, acctest.ServiceNetworkWithPrefixLength(16))
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -1044,8 +1044,8 @@ func TestAccSqlDatabaseInstance_withPrivateNetwork_withAllocatedIpRangeReplica(t
 	databaseName := "tf-test-" + acctest.RandString(t, 10)
 
 	testId := "sql-instance-replica-1"
-	addressName := acctest.BootstrapSharedTestGlobalAddress(t, testId)
-	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, testId)
+	addressName := acctest.BootstrapSharedTestGlobalAddress(t, testId, acctest.AddressWithPrefixLength(16))
+	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, testId, acctest.ServiceNetworkWithPrefixLength(16))
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -1077,8 +1077,8 @@ func TestAccSqlDatabaseInstance_withPrivateNetwork_withAllocatedIpRangeClone(t *
 
 	databaseName := "tf-test-" + acctest.RandString(t, 10)
 	testId := "sql-instance-clone-1"
-	addressName := acctest.BootstrapSharedTestGlobalAddress(t, testId)
-	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, testId)
+	addressName := acctest.BootstrapSharedTestGlobalAddress(t, testId, acctest.AddressWithPrefixLength(16))
+	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, testId, acctest.ServiceNetworkWithPrefixLength(16))
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -1520,7 +1520,7 @@ func TestAccSqlDatabaseInstance_ActiveDirectory(t *testing.T) {
 
 	t.Parallel()
 	databaseName := "tf-test-" + acctest.RandString(t, 10)
-	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, "sql-instance-ad-1")
+	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, "sql-instance-ad-1", acctest.ServiceNetworkWithPrefixLength(16))
 	rootPassword := acctest.RandString(t, 15)
 	adDomainName := acctest.BootstrapSharedTestADDomain(t, "test-domain", networkName)
 

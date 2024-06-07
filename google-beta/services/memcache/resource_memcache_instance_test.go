@@ -15,7 +15,7 @@ func TestAccMemcacheInstance_update(t *testing.T) {
 
 	prefix := fmt.Sprintf("%d", acctest.RandInt(t))
 	name := fmt.Sprintf("tf-test-%s", prefix)
-	network := acctest.BootstrapSharedServiceNetworkingConnection(t, "memcache-instance-update-1")
+	network := acctest.BootstrapSharedServiceNetworkingConnection(t, "memcache-instance-update-1", acctest.ServiceNetworkWithPrefixLength(16))
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },

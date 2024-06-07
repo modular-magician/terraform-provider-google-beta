@@ -380,9 +380,7 @@ func AddressWithPrefixLength(prefixLength int) func(*AddressSettings) {
 }
 
 func NewAddressSettings(options ...func(*AddressSettings)) *AddressSettings {
-	settings := &AddressSettings{
-		PrefixLength: 16, // default prefix length
-	}
+	settings := &AddressSettings{}
 
 	for _, o := range options {
 		o(settings)
@@ -410,14 +408,16 @@ func BootstrapSharedTestGlobalAddress(t *testing.T, testId string, params ...fun
 		log.Printf("[DEBUG] Global address %q not found, bootstrapping", addressName)
 		url := fmt.Sprintf("%sprojects/%s/global/addresses", config.ComputeBasePath, project)
 
-		settings := NewAddressSettings(params...)
-
 		netObj := map[string]interface{}{
-			"name":          addressName,
-			"address_type":  "INTERNAL",
-			"purpose":       "VPC_PEERING",
-			"prefix_length": settings.PrefixLength,
-			"network":       networkId,
+			"name":         addressName,
+			"address_type": "INTERNAL",
+			"purpose":      "VPC_PEERING",
+			"network":      networkId,
+		}
+
+		settings := NewAddressSettings(params...)
+		if settings.PrefixLength != 0 {
+			netObj["prefix_length"] = settings.PrefixLength
 		}
 
 		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
@@ -469,7 +469,6 @@ func ServiceNetworkWithParentService(parentService string) func(*ServiceNetworkS
 
 func NewServiceNetworkSettings(options ...func(*ServiceNetworkSettings)) *ServiceNetworkSettings {
 	settings := &ServiceNetworkSettings{
-		PrefixLength:  16,                                 // default prefix length
 		ParentService: "servicenetworking.googleapis.com", // default parent service
 	}
 

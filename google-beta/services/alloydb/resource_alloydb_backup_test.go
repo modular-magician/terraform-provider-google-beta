@@ -14,7 +14,7 @@ func TestAccAlloydbBackup_update(t *testing.T) {
 
 	random_suffix := acctest.RandString(t, 10)
 	context := map[string]interface{}{
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-backup-update-1"),
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-backup-update-1", acctest.ServiceNetworkWithPrefixLength(16)),
 		"random_suffix": random_suffix,
 	}
 
@@ -117,7 +117,7 @@ func TestAccAlloydbBackup_createBackupWithMandatoryFields(t *testing.T) {
 
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-backup-mandatory-1"),
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-backup-mandatory-1", acctest.ServiceNetworkWithPrefixLength(16)),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -165,7 +165,7 @@ func TestAccAlloydbBackup_usingCMEK(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-backup-cmek-1"),
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-backup-cmek-1", acctest.ServiceNetworkWithPrefixLength(16)),
 		"random_suffix": acctest.RandString(t, 10),
 		"key_name":      "tf-test-key-" + acctest.RandString(t, 10),
 	}

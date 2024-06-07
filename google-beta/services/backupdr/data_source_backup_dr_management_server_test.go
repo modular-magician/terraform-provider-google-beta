@@ -17,7 +17,7 @@ func TestAccDataSourceGoogleBackupDRManagementServer_basic(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "backupdr-managementserver-basic"),
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "backupdr-managementserver-basic", acctest.ServiceNetworkWithPrefixLength(16)),
 		"random_suffix": acctest.RandString(t, 10),
 	}
 

@@ -168,7 +168,7 @@ func TestAccCloudbuildWorkerPool_withNetwork(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
 		"project":       envvar.GetTestProjectFromEnv(),
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "cloudbuild-workerpool-1"),
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "cloudbuild-workerpool-1", acctest.ServiceNetworkWithPrefixLength(16)),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

@@ -200,7 +200,7 @@ func TestAccRedisInstance_redisInstancePrivateServiceTestExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"network_name":    acctest.BootstrapSharedServiceNetworkingConnection(t, "vpc-network-1"),
+		"network_name":    acctest.BootstrapSharedServiceNetworkingConnection(t, "vpc-network-1", acctest.ServiceNetworkWithPrefixLength(16)),
 		"prevent_destroy": false,
 		"random_suffix":   acctest.RandString(t, 10),
 	}

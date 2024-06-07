@@ -14,7 +14,7 @@ func TestAccAlloydbInstance_update(t *testing.T) {
 
 	random_suffix := acctest.RandString(t, 10)
 	context := map[string]interface{}{
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-instance-update-1"),
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-instance-update-1", acctest.ServiceNetworkWithPrefixLength(16)),
 		"random_suffix": random_suffix,
 	}
 
@@ -111,7 +111,7 @@ func TestAccAlloydbInstance_createInstanceWithMandatoryFields(t *testing.T) {
 
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-instance-mandatory-1"),
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-instance-mandatory-1", acctest.ServiceNetworkWithPrefixLength(16)),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -154,7 +154,7 @@ data "google_compute_network" "default" {
 
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-instance-maximum-1"),
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-instance-maximum-1", acctest.ServiceNetworkWithPrefixLength(16)),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -224,7 +224,7 @@ func TestAccAlloydbInstance_createPrimaryAndReadPoolInstance(t *testing.T) {
 
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-instance-readpool-1"),
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-instance-readpool-1", acctest.ServiceNetworkWithPrefixLength(16)),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -277,7 +277,7 @@ data "google_compute_network" "default" {
 
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-instance-updatedb-1"),
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-instance-updatedb-1", acctest.ServiceNetworkWithPrefixLength(16)),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -355,8 +355,8 @@ func TestAccAlloydbInstance_createInstanceWithNetworkConfigAndAllocatedIPRange(t
 	t.Parallel()
 
 	testId := "alloydbinstance-network-config-1"
-	addressName := acctest.BootstrapSharedTestGlobalAddress(t, testId)
-	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, testId)
+	addressName := acctest.BootstrapSharedTestGlobalAddress(t, testId, acctest.AddressWithPrefixLength(16))
+	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, testId, acctest.ServiceNetworkWithPrefixLength(16))
 
 	context := map[string]interface{}{
 		"random_suffix": acctest.RandString(t, 10),
@@ -412,7 +412,7 @@ func TestAccAlloydbInstance_clientConnectionConfig(t *testing.T) {
 	t.Parallel()
 
 	suffix := acctest.RandString(t, 10)
-	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydbinstance-clientconnectionconfig")
+	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydbinstance-clientconnectionconfig", acctest.ServiceNetworkWithPrefixLength(16))
 
 	context := map[string]interface{}{
 		"random_suffix":      suffix,
@@ -573,7 +573,7 @@ func TestAccAlloydbInstance_networkConfig(t *testing.T) {
 	t.Parallel()
 
 	suffix := acctest.RandString(t, 10)
-	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydbinstance-networkconfig")
+	networkName := acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydbinstance-networkconfig", acctest.ServiceNetworkWithPrefixLength(16))
 
 	context1 := map[string]interface{}{
 		"random_suffix":                suffix,
