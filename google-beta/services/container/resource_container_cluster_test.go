@@ -5211,6 +5211,9 @@ resource "google_container_cluster" "primary" {
     kalm_config {
       enabled = false
     }
+    parallelstore_csi_driver_config {
+      enabled = false
+    }
   }
   deletion_protection = false
   network    = "%s"
@@ -5277,6 +5280,9 @@ resource "google_container_cluster" "primary" {
       auth     = "AUTH_NONE"
     }
     kalm_config {
+      enabled = true
+    }
+    parallelstore_csi_driver_config {
       enabled = true
     }
 	}
