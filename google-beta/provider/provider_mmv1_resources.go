@@ -121,6 +121,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/securityscanner"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicedirectory"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicemanagement"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicenetworking"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/serviceusage"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/sourcerepo"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/spanner"
@@ -143,7 +144,6 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/containeraws"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/containerazure"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataflow"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicenetworking"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgiamresource"
 )
 
@@ -461,9 +461,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 480
+// Generated resources: 481
 // Generated IAM resources: 279
-// Total generated resources: 759
+// Total generated resources: 760
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                  accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                            accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1148,6 +1148,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_endpoints_service_consumers_iam_binding":                          tpgiamresource.ResourceIamBinding(servicemanagement.ServiceManagementServiceConsumersIamSchema, servicemanagement.ServiceManagementServiceConsumersIamUpdaterProducer, servicemanagement.ServiceManagementServiceConsumersIdParseFunc),
 	"google_endpoints_service_consumers_iam_member":                           tpgiamresource.ResourceIamMember(servicemanagement.ServiceManagementServiceConsumersIamSchema, servicemanagement.ServiceManagementServiceConsumersIamUpdaterProducer, servicemanagement.ServiceManagementServiceConsumersIdParseFunc),
 	"google_endpoints_service_consumers_iam_policy":                           tpgiamresource.ResourceIamPolicy(servicemanagement.ServiceManagementServiceConsumersIamSchema, servicemanagement.ServiceManagementServiceConsumersIamUpdaterProducer, servicemanagement.ServiceManagementServiceConsumersIdParseFunc),
+	"google_service_networking_vpc_service_controls":                          servicenetworking.ResourceServiceNetworkingVPCServiceControls(),
 	"google_service_usage_consumer_quota_override":                            serviceusage.ResourceServiceUsageConsumerQuotaOverride(),
 	"google_sourcerepo_repository":                                            sourcerepo.ResourceSourceRepoRepository(),
 	"google_sourcerepo_repository_iam_binding":                                tpgiamresource.ResourceIamBinding(sourcerepo.SourceRepoRepositoryIamSchema, sourcerepo.SourceRepoRepositoryIamUpdaterProducer, sourcerepo.SourceRepoRepositoryIdParseFunc),

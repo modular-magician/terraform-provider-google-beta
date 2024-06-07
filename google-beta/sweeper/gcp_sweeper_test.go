@@ -123,6 +123,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/securityscanner"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicedirectory"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicemanagement"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicenetworking"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/serviceusage"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/sourcerepo"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/spanner"
