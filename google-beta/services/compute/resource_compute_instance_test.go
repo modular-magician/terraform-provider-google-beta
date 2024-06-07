@@ -5,7 +5,6 @@ package compute_test
 import (
 	"encoding/json"
 	"fmt"
-	"google.golang.org/api/googleapi"
 	"reflect"
 	"regexp"
 	"sort"
@@ -13,6 +12,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"google.golang.org/api/googleapi"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -3160,10 +3161,29 @@ func testAccComputeInstance_nic_securityPolicyCreateWithEmptyAndNullSecurityPoli
 
 func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateOnlyOnePolicy(t *testing.T) {
 	var instance compute.Instance
-	var instanceName = fmt.Sprintf("tf-test-instance-%s", acctest.RandString(t, 10))
-	var policyName = fmt.Sprintf("tf-test-policy-%s", acctest.RandString(t, 10))
-	var policyName2 = fmt.Sprintf("tf-test-policy2-%s", acctest.RandString(t, 10))
-	var suffix = acctest.RandString(t, 10)
+	randomString := acctest.RandString(t, 10)
+	policyName1 := fmt.Sprintf("tf-test-policy-%s", randomString)
+	policyName2 := fmt.Sprintf("tf-test-policy2-%s", randomString)
+	policyRef1 := "google_compute_region_security_policy.policyforinstance.self_link"
+	policyRef2 := "google_compute_region_security_policy.policyforinstance2.self_link"
+
+	context_1 := map[string]interface{}{
+		"instance_name":    fmt.Sprintf("tf-test-instance-%s", randomString),
+		"policy_name_1":    policyName1,
+		"policy_name_2":    policyName2,
+		"suffix":           randomString,
+		"nic_1_policy_ref": policyRef1,
+		"nic_2_policy_ref": policyRef1,
+	}
+
+	context_2 := map[string]interface{}{
+		"instance_name":    fmt.Sprintf("tf-test-instance-%s", randomString),
+		"policy_name_1":    policyName1,
+		"policy_name_2":    policyName2,
+		"suffix":           randomString,
+		"nic_1_policy_ref": policyRef1,
+		"nic_2_policy_ref": policyRef2,
+	}
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -3171,11 +3191,11 @@ func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfi
 		CheckDestroy:             testAccCheckComputeInstanceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(suffix, policyName, policyName2, instanceName, "google_compute_region_security_policy.policyforinstance.self_link", "google_compute_region_security_policy.policyforinstance.self_link"),
+				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(context_1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(
 						t, "google_compute_instance.foobar", &instance),
-					testAccCheckComputeInstanceNicAccessConfigHasSecurityPolicy(&instance, policyName),
+					testAccCheckComputeInstanceNicAccessConfigHasSecurityPolicy(&instance, policyName1),
 				),
 			},
 			{
@@ -3184,7 +3204,7 @@ func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfi
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(suffix, policyName, policyName2, instanceName, "google_compute_region_security_policy.policyforinstance.self_link", "google_compute_region_security_policy.policyforinstance2.self_link"),
+				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(context_2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(
 						t, "google_compute_instance.foobar", &instance),
@@ -3237,10 +3257,21 @@ func testAccComputeInstance_nic_securityPolicyCreateWithTwoAccessConfigsUpdateSe
 
 func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateRemoveAccessConfig(t *testing.T) {
 	var instance compute.Instance
-	var instanceName = fmt.Sprintf("tf-test-instance-%s", acctest.RandString(t, 10))
-	var policyName = fmt.Sprintf("tf-test-policy-%s", acctest.RandString(t, 10))
-	var policyName2 = fmt.Sprintf("tf-test-policy2-%s", acctest.RandString(t, 10))
-	var suffix = acctest.RandString(t, 10)
+	randomString := acctest.RandString(t, 10)
+	policyRef := "google_compute_region_security_policy.policyforinstance.self_link"
+	policyName1 := fmt.Sprintf("tf-test-policy-%s", randomString)
+	policyName2 := fmt.Sprintf("tf-test-policy2-%s", acctest.RandString(t, 10))
+
+	context := map[string]interface{}{
+		"instance_name": fmt.Sprintf("tf-test-instance-%s", randomString),
+		"policy_name_1": policyName1,
+		"policy_name_2": policyName2,
+		"suffix":        randomString,
+
+		// This test intentionally has >1 policies provisioned but only uses one to define network interfaces
+		"nic_1_policy_ref": policyRef,
+		"nic_2_policy_ref": policyRef,
+	}
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -3248,11 +3279,11 @@ func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfi
 		CheckDestroy:             testAccCheckComputeInstanceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(suffix, policyName, policyName2, instanceName, "google_compute_region_security_policy.policyforinstance.self_link", "google_compute_region_security_policy.policyforinstance.self_link"),
+				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(context),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(
 						t, "google_compute_instance.foobar", &instance),
-					testAccCheckComputeInstanceNicAccessConfigHasSecurityPolicy(&instance, policyName),
+					testAccCheckComputeInstanceNicAccessConfigHasSecurityPolicy(&instance, policyName1),
 				),
 			},
 			{
@@ -3261,11 +3292,24 @@ func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfi
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPoliciesRemoveAccessConfig(suffix, policyName, policyName2, instanceName, "google_compute_region_security_policy.policyforinstance.self_link", "google_compute_region_security_policy.policyforinstance.self_link"),
+				// Remove the security policy from the resources in previous step
+				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPoliciesRemoveSecurityPolicy(context),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(
 						t, "google_compute_instance.foobar", &instance),
-					testAccCheckComputeInstanceNicAccessConfigHasSecurityPolicy(&instance, policyName),
+				),
+			},
+			{
+				// Remove the access config from the resources in previous step
+				ResourceName:      "google_compute_instance.foobar",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPoliciesRemoveAccessConfig(context),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeInstanceExists(
+						t, "google_compute_instance.foobar", &instance),
 				),
 			},
 			{
@@ -3279,10 +3323,38 @@ func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfi
 
 func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateSwapPolicies(t *testing.T) {
 	var instance compute.Instance
-	var instanceName = fmt.Sprintf("tf-test-instance-%s", acctest.RandString(t, 10))
-	var policyName = fmt.Sprintf("tf-test-policy-%s", acctest.RandString(t, 10))
-	var policyName2 = fmt.Sprintf("tf-test-policy2-%s", acctest.RandString(t, 10))
-	var suffix = acctest.RandString(t, 10)
+	randomString := acctest.RandString(t, 10)
+	policyName1 := fmt.Sprintf("tf-test-policy-%s", randomString)
+	policyName2 := fmt.Sprintf("tf-test-policy2-%s", randomString)
+	policyRef1 := "google_compute_region_security_policy.policyforinstance.self_link"
+	policyRef2 := "google_compute_region_security_policy.policyforinstance2.self_link"
+
+	context_1 := map[string]interface{}{
+		"instance_name":    fmt.Sprintf("tf-test-instance-%s", randomString),
+		"policy_name_1":    policyName1,
+		"policy_name_2":    policyName2,
+		"suffix":           randomString,
+		"nic_1_policy_ref": "\"\"",
+		"nic_2_policy_ref": "\"\"",
+	}
+	context_2 := map[string]interface{}{
+		"instance_name": fmt.Sprintf("tf-test-instance-%s", randomString),
+		"policy_name_1": policyName1,
+		"policy_name_2": policyName2,
+		"suffix":        randomString,
+		// Add policies
+		"nic_1_policy_ref": policyRef1,
+		"nic_2_policy_ref": policyRef2,
+	}
+	context_3 := map[string]interface{}{
+		"instance_name": fmt.Sprintf("tf-test-instance-%s", randomString),
+		"policy_name_1": policyName1,
+		"policy_name_2": policyName2,
+		"suffix":        randomString,
+		// Policies switch places vs context_2
+		"nic_1_policy_ref": policyRef2,
+		"nic_2_policy_ref": policyRef1,
+	}
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -3290,7 +3362,7 @@ func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfi
 		CheckDestroy:             testAccCheckComputeInstanceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(suffix, policyName, policyName2, instanceName, "\"\"", "\"\""),
+				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(context_1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(
 						t, "google_compute_instance.foobar", &instance),
@@ -3302,11 +3374,11 @@ func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfi
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(suffix, policyName, policyName2, instanceName, "google_compute_region_security_policy.policyforinstance.self_link", "google_compute_region_security_policy.policyforinstance2.self_link"),
+				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(context_2),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(
 						t, "google_compute_instance.foobar", &instance),
-					testAccCheckComputeInstanceNicAccessConfigHasSecurityPolicy(&instance, policyName),
+					testAccCheckComputeInstanceNicAccessConfigHasSecurityPolicy(&instance, policyName1),
 					testAccCheckComputeInstanceNicAccessConfigHasSecurityPolicy(&instance, policyName2),
 				),
 			},
@@ -3316,12 +3388,12 @@ func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfi
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(suffix, policyName, policyName2, instanceName, "google_compute_region_security_policy.policyforinstance2.self_link", "google_compute_region_security_policy.policyforinstance.self_link"),
+				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(context_3),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(
 						t, "google_compute_instance.foobar", &instance),
 					testAccCheckComputeInstanceNicAccessConfigHasSecurityPolicy(&instance, policyName2),
-					testAccCheckComputeInstanceNicAccessConfigHasSecurityPolicy(&instance, policyName),
+					testAccCheckComputeInstanceNicAccessConfigHasSecurityPolicy(&instance, policyName1),
 				),
 			},
 			{
@@ -3330,7 +3402,7 @@ func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfi
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(suffix, policyName, policyName2, instanceName, "\"\"", "\"\""),
+				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(context_1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckComputeInstanceExists(
 						t, "google_compute_instance.foobar", &instance),
@@ -3382,6 +3454,13 @@ func testAccComputeInstance_nic_securityPolicyCreateWithAccessConfigUpdateAccess
 				ResourceName:      "google_compute_instance.foobar",
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				Config: testAccComputeInstance_nic_securityPolicyCreateWithTwoAccessConfigsUpdateAccessConfig_removeSecurityPolicy(suffix, policyName, instanceName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckComputeInstanceExists(
+						t, "google_compute_instance.foobar", &instance),
+				),
 			},
 			{
 				Config:      testAccComputeInstance_nic_securityPolicyCreateWithTwoAccessConfigsRemoveAccessConfig(suffix, policyName, instanceName),
@@ -8668,8 +8747,8 @@ resource "google_compute_instance" "foobar" {
 `, suffix, suffix, suffix, suffix, policy, instance, policyToSetOne, desiredStatus)
 }
 
-func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(suffix, policy, policy2, instance, policyToSetOne, policyToSetTwo string) string {
-	return fmt.Sprintf(`
+func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPolicies(context map[string]interface{}) string {
+	return acctest.Nprintf(`
 data "google_compute_image" "my_image" {
   family  = "debian-11"
   project = "debian-cloud"
@@ -8678,7 +8757,7 @@ data "google_compute_image" "my_image" {
 # First activate advanced network DDoS protection for the desired region
 resource "google_compute_region_security_policy" "policyddosprotection" {
   region      = "europe-west1"
-  name        = "tf-test-policyddosprotection-%s"
+  name        = "tf-test-policyddosprotection-%{suffix}"
   description = "region security policy for instance"
   type        = "CLOUD_ARMOR_NETWORK"
   ddos_protection_config {
@@ -8688,19 +8767,19 @@ resource "google_compute_region_security_policy" "policyddosprotection" {
 
 resource "google_compute_network_edge_security_service" "edge_sec_service" {
   region          = "europe-west1"
-  name            = "tf-test-edgesecservice-%s"
+  name            = "tf-test-edgesecservice-%{suffix}"
   description     = "My basic resource using security policy"
   security_policy = google_compute_region_security_policy.policyddosprotection.self_link
 }
 
 resource "google_compute_network" "net" {
-  name                    = "tf-test-network-%s"
+  name                    = "tf-test-network-%{suffix}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "subnet" {
   region                     = "europe-west1"
-  name                       = "tf-test-subnet-%s"
+  name                       = "tf-test-subnet-%{suffix}"
   ip_cidr_range              = "192.168.0.0/16"
   purpose                    = "PRIVATE"
   stack_type                 = "IPV4_ONLY"
@@ -8709,7 +8788,7 @@ resource "google_compute_subnetwork" "subnet" {
 
 resource "google_compute_subnetwork" "subnet-ipv6" {
   region                     = "europe-west1"
-  name                       = "tf-test-subnet-ip6-%s"
+  name                       = "tf-test-subnet-ip6-%{suffix}"
   ip_cidr_range              = "10.0.0.0/22"
   purpose                    = "PRIVATE"
   stack_type                 = "IPV4_IPV6"
@@ -8719,12 +8798,12 @@ resource "google_compute_subnetwork" "subnet-ipv6" {
 
 resource "google_compute_address" "normal-address" {
   region   = "europe-west1"
-  name     = "tf-test-addr-normal-%s"
+  name     = "tf-test-addr-normal-%{suffix}"
 }
 
 resource "google_compute_address" "ipv6-address" {
   region             = "europe-west1"
-  name               = "tf-test-addr-ipv6-%s"
+  name               = "tf-test-addr-ipv6-%{suffix}"
   address_type       = "EXTERNAL"
   ip_version         = "IPV6"
   network_tier       = "PREMIUM"
@@ -8733,13 +8812,13 @@ resource "google_compute_address" "ipv6-address" {
 }
 
 resource "google_compute_network" "net2" {
-  name                    = "tf-test-network2-%s"
+  name                    = "tf-test-network2-%{suffix}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "subnet2" {
   region                     = "europe-west1"
-  name                       = "tf-test-subnet2-%s"
+  name                       = "tf-test-subnet2-%{suffix}"
   ip_cidr_range              = "192.170.0.0/20"
   purpose                    = "PRIVATE"
   stack_type                 = "IPV4_ONLY"
@@ -8748,7 +8827,7 @@ resource "google_compute_subnetwork" "subnet2" {
   
 resource "google_compute_subnetwork" "subnet-ipv62" {
   region                     = "europe-west1"
-  name                       = "tf-test-subnet-ip62-%s"
+  name                       = "tf-test-subnet-ip62-%{suffix}"
   ip_cidr_range              = "10.10.0.0/20"
   purpose                    = "PRIVATE"
   stack_type                 = "IPV4_IPV6"
@@ -8758,12 +8837,12 @@ resource "google_compute_subnetwork" "subnet-ipv62" {
 
 resource "google_compute_address" "normal-address2" {
   region   = "europe-west1"
-  name     = "tf-test-addr-normal2-%s"
+  name     = "tf-test-addr-normal2-%{suffix}"
 }
   
 resource "google_compute_address" "ipv6-address2" {
   region             = "europe-west1"
-  name               = "tf-test-addr-ipv62-%s"
+  name               = "tf-test-addr-ipv62-%{suffix}"
   address_type       = "EXTERNAL"
   ip_version         = "IPV6"
   network_tier       = "PREMIUM"
@@ -8773,7 +8852,7 @@ resource "google_compute_address" "ipv6-address2" {
 
 resource "google_compute_region_security_policy" "policyforinstance" {
   region      = "europe-west1"
-  name        = "%s"
+  name        = "%{policy_name_1}"
   description = "region security policy to set to instance"
   type        = "CLOUD_ARMOR_NETWORK"
   depends_on  = [google_compute_network_edge_security_service.edge_sec_service]
@@ -8781,14 +8860,14 @@ resource "google_compute_region_security_policy" "policyforinstance" {
 
 resource "google_compute_region_security_policy" "policyforinstance2" {
   region      = "europe-west1"
-  name        = "%s"
+  name        = "%{policy_name_2}"
   description = "region security policy 2 to set to instance"
   type        = "CLOUD_ARMOR_NETWORK"
   depends_on  = [google_compute_network_edge_security_service.edge_sec_service]
 }
 
 resource "google_compute_instance" "foobar" {
-  name         = "%s"
+  name         = "%{instance_name}"
   machine_type = "e2-medium"
   zone         = "europe-west1-b"
   tags         = ["foo", "bar"]
@@ -8813,7 +8892,7 @@ resource "google_compute_instance" "foobar" {
 	  network_tier = "PREMIUM"
       nat_ip = google_compute_address.normal-address.address
     }
-	security_policy = %s
+	security_policy = %{nic_1_policy_ref}
   }
 
   network_interface {
@@ -8830,49 +8909,33 @@ resource "google_compute_instance" "foobar" {
 	  network_tier = "PREMIUM"
       nat_ip = google_compute_address.normal-address2.address
     }
-	security_policy = %s
+	security_policy = %{nic_2_policy_ref}
   }
 
   metadata = {
     foo = "bar"
   }
 }
-`, suffix, suffix, suffix, suffix, suffix, suffix, suffix, suffix, suffix, suffix, suffix, suffix, policy, policy2, instance, policyToSetOne, policyToSetTwo)
+`, context)
 }
 
-func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPoliciesRemoveAccessConfig(suffix, policy, policy2, instance, policyToSetOne, policyToSetTwo string) string {
-	return fmt.Sprintf(`
+func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPoliciesRemoveSecurityPolicy(context map[string]interface{}) string {
+	return acctest.Nprintf(`
 data "google_compute_image" "my_image" {
   family  = "debian-11"
   project = "debian-cloud"
 }
 
-# First activate advanced network DDoS protection for the desired region
-resource "google_compute_region_security_policy" "policyddosprotection" {
-  region      = "europe-west1"
-  name        = "tf-test-policyddosprotection-%s"
-  description = "region security policy for instance"
-  type        = "CLOUD_ARMOR_NETWORK"
-  ddos_protection_config {
-    ddos_protection = "ADVANCED_PREVIEW"
-  }
-}
-
-resource "google_compute_network_edge_security_service" "edge_sec_service" {
-  region          = "europe-west1"
-  name            = "tf-test-edgesecservice-%s"
-  description     = "My basic resource using security policy"
-  security_policy = google_compute_region_security_policy.policyddosprotection.self_link
-}
+# Remove DDoS protection for the desired region
 
 resource "google_compute_network" "net" {
-  name                    = "tf-test-network-%s"
+  name                    = "tf-test-network-%{suffix}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "subnet" {
   region                     = "europe-west1"
-  name                       = "tf-test-subnet-%s"
+  name                       = "tf-test-subnet-%{suffix}"
   ip_cidr_range              = "192.168.0.0/16"
   purpose                    = "PRIVATE"
   stack_type                 = "IPV4_ONLY"
@@ -8881,7 +8944,7 @@ resource "google_compute_subnetwork" "subnet" {
 
 resource "google_compute_subnetwork" "subnet-ipv6" {
   region                     = "europe-west1"
-  name                       = "tf-test-subnet-ip6-%s"
+  name                       = "tf-test-subnet-ip6-%{suffix}"
   ip_cidr_range              = "10.0.0.0/22"
   purpose                    = "PRIVATE"
   stack_type                 = "IPV4_IPV6"
@@ -8891,12 +8954,12 @@ resource "google_compute_subnetwork" "subnet-ipv6" {
 
 resource "google_compute_address" "normal-address" {
   region   = "europe-west1"
-  name     = "tf-test-addr-normal-%s"
+  name     = "tf-test-addr-normal-%{suffix}"
 }
 
 resource "google_compute_address" "ipv6-address" {
   region             = "europe-west1"
-  name               = "tf-test-addr-ipv6-%s"
+  name               = "tf-test-addr-ipv6-%{suffix}"
   address_type       = "EXTERNAL"
   ip_version         = "IPV6"
   network_tier       = "PREMIUM"
@@ -8905,13 +8968,13 @@ resource "google_compute_address" "ipv6-address" {
 }
 
 resource "google_compute_network" "net2" {
-  name                    = "tf-test-network2-%s"
+  name                    = "tf-test-network2-%{suffix}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "subnet2" {
   region                     = "europe-west1"
-  name                       = "tf-test-subnet2-%s"
+  name                       = "tf-test-subnet2-%{suffix}"
   ip_cidr_range              = "192.170.0.0/20"
   purpose                    = "PRIVATE"
   stack_type                 = "IPV4_ONLY"
@@ -8920,7 +8983,7 @@ resource "google_compute_subnetwork" "subnet2" {
   
 resource "google_compute_subnetwork" "subnet-ipv62" {
   region                     = "europe-west1"
-  name                       = "tf-test-subnet-ip62-%s"
+  name                       = "tf-test-subnet-ip62-%{suffix}"
   ip_cidr_range              = "10.10.0.0/20"
   purpose                    = "PRIVATE"
   stack_type                 = "IPV4_IPV6"
@@ -8930,12 +8993,168 @@ resource "google_compute_subnetwork" "subnet-ipv62" {
 
 resource "google_compute_address" "normal-address2" {
   region   = "europe-west1"
-  name     = "tf-test-addr-normal2-%s"
+  name     = "tf-test-addr-normal2-%{suffix}"
 }
   
 resource "google_compute_address" "ipv6-address2" {
   region             = "europe-west1"
-  name               = "tf-test-addr-ipv62-%s"
+  name               = "tf-test-addr-ipv62-%{suffix}"
+  address_type       = "EXTERNAL"
+  ip_version         = "IPV6"
+  network_tier       = "PREMIUM"
+  ipv6_endpoint_type = "VM"
+  subnetwork         = google_compute_subnetwork.subnet-ipv62.name
+}
+
+resource "google_compute_region_security_policy" "policyforinstance" {
+  region      = "europe-west1"
+  name        = "%{policy_name_1}"
+  description = "region security policy to set to instance"
+  type        = "CLOUD_ARMOR_NETWORK"
+  depends_on  = [google_compute_network_edge_security_service.edge_sec_service]
+}
+
+resource "google_compute_region_security_policy" "policyforinstance2" {
+  region      = "europe-west1"
+  name        = "%{policy_name_2}"
+  description = "region security policy 2 to set to instance"
+  type        = "CLOUD_ARMOR_NETWORK"
+  depends_on  = [google_compute_network_edge_security_service.edge_sec_service]
+}
+
+resource "google_compute_instance" "foobar" {
+  name         = "%{instance_name}"
+  machine_type = "e2-medium"
+  zone         = "europe-west1-b"
+  tags         = ["foo", "bar"]
+
+  boot_disk {
+    initialize_params {
+      image = data.google_compute_image.my_image.self_link
+    }
+  }
+
+  network_interface {
+    network    = google_compute_network.net.self_link
+    subnetwork = google_compute_subnetwork.subnet-ipv6.self_link
+    stack_type = "IPV4_IPV6"
+    ipv6_access_config {
+      external_ipv6               = google_compute_address.ipv6-address.address
+      external_ipv6_prefix_length = 96
+      name                        = "external-ipv6-access-config"
+      network_tier                = "PREMIUM"
+    }
+    access_config {
+      network_tier = "PREMIUM"
+      nat_ip = google_compute_address.normal-address.address
+    }
+    # security_policy removed
+  }
+
+  network_interface {
+    network    = google_compute_network.net2.self_link
+    subnetwork = google_compute_subnetwork.subnet-ipv62.self_link
+    stack_type = "IPV4_IPV6"
+    ipv6_access_config {
+      external_ipv6               = google_compute_address.ipv6-address2.address
+      external_ipv6_prefix_length = 96
+      name                        = "external-ipv6-access-config"
+      network_tier                = "PREMIUM"
+    }
+    access_config {
+      network_tier = "PREMIUM"
+      nat_ip = google_compute_address.normal-address2.address
+    }
+    # security_policy removed
+  }
+
+  metadata = {
+    foo = "bar"
+  }
+}
+`, context)
+}
+
+func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndTwoAccessConfigsUpdateTwoPoliciesRemoveAccessConfig(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_compute_image" "my_image" {
+  family  = "debian-11"
+  project = "debian-cloud"
+}
+
+# Remove DDoS protection for the desired region
+
+resource "google_compute_network" "net" {
+  name                    = "tf-test-network-%{suffix}"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "subnet" {
+  region                     = "europe-west1"
+  name                       = "tf-test-subnet-%{suffix}"
+  ip_cidr_range              = "192.168.0.0/16"
+  purpose                    = "PRIVATE"
+  stack_type                 = "IPV4_ONLY"
+  network                    = google_compute_network.net.id
+}
+
+resource "google_compute_subnetwork" "subnet-ipv6" {
+  region                     = "europe-west1"
+  name                       = "tf-test-subnet-ip6-%{suffix}"
+  ip_cidr_range              = "10.0.0.0/22"
+  purpose                    = "PRIVATE"
+  stack_type                 = "IPV4_IPV6"
+  ipv6_access_type           = "EXTERNAL"
+  network                    = google_compute_network.net.id
+}
+
+resource "google_compute_address" "normal-address" {
+  region   = "europe-west1"
+  name     = "tf-test-addr-normal-%{suffix}"
+}
+
+resource "google_compute_address" "ipv6-address" {
+  region             = "europe-west1"
+  name               = "tf-test-addr-ipv6-%{suffix}"
+  address_type       = "EXTERNAL"
+  ip_version         = "IPV6"
+  network_tier       = "PREMIUM"
+  ipv6_endpoint_type = "VM"
+  subnetwork         = google_compute_subnetwork.subnet-ipv6.name
+}
+
+resource "google_compute_network" "net2" {
+  name                    = "tf-test-network2-%{suffix}"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "subnet2" {
+  region                     = "europe-west1"
+  name                       = "tf-test-subnet2-%{suffix}"
+  ip_cidr_range              = "192.170.0.0/20"
+  purpose                    = "PRIVATE"
+  stack_type                 = "IPV4_ONLY"
+  network                    = google_compute_network.net2.id
+}
+  
+resource "google_compute_subnetwork" "subnet-ipv62" {
+  region                     = "europe-west1"
+  name                       = "tf-test-subnet-ip62-%{suffix}"
+  ip_cidr_range              = "10.10.0.0/20"
+  purpose                    = "PRIVATE"
+  stack_type                 = "IPV4_IPV6"
+  ipv6_access_type           = "EXTERNAL"
+  network                    = google_compute_network.net2.id
+}
+
+resource "google_compute_address" "normal-address2" {
+  region   = "europe-west1"
+  name     = "tf-test-addr-normal2-%{suffix}"
+}
+  
+resource "google_compute_address" "ipv6-address2" {
+  region             = "europe-west1"
+  name               = "tf-test-addr-ipv62-%{suffix}"
   address_type       = "EXTERNAL"
   ip_version         = "IPV6"
   network_tier       = "PREMIUM"
@@ -8981,8 +9200,8 @@ resource "google_compute_instance" "foobar" {
       name                        = "external-ipv6-access-config"
       network_tier                = "PREMIUM"
     }
-	# access config removed
-	security_policy = %s
+    # access config removed
+    # security_policy removed
   }
 
   network_interface {
@@ -8995,15 +9214,15 @@ resource "google_compute_instance" "foobar" {
       name                        = "external-ipv6-access-config"
       network_tier                = "PREMIUM"
     }
-	# access config removed
-	security_policy = %s
+    # access config removed
+    # security_policy removed
   }
 
   metadata = {
     foo = "bar"
   }
 }
-`, suffix, suffix, suffix, suffix, suffix, suffix, suffix, suffix, suffix, suffix, suffix, suffix, policy, policy2, instance, policyToSetOne, policyToSetTwo)
+`, context)
 }
 
 func testAccComputeInstance_nic_securityPolicyCreateWithTwoNicsAndAccessConfigsWithEmptyAndNullSecurityPolicies(suffix, instance string) string {
@@ -9186,6 +9405,105 @@ resource "google_compute_instance" "foobar" {
 `, suffix, suffix, suffix, suffix, suffix, suffix, suffix, policy, instance)
 }
 
+func testAccComputeInstance_nic_securityPolicyCreateWithTwoAccessConfigsUpdateAccessConfig_removeSecurityPolicy(suffix, policy, instance string) string {
+	return fmt.Sprintf(`
+data "google_compute_image" "my_image" {
+  family  = "debian-11"
+  project = "debian-cloud"
+}
+
+# Remove DDoS protection for the desired region
+
+resource "google_compute_network_edge_security_service" "edge_sec_service" {
+  region          = "europe-west1"
+  name            = "tf-test-edgesecservice-%s"
+  description     = "My basic resource using security policy"
+  security_policy = google_compute_region_security_policy.policyddosprotection.self_link
+}
+
+resource "google_compute_network" "net" {
+  name                    = "tf-test-network-%s"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "subnet" {
+  region                     = "europe-west1"
+  name                       = "tf-test-subnet-%s"
+  ip_cidr_range              = "192.168.0.0/16"
+  purpose                    = "PRIVATE"
+  stack_type                 = "IPV4_ONLY"
+  network                    = google_compute_network.net.id
+}
+
+resource "google_compute_subnetwork" "subnet-ipv6" {
+  region                     = "europe-west1"
+  name                       = "tf-test-subnet-ip6-%s"
+  ip_cidr_range              = "10.0.0.0/22"
+  purpose                    = "PRIVATE"
+  stack_type                 = "IPV4_IPV6"
+  ipv6_access_type           = "EXTERNAL"
+  network                    = google_compute_network.net.id
+}
+
+resource "google_compute_address" "normal-address" {
+  region   = "europe-west1"
+  name     = "tf-test-addr-normal-%s"
+}
+
+resource "google_compute_address" "ipv6-address" {
+  region             = "europe-west1"
+  name               = "tf-test-addr-ipv6-%s"
+  address_type       = "EXTERNAL"
+  ip_version         = "IPV6"
+  network_tier       = "PREMIUM"
+  ipv6_endpoint_type = "VM"
+  subnetwork         = google_compute_subnetwork.subnet-ipv6.name
+}
+
+resource "google_compute_region_security_policy" "policyforinstance" {
+  region      = "europe-west1"
+  name        = "%s"
+  description = "region security policy to set to instance"
+  type        = "CLOUD_ARMOR_NETWORK"
+  depends_on  = [google_compute_network_edge_security_service.edge_sec_service]
+}
+
+resource "google_compute_instance" "foobar" {
+  name         = "%s"
+  machine_type = "e2-medium"
+  zone         = "europe-west1-b"
+  tags         = ["foo", "bar"]
+
+  boot_disk {
+    initialize_params {
+      image = data.google_compute_image.my_image.self_link
+    }
+  }
+
+  network_interface {
+    network = google_compute_network.net.self_link
+    subnetwork = google_compute_subnetwork.subnet-ipv6.self_link
+    stack_type = "IPV4_IPV6"
+    ipv6_access_config {
+      external_ipv6               = google_compute_address.ipv6-address.address
+      external_ipv6_prefix_length = 96
+      name                        = "external-ipv6-access-config"
+      network_tier                = "PREMIUM"
+    }
+	access_config {
+	  network_tier = "PREMIUM"
+      nat_ip = google_compute_address.normal-address.address
+    }
+    # security_policy removed
+  }
+
+  metadata = {
+    foo = "bar"
+  }
+}
+`, suffix, suffix, suffix, suffix, suffix, suffix, policy, instance)
+}
+
 func testAccComputeInstance_nic_securityPolicyCreateWithTwoAccessConfigsRemoveAccessConfig(suffix, policy, instance string) string {
 	return fmt.Sprintf(`
 data "google_compute_image" "my_image" {
@@ -9275,8 +9593,8 @@ resource "google_compute_instance" "foobar" {
     subnetwork = google_compute_subnetwork.subnet-ipv6.self_link
     stack_type = "IPV4_IPV6"
     # remove all access config
-	security_policy = google_compute_region_security_policy.policyforinstance.self_link
-  }
+    # security_policy removed
+}
 
   metadata = {
     foo = "bar"
