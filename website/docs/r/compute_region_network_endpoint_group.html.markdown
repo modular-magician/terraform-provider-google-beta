@@ -115,29 +115,74 @@ resource "google_cloud_run_service" "cloudrun_neg" {
   }
 }
 ```
-<div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=region_network_endpoint_group_appengine&open_in_editor=main.tf" target="_blank">
-    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
-  </a>
-</div>
 ## Example Usage - Region Network Endpoint Group Appengine
 
 
 ```hcl
 // App Engine Example
-resource "google_compute_region_network_endpoint_group" "appengine_neg" {
-  name                  = "appengine-neg"
+resource "google_project" "my_project" {
+ name = "appeng-flex"
+ project_id = "appeng-flex"
+ org_id = "123456789"
+ billing_account = "000000-0000000-0000000-000000"
+}
+
+resource "google_app_engine_application" "app" {
+  project     = google_project.my_project.project_id
+  location_id = "us-central"
+}
+
+resource "google_project_service" "appengine" {
+  project = google_project.my_project.project_id
+  service = "appengineflex.googleapis.com"
+
+  disable_dependent_services = false
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "compute" {
+  project = google_project.my_project.project_id
+  service = "compute.googleapis.com"
+
+    disable_on_destroy = false
+}
+
+data "google_app_engine_default_service_account" "default" {
+}
+
+resource "google_project_iam_member" "gae_api" {
+  project = google_project.my_project.project_id
+  role    = "roles/compute.networkUser"
+  member  = "serviceAccount:${data.google_app_engine_default_service_account.default.email}"
+}
+
+resource "google_project_iam_member" "logs_writer" {
+  project = google_project.my_project.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${data.google_app_engine_default_service_account.default.email}"
+}
+
+resource "google_project_iam_member" "storage_viewer" {
+  project = google_project.my_project.project_id
+  role    = "roles/storage.objectViewer"
+  member  = "serviceAccount:${data.google_app_engine_default_service_account.default.email}"
+}
+
+resource "google_compute_region_network_endpoint_group" "test-neg" {
+  project = google_project_service.compute.project
+  name                  = "test-neg"
   network_endpoint_type = "SERVERLESS"
   region                = "us-central1"
   app_engine {
-    service = google_app_engine_flexible_app_version.appengine_neg.service
-    version = google_app_engine_flexible_app_version.appengine_neg.version_id
+    service = google_app_engine_flexible_app_version.appengine-version.service
+    version = google_app_engine_flexible_app_version.appengine-version.version_id
   }
 }
 
-resource "google_app_engine_flexible_app_version" "appengine_neg" {
+resource "google_app_engine_flexible_app_version" "appengine-version" {
   version_id = "v1"
-  service    = "appengine-network-endpoint-group"
+  project = google_project_service.appengine.project
+  service    = "default"
   runtime    = "nodejs"
 
   entrypoint {
@@ -146,7 +191,7 @@ resource "google_app_engine_flexible_app_version" "appengine_neg" {
 
   deployment {
     zip {
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.appengine_neg.name}/${google_storage_bucket_object.appengine_neg.name}"
+      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.object.name}"
     }
   }
 
@@ -181,17 +226,19 @@ resource "google_app_engine_flexible_app_version" "appengine_neg" {
     }
   }
 
-  delete_service_on_destroy = true
+  delete_service_on_destroy = false
 }
 
-resource "google_storage_bucket" "appengine_neg" {
-  name     = "appengine-neg"
+resource "google_storage_bucket" "bucket" {
+  project  = google_project_service.compute.project
+  name     = "appengine-static-content"
   location = "US"
+  uniform_bucket_level_access = true
 }
 
-resource "google_storage_bucket_object" "appengine_neg" {
+resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
-  bucket = google_storage_bucket.appengine_neg.name
+  bucket = google_storage_bucket.bucket.name
   source = "./test-fixtures/hello-world.zip"
 }
 ```
