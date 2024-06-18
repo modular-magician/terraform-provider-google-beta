@@ -93,6 +93,25 @@ character, which cannot be a dash.
 
 These are in the same namespace as the managed SSL certificates.`,
 			},
+			"self_managed": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Configuration and status of a self-managed SSL certificate.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"certificate": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Description: `A local certificate file. The certificate must be in PEM format.
+The certificate chain must be no greater than 5 certs long.
+The chain must include at least one intermediate cert.`,
+						},
+					},
+				},
+			},
 			"certificate_id": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -107,6 +126,13 @@ These are in the same namespace as the managed SSL certificates.`,
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `Expire time of the certificate in RFC3339 text format.`,
+			},
+			"region": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `[Output Only] URL of the region
+where the regional SSL Certificate resides.
+This field is not applicable to global SSL Certificate.`,
 			},
 			"name_prefix": {
 				Type:          schema.TypeString,
@@ -172,6 +198,12 @@ func resourceComputeSslCertificateCreate(d *schema.ResourceData, meta interface{
 		return err
 	} else if v, ok := d.GetOkExists("private_key"); !tpgresource.IsEmptyValue(reflect.ValueOf(privateKeyProp)) && (ok || !reflect.DeepEqual(v, privateKeyProp)) {
 		obj["privateKey"] = privateKeyProp
+	}
+	selfManagedProp, err := expandComputeSslCertificateSelfManaged(d.Get("self_managed"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("self_managed"); !tpgresource.IsEmptyValue(reflect.ValueOf(selfManagedProp)) && (ok || !reflect.DeepEqual(v, selfManagedProp)) {
+		obj["selfManaged"] = selfManagedProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/sslCertificates")
@@ -288,6 +320,12 @@ func resourceComputeSslCertificateRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading SslCertificate: %s", err)
 	}
 	if err := d.Set("name", flattenComputeSslCertificateName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading SslCertificate: %s", err)
+	}
+	if err := d.Set("region", flattenComputeSslCertificateRegion(res["region"], d, config)); err != nil {
+		return fmt.Errorf("Error reading SslCertificate: %s", err)
+	}
+	if err := d.Set("self_managed", flattenComputeSslCertificateSelfManaged(res["selfManaged"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SslCertificate: %s", err)
 	}
 	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
@@ -410,6 +448,27 @@ func flattenComputeSslCertificateName(v interface{}, d *schema.ResourceData, con
 	return v
 }
 
+func flattenComputeSslCertificateRegion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeSslCertificateSelfManaged(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["certificate"] =
+		flattenComputeSslCertificateSelfManagedCertificate(original["certificate"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeSslCertificateSelfManagedCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandComputeSslCertificateCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -437,5 +496,28 @@ func expandComputeSslCertificateName(v interface{}, d tpgresource.TerraformResou
 }
 
 func expandComputeSslCertificatePrivateKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeSslCertificateSelfManaged(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedCertificate, err := expandComputeSslCertificateSelfManagedCertificate(original["certificate"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["certificate"] = transformedCertificate
+	}
+
+	return transformed, nil
+}
+
+func expandComputeSslCertificateSelfManagedCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

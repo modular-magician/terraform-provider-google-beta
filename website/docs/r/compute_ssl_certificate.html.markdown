@@ -198,11 +198,24 @@ The following arguments are supported:
 
   These are in the same namespace as the managed SSL certificates.
 
+* `self_managed` -
+  (Optional)
+  Configuration and status of a self-managed SSL certificate.
+  Structure is [documented below](#nested_self_managed).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
 * `name_prefix` - (Optional) Creates a unique name beginning with the
  specified prefix. Conflicts with `name`.
+
+<a name="nested_self_managed"></a>The `self_managed` block supports:
+
+* `certificate` -
+  (Optional)
+  A local certificate file. The certificate must be in PEM format.
+  The certificate chain must be no greater than 5 certs long.
+  The chain must include at least one intermediate cert.
 
 ## Attributes Reference
 
@@ -218,6 +231,11 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `certificate_id` -
   The unique identifier for the resource.
+
+* `region` -
+  [Output Only] URL of the region
+  where the regional SSL Certificate resides.
+  This field is not applicable to global SSL Certificate.
 * `self_link` - The URI of the created resource.
 
 
