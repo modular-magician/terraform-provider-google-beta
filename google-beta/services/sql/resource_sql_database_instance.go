@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"reflect"
 	"strings"
 	"time"
 
@@ -179,7 +178,7 @@ func ResourceSqlDatabaseInstance() *schema.Resource {
 						"edition": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Default:      "ENTERPRISE",
+							Computed:     true,
 							ValidateFunc: validation.StringInSlice([]string{"ENTERPRISE", "ENTERPRISE_PLUS"}, false),
 							Description:  `The edition of the instance, can be ENTERPRISE or ENTERPRISE_PLUS.`,
 						},
@@ -2058,7 +2057,7 @@ func flattenSettings(settings *sqladmin.Settings, d *schema.ResourceData) []map[
 	data := map[string]interface{}{
 		"version":                     settings.SettingsVersion,
 		"tier":                        settings.Tier,
-		"edition":                     flattenEdition(settings.Edition),
+		"edition":                     settings.Edition,
 		"activation_policy":           settings.ActivationPolicy,
 		"availability_type":           settings.AvailabilityType,
 		"collation":                   settings.Collation,
@@ -2391,14 +2390,6 @@ func flattenPasswordValidationPolicy(passwordValidationPolicy *sqladmin.Password
 		"enable_password_policy":      passwordValidationPolicy.EnablePasswordPolicy,
 	}
 	return []map[string]interface{}{data}
-}
-
-func flattenEdition(v interface{}) string {
-	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
-		return "ENTERPRISE"
-	}
-
-	return v.(string)
 }
 
 func instanceMutexKey(project, instance_name string) string {
