@@ -854,6 +854,11 @@ The following arguments are supported:
   The list of HostRules to use against the URL.
   Structure is [documented below](#nested_host_rule).
 
+* `default_custom_error_response_policy` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Specifies the custom error response policies that must be applied when the backend service or backend bucket responds with an error. Can be defined for the urlMap, pathMatcher or routeRule/pathRule. The most specific customErrorResponsePolicy that matches the error response applies.
+  Structure is [documented below](#nested_default_custom_error_response_policy).
+
 * `path_matcher` -
   (Optional)
   The list of named PathMatchers to use against the URL.
@@ -972,6 +977,37 @@ The following arguments are supported:
   The name of the PathMatcher to use to match the path portion of the URL if the
   hostRule matches the URL's host portion.
 
+<a name="nested_default_custom_error_response_policy"></a>The `default_custom_error_response_policy` block supports:
+
+* `error_response_rules` -
+  (Required)
+  Specifies the rules to match the error response. Rules defined for specific HTTP error status codes have higher precedence over rules defined for HTTP status code classes.
+  Structure is [documented below](#nested_error_response_rules).
+
+* `error_service` -
+  (Required)
+  The backend service or backend bucket to fetch the custom error content from.
+
+
+<a name="nested_error_response_rules"></a>The `error_response_rules` block supports:
+
+* `match_response_codes` -
+  (Required)
+  HTTP error status code, or class of error status codes to match against.
+  Example status codes are '501', '403', and example status code classes are
+  '4xx' and '5xx'.
+
+* `path` -
+  (Required)
+  Path to redirect to for the backend service or backend bucket to get
+  the custom error response.
+
+* `override_response_code` -
+  (Optional)
+  Optional HTTP status code returned with the response containing the custom
+  error content. If not specified, the original HTTP status code will be
+  returned with the custom error content.
+
 <a name="nested_path_matcher"></a>The `path_matcher` block supports:
 
 * `default_service` -
@@ -1005,6 +1041,11 @@ The following arguments are supported:
 * `name` -
   (Required)
   The name to which this PathMatcher is referred by the HostRule.
+
+* `default_custom_error_response_policy` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Specifies the custom error response policies that must be applied when the backend service or backend bucket responds with an error. Can be defined for the urlMap, pathMatcher or routeRule/pathRule. The most specific customErrorResponsePolicy that matches the error response applies.
+  Structure is [documented below](#nested_default_custom_error_response_policy).
 
 * `path_rule` -
   (Optional)
@@ -1141,6 +1182,37 @@ The following arguments are supported:
   header. If true, headerValue is set for the header, discarding any values that
   were set for that header.
 
+<a name="nested_default_custom_error_response_policy"></a>The `default_custom_error_response_policy` block supports:
+
+* `error_response_rules` -
+  (Required)
+  Specifies the rules to match the error response. Rules defined for specific HTTP error status codes have higher precedence over rules defined for HTTP status code classes.
+  Structure is [documented below](#nested_error_response_rules).
+
+* `error_service` -
+  (Required)
+  The backend service or backend bucket to fetch the custom error content from.
+
+
+<a name="nested_error_response_rules"></a>The `error_response_rules` block supports:
+
+* `match_response_codes` -
+  (Required)
+  HTTP error status code, or class of error status codes to match
+  against.  Example status codes are '501', '403', and example status
+  code classes are '4xx' and '5xx'.
+
+* `path` -
+  (Required)
+  Path to redirect to for the backend service or backend bucket to get
+  the custom error response.
+
+* `override_response_code` -
+  (Optional)
+  Optional HTTP status code returned with the response containing the
+  custom error content. If not specified, the original HTTP status code
+  will be returned with the custom error content.
+
 <a name="nested_path_rule"></a>The `path_rule` block supports:
 
 * `service` -
@@ -1174,6 +1246,11 @@ The following arguments are supported:
   routeAction cannot contain any  weightedBackendServices. Only one of routeAction
   or urlRedirect must be set.
   Structure is [documented below](#nested_route_action).
+
+* `custom_error_response_policy` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Specifies the custom error response policies that must be applied when the backend service or backend bucket responds with an error. Can be defined for the urlMap, pathMatcher or routeRule/pathRule. The most specific customErrorResponsePolicy that matches the error response applies.
+  Structure is [documented below](#nested_custom_error_response_policy).
 
 * `url_redirect` -
   (Optional)
@@ -1542,6 +1619,38 @@ The following arguments are supported:
   header. If true, headerValue is set for the header, discarding any values that
   were set for that header.
 
+<a name="nested_custom_error_response_policy"></a>The `custom_error_response_policy` block supports:
+
+* `error_response_rules` -
+  (Required)
+  Specifies the rules to match the error response. Rules defined for specific HTTP error status codes have higher precedence over rules defined for HTTP status code classes.
+  Structure is [documented below](#nested_error_response_rules).
+
+* `error_service` -
+  (Required)
+  The backend service or backend bucket to fetch the custom error content
+  from.
+
+
+<a name="nested_error_response_rules"></a>The `error_response_rules` block supports:
+
+* `match_response_codes` -
+  (Required)
+  HTTP error status code, or class of error status codes to match
+  against.  Example status codes are '501', '403', and example status
+  code classes are '4xx' and '5xx'.
+
+* `path` -
+  (Required)
+  Path to redirect to for the backend service or backend bucket to get
+  the custom error response.
+
+* `override_response_code` -
+  (Optional)
+  Optional HTTP status code returned with the response containing the
+  custom error content. If not specified, the original HTTP status code
+  will be returned with the custom error content.
+
 <a name="nested_url_redirect"></a>The `url_redirect` block supports:
 
 * `host_redirect` -
@@ -1643,6 +1752,11 @@ The following arguments are supported:
   routeAction cannot contain any  weightedBackendServices. Only one of routeAction
   or urlRedirect must be set.
   Structure is [documented below](#nested_route_action).
+
+* `custom_error_response_policy` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Specifies the custom error response policies that must be applied when the backend service or backend bucket responds with an error. Can be defined for the urlMap, pathMatcher or routeRule/pathRule. The most specific customErrorResponsePolicy that matches the error response applies.
+  Structure is [documented below](#nested_custom_error_response_policy).
 
 * `url_redirect` -
   (Optional)
@@ -2236,6 +2350,38 @@ The following arguments are supported:
   If false, headerValue is appended to any values that already exist for the
   header. If true, headerValue is set for the header, discarding any values that
   were set for that header.
+
+<a name="nested_custom_error_response_policy"></a>The `custom_error_response_policy` block supports:
+
+* `error_response_rules` -
+  (Required)
+  Specifies the rules to match the error response. Rules defined for specific HTTP error status codes have higher precedence over rules defined for HTTP status code classes.
+  Structure is [documented below](#nested_error_response_rules).
+
+* `error_service` -
+  (Required)
+  The backend service or backend bucket to fetch the custom error content
+  from.
+
+
+<a name="nested_error_response_rules"></a>The `error_response_rules` block supports:
+
+* `match_response_codes` -
+  (Required)
+  HTTP error status code, or class of error status codes to match
+  against.  Example status codes are '501', '403', and example status
+  code classes are '4xx' and '5xx'.
+
+* `path` -
+  (Required)
+  Path to redirect to for the backend service or backend bucket to get
+  the custom error response.
+
+* `override_response_code` -
+  (Optional)
+  Optional HTTP status code returned with the response containing the
+  custom error content. If not specified, the original HTTP status code
+  will be returned with the custom error content.
 
 <a name="nested_url_redirect"></a>The `url_redirect` block supports:
 

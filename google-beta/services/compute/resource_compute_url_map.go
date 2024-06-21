@@ -68,6 +68,54 @@ letter, and all following characters must be a dash, lowercase letter, or digit,
 except the last character, which cannot be a dash.`,
 			},
 			"default_custom_error_response_policy": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Specifies the custom error response policies that must be applied when the backend service or backend bucket responds with an error. Can be defined for the urlMap, pathMatcher or routeRule/pathRule. The most specific customErrorResponsePolicy that matches the error response applies.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"error_response_rules": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: `Specifies the rules to match the error response. Rules defined for specific HTTP error status codes have higher precedence over rules defined for HTTP status code classes.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"match_response_codes": {
+										Type:     schema.TypeList,
+										Required: true,
+										Description: `HTTP error status code, or class of error status codes to match against.
+Example status codes are '501', '403', and example status code classes are
+'4xx' and '5xx'.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+									"path": {
+										Type:     schema.TypeString,
+										Required: true,
+										Description: `Path to redirect to for the backend service or backend bucket to get
+the custom error response.`,
+									},
+									"override_response_code": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Description: `Optional HTTP status code returned with the response containing the custom
+error content. If not specified, the original HTTP status code will be
+returned with the custom error content.`,
+									},
+								},
+							},
+						},
+						"error_service": {
+							Type:             schema.TypeString,
+							Required:         true,
+							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+							Description:      `The backend service or backend bucket to fetch the custom error content from.`,
+						},
+					},
+				},
+			},
+			"default_custom_error_response_policy": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Description: `defaultCustomErrorResponsePolicy specifies how the Load Balancer returns error responses when BackendServiceor BackendBucket responds with an error.
@@ -858,6 +906,54 @@ If load balancer cannot reach the backendBucket, a simple Not Found Error will b
 								},
 							},
 						},
+						"default_custom_error_response_policy": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Specifies the custom error response policies that must be applied when the backend service or backend bucket responds with an error. Can be defined for the urlMap, pathMatcher or routeRule/pathRule. The most specific customErrorResponsePolicy that matches the error response applies.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"error_response_rules": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: `Specifies the rules to match the error response. Rules defined for specific HTTP error status codes have higher precedence over rules defined for HTTP status code classes.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"match_response_codes": {
+													Type:     schema.TypeList,
+													Required: true,
+													Description: `HTTP error status code, or class of error status codes to match
+against.  Example status codes are '501', '403', and example status
+code classes are '4xx' and '5xx'.`,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
+												"path": {
+													Type:     schema.TypeString,
+													Required: true,
+													Description: `Path to redirect to for the backend service or backend bucket to get
+the custom error response.`,
+												},
+												"override_response_code": {
+													Type:     schema.TypeInt,
+													Optional: true,
+													Description: `Optional HTTP status code returned with the response containing the
+custom error content. If not specified, the original HTTP status code
+will be returned with the custom error content.`,
+												},
+											},
+										},
+									},
+									"error_service": {
+										Type:             schema.TypeString,
+										Required:         true,
+										DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+										Description:      `The backend service or backend bucket to fetch the custom error content from.`,
+									},
+								},
+							},
+						},
 						"default_route_action": {
 							Type:     schema.TypeList,
 							Optional: true,
@@ -1538,6 +1634,55 @@ If load balancer cannot reach the backendBucket, a simple Not Found Error will b
 											},
 										},
 									},
+									"custom_error_response_policy": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Specifies the custom error response policies that must be applied when the backend service or backend bucket responds with an error. Can be defined for the urlMap, pathMatcher or routeRule/pathRule. The most specific customErrorResponsePolicy that matches the error response applies.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"error_response_rules": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `Specifies the rules to match the error response. Rules defined for specific HTTP error status codes have higher precedence over rules defined for HTTP status code classes.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"match_response_codes": {
+																Type:     schema.TypeList,
+																Required: true,
+																Description: `HTTP error status code, or class of error status codes to match
+against.  Example status codes are '501', '403', and example status
+code classes are '4xx' and '5xx'.`,
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+															},
+															"path": {
+																Type:     schema.TypeString,
+																Required: true,
+																Description: `Path to redirect to for the backend service or backend bucket to get
+the custom error response.`,
+															},
+															"override_response_code": {
+																Type:     schema.TypeInt,
+																Optional: true,
+																Description: `Optional HTTP status code returned with the response containing the
+custom error content. If not specified, the original HTTP status code
+will be returned with the custom error content.`,
+															},
+														},
+													},
+												},
+												"error_service": {
+													Type:             schema.TypeString,
+													Required:         true,
+													DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+													Description: `The backend service or backend bucket to fetch the custom error content
+from.`,
+												},
+											},
+										},
+									},
 									"route_action": {
 										Type:     schema.TypeList,
 										Optional: true,
@@ -2073,6 +2218,55 @@ in the future without affecting the rest of the rules. For example,
 1, 2, 3, 4, 5, 9, 12, 16 is a valid series of priority numbers to which
 you could add rules numbered from 6 to 8, 10 to 11, and 13 to 15 in the
 future without any impact on existing rules.`,
+									},
+									"custom_error_response_policy": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Specifies the custom error response policies that must be applied when the backend service or backend bucket responds with an error. Can be defined for the urlMap, pathMatcher or routeRule/pathRule. The most specific customErrorResponsePolicy that matches the error response applies.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"error_response_rules": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: `Specifies the rules to match the error response. Rules defined for specific HTTP error status codes have higher precedence over rules defined for HTTP status code classes.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"match_response_codes": {
+																Type:     schema.TypeList,
+																Required: true,
+																Description: `HTTP error status code, or class of error status codes to match
+against.  Example status codes are '501', '403', and example status
+code classes are '4xx' and '5xx'.`,
+																Elem: &schema.Schema{
+																	Type: schema.TypeString,
+																},
+															},
+															"path": {
+																Type:     schema.TypeString,
+																Required: true,
+																Description: `Path to redirect to for the backend service or backend bucket to get
+the custom error response.`,
+															},
+															"override_response_code": {
+																Type:     schema.TypeInt,
+																Optional: true,
+																Description: `Optional HTTP status code returned with the response containing the
+custom error content. If not specified, the original HTTP status code
+will be returned with the custom error content.`,
+															},
+														},
+													},
+												},
+												"error_service": {
+													Type:             schema.TypeString,
+													Required:         true,
+													DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+													Description: `The backend service or backend bucket to fetch the custom error content
+from.`,
+												},
+											},
+										},
 									},
 									"header_action": {
 										Type:     schema.TypeList,
@@ -3058,6 +3252,12 @@ func resourceComputeUrlMapCreate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
+	defaultCustomErrorResponsePolicyProp, err := expandComputeUrlMapDefaultCustomErrorResponsePolicy(d.Get("default_custom_error_response_policy"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("default_custom_error_response_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(defaultCustomErrorResponsePolicyProp)) && (ok || !reflect.DeepEqual(v, defaultCustomErrorResponsePolicyProp)) {
+		obj["defaultCustomErrorResponsePolicy"] = defaultCustomErrorResponsePolicyProp
+	}
 	pathMatchersProp, err := expandComputeUrlMapPathMatcher(d.Get("path_matcher"), d, config)
 	if err != nil {
 		return err
@@ -3211,6 +3411,9 @@ func resourceComputeUrlMapRead(d *schema.ResourceData, meta interface{}) error {
 	if err := d.Set("name", flattenComputeUrlMapName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
+	if err := d.Set("default_custom_error_response_policy", flattenComputeUrlMapDefaultCustomErrorResponsePolicy(res["defaultCustomErrorResponsePolicy"], d, config)); err != nil {
+		return fmt.Errorf("Error reading UrlMap: %s", err)
+	}
 	if err := d.Set("path_matcher", flattenComputeUrlMapPathMatcher(res["pathMatchers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
@@ -3284,6 +3487,12 @@ func resourceComputeUrlMapUpdate(d *schema.ResourceData, meta interface{}) error
 		return err
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
+	}
+	defaultCustomErrorResponsePolicyProp, err := expandComputeUrlMapDefaultCustomErrorResponsePolicy(d.Get("default_custom_error_response_policy"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("default_custom_error_response_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, defaultCustomErrorResponsePolicyProp)) {
+		obj["defaultCustomErrorResponsePolicy"] = defaultCustomErrorResponsePolicyProp
 	}
 	pathMatchersProp, err := expandComputeUrlMapPathMatcher(d.Get("path_matcher"), d, config)
 	if err != nil {
@@ -3599,6 +3808,73 @@ func flattenComputeUrlMapName(v interface{}, d *schema.ResourceData, config *tra
 	return v
 }
 
+func flattenComputeUrlMapDefaultCustomErrorResponsePolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["error_response_rules"] =
+		flattenComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRules(original["errorResponseRules"], d, config)
+	transformed["error_service"] =
+		flattenComputeUrlMapDefaultCustomErrorResponsePolicyErrorService(original["errorService"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRules(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"match_response_codes":   flattenComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(original["matchResponseCodes"], d, config),
+			"path":                   flattenComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesPath(original["path"], d, config),
+			"override_response_code": flattenComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(original["overrideResponseCode"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesPath(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenComputeUrlMapDefaultCustomErrorResponsePolicyErrorService(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	return tpgresource.ConvertSelfLinkToV1(v.(string))
+}
+
 func flattenComputeUrlMapPathMatcher(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -3617,6 +3893,7 @@ func flattenComputeUrlMapPathMatcher(v interface{}, d *schema.ResourceData, conf
 			"default_custom_error_response_policy": flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicy(original["defaultCustomErrorResponsePolicy"], d, config),
 			"header_action":                        flattenComputeUrlMapPathMatcherHeaderAction(original["headerAction"], d, config),
 			"name":                                 flattenComputeUrlMapPathMatcherName(original["name"], d, config),
+			"default_custom_error_response_policy": flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicy(original["defaultCustomErrorResponsePolicy"], d, config),
 			"path_rule":                            flattenComputeUrlMapPathMatcherPathRule(original["pathRules"], d, config),
 			"route_rules":                          flattenComputeUrlMapPathMatcherRouteRules(original["routeRules"], d, config),
 			"default_url_redirect":                 flattenComputeUrlMapPathMatcherDefaultUrlRedirect(original["defaultUrlRedirect"], d, config),
@@ -3798,6 +4075,73 @@ func flattenComputeUrlMapPathMatcherName(v interface{}, d *schema.ResourceData, 
 	return v
 }
 
+func flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["error_response_rules"] =
+		flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRules(original["errorResponseRules"], d, config)
+	transformed["error_service"] =
+		flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorService(original["errorService"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRules(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"match_response_codes":   flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(original["matchResponseCodes"], d, config),
+			"path":                   flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesPath(original["path"], d, config),
+			"override_response_code": flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(original["overrideResponseCode"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesPath(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorService(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	return tpgresource.ConvertSelfLinkToV1(v.(string))
+}
+
 func flattenComputeUrlMapPathMatcherPathRule(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -3815,6 +4159,7 @@ func flattenComputeUrlMapPathMatcherPathRule(v interface{}, d *schema.ResourceDa
 			"paths":                        flattenComputeUrlMapPathMatcherPathRulePaths(original["paths"], d, config),
 			"custom_error_response_policy": flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicy(original["customErrorResponsePolicy"], d, config),
 			"route_action":                 flattenComputeUrlMapPathMatcherPathRuleRouteAction(original["routeAction"], d, config),
+			"custom_error_response_policy": flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicy(original["customErrorResponsePolicy"], d, config),
 			"url_redirect":                 flattenComputeUrlMapPathMatcherPathRuleUrlRedirect(original["urlRedirect"], d, config),
 		})
 	}
@@ -4392,6 +4737,73 @@ func flattenComputeUrlMapPathMatcherPathRuleRouteActionWeightedBackendServicesWe
 	return v // let terraform core handle it otherwise
 }
 
+func flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["error_response_rules"] =
+		flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRules(original["errorResponseRules"], d, config)
+	transformed["error_service"] =
+		flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorService(original["errorService"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRules(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"match_response_codes":   flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(original["matchResponseCodes"], d, config),
+			"path":                   flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesPath(original["path"], d, config),
+			"override_response_code": flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(original["overrideResponseCode"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesPath(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorService(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	return tpgresource.ConvertSelfLinkToV1(v.(string))
+}
+
 func flattenComputeUrlMapPathMatcherPathRuleUrlRedirect(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -4452,12 +4864,13 @@ func flattenComputeUrlMapPathMatcherRouteRules(v interface{}, d *schema.Resource
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"priority":      flattenComputeUrlMapPathMatcherRouteRulesPriority(original["priority"], d, config),
-			"service":       flattenComputeUrlMapPathMatcherRouteRulesService(original["service"], d, config),
-			"header_action": flattenComputeUrlMapPathMatcherRouteRulesHeaderAction(original["headerAction"], d, config),
-			"match_rules":   flattenComputeUrlMapPathMatcherRouteRulesMatchRules(original["matchRules"], d, config),
-			"route_action":  flattenComputeUrlMapPathMatcherRouteRulesRouteAction(original["routeAction"], d, config),
-			"url_redirect":  flattenComputeUrlMapPathMatcherRouteRulesUrlRedirect(original["urlRedirect"], d, config),
+			"priority":                     flattenComputeUrlMapPathMatcherRouteRulesPriority(original["priority"], d, config),
+			"service":                      flattenComputeUrlMapPathMatcherRouteRulesService(original["service"], d, config),
+			"header_action":                flattenComputeUrlMapPathMatcherRouteRulesHeaderAction(original["headerAction"], d, config),
+			"match_rules":                  flattenComputeUrlMapPathMatcherRouteRulesMatchRules(original["matchRules"], d, config),
+			"route_action":                 flattenComputeUrlMapPathMatcherRouteRulesRouteAction(original["routeAction"], d, config),
+			"custom_error_response_policy": flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicy(original["customErrorResponsePolicy"], d, config),
+			"url_redirect":                 flattenComputeUrlMapPathMatcherRouteRulesUrlRedirect(original["urlRedirect"], d, config),
 		})
 	}
 	return transformed
@@ -5306,6 +5719,73 @@ func flattenComputeUrlMapPathMatcherRouteRulesRouteActionWeightedBackendServices
 	}
 
 	return v // let terraform core handle it otherwise
+}
+
+func flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["error_response_rules"] =
+		flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRules(original["errorResponseRules"], d, config)
+	transformed["error_service"] =
+		flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorService(original["errorService"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRules(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"match_response_codes":   flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(original["matchResponseCodes"], d, config),
+			"path":                   flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesPath(original["path"], d, config),
+			"override_response_code": flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(original["overrideResponseCode"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesPath(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorService(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	return tpgresource.ConvertSelfLinkToV1(v.(string))
 }
 
 func flattenComputeUrlMapPathMatcherRouteRulesUrlRedirect(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -6776,6 +7256,84 @@ func expandComputeUrlMapName(v interface{}, d tpgresource.TerraformResourceData,
 	return v, nil
 }
 
+func expandComputeUrlMapDefaultCustomErrorResponsePolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedErrorResponseRules, err := expandComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRules(original["error_response_rules"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedErrorResponseRules); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["errorResponseRules"] = transformedErrorResponseRules
+	}
+
+	transformedErrorService, err := expandComputeUrlMapDefaultCustomErrorResponsePolicyErrorService(original["error_service"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedErrorService); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["errorService"] = transformedErrorService
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedMatchResponseCodes, err := expandComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(original["match_response_codes"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMatchResponseCodes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["matchResponseCodes"] = transformedMatchResponseCodes
+		}
+
+		transformedPath, err := expandComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesPath(original["path"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["path"] = transformedPath
+		}
+
+		transformedOverrideResponseCode, err := expandComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(original["override_response_code"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedOverrideResponseCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["overrideResponseCode"] = transformedOverrideResponseCode
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapDefaultCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapDefaultCustomErrorResponsePolicyErrorService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandComputeUrlMapPathMatcher(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
@@ -6819,6 +7377,13 @@ func expandComputeUrlMapPathMatcher(v interface{}, d tpgresource.TerraformResour
 			return nil, err
 		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 			transformed["name"] = transformedName
+		}
+
+		transformedDefaultCustomErrorResponsePolicy, err := expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicy(original["default_custom_error_response_policy"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDefaultCustomErrorResponsePolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["defaultCustomErrorResponsePolicy"] = transformedDefaultCustomErrorResponsePolicy
 		}
 
 		transformedPathRule, err := expandComputeUrlMapPathMatcherPathRule(original["path_rule"], d, config)
@@ -7116,6 +7681,84 @@ func expandComputeUrlMapPathMatcherName(v interface{}, d tpgresource.TerraformRe
 	return v, nil
 }
 
+func expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedErrorResponseRules, err := expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRules(original["error_response_rules"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedErrorResponseRules); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["errorResponseRules"] = transformedErrorResponseRules
+	}
+
+	transformedErrorService, err := expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorService(original["error_service"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedErrorService); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["errorService"] = transformedErrorService
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedMatchResponseCodes, err := expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(original["match_response_codes"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMatchResponseCodes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["matchResponseCodes"] = transformedMatchResponseCodes
+		}
+
+		transformedPath, err := expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesPath(original["path"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["path"] = transformedPath
+		}
+
+		transformedOverrideResponseCode, err := expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(original["override_response_code"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedOverrideResponseCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["overrideResponseCode"] = transformedOverrideResponseCode
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherDefaultCustomErrorResponsePolicyErrorService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandComputeUrlMapPathMatcherPathRule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
@@ -7152,6 +7795,13 @@ func expandComputeUrlMapPathMatcherPathRule(v interface{}, d tpgresource.Terrafo
 			return nil, err
 		} else if val := reflect.ValueOf(transformedRouteAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 			transformed["routeAction"] = transformedRouteAction
+		}
+
+		transformedCustomErrorResponsePolicy, err := expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicy(original["custom_error_response_policy"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCustomErrorResponsePolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["customErrorResponsePolicy"] = transformedCustomErrorResponsePolicy
 		}
 
 		transformedUrlRedirect, err := expandComputeUrlMapPathMatcherPathRuleUrlRedirect(original["url_redirect"], d, config)
@@ -7976,6 +8626,84 @@ func expandComputeUrlMapPathMatcherPathRuleRouteActionWeightedBackendServicesWei
 	return v, nil
 }
 
+func expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedErrorResponseRules, err := expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRules(original["error_response_rules"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedErrorResponseRules); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["errorResponseRules"] = transformedErrorResponseRules
+	}
+
+	transformedErrorService, err := expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorService(original["error_service"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedErrorService); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["errorService"] = transformedErrorService
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedMatchResponseCodes, err := expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(original["match_response_codes"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMatchResponseCodes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["matchResponseCodes"] = transformedMatchResponseCodes
+		}
+
+		transformedPath, err := expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesPath(original["path"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["path"] = transformedPath
+		}
+
+		transformedOverrideResponseCode, err := expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(original["override_response_code"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedOverrideResponseCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["overrideResponseCode"] = transformedOverrideResponseCode
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherPathRuleCustomErrorResponsePolicyErrorService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandComputeUrlMapPathMatcherPathRuleUrlRedirect(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
@@ -8097,6 +8825,13 @@ func expandComputeUrlMapPathMatcherRouteRules(v interface{}, d tpgresource.Terra
 			return nil, err
 		} else if val := reflect.ValueOf(transformedRouteAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 			transformed["routeAction"] = transformedRouteAction
+		}
+
+		transformedCustomErrorResponsePolicy, err := expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicy(original["custom_error_response_policy"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCustomErrorResponsePolicy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["customErrorResponsePolicy"] = transformedCustomErrorResponsePolicy
 		}
 
 		transformedUrlRedirect, err := expandComputeUrlMapPathMatcherRouteRulesUrlRedirect(original["url_redirect"], d, config)
@@ -9347,6 +10082,84 @@ func expandComputeUrlMapPathMatcherRouteRulesRouteActionWeightedBackendServicesH
 }
 
 func expandComputeUrlMapPathMatcherRouteRulesRouteActionWeightedBackendServicesWeight(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedErrorResponseRules, err := expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRules(original["error_response_rules"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedErrorResponseRules); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["errorResponseRules"] = transformedErrorResponseRules
+	}
+
+	transformedErrorService, err := expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorService(original["error_service"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedErrorService); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["errorService"] = transformedErrorService
+	}
+
+	return transformed, nil
+}
+
+func expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedMatchResponseCodes, err := expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(original["match_response_codes"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMatchResponseCodes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["matchResponseCodes"] = transformedMatchResponseCodes
+		}
+
+		transformedPath, err := expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesPath(original["path"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["path"] = transformedPath
+		}
+
+		transformedOverrideResponseCode, err := expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(original["override_response_code"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedOverrideResponseCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["overrideResponseCode"] = transformedOverrideResponseCode
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesMatchResponseCodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorResponseRulesOverrideResponseCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeUrlMapPathMatcherRouteRulesCustomErrorResponsePolicyErrorService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
