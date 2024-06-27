@@ -126,6 +126,16 @@ via BGP even if their destinations match existing subnet ranges.`,
 you create the resource. This field can be set only at resource
 creation time.`,
 			},
+			"enable_flow_logs": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				ForceNew: true,
+				Description: `Whether to enable flow logging for this subnetwork.
+If this field is not explicitly set, it will not appear in get listings.
+If not set the default behavior is determined by the org policy, if there is no org
+policy specified, then it will default to disabled. This field isn't supported if the subnet
+purpose field is set to REGIONAL_MANAGED_PROXY.`,
+			},
 			"external_ipv6_prefix": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -477,6 +487,12 @@ func resourceComputeSubnetworkCreate(d *schema.ResourceData, meta interface{}) e
 	} else if v, ok := d.GetOkExists("allow_subnet_cidr_routes_overlap"); ok || !reflect.DeepEqual(v, allowSubnetCidrRoutesOverlapProp) {
 		obj["allowSubnetCidrRoutesOverlap"] = allowSubnetCidrRoutesOverlapProp
 	}
+	enableFlowLogsProp, err := expandComputeSubnetworkEnableFlowLogs(d.Get("enable_flow_logs"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("enable_flow_logs"); !tpgresource.IsEmptyValue(reflect.ValueOf(enableFlowLogsProp)) && (ok || !reflect.DeepEqual(v, enableFlowLogsProp)) {
+		obj["enableFlowLogs"] = enableFlowLogsProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/subnetworks")
 	if err != nil {
@@ -631,6 +647,9 @@ func resourceComputeSubnetworkRead(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
 	if err := d.Set("allow_subnet_cidr_routes_overlap", flattenComputeSubnetworkAllowSubnetCidrRoutesOverlap(res["allowSubnetCidrRoutesOverlap"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Subnetwork: %s", err)
+	}
+	if err := d.Set("enable_flow_logs", flattenComputeSubnetworkEnableFlowLogs(res["enableFlowLogs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Subnetwork: %s", err)
 	}
 	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
@@ -1254,6 +1273,10 @@ func flattenComputeSubnetworkAllowSubnetCidrRoutesOverlap(v interface{}, d *sche
 	return v
 }
 
+func flattenComputeSubnetworkEnableFlowLogs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandComputeSubnetworkDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1379,5 +1402,9 @@ func expandComputeSubnetworkExternalIpv6Prefix(v interface{}, d tpgresource.Terr
 }
 
 func expandComputeSubnetworkAllowSubnetCidrRoutesOverlap(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeSubnetworkEnableFlowLogs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

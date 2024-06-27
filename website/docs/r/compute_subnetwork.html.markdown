@@ -350,6 +350,14 @@ The following arguments are supported:
   Setting this field to true will allow these packets to match dynamic routes injected
   via BGP even if their destinations match existing subnet ranges.
 
+* `enable_flow_logs` -
+  (Optional)
+  Whether to enable flow logging for this subnetwork.
+  If this field is not explicitly set, it will not appear in get listings.
+  If not set the default behavior is determined by the org policy, if there is no org
+  policy specified, then it will default to disabled. This field isn't supported if the subnet
+  purpose field is set to REGIONAL_MANAGED_PROXY.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
