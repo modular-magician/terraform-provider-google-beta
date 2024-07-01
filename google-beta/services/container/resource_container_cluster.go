@@ -1483,6 +1483,7 @@ func ResourceContainerCluster() *schema.Resource {
 					},
 				},
 			},
+
 			"secret_manager_config": {
 				Type:             schema.TypeList,
 				Optional:         true,
