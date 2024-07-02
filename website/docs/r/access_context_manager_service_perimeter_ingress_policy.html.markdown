@@ -37,6 +37,11 @@ To get more information about ServicePerimeterIngressPolicy, see:
 
 * [API documentation](https://cloud.google.com/access-context-manager/docs/reference/rest/v1/accessPolicies.servicePerimeters#ingresspolicy)
 
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=access_context_manager_service_perimeter_ingress_policy&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
 ## Example Usage - Access Context Manager Service Perimeter Ingress Policy
 
 
@@ -53,14 +58,17 @@ resource "google_access_context_manager_service_perimeter" "storage-perimeter" {
   }
 }
 
+# Allow for anyone
 resource "google_access_context_manager_service_perimeter_ingress_policy" "ingress_policy" {
   perimeter = "${google_access_context_manager_service_perimeter.storage-perimeter.name}"
+
   ingress_from {
-    identity_type = "any_identity"
+    identity_type = "ANY_IDENTITY"
     sources {
       access_level = "*"
     }
   }
+
   ingress_to {
     resources = ["*"]
     operations {
@@ -75,6 +83,30 @@ resource "google_access_context_manager_service_perimeter_ingress_policy" "ingre
   }
 }
 
+# Allow just from a specific VPC
+resource "google_access_context_manager_service_perimeter_ingress_policy" "restricted_network" {
+  perimeter = "${google_access_context_manager_service_perimeter.storage-perimeter.name}"
+
+  # Allow ingress from a specific VPC in another project
+  ingress_from {
+    sources {
+      resource = "//compute.googleapis.com/projects/87654321/global/networks/network-in-another-project"
+    }
+  }
+
+  ingress_to {
+    resources = ["*"]
+    operations {
+      service_name = "bigquery.googleapis.com"
+      method_selectors {
+        method = "*"
+      }
+    }
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
 
 resource "google_access_context_manager_access_policy" "access-policy" {
   parent = "organizations/123456789"
@@ -146,10 +178,10 @@ The following arguments are supported:
   (Optional)
   A Google Cloud resource that is allowed to ingress the perimeter.
   Requests from these resources will be allowed to access perimeter data.
-  Currently only projects are allowed. Format `projects/{project_number}`
-  The project may be in any Google Cloud organization, not just the
-  organization that the perimeter is defined in. `*` is not allowed, the case
-  of allowing all Google Cloud resources only is not supported.
+  Currently only projects and VPCs are allowed.
+  Project format: projects/{projectNumber} VPC network format: //compute.googleapis.com/projects/{PROJECT_ID}/global/networks/{NAME}.
+  The project may be in any Google Cloud organization, not just the organization that the perimeter is defined in.
+  The value "*" is not allowed, the case of allowing all Google Cloud resources only is not supported.
 
 <a name="nested_ingress_to"></a>The `ingress_to` block supports:
 

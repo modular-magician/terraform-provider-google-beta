@@ -44,6 +44,11 @@ in the provider configuration. Otherwise the ACM API will return a 403 error.
 Your account must have the `serviceusage.services.use` permission on the
 `billing_project` you defined.
 
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=access_context_manager_service_perimeter_basic&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
 ## Example Usage - Access Context Manager Service Perimeter Basic
 
 
@@ -83,6 +88,11 @@ resource "google_access_context_manager_access_policy" "access-policy" {
   title  = "my policy"
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=access_context_manager_service_perimeter_secure_data_exchange&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
 ## Example Usage - Access Context Manager Service Perimeter Secure Data Exchange
 
 
@@ -103,10 +113,11 @@ resource "google_access_context_manager_service_perimeters" "secure-data-exchang
     title  = ""
     status {
       restricted_services = ["bigtable.googleapis.com"]
-      		vpcAccessibleServices = {
-			enableRestriction = true
-			allowedServices = ["bigquery.googleapis.com"]
-		}
+
+			vpc_accessible_services {
+				enable_restriction = true
+				allowed_services = ["bigquery.googleapis.com"]
+			}
     }
   }
 }
@@ -195,7 +206,12 @@ resource "google_access_context_manager_service_perimeter" "test-access" {
   }
 }
 ```
-## Example Usage - Access Context Manager Service Perimeter Dry-Run
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=access_context_manager_service_perimeter_dry_run&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Access Context Manager Service Perimeter Dry Run
 
 
 ```hcl
@@ -416,10 +432,10 @@ The following arguments are supported:
   (Optional)
   A Google Cloud resource that is allowed to ingress the perimeter.
   Requests from these resources will be allowed to access perimeter data.
-  Currently only projects are allowed. Format `projects/{project_number}`
-  The project may be in any Google Cloud organization, not just the
-  organization that the perimeter is defined in. `*` is not allowed, the case
-  of allowing all Google Cloud resources only is not supported.
+  Currently only projects and VPCs are allowed.
+  Project format: projects/{projectNumber} VPC network format: //compute.googleapis.com/projects/{PROJECT_ID}/global/networks/{NAME}.
+  The project may be in any Google Cloud organization, not just the organization that the perimeter is defined in.
+  The value "*" is not allowed, the case of allowing all Google Cloud resources only is not supported.
 
 <a name="nested_ingress_to"></a>The `ingress_to` block supports:
 
