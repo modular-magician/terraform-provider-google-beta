@@ -154,6 +154,312 @@ resource "google_compute_address" "dest-addr" {
   region       = "us-central1"
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=network_management_connectivity_test_cloudrun_v2&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Network Management Connectivity Test Cloudrun V2
+
+
+```hcl
+# [START networkmanagement_test_cloudrun_v2]
+resource "google_network_management_connectivity_test" "cloudrun-v2-test" {
+  name = "cloudrun-v2-test"
+  source {
+    cloud_run_revision {
+      uri = google_cloud_run_v2_service.source.id
+    } 
+  }
+
+  destination {
+    cloud_run_revision {
+      uri = google_cloud_run_v2_service.dest.id
+    } 
+  }
+
+  protocol = "TCP"
+  labels = {
+    env = "test"
+  }
+}
+
+resource "google_compute_network" "vpc" {
+  name = "connectivity-vpc"
+}
+
+resource "google_cloud_run_v2_service" "source" {
+  name     = "src-cloudrun-v2"
+  location = "us-central1"
+  ingress = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    containers {
+      image = "us-docker.pkg.dev/cloudrun/container/hello"
+    }
+    
+    vpc_access {
+      network_interfaces {
+        network = google_compute_network.vpc.id
+      }
+    }
+  }
+}
+
+resource "google_cloud_run_v2_service" "dest" {
+  name     = "dest-cloudrun-v2"
+  location = "us-central1"
+  ingress = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    containers {
+      image = "us-docker.pkg.dev/cloudrun/container/hello"
+    }
+
+    vpc_access {
+      network_interfaces {
+        network = google_compute_network.vpc.id
+      }
+    }
+  }
+}
+# [END networkmanagement_test_cloudrun_v2]
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=network_management_connectivity_test_cloudsql&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Network Management Connectivity Test Cloudsql
+
+
+```hcl
+resource "google_network_management_connectivity_test" "cloudsql-test" {
+  name = "cloudsql-test"
+  source {
+    cloud_sql_instance = google_sql_database_instance.source.self_link
+  }
+
+  destination {
+    cloud_sql_instance = google_sql_database_instance.dest.self_link
+  }
+
+  protocol = "TCP"
+  labels = {
+    env = "test"
+  }
+}
+
+resource "google_compute_network" "vpc" {
+  name = "connectivity-vpc"
+}
+
+resource "google_sql_database_instance" "source" {
+  name                = ""
+  database_version    = "POSTGRES_15"
+  region              = "us-central1"
+  deletion_protection = "true"
+
+  settings {
+    tier = "db-f1-micro"
+    ip_configuration {
+      ipv4_enabled                                  = false
+      private_network                               = google_compute_network.vpc.id
+      enable_private_path_for_google_cloud_services = true
+    }
+  }
+}
+
+resource "google_sql_database_instance" "dest" {
+  name                = ""
+  database_version    = "POSTGRES_15"
+  region              = "us-central1"
+  deletion_protection = "true"
+
+  settings {
+    tier = "db-f1-micro"
+    ip_configuration {
+      ipv4_enabled                                  = false
+      private_network                               = google_compute_network.vpc.id
+      enable_private_path_for_google_cloud_services = true
+    }
+  }
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=network_management_connectivity_test_forwarding_rule&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Network Management Connectivity Test Forwarding Rule
+
+
+```hcl
+resource "google_network_management_connectivity_test" "forwarding-rule-test" {
+  name = "forwarding-rule-test"
+  source {
+    forwarding_rule = google_compute_forwarding_rule.source.id
+  }
+
+  destination {
+    forwarding_rule = google_compute_forwarding_rule.dest.id
+  }
+
+  protocol = "TCP"
+  labels = {
+    env = "test"
+  }
+}
+
+resource "google_compute_target_pool" "source" {
+  name = "src-forwarding-rule"
+}
+
+resource "google_compute_forwarding_rule" "source" {
+  name        = "src-forwarding-rule"
+  target     = google_compute_target_pool.source.id
+  port_range = "80"
+}
+
+resource "google_compute_target_pool" "dest" {
+  name = "src-forwarding-rule"
+}
+
+resource "google_compute_forwarding_rule" "dest" {
+  name        = "src-forwarding-rule"
+  target     = google_compute_target_pool.dest.id
+  port_range = "80"
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=network_management_connectivity_test_gke_master&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Network Management Connectivity Test Gke Master
+
+
+```hcl
+resource "google_network_management_connectivity_test" "gke-master-test" {
+  name = "gke-master-test"
+  source {
+    forwarding_rule = google_compute_forwarding_rule.source.id
+  }
+
+  destination {
+    forwarding_rule = google_compute_forwarding_rule.dest.id
+  }
+
+  protocol = "TCP"
+  labels = {
+    env = "test"
+  }
+}
+
+resource "google_container_cluster" "source" {
+  name     = "src-gke"
+  location = "us-central1-a"
+
+  deletion_protection      = "true"
+  remove_default_node_pool = true
+  initial_node_count       = 1
+}
+
+resource "google_container_cluster" "dest" {
+  name     = "dst-gke"
+  location = "us-central1-a"
+
+  deletion_protection      = "true"
+  remove_default_node_pool = true
+  initial_node_count       = 1
+}
+```
+## Example Usage - Network Management Connectivity Test Cloudfunctions2
+
+
+```hcl
+# [START networkmanagement_test_cloudfunction2]
+resource "google_network_management_connectivity_test" "cloudfunctions2-test" {
+  name = "cloudfunctions2-test"
+  source {
+    cloud_function {
+      uri = google_cloudfunctions2_function.source.id
+    } 
+  }
+
+  destination {
+    cloud_function {
+      uri = google_cloudfunctions2_function.dest.id
+    } 
+  }
+
+  protocol = "TCP"
+  labels = {
+    env = "test"
+  }
+}
+
+locals {
+  project = "my-project-name" # Google Cloud Platform Project ID
+}
+
+resource "google_storage_bucket" "bucket" {
+  name     = "${local.project}-gcf-source"  # Every bucket name must be globally unique
+  location = "US"
+  uniform_bucket_level_access = true
+}
+ 
+resource "google_storage_bucket_object" "object" {
+  name   = "function-source.zip"
+  bucket = google_storage_bucket.bucket.name
+  source = "function-source.zip"  # Add path to the zipped function source code
+}
+
+resource "google_cloudfunctions2_function" "source" {
+  name = "src-cloudfunctions2"
+  location = "us-central1"
+ 
+  build_config {
+    runtime = "nodejs16"
+    entry_point = "helloHttp"  # Set the entry point 
+    source {
+      storage_source {
+        bucket = google_storage_bucket.bucket.name
+        object = google_storage_bucket_object.object.name
+      }
+    }
+  }
+ 
+  service_config {
+    max_instance_count  = 1
+    available_memory    = "256M"
+    timeout_seconds     = 60
+  }
+}
+
+resource "google_cloudfunctions2_function" "dest" {
+  name = "dest-cloudfunctions2"
+  location = "us-central1"
+ 
+  build_config {
+    runtime = "nodejs16"
+    entry_point = "helloHttp"  # Set the entry point 
+    source {
+      storage_source {
+        bucket = google_storage_bucket.bucket.name
+        object = google_storage_bucket_object.object.name
+      }
+    }
+  }
+ 
+  service_config {
+    max_instance_count  = 1
+    available_memory    = "256M"
+    timeout_seconds     = 60
+  }
+}
+# [END networkmanagement_test_cloudfunction2]
+```
 
 ## Argument Reference
 
@@ -243,6 +549,44 @@ The following arguments are supported:
      the network that the IP address resides in is defined in the
      host project.
 
+* `forwarding_rule` -
+  (Optional)
+  ID of the Forwarding Rule in one of the following formats:
+  1. projects/{project}/global/forwardingRules/{id}
+  2. projects/{project}/regions/{region}/forwardingRules/{id}
+
+* `gke_master_cluster` -
+  (Optional)
+  A cluster URI for Google Kubernetes Engine master.
+
+* `cloud_sql_instance` -
+  (Optional)
+  A Cloud SQL instance URI.
+
+* `cloud_function` -
+  (Optional)
+  Reference to a cloud function
+  Structure is [documented below](#nested_cloud_function).
+
+* `cloud_run_revision` -
+  (Optional)
+  Reference to a Cloud Run revision.
+  Structure is [documented below](#nested_cloud_run_revision).
+
+
+<a name="nested_cloud_function"></a>The `cloud_function` block supports:
+
+* `uri` -
+  (Optional)
+  A Cloud Function URI.
+
+<a name="nested_cloud_run_revision"></a>The `cloud_run_revision` block supports:
+
+* `uri` -
+  (Optional)
+  A Cloud Run revision URI.
+  The format is: projects/{project}/locations/{location}/revisions/{revision}
+
 <a name="nested_destination"></a>The `destination` block supports:
 
 * `ip_address` -
@@ -274,6 +618,44 @@ The following arguments are supported:
   that you provide is from the service project. In this case, the
   network that the IP address resides in is defined in the host
   project.
+
+* `forwarding_rule` -
+  (Optional)
+  ID of the Forwarding Rule in one of the following formats:
+  1. projects/{project}/global/forwardingRules/{id}
+  2. projects/{project}/regions/{region}/forwardingRules/{id}
+
+* `gke_master_cluster` -
+  (Optional)
+  A cluster URI for Google Kubernetes Engine master.
+
+* `cloud_sql_instance` -
+  (Optional)
+  A Cloud SQL instance URI.
+
+* `cloud_function` -
+  (Optional)
+  Reference to a cloud function
+  Structure is [documented below](#nested_cloud_function).
+
+* `cloud_run_revision` -
+  (Optional)
+  Reference to a Cloud Run revision.
+  Structure is [documented below](#nested_cloud_run_revision).
+
+
+<a name="nested_cloud_function"></a>The `cloud_function` block supports:
+
+* `uri` -
+  (Optional)
+  A Cloud Function URI.
+
+<a name="nested_cloud_run_revision"></a>The `cloud_run_revision` block supports:
+
+* `uri` -
+  (Optional)
+  A Cloud Run revision URI.
+  The format is: projects/{project}/locations/{location}/revisions/{revision}
 
 - - -
 

@@ -26,6 +26,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
@@ -189,6 +190,423 @@ resource "google_compute_address" "dest-addr" {
   address      = "10.0.43.43"
   region       = "us-central1"
 }
+`, context)
+}
+
+func TestAccNetworkManagementConnectivityTest_networkManagementConnectivityTestCloudrunV2Example(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkManagementConnectivityTestDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestCloudrunV2Example(context),
+			},
+			{
+				ResourceName:            "google_network_management_connectivity_test.cloudrun-v2-test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestCloudrunV2Example(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+# [START networkmanagement_test_cloudrun_v2]
+resource "google_network_management_connectivity_test" "cloudrun-v2-test" {
+  name = "tf-test-cloudrun-v2-test%{random_suffix}"
+  source {
+    cloud_run_revision {
+      uri = google_cloud_run_v2_service.source.id
+    } 
+  }
+
+  destination {
+    cloud_run_revision {
+      uri = google_cloud_run_v2_service.dest.id
+    } 
+  }
+
+  protocol = "TCP"
+  labels = {
+    env = "test"
+  }
+}
+
+resource "google_compute_network" "vpc" {
+  name = "tf-test-connectivity-vpc%{random_suffix}"
+}
+
+resource "google_cloud_run_v2_service" "source" {
+  name     = "tf-test-src-cloudrun-v2%{random_suffix}"
+  location = "us-central1"
+  ingress = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    containers {
+      image = "us-docker.pkg.dev/cloudrun/container/hello"
+    }
+    
+    vpc_access {
+      network_interfaces {
+        network = google_compute_network.vpc.id
+      }
+    }
+  }
+}
+
+resource "google_cloud_run_v2_service" "dest" {
+  name     = "tf-test-dest-cloudrun-v2%{random_suffix}"
+  location = "us-central1"
+  ingress = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    containers {
+      image = "us-docker.pkg.dev/cloudrun/container/hello"
+    }
+
+    vpc_access {
+      network_interfaces {
+        network = google_compute_network.vpc.id
+      }
+    }
+  }
+}
+# [END networkmanagement_test_cloudrun_v2]
+`, context)
+}
+
+func TestAccNetworkManagementConnectivityTest_networkManagementConnectivityTestCloudsqlExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"deletion_protection": false,
+		"random_suffix":       acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkManagementConnectivityTestDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestCloudsqlExample(context),
+			},
+			{
+				ResourceName:            "google_network_management_connectivity_test.cloudsql-test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestCloudsqlExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_network_management_connectivity_test" "cloudsql-test" {
+  name = "tf-test-cloudsql-test%{random_suffix}"
+  source {
+    cloud_sql_instance = google_sql_database_instance.source.self_link
+  }
+
+  destination {
+    cloud_sql_instance = google_sql_database_instance.dest.self_link
+  }
+
+  protocol = "TCP"
+  labels = {
+    env = "test"
+  }
+}
+
+resource "google_compute_network" "vpc" {
+  name = "tf-test-connectivity-vpc%{random_suffix}"
+}
+
+resource "google_sql_database_instance" "source" {
+  name                = ""
+  database_version    = "POSTGRES_15"
+  region              = "us-central1"
+  deletion_protection = "%{deletion_protection}"
+
+  settings {
+    tier = "db-f1-micro"
+    ip_configuration {
+      ipv4_enabled                                  = false
+      private_network                               = google_compute_network.vpc.id
+      enable_private_path_for_google_cloud_services = true
+    }
+  }
+}
+
+resource "google_sql_database_instance" "dest" {
+  name                = ""
+  database_version    = "POSTGRES_15"
+  region              = "us-central1"
+  deletion_protection = "%{deletion_protection}"
+
+  settings {
+    tier = "db-f1-micro"
+    ip_configuration {
+      ipv4_enabled                                  = false
+      private_network                               = google_compute_network.vpc.id
+      enable_private_path_for_google_cloud_services = true
+    }
+  }
+}
+`, context)
+}
+
+func TestAccNetworkManagementConnectivityTest_networkManagementConnectivityTestForwardingRuleExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"deletion_protection": false,
+		"random_suffix":       acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkManagementConnectivityTestDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestForwardingRuleExample(context),
+			},
+			{
+				ResourceName:            "google_network_management_connectivity_test.forwarding-rule-test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestForwardingRuleExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_network_management_connectivity_test" "forwarding-rule-test" {
+  name = "tf-test-forwarding-rule-test%{random_suffix}"
+  source {
+    forwarding_rule = google_compute_forwarding_rule.source.id
+  }
+
+  destination {
+    forwarding_rule = google_compute_forwarding_rule.dest.id
+  }
+
+  protocol = "TCP"
+  labels = {
+    env = "test"
+  }
+}
+
+resource "google_compute_target_pool" "source" {
+  name = "tf-test-src-forwarding-rule%{random_suffix}"
+}
+
+resource "google_compute_forwarding_rule" "source" {
+  name        = "tf-test-src-forwarding-rule%{random_suffix}"
+  target     = google_compute_target_pool.source.id
+  port_range = "80"
+}
+
+resource "google_compute_target_pool" "dest" {
+  name = "tf-test-src-forwarding-rule%{random_suffix}"
+}
+
+resource "google_compute_forwarding_rule" "dest" {
+  name        = "tf-test-src-forwarding-rule%{random_suffix}"
+  target     = google_compute_target_pool.dest.id
+  port_range = "80"
+}
+`, context)
+}
+
+func TestAccNetworkManagementConnectivityTest_networkManagementConnectivityTestGkeMasterExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"deletion_protection": false,
+		"random_suffix":       acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkManagementConnectivityTestDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestGkeMasterExample(context),
+			},
+			{
+				ResourceName:            "google_network_management_connectivity_test.gke-master-test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestGkeMasterExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_network_management_connectivity_test" "gke-master-test" {
+  name = "tf-test-gke-master-test%{random_suffix}"
+  source {
+    forwarding_rule = google_compute_forwarding_rule.source.id
+  }
+
+  destination {
+    forwarding_rule = google_compute_forwarding_rule.dest.id
+  }
+
+  protocol = "TCP"
+  labels = {
+    env = "test"
+  }
+}
+
+resource "google_container_cluster" "source" {
+  name     = "tf-test-src-gke%{random_suffix}"
+  location = "us-central1-a"
+
+  deletion_protection      = "%{deletion_protection}"
+  remove_default_node_pool = true
+  initial_node_count       = 1
+}
+
+resource "google_container_cluster" "dest" {
+  name     = "tf-test-dst-gke%{random_suffix}"
+  location = "us-central1-a"
+
+  deletion_protection      = "%{deletion_protection}"
+  remove_default_node_pool = true
+  initial_node_count       = 1
+}
+`, context)
+}
+
+func TestAccNetworkManagementConnectivityTest_networkManagementConnectivityTestCloudfunctions2Example(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"project":       envvar.GetTestProjectFromEnv(),
+		"location":      "us-central1",
+		"zip_path":      "../cloudfunctions2/test-fixtures/function-source.zip",
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkManagementConnectivityTestDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestCloudfunctions2Example(context),
+			},
+			{
+				ResourceName:            "google_network_management_connectivity_test.cloudfunctions2-test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"build_config.0.source.0.storage_source.0.bucket", "build_config.0.source.0.storage_source.0.object", "labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccNetworkManagementConnectivityTest_networkManagementConnectivityTestCloudfunctions2Example(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+# [START networkmanagement_test_cloudfunction2]
+resource "google_network_management_connectivity_test" "cloudfunctions2-test" {
+  name = "tf-test-cloudfunctions2-test%{random_suffix}"
+  source {
+    cloud_function {
+      uri = google_cloudfunctions2_function.source.id
+    } 
+  }
+
+  destination {
+    cloud_function {
+      uri = google_cloudfunctions2_function.dest.id
+    } 
+  }
+
+  protocol = "TCP"
+  labels = {
+    env = "test"
+  }
+}
+
+locals {
+  project = "%{project}" # Google Cloud Platform Project ID
+}
+
+resource "google_storage_bucket" "bucket" {
+  name     = "${local.project}-tf-test-gcf-source%{random_suffix}"  # Every bucket name must be globally unique
+  location = "US"
+  uniform_bucket_level_access = true
+}
+ 
+resource "google_storage_bucket_object" "object" {
+  name   = "function-source.zip"
+  bucket = google_storage_bucket.bucket.name
+  source = "%{zip_path}"  # Add path to the zipped function source code
+}
+
+resource "google_cloudfunctions2_function" "source" {
+  name = "tf-test-src-cloudfunctions2%{random_suffix}"
+  location = "us-central1"
+ 
+  build_config {
+    runtime = "nodejs16"
+    entry_point = "helloHttp"  # Set the entry point 
+    source {
+      storage_source {
+        bucket = google_storage_bucket.bucket.name
+        object = google_storage_bucket_object.object.name
+      }
+    }
+  }
+ 
+  service_config {
+    max_instance_count  = 1
+    available_memory    = "256M"
+    timeout_seconds     = 60
+  }
+}
+
+resource "google_cloudfunctions2_function" "dest" {
+  name = "tf-test-dest-cloudfunctions2%{random_suffix}"
+  location = "us-central1"
+ 
+  build_config {
+    runtime = "nodejs16"
+    entry_point = "helloHttp"  # Set the entry point 
+    source {
+      storage_source {
+        bucket = google_storage_bucket.bucket.name
+        object = google_storage_bucket_object.object.name
+      }
+    }
+  }
+ 
+  service_config {
+    max_instance_count  = 1
+    available_memory    = "256M"
+    timeout_seconds     = 60
+  }
+}
+# [END networkmanagement_test_cloudfunction2]
 `, context)
 }
 
