@@ -253,7 +253,7 @@ func TestAccPrivatecaCertificateAuthority_privatecaCertificateAuthorityCustomSki
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
 		CheckDestroy:             testAccCheckPrivatecaCertificateAuthorityDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -271,7 +271,14 @@ func TestAccPrivatecaCertificateAuthority_privatecaCertificateAuthorityCustomSki
 
 func testAccPrivatecaCertificateAuthority_privatecaCertificateAuthorityCustomSkiExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+resource "google_project_service_identity" "privateca_sa" {
+  provider = google-beta
+  service = "privateca.googleapis.com"
+}
+
 resource "google_privateca_certificate_authority" "default" {
+  provider = google-beta
+
  // This example assumes this pool already exists.
  // Pools cannot be deleted in normal test circumstances, so we depend on static pools
   pool = "%{pool_name}"
@@ -321,6 +328,8 @@ resource "google_privateca_certificate_authority" "default" {
   key_spec {
     cloud_kms_key_version = "%{kms_key_name}/cryptoKeyVersions/1"
   }
+
+  depends_on = [google_project_service_identity.privateca_sa]
 }
 `, context)
 }
