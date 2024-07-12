@@ -49,7 +49,7 @@ func TestAccComputeRouter_routerBasicExample(t *testing.T) {
 				ResourceName:            "google_compute_router.foobar",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"advertisedIpRanges", "network", "region"},
+				ImportStateVerifyIgnore: []string{"network", "region"},
 			},
 		},
 	})
@@ -99,7 +99,7 @@ func TestAccComputeRouter_computeRouterEncryptedInterconnectExample(t *testing.T
 				ResourceName:            "google_compute_router.encrypted-interconnect-router",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"advertisedIpRanges", "network", "region"},
+				ImportStateVerifyIgnore: []string{"network", "region"},
 			},
 		},
 	})
