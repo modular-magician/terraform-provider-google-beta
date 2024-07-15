@@ -52,11 +52,6 @@ resource "google_bigtable_table" "table" {
   }
 
   change_stream_retention = "24h0m0s"
-
-  automated_backup_policy {
-    retention_period = "72h0m0s"
-    frequency = "24h0m0s"
-  }
 }
 ```
 
@@ -80,8 +75,6 @@ to delete/recreate the entire `google_bigtable_table` resource.
 * `deletion_protection` - (Optional) A field to make the table protected against data loss i.e. when set to PROTECTED, deleting the table, the column families in the table, and the instance containing the table would be prohibited. If not provided, deletion protection will be set to UNPROTECTED.
 
 * `change_stream_retention` - (Optional) Duration to retain change stream data for the table. Set to 0 to disable. Must be between 1 and 7 days.
-
-* `automated_backup_policy` - (Optional) Defines an automated backup policy for a table, specified by Retention Period and Frequency. To disable, set both Retention Period and Frequency to 0.
 
 -----
 
