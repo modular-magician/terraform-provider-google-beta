@@ -23,7 +23,7 @@ func TestAccRedisCluster_createClusterWithNodeType(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// create cluster with replica count 1
-				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 3, preventDestroy: true, nodeType: "REDIS_STANDARD_SMALL", zoneDistributionMode: "MULTI_ZONE"}),
+				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 3, preventDestroy: true, nodeType: "REDIS_STANDARD_SMALL", zoneDistributionMode: "MULTI_ZONE", maintenanceDay: "MONDAY", maintenanceHours: 0, maintenanceMinutes: 30, maintenanceSeconds: 0, maintenanceNanos: 0}),
 			},
 			{
 				ResourceName:            "google_redis_cluster.test",
@@ -33,7 +33,7 @@ func TestAccRedisCluster_createClusterWithNodeType(t *testing.T) {
 			},
 			{
 				// clean up the resource
-				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 0, shardCount: 3, preventDestroy: false, nodeType: "REDIS_STANDARD_SMALL", zoneDistributionMode: "MULTI_ZONE"}),
+				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 0, shardCount: 3, preventDestroy: false, nodeType: "REDIS_STANDARD_SMALL", zoneDistributionMode: "MULTI_ZONE", maintenanceDay: "MONDAY", maintenanceHours: 0, maintenanceMinutes: 30, maintenanceSeconds: 0, maintenanceNanos: 0}),
 			},
 		},
 	})
@@ -81,7 +81,7 @@ func TestAccRedisCluster_updateReplicaCount(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// create cluster with replica count 1
-				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 3, preventDestroy: true, zoneDistributionMode: "MULTI_ZONE"}),
+				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 3, preventDestroy: true, zoneDistributionMode: "MULTI_ZONE", maintenanceDay: "MONDAY", maintenanceHours: 0, maintenanceMinutes: 30, maintenanceSeconds: 0, maintenanceNanos: 0}),
 			},
 			{
 				ResourceName:            "google_redis_cluster.test",
@@ -91,7 +91,7 @@ func TestAccRedisCluster_updateReplicaCount(t *testing.T) {
 			},
 			{
 				// update replica count to 2
-				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 2, shardCount: 3, preventDestroy: true, zoneDistributionMode: "MULTI_ZONE"}),
+				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 2, shardCount: 3, preventDestroy: true, zoneDistributionMode: "MULTI_ZONE", maintenanceDay: "MONDAY", maintenanceHours: 0, maintenanceMinutes: 30, maintenanceSeconds: 0, maintenanceNanos: 0}),
 			},
 			{
 				ResourceName:            "google_redis_cluster.test",
@@ -101,11 +101,11 @@ func TestAccRedisCluster_updateReplicaCount(t *testing.T) {
 			},
 			{
 				// clean up the resource
-				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 3, preventDestroy: false, zoneDistributionMode: "MULTI_ZONE"}),
+				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 3, preventDestroy: false, zoneDistributionMode: "MULTI_ZONE", maintenanceDay: "MONDAY", maintenanceHours: 0, maintenanceMinutes: 30, maintenanceSeconds: 0, maintenanceNanos: 0}),
 			},
 			{
 				// update replica count to 0
-				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 0, shardCount: 3, preventDestroy: true, zoneDistributionMode: "MULTI_ZONE"}),
+				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 0, shardCount: 3, preventDestroy: true, zoneDistributionMode: "MULTI_ZONE", maintenanceDay: "MONDAY", maintenanceHours: 0, maintenanceMinutes: 30, maintenanceSeconds: 0, maintenanceNanos: 0}),
 			},
 			{
 				ResourceName:            "google_redis_cluster.test",
@@ -115,7 +115,7 @@ func TestAccRedisCluster_updateReplicaCount(t *testing.T) {
 			},
 			{
 				// clean up the resource
-				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 0, shardCount: 3, preventDestroy: false, zoneDistributionMode: "MULTI_ZONE"}),
+				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 0, shardCount: 3, preventDestroy: false, zoneDistributionMode: "MULTI_ZONE", maintenanceDay: "MONDAY", maintenanceHours: 0, maintenanceMinutes: 30, maintenanceSeconds: 0, maintenanceNanos: 0}),
 			},
 		},
 	})
@@ -134,7 +134,7 @@ func TestAccRedisCluster_updateShardCount(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// create cluster with shard count 3
-				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 3, preventDestroy: true, zoneDistributionMode: "MULTI_ZONE"}),
+				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 3, preventDestroy: true, zoneDistributionMode: "MULTI_ZONE", maintenanceDay: "MONDAY", maintenanceHours: 0, maintenanceMinutes: 30, maintenanceSeconds: 0, maintenanceNanos: 0}),
 			},
 			{
 				ResourceName:            "google_redis_cluster.test",
@@ -144,7 +144,7 @@ func TestAccRedisCluster_updateShardCount(t *testing.T) {
 			},
 			{
 				// update shard count to 5
-				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 5, preventDestroy: true, zoneDistributionMode: "MULTI_ZONE"}),
+				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 5, preventDestroy: true, zoneDistributionMode: "MULTI_ZONE", maintenanceDay: "MONDAY", maintenanceHours: 0, maintenanceMinutes: 30, maintenanceSeconds: 0, maintenanceNanos: 0}),
 			},
 			{
 				ResourceName:            "google_redis_cluster.test",
@@ -154,7 +154,7 @@ func TestAccRedisCluster_updateShardCount(t *testing.T) {
 			},
 			{
 				// clean up the resource
-				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 5, preventDestroy: false, zoneDistributionMode: "MULTI_ZONE"}),
+				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, replicaCount: 1, shardCount: 5, preventDestroy: false, zoneDistributionMode: "MULTI_ZONE", maintenanceDay: "MONDAY", maintenanceHours: 0, maintenanceMinutes: 30, maintenanceSeconds: 0, maintenanceNanos: 0}),
 			},
 		},
 	})
@@ -177,6 +177,11 @@ func TestAccRedisCluster_updateRedisConfigs(t *testing.T) {
 					name:                 name,
 					shardCount:           3,
 					zoneDistributionMode: "MULTI_ZONE",
+					maintenanceDay:       "MONDAY",
+					maintenanceHours:     0,
+					maintenanceMinutes:   30,
+					maintenanceSeconds:   0,
+					maintenanceNanos:     0,
 					redisConfigs: map[string]string{
 						"maxmemory-policy": "volatile-ttl",
 					}}),
@@ -193,6 +198,11 @@ func TestAccRedisCluster_updateRedisConfigs(t *testing.T) {
 					name:                 name,
 					shardCount:           3,
 					zoneDistributionMode: "MULTI_ZONE",
+					maintenanceDay:       "MONDAY",
+					maintenanceHours:     0,
+					maintenanceMinutes:   30,
+					maintenanceSeconds:   0,
+					maintenanceNanos:     0,
 					redisConfigs: map[string]string{
 						"maxmemory-policy":  "allkeys-lru",
 						"maxmemory-clients": "90%",
@@ -206,7 +216,7 @@ func TestAccRedisCluster_updateRedisConfigs(t *testing.T) {
 			},
 			{
 				// remove all redis configs
-				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, shardCount: 3, zoneDistributionMode: "MULTI_ZONE"}),
+				Config: createOrUpdateRedisCluster(&ClusterParams{name: name, shardCount: 3, zoneDistributionMode: "MULTI_ZONE", maintenanceDay: "MONDAY", maintenanceHours: 0, maintenanceMinutes: 30, maintenanceSeconds: 0, maintenanceNanos: 0}),
 			},
 		},
 	})
@@ -221,6 +231,11 @@ type ClusterParams struct {
 	redisConfigs         map[string]string
 	zoneDistributionMode string
 	zone                 string
+	maintenanceDay       string
+	maintenanceHours     int
+	maintenanceMinutes   int
+	maintenanceSeconds   int
+	maintenanceNanos     int
 }
 
 func createOrUpdateRedisCluster(params *ClusterParams) string {
@@ -246,6 +261,23 @@ func createOrUpdateRedisCluster(params *ClusterParams) string {
 		`, params.zoneDistributionMode, params.zone)
 	}
 
+	maintenancePolicyBlock := ``
+	if params.maintenanceDay != "" {
+		maintenancePolicyBlock = fmt.Sprintf(`
+		maintenance_policy {
+			weekly_maintenance_window {
+				day = "%s"
+				start_time {
+					hours = %d
+					minutes = %d
+					seconds = %d
+					nanos = %d
+				}
+			}
+		}
+		`, params.maintenanceDay, params.maintenanceHours, params.maintenanceMinutes, params.maintenanceSeconds, params.maintenanceNanos)
+	}
+
 	return fmt.Sprintf(`
 resource "google_redis_cluster" "test" {
 	provider = google-beta
@@ -260,6 +292,7 @@ resource "google_redis_cluster" "test" {
 	redis_configs = {
 		%s
 	}
+  %s
   %s
 	depends_on = [
 			google_network_connectivity_service_connection_policy.default
@@ -292,5 +325,5 @@ resource "google_compute_network" "producer_net" {
 	name                    = "%s"
 	auto_create_subnetworks = false
 }
-`, params.name, params.replicaCount, params.shardCount, params.nodeType, strBuilder.String(), zoneDistributionConfigBlock, lifecycleBlock, params.name, params.name, params.name)
+`, params.name, params.replicaCount, params.shardCount, params.nodeType, strBuilder.String(), zoneDistributionConfigBlock, maintenancePolicyBlock, lifecycleBlock, params.name, params.name, params.name)
 }
