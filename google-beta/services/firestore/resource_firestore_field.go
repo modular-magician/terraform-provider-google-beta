@@ -58,16 +58,19 @@ func ResourceFirestoreField() *schema.Resource {
 			"collection": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: `The id of the collection group to configure.`,
 			},
 			"field": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: `The id of the field to configure.`,
 			},
 			"database": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: `The Firestore database id. Defaults to '"(default)"'.`,
 				Default:     "(default)",
 			},
