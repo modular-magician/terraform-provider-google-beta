@@ -1483,6 +1483,7 @@ func ResourceContainerCluster() *schema.Resource {
 					},
 				},
 			},
+
 			"secret_manager_config": {
 				Type:             schema.TypeList,
 				Optional:         true,
@@ -2262,9 +2263,10 @@ func resourceContainerClusterCreate(d *schema.ResourceData, meta interface{}) er
 		EnableKubernetesAlpha:   d.Get("enable_kubernetes_alpha").(bool),
 		IpAllocationPolicy:      ipAllocationBlock,
 		PodSecurityPolicyConfig: expandPodSecurityPolicyConfig(d.Get("pod_security_policy_config")),
-		SecretManagerConfig:     expandSecretManagerConfig(d.Get("secret_manager_config")),
-		Autoscaling:             expandClusterAutoscaling(d.Get("cluster_autoscaling"), d),
-		BinaryAuthorization:     expandBinaryAuthorization(d.Get("binary_authorization")),
+
+		SecretManagerConfig: expandSecretManagerConfig(d.Get("secret_manager_config")),
+		Autoscaling:         expandClusterAutoscaling(d.Get("cluster_autoscaling"), d),
+		BinaryAuthorization: expandBinaryAuthorization(d.Get("binary_authorization")),
 		Autopilot: &container.Autopilot{
 			Enabled:              d.Get("enable_autopilot").(bool),
 			WorkloadPolicyConfig: workloadPolicyConfig,
