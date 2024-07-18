@@ -471,9 +471,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 497
+// Generated resources: 500
 // Generated IAM resources: 282
-// Total generated resources: 779
+// Total generated resources: 782
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1052,6 +1052,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_network_connectivity_policy_based_route":                             networkconnectivity.ResourceNetworkConnectivityPolicyBasedRoute(),
 	"google_network_connectivity_regional_endpoint":                              networkconnectivity.ResourceNetworkConnectivityRegionalEndpoint(),
 	"google_network_connectivity_service_connection_policy":                      networkconnectivity.ResourceNetworkConnectivityServiceConnectionPolicy(),
+	"google_network_connectivity_spoke":                                          networkconnectivity.ResourceNetworkConnectivitySpoke(),
 	"google_network_management_connectivity_test":                                networkmanagement.ResourceNetworkManagementConnectivityTest(),
 	"google_network_security_address_group":                                      networksecurity.ResourceNetworkSecurityAddressGroup(),
 	"google_network_security_authorization_policy":                               networksecurity.ResourceNetworkSecurityAuthorizationPolicy(),
@@ -1156,8 +1157,10 @@ var generatedResources = map[string]*schema.Resource{
 	"google_scc_management_organization_event_threat_detection_custom_module":    securitycentermanagement.ResourceSecurityCenterManagementOrganizationEventThreatDetectionCustomModule(),
 	"google_scc_management_organization_security_health_analytics_custom_module": securitycentermanagement.ResourceSecurityCenterManagementOrganizationSecurityHealthAnalyticsCustomModule(),
 	"google_scc_management_project_security_health_analytics_custom_module":      securitycentermanagement.ResourceSecurityCenterManagementProjectSecurityHealthAnalyticsCustomModule(),
+	"google_scc_v2_folder_mute_config":                                           securitycenterv2.ResourceSecurityCenterV2FolderMuteConfig(),
 	"google_scc_v2_organization_mute_config":                                     securitycenterv2.ResourceSecurityCenterV2OrganizationMuteConfig(),
 	"google_scc_v2_organization_notification_config":                             securitycenterv2.ResourceSecurityCenterV2OrganizationNotificationConfig(),
+	"google_scc_v2_project_mute_config":                                          securitycenterv2.ResourceSecurityCenterV2projectMuteConfig(),
 	"google_securityposture_posture":                                             securityposture.ResourceSecurityposturePosture(),
 	"google_securityposture_posture_deployment":                                  securityposture.ResourceSecurityposturePostureDeployment(),
 	"google_security_scanner_scan_config":                                        securityscanner.ResourceSecurityScannerScanConfig(),

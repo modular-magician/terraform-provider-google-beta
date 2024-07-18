@@ -22,6 +22,7 @@ import (
 	"log"
 	"net/http"
 	"reflect"
+	"regexp"
 	"strings"
 	"time"
 
@@ -29,17 +30,18 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
 
-func ResourceSecurityCenterV2OrganizationMuteConfig() *schema.Resource {
+func ResourceSecurityCenterV2FolderMuteConfig() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceSecurityCenterV2OrganizationMuteConfigCreate,
-		Read:   resourceSecurityCenterV2OrganizationMuteConfigRead,
-		Update: resourceSecurityCenterV2OrganizationMuteConfigUpdate,
-		Delete: resourceSecurityCenterV2OrganizationMuteConfigDelete,
+		Create: resourceSecurityCenterV2FolderMuteConfigCreate,
+		Read:   resourceSecurityCenterV2FolderMuteConfigRead,
+		Update: resourceSecurityCenterV2FolderMuteConfigUpdate,
+		Delete: resourceSecurityCenterV2FolderMuteConfigDelete,
 
 		Importer: &schema.ResourceImporter{
-			State: resourceSecurityCenterV2OrganizationMuteConfigImport,
+			State: resourceSecurityCenterV2FolderMuteConfigImport,
 		},
 
 		Timeouts: &schema.ResourceTimeout{
@@ -58,17 +60,25 @@ the scope in which the mute configuration is being created. E.g.,
 If a filter contains project = X but is created under the
 project = Y scope, it might not match any findings.`,
 			},
-			"organization": {
+			"folder": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				Description: `The organization whose Cloud Security Command Center the Mute
-Config lives in.`,
+				Description: `Resource name of the new organization mute configs's parent. Its format is
+"[folder_id]"`,
 			},
-			"type": {
+			"mute_config_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: `The type of the mute config.`,
+				ForceNew:    true,
+				Description: `Unique identifier provided by the client within the parent scope.`,
+			},
+			"type": {
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"MUTE_CONFIG_TYPE_UNSPECIFIED", "STATIC"}),
+				Description: `Required. The type of the mute config,
+which determines what type of mute state the config affects. Immutable after creation. Possible values: ["MUTE_CONFIG_TYPE_UNSPECIFIED", "STATIC"]`,
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -99,9 +109,9 @@ config creation or update.`,
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `Name of the mute config. Its format is
-organizations/{organization}/locations/global/muteConfigs/{configId},
-folders/{folder}/locations/global/muteConfigs/{configId},
-or projects/{project}/locations/global/muteConfigs/{configId}`,
+organizations/{organization}/muteConfigs/{configId},
+folders/{folder}/muteConfigs/{configId},
+or projects/{project}/muteConfigs/{configId}`,
 			},
 			"update_time": {
 				Type:     schema.TypeString,
@@ -115,7 +125,7 @@ provided on config creation or update.`,
 	}
 }
 
-func resourceSecurityCenterV2OrganizationMuteConfigCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityCenterV2FolderMuteConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
@@ -123,31 +133,31 @@ func resourceSecurityCenterV2OrganizationMuteConfigCreate(d *schema.ResourceData
 	}
 
 	obj := make(map[string]interface{})
-	descriptionProp, err := expandSecurityCenterV2OrganizationMuteConfigDescription(d.Get("description"), d, config)
+	descriptionProp, err := expandSecurityCenterV2FolderMuteConfigDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
-	filterProp, err := expandSecurityCenterV2OrganizationMuteConfigFilter(d.Get("filter"), d, config)
+	filterProp, err := expandSecurityCenterV2FolderMuteConfigFilter(d.Get("filter"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("filter"); !tpgresource.IsEmptyValue(reflect.ValueOf(filterProp)) && (ok || !reflect.DeepEqual(v, filterProp)) {
 		obj["filter"] = filterProp
 	}
-	typeProp, err := expandSecurityCenterV2OrganizationMuteConfigType(d.Get("type"), d, config)
+	typeProp, err := expandSecurityCenterV2FolderMuteConfigType(d.Get("type"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("type"); !tpgresource.IsEmptyValue(reflect.ValueOf(typeProp)) && (ok || !reflect.DeepEqual(v, typeProp)) {
 		obj["type"] = typeProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityCenterV2BasePath}}organizations/{{organization}}/locations/{{location}}/muteConfigs?muteConfigId={{mute_config_id}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityCenterV2BasePath}}folders/{{folder}}/locations/{{location}}/muteConfigs?muteConfigId={{mute_config_id}}")
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[DEBUG] Creating new OrganizationMuteConfig: %#v", obj)
+	log.Printf("[DEBUG] Creating new FolderMuteConfig: %#v", obj)
 	billingProject := ""
 
 	// err == nil indicates that the billing_project value was found
@@ -167,32 +177,32 @@ func resourceSecurityCenterV2OrganizationMuteConfigCreate(d *schema.ResourceData
 		Headers:   headers,
 	})
 	if err != nil {
-		return fmt.Errorf("Error creating OrganizationMuteConfig: %s", err)
+		return fmt.Errorf("Error creating FolderMuteConfig: %s", err)
 	}
-	if err := d.Set("name", flattenSecurityCenterV2OrganizationMuteConfigName(res["name"], d, config)); err != nil {
+	if err := d.Set("name", flattenSecurityCenterV2FolderMuteConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "organizations/{{organization}}/locations/{{location}}/muteConfigs/{{mute_config_id}}")
+	id, err := tpgresource.ReplaceVars(d, config, "{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
 
-	log.Printf("[DEBUG] Finished creating OrganizationMuteConfig %q: %#v", d.Id(), res)
+	log.Printf("[DEBUG] Finished creating FolderMuteConfig %q: %#v", d.Id(), res)
 
-	return resourceSecurityCenterV2OrganizationMuteConfigRead(d, meta)
+	return resourceSecurityCenterV2FolderMuteConfigRead(d, meta)
 }
 
-func resourceSecurityCenterV2OrganizationMuteConfigRead(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityCenterV2FolderMuteConfigRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityCenterV2BasePath}}organizations/{{organization}}/locations/{{location}}/muteConfigs/{{mute_config_id}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityCenterV2BasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -214,35 +224,35 @@ func resourceSecurityCenterV2OrganizationMuteConfigRead(d *schema.ResourceData, 
 		Headers:   headers,
 	})
 	if err != nil {
-		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("SecurityCenterV2OrganizationMuteConfig %q", d.Id()))
+		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("SecurityCenterV2FolderMuteConfig %q", d.Id()))
 	}
 
-	if err := d.Set("name", flattenSecurityCenterV2OrganizationMuteConfigName(res["name"], d, config)); err != nil {
-		return fmt.Errorf("Error reading OrganizationMuteConfig: %s", err)
+	if err := d.Set("name", flattenSecurityCenterV2FolderMuteConfigName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading FolderMuteConfig: %s", err)
 	}
-	if err := d.Set("description", flattenSecurityCenterV2OrganizationMuteConfigDescription(res["description"], d, config)); err != nil {
-		return fmt.Errorf("Error reading OrganizationMuteConfig: %s", err)
+	if err := d.Set("description", flattenSecurityCenterV2FolderMuteConfigDescription(res["description"], d, config)); err != nil {
+		return fmt.Errorf("Error reading FolderMuteConfig: %s", err)
 	}
-	if err := d.Set("filter", flattenSecurityCenterV2OrganizationMuteConfigFilter(res["filter"], d, config)); err != nil {
-		return fmt.Errorf("Error reading OrganizationMuteConfig: %s", err)
+	if err := d.Set("filter", flattenSecurityCenterV2FolderMuteConfigFilter(res["filter"], d, config)); err != nil {
+		return fmt.Errorf("Error reading FolderMuteConfig: %s", err)
 	}
-	if err := d.Set("create_time", flattenSecurityCenterV2OrganizationMuteConfigCreateTime(res["createTime"], d, config)); err != nil {
-		return fmt.Errorf("Error reading OrganizationMuteConfig: %s", err)
+	if err := d.Set("create_time", flattenSecurityCenterV2FolderMuteConfigCreateTime(res["createTime"], d, config)); err != nil {
+		return fmt.Errorf("Error reading FolderMuteConfig: %s", err)
 	}
-	if err := d.Set("update_time", flattenSecurityCenterV2OrganizationMuteConfigUpdateTime(res["updateTime"], d, config)); err != nil {
-		return fmt.Errorf("Error reading OrganizationMuteConfig: %s", err)
+	if err := d.Set("update_time", flattenSecurityCenterV2FolderMuteConfigUpdateTime(res["updateTime"], d, config)); err != nil {
+		return fmt.Errorf("Error reading FolderMuteConfig: %s", err)
 	}
-	if err := d.Set("most_recent_editor", flattenSecurityCenterV2OrganizationMuteConfigMostRecentEditor(res["mostRecentEditor"], d, config)); err != nil {
-		return fmt.Errorf("Error reading OrganizationMuteConfig: %s", err)
+	if err := d.Set("most_recent_editor", flattenSecurityCenterV2FolderMuteConfigMostRecentEditor(res["mostRecentEditor"], d, config)); err != nil {
+		return fmt.Errorf("Error reading FolderMuteConfig: %s", err)
 	}
-	if err := d.Set("type", flattenSecurityCenterV2OrganizationMuteConfigType(res["type"], d, config)); err != nil {
-		return fmt.Errorf("Error reading OrganizationMuteConfig: %s", err)
+	if err := d.Set("type", flattenSecurityCenterV2FolderMuteConfigType(res["type"], d, config)); err != nil {
+		return fmt.Errorf("Error reading FolderMuteConfig: %s", err)
 	}
 
 	return nil
 }
 
-func resourceSecurityCenterV2OrganizationMuteConfigUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityCenterV2FolderMuteConfigUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
@@ -252,31 +262,31 @@ func resourceSecurityCenterV2OrganizationMuteConfigUpdate(d *schema.ResourceData
 	billingProject := ""
 
 	obj := make(map[string]interface{})
-	descriptionProp, err := expandSecurityCenterV2OrganizationMuteConfigDescription(d.Get("description"), d, config)
+	descriptionProp, err := expandSecurityCenterV2FolderMuteConfigDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
-	filterProp, err := expandSecurityCenterV2OrganizationMuteConfigFilter(d.Get("filter"), d, config)
+	filterProp, err := expandSecurityCenterV2FolderMuteConfigFilter(d.Get("filter"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("filter"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, filterProp)) {
 		obj["filter"] = filterProp
 	}
-	typeProp, err := expandSecurityCenterV2OrganizationMuteConfigType(d.Get("type"), d, config)
+	typeProp, err := expandSecurityCenterV2FolderMuteConfigType(d.Get("type"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, typeProp)) {
 		obj["type"] = typeProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityCenterV2BasePath}}organizations/{{organization}}/locations/{{location}}/muteConfigs/{{mute_config_id}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityCenterV2BasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[DEBUG] Updating OrganizationMuteConfig %q: %#v", d.Id(), obj)
+	log.Printf("[DEBUG] Updating FolderMuteConfig %q: %#v", d.Id(), obj)
 	headers := make(http.Header)
 	updateMask := []string{}
 
@@ -317,17 +327,17 @@ func resourceSecurityCenterV2OrganizationMuteConfigUpdate(d *schema.ResourceData
 		})
 
 		if err != nil {
-			return fmt.Errorf("Error updating OrganizationMuteConfig %q: %s", d.Id(), err)
+			return fmt.Errorf("Error updating FolderMuteConfig %q: %s", d.Id(), err)
 		} else {
-			log.Printf("[DEBUG] Finished updating OrganizationMuteConfig %q: %#v", d.Id(), res)
+			log.Printf("[DEBUG] Finished updating FolderMuteConfig %q: %#v", d.Id(), res)
 		}
 
 	}
 
-	return resourceSecurityCenterV2OrganizationMuteConfigRead(d, meta)
+	return resourceSecurityCenterV2FolderMuteConfigRead(d, meta)
 }
 
-func resourceSecurityCenterV2OrganizationMuteConfigDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceSecurityCenterV2FolderMuteConfigDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
@@ -336,7 +346,7 @@ func resourceSecurityCenterV2OrganizationMuteConfigDelete(d *schema.ResourceData
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityCenterV2BasePath}}organizations/{{organization}}/locations/{{location}}/muteConfigs/{{mute_config_id}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityCenterV2BasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -350,7 +360,7 @@ func resourceSecurityCenterV2OrganizationMuteConfigDelete(d *schema.ResourceData
 
 	headers := make(http.Header)
 
-	log.Printf("[DEBUG] Deleting OrganizationMuteConfig %q", d.Id())
+	log.Printf("[DEBUG] Deleting FolderMuteConfig %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "DELETE",
@@ -362,68 +372,86 @@ func resourceSecurityCenterV2OrganizationMuteConfigDelete(d *schema.ResourceData
 		Headers:   headers,
 	})
 	if err != nil {
-		return transport_tpg.HandleNotFoundError(err, d, "OrganizationMuteConfig")
+		return transport_tpg.HandleNotFoundError(err, d, "FolderMuteConfig")
 	}
 
-	log.Printf("[DEBUG] Finished deleting OrganizationMuteConfig %q: %#v", d.Id(), res)
+	log.Printf("[DEBUG] Finished deleting FolderMuteConfig %q: %#v", d.Id(), res)
 	return nil
 }
 
-func resourceSecurityCenterV2OrganizationMuteConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+func resourceSecurityCenterV2FolderMuteConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
-		"^organizations/(?P<organization>[^/]+)/locations/(?P<location>[^/]+)/muteConfigs/(?P<mute_config_id>[^/]+)$",
-		"^(?P<organization>[^/]+)/(?P<location>[^/]+)/(?P<mute_config_id>[^/]+)$",
-	}, d, config); err != nil {
+
+	if err := tpgresource.ParseImportId([]string{"(?P<name>.+)"}, d, config); err != nil {
 		return nil, err
 	}
 
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "organizations/{{organization}}/locations/{{location}}/muteConfigs/{{mute_config_id}}")
+	// current import_formats can't import fields with forward slashes in their value
+	name := d.Get("name").(string)
+
+	matched, err := regexp.MatchString("(organizations|folders|projects)/.+/muteConfigs/.+", name)
 	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
+		return nil, fmt.Errorf("error validating import name: %s", err)
 	}
-	d.SetId(id)
+
+	if !matched {
+		return nil, fmt.Errorf("error validating import name: %s does not fit naming for muteConfigs. Expected %s",
+			name, "organizations/{organization}/muteConfigs/{configId}, folders/{folder}/muteConfigs/{configId} or projects/{project}/muteConfigs/{configId}")
+	}
+
+	if err := d.Set("name", name); err != nil {
+		return nil, fmt.Errorf("Error setting name: %s", err)
+	}
+
+	// mute_config_id and parent are not returned by the API and therefore need to be set manually
+	stringParts := strings.Split(d.Get("name").(string), "/")
+	if err := d.Set("mute_config_id", stringParts[3]); err != nil {
+		return nil, fmt.Errorf("Error setting mute_config_id: %s", err)
+	}
+
+	if err := d.Set("parent", fmt.Sprintf("%s/%s", stringParts[0], stringParts[1])); err != nil {
+		return nil, fmt.Errorf("Error setting mute_config_id: %s", err)
+	}
 
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenSecurityCenterV2OrganizationMuteConfigName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenSecurityCenterV2FolderMuteConfigName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenSecurityCenterV2OrganizationMuteConfigDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenSecurityCenterV2FolderMuteConfigDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenSecurityCenterV2OrganizationMuteConfigFilter(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenSecurityCenterV2FolderMuteConfigFilter(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenSecurityCenterV2OrganizationMuteConfigCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenSecurityCenterV2FolderMuteConfigCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenSecurityCenterV2OrganizationMuteConfigUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenSecurityCenterV2FolderMuteConfigUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenSecurityCenterV2OrganizationMuteConfigMostRecentEditor(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenSecurityCenterV2FolderMuteConfigMostRecentEditor(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenSecurityCenterV2OrganizationMuteConfigType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenSecurityCenterV2FolderMuteConfigType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func expandSecurityCenterV2OrganizationMuteConfigDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityCenterV2FolderMuteConfigDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityCenterV2OrganizationMuteConfigFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityCenterV2FolderMuteConfigFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandSecurityCenterV2OrganizationMuteConfigType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandSecurityCenterV2FolderMuteConfigType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

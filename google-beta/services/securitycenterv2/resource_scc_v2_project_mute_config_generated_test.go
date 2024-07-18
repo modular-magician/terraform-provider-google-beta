@@ -31,7 +31,7 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-func TestAccSecurityCenterV2OrganizationMuteConfig_sccV2OrganizationMuteConfigBasicExample(t *testing.T) {
+func TestAccSecurityCenterV2projectMuteConfig_sccV2ProjectMuteConfigBasicExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -42,38 +42,50 @@ func TestAccSecurityCenterV2OrganizationMuteConfig_sccV2OrganizationMuteConfigBa
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckSecurityCenterV2OrganizationMuteConfigDestroyProducer(t),
+		CheckDestroy:             testAccCheckSecurityCenterV2projectMuteConfigDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSecurityCenterV2OrganizationMuteConfig_sccV2OrganizationMuteConfigBasicExample(context),
+				Config: testAccSecurityCenterV2projectMuteConfig_sccV2ProjectMuteConfigBasicExample(context),
 			},
 			{
-				ResourceName:            "google_scc_v2_organization_mute_config.default",
+				ResourceName:            "google_scc_v2_project_mute_config.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "organization"},
+				ImportStateVerifyIgnore: []string{"location", "mute_config_id", "project_parent"},
 			},
 		},
 	})
 }
 
-func testAccSecurityCenterV2OrganizationMuteConfig_sccV2OrganizationMuteConfigBasicExample(context map[string]interface{}) string {
+func testAccSecurityCenterV2projectMuteConfig_sccV2ProjectMuteConfigBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_scc_v2_organization_mute_config" "default" {
-  mute_config_id    = "tf-test-my-config%{random_suffix}"
-  organization = "%{org_id}"
-  location     = "global"
-  description  = "My custom Cloud Security Command Center Finding Organization mute Configuration"
-  filter = "severity = \"HIGH\""
-  type = "STATIC"
+resource "google_project" "project" {
+  name       = "My Test Project"
+  project_id = ""
+  parent     = ""
+}
+
+resource "google_project_iam_member" "scc_project_mute_config" {
+  project = google_project.project.project_id
+  role    = "roles/securitycenter.admin"
+  member  = "serviceAccount:"
+}
+
+resource "google_scc_v2_project_mute_config" "default" {
+  mute_config_id = "tf-test-my-config%{random_suffix}"
+  project         = google_project.project.project_id
+  description    = "My custom Cloud Security Command Center Project Mute Configuration"
+  filter         = "severity = \"HIGH\""
+  type           =  "STATIC"
+  depends_on = [google_project_iam_member.scc_project_mute_config]
 }
 `, context)
 }
 
-func testAccCheckSecurityCenterV2OrganizationMuteConfigDestroyProducer(t *testing.T) func(s *terraform.State) error {
+func testAccCheckSecurityCenterV2projectMuteConfigDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
-			if rs.Type != "google_scc_v2_organization_mute_config" {
+			if rs.Type != "google_scc_v2_project_mute_config" {
 				continue
 			}
 			if strings.HasPrefix(name, "data.") {
@@ -82,7 +94,7 @@ func testAccCheckSecurityCenterV2OrganizationMuteConfigDestroyProducer(t *testin
 
 			config := acctest.GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{SecurityCenterV2BasePath}}organizations/{{organization}}/locations/{{location}}/muteConfigs/{{mute_config_id}}")
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{SecurityCenterV2BasePath}}{{name}}")
 			if err != nil {
 				return err
 			}
@@ -101,7 +113,7 @@ func testAccCheckSecurityCenterV2OrganizationMuteConfigDestroyProducer(t *testin
 				UserAgent: config.UserAgent,
 			})
 			if err == nil {
-				return fmt.Errorf("SecurityCenterV2OrganizationMuteConfig still exists at %s", url)
+				return fmt.Errorf("SecurityCenterV2projectMuteConfig still exists at %s", url)
 			}
 		}
 

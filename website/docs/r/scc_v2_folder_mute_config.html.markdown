@@ -20,7 +20,7 @@ description: |-
   findings based on criteria you specify.
 ---
 
-# google_scc_v2_organization_mute_config
+# google_scc_v2_folder_mute_config
 
 Mute Findings is a volume management feature in Security Command Center
 that lets you manually or programmatically hide irrelevant findings,
@@ -28,21 +28,32 @@ and create filters to automatically silence existing and future
 findings based on criteria you specify.
 
 
-To get more information about OrganizationMuteConfig, see:
+To get more information about FolderMuteConfig, see:
 
-* [API documentation](https://cloud.google.com/security-command-center/docs/reference/rest/v2/organizations.muteConfigs)
+* [API documentation](https://cloud.google.com/security-command-center/docs/reference/rest/v2/folders.locations.muteConfigs)
 
-## Example Usage - Scc V2 Organization Mute Config Basic
+## Example Usage - Scc V2 Folder Mute Config Basic
 
 
 ```hcl
-resource "google_scc_v2_organization_mute_config" "default" {
-  mute_config_id    = "my-config"
-  organization = "123456789"
-  location     = "global"
-  description  = "My custom Cloud Security Command Center Finding Organization mute Configuration"
-  filter = "severity = \"HIGH\""
-  type = "STATIC"
+resource "google_folder" "folder" {
+	display_name = "A test folder mute config"
+	parent       = "organizations/"
+}
+
+resource "google_folder_iam_member" "scc_folder_mute_config" {
+  folder = google_folder.folder.id
+  role   = "roles/securitycenter.admin"
+  member = "serviceAccount:"
+}
+
+resource "google_scc_v2_folder_mute_config" "default" {
+	mute_config_id = "my-config"
+	folder         = google_folder.folder.folder_id
+	description    = "My custom Cloud Security Command Center Mute Configuration"
+	filter         = "severity = \"HIGH\""
+	type           =  "STATIC"
+	depends_on     = [google_folder_iam_member.scc_folder_mute_config]
 }
 ```
 
@@ -61,12 +72,18 @@ The following arguments are supported:
 
 * `type` -
   (Required)
-  The type of the mute config.
+  Required. The type of the mute config,
+  which determines what type of mute state the config affects. Immutable after creation.
+  Possible values are: `MUTE_CONFIG_TYPE_UNSPECIFIED`, `STATIC`.
 
-* `organization` -
+* `mute_config_id` -
   (Required)
-  The organization whose Cloud Security Command Center the Mute
-  Config lives in.
+  Unique identifier provided by the client within the parent scope.
+
+* `folder` -
+  (Required)
+  Resource name of the new organization mute configs's parent. Its format is
+  "[folder_id]"
 
 
 - - -
@@ -85,13 +102,13 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `organizations/{{organization}}/locations/{{location}}/muteConfigs/{{mute_config_id}}`
+* `id` - an identifier for the resource with format `{{name}}`
 
 * `name` -
   Name of the mute config. Its format is
-  organizations/{organization}/locations/global/muteConfigs/{configId},
-  folders/{folder}/locations/global/muteConfigs/{configId},
-  or projects/{project}/locations/global/muteConfigs/{configId}
+  organizations/{organization}/muteConfigs/{configId},
+  folders/{folder}/muteConfigs/{configId},
+  or projects/{project}/muteConfigs/{configId}
 
 * `create_time` -
   The time at which the mute config was created. This field is set by
@@ -120,24 +137,22 @@ This resource provides the following
 ## Import
 
 
-OrganizationMuteConfig can be imported using any of these accepted formats:
+FolderMuteConfig can be imported using any of these accepted formats:
 
-* `organizations/{{organization}}/locations/{{location}}/muteConfigs/{{mute_config_id}}`
-* `{{organization}}/{{location}}/{{mute_config_id}}`
+* `{{name}}`
 
 
-In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import OrganizationMuteConfig using one of the formats above. For example:
+In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import FolderMuteConfig using one of the formats above. For example:
 
 ```tf
 import {
-  id = "organizations/{{organization}}/locations/{{location}}/muteConfigs/{{mute_config_id}}"
-  to = google_scc_v2_organization_mute_config.default
+  id = "{{name}}"
+  to = google_scc_v2_folder_mute_config.default
 }
 ```
 
-When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), OrganizationMuteConfig can be imported using one of the formats above. For example:
+When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), FolderMuteConfig can be imported using one of the formats above. For example:
 
 ```
-$ terraform import google_scc_v2_organization_mute_config.default organizations/{{organization}}/locations/{{location}}/muteConfigs/{{mute_config_id}}
-$ terraform import google_scc_v2_organization_mute_config.default {{organization}}/{{location}}/{{mute_config_id}}
+$ terraform import google_scc_v2_folder_mute_config.default {{name}}
 ```
