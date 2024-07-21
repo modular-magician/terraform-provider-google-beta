@@ -70,6 +70,11 @@ The following arguments are supported:
   (Optional)
   An optional description of this resource.
 
+* `status` -
+  (Optional)
+  The status of the public advertised prefix.
+  Possible values are: `INITIAL`, `PTR_CONFIGURED`, `VALIDATED`, `REVERSE_DNS_LOOKUP_FAILED`, `PREFIX_CONFIGURATION_IN_PROGRESS`, `PREFIX_CONFIGURATION_COMPLETE`, `PREFIX_REMOVAL_IN_PROGRESS`.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 

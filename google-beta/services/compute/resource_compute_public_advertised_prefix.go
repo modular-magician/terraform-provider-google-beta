@@ -29,6 +29,7 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
 
 func ResourceComputePublicAdvertisedPrefix() *schema.Resource {
@@ -79,6 +80,13 @@ except the last character, which cannot be a dash.`,
 				Optional:    true,
 				ForceNew:    true,
 				Description: `An optional description of this resource.`,
+			},
+			"status": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"INITIAL", "PTR_CONFIGURED", "VALIDATED", "REVERSE_DNS_LOOKUP_FAILED", "PREFIX_CONFIGURATION_IN_PROGRESS", "PREFIX_CONFIGURATION_COMPLETE", "PREFIX_REMOVAL_IN_PROGRESS", ""}),
+				Description:  `The status of the public advertised prefix. Possible values: ["INITIAL", "PTR_CONFIGURED", "VALIDATED", "REVERSE_DNS_LOOKUP_FAILED", "PREFIX_CONFIGURATION_IN_PROGRESS", "PREFIX_CONFIGURATION_COMPLETE", "PREFIX_REMOVAL_IN_PROGRESS"]`,
 			},
 			"shared_secret": {
 				Type:        schema.TypeString,
@@ -131,6 +139,12 @@ func resourceComputePublicAdvertisedPrefixCreate(d *schema.ResourceData, meta in
 		return err
 	} else if v, ok := d.GetOkExists("ip_cidr_range"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipCidrRangeProp)) && (ok || !reflect.DeepEqual(v, ipCidrRangeProp)) {
 		obj["ipCidrRange"] = ipCidrRangeProp
+	}
+	statusProp, err := expandComputePublicAdvertisedPrefixStatus(d.Get("status"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("status"); !tpgresource.IsEmptyValue(reflect.ValueOf(statusProp)) && (ok || !reflect.DeepEqual(v, statusProp)) {
+		obj["status"] = statusProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/publicAdvertisedPrefixes")
@@ -243,6 +257,9 @@ func resourceComputePublicAdvertisedPrefixRead(d *schema.ResourceData, meta inte
 	if err := d.Set("ip_cidr_range", flattenComputePublicAdvertisedPrefixIpCidrRange(res["ipCidrRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
+	if err := d.Set("status", flattenComputePublicAdvertisedPrefixStatus(res["status"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
+	}
 	if err := d.Set("shared_secret", flattenComputePublicAdvertisedPrefixSharedSecret(res["sharedSecret"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
@@ -345,6 +362,10 @@ func flattenComputePublicAdvertisedPrefixIpCidrRange(v interface{}, d *schema.Re
 	return v
 }
 
+func flattenComputePublicAdvertisedPrefixStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputePublicAdvertisedPrefixSharedSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -362,5 +383,9 @@ func expandComputePublicAdvertisedPrefixDnsVerificationIp(v interface{}, d tpgre
 }
 
 func expandComputePublicAdvertisedPrefixIpCidrRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicAdvertisedPrefixStatus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
