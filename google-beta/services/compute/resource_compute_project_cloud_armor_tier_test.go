@@ -129,6 +129,7 @@ resource "google_project" "project" {
   name            = "%{projectID}"
   org_id          = "%{org}"
   billing_account = "%{billingId}"
+  deletion_protection = false
 }
 
 resource "google_project_service" "compute" {
@@ -151,6 +152,7 @@ resource "google_project" "project" {
   name            = "%{projectID}"
   org_id          = "%{org}"
   billing_account = "%{billingId}"
+  deletion_protection = false
 }
 
 resource "google_project_service" "compute" {

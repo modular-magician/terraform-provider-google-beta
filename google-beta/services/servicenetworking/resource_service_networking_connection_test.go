@@ -155,6 +155,7 @@ resource "google_project" "project" {
   name            = "%s"
   org_id          = "%s"
   billing_account = "%s"
+  deletion_protection = false
 }
 
 resource "google_project_service" "servicenetworking" {
@@ -192,6 +193,7 @@ resource "google_project" "project" {
   name            = "%s"
   org_id          = "%s"
   billing_account = "%s"
+  deletion_protection = false
 }
 
 resource "google_project_service" "servicenetworking" {
