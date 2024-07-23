@@ -214,11 +214,12 @@ func ResourcePrivatecaCertificateAuthority() *schema.Resource {
 							},
 						},
 						"x509_config": {
-							Type:        schema.TypeList,
-							Required:    true,
-							ForceNew:    true,
-							Description: `Describes how some of the technical X.509 fields in a certificate should be populated.`,
-							MaxItems:    1,
+							Type:             schema.TypeList,
+							Required:         true,
+							ForceNew:         true,
+							DiffSuppressFunc: tpgresource.EmptyOrUnsetBlockDiffSuppress,
+							Description:      `Describes how some of the technical X.509 fields in a certificate should be populated.`,
+							MaxItems:         1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"ca_options": {

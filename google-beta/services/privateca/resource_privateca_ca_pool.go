@@ -152,8 +152,9 @@ service-level min RSA modulus size will continue to apply.`,
 							},
 						},
 						"baseline_values": {
-							Type:     schema.TypeList,
-							Optional: true,
+							Type:             schema.TypeList,
+							Optional:         true,
+							DiffSuppressFunc: tpgresource.EmptyOrUnsetBlockDiffSuppress,
 							Description: `A set of X.509 values that will be applied to all certificates issued through this CaPool. If a certificate request
 includes conflicting values for the same properties, they will be overwritten by the values defined here. If a certificate
 request uses a CertificateTemplate that defines conflicting predefinedValues for the same properties, the certificate
