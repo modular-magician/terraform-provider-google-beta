@@ -257,7 +257,7 @@ resource "google_network_services_lb_route_extension" "default" {
   }
 }
 
-# test instance
+# test instance lololol
 resource "google_compute_instance" "vm_test" {
   name         = "l7-ilb-test-vm"
   zone         = "us-west1-b"
