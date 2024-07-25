@@ -205,6 +205,20 @@ resource "google_workstations_workstation_config" "default" {
       }
     }
   }
+  allowed_ports = [
+    {
+      first: 22
+      last:22
+    },
+    {
+      first: 80
+      last: 80
+    },
+    {
+      first: 8000
+      last: 9000
+    }
+  ]
 }
 
 resource "google_workstations_workstation_config_iam_member" "foo" {
@@ -292,6 +306,20 @@ resource "google_workstations_workstation_config" "default" {
       }
     }
   }
+  allowed_ports = [
+    {
+      first: 22
+      last:22
+    },
+    {
+      first: 80
+      last: 80
+    },
+    {
+      first: 8000
+      last: 9000
+    }
+  ]
 }
 
 data "google_iam_policy" "foo" {
@@ -397,6 +425,20 @@ resource "google_workstations_workstation_config" "default" {
       }
     }
   }
+  allowed_ports = [
+    {
+      first: 22
+      last:22
+    },
+    {
+      first: 80
+      last: 80
+    },
+    {
+      first: 8000
+      last: 9000
+    }
+  ]
 }
 
 data "google_iam_policy" "foo" {
@@ -487,6 +529,20 @@ resource "google_workstations_workstation_config" "default" {
       }
     }
   }
+  allowed_ports = [
+    {
+      first: 22
+      last:22
+    },
+    {
+      first: 80
+      last: 80
+    },
+    {
+      first: 8000
+      last: 9000
+    }
+  ]
 }
 
 resource "google_workstations_workstation_config_iam_binding" "foo" {
@@ -574,6 +630,20 @@ resource "google_workstations_workstation_config" "default" {
       }
     }
   }
+  allowed_ports = [
+    {
+      first: 22
+      last:22
+    },
+    {
+      first: 80
+      last: 80
+    },
+    {
+      first: 8000
+      last: 9000
+    }
+  ]
 }
 
 resource "google_workstations_workstation_config_iam_binding" "foo" {

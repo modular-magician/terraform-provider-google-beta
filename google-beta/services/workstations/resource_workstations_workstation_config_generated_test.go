@@ -132,6 +132,20 @@ resource "google_workstations_workstation_config" "default" {
       }
     }
   }
+  allowed_ports = [
+    {
+      first: 22
+      last:22
+    },
+    {
+      first: 80
+      last: 80
+    },
+    {
+      first: 8000
+      last: 9000
+    }
+  ]
 }
 `, context)
 }

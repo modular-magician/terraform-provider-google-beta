@@ -110,6 +110,20 @@ resource "google_workstations_workstation_config" "default" {
       }
     }
   }
+  allowed_ports = [
+    {
+      first: 22
+      last:22
+    },
+    {
+      first: 80
+      last: 80
+    },
+    {
+      first: 8000
+      last: 9000
+    }
+  ]
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
@@ -672,6 +686,14 @@ The following arguments are supported:
   (Optional)
   Disables support for plain TCP connections in the workstation. By default the service supports TCP connections via a websocket relay. Setting this option to true disables that relay, which prevents the usage of services that require plain tcp connections, such as ssh. When enabled, all communication must occur over https or wss.
 
+* `allowed_ports` -
+  (Optional)
+  A list of ports specifying single ports or ranges of ports that
+  are externally accessible in the workstation.
+  Allowed ports must be one of 22, 80, or within range 1024-65535.
+  If not specified defaults to ports 22, 80, and ports 1024-65535.
+  Structure is [documented below](#nested_allowed_ports).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -938,6 +960,16 @@ The following arguments are supported:
 * `port` -
   (Required)
   Port to which the request should be sent.
+
+<a name="nested_allowed_ports"></a>The `allowed_ports` block supports:
+
+* `first` -
+  (Optional)
+  Starting port number for the current range of ports.
+
+* `last` -
+  (Optional)
+  Ending port number for the current range of ports.
 
 ## Attributes Reference
 
