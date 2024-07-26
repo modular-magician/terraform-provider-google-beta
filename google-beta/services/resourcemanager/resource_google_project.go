@@ -66,7 +66,7 @@ func ResourceGoogleProject() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: verify.ValidateProjectID(),
-				Description:  `The project ID. Changing this forces a new project to be created.`,
+				Description:  `The project unique ID. Changing this forces a new project to be created.`,
 			},
 			"skip_delete": {
 				Type:        schema.TypeBool,
@@ -131,6 +131,13 @@ func ResourceGoogleProject() *schema.Resource {
 				Computed:    true,
 				Description: `All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.`,
 				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+
+			"deletion_protection": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: `When the field is set to true or unset in Terraform state, a terraform apply or terraform destroy that would delete the instance will fail. When the field is set to false, deleting the instance is allowed.`,
 			},
 		},
 		UseJSONNumber: true,
@@ -502,6 +509,9 @@ func resourceGoogleProjectDelete(d *schema.ResourceData, meta interface{}) error
 	}
 	// Only delete projects if skip_delete isn't set
 	if !d.Get("skip_delete").(bool) {
+		if d.Get("deletion_protection").(bool) {
+			return fmt.Errorf("cannot destroy project without setting deletion_protection=false and running `terraform apply`")
+		}
 		parts := strings.Split(d.Id(), "/")
 		pid := parts[len(parts)-1]
 		if err := transport_tpg.Retry(transport_tpg.RetryOptions{

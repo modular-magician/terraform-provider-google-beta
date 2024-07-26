@@ -109,6 +109,7 @@ resource "google_project" "owner_project" {
   name            = "tf-test%{random_suffix}"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
+  deletion_protection = false
 }
 
 
@@ -122,6 +123,7 @@ resource "google_project" "guest_project" {
   project_id      = "tf-test-2%{random_suffix}"
   name            = "tf-test-2%{random_suffix}"
   org_id          = "%{org_id}"
+  deletion_protection = false
 }
 
 resource "google_organization_policy" "shared_reservation_org_policy" {

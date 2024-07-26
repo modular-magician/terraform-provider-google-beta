@@ -44,6 +44,7 @@ resource "google_project" "project" {
   project_id = "my-project"
   name       = "my-project"
   org_id     = "123456789"
+  deletion_protection = false
 }
 
 resource "google_project_service" "project_service" {
@@ -96,6 +97,8 @@ In addition to the arguments listed above, the following computed attributes are
 * `client_id` -
   Output only. Unique identifier of the OAuth client.
 
+
+* `client_id`: The OAuth2 ID of the client.
 
 ## Timeouts
 

@@ -136,9 +136,9 @@ label keys, the applied set may differ depending on the Kubernetes
 version -- it's best to assume the behavior is undefined and
 conflicts should be avoided. For more information, including usage
 and the valid values, see:
-  - http://kubernetes.io/v1.1/docs/user-guide/labels.html
+  http://kubernetes.io/v1.1/docs/user-guide/labels.html
 An object containing a list of "key": value pairs.
-For example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.`,
+Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.`,
 													Elem: &schema.Schema{Type: schema.TypeString},
 												},
 												"node_configs": {
@@ -157,9 +157,9 @@ label keys, the applied set may differ depending on the Kubernetes
 version -- it's best to assume the behavior is undefined and
 conflicts should be avoided. For more information, including usage
 and the valid values, see:
-  - http://kubernetes.io/v1.1/docs/user-guide/labels.html
+  http://kubernetes.io/v1.1/docs/user-guide/labels.html
 An object containing a list of "key": value pairs.
-For example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.`,
+Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.`,
 																Elem: &schema.Schema{Type: schema.TypeString},
 															},
 															"node_ip": {
@@ -393,15 +393,15 @@ assigned to the node will be derived from this parameter.`,
 							Type:     schema.TypeString,
 							Required: true,
 							Description: `Specifies the address of your proxy server.
-For Example: http://domain
+Examples: http://domain
 WARNING: Do not provide credentials in the format
-of http://(username:password@)domain these will be rejected by the server.`,
+http://(username:password@)domain these will be rejected by the server.`,
 						},
 						"no_proxy": {
 							Type:     schema.TypeList,
 							Optional: true,
 							Description: `A list of IPs, hostnames, and domains that should skip the proxy.
-For example: ["127.0.0.1", "example.com", ".corp", "localhost"].`,
+Examples: ["127.0.0.1", "example.com", ".corp", "localhost"].`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

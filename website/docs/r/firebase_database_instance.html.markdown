@@ -63,6 +63,7 @@ resource "google_project" "default" {
   project_id = "rtdb-project"
   name       = "rtdb-project"
   org_id     = "123456789"
+  deletion_protection = false
   labels     = {
     "firebase" = "enabled"
   }
