@@ -167,6 +167,7 @@ historical state of the data.`,
 Editing this field will only affect new tables created in the future, but existing tables
 will not be impacted. Lower values mean that queries will return fresher data, but may result in higher cost.
 A duration in seconds with up to nine fractional digits, terminated by 's'. Example: "3.5s". Defaults to 900s.`,
+										Default: "900s",
 									},
 									"merge": {
 										Type:     schema.TypeList,
