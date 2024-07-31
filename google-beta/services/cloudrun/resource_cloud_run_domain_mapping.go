@@ -70,7 +70,7 @@ func ResourceCloudRunDomainMapping() *schema.Resource {
 		},
 		CustomizeDiff: customdiff.All(
 			hasMetadata,
-			tpgresource.SetMetadataLabelsDiff,
+			tpgresource.SetNestedLabelsDiff("metadata", "labels"),
 			tpgresource.SetMetadataAnnotationsDiff,
 			tpgresource.DefaultProviderProject,
 		),

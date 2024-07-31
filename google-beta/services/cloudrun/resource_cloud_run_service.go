@@ -112,7 +112,7 @@ func ResourceCloudRunService() *schema.Resource {
 		},
 		CustomizeDiff: customdiff.All(
 			revisionNameCustomizeDiff,
-			tpgresource.SetMetadataLabelsDiff,
+			tpgresource.SetNestedLabelsDiff("metadata", "labels"),
 			tpgresource.SetMetadataAnnotationsDiff,
 			tpgresource.DefaultProviderProject,
 		),
