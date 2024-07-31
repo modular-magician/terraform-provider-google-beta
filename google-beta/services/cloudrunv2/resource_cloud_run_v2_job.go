@@ -798,6 +798,17 @@ A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to n
 				Computed:    true,
 				Description: `The last-modified time.`,
 			},
+			"deletion_protection": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  true,
+				Description: `Whether Terraform will be prevented from destroying the job. Defaults to true.
+When a'terraform destroy' or 'terraform apply' would delete the job,
+the command will fail if this field is not set to false in Terraform state.
+When the field is set to true or unset in Terraform state, a 'terraform apply'
+or 'terraform destroy' that would delete the job will fail.
+When the field is set to false, deleting the job is allowed.`,
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -973,6 +984,12 @@ func resourceCloudRunV2JobRead(d *schema.ResourceData, meta interface{}) error {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("CloudRunV2Job %q", d.Id()))
 	}
 
+	// Explicitly set virtual fields to default values if unset
+	if _, ok := d.GetOkExists("deletion_protection"); !ok {
+		if err := d.Set("deletion_protection", true); err != nil {
+			return fmt.Errorf("Error setting deletion_protection: %s", err)
+		}
+	}
 	if err := d.Set("project", project); err != nil {
 		return fmt.Errorf("Error reading Job: %s", err)
 	}
@@ -1202,6 +1219,9 @@ func resourceCloudRunV2JobDelete(d *schema.ResourceData, meta interface{}) error
 	}
 
 	headers := make(http.Header)
+	if d.Get("deletion_protection").(bool) {
+		return fmt.Errorf("cannot destroy job without setting deletion_protection=false and running `terraform apply`")
+	}
 
 	log.Printf("[DEBUG] Deleting Job %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
@@ -1231,21 +1251,13 @@ func resourceCloudRunV2JobDelete(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceCloudRunV2JobImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+
 	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
-		"^projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/jobs/(?P<name>[^/]+)$",
-		"^(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)$",
-		"^(?P<location>[^/]+)/(?P<name>[^/]+)$",
-	}, d, config); err != nil {
+
+	// current import_formats can't import fields with forward slashes in their value
+	if err := tpgresource.ParseImportId([]string{"(?P<project>[^ ]+) (?P<name>[^ ]+)", "(?P<name>[^ ]+)"}, d, config); err != nil {
 		return nil, err
 	}
-
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/jobs/{{name}}")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
 }
