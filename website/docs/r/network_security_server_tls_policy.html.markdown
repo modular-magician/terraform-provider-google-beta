@@ -21,6 +21,8 @@ description: |-
 
 ClientTlsPolicy is a resource that specifies how a client should authenticate connections to backends of a service. This resource itself does not affect configuration unless it is attached to a backend service resource.
 
+Recreating a server TLS policy that's in use by another resource will give a `resourceInUseByAnotherResource` error. Use `lifecycle.create_before_destroy` to avoid this type of error.
+
 ~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
 See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
 
@@ -126,6 +128,18 @@ resource "google_network_security_server_tls_policy" "default" {
 
 
 ```hcl
+// Using with Target HTTPS Proxies
+//
+// If you need to rename or delete the "google_network_security_server_tls_policy" resource,
+// Terraform will try to destroy it first then perform the update to the
+// "google_compute_region_target_https_proxy" resource that references the server TLS policy.
+// This might happen in a situation where you want to disable mTLS on a target HTTPS proxy.
+// This will NOT work and will yield a "resourceInUseByAnotherResource" error as the target
+// HTTPS proxy is still referencing the server TLS policy that Terraform is trying to destroy.
+// It is recommended to specify "create_before_destroy = true" in a lifecycle block for the
+// "google_network_security_server_tls_policy" resource so that any create/update operations take
+// place _before_ the destroy.
+
 data "google_project" "project" {
   provider = google-beta
 }
