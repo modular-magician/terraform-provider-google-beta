@@ -29,13 +29,13 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
 
 func ResourceBackupDRManagementServer() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceBackupDRManagementServerCreate,
 		Read:   resourceBackupDRManagementServerRead,
+		Update: resourceBackupDRManagementServerUpdate,
 		Delete: resourceBackupDRManagementServerDelete,
 
 		Importer: &schema.ResourceImporter{
@@ -43,11 +43,13 @@ func ResourceBackupDRManagementServer() *schema.Resource {
 		},
 
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(40 * time.Minute),
-			Delete: schema.DefaultTimeout(40 * time.Minute),
+			Create: schema.DefaultTimeout(20 * time.Minute),
+			Update: schema.DefaultTimeout(20 * time.Minute),
+			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 
 		CustomizeDiff: customdiff.All(
+			tpgresource.SetLabelsDiff,
 			tpgresource.DefaultProviderProject,
 		),
 
@@ -56,69 +58,210 @@ func ResourceBackupDRManagementServer() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: `The location for the management server (management console)`,
+				Description: ``,
 			},
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: `The name of management server (management console)`,
+			"management_server_id": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+				Description: `Required. The name of the management server to create. The name must be unique for
+the specified project and location.`,
 			},
 			"networks": {
-				Type:        schema.TypeList,
-				Required:    true,
-				ForceNew:    true,
-				Description: `Network details to create management server (management console).`,
+				Type:     schema.TypeList,
+				Required: true,
+				ForceNew: true,
+				Description: `Required. VPC networks to which the ManagementServer instance is connected. For this
+version, only a single network is supported.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"network": {
-							Type:        schema.TypeString,
-							Required:    true,
-							ForceNew:    true,
-							Description: `Network with format 'projects/{{project_id}}/global/networks/{{network_id}}'`,
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Description: `Optional. The resource name of the Google Compute Engine VPC network to which the
+ManagementServer instance is connected.`,
 						},
 						"peering_mode": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							ForceNew:     true,
-							ValidateFunc: verify.ValidateEnum([]string{"PRIVATE_SERVICE_ACCESS", ""}),
-							Description:  `Type of Network peeringMode Default value: "PRIVATE_SERVICE_ACCESS" Possible values: ["PRIVATE_SERVICE_ACCESS"]`,
-							Default:      "PRIVATE_SERVICE_ACCESS",
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Description: `Optional. The network connect mode of the ManagementServer instance. For this
+version, only PRIVATE_SERVICE_ACCESS is supported. 
+ Possible values:
+ PEERING_MODE_UNSPECIFIED
+PRIVATE_SERVICE_ACCESS`,
 						},
 					},
 				},
 			},
-			"type": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"BACKUP_RESTORE", ""}),
-				Description:  `The type of management server (management console). Default value: "BACKUP_RESTORE" Possible values: ["BACKUP_RESTORE"]`,
-				Default:      "BACKUP_RESTORE",
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Optional. The description of the ManagementServer instance (2048 characters or less).`,
+			},
+			"etag": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `Optional. Server specified ETag for the ManagementServer resource to prevent
+simultaneous updates from overwiting each other.`,
+			},
+			"labels": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				Description: `Optional. Resource labels to represent user provided metadata.
+Labels currently defined:
+1. migrate_from_go=
+   If set to true, the MS is created in migration ready mode. 
+
+**Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
+Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 			"management_uri": {
 				Type:        schema.TypeList,
-				Computed:    true,
-				Description: `The management console URI`,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `ManagementURI for the Management Server resource.`,
+				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"api": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: `The management console api endpoint.`,
+							Description: `Output only. The ManagementServer AGM/RD API URL.`,
 						},
 						"web_ui": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: `The management console webUi.`,
+							Description: `Output only. The ManagementServer AGM/RD WebUI URL.`,
 						},
 					},
 				},
 			},
-			"oauth2_client_id": {
+			"type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `Optional. The type of the ManagementServer resource. 
+ Possible values:
+ INSTANCE_TYPE_UNSPECIFIED
+BACKUP_RESTORE`,
+			},
+			"workforce_identity_based_management_uri": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `ManagementURI depending on the Workforce Identity i.e. either 1p or 3p.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"first_party_management_uri": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Output only. First party Management URI for Google Identities.`,
+						},
+						"third_party_management_uri": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Output only. Third party Management URI for External Identity Providers.`,
+						},
+					},
+				},
+			},
+			"workforce_identity_based_oauth2_client_id": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `OAuth Client ID depending on the Workforce Identity i.e. either 1p or 3p,`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"first_party_oauth2_client_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Output only. First party OAuth Client ID for Google Identities.`,
+						},
+						"third_party_oauth2_client_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Output only. Third party OAuth Client ID for External Identity Providers.`,
+						},
+					},
+				},
+			},
+			"ba_proxy_uri": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Description: `Output only. The hostname or ip address of the exposed AGM endpoints, used by BAs to
+connect to BA proxy.`,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: `The oauth2ClientId of management console.`,
+				Description: `Output only. The time when the instance was created.`,
+			},
+			"effective_labels": {
+				Type:        schema.TypeMap,
+				Computed:    true,
+				ForceNew:    true,
+				Description: `All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.`,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `Output only. Identifier. The resource name.`,
+			},
+			"oauth2_client_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `Output only. The OAuth 2.0 client id is required to make API calls to the BackupDR
+instance API of this ManagementServer. This is the value that should
+be provided in the 'aud' field of the OIDC ID Token (see openid
+specification
+https://openid.net/specs/openid-connect-core-1_0.html#IDToken).`,
+			},
+			"satisfies_pzi": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: `Output only. Reserved for future use.`,
+			},
+			"satisfies_pzs": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: `Output only. Reserved for future use.`,
+			},
+			"state": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `Output only. The ManagementServer state. 
+ Possible values:
+ INSTANCE_STATE_UNSPECIFIED
+CREATING
+READY
+UPDATING
+DELETING
+REPAIRING
+MAINTENANCE
+ERROR`,
+			},
+			"terraform_labels": {
+				Type:     schema.TypeMap,
+				Computed: true,
+				Description: `The combination of labels configured directly on the resource
+ and default labels configured on the provider.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
+			},
+			"update_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `Output only. The time when the instance was updated.`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -139,11 +282,29 @@ func resourceBackupDRManagementServerCreate(d *schema.ResourceData, meta interfa
 	}
 
 	obj := make(map[string]interface{})
+	descriptionProp, err := expandBackupDRManagementServerDescription(d.Get("description"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+		obj["description"] = descriptionProp
+	}
 	typeProp, err := expandBackupDRManagementServerType(d.Get("type"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("type"); !tpgresource.IsEmptyValue(reflect.ValueOf(typeProp)) && (ok || !reflect.DeepEqual(v, typeProp)) {
 		obj["type"] = typeProp
+	}
+	managementUriProp, err := expandBackupDRManagementServerManagementUri(d.Get("management_uri"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("management_uri"); !tpgresource.IsEmptyValue(reflect.ValueOf(managementUriProp)) && (ok || !reflect.DeepEqual(v, managementUriProp)) {
+		obj["managementUri"] = managementUriProp
+	}
+	workforceIdentityBasedManagementUriProp, err := expandBackupDRManagementServerWorkforceIdentityBasedManagementUri(d.Get("workforce_identity_based_management_uri"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("workforce_identity_based_management_uri"); !tpgresource.IsEmptyValue(reflect.ValueOf(workforceIdentityBasedManagementUriProp)) && (ok || !reflect.DeepEqual(v, workforceIdentityBasedManagementUriProp)) {
+		obj["workforceIdentityBasedManagementUri"] = workforceIdentityBasedManagementUriProp
 	}
 	networksProp, err := expandBackupDRManagementServerNetworks(d.Get("networks"), d, config)
 	if err != nil {
@@ -151,8 +312,26 @@ func resourceBackupDRManagementServerCreate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("networks"); !tpgresource.IsEmptyValue(reflect.ValueOf(networksProp)) && (ok || !reflect.DeepEqual(v, networksProp)) {
 		obj["networks"] = networksProp
 	}
+	etagProp, err := expandBackupDRManagementServerEtag(d.Get("etag"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("etag"); !tpgresource.IsEmptyValue(reflect.ValueOf(etagProp)) && (ok || !reflect.DeepEqual(v, etagProp)) {
+		obj["etag"] = etagProp
+	}
+	workforceIdentityBasedOauth2ClientIdProp, err := expandBackupDRManagementServerWorkforceIdentityBasedOauth2ClientId(d.Get("workforce_identity_based_oauth2_client_id"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("workforce_identity_based_oauth2_client_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(workforceIdentityBasedOauth2ClientIdProp)) && (ok || !reflect.DeepEqual(v, workforceIdentityBasedOauth2ClientIdProp)) {
+		obj["workforceIdentityBasedOauth2ClientId"] = workforceIdentityBasedOauth2ClientIdProp
+	}
+	labelsProp, err := expandBackupDRManagementServerEffectiveLabels(d.Get("effective_labels"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+		obj["labels"] = labelsProp
+	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{BackupDRBasePath}}projects/{{project}}/locations/{{location}}/managementServers/?management_server_id={{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{BackupDRBasePath}}projects/{{project}}/locations/{{location}}/managementServers?managementServerId={{management_server_id}}")
 	if err != nil {
 		return err
 	}
@@ -187,7 +366,7 @@ func resourceBackupDRManagementServerCreate(d *schema.ResourceData, meta interfa
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/managementServers/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/managementServers/{{management_server_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -206,8 +385,12 @@ func resourceBackupDRManagementServerCreate(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("Error waiting to create ManagementServer: %s", err)
 	}
 
+	if err := d.Set("name", flattenBackupDRManagementServerName(opRes["name"], d, config)); err != nil {
+		return err
+	}
+
 	// This may have caused the ID to update - update it if so.
-	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/managementServers/{{name}}")
+	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/managementServers/{{management_server_id}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -225,7 +408,7 @@ func resourceBackupDRManagementServerRead(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{BackupDRBasePath}}projects/{{project}}/locations/{{location}}/managementServers/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{BackupDRBasePath}}projects/{{project}}/locations/{{location}}/managementServers/{{management_server_id}}")
 	if err != nil {
 		return err
 	}
@@ -260,20 +443,67 @@ func resourceBackupDRManagementServerRead(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error reading ManagementServer: %s", err)
 	}
 
+	if err := d.Set("name", flattenBackupDRManagementServerName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("description", flattenBackupDRManagementServerDescription(res["description"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("labels", flattenBackupDRManagementServerLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("create_time", flattenBackupDRManagementServerCreateTime(res["createTime"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("update_time", flattenBackupDRManagementServerUpdateTime(res["updateTime"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
 	if err := d.Set("type", flattenBackupDRManagementServerType(res["type"], d, config)); err != nil {
-		return fmt.Errorf("Error reading ManagementServer: %s", err)
-	}
-	if err := d.Set("networks", flattenBackupDRManagementServerNetworks(res["networks"], d, config)); err != nil {
-		return fmt.Errorf("Error reading ManagementServer: %s", err)
-	}
-	if err := d.Set("oauth2_client_id", flattenBackupDRManagementServerOauth2ClientId(res["oauth2ClientId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagementServer: %s", err)
 	}
 	if err := d.Set("management_uri", flattenBackupDRManagementServerManagementUri(res["managementUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagementServer: %s", err)
 	}
+	if err := d.Set("workforce_identity_based_management_uri", flattenBackupDRManagementServerWorkforceIdentityBasedManagementUri(res["workforceIdentityBasedManagementUri"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("state", flattenBackupDRManagementServerState(res["state"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("networks", flattenBackupDRManagementServerNetworks(res["networks"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("etag", flattenBackupDRManagementServerEtag(res["etag"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("oauth2_client_id", flattenBackupDRManagementServerOauth2ClientId(res["oauth2ClientId"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("workforce_identity_based_oauth2_client_id", flattenBackupDRManagementServerWorkforceIdentityBasedOauth2ClientId(res["workforceIdentityBasedOauth2ClientId"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("ba_proxy_uri", flattenBackupDRManagementServerBaProxyUri(res["baProxyUri"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("satisfies_pzs", flattenBackupDRManagementServerSatisfiesPzs(res["satisfiesPzs"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("satisfies_pzi", flattenBackupDRManagementServerSatisfiesPzi(res["satisfiesPzi"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("terraform_labels", flattenBackupDRManagementServerTerraformLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
+	if err := d.Set("effective_labels", flattenBackupDRManagementServerEffectiveLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagementServer: %s", err)
+	}
 
 	return nil
+}
+
+func resourceBackupDRManagementServerUpdate(d *schema.ResourceData, meta interface{}) error {
+	// Only the root field "labels" and "terraform_labels" are mutable
+	return resourceBackupDRManagementServerRead(d, meta)
 }
 
 func resourceBackupDRManagementServerDelete(d *schema.ResourceData, meta interface{}) error {
@@ -291,7 +521,7 @@ func resourceBackupDRManagementServerDelete(d *schema.ResourceData, meta interfa
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{BackupDRBasePath}}projects/{{project}}/locations/{{location}}/managementServers/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{BackupDRBasePath}}projects/{{project}}/locations/{{location}}/managementServers/{{management_server_id}}")
 	if err != nil {
 		return err
 	}
@@ -335,15 +565,15 @@ func resourceBackupDRManagementServerDelete(d *schema.ResourceData, meta interfa
 func resourceBackupDRManagementServerImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
 	if err := tpgresource.ParseImportId([]string{
-		"^projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/managementServers/(?P<name>[^/]+)$",
-		"^(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)$",
-		"^(?P<location>[^/]+)/(?P<name>[^/]+)$",
+		"^projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/managementServers/(?P<management_server_id>[^/]+)$",
+		"^(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<management_server_id>[^/]+)$",
+		"^(?P<location>[^/]+)/(?P<management_server_id>[^/]+)$",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/managementServers/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/managementServers/{{management_server_id}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -352,7 +582,88 @@ func resourceBackupDRManagementServerImport(d *schema.ResourceData, meta interfa
 	return []*schema.ResourceData{d}, nil
 }
 
+func flattenBackupDRManagementServerName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRManagementServerDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRManagementServerLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+
+	transformed := make(map[string]interface{})
+	if l, ok := d.GetOkExists("labels"); ok {
+		for k := range l.(map[string]interface{}) {
+			transformed[k] = v.(map[string]interface{})[k]
+		}
+	}
+
+	return transformed
+}
+
+func flattenBackupDRManagementServerCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRManagementServerUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenBackupDRManagementServerType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRManagementServerManagementUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["web_ui"] =
+		flattenBackupDRManagementServerManagementUriWebUi(original["webUi"], d, config)
+	transformed["api"] =
+		flattenBackupDRManagementServerManagementUriApi(original["api"], d, config)
+	return []interface{}{transformed}
+}
+func flattenBackupDRManagementServerManagementUriWebUi(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRManagementServerManagementUriApi(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRManagementServerWorkforceIdentityBasedManagementUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["first_party_management_uri"] =
+		flattenBackupDRManagementServerWorkforceIdentityBasedManagementUriFirstPartyManagementUri(original["firstPartyManagementUri"], d, config)
+	transformed["third_party_management_uri"] =
+		flattenBackupDRManagementServerWorkforceIdentityBasedManagementUriThirdPartyManagementUri(original["thirdPartyManagementUri"], d, config)
+	return []interface{}{transformed}
+}
+func flattenBackupDRManagementServerWorkforceIdentityBasedManagementUriFirstPartyManagementUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRManagementServerWorkforceIdentityBasedManagementUriThirdPartyManagementUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRManagementServerState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -383,11 +694,15 @@ func flattenBackupDRManagementServerNetworksPeeringMode(v interface{}, d *schema
 	return v
 }
 
+func flattenBackupDRManagementServerEtag(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenBackupDRManagementServerOauth2ClientId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenBackupDRManagementServerManagementUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenBackupDRManagementServerWorkforceIdentityBasedOauth2ClientId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -396,21 +711,124 @@ func flattenBackupDRManagementServerManagementUri(v interface{}, d *schema.Resou
 		return nil
 	}
 	transformed := make(map[string]interface{})
-	transformed["web_ui"] =
-		flattenBackupDRManagementServerManagementUriWebUi(original["webUi"], d, config)
-	transformed["api"] =
-		flattenBackupDRManagementServerManagementUriApi(original["api"], d, config)
+	transformed["first_party_oauth2_client_id"] =
+		flattenBackupDRManagementServerWorkforceIdentityBasedOauth2ClientIdFirstPartyOauth2ClientId(original["firstPartyOauth2ClientId"], d, config)
+	transformed["third_party_oauth2_client_id"] =
+		flattenBackupDRManagementServerWorkforceIdentityBasedOauth2ClientIdThirdPartyOauth2ClientId(original["thirdPartyOauth2ClientId"], d, config)
 	return []interface{}{transformed}
 }
-func flattenBackupDRManagementServerManagementUriWebUi(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenBackupDRManagementServerWorkforceIdentityBasedOauth2ClientIdFirstPartyOauth2ClientId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenBackupDRManagementServerManagementUriApi(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenBackupDRManagementServerWorkforceIdentityBasedOauth2ClientIdThirdPartyOauth2ClientId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func flattenBackupDRManagementServerBaProxyUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRManagementServerSatisfiesPzs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRManagementServerSatisfiesPzi(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBackupDRManagementServerTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+
+	transformed := make(map[string]interface{})
+	if l, ok := d.GetOkExists("terraform_labels"); ok {
+		for k := range l.(map[string]interface{}) {
+			transformed[k] = v.(map[string]interface{})[k]
+		}
+	}
+
+	return transformed
+}
+
+func flattenBackupDRManagementServerEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func expandBackupDRManagementServerDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandBackupDRManagementServerType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBackupDRManagementServerManagementUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedWebUi, err := expandBackupDRManagementServerManagementUriWebUi(original["web_ui"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedWebUi); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["webUi"] = transformedWebUi
+	}
+
+	transformedApi, err := expandBackupDRManagementServerManagementUriApi(original["api"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedApi); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["api"] = transformedApi
+	}
+
+	return transformed, nil
+}
+
+func expandBackupDRManagementServerManagementUriWebUi(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBackupDRManagementServerManagementUriApi(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBackupDRManagementServerWorkforceIdentityBasedManagementUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedFirstPartyManagementUri, err := expandBackupDRManagementServerWorkforceIdentityBasedManagementUriFirstPartyManagementUri(original["first_party_management_uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedFirstPartyManagementUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["firstPartyManagementUri"] = transformedFirstPartyManagementUri
+	}
+
+	transformedThirdPartyManagementUri, err := expandBackupDRManagementServerWorkforceIdentityBasedManagementUriThirdPartyManagementUri(original["third_party_management_uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedThirdPartyManagementUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["thirdPartyManagementUri"] = transformedThirdPartyManagementUri
+	}
+
+	return transformed, nil
+}
+
+func expandBackupDRManagementServerWorkforceIdentityBasedManagementUriFirstPartyManagementUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBackupDRManagementServerWorkforceIdentityBasedManagementUriThirdPartyManagementUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -449,4 +867,53 @@ func expandBackupDRManagementServerNetworksNetwork(v interface{}, d tpgresource.
 
 func expandBackupDRManagementServerNetworksPeeringMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandBackupDRManagementServerEtag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBackupDRManagementServerWorkforceIdentityBasedOauth2ClientId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedFirstPartyOauth2ClientId, err := expandBackupDRManagementServerWorkforceIdentityBasedOauth2ClientIdFirstPartyOauth2ClientId(original["first_party_oauth2_client_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedFirstPartyOauth2ClientId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["firstPartyOauth2ClientId"] = transformedFirstPartyOauth2ClientId
+	}
+
+	transformedThirdPartyOauth2ClientId, err := expandBackupDRManagementServerWorkforceIdentityBasedOauth2ClientIdThirdPartyOauth2ClientId(original["third_party_oauth2_client_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedThirdPartyOauth2ClientId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["thirdPartyOauth2ClientId"] = transformedThirdPartyOauth2ClientId
+	}
+
+	return transformed, nil
+}
+
+func expandBackupDRManagementServerWorkforceIdentityBasedOauth2ClientIdFirstPartyOauth2ClientId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBackupDRManagementServerWorkforceIdentityBasedOauth2ClientIdThirdPartyOauth2ClientId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBackupDRManagementServerEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }

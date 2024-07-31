@@ -30,12 +30,12 @@ import (
 )
 
 func init() {
-	sweeper.AddTestSweepers("BackupDRManagementServer", testSweepBackupDRManagementServer)
+	sweeper.AddTestSweepers("BackupDRBackupVault", testSweepBackupDRBackupVault)
 }
 
 // At the time of writing, the CI only passes us-central1 as the region
-func testSweepBackupDRManagementServer(region string) error {
-	resourceName := "BackupDRManagementServer"
+func testSweepBackupDRBackupVault(region string) error {
+	resourceName := "BackupDRBackupVault"
 	log.Printf("[INFO][SWEEPER_LOG] Starting sweeper for %s", resourceName)
 
 	config, err := sweeper.SharedConfigForRegion(region)
@@ -64,7 +64,7 @@ func testSweepBackupDRManagementServer(region string) error {
 		},
 	}
 
-	listTemplate := strings.Split("https://autopush-backupdr.sandbox.googleapis.com/v1/projects/{{project}}/locations/{{location}}/managementServers", "?")[0]
+	listTemplate := strings.Split("https://autopush-backupdr.sandbox.googleapis.com/v1/projects/{{project}}/locations/{{location}}/backupVaults", "?")[0]
 	listUrl, err := tpgresource.ReplaceVars(d, config, listTemplate)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
@@ -83,7 +83,7 @@ func testSweepBackupDRManagementServer(region string) error {
 		return nil
 	}
 
-	resourceList, ok := res["managementServers"]
+	resourceList, ok := res["backupVaults"]
 	if !ok {
 		log.Printf("[INFO][SWEEPER_LOG] Nothing found in response.")
 		return nil
@@ -112,7 +112,7 @@ func testSweepBackupDRManagementServer(region string) error {
 			continue
 		}
 
-		deleteTemplate := "https://autopush-backupdr.sandbox.googleapis.com/v1/projects/{{project}}/locations/{{location}}/managementServers/{{management_server_id}}"
+		deleteTemplate := "https://autopush-backupdr.sandbox.googleapis.com/v1/projects/{{project}}/locations/{{location}}/backupVaults/{{backup_vault_id}}"
 		deleteUrl, err := tpgresource.ReplaceVars(d, config, deleteTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing delete url: %s", err)

@@ -501,7 +501,7 @@ var DefaultBasePaths = map[string]string{
 	AppEngineBasePathKey:                "https://appengine.googleapis.com/v1beta/",
 	ApphubBasePathKey:                   "https://apphub.googleapis.com/v1/",
 	ArtifactRegistryBasePathKey:         "https://artifactregistry.googleapis.com/v1/",
-	BackupDRBasePathKey:                 "https://backupdr.googleapis.com/v1/",
+	BackupDRBasePathKey:                 "https://autopush-backupdr.sandbox.googleapis.com/v1/",
 	BeyondcorpBasePathKey:               "https://beyondcorp.googleapis.com/v1/",
 	BiglakeBasePathKey:                  "https://biglake.googleapis.com/v1/",
 	BigQueryBasePathKey:                 "https://bigquery.googleapis.com/bigquery/v2/",

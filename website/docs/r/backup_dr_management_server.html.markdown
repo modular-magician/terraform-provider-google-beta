@@ -12,61 +12,18 @@
 #     .github/CONTRIBUTING.md.
 #
 # ----------------------------------------------------------------------------
-subcategory: "Backup and DR"
+subcategory: "Backup and DR Service"
 description: |-
-  A Backup and DR Management Server (Also referred as Management Console)
+  Description
 ---
 
 # google_backup_dr_management_server
 
-A Backup and DR Management Server (Also referred as Management Console)
+Description
 
 ~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
 See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
 
-To get more information about ManagementServer, see:
-
-* [API documentation](https://cloud.google.com/backup-disaster-recovery/docs/deployment/deployment-plan)
-* How-to Guides
-    * [Official Documentation](https://cloud.google.com/backup-disaster-recovery/docs)
-
-## Example Usage - Backup Dr Management Server
-
-
-```hcl
-resource "google_compute_network" "default" {
-  provider = google-beta
-  name = "vpc-network"
-}
-
-resource "google_compute_global_address" "private_ip_address" {
-  provider = google-beta
-  name          = "vpc-network"
-  address_type  = "INTERNAL"
-  purpose       = "VPC_PEERING"
-  prefix_length = 20
-  network       = google_compute_network.default.id
-}
-
-resource "google_service_networking_connection" "default" {
-  provider = google-beta
-  network                 = google_compute_network.default.id
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
-}
-
-resource "google_backup_dr_management_server" "ms-console" {
-  provider = google-beta
-  location = "us-central1"
-  name     = "ms-console"
-  type     = "BACKUP_RESTORE" 
-  networks {
-    network      = google_compute_network.default.id
-    peering_mode = "PRIVATE_SERVICE_ACCESS"
-  }
-  depends_on = [ google_service_networking_connection.default ]
-}
-```
 
 ## Argument Reference
 
@@ -75,90 +32,187 @@ The following arguments are supported:
 
 * `networks` -
   (Required)
-  Network details to create management server (management console).
+  Required. VPC networks to which the ManagementServer instance is connected. For this
+  version, only a single network is supported.
   Structure is [documented below](#nested_networks).
 
 * `location` -
   (Required)
-  The location for the management server (management console)
 
-* `name` -
+* `management_server_id` -
   (Required)
-  The name of management server (management console)
+  Required. The name of the management server to create. The name must be unique for
+  the specified project and location.
 
 
 <a name="nested_networks"></a>The `networks` block supports:
 
 * `network` -
-  (Required)
-  Network with format `projects/{{project_id}}/global/networks/{{network_id}}`
+  (Optional)
+  Optional. The resource name of the Google Compute Engine VPC network to which the
+  ManagementServer instance is connected.
 
 * `peering_mode` -
   (Optional)
-  Type of Network peeringMode
-  Default value is `PRIVATE_SERVICE_ACCESS`.
-  Possible values are: `PRIVATE_SERVICE_ACCESS`.
+  Optional. The network connect mode of the ManagementServer instance. For this
+  version, only PRIVATE_SERVICE_ACCESS is supported. 
+   Possible values:
+   PEERING_MODE_UNSPECIFIED
+  PRIVATE_SERVICE_ACCESS
 
 - - -
 
 
+* `description` -
+  (Optional)
+  Optional. The description of the ManagementServer instance (2048 characters or less).
+
+* `labels` -
+  (Optional)
+  Optional. Resource labels to represent user provided metadata.
+  Labels currently defined:
+  1. migrate_from_go=
+     If set to true, the MS is created in migration ready mode. 
+  **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
+  Please refer to the field `effective_labels` for all of the labels present on the resource.
+
 * `type` -
   (Optional)
-  The type of management server (management console).
-  Default value is `BACKUP_RESTORE`.
-  Possible values are: `BACKUP_RESTORE`.
+  Optional. The type of the ManagementServer resource. 
+   Possible values:
+   INSTANCE_TYPE_UNSPECIFIED
+  BACKUP_RESTORE
+
+* `management_uri` -
+  (Optional)
+  ManagementURI for the Management Server resource.
+  Structure is [documented below](#nested_management_uri).
+
+* `workforce_identity_based_management_uri` -
+  (Optional)
+  ManagementURI depending on the Workforce Identity i.e. either 1p or 3p.
+  Structure is [documented below](#nested_workforce_identity_based_management_uri).
+
+* `etag` -
+  (Optional)
+  Optional. Server specified ETag for the ManagementServer resource to prevent
+  simultaneous updates from overwiting each other.
+
+* `workforce_identity_based_oauth2_client_id` -
+  (Optional)
+  OAuth Client ID depending on the Workforce Identity i.e. either 1p or 3p,
+  Structure is [documented below](#nested_workforce_identity_based_oauth2_client_id).
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
 
+<a name="nested_management_uri"></a>The `management_uri` block supports:
+
+* `web_ui` -
+  (Output)
+  Output only. The ManagementServer AGM/RD WebUI URL.
+
+* `api` -
+  (Output)
+  Output only. The ManagementServer AGM/RD API URL.
+
+<a name="nested_workforce_identity_based_management_uri"></a>The `workforce_identity_based_management_uri` block supports:
+
+* `first_party_management_uri` -
+  (Output)
+  Output only. First party Management URI for Google Identities.
+
+* `third_party_management_uri` -
+  (Output)
+  Output only. Third party Management URI for External Identity Providers.
+
+<a name="nested_workforce_identity_based_oauth2_client_id"></a>The `workforce_identity_based_oauth2_client_id` block supports:
+
+* `first_party_oauth2_client_id` -
+  (Output)
+  Output only. First party OAuth Client ID for Google Identities.
+
+* `third_party_oauth2_client_id` -
+  (Output)
+  Output only. Third party OAuth Client ID for External Identity Providers.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/managementServers/{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/managementServers/{{management_server_id}}`
+
+* `name` -
+  Output only. Identifier. The resource name.
+
+* `create_time` -
+  Output only. The time when the instance was created.
+
+* `update_time` -
+  Output only. The time when the instance was updated.
+
+* `state` -
+  Output only. The ManagementServer state. 
+   Possible values:
+   INSTANCE_STATE_UNSPECIFIED
+  CREATING
+  READY
+  UPDATING
+  DELETING
+  REPAIRING
+  MAINTENANCE
+  ERROR
 
 * `oauth2_client_id` -
-  The oauth2ClientId of management console.
+  Output only. The OAuth 2.0 client id is required to make API calls to the BackupDR
+  instance API of this ManagementServer. This is the value that should
+  be provided in the 'aud' field of the OIDC ID Token (see openid
+  specification
+  https://openid.net/specs/openid-connect-core-1_0.html#IDToken).
 
-* `management_uri` -
-  The management console URI
-  Structure is [documented below](#nested_management_uri).
+* `ba_proxy_uri` -
+  Output only. The hostname or ip address of the exposed AGM endpoints, used by BAs to
+  connect to BA proxy.
 
+* `satisfies_pzs` -
+  Output only. Reserved for future use.
 
-<a name="nested_management_uri"></a>The `management_uri` block contains:
+* `satisfies_pzi` -
+  Output only. Reserved for future use.
 
-* `web_ui` -
-  (Output)
-  The management console webUi.
+* `terraform_labels` -
+  The combination of labels configured directly on the resource
+   and default labels configured on the provider.
 
-* `api` -
-  (Output)
-  The management console api endpoint.
+* `effective_labels` -
+  All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.
+
 
 ## Timeouts
 
 This resource provides the following
 [Timeouts](https://developer.hashicorp.com/terraform/plugin/sdkv2/resources/retries-and-customizable-timeouts) configuration options:
 
-- `create` - Default is 40 minutes.
-- `delete` - Default is 40 minutes.
+- `create` - Default is 20 minutes.
+- `update` - Default is 20 minutes.
+- `delete` - Default is 20 minutes.
 
 ## Import
 
 
 ManagementServer can be imported using any of these accepted formats:
 
-* `projects/{{project}}/locations/{{location}}/managementServers/{{name}}`
-* `{{project}}/{{location}}/{{name}}`
-* `{{location}}/{{name}}`
+* `projects/{{project}}/locations/{{location}}/managementServers/{{management_server_id}}`
+* `{{project}}/{{location}}/{{management_server_id}}`
+* `{{location}}/{{management_server_id}}`
 
 
 In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import ManagementServer using one of the formats above. For example:
 
 ```tf
 import {
-  id = "projects/{{project}}/locations/{{location}}/managementServers/{{name}}"
+  id = "projects/{{project}}/locations/{{location}}/managementServers/{{management_server_id}}"
   to = google_backup_dr_management_server.default
 }
 ```
@@ -166,9 +220,9 @@ import {
 When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), ManagementServer can be imported using one of the formats above. For example:
 
 ```
-$ terraform import google_backup_dr_management_server.default projects/{{project}}/locations/{{location}}/managementServers/{{name}}
-$ terraform import google_backup_dr_management_server.default {{project}}/{{location}}/{{name}}
-$ terraform import google_backup_dr_management_server.default {{location}}/{{name}}
+$ terraform import google_backup_dr_management_server.default projects/{{project}}/locations/{{location}}/managementServers/{{management_server_id}}
+$ terraform import google_backup_dr_management_server.default {{project}}/{{location}}/{{management_server_id}}
+$ terraform import google_backup_dr_management_server.default {{location}}/{{management_server_id}}
 ```
 
 ## User Project Overrides
