@@ -49,6 +49,9 @@ func TestAccIapAppEngineServiceIamBindingGenerated(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"archive": {},
+		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIapAppEngineServiceIamBinding_basicGenerated(context),
@@ -93,6 +96,9 @@ func TestAccIapAppEngineServiceIamMemberGenerated(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"archive": {},
+		},
 		Steps: []resource.TestStep{
 			{
 				// Test Iam Member creation (no update for member, no need to test)
@@ -128,6 +134,9 @@ func TestAccIapAppEngineServiceIamPolicyGenerated(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"archive": {},
+		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIapAppEngineServiceIamPolicy_basicGenerated(context),
@@ -172,6 +181,9 @@ func TestAccIapAppEngineServiceIamBindingGenerated_withCondition(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"archive": {},
+		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIapAppEngineServiceIamBinding_withConditionGenerated(context),
@@ -208,6 +220,9 @@ func TestAccIapAppEngineServiceIamBindingGenerated_withAndWithoutCondition(t *te
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"archive": {},
+		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIapAppEngineServiceIamBinding_withAndWithoutConditionGenerated(context),
@@ -254,6 +269,9 @@ func TestAccIapAppEngineServiceIamMemberGenerated_withCondition(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"archive": {},
+		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIapAppEngineServiceIamMember_withConditionGenerated(context),
@@ -290,6 +308,9 @@ func TestAccIapAppEngineServiceIamMemberGenerated_withAndWithoutCondition(t *tes
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"archive": {},
+		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIapAppEngineServiceIamMember_withAndWithoutConditionGenerated(context),
@@ -340,6 +361,9 @@ func TestAccIapAppEngineServiceIamPolicyGenerated_withCondition(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"archive": {},
+		},
 		Steps: []resource.TestStep{
 			{
 				Config: testAccIapAppEngineServiceIamPolicy_withConditionGenerated(context),
@@ -390,10 +414,16 @@ resource "google_storage_bucket" "bucket" {
   location = "US"
 }
 
+data "archive_file" "app" {
+  type        = "zip"
+  source_dir = "./test-fixtures/hello-world-node-standard"
+  output_path = "./test-fixtures/hello-world-node-standard.zip"
+}
+
 resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./test-fixtures/hello-world.zip"
+  source = data.archive_file.app.output_path
 }
 
 resource "google_app_engine_standard_app_version" "version" {
@@ -460,10 +490,16 @@ resource "google_storage_bucket" "bucket" {
   location = "US"
 }
 
+data "archive_file" "app" {
+  type        = "zip"
+  source_dir = "./test-fixtures/hello-world-node-standard"
+  output_path = "./test-fixtures/hello-world-node-standard.zip"
+}
+
 resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./test-fixtures/hello-world.zip"
+  source = data.archive_file.app.output_path
 }
 
 resource "google_app_engine_standard_app_version" "version" {
@@ -545,10 +581,16 @@ resource "google_storage_bucket" "bucket" {
   location = "US"
 }
 
+data "archive_file" "app" {
+  type        = "zip"
+  source_dir = "./test-fixtures/hello-world-node-standard"
+  output_path = "./test-fixtures/hello-world-node-standard.zip"
+}
+
 resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./test-fixtures/hello-world.zip"
+  source = data.archive_file.app.output_path
 }
 
 resource "google_app_engine_standard_app_version" "version" {
@@ -617,10 +659,16 @@ resource "google_storage_bucket" "bucket" {
   location = "US"
 }
 
+data "archive_file" "app" {
+  type        = "zip"
+  source_dir = "./test-fixtures/hello-world-node-standard"
+  output_path = "./test-fixtures/hello-world-node-standard.zip"
+}
+
 resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./test-fixtures/hello-world.zip"
+  source = data.archive_file.app.output_path
 }
 
 resource "google_app_engine_standard_app_version" "version" {
@@ -687,10 +735,16 @@ resource "google_storage_bucket" "bucket" {
   location = "US"
 }
 
+data "archive_file" "app" {
+  type        = "zip"
+  source_dir = "./test-fixtures/hello-world-node-standard"
+  output_path = "./test-fixtures/hello-world-node-standard.zip"
+}
+
 resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./test-fixtures/hello-world.zip"
+  source = data.archive_file.app.output_path
 }
 
 resource "google_app_engine_standard_app_version" "version" {
@@ -757,10 +811,16 @@ resource "google_storage_bucket" "bucket" {
   location = "US"
 }
 
+data "archive_file" "app" {
+  type        = "zip"
+  source_dir = "./test-fixtures/hello-world-node-standard"
+  output_path = "./test-fixtures/hello-world-node-standard.zip"
+}
+
 resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./test-fixtures/hello-world.zip"
+  source = data.archive_file.app.output_path
 }
 
 resource "google_app_engine_standard_app_version" "version" {
@@ -832,10 +892,16 @@ resource "google_storage_bucket" "bucket" {
   location = "US"
 }
 
+data "archive_file" "app" {
+  type        = "zip"
+  source_dir = "./test-fixtures/hello-world-node-standard"
+  output_path = "./test-fixtures/hello-world-node-standard.zip"
+}
+
 resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./test-fixtures/hello-world.zip"
+  source = data.archive_file.app.output_path
 }
 
 resource "google_app_engine_standard_app_version" "version" {
@@ -929,10 +995,16 @@ resource "google_storage_bucket" "bucket" {
   location = "US"
 }
 
+data "archive_file" "app" {
+  type        = "zip"
+  source_dir = "./test-fixtures/hello-world-node-standard"
+  output_path = "./test-fixtures/hello-world-node-standard.zip"
+}
+
 resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./test-fixtures/hello-world.zip"
+  source = data.archive_file.app.output_path
 }
 
 resource "google_app_engine_standard_app_version" "version" {
@@ -1004,10 +1076,16 @@ resource "google_storage_bucket" "bucket" {
   location = "US"
 }
 
+data "archive_file" "app" {
+  type        = "zip"
+  source_dir = "./test-fixtures/hello-world-node-standard"
+  output_path = "./test-fixtures/hello-world-node-standard.zip"
+}
+
 resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./test-fixtures/hello-world.zip"
+  source = data.archive_file.app.output_path
 }
 
 resource "google_app_engine_standard_app_version" "version" {
@@ -1101,10 +1179,16 @@ resource "google_storage_bucket" "bucket" {
   location = "US"
 }
 
+data "archive_file" "app" {
+  type        = "zip"
+  source_dir = "./test-fixtures/hello-world-node-standard"
+  output_path = "./test-fixtures/hello-world-node-standard.zip"
+}
+
 resource "google_storage_bucket_object" "object" {
   name   = "hello-world.zip"
   bucket = google_storage_bucket.bucket.name
-  source = "./test-fixtures/hello-world.zip"
+  source = data.archive_file.app.output_path
 }
 
 resource "google_app_engine_standard_app_version" "version" {

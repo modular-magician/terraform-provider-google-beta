@@ -161,7 +161,10 @@ func TestAccComputeRegionNetworkEndpointGroup_regionNetworkEndpointGroupAppengin
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckComputeRegionNetworkEndpointGroupDestroyProducer(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"archive": {},
+		},
+		CheckDestroy: testAccCheckComputeRegionNetworkEndpointGroupDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccComputeRegionNetworkEndpointGroup_regionNetworkEndpointGroupAppengineExample(context),
@@ -243,10 +246,16 @@ resource "google_storage_bucket" "appengine_neg" {
   location = "US"
 }
 
+data "archive_file" "app" {
+  type        = "zip"
+  source_dir = "./test-fixtures/hello-world-node-standard"
+  output_path = "./test-fixtures/hello-world-node-standard.zip"
+}
+
 resource "google_storage_bucket_object" "appengine_neg" {
   name   = "hello-world.zip"
   bucket = google_storage_bucket.appengine_neg.name
-  source = "./test-fixtures/hello-world.zip"
+  source = data.archive_file.app.output_path
 }
 `, context)
 }
