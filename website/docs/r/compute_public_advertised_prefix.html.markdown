@@ -70,6 +70,11 @@ The following arguments are supported:
   (Optional)
   An optional description of this resource.
 
+* `status` -
+  (Optional)
+  The status of the public advertised prefix.
+  Possible values are: `INITIAL`, `PTR_CONFIGURED`, `VALIDATED`, `REVERSE_DNS_LOOKUP_FAILED`, `PREFIX_CONFIGURATION_IN_PROGRESS`, `PREFIX_CONFIGURATION_COMPLETE`, `PREFIX_REMOVAL_IN_PROGRESS`.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -82,6 +87,12 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `shared_secret` -
   Output Only. The shared secret to be used for reverse DNS verification.
+  public_advertised_prefix_update_get_.fingerprint.go
+
+* `fingerprint` -
+  Output Only. Fingerprint of this resource. A hash of the contents stored in this object. This field is used in optimistic locking.
+  This field will be ignored when inserting a new PublicAdvertisedPrefix.
+  An up-to-date fingerprint must be provided in order to update the PublicAdvertisedPrefix, otherwise the request will fail with error 412 conditionNotMet.
 * `self_link` - The URI of the created resource.
 
 
@@ -91,6 +102,7 @@ This resource provides the following
 [Timeouts](https://developer.hashicorp.com/terraform/plugin/sdkv2/resources/retries-and-customizable-timeouts) configuration options:
 
 - `create` - Default is 20 minutes.
+- `update` - Default is 20 minutes.
 - `delete` - Default is 20 minutes.
 
 ## Import

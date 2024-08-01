@@ -29,12 +29,14 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
 
 func ResourceComputePublicAdvertisedPrefix() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceComputePublicAdvertisedPrefixCreate,
 		Read:   resourceComputePublicAdvertisedPrefixRead,
+		Update: resourceComputePublicAdvertisedPrefixUpdate,
 		Delete: resourceComputePublicAdvertisedPrefixDelete,
 
 		Importer: &schema.ResourceImporter{
@@ -43,6 +45,7 @@ func ResourceComputePublicAdvertisedPrefix() *schema.Resource {
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(20 * time.Minute),
+			Update: schema.DefaultTimeout(20 * time.Minute),
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 
@@ -80,10 +83,25 @@ except the last character, which cannot be a dash.`,
 				ForceNew:    true,
 				Description: `An optional description of this resource.`,
 			},
+			"status": {
+				Type:         schema.TypeString,
+				Computed:     true,
+				Optional:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"INITIAL", "PTR_CONFIGURED", "VALIDATED", "REVERSE_DNS_LOOKUP_FAILED", "PREFIX_CONFIGURATION_IN_PROGRESS", "PREFIX_CONFIGURATION_COMPLETE", "PREFIX_REMOVAL_IN_PROGRESS", ""}),
+				Description:  `The status of the public advertised prefix. Possible values: ["INITIAL", "PTR_CONFIGURED", "VALIDATED", "REVERSE_DNS_LOOKUP_FAILED", "PREFIX_CONFIGURATION_IN_PROGRESS", "PREFIX_CONFIGURATION_COMPLETE", "PREFIX_REMOVAL_IN_PROGRESS"]`,
+			},
+			"fingerprint": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `Output Only. Fingerprint of this resource. A hash of the contents stored in this object. This field is used in optimistic locking.
+This field will be ignored when inserting a new PublicAdvertisedPrefix.
+An up-to-date fingerprint must be provided in order to update the PublicAdvertisedPrefix, otherwise the request will fail with error 412 conditionNotMet.`,
+			},
 			"shared_secret": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Output Only. The shared secret to be used for reverse DNS verification.`,
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `Output Only. The shared secret to be used for reverse DNS verification.
+public_advertised_prefix_update_get_.fingerprint.go`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -131,6 +149,12 @@ func resourceComputePublicAdvertisedPrefixCreate(d *schema.ResourceData, meta in
 		return err
 	} else if v, ok := d.GetOkExists("ip_cidr_range"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipCidrRangeProp)) && (ok || !reflect.DeepEqual(v, ipCidrRangeProp)) {
 		obj["ipCidrRange"] = ipCidrRangeProp
+	}
+	statusProp, err := expandComputePublicAdvertisedPrefixStatus(d.Get("status"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("status"); !tpgresource.IsEmptyValue(reflect.ValueOf(statusProp)) && (ok || !reflect.DeepEqual(v, statusProp)) {
+		obj["status"] = statusProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/publicAdvertisedPrefixes")
@@ -182,6 +206,12 @@ func resourceComputePublicAdvertisedPrefixCreate(d *schema.ResourceData, meta in
 		// The resource didn't actually create
 		d.SetId("")
 		return fmt.Errorf("Error waiting to create PublicAdvertisedPrefix: %s", err)
+	}
+
+	if v, ok := d.GetOkExists("status"); !tpgresource.IsEmptyValue(reflect.ValueOf(statusProp)) && (ok || !reflect.DeepEqual(v, statusProp)) {
+		log.Printf("[DEBUG] Calling update after create to patch in google_compute_public_advertised_prefix")
+		// staus on google_compute_public_advertised_prefix cannot be added on create
+		return resourceComputePublicAdvertisedPrefixUpdate(d, meta)
 	}
 
 	log.Printf("[DEBUG] Finished creating PublicAdvertisedPrefix %q: %#v", d.Id(), res)
@@ -243,7 +273,13 @@ func resourceComputePublicAdvertisedPrefixRead(d *schema.ResourceData, meta inte
 	if err := d.Set("ip_cidr_range", flattenComputePublicAdvertisedPrefixIpCidrRange(res["ipCidrRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
+	if err := d.Set("status", flattenComputePublicAdvertisedPrefixStatus(res["status"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
+	}
 	if err := d.Set("shared_secret", flattenComputePublicAdvertisedPrefixSharedSecret(res["sharedSecret"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
+	}
+	if err := d.Set("fingerprint", flattenComputePublicAdvertisedPrefixFingerprint(res["fingerprint"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
 	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
@@ -251,6 +287,75 @@ func resourceComputePublicAdvertisedPrefixRead(d *schema.ResourceData, meta inte
 	}
 
 	return nil
+}
+
+func resourceComputePublicAdvertisedPrefixUpdate(d *schema.ResourceData, meta interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	if err != nil {
+		return err
+	}
+
+	billingProject := ""
+
+	project, err := tpgresource.GetProject(d, config)
+	if err != nil {
+		return fmt.Errorf("Error fetching project for PublicAdvertisedPrefix: %s", err)
+	}
+	billingProject = project
+
+	obj := make(map[string]interface{})
+	statusProp, err := expandComputePublicAdvertisedPrefixStatus(d.Get("status"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("status"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, statusProp)) {
+		obj["status"] = statusProp
+	}
+
+	obj, err = resourceComputePublicAdvertisedPrefixUpdateEncoder(d, meta, obj)
+	if err != nil {
+		return err
+	}
+
+	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/publicAdvertisedPrefixes/{{name}}")
+	if err != nil {
+		return err
+	}
+
+	log.Printf("[DEBUG] Updating PublicAdvertisedPrefix %q: %#v", d.Id(), obj)
+	headers := make(http.Header)
+
+	// err == nil indicates that the billing_project value was found
+	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+		billingProject = bp
+	}
+
+	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "PATCH",
+		Project:   billingProject,
+		RawURL:    url,
+		UserAgent: userAgent,
+		Body:      obj,
+		Timeout:   d.Timeout(schema.TimeoutUpdate),
+		Headers:   headers,
+	})
+
+	if err != nil {
+		return fmt.Errorf("Error updating PublicAdvertisedPrefix %q: %s", d.Id(), err)
+	} else {
+		log.Printf("[DEBUG] Finished updating PublicAdvertisedPrefix %q: %#v", d.Id(), res)
+	}
+
+	err = ComputeOperationWaitTime(
+		config, res, project, "Updating PublicAdvertisedPrefix", userAgent,
+		d.Timeout(schema.TimeoutUpdate))
+
+	if err != nil {
+		return err
+	}
+
+	return resourceComputePublicAdvertisedPrefixRead(d, meta)
 }
 
 func resourceComputePublicAdvertisedPrefixDelete(d *schema.ResourceData, meta interface{}) error {
@@ -345,7 +450,15 @@ func flattenComputePublicAdvertisedPrefixIpCidrRange(v interface{}, d *schema.Re
 	return v
 }
 
+func flattenComputePublicAdvertisedPrefixStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputePublicAdvertisedPrefixSharedSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputePublicAdvertisedPrefixFingerprint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -363,4 +476,18 @@ func expandComputePublicAdvertisedPrefixDnsVerificationIp(v interface{}, d tpgre
 
 func expandComputePublicAdvertisedPrefixIpCidrRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandComputePublicAdvertisedPrefixStatus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func resourceComputePublicAdvertisedPrefixUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	if d.HasChange("status") {
+		fingerPrint := d.Get("fingerprint")
+		if v, ok := d.GetOkExists("fingerprint"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, fingerPrint)) {
+			obj["fingerprint"] = fingerPrint
+		}
+	}
+	return obj, nil
 }
