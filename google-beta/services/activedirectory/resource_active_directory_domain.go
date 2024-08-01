@@ -107,6 +107,15 @@ If CIDR subnets overlap between networks, domain creation will fail.`,
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Description: `A map of resource manager tags. Resource manager tag keys and values have the same definition
+as resource manager tags. Keys must be in the format tagKeys/{tag_key_id}, and values are in
+the format tagValues/456. The field is ignored (both PUT & PATCH) when empty.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
+			},
 			"effective_labels": {
 				Type:        schema.TypeMap,
 				Computed:    true,
@@ -184,6 +193,12 @@ func resourceActiveDirectoryDomainCreate(d *schema.ResourceData, meta interface{
 		return err
 	} else if v, ok := d.GetOkExists("admin"); !tpgresource.IsEmptyValue(reflect.ValueOf(adminProp)) && (ok || !reflect.DeepEqual(v, adminProp)) {
 		obj["admin"] = adminProp
+	}
+	tagsProp, err := expandActiveDirectoryDomainTags(d.Get("tags"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tags"); !tpgresource.IsEmptyValue(reflect.ValueOf(tagsProp)) && (ok || !reflect.DeepEqual(v, tagsProp)) {
+		obj["tags"] = tagsProp
 	}
 	labelsProp, err := expandActiveDirectoryDomainEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -590,6 +605,17 @@ func expandActiveDirectoryDomainLocations(v interface{}, d tpgresource.Terraform
 
 func expandActiveDirectoryDomainAdmin(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandActiveDirectoryDomainTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }
 
 func expandActiveDirectoryDomainEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
