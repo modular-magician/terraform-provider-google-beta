@@ -215,6 +215,48 @@ Removed in favor of the field `lifecycle_rule.condition.send_age_if_zero` which 
 
 For a seamless update, if your state today uses `no_age=true`, update it to remove `no_age` and set `send_age_if_zero=false`. If you do not use `no_age=true`, you will need to add `send_age_if_zero=true` to your state to avoid any changes after updating to 6.0.0. 
 
+## Resource: `google_container_cluster`
+
+### Three label-related fields are now present
+
+* `resource_labels` field is non-authoritative and only manages the labels defined by
+the users on the resource through Terraform.
+* The new output-only `terraform_labels` field merges the labels defined by the users
+on the resource through Terraform and the default labels configured on the provider.
+* The new output-only `effective_labels` field lists all of labels present on the resource
+in GCP, including the labels configured through Terraform, the system, and other clients.
+
+## Data source: `google_container_cluster`
+
+### Three label-related fields are now present
+
+All three of `resource_labels`, `effective_labels` and `terraform_labels` will now be present.
+All of these three fields include all of the labels present on the resource in GCP including
+the labels configured through Terraform, the system, and other clients, equivalent to
+`effective_labels` on the resource.
+
+## Resource: `google_edgenetwork_network`
+
+### Three label-related fields are now present
+
+* `labels` field is non-authoritative and only manages the labels defined by
+the users on the resource through Terraform.
+* The new output-only `terraform_labels` field merges the labels defined by the users
+on the resource through Terraform and the default labels configured on the provider.
+* The new output-only `effective_labels` field lists all of labels present on the resource
+in GCP, including the labels configured through Terraform, the system, and other clients.
+
+## Resource: `google_edgenetwork_subnet`
+
+### Three label-related fields are now present
+
+* `labels` field is non-authoritative and only manages the labels defined by
+the users on the resource through Terraform.
+* The new output-only `terraform_labels` field merges the labels defined by the users
+on the resource through Terraform and the default labels configured on the provider.
+* The new output-only `effective_labels` field lists all of labels present on the resource
+in GCP, including the labels configured through Terraform, the system, and other clients.
+
 ## Removals
 
 ### Resource: `google_identity_platform_project_default_config` is now removed
