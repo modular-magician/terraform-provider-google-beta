@@ -36,7 +36,7 @@ resource "google_logging_project_bucket_config" "logging_log_view" {
     project        = "my-project-name"
     location       = "global"
     retention_days = 30
-    bucket_id      = "_Default"
+    bucket_id      = "redacted-logs"
 }
 
 resource "google_logging_log_view" "logging_log_view" {
