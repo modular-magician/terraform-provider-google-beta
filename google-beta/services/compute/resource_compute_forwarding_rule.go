@@ -268,6 +268,23 @@ must be omitted for all other load balancer types.`,
 				Description: `An optional description of this resource. Provide this property when
 you create the resource.`,
 			},
+			"ip_collection": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `Resource reference of a PublicDelegatedPrefix. The PDP must be a sub-PDP
+in EXTERNAL_IPV6_FORWARDING_RULE_CREATION mode.
+
+Use one of the following formats to specify a sub-PDP when creating an
+IPv6 NetLB forwarding rule using BYOIP:
+
+Full resource URL, as in:
+  * 'https://www.googleapis.com/compute/v1/projects/{{projectId}}/regions/{{region}}/publicDelegatedPrefixes/{{sub-pdp-name}}'
+
+Partial URL, as in:
+  * 'projects/{{projectId}}/regions/region/publicDelegatedPrefixes/{{sub-pdp-name}}'
+  * 'regions/{{region}}/publicDelegatedPrefixes/{{sub-pdp-name}}'`,
+			},
 			"ip_version": {
 				Type:         schema.TypeString,
 				Computed:     true,
@@ -719,6 +736,12 @@ func resourceComputeForwardingRuleCreate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("ip_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipVersionProp)) && (ok || !reflect.DeepEqual(v, ipVersionProp)) {
 		obj["ipVersion"] = ipVersionProp
 	}
+	ipCollectionProp, err := expandComputeForwardingRuleIpCollection(d.Get("ip_collection"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("ip_collection"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipCollectionProp)) && (ok || !reflect.DeepEqual(v, ipCollectionProp)) {
+		obj["ipCollection"] = ipCollectionProp
+	}
 	labelsProp, err := expandComputeForwardingRuleEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -981,6 +1004,9 @@ func resourceComputeForwardingRuleRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
 	if err := d.Set("ip_version", flattenComputeForwardingRuleIpVersion(res["ipVersion"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ForwardingRule: %s", err)
+	}
+	if err := d.Set("ip_collection", flattenComputeForwardingRuleIpCollection(res["ipCollection"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ForwardingRule: %s", err)
 	}
 	if err := d.Set("terraform_labels", flattenComputeForwardingRuleTerraformLabels(res["labels"], d, config)); err != nil {
@@ -1467,6 +1493,10 @@ func flattenComputeForwardingRuleIpVersion(v interface{}, d *schema.ResourceData
 	return v
 }
 
+func flattenComputeForwardingRuleIpCollection(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeForwardingRuleTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1677,6 +1707,10 @@ func expandComputeForwardingRuleNoAutomateDnsZone(v interface{}, d tpgresource.T
 }
 
 func expandComputeForwardingRuleIpVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeForwardingRuleIpCollection(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

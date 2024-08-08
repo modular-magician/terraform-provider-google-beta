@@ -513,6 +513,82 @@ resource "google_compute_region_health_check" "hc" {
 `, context)
 }
 
+func TestAccComputeForwardingRule_forwardingRuleExternallbIpv6Example(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeForwardingRuleDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeForwardingRule_forwardingRuleExternallbIpv6Example(context),
+			},
+			{
+				ResourceName:            "google_compute_forwarding_rule.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"backend_service", "labels", "network", "no_automate_dns_zone", "port_range", "region", "subnetwork", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccComputeForwardingRule_forwardingRuleExternallbIpv6Example(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_public_advertised_prefix" "advertised" {
+  name                = "tf-test-my-pap%{random_suffix}"
+  description         = "my description"
+  dns_verification_ip = "2001:db8::55"
+  ip_cidr_range       = "2001:db8::/40"
+  pdp_scope           = "REGIONAL"
+}
+
+resource "google_compute_public_delegated_prefix" "pdp" {
+  name          = "tf-test-my-pdp%{random_suffix}"
+  region        = "us-central1"
+  description   = "my description"
+  ip_cidr_range = "2001:db8::/48"
+  mode          = "EXTERNAL_IPV6_FORWARDING_RULE_CREATION"
+  parent_prefix = google_compute_public_advertised_prefix.advertised.id
+}
+resource "google_compute_forwarding_rule" "default" {
+  name                  = "tf-test-website-forwarding-rule%{random_suffix}"
+  region                = "us-central1"
+  port_range            = 80
+  ip_protocol           = "TCP"
+  ip_version            = "IPV6"
+  load_balancing_scheme = "EXTERNAL"
+  ip_address            = "2001:db8::1/96"
+  network_tier          = "PREMIUM"
+  backend_service       = google_compute_region_backend_service.backend.id
+  ip_collection         = google_compute_public_delegated_prefix.pdp.id
+}
+
+resource "google_compute_region_backend_service" "backend" {
+  name                  = "tf-test-website-backend%{random_suffix}"
+  region                = "us-central1"
+  load_balancing_scheme = "EXTERNAL"
+  health_checks         = [google_compute_region_health_check.hc.id]
+}
+
+resource "google_compute_region_health_check" "hc" {
+  name               = "check-tf-test-website-backend%{random_suffix}"
+  check_interval_sec = 1
+  timeout_sec        = 1
+  region             = "us-central1"
+
+  tcp_health_check {
+    port = "80"
+  }
+}
+`, context)
+}
+
 func TestAccComputeForwardingRule_forwardingRuleGlobalInternallbExample(t *testing.T) {
 	t.Parallel()
 
