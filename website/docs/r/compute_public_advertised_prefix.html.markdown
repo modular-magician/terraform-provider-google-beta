@@ -39,6 +39,18 @@ resource "google_compute_public_advertised_prefix" "prefixes" {
   ip_cidr_range = "127.127.0.0/16"
 }
 ```
+## Example Usage - Public Advertised Prefixes Ipv6
+
+
+```hcl
+resource "google_compute_public_advertised_prefix" "prefixes" {
+  name                = "my-prefix"
+  description         = "description"
+  dns_verification_ip = "2001:db8::55"
+  ip_cidr_range       = "2001:db8::/40"
+  pdp_scope           = "REGIONAL"
+}
+```
 
 ## Argument Reference
 
@@ -60,7 +72,7 @@ The following arguments are supported:
 
 * `ip_cidr_range` -
   (Required)
-  The IPv4 address range, in CIDR format, represented by this public advertised prefix.
+  The address range, in CIDR format, represented by this public advertised prefix.
 
 
 - - -
@@ -69,6 +81,14 @@ The following arguments are supported:
 * `description` -
   (Optional)
   An optional description of this resource.
+
+* `pdp_scope` -
+  (Optional)
+  Specifies how child public delegated prefix will be scoped. It could be one of following values:
+  REGIONAL: The public delegated prefix is regional only. The provisioning will take a few minutes.
+  GLOBAL: The public delegated prefix is global only. The provisioning will take ~4 weeks.
+  GLOBAL_AND_REGIONAL [output only]: The public delegated prefixes is BYOIP V1 legacy prefix. This is output only value and no longer supported in BYOIP V2.
+  Possible values are: `REGIONAL`, `GLOBAL`, `GLOBAL_AND_REGIONAL`.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

@@ -47,6 +47,25 @@ resource "google_compute_public_delegated_prefix" "prefixes" {
   parent_prefix = google_compute_public_advertised_prefix.advertised.id
 }
 ```
+## Example Usage - Public Delegated Prefixes Ipv6
+
+
+```hcl
+resource "google_compute_public_advertised_prefix" "advertised" {
+  name                = "my-prefix"
+  description         = "description"
+  dns_verification_ip = "2001:db8::55"
+  ip_cidr_range       = "2001:db8::/40"
+}
+
+resource "google_compute_public_delegated_prefix" "prefixes" {
+  name          = "my-prefix"
+  region        = "us-central1"
+  description   = "my description"
+  ip_cidr_range = "2001:db8::/48"
+  parent_prefix = google_compute_public_advertised_prefix.advertised.id
+}
+```
 
 ## Argument Reference
 
@@ -72,7 +91,7 @@ The following arguments are supported:
 
 * `ip_cidr_range` -
   (Required)
-  The IPv4 address range, in CIDR format, represented by this public advertised prefix.
+  The IP address range, in CIDR format, represented by this public delegated prefix.
 
 
 - - -
@@ -85,6 +104,11 @@ The following arguments are supported:
 * `is_live_migration` -
   (Optional)
   If true, the prefix will be live migrated.
+
+* `mode` -
+  (Optional)
+  The public delegated prefix mode for IPv6 only.
+  Possible values are: `DELEGATION`, `EXTERNAL_IPV6_FORWARDING_RULE_CREATION`.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

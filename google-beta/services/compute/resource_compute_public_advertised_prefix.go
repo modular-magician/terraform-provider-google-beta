@@ -29,6 +29,7 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
 
 func ResourceComputePublicAdvertisedPrefix() *schema.Resource {
@@ -61,7 +62,7 @@ func ResourceComputePublicAdvertisedPrefix() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: `The IPv4 address range, in CIDR format, represented by this public advertised prefix.`,
+				Description: `The address range, in CIDR format, represented by this public advertised prefix.`,
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -79,6 +80,17 @@ except the last character, which cannot be a dash.`,
 				Optional:    true,
 				ForceNew:    true,
 				Description: `An optional description of this resource.`,
+			},
+			"pdp_scope": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"REGIONAL", "GLOBAL", "GLOBAL_AND_REGIONAL", ""}),
+				Description: `Specifies how child public delegated prefix will be scoped. It could be one of following values:
+
+REGIONAL: The public delegated prefix is regional only. The provisioning will take a few minutes.
+GLOBAL: The public delegated prefix is global only. The provisioning will take ~4 weeks.
+GLOBAL_AND_REGIONAL [output only]: The public delegated prefixes is BYOIP V1 legacy prefix. This is output only value and no longer supported in BYOIP V2. Possible values: ["REGIONAL", "GLOBAL", "GLOBAL_AND_REGIONAL"]`,
 			},
 			"shared_secret": {
 				Type:        schema.TypeString,
@@ -131,6 +143,12 @@ func resourceComputePublicAdvertisedPrefixCreate(d *schema.ResourceData, meta in
 		return err
 	} else if v, ok := d.GetOkExists("ip_cidr_range"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipCidrRangeProp)) && (ok || !reflect.DeepEqual(v, ipCidrRangeProp)) {
 		obj["ipCidrRange"] = ipCidrRangeProp
+	}
+	pdpScopeProp, err := expandComputePublicAdvertisedPrefixPdpScope(d.Get("pdp_scope"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("pdp_scope"); !tpgresource.IsEmptyValue(reflect.ValueOf(pdpScopeProp)) && (ok || !reflect.DeepEqual(v, pdpScopeProp)) {
+		obj["pdpScope"] = pdpScopeProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/publicAdvertisedPrefixes")
@@ -246,6 +264,9 @@ func resourceComputePublicAdvertisedPrefixRead(d *schema.ResourceData, meta inte
 	if err := d.Set("shared_secret", flattenComputePublicAdvertisedPrefixSharedSecret(res["sharedSecret"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
+	if err := d.Set("pdp_scope", flattenComputePublicAdvertisedPrefixPdpScope(res["pdpScope"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
+	}
 	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
 		return fmt.Errorf("Error reading PublicAdvertisedPrefix: %s", err)
 	}
@@ -349,6 +370,10 @@ func flattenComputePublicAdvertisedPrefixSharedSecret(v interface{}, d *schema.R
 	return v
 }
 
+func flattenComputePublicAdvertisedPrefixPdpScope(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandComputePublicAdvertisedPrefixDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -362,5 +387,9 @@ func expandComputePublicAdvertisedPrefixDnsVerificationIp(v interface{}, d tpgre
 }
 
 func expandComputePublicAdvertisedPrefixIpCidrRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicAdvertisedPrefixPdpScope(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

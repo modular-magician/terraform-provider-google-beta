@@ -29,6 +29,7 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
 
 func ResourceComputePublicDelegatedPrefix() *schema.Resource {
@@ -55,7 +56,7 @@ func ResourceComputePublicDelegatedPrefix() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: `The IPv4 address range, in CIDR format, represented by this public advertised prefix.`,
+				Description: `The IP address range, in CIDR format, represented by this public delegated prefix.`,
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -92,6 +93,13 @@ except the last character, which cannot be a dash.`,
 				Optional:    true,
 				ForceNew:    true,
 				Description: `If true, the prefix will be live migrated.`,
+			},
+			"mode": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"DELEGATION", "EXTERNAL_IPV6_FORWARDING_RULE_CREATION", ""}),
+				Description:  `The public delegated prefix mode for IPv6 only. Possible values: ["DELEGATION", "EXTERNAL_IPV6_FORWARDING_RULE_CREATION"]`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -145,6 +153,12 @@ func resourceComputePublicDelegatedPrefixCreate(d *schema.ResourceData, meta int
 		return err
 	} else if v, ok := d.GetOkExists("ip_cidr_range"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipCidrRangeProp)) && (ok || !reflect.DeepEqual(v, ipCidrRangeProp)) {
 		obj["ipCidrRange"] = ipCidrRangeProp
+	}
+	modeProp, err := expandComputePublicDelegatedPrefixMode(d.Get("mode"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("mode"); !tpgresource.IsEmptyValue(reflect.ValueOf(modeProp)) && (ok || !reflect.DeepEqual(v, modeProp)) {
+		obj["mode"] = modeProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/publicDelegatedPrefixes")
@@ -260,6 +274,9 @@ func resourceComputePublicDelegatedPrefixRead(d *schema.ResourceData, meta inter
 	if err := d.Set("ip_cidr_range", flattenComputePublicDelegatedPrefixIpCidrRange(res["ipCidrRange"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
+	if err := d.Set("mode", flattenComputePublicDelegatedPrefixMode(res["mode"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
+	}
 	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
@@ -364,6 +381,10 @@ func flattenComputePublicDelegatedPrefixIpCidrRange(v interface{}, d *schema.Res
 	return v
 }
 
+func flattenComputePublicDelegatedPrefixMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandComputePublicDelegatedPrefixDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -381,5 +402,9 @@ func expandComputePublicDelegatedPrefixParentPrefix(v interface{}, d tpgresource
 }
 
 func expandComputePublicDelegatedPrefixIpCidrRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
