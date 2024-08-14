@@ -428,7 +428,7 @@ func ResourceComputeRegionInstanceGroupManager() *schema.Resource {
 				},
 			},
 			"stateful_internal_ip": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: `External IPs considered stateful by the instance group. `,
 				Elem: &schema.Resource{
@@ -449,7 +449,7 @@ func ResourceComputeRegionInstanceGroupManager() *schema.Resource {
 				},
 			},
 			"stateful_external_ip": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: `External IPs considered stateful by the instance group. `,
 				Elem: &schema.Resource{
@@ -836,10 +836,10 @@ func resourceComputeRegionInstanceGroupManagerRead(d *schema.ResourceData, meta 
 	if err = d.Set("status", flattenStatus(manager.Status)); err != nil {
 		return fmt.Errorf("Error setting status in state: %s", err.Error())
 	}
-	if err = d.Set("stateful_internal_ip", flattenStatefulPolicyStatefulInternalIps(d, manager.StatefulPolicy)); err != nil {
+	if err = d.Set("stateful_internal_ip", flattenStatefulPolicyStatefulInternalIps(manager.StatefulPolicy)); err != nil {
 		return fmt.Errorf("Error setting stateful_internal_ip in state: %s", err.Error())
 	}
-	if err = d.Set("stateful_external_ip", flattenStatefulPolicyStatefulExternalIps(d, manager.StatefulPolicy)); err != nil {
+	if err = d.Set("stateful_external_ip", flattenStatefulPolicyStatefulExternalIps(manager.StatefulPolicy)); err != nil {
 		return fmt.Errorf("Error setting stateful_external_ip in state: %s", err.Error())
 	}
 	// If unset in state set to default value
