@@ -14,7 +14,6 @@ import (
 )
 
 func TestAccAppEngineFlexibleAppVersion_update(t *testing.T) {
-	t.Skip("https://github.com/hashicorp/terraform-provider-google/issues/18239")
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -77,6 +76,28 @@ resource "google_project_service" "appengineflex" {
   depends_on = [google_project_service.compute]
 }
 
+resource "google_project_service" "appengine" {
+  provider = google-beta
+  project = google_project.my_project.project_id
+  service = "appengine.googleapis.com"
+
+  disable_dependent_services = false
+  depends_on = [google_project_service.compute]
+}
+
+resource "google_project_service_identity" "gae_flex_sa" {
+  provider = google-beta
+
+  project = google_project_service.appengineflex.project
+  service = "appengineflex.googleapis.com"
+}
+
+// <PROJECT_ID>@appspot.gserviceaccount.com
+data "google_app_engine_default_service_account" "default" {
+  provider = google-beta
+  project = google_project_service.appengine.project
+}
+
 resource "google_compute_network" "network" {
   provider = google-beta
   project                 = google_project_service.compute.project
@@ -100,12 +121,27 @@ resource "google_app_engine_application" "app" {
   location_id = "us-central"
 }
 
-resource "google_project_iam_member" "gae_api" {
+resource "google_project_iam_member" "network_user_gae_sa" {
   provider = google-beta
   project = google_project_service.appengineflex.project
   role    = "roles/compute.networkUser"
-  member  = "serviceAccount:service-${google_project.my_project.number}@gae-api-prod.google.com.iam.gserviceaccount.com"
+  member  = "serviceAccount:${data.google_app_engine_default_service_account.default.email}"
 }
+
+resource "google_project_iam_member" "storage_admin_gae_sa" {
+  provider = google-beta
+  project = google_project_service.appengineflex.project
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${data.google_app_engine_default_service_account.default.email}"
+}
+
+resource "google_project_iam_member" "storage_admin_gae_flex_sa" {
+  provider = google-beta
+  project = google_project_service.appengineflex.project
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_project_service_identity.gae_flex_sa.email}"
+}
+
 
 resource "google_app_engine_standard_app_version" "foo" {
   provider = google-beta
@@ -121,12 +157,12 @@ resource "google_app_engine_standard_app_version" "foo" {
   deployment {
     files {
       name = "main.py"
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.main.name}"
+      source_url = google_storage_bucket_object.main.media_link
     }
 
     files {
       name = "requirements.txt"
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.requirements.name}"
+      source_url = google_storage_bucket_object.requirements.media_link
     }
   }
 
@@ -135,6 +171,10 @@ resource "google_app_engine_standard_app_version" "foo" {
   }
 
   noop_on_destroy = true
+  depends_on = [
+    google_project_iam_member.network_user_gae_sa,
+    google_project_iam_member.storage_admin_gae_sa
+  ]
 }
 
 resource "google_app_engine_flexible_app_version" "foo" {
@@ -164,17 +204,17 @@ resource "google_app_engine_flexible_app_version" "foo" {
   deployment {
     files {
       name = "main.py"
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.main.name}"
+      source_url = google_storage_bucket_object.main.media_link
     }
 
     files {
       name = "requirements.txt"
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.requirements.name}"
+      source_url = google_storage_bucket_object.requirements.media_link
     }
 
     files {
       name = "app.yaml"
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.yaml.name}"
+      source_url = google_storage_bucket_object.yaml.media_link
     }
   }
 
@@ -204,7 +244,10 @@ resource "google_app_engine_flexible_app_version" "foo" {
 
   noop_on_destroy = true
 
-  depends_on = [google_app_engine_standard_app_version.foo]
+  depends_on = [
+    google_app_engine_standard_app_version.foo,
+    google_project_iam_member.storage_admin_gae_flex_sa,
+  ]
 }
 
 resource "google_storage_bucket" "bucket" {
@@ -263,6 +306,28 @@ resource "google_project_service" "appengineflex" {
   depends_on = [google_project_service.compute]
 }
 
+resource "google_project_service" "appengine" {
+  provider = google-beta
+  project = google_project.my_project.project_id
+  service = "appengine.googleapis.com"
+
+  disable_dependent_services = false
+  depends_on = [google_project_service.compute]
+}
+
+resource "google_project_service_identity" "gae_flex_sa" {
+  provider = google-beta
+
+  project = google_project_service.appengineflex.project
+  service = "appengineflex.googleapis.com"
+}
+
+// <PROJECT_ID>@appspot.gserviceaccount.com
+data "google_app_engine_default_service_account" "default" {
+  provider = google-beta
+  project = google_project_service.appengine.project
+}
+
 resource "google_compute_network" "network" {
   provider = google-beta
   project                 = google_project_service.compute.project
@@ -286,11 +351,25 @@ resource "google_app_engine_application" "app" {
   location_id = "us-central"
 }
 
-resource "google_project_iam_member" "gae_api" {
+resource "google_project_iam_member" "network_user_gae_sa" {
   provider = google-beta
   project = google_project_service.appengineflex.project
   role    = "roles/compute.networkUser"
-  member  = "serviceAccount:service-${google_project.my_project.number}@gae-api-prod.google.com.iam.gserviceaccount.com"
+  member  = "serviceAccount:${data.google_app_engine_default_service_account.default.email}"
+}
+
+resource "google_project_iam_member" "storage_admin_gae_sa" {
+  provider = google-beta
+  project = google_project_service.appengineflex.project
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${data.google_app_engine_default_service_account.default.email}"
+}
+
+resource "google_project_iam_member" "storage_admin_gae_flex_sa" {
+  provider = google-beta
+  project = google_project_service.appengineflex.project
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_project_service_identity.gae_flex_sa.email}"
 }
 
 resource "google_app_engine_standard_app_version" "foo" {
@@ -307,12 +386,12 @@ resource "google_app_engine_standard_app_version" "foo" {
   deployment {
     files {
       name = "main.py"
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.main.name}"
+      source_url = google_storage_bucket_object.main.media_link
     }
 
     files {
       name = "requirements.txt"
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.requirements.name}"
+      source_url = google_storage_bucket_object.requirements.media_link
     }
   }
 
@@ -321,6 +400,10 @@ resource "google_app_engine_standard_app_version" "foo" {
   }
 
   noop_on_destroy = true
+  depends_on = [
+    google_project_iam_member.network_user_gae_sa,
+    google_project_iam_member.storage_admin_gae_sa
+  ]
 }
 
 resource "google_app_engine_flexible_app_version" "foo" {
@@ -350,17 +433,17 @@ resource "google_app_engine_flexible_app_version" "foo" {
   deployment {
     files {
       name = "main.py"
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.main.name}"
+      source_url = google_storage_bucket_object.main.media_link
     }
 
     files {
       name = "requirements.txt"
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.requirements.name}"
+      source_url = google_storage_bucket_object.requirements.media_link
     }
 
     files {
       name = "app.yaml"
-      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.yaml.name}"
+      source_url = google_storage_bucket_object.yaml.media_link
     }
   }
 
@@ -390,7 +473,10 @@ resource "google_app_engine_flexible_app_version" "foo" {
 
   delete_service_on_destroy = true
   
-  depends_on = [google_app_engine_standard_app_version.foo]
+  depends_on = [
+    google_app_engine_standard_app_version.foo,
+    google_project_iam_member.storage_admin_gae_flex_sa,
+  ]
 }
 
 resource "google_storage_bucket" "bucket" {
