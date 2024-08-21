@@ -67,7 +67,6 @@ resource "google_project" "project" {
   project_id = "tf-test-project-id%{random_suffix}"
   name       = "tf-test-project-id%{random_suffix}"
   org_id     = "%{org_id}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -139,7 +138,6 @@ resource "google_project" "project" {
   project_id      = "tf-test-project-id%{random_suffix}"
   name            = "tf-test-project-id%{random_suffix}"
   org_id          = "%{org_id}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {

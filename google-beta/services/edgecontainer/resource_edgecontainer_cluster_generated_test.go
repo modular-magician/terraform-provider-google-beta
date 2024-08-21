@@ -31,7 +31,6 @@ import (
 )
 
 func TestAccEdgecontainerCluster_edgecontainerClusterExample(t *testing.T) {
-	acctest.SkipIfVcr(t)
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -88,7 +87,6 @@ data "google_project" "project" {}
 }
 
 func TestAccEdgecontainerCluster_edgecontainerClusterWithMaintenanceWindowExample(t *testing.T) {
-	acctest.SkipIfVcr(t)
 	t.Parallel()
 
 	context := map[string]interface{}{

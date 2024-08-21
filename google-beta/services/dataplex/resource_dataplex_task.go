@@ -51,7 +51,7 @@ func ResourceDataplexTask() *schema.Resource {
 		},
 
 		CustomizeDiff: customdiff.All(
-			tpgresource.SetLabelsDiffWithoutAttributionLabel,
+			tpgresource.SetLabelsDiff,
 			tpgresource.DefaultProviderProject,
 		),
 

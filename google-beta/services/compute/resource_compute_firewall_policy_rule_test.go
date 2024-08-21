@@ -154,7 +154,6 @@ func testAccComputeFirewallPolicyRule_securityProfileGroup_basic(context map[str
 resource "google_folder" "folder" {
   display_name = "tf-test-folder-%{random_suffix}"
   parent       = "%{org_name}"
-  deletion_protection = false
 }
 
 resource "google_network_security_security_profile" "security_profile" {
@@ -204,7 +203,6 @@ func testAccComputeFirewallPolicyRule_securityProfileGroup_update(context map[st
 resource "google_folder" "folder" {
   display_name = "tf-test-folder-%{random_suffix}"
   parent       = "%{org_name}"
-  deletion_protection = false
 }
 
 resource "google_network_security_security_profile" "security_profile" {
@@ -280,7 +278,6 @@ resource "google_compute_network" "network2" {
 resource "google_folder" "folder" {
   display_name = "tf-test-folder-%{random_suffix}"
   parent       = "%{org_name}"
-  deletion_protection = false
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
@@ -346,7 +343,6 @@ resource "google_compute_network" "network2" {
 resource "google_folder" "folder" {
   display_name = "tf-test-folder-%{random_suffix}"
   parent       = "%{org_name}"
-  deletion_protection = false
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
@@ -422,7 +418,6 @@ resource "google_compute_network" "network2" {
 resource "google_folder" "folder" {
   display_name = "tf-test-folder-%{random_suffix}"
   parent       = "%{org_name}"
-  deletion_protection = false
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
@@ -474,7 +469,6 @@ func testAccComputeFirewallPolicyRule_multiple(context map[string]interface{}) s
 resource "google_folder" "folder" {
   display_name = "tf-test-folder-%{random_suffix}"
   parent       = "%{org_name}"
-  deletion_protection = false
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
@@ -547,7 +541,6 @@ func testAccComputeFirewallPolicyRule_multipleAdd(context map[string]interface{}
 resource "google_folder" "folder" {
   display_name = "tf-test-folder-%{random_suffix}"
   parent       = "%{org_name}"
-  deletion_protection = false
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
@@ -641,7 +634,6 @@ func testAccComputeFirewallPolicyRule_multipleRemove(context map[string]interfac
 resource "google_folder" "folder" {
   display_name = "tf-test-folder-%{random_suffix}"
   parent       = "%{org_name}"
-  deletion_protection = false
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {

@@ -312,7 +312,6 @@ func testAccFolderOrganizationPolicy_boolean(org, folder string, enforced bool) 
 resource "google_folder" "orgpolicy" {
   display_name = "%s"
   parent       = "%s"
-  deletion_protection = false
 }
 
 resource "google_folder_organization_policy" "bool" {
@@ -332,7 +331,6 @@ func testAccFolderOrganizationPolicy_list_allowAll(org, folder string) string {
 resource "google_folder" "orgpolicy" {
   display_name = "%s"
   parent       = "%s"
-  deletion_protection = false
 }
 
 resource "google_folder_organization_policy" "list" {
@@ -353,7 +351,6 @@ func testAccFolderOrganizationPolicy_list_allowSome(org, folder, project string)
 resource "google_folder" "orgpolicy" {
   display_name = "%s"
   parent       = "%s"
-  deletion_protection = false
 }
 
 resource "google_folder_organization_policy" "list" {
@@ -374,7 +371,6 @@ func testAccFolderOrganizationPolicy_list_denySome(org, folder string) string {
 resource "google_folder" "orgpolicy" {
   display_name = "%s"
   parent       = "%s"
-  deletion_protection = false
 }
 
 resource "google_folder_organization_policy" "list" {
@@ -398,7 +394,6 @@ func testAccFolderOrganizationPolicy_restore_defaultTrue(org, folder string) str
 resource "google_folder" "orgpolicy" {
   display_name = "%s"
   parent       = "%s"
-  deletion_protection = false
 }
 
 resource "google_folder_organization_policy" "restore" {

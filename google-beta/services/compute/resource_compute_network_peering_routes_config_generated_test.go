@@ -87,7 +87,6 @@ resource "google_compute_network" "network_secondary" {
 }
 
 func TestAccComputeNetworkPeeringRoutesConfig_networkPeeringRoutesConfigGkeExample(t *testing.T) {
-	acctest.SkipIfVcr(t)
 	t.Parallel()
 
 	context := map[string]interface{}{

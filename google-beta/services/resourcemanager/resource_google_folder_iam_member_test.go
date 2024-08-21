@@ -129,7 +129,6 @@ func testAccFolderAssociateMemberBasic(org, fname string) string {
 resource "google_folder" "acceptance" {
   parent       = "organizations/%s"
   display_name = "%s"
-  deletion_protection = false
 }
 
 resource "google_folder_iam_member" "acceptance" {
@@ -145,7 +144,6 @@ func testAccFolderAssociateMemberMultiple(org, fname string) string {
 resource "google_folder" "acceptance" {
   parent       = "organizations/%s"
   display_name = "%s"
-  deletion_protection = false
 }
 
 resource "google_folder_iam_member" "acceptance" {

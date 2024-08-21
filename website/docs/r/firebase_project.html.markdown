@@ -47,7 +47,6 @@ resource "google_project" "default" {
   project_id = "my-project"
   name       = "my-project"
   org_id     = "123456789"
-  deletion_policy = "DELETE"
 
   labels = {
     "firebase" = "enabled"

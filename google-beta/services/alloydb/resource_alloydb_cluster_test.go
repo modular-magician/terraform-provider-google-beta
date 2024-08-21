@@ -52,9 +52,7 @@ func testAccAlloydbCluster_update(context map[string]interface{}) string {
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
 
   labels = {
 	foo = "bar" 
@@ -192,9 +190,7 @@ func testAccAlloydbCluster_withInitialUserAndAutomatedBackupPolicy(context map[s
 resource "google_alloydb_cluster" "default" {
   cluster_id   = "tf-test-alloydb-cluster%{random_suffix}"
   location     = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network      = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
 
   initial_user {
     user     = "tf-test-alloydb-cluster%{random_suffix}"
@@ -244,9 +240,7 @@ func testAccAlloydbCluster_withoutInitialUserAndAutomatedBackupPolicy(context ma
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   lifecycle {
     prevent_destroy = true
   }  
@@ -291,9 +285,7 @@ func testAccAlloydbCluster_missingWeeklySchedule(context map[string]interface{})
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   automated_backup_policy {
     location      = "us-central1"
     backup_window = "1800s"
@@ -394,9 +386,7 @@ func testAccAlloydbCluster_withTimeBasedRetentionPolicy(context map[string]inter
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   automated_backup_policy {
     location      = "us-central1"
     backup_window = "1800s"
@@ -437,9 +427,7 @@ func testAccAlloydbCluster_withoutTimeBasedRetentionPolicy(context map[string]in
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   automated_backup_policy {
     location      = "us-central1"
     backup_window = "1800s"
@@ -502,9 +490,7 @@ func testAccAlloydbCluster_usingCMEK(context map[string]interface{}) string {
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   encryption_config {
     kms_key_name = google_kms_crypto_key.key.id
   }
@@ -579,9 +565,7 @@ func testAccAlloydbCluster_usingCMEKInClusterAndAutomatedBackup(context map[stri
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   encryption_config {
     kms_key_name = google_kms_crypto_key.key.id
   }
@@ -631,9 +615,7 @@ func testAccAlloydbCluster_updateCMEKInAutomatedBackup(context map[string]interf
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   encryption_config {
     kms_key_name = google_kms_crypto_key.key.id
   }
@@ -694,9 +676,7 @@ func testAccAlloydbCluster_usingCMEKallowDeletion(context map[string]interface{}
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   encryption_config {
     kms_key_name = google_kms_crypto_key.key.id
   }
@@ -943,9 +923,7 @@ func testAccAlloydbCluster_withoutContinuousBackupConfig(context map[string]inte
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   lifecycle {
     prevent_destroy = true
   }
@@ -965,9 +943,7 @@ func testAccAlloydbCluster_continuousBackupConfig(context map[string]interface{}
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
 
   continuous_backup_config {
     enabled              = %{enabled}
@@ -1046,9 +1022,7 @@ func testAccAlloydbCluster_usingCMEKInClusterAndContinuousBackup(context map[str
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   continuous_backup_config {
     enabled       		 = true
 	recovery_window_days = 20
@@ -1081,9 +1055,7 @@ func testAccAlloydbCluster_continuousBackupUsingCMEKAllowDeletion(context map[st
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   continuous_backup_config {
     enabled       		 = true
 	recovery_window_days = 20
@@ -1139,7 +1111,7 @@ resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
   network_config {
-		network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+	network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   }
 }
 data "google_project" "project" {}
@@ -1180,8 +1152,8 @@ resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
   network_config {
-		network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-		allocated_ip_range = google_compute_global_address.private_ip_alloc.name
+	network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+	allocated_ip_range = google_compute_global_address.private_ip_alloc.name
   }
 }
 data "google_project" "project" {}
@@ -1230,7 +1202,7 @@ resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
   network_config {
-		network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
+	network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   }
   maintenance_update_policy {
     maintenance_windows {
@@ -1282,9 +1254,7 @@ func testAccAlloydbCluster_withMaintenanceWindowMissingStartTime(context map[str
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   
   maintenance_update_policy {
     maintenance_windows {
@@ -1306,9 +1276,7 @@ func testAccAlloydbCluster_withMaintenanceWindowMissingDay(context map[string]in
 resource "google_alloydb_cluster" "default" {
   cluster_id = "tf-test-alloydb-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
-  }
+  network    = "projects/${data.google_project.project.number}/global/networks/${google_compute_network.default.name}"
   
   maintenance_update_policy {
     maintenance_windows {

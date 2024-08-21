@@ -39,7 +39,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobFullUpdate(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_job.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "launch_stage", "labels", "terraform_labels", "annotations", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"location", "launch_stage", "labels", "terraform_labels", "annotations"},
 			},
 		},
 	})
@@ -118,7 +118,6 @@ func testAccCloudRunV2Job_cloudrunv2JobFullUpdate(context map[string]interface{}
 resource "google_cloud_run_v2_job" "default" {
   name     = "tf-test-cloudrun-job%{random_suffix}"
   location = "us-central1"
-  deletion_protection = false
   binary_authorization {
     use_default = true
     breakglass_justification = "Some justification"
@@ -231,7 +230,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobWithDirectVPCUpdate(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_job.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "launch_stage", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"location", "launch_stage"},
 			},
 			{
 				Config: testAccCloudRunV2Job_cloudrunv2JobWithDirectVPCAndNamedBinAuthPolicyUpdate(context),
@@ -240,7 +239,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobWithDirectVPCUpdate(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_job.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "launch_stage", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"location", "launch_stage"},
 			},
 		},
 	})
@@ -251,8 +250,6 @@ func testAccCloudRunV2Job_cloudrunv2JobWithDirectVPC(context map[string]interfac
   resource "google_cloud_run_v2_job" "default" {
     name     = "%{job_name}"
     location = "us-central1"
-    deletion_protection = false
-    launch_stage = "BETA"
     template {
       template {
         containers {
@@ -280,8 +277,6 @@ func testAccCloudRunV2Job_cloudrunv2JobWithDirectVPCAndNamedBinAuthPolicyUpdate(
   resource "google_cloud_run_v2_job" "default" {
     name     = "%{job_name}"
     location = "us-central1"
-    deletion_protection = false
-    launch_stage = "BETA"
     binary_authorization {
       policy = "projects/%{project}/platforms/cloudRun/policies/my-policy"
       breakglass_justification = "Some justification"
@@ -311,7 +306,6 @@ func testAccCloudRunV2Job_cloudrunv2JobWithDirectVPCAndNamedBinAuthPolicyUpdate(
 }
 
 func TestAccCloudRunV2Job_cloudrunv2JobWithGcsUpdate(t *testing.T) {
-	acctest.SkipIfVcr(t)
 	t.Parallel()
 
 	jobName := fmt.Sprintf("tf-test-cloudrun-service%s", acctest.RandString(t, 10))
@@ -331,7 +325,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobWithGcsUpdate(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_job.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "launch_stage", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"location", "launch_stage"},
 			},
 			{
 				Config: testAccCloudRunV2Job_cloudrunv2JobWithGcsVolume(context),
@@ -340,7 +334,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobWithGcsUpdate(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_job.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "launch_stage", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"location", "launch_stage"},
 			},
 		},
 	})
@@ -351,7 +345,6 @@ func testAccCloudRunV2Job_cloudrunv2JobWithNoVolume(context map[string]interface
   resource "google_cloud_run_v2_job" "default" {
     name     = "%{job_name}"
     location = "us-central1"
-    deletion_protection = false
     launch_stage = "BETA"
     template {
       template {
@@ -375,7 +368,6 @@ func testAccCloudRunV2Job_cloudrunv2JobWithGcsVolume(context map[string]interfac
   resource "google_cloud_run_v2_job" "default" {
     name     = "%{job_name}"
     location = "us-central1"
-    deletion_protection = false
     launch_stage = "BETA"
     template {
       template {
@@ -400,7 +392,6 @@ func testAccCloudRunV2Job_cloudrunv2JobWithGcsVolume(context map[string]interfac
 }
 
 func TestAccCloudRunV2Job_cloudrunv2JobWithNfsUpdate(t *testing.T) {
-	acctest.SkipIfVcr(t)
 	t.Parallel()
 
 	jobName := fmt.Sprintf("tf-test-cloudrun-service%s", acctest.RandString(t, 10))
@@ -420,7 +411,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobWithNfsUpdate(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_job.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "launch_stage", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"location", "launch_stage"},
 			},
 			{
 				Config: testAccCloudRunV2Job_cloudrunv2JobWithNfsVolume(context),
@@ -429,7 +420,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobWithNfsUpdate(t *testing.T) {
 				ResourceName:            "google_cloud_run_v2_job.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "launch_stage", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"location", "launch_stage"},
 			},
 		},
 	})
@@ -440,7 +431,6 @@ func testAccCloudRunV2Job_cloudrunv2JobWithNfsVolume(context map[string]interfac
   resource "google_cloud_run_v2_job" "default" {
     name     = "%{job_name}"
     location = "us-central1"
-    deletion_protection = false
     launch_stage = "BETA"
     template {
       template {
@@ -490,7 +480,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobWithStartExecutionTokenUpdate(t *testing.
 				ResourceName:            "google_cloud_run_v2_job.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "launch_stage", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"location", "launch_stage"},
 			},
 			{
 				Config: testAccCloudRunV2Job_cloudrunv2JobWithStartExecutionToken(context2),
@@ -499,7 +489,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobWithStartExecutionTokenUpdate(t *testing.
 				ResourceName:            "google_cloud_run_v2_job.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "launch_stage", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"location", "launch_stage"},
 			},
 		},
 	})
@@ -510,7 +500,6 @@ func testAccCloudRunV2Job_cloudrunv2JobWithStartExecutionToken(context map[strin
   resource "google_cloud_run_v2_job" "default" {
     name     = "%{job_name}"
     location = "us-central1"
-    deletion_protection = false
     start_execution_token = "%{token}"
     template {
       template {
@@ -548,7 +537,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobWithRunExecutionTokenUpdate(t *testing.T)
 				ResourceName:            "google_cloud_run_v2_job.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "launch_stage", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"location", "launch_stage"},
 			},
 			{
 				Config: testAccCloudRunV2Job_cloudrunv2JobWithRunExecutionToken(context2),
@@ -557,7 +546,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobWithRunExecutionTokenUpdate(t *testing.T)
 				ResourceName:            "google_cloud_run_v2_job.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "launch_stage", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"location", "launch_stage"},
 			},
 		},
 	})
@@ -568,7 +557,6 @@ func testAccCloudRunV2Job_cloudrunv2JobWithRunExecutionToken(context map[string]
   resource "google_cloud_run_v2_job" "default" {
     name     = "%{job_name}"
     location = "us-central1"
-    deletion_protection = false
     run_execution_token = "%{token}"
     template {
       template {

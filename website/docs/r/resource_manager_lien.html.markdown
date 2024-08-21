@@ -37,7 +37,6 @@ resource "google_resource_manager_lien" "lien" {
 resource "google_project" "project" {
   project_id = "staging-project"
   name       = "A very important project!"
-  deletion_policy = "DELETE"
 }
 ```
 

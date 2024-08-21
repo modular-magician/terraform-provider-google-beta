@@ -137,9 +137,8 @@ func TestAccFirebaseHostingVersion_firebasehostingVersionCloudRunExample(t *test
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"project_id":          envvar.GetTestProjectFromEnv(),
-		"deletion_protection": false,
-		"random_suffix":       acctest.RandString(t, 10),
+		"project_id":    envvar.GetTestProjectFromEnv(),
+		"random_suffix": acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -153,7 +152,7 @@ func TestAccFirebaseHostingVersion_firebasehostingVersionCloudRunExample(t *test
 				ResourceName:            "google_firebase_hosting_version.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "site_id", "version_id"},
+				ImportStateVerifyIgnore: []string{"site_id", "version_id"},
 			},
 		},
 	})
@@ -181,8 +180,6 @@ resource "google_cloud_run_v2_service" "default" {
       image = "us-docker.pkg.dev/cloudrun/container/hello"
     }
   }
-
-  deletion_protection = "%{deletion_protection}"
 }
 
 resource "google_firebase_hosting_version" "default" {
