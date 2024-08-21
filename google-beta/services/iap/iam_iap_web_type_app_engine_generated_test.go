@@ -399,7 +399,6 @@ resource "google_project" "project" {
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -438,7 +437,6 @@ resource "google_project" "project" {
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -491,7 +489,6 @@ resource "google_project" "project" {
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -532,7 +529,6 @@ resource "google_project" "project" {
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -571,7 +567,6 @@ resource "google_project" "project" {
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -610,7 +605,6 @@ resource "google_project" "project" {
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -654,7 +648,6 @@ resource "google_project" "project" {
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -718,7 +711,6 @@ resource "google_project" "project" {
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -762,7 +754,6 @@ resource "google_project" "project" {
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {
@@ -826,7 +817,6 @@ resource "google_project" "project" {
   project_id = "%{project_id}"
   org_id     = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "time_sleep" "wait_60_seconds" {

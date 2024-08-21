@@ -69,7 +69,6 @@ resource "google_project" "rejected_producer_project" {
     name            = "prj-rejected"
     org_id          = "123456789"
     billing_account = "000000-0000000-0000000-000000"
-    deletion_policy = "DELETE"
 }
 
 resource "google_project" "accepted_producer_project" {
@@ -77,7 +76,6 @@ resource "google_project" "accepted_producer_project" {
     name            = "prj-accepted"
     org_id          = "123456789"
     billing_account = "000000-0000000-0000000-000000"
-    deletion_policy = "DELETE"
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">

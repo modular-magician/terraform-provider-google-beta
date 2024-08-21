@@ -133,11 +133,11 @@ If it is not provided, the provider region is used.`,
 				Description:   "Creates a unique name beginning with the specified prefix. Conflicts with name.",
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					// https://cloud.google.com/compute/docs/reference/latest/sslCertificates#resource
-					// uuid is 9 characters, limit the prefix to 54.
+					// uuid is 26 characters, limit the prefix to 37.
 					value := v.(string)
-					if len(value) > 54 {
+					if len(value) > 37 {
 						errors = append(errors, fmt.Errorf(
-							"%q cannot be longer than 54 characters, name is limited to 63", k))
+							"%q cannot be longer than 37 characters, name is limited to 63", k))
 					}
 					return
 				},
@@ -456,12 +456,7 @@ func expandComputeRegionSslCertificateName(v interface{}, d tpgresource.Terrafor
 	if v, ok := d.GetOk("name"); ok {
 		certName = v.(string)
 	} else if v, ok := d.GetOk("name_prefix"); ok {
-		prefix := v.(string)
-		if len(prefix) > 37 {
-			certName = tpgresource.ReducedPrefixedUniqueId(prefix)
-		} else {
-			certName = id.PrefixedUniqueId(prefix)
-		}
+		certName = id.PrefixedUniqueId(v.(string))
 	} else {
 		certName = id.UniqueId()
 	}

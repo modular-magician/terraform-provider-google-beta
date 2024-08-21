@@ -77,7 +77,6 @@ resource "google_project" "service_project" {
   name = "Service Project"
   org_id = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 # Enable Compute API
@@ -222,7 +221,6 @@ resource "google_project" "service_project" {
   name = "Service Project"
   org_id = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 # Enable Compute API

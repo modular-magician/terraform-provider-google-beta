@@ -96,7 +96,6 @@ resource "google_project" "project" {
   project_id = "tf-test-%s"
   name       = "tf-test-%s"
   org_id     = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_iam_binding" "bar" {
@@ -125,7 +124,6 @@ resource "google_project" "project" {
   project_id = "tf-test-%s"
   name       = "tf-test-%s"
   org_id     = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_iam_binding" "bar" {
@@ -154,7 +152,6 @@ resource "google_project" "project" {
   project_id = "tf-test-%s"
   name       = "tf-test-%s"
   org_id     = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_iam_binding" "bar" {
@@ -183,7 +180,6 @@ resource "google_project" "project" {
   project_id = "tf-test-%s"
   name       = "tf-test-%s"
   org_id     = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_iam_binding" "bar" {
@@ -212,7 +208,6 @@ resource "google_project" "project" {
   project_id = "tf-test-%s"
   name       = "tf-test-%s"
   org_id     = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_iam_binding" "bar" {
@@ -247,7 +242,6 @@ resource "google_project" "project" {
   project_id = "tf-test-%s"
   name       = "tf-test-%s"
   org_id     = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_iam_binding" "bar" {

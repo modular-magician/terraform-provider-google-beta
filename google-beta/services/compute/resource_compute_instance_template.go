@@ -90,14 +90,14 @@ func ResourceComputeInstanceTemplate() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: `Creates a unique name beginning with the specified prefix. Conflicts with name. Max length is 54 characters. Prefixes with lengths longer than 37 characters will use a shortened UUID that will be more prone to collisions.`,
+				Description: `Creates a unique name beginning with the specified prefix. Conflicts with name.`,
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					// https://cloud.google.com/compute/docs/reference/latest/instanceTemplates#resource
-					// shortened uuid is 9 characters, limit the prefix to 55.
+					// uuid is 26 characters, limit the prefix to 37.
 					value := v.(string)
-					if len(value) > 54 {
+					if len(value) > 37 {
 						errors = append(errors, fmt.Errorf(
-							"%q cannot be longer than 54 characters, name is limited to 63", k))
+							"%q cannot be longer than 37 characters, name is limited to 63", k))
 					}
 					return
 				},
@@ -1414,12 +1414,7 @@ func resourceComputeInstanceTemplateCreate(d *schema.ResourceData, meta interfac
 	if v, ok := d.GetOk("name"); ok {
 		itName = v.(string)
 	} else if v, ok := d.GetOk("name_prefix"); ok {
-		prefix := v.(string)
-		if len(prefix) > 37 {
-			itName = tpgresource.ReducedPrefixedUniqueId(prefix)
-		} else {
-			itName = id.PrefixedUniqueId(prefix)
-		}
+		itName = id.PrefixedUniqueId(v.(string))
 	} else {
 		itName = id.UniqueId()
 	}

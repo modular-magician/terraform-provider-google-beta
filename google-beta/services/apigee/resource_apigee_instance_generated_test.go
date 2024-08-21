@@ -66,7 +66,6 @@ resource "google_project" "project" {
   name            = "tf-test%{random_suffix}"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "apigee" {
@@ -159,7 +158,6 @@ resource "google_project" "project" {
   name            = "tf-test%{random_suffix}"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "apigee" {
@@ -253,7 +251,6 @@ resource "google_project" "project" {
   name            = "tf-test%{random_suffix}"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "apigee" {
@@ -349,7 +346,6 @@ resource "google_project" "project" {
   name            = "tf-test%{random_suffix}"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "apigee" {
@@ -504,7 +500,6 @@ resource "google_project" "project" {
   name            = "tf-test%{random_suffix}"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "apigee" {

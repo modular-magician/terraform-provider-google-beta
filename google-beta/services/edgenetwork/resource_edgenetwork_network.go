@@ -35,7 +35,6 @@ func ResourceEdgenetworkNetwork() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceEdgenetworkNetworkCreate,
 		Read:   resourceEdgenetworkNetworkRead,
-		Update: resourceEdgenetworkNetworkUpdate,
 		Delete: resourceEdgenetworkNetworkDelete,
 
 		Importer: &schema.ResourceImporter{
@@ -44,12 +43,10 @@ func ResourceEdgenetworkNetwork() *schema.Resource {
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(20 * time.Minute),
-			Update: schema.DefaultTimeout(20 * time.Minute),
 			Delete: schema.DefaultTimeout(30 * time.Minute),
 		},
 
 		CustomizeDiff: customdiff.All(
-			tpgresource.SetLabelsDiff,
 			tpgresource.DefaultProviderProject,
 		),
 
@@ -79,14 +76,11 @@ func ResourceEdgenetworkNetwork() *schema.Resource {
 				Description: `A free-text description of the resource. Max length 1024 characters.`,
 			},
 			"labels": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				Description: `Labels associated with this resource.
-
-
-**Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
-Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
-				Elem: &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeMap,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Labels associated with this resource.`,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"mtu": {
 				Type:        schema.TypeInt,
@@ -102,25 +96,11 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine
 fractional digits. Examples: '2014-10-02T15:01:23Z' and '2014-10-02T15:01:23.045123456Z'.`,
 			},
-			"effective_labels": {
-				Type:        schema.TypeMap,
-				Computed:    true,
-				ForceNew:    true,
-				Description: `All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.`,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-			},
 			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: `The canonical name of this resource, with format
 'projects/{{project}}/locations/{{location}}/zones/{{zone}}/networks/{{network_id}}'`,
-			},
-			"terraform_labels": {
-				Type:     schema.TypeMap,
-				Computed: true,
-				Description: `The combination of labels configured directly on the resource
- and default labels configured on the provider.`,
-				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 			"update_time": {
 				Type:     schema.TypeString,
@@ -148,6 +128,12 @@ func resourceEdgenetworkNetworkCreate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	obj := make(map[string]interface{})
+	labelsProp, err := expandEdgenetworkNetworkLabels(d.Get("labels"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
+		obj["labels"] = labelsProp
+	}
 	descriptionProp, err := expandEdgenetworkNetworkDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
@@ -159,12 +145,6 @@ func resourceEdgenetworkNetworkCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	} else if v, ok := d.GetOkExists("mtu"); !tpgresource.IsEmptyValue(reflect.ValueOf(mtuProp)) && (ok || !reflect.DeepEqual(v, mtuProp)) {
 		obj["mtu"] = mtuProp
-	}
-	labelsProp, err := expandEdgenetworkNetworkEffectiveLabels(d.Get("effective_labels"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{EdgenetworkBasePath}}projects/{{project}}/locations/{{location}}/zones/{{zone}}/networks?networkId={{network_id}}")
@@ -283,19 +263,8 @@ func resourceEdgenetworkNetworkRead(d *schema.ResourceData, meta interface{}) er
 	if err := d.Set("mtu", flattenEdgenetworkNetworkMtu(res["mtu"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Network: %s", err)
 	}
-	if err := d.Set("terraform_labels", flattenEdgenetworkNetworkTerraformLabels(res["labels"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Network: %s", err)
-	}
-	if err := d.Set("effective_labels", flattenEdgenetworkNetworkEffectiveLabels(res["labels"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Network: %s", err)
-	}
 
 	return nil
-}
-
-func resourceEdgenetworkNetworkUpdate(d *schema.ResourceData, meta interface{}) error {
-	// Only the root field "labels" and "terraform_labels" are mutable
-	return resourceEdgenetworkNetworkRead(d, meta)
 }
 
 func resourceEdgenetworkNetworkDelete(d *schema.ResourceData, meta interface{}) error {
@@ -381,18 +350,7 @@ func flattenEdgenetworkNetworkName(v interface{}, d *schema.ResourceData, config
 }
 
 func flattenEdgenetworkNetworkLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-
-	transformed := make(map[string]interface{})
-	if l, ok := d.GetOkExists("labels"); ok {
-		for k := range l.(map[string]interface{}) {
-			transformed[k] = v.(map[string]interface{})[k]
-		}
-	}
-
-	return transformed
+	return v
 }
 
 func flattenEdgenetworkNetworkDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -424,34 +382,7 @@ func flattenEdgenetworkNetworkMtu(v interface{}, d *schema.ResourceData, config 
 	return v // let terraform core handle it otherwise
 }
 
-func flattenEdgenetworkNetworkTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-
-	transformed := make(map[string]interface{})
-	if l, ok := d.GetOkExists("terraform_labels"); ok {
-		for k := range l.(map[string]interface{}) {
-			transformed[k] = v.(map[string]interface{})[k]
-		}
-	}
-
-	return transformed
-}
-
-func flattenEdgenetworkNetworkEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func expandEdgenetworkNetworkDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandEdgenetworkNetworkMtu(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandEdgenetworkNetworkEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandEdgenetworkNetworkLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}
@@ -460,4 +391,12 @@ func expandEdgenetworkNetworkEffectiveLabels(v interface{}, d tpgresource.Terraf
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandEdgenetworkNetworkDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandEdgenetworkNetworkMtu(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }

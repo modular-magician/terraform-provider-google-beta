@@ -40,7 +40,7 @@ func TestAccActiveDirectoryDomainTrust_activeDirectoryDomainTrustBasicExample(t 
 				ResourceName:            "google_active_directory_domain_trust.ad-domain-trust",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trust_handshake_secret", "domain", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"trust_handshake_secret", "domain"},
 			},
 			{
 				Config: testAccActiveDirectoryDomainTrust_activeDirectoryDomainTrustUpdate(context),
@@ -49,7 +49,7 @@ func TestAccActiveDirectoryDomainTrust_activeDirectoryDomainTrustBasicExample(t 
 				ResourceName:            "google_active_directory_domain_trust.ad-domain-trust",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"trust_handshake_secret", "domain", "deletion_protection"},
+				ImportStateVerifyIgnore: []string{"trust_handshake_secret", "domain"},
 			},
 		},
 	})
@@ -58,13 +58,12 @@ func TestAccActiveDirectoryDomainTrust_activeDirectoryDomainTrustBasicExample(t 
 func testAccActiveDirectoryDomainTrust_activeDirectoryDomainTrustBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_active_directory_domain_trust" "ad-domain-trust" {
-domain     = "ci-managed-ad.com"
+    domain     = "ci-managed-ad.com"
     target_domain_name = "example-gcp.com"
     target_dns_ip_addresses = ["10.1.0.100"]
     trust_direction         = "OUTBOUND"
     trust_type              = "FOREST"
     trust_handshake_secret  = "Testing1!"
-    deletion_protection = false
 }
 `, context)
 }
@@ -78,7 +77,6 @@ resource "google_active_directory_domain_trust" "ad-domain-trust" {
     trust_direction         = "OUTBOUND"
     trust_type              = "FOREST"
     trust_handshake_secret  = "Testing1!"
-    deletion_protection = false
 }
 `, context)
 }

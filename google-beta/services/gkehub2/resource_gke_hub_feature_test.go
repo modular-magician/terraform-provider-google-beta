@@ -149,7 +149,6 @@ resource "google_project" "project" {
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
   provider        = google-beta
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "mesh" {
@@ -985,7 +984,6 @@ resource "google_project" "project" {
   project_id      = "tf-test-gkehub%{random_suffix}"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "mesh" {
@@ -1041,7 +1039,6 @@ resource "google_project" "project_2" {
   project_id      = "tf-test-gkehub%{random_suffix}-2"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "compute_2" {

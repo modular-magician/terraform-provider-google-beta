@@ -43,9 +43,7 @@ func testAccAlloydbCluster_secondaryClusterMandatoryFields(context map[string]in
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network    = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -61,9 +59,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "us-east1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "SECONDARY"
 
   continuous_backup_config {
@@ -112,9 +108,7 @@ func testAccAlloydbCluster_secondaryClusterMissingSecondaryConfig(context map[st
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network    = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -130,9 +124,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "us-east1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "SECONDARY"
 
   continuous_backup_config {
@@ -180,9 +172,7 @@ func testAccAlloydbCluster_secondaryClusterDefinedSecondaryConfigButMissingClust
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network    = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -198,9 +188,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "us-east1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
 
   continuous_backup_config {
     enabled = false
@@ -248,9 +236,7 @@ func testAccAlloydbCluster_secondaryClusterDefinedSecondaryConfigButClusterTypeI
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network    = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -266,9 +252,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "us-east1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "PRIMARY"
 
   continuous_backup_config {
@@ -331,9 +315,7 @@ func testAccAlloydbCluster_secondaryClusterUpdate(context map[string]interface{}
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network    = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -349,9 +331,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "us-east1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "SECONDARY"
 
   continuous_backup_config {
@@ -409,9 +389,7 @@ func testAccAlloydbCluster_secondaryClusterUsingCMEK(context map[string]interfac
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -427,9 +405,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "us-east1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "SECONDARY"
 
   continuous_backup_config {
@@ -507,7 +483,7 @@ resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
   network_config {
-		network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
+	network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
   }
 }
 
@@ -525,7 +501,7 @@ resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "us-east1"
   network_config {
-		network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
+	network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
   }
   cluster_type = "SECONDARY"
 
@@ -582,8 +558,8 @@ resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
   network_config {
-		network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
-		allocated_ip_range = data.google_compute_global_address.private_ip_alloc.name
+	network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
+	allocated_ip_range = data.google_compute_global_address.private_ip_alloc.name
   }
 }
 
@@ -601,8 +577,8 @@ resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "us-east1"
   network_config {
-		network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
-		allocated_ip_range = data.google_compute_global_address.private_ip_alloc.name
+	network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
+	allocated_ip_range = data.google_compute_global_address.private_ip_alloc.name
   }
   cluster_type = "SECONDARY"
 
@@ -671,9 +647,7 @@ func testAccAlloydbInstance_secondaryClusterWithInstance(context map[string]inte
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -689,9 +663,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "%{secondary_cluster_location}"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "SECONDARY"
 
   continuous_backup_config {
@@ -734,9 +706,7 @@ func testAccAlloydbCluster_secondaryClusterPromote(context map[string]interface{
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -752,9 +722,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "%{secondary_cluster_location}"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "PRIMARY"
 
   continuous_backup_config {
@@ -826,9 +794,7 @@ func testAccAlloydbCluster_secondaryClusterPromoteAndSimultaneousUpdate(context 
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -844,9 +810,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "%{secondary_cluster_location}"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "PRIMARY"
 
   continuous_backup_config {
@@ -931,9 +895,7 @@ func testAccAlloydbCluster_secondaryClusterPromoteAndDeleteOriginalPrimary(conte
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "%{secondary_cluster_location}"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "PRIMARY"
 
   continuous_backup_config {
@@ -1014,9 +976,7 @@ func testAccAlloydbCluster_secondaryClusterPromoteAndUpdate(context map[string]i
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1032,9 +992,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "%{secondary_cluster_location}"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "PRIMARY"
 
   continuous_backup_config {
@@ -1297,9 +1255,7 @@ func testAccAlloydbCluster_secondaryClusterPromoteAndAddAutomatedBackupPolicyAnd
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1315,9 +1271,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "%{secondary_cluster_location}"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "PRIMARY"
 
   continuous_backup_config {
@@ -1437,9 +1391,7 @@ func testAccAlloydbCluster_secondaryClusterPromoteWithTimeBasedRetentionPolicy(c
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1455,9 +1407,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "%{secondary_cluster_location}"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "PRIMARY"
 
   continuous_backup_config {
@@ -1522,9 +1472,7 @@ func testAccAlloydbCluster_secondaryClusterPromoteWithoutTimeBasedRetentionPolic
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1540,9 +1488,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "%{secondary_cluster_location}"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "PRIMARY"
 
   continuous_backup_config {
@@ -1650,9 +1596,7 @@ func testAccAlloydbCluster_secondaryClusterPromoteAndAddContinuousBackupConfig(c
 resource "google_alloydb_cluster" "primary" {
   cluster_id = "tf-test-alloydb-primary-cluster%{random_suffix}"
   location   = "us-central1"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1668,9 +1612,7 @@ resource "google_alloydb_instance" "primary" {
 resource "google_alloydb_cluster" "secondary" {
   cluster_id   = "tf-test-alloydb-secondary-cluster%{random_suffix}"
   location     = "%{secondary_cluster_location}"
-  network_config {
-    network = data.google_compute_network.default.id
-  }
+  network      = data.google_compute_network.default.id
   cluster_type = "PRIMARY"
 
   continuous_backup_config {
