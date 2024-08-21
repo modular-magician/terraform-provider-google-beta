@@ -55,7 +55,6 @@ resource "google_project" "target_project" {
   name            = "tf-test%{random_suffix}"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_iam_member" "dns_peer_binding" {
@@ -118,7 +117,6 @@ resource "google_project" "target_project" {
   name            = "tf-test%{random_suffix}"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_iam_member" "dns_peer_binding" {

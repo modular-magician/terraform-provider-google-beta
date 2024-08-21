@@ -39,7 +39,6 @@ func testAccLoggingFolderSettings_datasource(context map[string]interface{}) str
 resource "google_folder" "default" {
 	display_name = "%{folder_name}"
 	parent       = "organizations/%{org_id}"
-	deletion_protection = false
 }
 
 data "google_logging_folder_settings" "settings" {

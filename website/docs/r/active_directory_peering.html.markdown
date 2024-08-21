@@ -39,7 +39,6 @@ resource "google_active_directory_peering" "ad-domain-peering" {
     domain_resource    = google_active_directory_domain.ad-domain.name
     peering_id         = "ad-domain-peering"
     authorized_network = google_compute_network.peered-network.id
-    deletion_protection = false
     labels             = {
         foo = "bar"
     }
@@ -51,7 +50,6 @@ resource "google_active_directory_domain" "ad-domain" {
     locations           = ["us-central1"]
     reserved_ip_range   = "192.168.255.0/24"
     authorized_networks = [google_compute_network.source-network.id]
-    deletion_protection = false
 }
 
 resource "google_compute_network" "peered-network" {
@@ -77,7 +75,6 @@ resource "google_project" "peered-project" {
     project_id      = "my-peered-project"
     org_id          = "123456789"
     billing_account = "000000-0000000-0000000-000000"
-    deletion_policy = "DELETE"
 }
 ```
 

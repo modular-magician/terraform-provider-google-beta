@@ -40,7 +40,6 @@ To get more information about FolderCustomModule, see:
 resource "google_folder" "folder" {
   parent       = "organizations/123456789"
   display_name = "folder-name"
-  deletion_protection = false
 }
 
 resource "google_scc_folder_custom_module" "example" {
@@ -69,7 +68,6 @@ resource "google_scc_folder_custom_module" "example" {
 resource "google_folder" "folder" {
   parent       = "organizations/123456789"
   display_name = "folder-name"
-  deletion_protection = false
 }
 
 resource "google_scc_folder_custom_module" "example" {

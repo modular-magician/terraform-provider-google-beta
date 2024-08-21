@@ -278,7 +278,6 @@ resource "google_project" "test_project" {
   project_id      = "%s"
   org_id          = "%s"
   billing_account = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "kms" {
@@ -318,7 +317,6 @@ resource "google_project" "test_project" {
   project_id      = "%s"
   org_id          = "%s"
   billing_account = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "kms" {
@@ -367,7 +365,6 @@ resource "google_project" "test_project" {
   project_id      = "%s"
   org_id          = "%s"
   billing_account = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "kms" {
@@ -412,7 +409,6 @@ resource "google_project" "test_project" {
   project_id      = "%s"
   org_id          = "%s"
   billing_account = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "kms" {
@@ -452,7 +448,6 @@ resource "google_project" "test_project" {
   project_id      = "%s"
   org_id          = "%s"
   billing_account = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "kms" {
@@ -497,7 +492,6 @@ resource "google_project" "test_project" {
   project_id      = "%s"
   org_id          = "%s"
   billing_account = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "kms" {
@@ -544,7 +538,6 @@ resource "google_project" "test_project" {
   project_id      = "%s"
   org_id          = "%s"
   billing_account = "%s"
-  deletion_policy = "DELETE"
 }
 
 resource "google_project_service" "kms" {

@@ -64,7 +64,6 @@ resource "google_project" "my_project" {
   name       = "tf-test-project"
   project_id = "quota%{random_suffix}"
   org_id     = "%{org_id}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_service_usage_consumer_quota_override" "override" {
@@ -112,7 +111,6 @@ resource "google_project" "my_project" {
   name       = "tf-test-project"
   project_id = "quota%{random_suffix}"
   org_id     = "%{org_id}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_service_usage_consumer_quota_override" "override" {
@@ -160,7 +158,6 @@ resource "google_project" "my_project" {
   name       = "tf-test-project"
   project_id = "quota%{random_suffix}"
   org_id     = "%{org_id}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_service_usage_consumer_quota_override" "override" {
@@ -211,7 +208,6 @@ resource "google_project" "my_project" {
   name       = "tf-test-project"
   project_id = "quota%{random_suffix}"
   org_id     = "%{org_id}"
-  deletion_policy = "DELETE"
 }
 
 resource "google_service_usage_consumer_quota_override" "override" {

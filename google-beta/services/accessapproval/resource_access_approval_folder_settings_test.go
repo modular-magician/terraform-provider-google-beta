@@ -69,7 +69,6 @@ func testAccAccessApprovalFolderSettings_full(context map[string]interface{}) st
 resource "google_folder" "my_folder" {
   display_name = "tf-test-my-folder%{random_suffix}"
   parent       = "organizations/%{org_id}"
-  deletion_protection = false
 }
 
 # Wait after folder creation to limit eventual consistency errors.
@@ -97,7 +96,6 @@ func testAccAccessApprovalFolderSettings_update(context map[string]interface{}) 
 resource "google_folder" "my_folder" {
   display_name = "tf-test-my-folder%{random_suffix}"
   parent       = "organizations/%{org_id}"
-  deletion_protection = false
 }
 
 # Wait after folder creation to limit eventual consistency errors.
@@ -125,7 +123,6 @@ func testAccAccessApprovalFolderSettings_activeKeyVersion(context map[string]int
 resource "google_folder" "my_folder" {
   display_name = "tf-test-my-folder%{random_suffix}"
   parent       = "organizations/%{org_id}"
-  deletion_protection = false
 }
 
 # Wait after folder creation to limit eventual consistency errors.

@@ -72,7 +72,6 @@ func testAccSecurityCenterManagementFolderSecurityHealthAnalyticsCustomModule_sc
 resource "google_folder" "folder" {
   parent       = "organizations/%{org_id}"
   display_name = "tf-test-folder-name%{random_suffix}"
-  deletion_protection = false
 }
 
 resource "time_sleep" "wait_1_minute" {
@@ -111,7 +110,6 @@ func testAccSecurityCenterManagementFolderSecurityHealthAnalyticsCustomModule_sc
 resource "google_folder" "folder" {
   parent       = "organizations/%{org_id}"
   display_name = "tf-test-folder-name%{random_suffix}"
-  deletion_protection = false
 }
 
 resource "google_scc_management_folder_security_health_analytics_custom_module" "example" {
@@ -155,7 +153,6 @@ func testAccSecurityCenterManagementFolderSecurityHealthAnalyticsCustomModule_sc
 resource "google_folder" "folder" {
   parent       = "organizations/%{org_id}"
   display_name = "tf-test-folder-name%{random_suffix}"
-  deletion_protection = false
 }
 
 resource "google_scc_management_folder_security_health_analytics_custom_module" "example" {

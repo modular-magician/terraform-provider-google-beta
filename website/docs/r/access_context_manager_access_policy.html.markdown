@@ -57,7 +57,6 @@ resource "google_project" "project" {
   project_id      = "my-project-name"
   name            = "my-project-name"
   org_id          = "123456789"
-  deletion_policy = "DELETE"
 }
 
 resource "google_access_context_manager_access_policy" "access-policy" {

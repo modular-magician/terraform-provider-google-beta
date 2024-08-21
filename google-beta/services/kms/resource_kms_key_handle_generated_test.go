@@ -27,7 +27,6 @@ import (
 )
 
 func TestAccKMSKeyHandle_kmsKeyHandleBasicExample(t *testing.T) {
-	acctest.SkipIfVcr(t)
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -64,7 +63,6 @@ resource "google_folder" "autokms_folder" {
   provider     = google-beta
   display_name = "folder-example"
   parent       = "organizations/%{org_id}"
-  deletion_protection = false
 }
 
 # Create the key project
@@ -75,7 +73,6 @@ resource "google_project" "key_project" {
   folder_id       = google_folder.autokms_folder.folder_id
   billing_account = "%{billing_account}"
   depends_on      = [google_folder.autokms_folder]
-  deletion_policy = "DELETE"
 }
 
 # Create the resource project
@@ -86,7 +83,6 @@ resource "google_project" "resource_project" {
   folder_id       = google_folder.autokms_folder.folder_id
   billing_account = "%{billing_account}"
   depends_on      = [google_folder.autokms_folder]
-  deletion_policy = "DELETE"
 }
 
 # Enable the Cloud KMS API

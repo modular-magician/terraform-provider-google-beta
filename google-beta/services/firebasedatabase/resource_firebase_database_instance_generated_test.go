@@ -140,7 +140,6 @@ resource "google_project" "default" {
   project_id = "tf-test-rtdb-project%{random_suffix}"
   name       = "tf-test-rtdb-project%{random_suffix}"
   org_id     = "%{org_id}"
-  deletion_policy = "DELETE"
   labels     = {
     "firebase" = "enabled"
   }

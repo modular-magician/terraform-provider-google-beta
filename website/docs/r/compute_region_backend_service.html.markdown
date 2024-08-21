@@ -76,7 +76,6 @@ resource "google_compute_region_backend_service" "default" {
   protocol              = "HTTP"
   load_balancing_scheme = "EXTERNAL"
   iap {
-    enabled              = true
     oauth2_client_id     = "abc"
     oauth2_client_secret = "xyz"
   }
@@ -424,6 +423,7 @@ The following arguments are supported:
   (Optional)
   Time for which instance will be drained (not accept new
   connections, but still work to finish started).
+  From version 6.0.0 ConnectionDrainingTimeoutSec default value will be 300 to match default GCP value.
 
 * `description` -
   (Optional)
@@ -513,6 +513,8 @@ The following arguments are supported:
   Settings controlling eviction of unhealthy hosts from the load balancing pool.
   This field is applicable only when the `load_balancing_scheme` is set
   to INTERNAL_MANAGED and the `protocol` is set to HTTP, HTTPS, or HTTP2.
+  From version 6.0.0 outlierDetection default terraform values will be removed to match default GCP value.
+  Default values are enforce by GCP without providing them.
   Structure is [documented below](#nested_outlier_detection).
 
 * `port_name` -
@@ -588,7 +590,8 @@ The following arguments are supported:
   Specifies the balancing mode for this backend.
   See the [Backend Services Overview](https://cloud.google.com/load-balancing/docs/backend-service#balancing-mode)
   for an explanation of load balancing modes.
-  Default value is `UTILIZATION`.
+  From version 6.0.0 default value will be UTILIZATION to match default GCP value.
+  Default value is `CONNECTION`.
   Possible values are: `UTILIZATION`, `RATE`, `CONNECTION`.
 
 * `capacity_scaler` -
@@ -932,16 +935,12 @@ The following arguments are supported:
 
 <a name="nested_iap"></a>The `iap` block supports:
 
-* `enabled` -
-  (Required)
-  Whether the serving infrastructure will authenticate and authorize all incoming requests.
-
 * `oauth2_client_id` -
-  (Optional)
+  (Required)
   OAuth2 Client ID for IAP
 
 * `oauth2_client_secret` -
-  (Optional)
+  (Required)
   OAuth2 Client Secret for IAP
   **Note**: This property is sensitive and will not be displayed in the plan.
 
