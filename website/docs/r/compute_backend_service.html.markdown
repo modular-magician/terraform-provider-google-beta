@@ -687,6 +687,13 @@ The following arguments are supported:
   Used when balancingMode is UTILIZATION. This ratio defines the
   CPU utilization target for the group. Valid range is [0.0, 1.0].
 
+* `preference` -
+  (Optional)
+  Indicates whether this backend should be fully utilized before
+  sending traffic to backends with default preference. The possible
+  values are PREFERRED and DEFAULT.
+  Possible values are: `PREFERRED`, `DEFAULT`.
+
 <a name="nested_circuit_breakers"></a>The `circuit_breakers` block supports:
 
 * `connect_timeout` -
