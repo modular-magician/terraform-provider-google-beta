@@ -159,6 +159,11 @@ The following arguments are supported:
   Backup configuration for the volume.
   Structure is [documented below](#nested_backup_config).
 
+* `tiering_policy` -
+  (Optional)
+  Tiering policy for the volume.
+  Structure is [documented below](#nested_tiering_policy).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -340,6 +345,19 @@ Possible values: DEFAULT, FORCE.
   (Optional)
   When set to true, scheduled backup is enabled on the volume. Omit if no backup_policy is specified.
 
+<a name="nested_tiering_policy"></a>The `tiering_policy` block supports:
+
+* `cooling_threshold_days` -
+  (Optional)
+  Optional. Time in days to mark the volume's data block as cold and make it eligible for tiering, can be range from 7-183.
+  Default is 31.
+
+* `tier_action` -
+  (Optional)
+  Optional. Flag indicating if the volume has tiering policy enable/pause. Default is PAUSED.
+  Default value is `PAUSED`.
+  Possible values are: `ENABLED`, `PAUSED`.
+
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
@@ -393,6 +411,9 @@ In addition to the arguments listed above, the following computed attributes are
 * `replica_zone` -
   ([Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Specifies the replica zone for regional volume.
+
+* `cold_tier_size_gib` -
+  Output only. Size of the volume cold tier data in GiB.
 
 * `terraform_labels` -
   The combination of labels configured directly on the resource

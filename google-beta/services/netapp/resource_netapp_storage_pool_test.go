@@ -170,6 +170,15 @@ func TestAccNetappStoragePool_FlexRegionalStoragePoolCreateExample_update(t *tes
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"location", "name", "labels", "terraform_labels"},
 			},
+			{
+				Config: testAccNetappstoragePool_FlexRegionalStoragePoolCreateExample_autoTieredPool(context),
+			},
+			{
+				ResourceName:            "google_netapp_storage_pool.test_pool",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location", "name", "labels", "terraform_labels"},
+			},
 		},
 	})
 }
@@ -243,6 +252,30 @@ resource "google_netapp_storage_pool" "test_pool" {
   network = data.google_compute_network.default.id
   zone = "us-east1-c"
   replica_zone = "us-east1-b"
+}
+
+resource "time_sleep" "wait_5_minutes" {
+    depends_on = [google_netapp_storage_pool.test_pool]
+    destroy_duration = "5m"
+}
+
+data "google_compute_network" "default" {
+    provider = google-beta
+    name = "%{network_name}"
+}
+`, context)
+}
+
+func testAccNetappstoragePool_FlexRegionalStoragePoolCreateExample_autoTieredPool(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_netapp_storage_pool" "test_pool" {
+  provider = google-beta
+  name = "tf-test-pool%{random_suffix}"
+  location = "us-central1"
+  service_level = "PREMIUM"
+  capacity_gib = "4096"
+  network = data.google_compute_network.default.id
+  allow_auto_tiering = true
 }
 
 resource "time_sleep" "wait_5_minutes" {
