@@ -431,6 +431,7 @@ var generatedIAMDatasources = map[string]*schema.Resource{
 	"google_pubsub_topic_iam_policy":                         tpgiamresource.DataSourceIamPolicy(pubsub.PubsubTopicIamSchema, pubsub.PubsubTopicIamUpdaterProducer),
 	"google_runtimeconfig_config_iam_policy":                 tpgiamresource.DataSourceIamPolicy(runtimeconfig.RuntimeConfigConfigIamSchema, runtimeconfig.RuntimeConfigConfigIamUpdaterProducer),
 	"google_secret_manager_secret_iam_policy":                tpgiamresource.DataSourceIamPolicy(secretmanager.SecretManagerSecretIamSchema, secretmanager.SecretManagerSecretIamUpdaterProducer),
+	"google_secure_source_manager_branch_rule_iam_policy":    tpgiamresource.DataSourceIamPolicy(securesourcemanager.SecureSourceManagerBranchRuleIamSchema, securesourcemanager.SecureSourceManagerBranchRuleIamUpdaterProducer),
 	"google_secure_source_manager_instance_iam_policy":       tpgiamresource.DataSourceIamPolicy(securesourcemanager.SecureSourceManagerInstanceIamSchema, securesourcemanager.SecureSourceManagerInstanceIamUpdaterProducer),
 	"google_secure_source_manager_repository_iam_policy":     tpgiamresource.DataSourceIamPolicy(securesourcemanager.SecureSourceManagerRepositoryIamSchema, securesourcemanager.SecureSourceManagerRepositoryIamUpdaterProducer),
 	"google_scc_source_iam_policy":                           tpgiamresource.DataSourceIamPolicy(securitycenter.SecurityCenterSourceIamSchema, securitycenter.SecurityCenterSourceIamUpdaterProducer),
@@ -478,9 +479,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 512
-// Generated IAM resources: 288
-// Total generated resources: 800
+// Generated resources: 513
+// Generated IAM resources: 291
+// Total generated resources: 804
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1148,6 +1149,10 @@ var generatedResources = map[string]*schema.Resource{
 	"google_secret_manager_secret_iam_member":                                    tpgiamresource.ResourceIamMember(secretmanager.SecretManagerSecretIamSchema, secretmanager.SecretManagerSecretIamUpdaterProducer, secretmanager.SecretManagerSecretIdParseFunc),
 	"google_secret_manager_secret_iam_policy":                                    tpgiamresource.ResourceIamPolicy(secretmanager.SecretManagerSecretIamSchema, secretmanager.SecretManagerSecretIamUpdaterProducer, secretmanager.SecretManagerSecretIdParseFunc),
 	"google_secret_manager_secret_version":                                       secretmanager.ResourceSecretManagerSecretVersion(),
+	"google_secure_source_manager_branch_rule":                                   securesourcemanager.ResourceSecureSourceManagerBranchRule(),
+	"google_secure_source_manager_branch_rule_iam_binding":                       tpgiamresource.ResourceIamBinding(securesourcemanager.SecureSourceManagerBranchRuleIamSchema, securesourcemanager.SecureSourceManagerBranchRuleIamUpdaterProducer, securesourcemanager.SecureSourceManagerBranchRuleIdParseFunc),
+	"google_secure_source_manager_branch_rule_iam_member":                        tpgiamresource.ResourceIamMember(securesourcemanager.SecureSourceManagerBranchRuleIamSchema, securesourcemanager.SecureSourceManagerBranchRuleIamUpdaterProducer, securesourcemanager.SecureSourceManagerBranchRuleIdParseFunc),
+	"google_secure_source_manager_branch_rule_iam_policy":                        tpgiamresource.ResourceIamPolicy(securesourcemanager.SecureSourceManagerBranchRuleIamSchema, securesourcemanager.SecureSourceManagerBranchRuleIamUpdaterProducer, securesourcemanager.SecureSourceManagerBranchRuleIdParseFunc),
 	"google_secure_source_manager_instance":                                      securesourcemanager.ResourceSecureSourceManagerInstance(),
 	"google_secure_source_manager_instance_iam_binding":                          tpgiamresource.ResourceIamBinding(securesourcemanager.SecureSourceManagerInstanceIamSchema, securesourcemanager.SecureSourceManagerInstanceIamUpdaterProducer, securesourcemanager.SecureSourceManagerInstanceIdParseFunc),
 	"google_secure_source_manager_instance_iam_member":                           tpgiamresource.ResourceIamMember(securesourcemanager.SecureSourceManagerInstanceIamSchema, securesourcemanager.SecureSourceManagerInstanceIamUpdaterProducer, securesourcemanager.SecureSourceManagerInstanceIdParseFunc),
