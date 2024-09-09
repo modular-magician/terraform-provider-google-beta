@@ -59,13 +59,6 @@ func ResourceComputeInterconnect() *schema.Resource {
 		),
 
 		Schema: map[string]*schema.Schema{
-			"customer_name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				Description: `Customer name, to put in the Letter of Authorization as the party authorized to request a
-crossconnect.`,
-			},
 			"interconnect_type": {
 				Type:             schema.TypeString,
 				Required:         true,
@@ -119,6 +112,13 @@ lowercase letter, or digit, except the last character, which cannot be a dash.`,
 functional and can carry traffic. When set to false, no packets can be carried over the
 interconnect and no BGP routes are exchanged over it. By default, the status is set to true.`,
 				Default: true,
+			},
+			"customer_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `Customer name, to put in the Letter of Authorization as the party authorized to request a
+crossconnect.`,
 			},
 			"description": {
 				Type:        schema.TypeString,

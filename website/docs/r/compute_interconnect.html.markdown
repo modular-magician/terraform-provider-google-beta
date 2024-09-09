@@ -37,7 +37,6 @@ data "google_project" "project" {}
 
 resource "google_compute_interconnect" "example-interconnect" {
   name                 = "example-interconnect"
-  customer_name        = "example_customer"
   interconnect_type    = "DEDICATED"
   link_type            = "LINK_TYPE_ETHERNET_10G_LR"
   location             = "https://www.googleapis.com/compute/v1/projects/${data.google_project.project.name}/global/interconnectLocations/iad-zone1-1"
@@ -82,11 +81,6 @@ The following arguments are supported:
     - DEDICATED: A dedicated physical interconnection with the customer.
   Possible values are: `DEDICATED`, `PARTNER`, `IT_PRIVATE`.
 
-* `customer_name` -
-  (Required)
-  Customer name, to put in the Letter of Authorization as the party authorized to request a
-  crossconnect.
-
 
 - - -
 
@@ -108,6 +102,11 @@ The following arguments are supported:
   all other forms described, such as Cloud Monitoring logs alerting and Cloud Notifications.
   This field is required for users who sign up for Cloud Interconnect using workforce identity
   federation.
+
+* `customer_name` -
+  (Optional)
+  Customer name, to put in the Letter of Authorization as the party authorized to request a
+  crossconnect.
 
 * `labels` -
   (Optional)
