@@ -932,8 +932,7 @@ func expandHiveJob(config map[string]interface{}) *dataproc.HiveJob {
 	job := &dataproc.HiveJob{}
 	if v, ok := config["query_file_uri"]; ok {
 		job.QueryFileUri = v.(string)
-	}
-	if v, ok := config["query_list"]; ok {
+	} else if v, ok := config["query_list"]; ok {
 		job.QueryList = &dataproc.QueryList{
 			Queries: tpgresource.ConvertStringArr(v.([]interface{})),
 		}
@@ -1040,8 +1039,7 @@ func expandPigJob(config map[string]interface{}) *dataproc.PigJob {
 	job := &dataproc.PigJob{}
 	if v, ok := config["query_file_uri"]; ok {
 		job.QueryFileUri = v.(string)
-	}
-	if v, ok := config["query_list"]; ok {
+	} else if v, ok := config["query_list"]; ok {
 		job.QueryList = &dataproc.QueryList{
 			Queries: tpgresource.ConvertStringArr(v.([]interface{})),
 		}
@@ -1141,8 +1139,7 @@ func expandSparkSqlJob(config map[string]interface{}) *dataproc.SparkSqlJob {
 	job := &dataproc.SparkSqlJob{}
 	if v, ok := config["query_file_uri"]; ok {
 		job.QueryFileUri = v.(string)
-	}
-	if v, ok := config["query_list"]; ok {
+	} else if v, ok := config["query_list"]; ok {
 		job.QueryList = &dataproc.QueryList{
 			Queries: tpgresource.ConvertStringArr(v.([]interface{})),
 		}
@@ -1249,8 +1246,7 @@ func expandPrestoJob(config map[string]interface{}) *dataproc.PrestoJob {
 	}
 	if v, ok := config["query_file_uri"]; ok {
 		job.QueryFileUri = v.(string)
-	}
-	if v, ok := config["query_list"]; ok {
+	} else if v, ok := config["query_list"]; ok {
 		job.QueryList = &dataproc.QueryList{
 			Queries: tpgresource.ConvertStringArr(v.([]interface{})),
 		}
