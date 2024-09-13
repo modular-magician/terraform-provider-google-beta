@@ -102,6 +102,10 @@ The following arguments are supported:
   names must be unique globally and match pattern
   'projects/*/locations/*/certificateMaps/*/certificateMapEntries/*'
 
+* `location` -
+  (Required)
+  The geographic location where the Certificate Map Entry should reside. Defaults to global.
+
 * `map` -
   (Required)
   A map entry that is inputted into the cetrificate map
@@ -141,7 +145,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/locations/global/certificateMaps/{{map}}/certificateMapEntries/{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/certificateMaps/{{map}}/certificateMapEntries/{{name}}`
 
 * `create_time` -
   Creation timestamp of a Certificate Map Entry. Timestamp in RFC3339 UTC "Zulu" format,
@@ -178,16 +182,16 @@ This resource provides the following
 
 CertificateMapEntry can be imported using any of these accepted formats:
 
-* `projects/{{project}}/locations/global/certificateMaps/{{map}}/certificateMapEntries/{{name}}`
-* `{{project}}/{{map}}/{{name}}`
-* `{{map}}/{{name}}`
+* `projects/{{project}}/locations/{{location}}/certificateMaps/{{map}}/certificateMapEntries/{{name}}`
+* `{{project}}/{{location}}/{{map}}/{{name}}`
+* `{{location}}/{{map}}/{{name}}`
 
 
 In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import CertificateMapEntry using one of the formats above. For example:
 
 ```tf
 import {
-  id = "projects/{{project}}/locations/global/certificateMaps/{{map}}/certificateMapEntries/{{name}}"
+  id = "projects/{{project}}/locations/{{location}}/certificateMaps/{{map}}/certificateMapEntries/{{name}}"
   to = google_certificate_manager_certificate_map_entry.default
 }
 ```
@@ -195,9 +199,9 @@ import {
 When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), CertificateMapEntry can be imported using one of the formats above. For example:
 
 ```
-$ terraform import google_certificate_manager_certificate_map_entry.default projects/{{project}}/locations/global/certificateMaps/{{map}}/certificateMapEntries/{{name}}
-$ terraform import google_certificate_manager_certificate_map_entry.default {{project}}/{{map}}/{{name}}
-$ terraform import google_certificate_manager_certificate_map_entry.default {{map}}/{{name}}
+$ terraform import google_certificate_manager_certificate_map_entry.default projects/{{project}}/locations/{{location}}/certificateMaps/{{map}}/certificateMapEntries/{{name}}
+$ terraform import google_certificate_manager_certificate_map_entry.default {{project}}/{{location}}/{{map}}/{{name}}
+$ terraform import google_certificate_manager_certificate_map_entry.default {{location}}/{{map}}/{{name}}
 ```
 
 ## User Project Overrides

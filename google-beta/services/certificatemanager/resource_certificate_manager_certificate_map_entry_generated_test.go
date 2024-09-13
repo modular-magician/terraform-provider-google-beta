@@ -49,7 +49,7 @@ func TestAccCertificateManagerCertificateMapEntry_certificateManagerCertificateM
 				ResourceName:            "google_certificate_manager_certificate_map_entry.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "map", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "map", "terraform_labels"},
 			},
 		},
 	})
@@ -121,7 +121,7 @@ func testAccCheckCertificateManagerCertificateMapEntryDestroyProducer(t *testing
 
 			config := acctest.GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{CertificateManagerBasePath}}projects/{{project}}/locations/global/certificateMaps/{{map}}/certificateMapEntries/{{name}}")
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificateMaps/{{map}}/certificateMapEntries/{{name}}")
 			if err != nil {
 				return err
 			}

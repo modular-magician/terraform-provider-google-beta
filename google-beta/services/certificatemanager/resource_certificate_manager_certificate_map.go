@@ -55,6 +55,13 @@ func ResourceCertificateManagerCertificateMap() *schema.Resource {
 		),
 
 		Schema: map[string]*schema.Schema{
+			"location": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: `The geographic location where the Certificate Map should reside. Defaults to global.`,
+				Default:     "global",
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -181,7 +188,7 @@ func resourceCertificateManagerCertificateMapCreate(d *schema.ResourceData, meta
 		obj["labels"] = labelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/global/certificateMaps?certificateMapId={{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificateMaps?certificateMapId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -216,7 +223,7 @@ func resourceCertificateManagerCertificateMapCreate(d *schema.ResourceData, meta
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/certificateMaps/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/certificateMaps/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -244,7 +251,7 @@ func resourceCertificateManagerCertificateMapRead(d *schema.ResourceData, meta i
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/global/certificateMaps/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificateMaps/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -333,7 +340,7 @@ func resourceCertificateManagerCertificateMapUpdate(d *schema.ResourceData, meta
 		obj["labels"] = labelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/global/certificateMaps/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificateMaps/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -407,7 +414,7 @@ func resourceCertificateManagerCertificateMapDelete(d *schema.ResourceData, meta
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/global/certificateMaps/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{CertificateManagerBasePath}}projects/{{project}}/locations/{{location}}/certificateMaps/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -451,15 +458,15 @@ func resourceCertificateManagerCertificateMapDelete(d *schema.ResourceData, meta
 func resourceCertificateManagerCertificateMapImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
 	if err := tpgresource.ParseImportId([]string{
-		"^projects/(?P<project>[^/]+)/locations/global/certificateMaps/(?P<name>[^/]+)$",
-		"^(?P<project>[^/]+)/(?P<name>[^/]+)$",
-		"^(?P<name>[^/]+)$",
+		"^projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/certificateMaps/(?P<name>[^/]+)$",
+		"^(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)$",
+		"^(?P<location>[^/]+)/(?P<name>[^/]+)$",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/certificateMaps/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/certificateMaps/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}

@@ -54,6 +54,10 @@ The following arguments are supported:
   A user-defined name of the Certificate Map. Certificate Map names must be unique
   globally and match the pattern `projects/*/locations/*/certificateMaps/*`.
 
+* `location` -
+  (Required)
+  The geographic location where the Certificate Map should reside. Defaults to global.
+
 
 - - -
 
@@ -77,7 +81,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/locations/global/certificateMaps/{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/certificateMaps/{{name}}`
 
 * `create_time` -
   Creation timestamp of a Certificate Map. Timestamp is in RFC3339 UTC "Zulu" format,
@@ -145,16 +149,16 @@ This resource provides the following
 
 CertificateMap can be imported using any of these accepted formats:
 
-* `projects/{{project}}/locations/global/certificateMaps/{{name}}`
-* `{{project}}/{{name}}`
-* `{{name}}`
+* `projects/{{project}}/locations/{{location}}/certificateMaps/{{name}}`
+* `{{project}}/{{location}}/{{name}}`
+* `{{location}}/{{name}}`
 
 
 In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import CertificateMap using one of the formats above. For example:
 
 ```tf
 import {
-  id = "projects/{{project}}/locations/global/certificateMaps/{{name}}"
+  id = "projects/{{project}}/locations/{{location}}/certificateMaps/{{name}}"
   to = google_certificate_manager_certificate_map.default
 }
 ```
@@ -162,9 +166,9 @@ import {
 When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), CertificateMap can be imported using one of the formats above. For example:
 
 ```
-$ terraform import google_certificate_manager_certificate_map.default projects/{{project}}/locations/global/certificateMaps/{{name}}
-$ terraform import google_certificate_manager_certificate_map.default {{project}}/{{name}}
-$ terraform import google_certificate_manager_certificate_map.default {{name}}
+$ terraform import google_certificate_manager_certificate_map.default projects/{{project}}/locations/{{location}}/certificateMaps/{{name}}
+$ terraform import google_certificate_manager_certificate_map.default {{project}}/{{location}}/{{name}}
+$ terraform import google_certificate_manager_certificate_map.default {{location}}/{{name}}
 ```
 
 ## User Project Overrides
