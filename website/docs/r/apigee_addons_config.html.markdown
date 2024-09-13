@@ -144,12 +144,12 @@ The following arguments are supported:
 
 * `advanced_api_ops_config` -
   (Optional)
-  Configuration for the Monetization add-on.
+  Configuration for the Advanced API Ops add-on.
   Structure is [documented below](#nested_advanced_api_ops_config).
 
 * `integration_config` -
   (Optional)
-  Configuration for the Monetization add-on.
+  Configuration for the Integration add-on.
   Structure is [documented below](#nested_integration_config).
 
 * `monetization_config` -
@@ -159,7 +159,7 @@ The following arguments are supported:
 
 * `api_security_config` -
   (Optional)
-  Configuration for the Monetization add-on.
+  Configuration for the API Security add-on.
   Structure is [documented below](#nested_api_security_config).
 
 * `connectors_platform_config` -
@@ -178,33 +178,33 @@ The following arguments are supported:
 
 * `enabled` -
   (Optional)
-  Flag that specifies whether the Advanced API Ops add-on is enabled.
+  Flag that specifies whether the Integration add-on is enabled.
 
 <a name="nested_monetization_config"></a>The `monetization_config` block supports:
 
 * `enabled` -
   (Optional)
-  Flag that specifies whether the Advanced API Ops add-on is enabled.
+  Flag that specifies whether the Monetization add-on is enabled.
 
 <a name="nested_api_security_config"></a>The `api_security_config` block supports:
 
 * `enabled` -
   (Optional)
-  Flag that specifies whether the Advanced API Ops add-on is enabled.
+  Flag that specifies whether the API security add-on is enabled.
 
 * `expires_at` -
   (Output)
-  Flag that specifies whether the Advanced API Ops add-on is enabled.
+  Time at which the API Security add-on expires in in milliseconds since epoch. If unspecified, the add-on will never expire.
 
 <a name="nested_connectors_platform_config"></a>The `connectors_platform_config` block supports:
 
 * `enabled` -
   (Optional)
-  Flag that specifies whether the Advanced API Ops add-on is enabled.
+  Flag that specifies whether the Connectors Platform add-on is enabled.
 
 * `expires_at` -
   (Output)
-  Flag that specifies whether the Advanced API Ops add-on is enabled.
+  Time at which the Connectors Platform add-on expires in milliseconds since epoch. If unspecified, the add-on will never expire.
 
 ## Attributes Reference
 
