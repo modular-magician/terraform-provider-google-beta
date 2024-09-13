@@ -481,9 +481,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 520
+// Generated resources: 521
 // Generated IAM resources: 291
-// Total generated resources: 811
+// Total generated resources: 812
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -806,6 +806,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_data_catalog_taxonomy_iam_binding":                                   tpgiamresource.ResourceIamBinding(datacatalog.DataCatalogTaxonomyIamSchema, datacatalog.DataCatalogTaxonomyIamUpdaterProducer, datacatalog.DataCatalogTaxonomyIdParseFunc),
 	"google_data_catalog_taxonomy_iam_member":                                    tpgiamresource.ResourceIamMember(datacatalog.DataCatalogTaxonomyIamSchema, datacatalog.DataCatalogTaxonomyIamUpdaterProducer, datacatalog.DataCatalogTaxonomyIdParseFunc),
 	"google_data_catalog_taxonomy_iam_policy":                                    tpgiamresource.ResourceIamPolicy(datacatalog.DataCatalogTaxonomyIamSchema, datacatalog.DataCatalogTaxonomyIamUpdaterProducer, datacatalog.DataCatalogTaxonomyIdParseFunc),
+	"google_dataform_config":                                                     dataform.ResourceDataformConfig(),
 	"google_dataform_repository":                                                 dataform.ResourceDataformRepository(),
 	"google_dataform_repository_iam_binding":                                     tpgiamresource.ResourceIamBinding(dataform.DataformRepositoryIamSchema, dataform.DataformRepositoryIamUpdaterProducer, dataform.DataformRepositoryIdParseFunc),
 	"google_dataform_repository_iam_member":                                      tpgiamresource.ResourceIamMember(dataform.DataformRepositoryIamSchema, dataform.DataformRepositoryIamUpdaterProducer, dataform.DataformRepositoryIdParseFunc),
