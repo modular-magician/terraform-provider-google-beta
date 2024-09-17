@@ -66,6 +66,8 @@ resource "google_compute_network_peering" "peering_primary" {
 
   import_custom_routes = true
   export_custom_routes = true
+  import_subnet_routes_with_public_ip = false
+  export_subnet_routes_with_public_ip = false
 }
 
 resource "google_compute_network_peering" "peering_secondary" {
