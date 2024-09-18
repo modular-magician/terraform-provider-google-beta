@@ -630,6 +630,7 @@ resource "google_compute_address" "consumer_address" {
 }
 `, context)
 }
+
 func TestAccComputeRegionTargetHttpsProxy_addServerTlsPolicy_withForwardingRule(t *testing.T) {
 	t.Parallel()
 

@@ -579,6 +579,7 @@ func resourceSpannerDatabaseUpdate(d *schema.ResourceData, meta interface{}) err
 	if err != nil {
 		return err
 	}
+
 	if obj["statements"] != nil {
 		if len(obj["statements"].([]string)) == 0 {
 			// Return early to avoid making an API call that errors,
@@ -658,6 +659,7 @@ func resourceSpannerDatabaseUpdate(d *schema.ResourceData, meta interface{}) err
 		}
 
 		headers := make(http.Header)
+
 		if obj["statements"] != nil {
 			if len(obj["statements"].([]string)) == 0 {
 				// Return early to avoid making an API call that errors,
@@ -914,6 +916,7 @@ func resourceSpannerDatabaseEncoder(d *schema.ResourceData, meta interface{}, ob
 }
 
 func resourceSpannerDatabaseUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+
 	if obj["versionRetentionPeriod"] != nil || obj["extraStatements"] != nil {
 		old, new := d.GetChange("ddl")
 		oldDdls := old.([]interface{})

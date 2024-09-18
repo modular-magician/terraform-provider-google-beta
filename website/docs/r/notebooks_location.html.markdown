@@ -23,7 +23,6 @@ Represents a Location resource.
 
 
 
-
 ## Argument Reference
 
 The following arguments are supported:
