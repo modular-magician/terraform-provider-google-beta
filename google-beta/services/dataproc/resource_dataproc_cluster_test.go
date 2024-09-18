@@ -2023,6 +2023,7 @@ resource "google_dataproc_cluster" "with_bucket" {
 
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
 
     # Keep the costs down with smallest config we can get away with
@@ -2056,6 +2057,7 @@ resource "google_dataproc_cluster" "with_bucket" {
 
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
 
     # Keep the costs down with smallest config we can get away with
@@ -2084,6 +2086,7 @@ resource "google_dataproc_cluster" "with_labels" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
   }
 
@@ -2102,6 +2105,7 @@ resource "google_dataproc_cluster" "with_labels" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
   }
 
@@ -2120,6 +2124,7 @@ resource "google_dataproc_cluster" "with_labels" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
   }
 }
@@ -2135,6 +2140,7 @@ resource "google_dataproc_cluster" "with_endpoint_config" {
 	cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
 
 		endpoint_config {
@@ -2154,6 +2160,7 @@ resource "google_dataproc_cluster" "with_image_version" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
 
     software_config {
@@ -2173,6 +2180,7 @@ resource "google_dataproc_cluster" "with_opt_components" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
 
     software_config {
@@ -2192,6 +2200,7 @@ resource "google_dataproc_cluster" "with_lifecycle_config" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
 
     lifecycle_config {
@@ -2211,6 +2220,7 @@ resource "google_dataproc_cluster" "with_lifecycle_config" {
  cluster_config {
   gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
 
    lifecycle_config {
@@ -2276,6 +2286,7 @@ resource "google_dataproc_cluster" "with_service_account" {
         "storage-rw",
         "logging-write",
       ]
+      internal_ip_only = false
     }
   }
 
@@ -2342,6 +2353,7 @@ resource "google_dataproc_cluster" "with_net_ref_by_name" {
 
     gce_cluster_config {
       network = google_compute_network.dataproc_network.name
+      internal_ip_only = false
     }
   }
 }
@@ -2369,6 +2381,7 @@ resource "google_dataproc_cluster" "with_net_ref_by_url" {
 
     gce_cluster_config {
       network = google_compute_network.dataproc_network.self_link
+      internal_ip_only = false
     }
   }
 }
@@ -2384,6 +2397,7 @@ resource "google_dataproc_cluster" "kms" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
 
     encryption_config {
@@ -2413,6 +2427,7 @@ resource "google_dataproc_cluster" "kerb" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
 
     security_config {
@@ -2435,6 +2450,7 @@ resource "google_dataproc_cluster" "basic" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
 
     autoscaling_config {
@@ -2471,6 +2487,7 @@ resource "google_dataproc_cluster" "basic" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+      internal_ip_only = false
     }
 
     autoscaling_config {
