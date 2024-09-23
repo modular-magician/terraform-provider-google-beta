@@ -207,8 +207,8 @@ func (d *GoogleProviderConfigPluginFrameworkDataSource) Read(ctx context.Context
 
 	data.Credentials = d.providerConfig.Credentials
 	data.AccessToken = d.providerConfig.AccessToken
-	// TODO(SarahFrench) - impersonate_service_account
-	// TODO(SarahFrench) - impersonate_service_account_delegates
+	data.ImpersonateServiceAccount = d.providerConfig.ImpersonateServiceAccount
+	data.ImpersonateServiceAccountDelegates = d.providerConfig.ImpersonateServiceAccountDelegates
 	data.Project = d.providerConfig.Project
 	data.Region = d.providerConfig.Region
 	data.BillingProject = d.providerConfig.BillingProject
