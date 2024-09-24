@@ -209,6 +209,10 @@ The following arguments are supported:
   in the event of transient errors or delays. Clusters in a region are considered equidistant. Choosing this option sacrifices read-your-writes
   consistency to improve availability.
 
+* `row_affinity` -
+  (Optional)
+  Must be used with multi-cluster routing. If true, then this app profile will use row affinity sticky routing. With row affinity, Bigtable will route single row key requests based on the row key, rather than randomly. Instead, each row key will be assigned to a cluster by Cloud Bigtable, and will stick to that cluster. Choosing this option improves read-your-writes consistency for most requests under most circumstances, without sacrificing availability. Consistency is not guaranteed, as requests may still fail over between clusters in the event of errors or latency.
+
 * `single_cluster_routing` -
   (Optional)
   Use a single-cluster routing policy.

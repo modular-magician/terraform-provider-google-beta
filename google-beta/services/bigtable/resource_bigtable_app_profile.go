@@ -105,6 +105,12 @@ in the event of transient errors or delays. Clusters in a region are considered 
 consistency to improve availability.`,
 				ExactlyOneOf: []string{"single_cluster_routing", "multi_cluster_routing_use_any"},
 			},
+			"row_affinity": {
+				Type:          schema.TypeBool,
+				Optional:      true,
+				Description:   `Must be used with multi-cluster routing. If true, then this app profile will use row affinity sticky routing. With row affinity, Bigtable will route single row key requests based on the row key, rather than randomly. Instead, each row key will be assigned to a cluster by Cloud Bigtable, and will stick to that cluster. Choosing this option improves read-your-writes consistency for most requests under most circumstances, without sacrificing availability. Consistency is not guaranteed, as requests may still fail over between clusters in the event of errors or latency.`,
+				ConflictsWith: []string{"single_cluster_routing"},
+			},
 			"single_cluster_routing": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -189,6 +195,12 @@ func resourceBigtableAppProfileCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	} else if v, ok := d.GetOkExists("multi_cluster_routing_use_any"); !tpgresource.IsEmptyValue(reflect.ValueOf(multiClusterRoutingUseAnyProp)) && (ok || !reflect.DeepEqual(v, multiClusterRoutingUseAnyProp)) {
 		obj["multiClusterRoutingUseAny"] = multiClusterRoutingUseAnyProp
+	}
+	rowAffinityProp, err := expandBigtableAppProfileRowAffinity(d.Get("row_affinity"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("row_affinity"); !tpgresource.IsEmptyValue(reflect.ValueOf(rowAffinityProp)) && (ok || !reflect.DeepEqual(v, rowAffinityProp)) {
+		obj["rowAffinity"] = rowAffinityProp
 	}
 	singleClusterRoutingProp, err := expandBigtableAppProfileSingleClusterRouting(d.Get("single_cluster_routing"), d, config)
 	if err != nil {
@@ -314,6 +326,9 @@ func resourceBigtableAppProfileRead(d *schema.ResourceData, meta interface{}) er
 	if err := d.Set("multi_cluster_routing_use_any", flattenBigtableAppProfileMultiClusterRoutingUseAny(res["multiClusterRoutingUseAny"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppProfile: %s", err)
 	}
+	if err := d.Set("row_affinity", flattenBigtableAppProfileRowAffinity(res["rowAffinity"], d, config)); err != nil {
+		return fmt.Errorf("Error reading AppProfile: %s", err)
+	}
 	if err := d.Set("single_cluster_routing", flattenBigtableAppProfileSingleClusterRouting(res["singleClusterRouting"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AppProfile: %s", err)
 	}
@@ -355,6 +370,12 @@ func resourceBigtableAppProfileUpdate(d *schema.ResourceData, meta interface{}) 
 	} else if v, ok := d.GetOkExists("multi_cluster_routing_use_any"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, multiClusterRoutingUseAnyProp)) {
 		obj["multiClusterRoutingUseAny"] = multiClusterRoutingUseAnyProp
 	}
+	rowAffinityProp, err := expandBigtableAppProfileRowAffinity(d.Get("row_affinity"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("row_affinity"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, rowAffinityProp)) {
+		obj["rowAffinity"] = rowAffinityProp
+	}
 	singleClusterRoutingProp, err := expandBigtableAppProfileSingleClusterRouting(d.Get("single_cluster_routing"), d, config)
 	if err != nil {
 		return err
@@ -394,6 +415,10 @@ func resourceBigtableAppProfileUpdate(d *schema.ResourceData, meta interface{}) 
 
 	if d.HasChange("multi_cluster_routing_use_any") {
 		updateMask = append(updateMask, "multiClusterRoutingUseAny")
+	}
+
+	if d.HasChange("row_affinity") {
+		updateMask = append(updateMask, "rowAffinity")
 	}
 
 	if d.HasChange("single_cluster_routing") {
@@ -573,6 +598,10 @@ func flattenBigtableAppProfileMultiClusterRoutingUseAny(v interface{}, d *schema
 	return true
 }
 
+func flattenBigtableAppProfileRowAffinity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenBigtableAppProfileSingleClusterRouting(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -648,6 +677,10 @@ func expandBigtableAppProfileMultiClusterRoutingUseAny(v interface{}, d tpgresou
 	}
 
 	return obj, nil
+}
+
+func expandBigtableAppProfileRowAffinity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandBigtableAppProfileSingleClusterRouting(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
