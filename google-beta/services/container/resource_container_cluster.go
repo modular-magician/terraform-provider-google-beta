@@ -2094,11 +2094,10 @@ func ResourceContainerCluster() *schema.Resource {
 				},
 			},
 			"dns_config": {
-				Type:             schema.TypeList,
-				Optional:         true,
-				MaxItems:         1,
-				DiffSuppressFunc: suppressDiffForAutopilot,
-				Description:      `Configuration for Cloud DNS for Kubernetes Engine.`,
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: `Configuration for Cloud DNS for Kubernetes Engine.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"additive_vpc_scope_dns_domain": {
@@ -2107,23 +2106,26 @@ func ResourceContainerCluster() *schema.Resource {
 							Optional:    true,
 						},
 						"cluster_dns": {
-							Type:         schema.TypeString,
-							Default:      "PROVIDER_UNSPECIFIED",
-							ValidateFunc: validation.StringInSlice([]string{"PROVIDER_UNSPECIFIED", "PLATFORM_DEFAULT", "CLOUD_DNS"}, false),
-							Description:  `Which in-cluster DNS provider should be used.`,
-							Optional:     true,
+							Type:             schema.TypeString,
+							Default:          "PROVIDER_UNSPECIFIED",
+							ValidateFunc:     validation.StringInSlice([]string{"PROVIDER_UNSPECIFIED", "PLATFORM_DEFAULT", "CLOUD_DNS"}, false),
+							DiffSuppressFunc: suppressDiffForAutopilot,
+							Description:      `Which in-cluster DNS provider should be used.`,
+							Optional:         true,
 						},
 						"cluster_dns_scope": {
-							Type:         schema.TypeString,
-							Default:      "DNS_SCOPE_UNSPECIFIED",
-							ValidateFunc: validation.StringInSlice([]string{"DNS_SCOPE_UNSPECIFIED", "CLUSTER_SCOPE", "VPC_SCOPE"}, false),
-							Description:  `The scope of access to cluster DNS records.`,
-							Optional:     true,
+							Type:             schema.TypeString,
+							Default:          "DNS_SCOPE_UNSPECIFIED",
+							ValidateFunc:     validation.StringInSlice([]string{"DNS_SCOPE_UNSPECIFIED", "CLUSTER_SCOPE", "VPC_SCOPE"}, false),
+							DiffSuppressFunc: suppressDiffForAutopilot,
+							Description:      `The scope of access to cluster DNS records.`,
+							Optional:         true,
 						},
 						"cluster_dns_domain": {
-							Type:        schema.TypeString,
-							Description: `The suffix used for all cluster service records.`,
-							Optional:    true,
+							Type:             schema.TypeString,
+							Description:      `The suffix used for all cluster service records.`,
+							DiffSuppressFunc: suppressDiffForAutopilot,
+							Optional:         true,
 						},
 					},
 				},
@@ -6753,6 +6755,11 @@ func containerClusterAutopilotCustomizeDiff(_ context.Context, d *schema.Resourc
 		if err := d.SetNew("networking_mode", "VPC_NATIVE"); err != nil {
 			return err
 		}
+	}
+	// Additive VPC Scope DNS domain is supported in Autopilot but only on creation.
+	// If additive_vpc_scope_dns_domain is changed and enable_autopilot is true, force recreation.
+	if d.HasChange("dns_config.0.additive_vpc_scope_dns_domain") && d.Get("enable_autopilot").(bool) {
+		return d.ForceNew("dns_config.0.additive_vpc_scope_dns_domain")
 	}
 	return nil
 }
