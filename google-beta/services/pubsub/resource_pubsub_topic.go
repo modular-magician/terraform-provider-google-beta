@@ -61,7 +61,7 @@ func ResourcePubsubTopic() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
-				Description:      `Name of the topic.`,
+				Description:      `Name of the topic. TEST`,
 			},
 			"ingestion_data_source_settings": {
 				Type:        schema.TypeList,

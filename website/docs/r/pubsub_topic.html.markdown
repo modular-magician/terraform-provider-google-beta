@@ -139,7 +139,7 @@ The following arguments are supported:
 
 * `name` -
   (Required)
-  Name of the topic.
+  Name of the topic. TEST
 
 
 - - -
