@@ -2017,7 +2017,6 @@ func resourceComputeRegionNetworkFirewallPolicyWithRulesUpdateEncoder(d *schema.
 	obj["rules"] = append(rules, predefinedRulesProp)
 
 	return obj, nil
-
 }
 
 func resourceComputeRegionNetworkFirewallPolicyWithRulesDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {

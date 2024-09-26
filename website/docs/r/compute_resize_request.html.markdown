@@ -15,6 +15,7 @@
 subcategory: "Compute Engine"
 description: |-
   Represents a Managed Instance Group Resize Request
+
   Resize Requests are the Managed Instance Group implementation of Dynamic Workload Scheduler Flex Start.
 ---
 

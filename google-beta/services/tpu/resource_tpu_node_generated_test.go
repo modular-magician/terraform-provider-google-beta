@@ -57,6 +57,7 @@ func TestAccTPUNode_tpuNodeBasicExample(t *testing.T) {
 
 func testAccTPUNode_tpuNodeBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+
 data "google_tpu_tensorflow_versions" "available" {
 }
 
@@ -99,6 +100,7 @@ func TestAccTPUNode_tpuNodeFullTestExample(t *testing.T) {
 
 func testAccTPUNode_tpuNodeFullTestExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+
 resource "google_tpu_node" "tpu" {
   name = "tf-test-test-tpu%{random_suffix}"
   zone = "us-central1-b"

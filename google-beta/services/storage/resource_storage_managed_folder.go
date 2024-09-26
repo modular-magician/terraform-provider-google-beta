@@ -88,7 +88,6 @@ within the folder will remain in a simulated folder with the
 same name.`,
 				Default: false,
 			},
-
 			"self_link": {
 				Type:     schema.TypeString,
 				Computed: true,

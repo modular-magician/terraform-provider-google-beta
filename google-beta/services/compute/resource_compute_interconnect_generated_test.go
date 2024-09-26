@@ -71,9 +71,6 @@ resource "google_compute_interconnect" "example-interconnect" {
   macsec_enabled       = false
   noc_contact_email    = "user@example.com"
   requested_features   = []
-  labels = {
-    mykey = "myvalue"
-  }
 }
 `, context)
 }

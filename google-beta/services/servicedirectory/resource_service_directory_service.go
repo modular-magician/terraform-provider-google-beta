@@ -346,7 +346,6 @@ func resourceServiceDirectoryServiceImport(d *schema.ResourceData, meta interfac
 			"{{location}}/{{namespace_id}}/{{service_id}}")
 	}
 	return []*schema.ResourceData{d}, nil
-
 }
 
 func flattenServiceDirectoryServiceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
