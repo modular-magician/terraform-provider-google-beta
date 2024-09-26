@@ -42,6 +42,19 @@ resource "google_gke_hub_fleet" "default" {
   }
 }
 ```
+## Example Usage - Gkehub Fleet Compliance Enabled By Default
+
+
+```hcl
+resource "google_gke_hub_fleet" "default" {
+  display_name = "my production fleet"
+  default_cluster_config {
+    compliance_config {
+      mode = "ENABLED"
+    }
+  }
+}
+```
 
 ## Argument Reference
 
@@ -78,6 +91,11 @@ The following arguments are supported:
   Enable/Disable Security Posture features for the cluster.
   Structure is [documented below](#nested_security_posture_config).
 
+* `compliance_config` -
+  (Optional)
+  Defines the config needed to enable/disable features for Compliance Posture.
+  Structure is [documented below](#nested_compliance_config).
+
 
 <a name="nested_binary_authorization_config"></a>The `binary_authorization_config` block supports:
 
@@ -111,6 +129,25 @@ The following arguments are supported:
   (Optional)
   Sets which mode to use for vulnerability scanning.
   Possible values are: `VULNERABILITY_DISABLED`, `VULNERABILITY_BASIC`, `VULNERABILITY_ENTERPRISE`.
+
+<a name="nested_compliance_config"></a>The `compliance_config` block supports:
+
+* `mode` -
+  (Required)
+  Sets which mode to use for Security Posture features.
+  Possible values are: `DISABLED`, `ENABLED`.
+
+* `compliance_standards` -
+  (Optional)
+  List of enabled compliance standards.
+  Structure is [documented below](#nested_compliance_standards).
+
+
+<a name="nested_compliance_standards"></a>The `compliance_standards` block supports:
+
+* `standard` -
+  (Required)
+  Name of the compliance standard.
 
 ## Attributes Reference
 

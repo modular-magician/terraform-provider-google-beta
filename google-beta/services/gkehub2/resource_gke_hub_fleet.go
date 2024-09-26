@@ -94,6 +94,37 @@ platform policies have the following format:
 								},
 							},
 						},
+						"compliance_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Defines the config needed to enable/disable features for Compliance Posture.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"mode": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"DISABLED", "ENABLED"}),
+										Description:  `Sets which mode to use for Security Posture features. Possible values: ["DISABLED", "ENABLED"]`,
+									},
+									"compliance_standards": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Optional:    true,
+										Description: `List of enabled compliance standards.`,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"standard": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: `Name of the compliance standard.`,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
 						"security_posture_config": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -529,6 +560,8 @@ func flattenGKEHub2FleetDefaultClusterConfig(v interface{}, d *schema.ResourceDa
 		flattenGKEHub2FleetDefaultClusterConfigBinaryAuthorizationConfig(original["binaryAuthorizationConfig"], d, config)
 	transformed["security_posture_config"] =
 		flattenGKEHub2FleetDefaultClusterConfigSecurityPostureConfig(original["securityPostureConfig"], d, config)
+	transformed["compliance_config"] =
+		flattenGKEHub2FleetDefaultClusterConfigComplianceConfig(original["compliancePostureConfig"], d, config)
 	return []interface{}{transformed}
 }
 func flattenGKEHub2FleetDefaultClusterConfigBinaryAuthorizationConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -595,6 +628,47 @@ func flattenGKEHub2FleetDefaultClusterConfigSecurityPostureConfigVulnerabilityMo
 	return v
 }
 
+func flattenGKEHub2FleetDefaultClusterConfigComplianceConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["mode"] =
+		flattenGKEHub2FleetDefaultClusterConfigComplianceConfigMode(original["mode"], d, config)
+	transformed["compliance_standards"] =
+		flattenGKEHub2FleetDefaultClusterConfigComplianceConfigComplianceStandards(original["complianceStandards"], d, config)
+	return []interface{}{transformed}
+}
+func flattenGKEHub2FleetDefaultClusterConfigComplianceConfigMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenGKEHub2FleetDefaultClusterConfigComplianceConfigComplianceStandards(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"standard": flattenGKEHub2FleetDefaultClusterConfigComplianceConfigComplianceStandardsStandard(original["standard"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenGKEHub2FleetDefaultClusterConfigComplianceConfigComplianceStandardsStandard(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandGKEHub2FleetDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -620,6 +694,13 @@ func expandGKEHub2FleetDefaultClusterConfig(v interface{}, d tpgresource.Terrafo
 		return nil, err
 	} else if val := reflect.ValueOf(transformedSecurityPostureConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["securityPostureConfig"] = transformedSecurityPostureConfig
+	}
+
+	transformedComplianceConfig, err := expandGKEHub2FleetDefaultClusterConfigComplianceConfig(original["compliance_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedComplianceConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["compliancePostureConfig"] = transformedComplianceConfig
 	}
 
 	return transformed, nil
@@ -712,5 +793,61 @@ func expandGKEHub2FleetDefaultClusterConfigSecurityPostureConfigMode(v interface
 }
 
 func expandGKEHub2FleetDefaultClusterConfigSecurityPostureConfigVulnerabilityMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandGKEHub2FleetDefaultClusterConfigComplianceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMode, err := expandGKEHub2FleetDefaultClusterConfigComplianceConfigMode(original["mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["mode"] = transformedMode
+	}
+
+	transformedComplianceStandards, err := expandGKEHub2FleetDefaultClusterConfigComplianceConfigComplianceStandards(original["compliance_standards"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedComplianceStandards); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["complianceStandards"] = transformedComplianceStandards
+	}
+
+	return transformed, nil
+}
+
+func expandGKEHub2FleetDefaultClusterConfigComplianceConfigMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandGKEHub2FleetDefaultClusterConfigComplianceConfigComplianceStandards(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedStandard, err := expandGKEHub2FleetDefaultClusterConfigComplianceConfigComplianceStandardsStandard(original["standard"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedStandard); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["standard"] = transformedStandard
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandGKEHub2FleetDefaultClusterConfigComplianceConfigComplianceStandardsStandard(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
