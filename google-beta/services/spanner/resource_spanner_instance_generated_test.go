@@ -50,7 +50,7 @@ func TestAccSpannerInstance_spannerInstanceBasicExample(t *testing.T) {
 				ResourceName:            "google_spanner_instance.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"config", "labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"config", "labels", "tags", "terraform_labels"},
 			},
 		},
 	})
@@ -90,7 +90,7 @@ func TestAccSpannerInstance_spannerInstanceProcessingUnitsExample(t *testing.T) 
 				ResourceName:            "google_spanner_instance.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"config", "labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"config", "labels", "tags", "terraform_labels"},
 			},
 		},
 	})
@@ -129,7 +129,7 @@ func TestAccSpannerInstance_spannerInstanceWithAutoscalingExample(t *testing.T) 
 				ResourceName:            "google_spanner_instance.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"config", "labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"config", "labels", "tags", "terraform_labels"},
 			},
 		},
 	})
@@ -180,7 +180,7 @@ func TestAccSpannerInstance_spannerInstanceMultiRegionalExample(t *testing.T) {
 				ResourceName:            "google_spanner_instance.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"config", "labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"config", "labels", "tags", "terraform_labels"},
 			},
 		},
 	})
