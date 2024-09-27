@@ -4,11 +4,11 @@ package redis_test
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 )
 
 func TestAccRedisInstance_update(t *testing.T) {
@@ -28,7 +28,7 @@ func TestAccRedisInstance_update(t *testing.T) {
 				ResourceName:            "google_redis_instance.test",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "deletion_protection"},
 			},
 			{
 				Config: testAccRedisInstance_update2(name, true),
@@ -37,10 +37,37 @@ func TestAccRedisInstance_update(t *testing.T) {
 				ResourceName:            "google_redis_instance.test",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "deletion_protection"},
 			},
 			{
 				Config: testAccRedisInstance_update2(name, false),
+			},
+		},
+	})
+}
+
+func TestAccRedisInstance_deletionprotection(t *testing.T) {
+	t.Parallel()
+
+	name := fmt.Sprintf("tf-test-%d", acctest.RandInt(t))
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckRedisInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccRedisInstance_deletionprotection(name, "us-central1", true),
+			},
+			{
+				ResourceName:            "google_redis_instance.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "deletion_protection"},
+			},
+			{
+				Config:      testAccRedisInstance_deletionprotection2(name, "us-west2", true),
+				ExpectError: regexp.MustCompile("deletion_protection"),
 			},
 		},
 	})
@@ -276,7 +303,7 @@ func TestAccRedisInstance_selfServiceUpdate(t *testing.T) {
 				ResourceName:            "google_redis_instance.cache",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"region"},
+				ImportStateVerifyIgnore: []string{"region", "deletion_protection"},
 			},
 			{
 				Config: testAccRedisInstance_selfServiceUpdate20240503_00_00(context),
@@ -285,7 +312,7 @@ func TestAccRedisInstance_selfServiceUpdate(t *testing.T) {
 				ResourceName:            "google_redis_instance.cache",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"region"},
+				ImportStateVerifyIgnore: []string{"region", "deletion_protection"},
 			},
 		},
 	})
@@ -334,6 +361,8 @@ resource "google_redis_instance" "test" {
   name           = "%s"
   display_name   = "pre-update"
   memory_size_gb = 1
+  deletion_protection = true
+
   region         = "us-central1"
 	%s
 
@@ -363,6 +392,7 @@ func testAccRedisInstance_update2(name string, preventDestroy bool) string {
 resource "google_redis_instance" "test" {
   name           = "%s"
   display_name   = "post-update"
+  deletion_protection = true
   memory_size_gb = 1
 	%s
 
@@ -378,6 +408,68 @@ resource "google_redis_instance" "test" {
   redis_version = "REDIS_5_0"
 }
 `, name, lifecycleBlock)
+}
+
+func testAccRedisInstance_deletionprotection(name string, region string, preventDestroy bool) string {
+	lifecycleBlock := ""
+	if preventDestroy {
+		lifecycleBlock = `
+		lifecycle {
+			prevent_destroy = false
+		}`
+	}
+	return fmt.Sprintf(`
+resource "google_redis_instance" "test" {
+  name           = "%s"
+  region       = "%s"
+  display_name   = "pre-update"
+  memory_size_gb = 1
+  deletion_protection = true
+	%s
+
+  labels = {
+    my_key    = "my_val"
+    other_key = "other_val"
+  }
+
+  redis_configs = {
+    maxmemory-policy       = "allkeys-lru"
+    notify-keyspace-events = "KEA"
+  }
+  redis_version = "REDIS_4_0"
+}
+`, name, region, lifecycleBlock)
+}
+
+func testAccRedisInstance_deletionprotection2(name string, region string, preventDestroy bool) string {
+	lifecycleBlock := ""
+	if preventDestroy {
+		lifecycleBlock = `
+		lifecycle {
+			prevent_destroy = false
+		}`
+	}
+	return fmt.Sprintf(`
+resource "google_redis_instance" "test" {
+  name           = "%s"
+  region       = "%s"
+  deletion_protection = true
+  display_name   = "post-update"
+  memory_size_gb = 1
+	%s
+
+  labels = {
+    my_key    = "my_val"
+    other_key = "new_val"
+  }
+
+  redis_configs = {
+    maxmemory-policy       = "noeviction"
+    notify-keyspace-events = ""
+  }
+  redis_version = "REDIS_5_0"
+}
+`, name, region, lifecycleBlock)
 }
 
 func testAccRedisInstance_regionFromLocation(name, zone string) string {
@@ -415,6 +507,7 @@ func testAccRedisInstance_selfServiceUpdate20240411_00_00(context map[string]int
 resource "google_redis_instance" "cache" {
   name           = "tf-test-memory-cache%{random_suffix}"
   memory_size_gb = 1
+  deletion_protection = true
   maintenance_version = "20240411_00_00"
 }
 `, context)
@@ -425,6 +518,7 @@ func testAccRedisInstance_selfServiceUpdate20240503_00_00(context map[string]int
 resource "google_redis_instance" "cache" {
   name           = "tf-test-memory-cache%{random_suffix}"
   memory_size_gb = 1
+  deletion_protection = true
   maintenance_version = "20240503_00_00"
 }
 `, context)
