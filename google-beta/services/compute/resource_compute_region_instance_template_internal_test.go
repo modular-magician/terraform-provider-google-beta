@@ -21,8 +21,9 @@ func TestComputeRegionInstanceTemplate_reorderDisks(t *testing.T) {
 	cDeviceName := map[string]interface{}{
 		"device_name": "disk-1",
 	}
-	cScratch := map[string]interface{}{
-		"type": "SCRATCH",
+	cScratchScsi := map[string]interface{}{
+		"type":      "SCRATCH",
+		"interface": "SCSI",
 	}
 	cSource := map[string]interface{}{
 		"source": "disk-source",
@@ -80,7 +81,7 @@ func TestComputeRegionInstanceTemplate_reorderDisks(t *testing.T) {
 				aBoot, aScratchNvme, aSource, aScratchScsi, aFallThrough, aDeviceName,
 			},
 			ConfigDisks: []interface{}{
-				cBoot, cFallThrough, cDeviceName, cScratch, cSource, cScratchNvme,
+				cBoot, cFallThrough, cDeviceName, cScratchScsi, cSource, cScratchNvme,
 			},
 			ExpectedResult: []map[string]interface{}{
 				aBoot, aFallThrough, aDeviceName, aScratchScsi, aSource, aScratchNvme,
@@ -91,7 +92,7 @@ func TestComputeRegionInstanceTemplate_reorderDisks(t *testing.T) {
 				aBoot, aNoMatch, aScratchNvme, aScratchScsi, aFallThrough, aDeviceName,
 			},
 			ConfigDisks: []interface{}{
-				cBoot, cFallThrough, cDeviceName, cScratch, cSource, cScratchNvme,
+				cBoot, cFallThrough, cDeviceName, cScratchScsi, cSource, cScratchNvme,
 			},
 			ExpectedResult: []map[string]interface{}{
 				aBoot, aFallThrough, aDeviceName, aScratchScsi, aScratchNvme, aNoMatch,
@@ -102,7 +103,7 @@ func TestComputeRegionInstanceTemplate_reorderDisks(t *testing.T) {
 				aBoot, aScratchNvme, aFallThrough, aSource, aScratchScsi, aFallThrough2, aDeviceName,
 			},
 			ConfigDisks: []interface{}{
-				cBoot, cFallThrough, cDeviceName, cScratch, cFallThrough, cSource, cScratchNvme,
+				cBoot, cFallThrough, cDeviceName, cScratchScsi, cFallThrough, cSource, cScratchNvme,
 			},
 			ExpectedResult: []map[string]interface{}{
 				aBoot, aFallThrough, aDeviceName, aScratchScsi, aFallThrough2, aSource, aScratchNvme,
