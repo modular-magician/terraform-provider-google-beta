@@ -262,6 +262,16 @@ associated with IP range 10.0.0.0/29.`,
 					Type: schema.TypeString,
 				},
 			},
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Description: `A map of resource manager tags.
+Resource manager tag keys and values have the same definition as resource manager tags.
+Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/{tag_value_id}.
+The field is ignored (both PUT & PATCH) when empty.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
+			},
 			"zones": {
 				Type:     schema.TypeSet,
 				Computed: true,
@@ -439,6 +449,12 @@ func resourceMemcacheInstanceCreate(d *schema.ResourceData, meta interface{}) er
 		return err
 	} else if v, ok := d.GetOkExists("reserved_ip_range_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(reservedIpRangeIdProp)) && (ok || !reflect.DeepEqual(v, reservedIpRangeIdProp)) {
 		obj["reservedIpRangeId"] = reservedIpRangeIdProp
+	}
+	tagsProp, err := expandMemcacheInstanceTags(d.Get("tags"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tags"); !tpgresource.IsEmptyValue(reflect.ValueOf(tagsProp)) && (ok || !reflect.DeepEqual(v, tagsProp)) {
+		obj["tags"] = tagsProp
 	}
 	labelsProp, err := expandMemcacheInstanceEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -1477,6 +1493,17 @@ func expandMemcacheInstanceMaintenancePolicyWeeklyMaintenanceWindowStartTimeNano
 
 func expandMemcacheInstanceReservedIpRangeId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandMemcacheInstanceTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }
 
 func expandMemcacheInstanceEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {

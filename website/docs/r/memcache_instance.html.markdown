@@ -165,6 +165,13 @@ The following arguments are supported:
   the private service access connection for example, "test-default"
   associated with IP range 10.0.0.0/29.
 
+* `tags` -
+  (Optional)
+  A map of resource manager tags.
+  Resource manager tag keys and values have the same definition as resource manager tags.
+  Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/{tag_value_id}.
+  The field is ignored (both PUT & PATCH) when empty.
+
 * `region` -
   (Optional)
   The region of the Memcache instance. If it is not provided, the provider region is used.
