@@ -173,7 +173,7 @@ resource "google_network_security_security_profile_group" "security_profile_grou
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
-  parent      = google_folder.folder.name
+  parent      = "%{org_name}"
   short_name  = "tf-test-policy-%{random_suffix}"
   description = "Resource created for Terraform acceptance testing"
 }
@@ -231,7 +231,7 @@ resource "google_network_security_security_profile_group" "security_profile_grou
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
-  parent      = google_folder.folder.name
+  parent      = "%{org_name}"
   short_name  = "tf-test-policy-%{random_suffix}"
   description = "Resource created for Terraform acceptance testing"
 }
@@ -284,7 +284,7 @@ resource "google_folder" "folder" {
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
-  parent      = google_folder.folder.name
+  parent      = "%{org_name}"
   short_name  = "tf-test-policy-%{random_suffix}"
   description = "Resource created for Terraform acceptance testing"
 }
@@ -350,7 +350,7 @@ resource "google_folder" "folder" {
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
-  parent      = google_folder.folder.name
+  parent      = "%{org_name}"
   short_name  = "tf-test-policy-%{random_suffix}"
   description = "Resource created for Terraform acceptance testing"
 }
@@ -426,7 +426,7 @@ resource "google_folder" "folder" {
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
-  parent      = google_folder.folder.id
+  parent      = "%{org_name}"
   short_name  = "tf-test-policy-%{random_suffix}"
   description = "Resource created for Terraform acceptance testing"
 }
@@ -478,7 +478,7 @@ resource "google_folder" "folder" {
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
-  parent      = google_folder.folder.name
+  parent      = "%{org_name}"
   short_name  = "tf-test-policy-%{random_suffix}"
   description = "Resource created for Terraform acceptance testing"
 }
@@ -551,9 +551,9 @@ resource "google_folder" "folder" {
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
-  parent      = google_folder.folder.id
+  parent      = "%{org_name}"
   short_name  = "tf-test-policy-%{random_suffix}"
-  description = "Description Update"
+  description = "Resource created for Terraform acceptance testing"
 }
 
 resource "google_network_security_address_group" "address_group" {
@@ -645,7 +645,7 @@ resource "google_folder" "folder" {
 }
 
 resource "google_compute_firewall_policy" "fw_policy" {
-  parent      = google_folder.folder.name
+  parent      = "%{org_name}"
   short_name  = "tf-test-policy-%{random_suffix}"
   description = "Resource created for Terraform acceptance testing"
 }

@@ -87,7 +87,7 @@ resource "google_folder" "folder" {
 }
 
 resource "google_compute_firewall_policy" "default" {
-  parent      = google_folder.folder.id
+  parent      = "organizations/%{org_id}"
   short_name  = "tf-test-policy%{random_suffix}"
   description = "Resource created for Terraform acceptance testing"
 }
@@ -141,7 +141,7 @@ resource "google_folder" "folder" {
 }
 
 resource "google_compute_firewall_policy" "default" {
-  parent      = google_folder.folder.id
+  parent      = "organizations/%{org_id}"
   short_name  = "tf-test-policy%{random_suffix}"
   description = "Resource created for Terraform acceptance testing"
 }
