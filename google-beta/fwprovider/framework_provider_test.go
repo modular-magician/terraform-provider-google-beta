@@ -13,14 +13,11 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/fwresource"
-	"github.com/hashicorp/terraform-provider-google-beta/google-beta/fwtransport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
 func TestAccFrameworkProviderMeta_setModuleName(t *testing.T) {
-	// TODO: https://github.com/hashicorp/terraform-provider-google/issues/14158
-	acctest.SkipIfVcr(t)
 	t.Parallel()
 
 	moduleName := "my-module"
@@ -65,8 +62,6 @@ func TestAccFrameworkProviderBasePath_setInvalidBasePath(t *testing.T) {
 }
 
 func TestAccFrameworkProviderBasePath_setBasePath(t *testing.T) {
-	// TODO: https://github.com/hashicorp/terraform-provider-google/issues/14158
-	acctest.SkipIfVcr(t)
 	t.Parallel()
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -222,21 +217,28 @@ func testAccCheckDNSManagedZoneDestroyProducerFramework(t *testing.T) func(s *te
 				continue
 			}
 
-			p := acctest.GetFwTestProvider(t)
+			config := acctest.GoogleProviderConfig(t)
 
-			url, err := fwresource.ReplaceVarsForFrameworkTest(&p.FrameworkProvider.FrameworkProviderConfig, rs, "{{DNSBasePath}}projects/{{project}}/managedZones/{{name}}")
+			url, err := fwresource.ReplaceVarsForFrameworkTest(config, rs, "{{DNSBasePath}}projects/{{project}}/managedZones/{{name}}")
 			if err != nil {
 				return err
 			}
 
 			billingProject := ""
 
-			if !p.BillingProject.IsNull() && p.BillingProject.String() != "" {
-				billingProject = p.BillingProject.String()
+			if config.BillingProject != "" {
+				billingProject = config.BillingProject
 			}
 
-			_, diags := fwtransport.SendFrameworkRequest(&p.FrameworkProvider.FrameworkProviderConfig, "GET", billingProject, url, p.UserAgent, nil)
-			if !diags.HasError() {
+			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+				Config:    config,
+				Method:    "GET",
+				Project:   billingProject,
+				RawURL:    url,
+				UserAgent: config.UserAgent,
+			})
+
+			if err == nil {
 				return fmt.Errorf("DNSManagedZone still exists at %s", url)
 			}
 		}
