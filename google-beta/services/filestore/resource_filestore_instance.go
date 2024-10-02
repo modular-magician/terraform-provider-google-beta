@@ -267,6 +267,57 @@ NFSv4.1 can be used with HIGH_SCALE_SSD, ZONAL, REGIONAL and ENTERPRISE.
 The default is NFSv3. Default value: "NFS_V3" Possible values: ["NFS_V3", "NFS_V4_1"]`,
 				Default: "NFS_V3",
 			},
+			"replication": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Replication configuration, once set, this cannot be updated or removed.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"replicas": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `The replication role.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"peer_instance": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `The peer instance.`,
+									},
+									"last_active_sync_time": {
+										Type:     schema.TypeString,
+										Computed: true,
+										Description: `Output only. The timestamp of the latest replication snapshot taken on the active instance and is already replicated safely.
+A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits.
+Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z"`,
+									},
+									"state": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: `Output only. The replica state`,
+									},
+									"state_reasons": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: `Output only. Additional information about the replication state, if available.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
+						"role": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"ROLE_UNSPECIFIED", "ACTIVE", "STANDBY", ""}),
+							Description:  `The replication role. Default value: "STANDBY" Possible values: ["ROLE_UNSPECIFIED", "ACTIVE", "STANDBY"]`,
+							Default:      "STANDBY",
+						},
+					},
+				},
+			},
 			"zone": {
 				Type:         schema.TypeString,
 				Computed:     true,
@@ -366,6 +417,12 @@ func resourceFilestoreInstanceCreate(d *schema.ResourceData, meta interface{}) e
 		return err
 	} else if v, ok := d.GetOkExists("deletion_protection_reason"); !tpgresource.IsEmptyValue(reflect.ValueOf(deletionProtectionReasonProp)) && (ok || !reflect.DeepEqual(v, deletionProtectionReasonProp)) {
 		obj["deletionProtectionReason"] = deletionProtectionReasonProp
+	}
+	replicationProp, err := expandFilestoreInstanceReplication(d.Get("replication"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("replication"); !tpgresource.IsEmptyValue(reflect.ValueOf(replicationProp)) && (ok || !reflect.DeepEqual(v, replicationProp)) {
+		obj["replication"] = replicationProp
 	}
 	labelsProp, err := expandFilestoreInstanceEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -534,6 +591,9 @@ func resourceFilestoreInstanceRead(d *schema.ResourceData, meta interface{}) err
 	if err := d.Set("deletion_protection_reason", flattenFilestoreInstanceDeletionProtectionReason(res["deletionProtectionReason"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	if err := d.Set("replication", flattenFilestoreInstanceReplication(res["replication"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
 	if err := d.Set("terraform_labels", flattenFilestoreInstanceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
@@ -584,6 +644,12 @@ func resourceFilestoreInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 	} else if v, ok := d.GetOkExists("deletion_protection_reason"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, deletionProtectionReasonProp)) {
 		obj["deletionProtectionReason"] = deletionProtectionReasonProp
 	}
+	replicationProp, err := expandFilestoreInstanceReplication(d.Get("replication"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("replication"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, replicationProp)) {
+		obj["replication"] = replicationProp
+	}
 	labelsProp, err := expandFilestoreInstanceEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -614,6 +680,10 @@ func resourceFilestoreInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 
 	if d.HasChange("deletion_protection_reason") {
 		updateMask = append(updateMask, "deletionProtectionReason")
+	}
+
+	if d.HasChange("replication") {
+		updateMask = append(updateMask, "replication")
 	}
 
 	if d.HasChange("effective_labels") {
@@ -951,6 +1021,62 @@ func flattenFilestoreInstanceDeletionProtectionReason(v interface{}, d *schema.R
 	return v
 }
 
+func flattenFilestoreInstanceReplication(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["role"] =
+		flattenFilestoreInstanceReplicationRole(original["role"], d, config)
+	transformed["replicas"] =
+		flattenFilestoreInstanceReplicationReplicas(original["replicas"], d, config)
+	return []interface{}{transformed}
+}
+func flattenFilestoreInstanceReplicationRole(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenFilestoreInstanceReplicationReplicas(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"state":                 flattenFilestoreInstanceReplicationReplicasState(original["state"], d, config),
+			"state_reasons":         flattenFilestoreInstanceReplicationReplicasStateReasons(original["stateReasons"], d, config),
+			"peer_instance":         flattenFilestoreInstanceReplicationReplicasPeerInstance(original["peerInstance"], d, config),
+			"last_active_sync_time": flattenFilestoreInstanceReplicationReplicasLastActiveSyncTime(original["lastActiveSyncTime"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenFilestoreInstanceReplicationReplicasState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenFilestoreInstanceReplicationReplicasStateReasons(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenFilestoreInstanceReplicationReplicasPeerInstance(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenFilestoreInstanceReplicationReplicasLastActiveSyncTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenFilestoreInstanceTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1186,6 +1312,95 @@ func expandFilestoreInstanceDeletionProtectionEnabled(v interface{}, d tpgresour
 }
 
 func expandFilestoreInstanceDeletionProtectionReason(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandFilestoreInstanceReplication(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedRole, err := expandFilestoreInstanceReplicationRole(original["role"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRole); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["role"] = transformedRole
+	}
+
+	transformedReplicas, err := expandFilestoreInstanceReplicationReplicas(original["replicas"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedReplicas); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["replicas"] = transformedReplicas
+	}
+
+	return transformed, nil
+}
+
+func expandFilestoreInstanceReplicationRole(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandFilestoreInstanceReplicationReplicas(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedState, err := expandFilestoreInstanceReplicationReplicasState(original["state"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["state"] = transformedState
+		}
+
+		transformedStateReasons, err := expandFilestoreInstanceReplicationReplicasStateReasons(original["state_reasons"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedStateReasons); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["stateReasons"] = transformedStateReasons
+		}
+
+		transformedPeerInstance, err := expandFilestoreInstanceReplicationReplicasPeerInstance(original["peer_instance"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPeerInstance); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["peerInstance"] = transformedPeerInstance
+		}
+
+		transformedLastActiveSyncTime, err := expandFilestoreInstanceReplicationReplicasLastActiveSyncTime(original["last_active_sync_time"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedLastActiveSyncTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["lastActiveSyncTime"] = transformedLastActiveSyncTime
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandFilestoreInstanceReplicationReplicasState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandFilestoreInstanceReplicationReplicasStateReasons(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandFilestoreInstanceReplicationReplicasPeerInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandFilestoreInstanceReplicationReplicasLastActiveSyncTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

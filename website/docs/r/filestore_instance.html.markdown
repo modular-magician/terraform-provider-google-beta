@@ -305,6 +305,11 @@ The following arguments are supported:
   (Optional)
   The reason for enabling deletion protection.
 
+* `replication` -
+  (Optional)
+  Replication configuration, once set, this cannot be updated or removed.
+  Structure is [documented below](#nested_replication).
+
 * `zone` -
   (Optional, Deprecated)
   The name of the Filestore zone of the instance.
@@ -318,6 +323,40 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+
+<a name="nested_replication"></a>The `replication` block supports:
+
+* `role` -
+  (Optional)
+  The replication role.
+  Default value is `STANDBY`.
+  Possible values are: `ROLE_UNSPECIFIED`, `ACTIVE`, `STANDBY`.
+
+* `replicas` -
+  (Optional)
+  The replication role.
+  Structure is [documented below](#nested_replicas).
+
+
+<a name="nested_replicas"></a>The `replicas` block supports:
+
+* `state` -
+  (Output)
+  Output only. The replica state
+
+* `state_reasons` -
+  (Output)
+  Output only. Additional information about the replication state, if available.
+
+* `peer_instance` -
+  (Required)
+  The peer instance.
+
+* `last_active_sync_time` -
+  (Output)
+  Output only. The timestamp of the latest replication snapshot taken on the active instance and is already replicated safely.
+  A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits.
+  Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z"
 
 ## Attributes Reference
 
