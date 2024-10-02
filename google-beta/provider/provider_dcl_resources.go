@@ -42,7 +42,6 @@ var dclResources = map[string]*schema.Resource{
 	"google_clouddeploy_delivery_pipeline":                      clouddeploy.ResourceClouddeployDeliveryPipeline(),
 	"google_clouddeploy_target":                                 clouddeploy.ResourceClouddeployTarget(),
 	"google_compute_firewall_policy":                            compute.ResourceComputeFirewallPolicy(),
-	"google_compute_firewall_policy_association":                compute.ResourceComputeFirewallPolicyAssociation(),
 	"google_compute_firewall_policy_rule":                       compute.ResourceComputeFirewallPolicyRule(),
 	"google_compute_network_firewall_policy_association":        compute.ResourceComputeNetworkFirewallPolicyAssociation(),
 	"google_compute_region_network_firewall_policy_association": compute.ResourceComputeRegionNetworkFirewallPolicyAssociation(),
