@@ -38,6 +38,14 @@ var loggingBucketConfigSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: `An optional description for this bucket.`,
 	},
+	"restricted_fields": {
+		Type:        schema.TypeList,
+		Optional:    true,
+		Description: `Optional fields to configure with field-level access`,
+		Elem: &schema.Schema{
+			Type: schema.TypeString,
+		},
+	},
 	"retention_days": {
 		Type:        schema.TypeInt,
 		Optional:    true,
@@ -207,7 +215,7 @@ func resourceLoggingBucketConfigAcquireOrCreate(parentType string, iDFunc loggin
 				UserAgent: userAgent,
 			})
 			if res == nil {
-				log.Printf("[DEGUG] Loggin Bucket not exist %s", id)
+				log.Printf("[DEGUG] Logging Bucket does not exist %s", id)
 				// we need to pass the id in here because we don't want to set it in state
 				// until we know there won't be any errors on create
 				return resourceLoggingBucketConfigCreate(d, meta, id)
@@ -230,6 +238,7 @@ func resourceLoggingBucketConfigCreate(d *schema.ResourceData, meta interface{},
 	obj := make(map[string]interface{})
 	obj["name"] = d.Get("name")
 	obj["description"] = d.Get("description")
+	obj["restrictedFields"] = d.Get("restricted_fields")
 	obj["retentionDays"] = d.Get("retention_days")
 	obj["cmekSettings"] = expandCmekSettings(d.Get("cmek_settings"))
 	obj["indexConfigs"] = expandIndexConfigs(d.Get("index_configs"))
@@ -306,6 +315,9 @@ func resourceLoggingBucketConfigRead(d *schema.ResourceData, meta interface{}) e
 	if err := d.Set("description", res["description"]); err != nil {
 		return fmt.Errorf("Error setting description: %s", err)
 	}
+	if err := d.Set("restricted_fields", res["restrictedFields"]); err != nil {
+		return fmt.Errorf("Error setting restricted_fields: %s", err)
+	}
 	if err := d.Set("lifecycle_state", res["lifecycleState"]); err != nil {
 		return fmt.Errorf("Error setting lifecycle_state: %s", err)
 	}
@@ -340,6 +352,7 @@ func resourceLoggingBucketConfigUpdate(d *schema.ResourceData, meta interface{})
 
 	obj["retentionDays"] = d.Get("retention_days")
 	obj["description"] = d.Get("description")
+	obj["restrictedFields"] = d.Get("restricted_fields")
 	obj["cmekSettings"] = expandCmekSettings(d.Get("cmek_settings"))
 	obj["indexConfigs"] = expandIndexConfigs(d.Get("index_configs"))
 
@@ -349,6 +362,9 @@ func resourceLoggingBucketConfigUpdate(d *schema.ResourceData, meta interface{})
 	}
 	if d.HasChange("description") {
 		updateMask = append(updateMask, "description")
+	}
+	if d.HasChange("restricted_fields") {
+		updateMask = append(updateMask, "restrictedFields")
 	}
 	if d.HasChange("cmek_settings") {
 		updateMask = append(updateMask, "cmekSettings")
