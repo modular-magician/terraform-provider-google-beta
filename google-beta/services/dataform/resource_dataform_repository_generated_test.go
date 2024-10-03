@@ -34,7 +34,9 @@ func TestAccDataformRepository_dataformRepositoryWithCloudsourceRepoExample(t *t
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"crypto_key_name": tpgresource.GetResourceNameFromSelfLink(acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name),
+		"key_ring_name":   acctest.BootstrapKMSKeyInLocation(t, "us-central1").KeyRing.Name,
+		"random_suffix":   acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -82,29 +84,20 @@ resource "google_secret_manager_secret_version" "secret_version" {
   secret_data = "tf-test-secret-data%{random_suffix}"
 }
 
-resource "google_kms_key_ring" "keyring" {
+data "google_kms_crypto_key" "example_key" {
   provider = google-beta
   
-  name     = "tf-test-example-key-ring%{random_suffix}"
-  location = "us-central1"
+  name            = "%{crypto_key_name}"
+  key_ring        = "%{key_ring_name}"
 }
 
-resource "google_kms_crypto_key" "example_key" {
-  provider = google-beta
-  
-  name            = "tf-test-example-crypto-key-name%{random_suffix}"
-  key_ring        = google_kms_key_ring.keyring.id
-}
-
-resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
+resource "google_kms_crypto_key_iam_member" "crypto_key_member" {
   provider = google-beta
 
-  crypto_key_id = google_kms_crypto_key.example_key.id
+  crypto_key_id = data.google_kms_crypto_key.example_key.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
 
-  members = [
-    "serviceAccount:service-${data.google_project.project.number}@gcp-sa-dataform.iam.gserviceaccount.com",
-  ]
+  member = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-dataform.iam.gserviceaccount.com"
 }
 
 resource "google_dataform_repository" "dataform_repository" {
@@ -112,7 +105,7 @@ resource "google_dataform_repository" "dataform_repository" {
   name = "tf_test_dataform_repository%{random_suffix}"
   display_name = "tf_test_dataform_repository%{random_suffix}"
   npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
-  kms_key_name = google_kms_crypto_key.example_key.id
+  kms_key_name = data.google_kms_crypto_key.example_key.id
 
   labels = {
     label_foo1 = "label-bar1"
@@ -131,7 +124,7 @@ resource "google_dataform_repository" "dataform_repository" {
   }
 
   depends_on = [
-    google_kms_crypto_key_iam_binding.crypto_key_binding
+    google_kms_crypto_key_iam_member.crypto_key_member
   ]
 }
 `, context)

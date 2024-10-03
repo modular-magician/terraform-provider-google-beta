@@ -50,29 +50,20 @@ resource "google_secret_manager_secret_version" "secret_version" {
   secret_data = "secret-data"
 }
 
-resource "google_kms_key_ring" "keyring" {
-  provider = google-beta
-  
-  name     = "example-key-ring"
-  location = "us-central1"
-}
-
-resource "google_kms_crypto_key" "example_key" {
+data "google_kms_crypto_key" "example_key" {
   provider = google-beta
   
   name            = "example-crypto-key-name"
-  key_ring        = google_kms_key_ring.keyring.id
+  key_ring        = "example-key-ring"
 }
 
-resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
+resource "google_kms_crypto_key_iam_member" "crypto_key_member" {
   provider = google-beta
 
-  crypto_key_id = google_kms_crypto_key.example_key.id
+  crypto_key_id = data.google_kms_crypto_key.example_key.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
 
-  members = [
-    "serviceAccount:service-${data.google_project.project.number}@gcp-sa-dataform.iam.gserviceaccount.com",
-  ]
+  member = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-dataform.iam.gserviceaccount.com"
 }
 
 resource "google_dataform_repository" "dataform_repository" {
@@ -80,7 +71,7 @@ resource "google_dataform_repository" "dataform_repository" {
   name = "dataform_repository"
   display_name = "dataform_repository"
   npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
-  kms_key_name = google_kms_crypto_key.example_key.id
+  kms_key_name = data.google_kms_crypto_key.example_key.id
 
   labels = {
     label_foo1 = "label-bar1"
@@ -99,7 +90,7 @@ resource "google_dataform_repository" "dataform_repository" {
   }
 
   depends_on = [
-    google_kms_crypto_key_iam_binding.crypto_key_binding
+    google_kms_crypto_key_iam_member.crypto_key_member
   ]
 }
 ```
