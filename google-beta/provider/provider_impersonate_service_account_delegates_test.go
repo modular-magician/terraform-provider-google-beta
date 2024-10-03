@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 )
 
-func TestAccFwProvider_impersonate_service_account_delegates(t *testing.T) {
+func TestAccSdkProvider_impersonate_service_account_delegates(t *testing.T) {
 	testCases := map[string]func(t *testing.T){
 		// Configuring the provider using inputs
 		//     There are no environment variables for this field
