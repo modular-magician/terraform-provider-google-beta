@@ -125,10 +125,6 @@ func TestAccDataformRepositoryIamPolicyGenerated(t *testing.T) {
 
 func testAccDataformRepositoryIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-data "google_project" "project" {
-  provider = google-beta
-}
-
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
   name = "my/repository%{random_suffix}"
@@ -150,46 +146,17 @@ resource "google_secret_manager_secret_version" "secret_version" {
   secret_data = "tf-test-secret-data%{random_suffix}"
 }
 
-resource "google_kms_key_ring" "keyring" {
-  provider = google-beta
-  
-  name     = "tf-test-example-key-ring%{random_suffix}"
-  location = "us-central1"
-}
-
-resource "google_kms_crypto_key" "example_key" {
-  provider = google-beta
-  
-  name            = "tf-test-example-crypto-key-name%{random_suffix}"
-  key_ring        = google_kms_key_ring.keyring.id
-}
-
-resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
-  provider = google-beta
-
-  crypto_key_id = google_kms_crypto_key.example_key.id
-  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-
-  members = [
-    "serviceAccount:service-${data.google_project.project.number}@gcp-sa-dataform.iam.gserviceaccount.com",
-  ]
-}
-
 resource "google_dataform_repository" "dataform_repository" {
   provider = google-beta
   name = "tf_test_dataform_repository%{random_suffix}"
-  display_name = "tf_test_dataform_repository%{random_suffix}"
-  npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
-  kms_key_name = google_kms_crypto_key.example_key.id
-
-  labels = {
-    label_foo1 = "label-bar1"
-  }
 
   git_remote_settings {
       url = google_sourcerepo_repository.git_repository.url
       default_branch = "main"
-      authentication_token_secret_version = google_secret_manager_secret_version.secret_version.id
+      ssh_authentication_config {
+        user_private_key_secret_version = google_secret_manager_secret_version.secret_version.id
+        host_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU"
+      }
   }
 
   workspace_compilation_overrides {
@@ -198,9 +165,7 @@ resource "google_dataform_repository" "dataform_repository" {
     table_prefix = "prefix_"
   }
 
-  depends_on = [
-    google_kms_crypto_key_iam_binding.crypto_key_binding
-  ]
+  service_account = "1234567890-compute@developer.gserviceaccount.com"
 }
 
 resource "google_dataform_repository_iam_member" "foo" {
@@ -216,10 +181,6 @@ resource "google_dataform_repository_iam_member" "foo" {
 
 func testAccDataformRepositoryIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-data "google_project" "project" {
-  provider = google-beta
-}
-
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
   name = "my/repository%{random_suffix}"
@@ -241,46 +202,17 @@ resource "google_secret_manager_secret_version" "secret_version" {
   secret_data = "tf-test-secret-data%{random_suffix}"
 }
 
-resource "google_kms_key_ring" "keyring" {
-  provider = google-beta
-  
-  name     = "tf-test-example-key-ring%{random_suffix}"
-  location = "us-central1"
-}
-
-resource "google_kms_crypto_key" "example_key" {
-  provider = google-beta
-  
-  name            = "tf-test-example-crypto-key-name%{random_suffix}"
-  key_ring        = google_kms_key_ring.keyring.id
-}
-
-resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
-  provider = google-beta
-
-  crypto_key_id = google_kms_crypto_key.example_key.id
-  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-
-  members = [
-    "serviceAccount:service-${data.google_project.project.number}@gcp-sa-dataform.iam.gserviceaccount.com",
-  ]
-}
-
 resource "google_dataform_repository" "dataform_repository" {
   provider = google-beta
   name = "tf_test_dataform_repository%{random_suffix}"
-  display_name = "tf_test_dataform_repository%{random_suffix}"
-  npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
-  kms_key_name = google_kms_crypto_key.example_key.id
-
-  labels = {
-    label_foo1 = "label-bar1"
-  }
 
   git_remote_settings {
       url = google_sourcerepo_repository.git_repository.url
       default_branch = "main"
-      authentication_token_secret_version = google_secret_manager_secret_version.secret_version.id
+      ssh_authentication_config {
+        user_private_key_secret_version = google_secret_manager_secret_version.secret_version.id
+        host_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU"
+      }
   }
 
   workspace_compilation_overrides {
@@ -289,9 +221,7 @@ resource "google_dataform_repository" "dataform_repository" {
     table_prefix = "prefix_"
   }
 
-  depends_on = [
-    google_kms_crypto_key_iam_binding.crypto_key_binding
-  ]
+  service_account = "1234567890-compute@developer.gserviceaccount.com"
 }
 
 data "google_iam_policy" "foo" {
@@ -324,10 +254,6 @@ data "google_dataform_repository_iam_policy" "foo" {
 
 func testAccDataformRepositoryIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-data "google_project" "project" {
-  provider = google-beta
-}
-
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
   name = "my/repository%{random_suffix}"
@@ -349,46 +275,17 @@ resource "google_secret_manager_secret_version" "secret_version" {
   secret_data = "tf-test-secret-data%{random_suffix}"
 }
 
-resource "google_kms_key_ring" "keyring" {
-  provider = google-beta
-  
-  name     = "tf-test-example-key-ring%{random_suffix}"
-  location = "us-central1"
-}
-
-resource "google_kms_crypto_key" "example_key" {
-  provider = google-beta
-  
-  name            = "tf-test-example-crypto-key-name%{random_suffix}"
-  key_ring        = google_kms_key_ring.keyring.id
-}
-
-resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
-  provider = google-beta
-
-  crypto_key_id = google_kms_crypto_key.example_key.id
-  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-
-  members = [
-    "serviceAccount:service-${data.google_project.project.number}@gcp-sa-dataform.iam.gserviceaccount.com",
-  ]
-}
-
 resource "google_dataform_repository" "dataform_repository" {
   provider = google-beta
   name = "tf_test_dataform_repository%{random_suffix}"
-  display_name = "tf_test_dataform_repository%{random_suffix}"
-  npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
-  kms_key_name = google_kms_crypto_key.example_key.id
-
-  labels = {
-    label_foo1 = "label-bar1"
-  }
 
   git_remote_settings {
       url = google_sourcerepo_repository.git_repository.url
       default_branch = "main"
-      authentication_token_secret_version = google_secret_manager_secret_version.secret_version.id
+      ssh_authentication_config {
+        user_private_key_secret_version = google_secret_manager_secret_version.secret_version.id
+        host_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU"
+      }
   }
 
   workspace_compilation_overrides {
@@ -397,9 +294,7 @@ resource "google_dataform_repository" "dataform_repository" {
     table_prefix = "prefix_"
   }
 
-  depends_on = [
-    google_kms_crypto_key_iam_binding.crypto_key_binding
-  ]
+  service_account = "1234567890-compute@developer.gserviceaccount.com"
 }
 
 data "google_iam_policy" "foo" {
@@ -418,10 +313,6 @@ resource "google_dataform_repository_iam_policy" "foo" {
 
 func testAccDataformRepositoryIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-data "google_project" "project" {
-  provider = google-beta
-}
-
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
   name = "my/repository%{random_suffix}"
@@ -443,46 +334,17 @@ resource "google_secret_manager_secret_version" "secret_version" {
   secret_data = "tf-test-secret-data%{random_suffix}"
 }
 
-resource "google_kms_key_ring" "keyring" {
-  provider = google-beta
-  
-  name     = "tf-test-example-key-ring%{random_suffix}"
-  location = "us-central1"
-}
-
-resource "google_kms_crypto_key" "example_key" {
-  provider = google-beta
-  
-  name            = "tf-test-example-crypto-key-name%{random_suffix}"
-  key_ring        = google_kms_key_ring.keyring.id
-}
-
-resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
-  provider = google-beta
-
-  crypto_key_id = google_kms_crypto_key.example_key.id
-  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-
-  members = [
-    "serviceAccount:service-${data.google_project.project.number}@gcp-sa-dataform.iam.gserviceaccount.com",
-  ]
-}
-
 resource "google_dataform_repository" "dataform_repository" {
   provider = google-beta
   name = "tf_test_dataform_repository%{random_suffix}"
-  display_name = "tf_test_dataform_repository%{random_suffix}"
-  npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
-  kms_key_name = google_kms_crypto_key.example_key.id
-
-  labels = {
-    label_foo1 = "label-bar1"
-  }
 
   git_remote_settings {
       url = google_sourcerepo_repository.git_repository.url
       default_branch = "main"
-      authentication_token_secret_version = google_secret_manager_secret_version.secret_version.id
+      ssh_authentication_config {
+        user_private_key_secret_version = google_secret_manager_secret_version.secret_version.id
+        host_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU"
+      }
   }
 
   workspace_compilation_overrides {
@@ -491,9 +353,7 @@ resource "google_dataform_repository" "dataform_repository" {
     table_prefix = "prefix_"
   }
 
-  depends_on = [
-    google_kms_crypto_key_iam_binding.crypto_key_binding
-  ]
+  service_account = "1234567890-compute@developer.gserviceaccount.com"
 }
 
 resource "google_dataform_repository_iam_binding" "foo" {
@@ -509,10 +369,6 @@ resource "google_dataform_repository_iam_binding" "foo" {
 
 func testAccDataformRepositoryIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-data "google_project" "project" {
-  provider = google-beta
-}
-
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
   name = "my/repository%{random_suffix}"
@@ -534,46 +390,17 @@ resource "google_secret_manager_secret_version" "secret_version" {
   secret_data = "tf-test-secret-data%{random_suffix}"
 }
 
-resource "google_kms_key_ring" "keyring" {
-  provider = google-beta
-  
-  name     = "tf-test-example-key-ring%{random_suffix}"
-  location = "us-central1"
-}
-
-resource "google_kms_crypto_key" "example_key" {
-  provider = google-beta
-  
-  name            = "tf-test-example-crypto-key-name%{random_suffix}"
-  key_ring        = google_kms_key_ring.keyring.id
-}
-
-resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
-  provider = google-beta
-
-  crypto_key_id = google_kms_crypto_key.example_key.id
-  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-
-  members = [
-    "serviceAccount:service-${data.google_project.project.number}@gcp-sa-dataform.iam.gserviceaccount.com",
-  ]
-}
-
 resource "google_dataform_repository" "dataform_repository" {
   provider = google-beta
   name = "tf_test_dataform_repository%{random_suffix}"
-  display_name = "tf_test_dataform_repository%{random_suffix}"
-  npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
-  kms_key_name = google_kms_crypto_key.example_key.id
-
-  labels = {
-    label_foo1 = "label-bar1"
-  }
 
   git_remote_settings {
       url = google_sourcerepo_repository.git_repository.url
       default_branch = "main"
-      authentication_token_secret_version = google_secret_manager_secret_version.secret_version.id
+      ssh_authentication_config {
+        user_private_key_secret_version = google_secret_manager_secret_version.secret_version.id
+        host_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU"
+      }
   }
 
   workspace_compilation_overrides {
@@ -582,9 +409,7 @@ resource "google_dataform_repository" "dataform_repository" {
     table_prefix = "prefix_"
   }
 
-  depends_on = [
-    google_kms_crypto_key_iam_binding.crypto_key_binding
-  ]
+  service_account = "1234567890-compute@developer.gserviceaccount.com"
 }
 
 resource "google_dataform_repository_iam_binding" "foo" {
