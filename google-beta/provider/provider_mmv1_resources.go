@@ -486,9 +486,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 531
+// Generated resources: 532
 // Generated IAM resources: 291
-// Total generated resources: 822
+// Total generated resources: 823
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -996,6 +996,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_iap_app_engine_version_iam_policy":                                   tpgiamresource.ResourceIamPolicy(iap.IapAppEngineVersionIamSchema, iap.IapAppEngineVersionIamUpdaterProducer, iap.IapAppEngineVersionIdParseFunc),
 	"google_iap_brand":                                                           iap.ResourceIapBrand(),
 	"google_iap_client":                                                          iap.ResourceIapClient(),
+	"google_iap_settings":                                                        iap.ResourceIapSettings(),
 	"google_iap_tunnel_iam_binding":                                              tpgiamresource.ResourceIamBinding(iap.IapTunnelIamSchema, iap.IapTunnelIamUpdaterProducer, iap.IapTunnelIdParseFunc),
 	"google_iap_tunnel_iam_member":                                               tpgiamresource.ResourceIamMember(iap.IapTunnelIamSchema, iap.IapTunnelIamUpdaterProducer, iap.IapTunnelIdParseFunc),
 	"google_iap_tunnel_iam_policy":                                               tpgiamresource.ResourceIamPolicy(iap.IapTunnelIamSchema, iap.IapTunnelIamUpdaterProducer, iap.IapTunnelIdParseFunc),
