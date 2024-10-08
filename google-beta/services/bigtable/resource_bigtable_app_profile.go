@@ -27,7 +27,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"google.golang.org/api/bigtableadmin/v2"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
@@ -157,6 +156,12 @@ It is unsafe to send these requests to the same table/row/column in multiple clu
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+				ConflictsWith: []string{"single_cluster_routing"},
+			},
+			"row_affinity": {
+				Type:          schema.TypeBool,
+				Optional:      true,
+				Description:   `Must be used with multi-cluster routing. If true, then this app profile will use row affinity sticky routing. With row affinity, Bigtable will route single row key requests based on the row key, rather than randomly. Instead, each row key will be assigned to a cluster by Cloud Bigtable, and will stick to that cluster. Choosing this option improves read-your-writes consistency for most requests under most circumstances, without sacrificing availability. Consistency is not guaranteed, as requests may still fail over between clusters in the event of errors or latency.`,
 				ConflictsWith: []string{"single_cluster_routing"},
 			},
 			"project": {
@@ -645,6 +650,10 @@ func expandBigtableAppProfileMultiClusterRoutingUseAny(v interface{}, d tpgresou
 
 	for _, id := range clusterIds {
 		obj.ClusterIds = append(obj.ClusterIds, id.(string))
+	}
+
+	if _, ok := d.GetOkExists("row_affinity"); ok {
+		obj.RowAffinity = &bigtableadmin.RowAffinity{}
 	}
 
 	return obj, nil
