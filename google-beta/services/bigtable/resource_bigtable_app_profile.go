@@ -27,7 +27,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"google.golang.org/api/bigtableadmin/v2"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
@@ -645,6 +644,10 @@ func expandBigtableAppProfileMultiClusterRoutingUseAny(v interface{}, d tpgresou
 
 	for _, id := range clusterIds {
 		obj.ClusterIds = append(obj.ClusterIds, id.(string))
+	}
+
+	if _, ok := d.GetOkExists("row_affinity"); ok {
+		obj.RowAffinity = &bigtableadmin.RowAffinity{}
 	}
 
 	return obj, nil
