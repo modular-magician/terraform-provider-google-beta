@@ -418,6 +418,95 @@ resource "google_network_connectivity_spoke" "primary" {
 `, context)
 }
 
+func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedProducerVpcNetworkExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkConnectivitySpokeDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedProducerVpcNetworkExample(context),
+			},
+			{
+				ResourceName:            "google_network_connectivity_spoke.producer",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"hub", "labels", "location", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedProducerVpcNetworkExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_network" "network" {
+  provider                = google-beta
+  name                    = "net%{random_suffix}"
+  auto_create_subnetworks = false
+}
+
+resource "google_network_connectivity_hub" "hub" {
+  provider    = google-beta
+  name        = "hub%{random_suffix}"
+}
+
+# reserve private range for service networking
+resource "google_compute_global_address" "range" {
+  provider      = google-beta
+  name          = "tf-test-psa-range%{random_suffix}"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = google_compute_network.network.id
+}
+
+# create service networking connection
+resource "google_service_networking_connection" "default" {
+  provider                = google-beta
+  network                 = google_compute_network.network.id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.range.name]
+}
+
+# attach the consumer VPC to the hub
+resource "google_network_connectivity_spoke" "consumer" {
+  provider = google-beta
+  name     = "tf-test-consumer-vpc-spoke%{random_suffix}"
+  location = "global"
+  hub      = google_network_connectivity_hub.hub.id
+  linked_vpc_network {
+    uri = google_compute_network.network.id
+  }
+}
+
+# attach the producer VPC to the hub
+resource "google_network_connectivity_spoke" "producer"  {
+  provider = google-beta
+  name     = "tf-test-producer-vpc-spoke%{random_suffix}"
+  location = "global"
+  hub      = google_network_connectivity_hub.hub.id
+  linked_producer_vpc_network {
+    exclude_export_ranges = ["10.10.0.0/16"]
+    include_export_ranges = ["10.0.0.0/8"]
+    network = google_compute_network.network.id
+    peering = google_service_networking_connection.default.peering
+  }
+
+  # producer vpc spoke can only be attached after attaching the
+  # consumer vpc
+  depends_on = [    
+    google_network_connectivity_spoke.consumer
+  ]
+}
+`, context)
+}
+
 func testAccCheckNetworkConnectivitySpokeDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

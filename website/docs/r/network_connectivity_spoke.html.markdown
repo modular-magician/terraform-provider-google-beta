@@ -335,6 +335,75 @@ resource "google_network_connectivity_spoke" "primary" {
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=network_connectivity_spoke_linked_producer_vpc_network&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Network Connectivity Spoke Linked Producer Vpc Network
+
+
+```hcl
+resource "google_compute_network" "network" {
+  provider                = google-beta
+  name                    = "net"
+  auto_create_subnetworks = false
+}
+
+resource "google_network_connectivity_hub" "hub" {
+  provider    = google-beta
+  name        = "hub"
+}
+
+# reserve private range for service networking
+resource "google_compute_global_address" "range" {
+  provider      = google-beta
+  name          = "psa-range"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = google_compute_network.network.id
+}
+
+# create service networking connection
+resource "google_service_networking_connection" "default" {
+  provider                = google-beta
+  network                 = google_compute_network.network.id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.range.name]
+}
+
+# attach the consumer VPC to the hub
+resource "google_network_connectivity_spoke" "consumer" {
+  provider = google-beta
+  name     = "consumer-vpc-spoke"
+  location = "global"
+  hub      = google_network_connectivity_hub.hub.id
+  linked_vpc_network {
+    uri = google_compute_network.network.id
+  }
+}
+
+# attach the producer VPC to the hub
+resource "google_network_connectivity_spoke" "producer"  {
+  provider = google-beta
+  name     = "producer-vpc-spoke"
+  location = "global"
+  hub      = google_network_connectivity_hub.hub.id
+  linked_producer_vpc_network {
+    exclude_export_ranges = ["10.10.0.0/16"]
+    include_export_ranges = ["10.0.0.0/8"]
+    network = google_compute_network.network.id
+    peering = google_service_networking_connection.default.peering
+  }
+
+  # producer vpc spoke can only be attached after attaching the
+  # consumer vpc
+  depends_on = [    
+    google_network_connectivity_spoke.consumer
+  ]
+}
+```
 
 ## Argument Reference
 
@@ -376,6 +445,11 @@ The following arguments are supported:
   (Optional)
   A collection of VLAN attachment resources. These resources should be redundant attachments that all advertise the same prefixes to Google Cloud. Alternatively, in active/passive configurations, all attachments should be capable of advertising the same prefixes.
   Structure is [documented below](#nested_linked_interconnect_attachments).
+
+* `linked_producer_vpc_network` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Producer VPC network that is associated with the spoke.
+  Structure is [documented below](#nested_linked_producer_vpc_network).
 
 * `linked_router_appliance_instances` -
   (Optional)
@@ -420,6 +494,25 @@ The following arguments are supported:
   (Optional)
   IP ranges allowed to be included during import from hub (does not control transit connectivity).
   The only allowed value for now is "ALL_IPV4_RANGES".
+
+<a name="nested_linked_producer_vpc_network"></a>The `linked_producer_vpc_network` block supports:
+
+* `network` -
+  (Required, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  VPC network that contains the peering to the Producer VPC
+
+* `peering` -
+  (Required, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  name of the peering between the VPC network and the Producer
+  VPC. Only `servicenetworking-googleapis-com` is supported.
+
+* `exclude_export_ranges` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  the IP address ranges to be excluded from exporting to the hub.
+
+* `include_export_ranges` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  the IP address ranges to be included when exporting to the hub
 
 <a name="nested_linked_router_appliance_instances"></a>The `linked_router_appliance_instances` block supports:
 

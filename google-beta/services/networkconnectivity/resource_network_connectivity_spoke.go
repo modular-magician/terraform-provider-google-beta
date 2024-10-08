@@ -123,7 +123,51 @@ The only allowed value for now is "ALL_IPV4_RANGES".`,
 						},
 					},
 				},
-				ConflictsWith: []string{"linked_vpn_tunnels", "linked_router_appliance_instances", "linked_vpc_network"},
+				ConflictsWith: []string{"linked_vpn_tunnels", "linked_producer_vpc_network", "linked_router_appliance_instances", "linked_vpc_network"},
+			},
+			"linked_producer_vpc_network": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Producer VPC network that is associated with the spoke.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"network": {
+							Type:             schema.TypeString,
+							Required:         true,
+							ForceNew:         true,
+							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+							Description:      `VPC network that contains the peering to the Producer VPC`,
+						},
+						"peering": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+							Description: `name of the peering between the VPC network and the Producer
+VPC. Only 'servicenetworking-googleapis-com' is supported.`,
+						},
+						"exclude_export_ranges": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `the IP address ranges to be excluded from exporting to the hub.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"include_export_ranges": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `the IP address ranges to be included when exporting to the hub`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+				ConflictsWith: []string{"linked_interconnect_attachments", "linked_router_appliance_instances", "linked_vpn_tunnels", "linked_vpc_network"},
 			},
 			"linked_router_appliance_instances": {
 				Type:        schema.TypeList,
@@ -173,7 +217,7 @@ The only allowed value for now is "ALL_IPV4_RANGES".`,
 						},
 					},
 				},
-				ConflictsWith: []string{"linked_interconnect_attachments", "linked_vpn_tunnels", "linked_vpc_network"},
+				ConflictsWith: []string{"linked_interconnect_attachments", "linked_producer_vpc_network", "linked_vpn_tunnels", "linked_vpc_network"},
 			},
 			"linked_vpc_network": {
 				Type:        schema.TypeList,
@@ -210,7 +254,7 @@ The only allowed value for now is "ALL_IPV4_RANGES".`,
 						},
 					},
 				},
-				ConflictsWith: []string{"linked_interconnect_attachments", "linked_router_appliance_instances", "linked_vpn_tunnels"},
+				ConflictsWith: []string{"linked_interconnect_attachments", "linked_producer_vpc_network", "linked_router_appliance_instances", "linked_vpn_tunnels"},
 			},
 			"linked_vpn_tunnels": {
 				Type:        schema.TypeList,
@@ -246,7 +290,7 @@ The only allowed value for now is "ALL_IPV4_RANGES".`,
 						},
 					},
 				},
-				ConflictsWith: []string{"linked_interconnect_attachments", "linked_router_appliance_instances", "linked_vpc_network"},
+				ConflictsWith: []string{"linked_interconnect_attachments", "linked_producer_vpc_network", "linked_router_appliance_instances", "linked_vpc_network"},
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -330,6 +374,12 @@ func resourceNetworkConnectivitySpokeCreate(d *schema.ResourceData, meta interfa
 		return err
 	} else if v, ok := d.GetOkExists("linked_interconnect_attachments"); !tpgresource.IsEmptyValue(reflect.ValueOf(linkedInterconnectAttachmentsProp)) && (ok || !reflect.DeepEqual(v, linkedInterconnectAttachmentsProp)) {
 		obj["linkedInterconnectAttachments"] = linkedInterconnectAttachmentsProp
+	}
+	linkedProducerVpcNetworkProp, err := expandNetworkConnectivitySpokeLinkedProducerVpcNetwork(d.Get("linked_producer_vpc_network"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("linked_producer_vpc_network"); !tpgresource.IsEmptyValue(reflect.ValueOf(linkedProducerVpcNetworkProp)) && (ok || !reflect.DeepEqual(v, linkedProducerVpcNetworkProp)) {
+		obj["linkedProducerVpcNetwork"] = linkedProducerVpcNetworkProp
 	}
 	linkedRouterApplianceInstancesProp, err := expandNetworkConnectivitySpokeLinkedRouterApplianceInstances(d.Get("linked_router_appliance_instances"), d, config)
 	if err != nil {
@@ -470,6 +520,9 @@ func resourceNetworkConnectivitySpokeRead(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error reading Spoke: %s", err)
 	}
 	if err := d.Set("linked_interconnect_attachments", flattenNetworkConnectivitySpokeLinkedInterconnectAttachments(res["linkedInterconnectAttachments"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Spoke: %s", err)
+	}
+	if err := d.Set("linked_producer_vpc_network", flattenNetworkConnectivitySpokeLinkedProducerVpcNetwork(res["linkedProducerVpcNetwork"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Spoke: %s", err)
 	}
 	if err := d.Set("linked_router_appliance_instances", flattenNetworkConnectivitySpokeLinkedRouterApplianceInstances(res["linkedRouterApplianceInstances"], d, config)); err != nil {
@@ -754,6 +807,41 @@ func flattenNetworkConnectivitySpokeLinkedInterconnectAttachmentsIncludeImportRa
 	return v
 }
 
+func flattenNetworkConnectivitySpokeLinkedProducerVpcNetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["network"] =
+		flattenNetworkConnectivitySpokeLinkedProducerVpcNetworkNetwork(original["network"], d, config)
+	transformed["peering"] =
+		flattenNetworkConnectivitySpokeLinkedProducerVpcNetworkPeering(original["peering"], d, config)
+	transformed["exclude_export_ranges"] =
+		flattenNetworkConnectivitySpokeLinkedProducerVpcNetworkExcludeExportRanges(original["excludeExportRanges"], d, config)
+	transformed["include_export_ranges"] =
+		flattenNetworkConnectivitySpokeLinkedProducerVpcNetworkIncludeExportRanges(original["includeExportRanges"], d, config)
+	return []interface{}{transformed}
+}
+func flattenNetworkConnectivitySpokeLinkedProducerVpcNetworkNetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenNetworkConnectivitySpokeLinkedProducerVpcNetworkPeering(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenNetworkConnectivitySpokeLinkedProducerVpcNetworkExcludeExportRanges(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenNetworkConnectivitySpokeLinkedProducerVpcNetworkIncludeExportRanges(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenNetworkConnectivitySpokeLinkedRouterApplianceInstances(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -961,6 +1049,62 @@ func expandNetworkConnectivitySpokeLinkedInterconnectAttachmentsSiteToSiteDataTr
 }
 
 func expandNetworkConnectivitySpokeLinkedInterconnectAttachmentsIncludeImportRanges(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNetworkConnectivitySpokeLinkedProducerVpcNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedNetwork, err := expandNetworkConnectivitySpokeLinkedProducerVpcNetworkNetwork(original["network"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedNetwork); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["network"] = transformedNetwork
+	}
+
+	transformedPeering, err := expandNetworkConnectivitySpokeLinkedProducerVpcNetworkPeering(original["peering"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPeering); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["peering"] = transformedPeering
+	}
+
+	transformedExcludeExportRanges, err := expandNetworkConnectivitySpokeLinkedProducerVpcNetworkExcludeExportRanges(original["exclude_export_ranges"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExcludeExportRanges); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["excludeExportRanges"] = transformedExcludeExportRanges
+	}
+
+	transformedIncludeExportRanges, err := expandNetworkConnectivitySpokeLinkedProducerVpcNetworkIncludeExportRanges(original["include_export_ranges"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedIncludeExportRanges); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["includeExportRanges"] = transformedIncludeExportRanges
+	}
+
+	return transformed, nil
+}
+
+func expandNetworkConnectivitySpokeLinkedProducerVpcNetworkNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNetworkConnectivitySpokeLinkedProducerVpcNetworkPeering(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNetworkConnectivitySpokeLinkedProducerVpcNetworkExcludeExportRanges(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNetworkConnectivitySpokeLinkedProducerVpcNetworkIncludeExportRanges(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
