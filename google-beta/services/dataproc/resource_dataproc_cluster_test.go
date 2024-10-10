@@ -60,15 +60,19 @@ func TestAccDataprocCluster_missingZoneGlobalRegion2(t *testing.T) {
 func TestAccDataprocCluster_basic(t *testing.T) {
 	t.Parallel()
 
-	var cluster dataproc.Cluster
 	rnd := acctest.RandString(t, 10)
+	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
+	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
+
+	var cluster dataproc.Cluster
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckDataprocClusterDestroy(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataprocCluster_basic(rnd),
+				Config: testAccDataprocCluster_basic(rnd, subnetworkName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.basic", &cluster),
 
@@ -76,7 +80,7 @@ func TestAccDataprocCluster_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("google_dataproc_cluster.basic", "cluster_config.0.bucket"),
 
 					// Default behavior is for Dataproc to not use only internal IP addresses
-					resource.TestCheckResourceAttr("google_dataproc_cluster.basic", "cluster_config.0.gce_cluster_config.0.internal_ip_only", "false"),
+					resource.TestCheckResourceAttr("google_dataproc_cluster.basic", "cluster_config.0.gce_cluster_config.0.internal_ip_only", "true"),
 
 					// Expect 1 master instances with computed values
 					resource.TestCheckResourceAttr("google_dataproc_cluster.basic", "cluster_config.0.master_config.#", "1"),
@@ -114,7 +118,7 @@ func TestAccDataprocVirtualCluster_basic(t *testing.T) {
 	var cluster dataproc.Cluster
 	rnd := acctest.RandString(t, 10)
 	pid := envvar.GetTestProjectFromEnv()
-	version := "3.1-dataproc-7"
+	version := "3.5-dataproc-19"
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
@@ -124,7 +128,7 @@ func TestAccDataprocVirtualCluster_basic(t *testing.T) {
 		CheckDestroy:             testAccCheckDataprocClusterDestroy(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataprocVirtualCluster_basic(pid, rnd, networkName, subnetworkName),
+				Config: testAccDataprocVirtualCluster_basic(pid, rnd, networkName, subnetworkName, version),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.virtual_cluster", &cluster),
 
@@ -428,15 +432,18 @@ func TestAccDataprocCluster_updatable(t *testing.T) {
 	t.Parallel()
 
 	rnd := acctest.RandString(t, 10)
-	var cluster dataproc.Cluster
+	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
+	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
 
+	var cluster dataproc.Cluster
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckDataprocClusterDestroy(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataprocCluster_updatable(rnd, 2, 1),
+				Config: testAccDataprocCluster_updatable(rnd, subnetworkName, 2, 1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.updatable", &cluster),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.updatable", "cluster_config.0.master_config.0.num_instances", "1"),
@@ -444,7 +451,7 @@ func TestAccDataprocCluster_updatable(t *testing.T) {
 					resource.TestCheckResourceAttr("google_dataproc_cluster.updatable", "cluster_config.0.preemptible_worker_config.0.num_instances", "1")),
 			},
 			{
-				Config: testAccDataprocCluster_updatable(rnd, 2, 0),
+				Config: testAccDataprocCluster_updatable(rnd, subnetworkName, 2, 0),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.updatable", &cluster),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.updatable", "cluster_config.0.master_config.0.num_instances", "1"),
@@ -452,7 +459,7 @@ func TestAccDataprocCluster_updatable(t *testing.T) {
 					resource.TestCheckResourceAttr("google_dataproc_cluster.updatable", "cluster_config.0.preemptible_worker_config.0.num_instances", "0")),
 			},
 			{
-				Config: testAccDataprocCluster_updatable(rnd, 3, 2),
+				Config: testAccDataprocCluster_updatable(rnd, subnetworkName, 3, 2),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("google_dataproc_cluster.updatable", "cluster_config.0.master_config.0.num_instances", "1"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.updatable", "cluster_config.0.worker_config.0.num_instances", "3"),
@@ -516,6 +523,10 @@ func TestAccDataprocCluster_spotWithInstanceFlexibilityPolicy(t *testing.T) {
 	t.Parallel()
 
 	rnd := acctest.RandString(t, 10)
+	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
+	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
+
 	var cluster dataproc.Cluster
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -523,7 +534,7 @@ func TestAccDataprocCluster_spotWithInstanceFlexibilityPolicy(t *testing.T) {
 		CheckDestroy:             testAccCheckDataprocClusterDestroy(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataprocCluster_spotWithInstanceFlexibilityPolicy(rnd),
+				Config: testAccDataprocCluster_spotWithInstanceFlexibilityPolicy(rnd, subnetworkName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.spot_with_instance_flexibility_policy", &cluster),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.spot_with_instance_flexibility_policy", "cluster_config.0.preemptible_worker_config.0.preemptibility", "SPOT"),
@@ -540,6 +551,10 @@ func TestAccDataprocCluster_spotWithAuxiliaryNodeGroups(t *testing.T) {
 
 	project := envvar.GetTestProjectFromEnv()
 	rnd := acctest.RandString(t, 10)
+	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
+	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
+
 	var cluster dataproc.Cluster
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -547,7 +562,7 @@ func TestAccDataprocCluster_spotWithAuxiliaryNodeGroups(t *testing.T) {
 		CheckDestroy:             testAccCheckDataprocClusterDestroy(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataprocCluster_withAuxiliaryNodeGroups(rnd),
+				Config: testAccDataprocCluster_withAuxiliaryNodeGroups(rnd, subnetworkName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.with_auxiliary_node_groups", &cluster),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_auxiliary_node_groups", "cluster_config.0.auxiliary_node_groups.0.node_group.0.roles.0", "DRIVER"),
@@ -1048,22 +1063,26 @@ func TestAccDataprocCluster_withMetastoreConfig(t *testing.T) {
 	msName_basic := fmt.Sprintf("projects/%s/locations/us-central1/services/%s", pid, basicServiceId)
 	msName_update := fmt.Sprintf("projects/%s/locations/us-central1/services/%s", pid, updateServiceId)
 
-	var cluster dataproc.Cluster
 	clusterName := "tf-test-" + acctest.RandString(t, 10)
+	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
+	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
+
+	var cluster dataproc.Cluster
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckDataprocClusterDestroy(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataprocCluster_withMetastoreConfig(clusterName, basicServiceId),
+				Config: testAccDataprocCluster_withMetastoreConfig(pid, clusterName, subnetworkName, basicServiceId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.with_metastore_config", &cluster),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_metastore_config", "cluster_config.0.metastore_config.0.dataproc_metastore_service", msName_basic),
 				),
 			},
 			{
-				Config: testAccDataprocCluster_withMetastoreConfig_update(clusterName, updateServiceId),
+				Config: testAccDataprocCluster_withMetastoreConfig_update(pid, clusterName, subnetworkName, updateServiceId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.with_metastore_config", &cluster),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_metastore_config", "cluster_config.0.metastore_config.0.dataproc_metastore_service", msName_update),
@@ -1325,16 +1344,32 @@ resource "google_dataproc_cluster" "basic" {
 `, rnd)
 }
 
-func testAccDataprocCluster_basic(rnd string) string {
+func testAccDataprocCluster_basic(rnd, subnetworkName string) string {
 	return fmt.Sprintf(`
 resource "google_dataproc_cluster" "basic" {
   name   = "tf-test-dproc-%s"
   region = "us-central1"
+
+  cluster_config {
+    gce_cluster_config {
+      subnetwork = "%s"
+    }
+
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+  }
 }
-`, rnd)
+`, rnd, subnetworkName)
 }
 
-func testAccDataprocVirtualCluster_basic(projectID, rnd, networkName, subnetworkName string) string {
+func testAccDataprocVirtualCluster_basic(projectID, rnd, networkName, subnetworkName, version string) string {
 	return fmt.Sprintf(`
 data "google_project" "project" {
   project_id = "%s"
@@ -1378,7 +1413,7 @@ resource "google_dataproc_cluster" "virtual_cluster" {
 		kubernetes_namespace = "tf-test-dproc-%s"
 		kubernetes_software_config {
 		  component_version = {
-			"SPARK": "3.1-dataproc-7",
+			"SPARK": "%s",
 		  }
 		}
 		gke_cluster_config {
@@ -1393,7 +1428,7 @@ resource "google_dataproc_cluster" "virtual_cluster" {
 	  }
 	}
   }
-`, projectID, rnd, networkName, subnetworkName, projectID, rnd, rnd, rnd, rnd, rnd, rnd)
+`, projectID, rnd, networkName, subnetworkName, projectID, rnd, rnd, rnd, rnd, rnd, version, rnd)
 }
 
 func testAccCheckDataprocGkeClusterNodePoolsHaveRoles(cluster *dataproc.Cluster, roles ...string) func(s *terraform.State) error {
@@ -1416,16 +1451,14 @@ resource "google_dataproc_cluster" "accelerated_cluster" {
   region = "us-central1"
 
   cluster_config {
-    software_config {
-      image_version = "2.0.35-debian10"
-    }
-
     gce_cluster_config {
       subnetwork = "%s"
       zone = "%s"
     }
 
     master_config {
+      # The default machine family is n2, which does not support (most) accelerators.
+      machine_type = "n1-standard-2"
       accelerators {
         accelerator_type  = "%s"
         accelerator_count = "1"
@@ -1433,6 +1466,8 @@ resource "google_dataproc_cluster" "accelerated_cluster" {
     }
 
     worker_config {
+      # The default machine family is n2, which does not support (most) accelerators.
+      machine_type = "n1-standard-2"
       accelerators {
         accelerator_type  = "%s"
         accelerator_count = "1"
@@ -1510,6 +1545,16 @@ resource "google_dataproc_cluster" "basic" {
         enable_vtpm                 = true
       }
     }
+
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
   }
 }
 `, rnd, rnd, rnd, rnd)
@@ -1530,6 +1575,16 @@ resource "google_dataproc_cluster" "basic" {
       }
       tags = ["my-tag", "your-tag", "our-tag", "their-tag"]
     }
+
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
   }
 }
 `, rnd, subnetworkName)
@@ -1545,12 +1600,16 @@ resource "google_dataproc_cluster" "with_min_num_instances" {
     gce_cluster_config {
       subnetwork = "%s"
     }
-    master_config{
+    master_config {
       num_instances=1
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
     }
-    worker_config{
+    worker_config {
       num_instances = 3
       min_num_instances = 2
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
     }
   }
 }
@@ -1610,6 +1669,15 @@ resource "google_dataproc_cluster" "basic" {
     gce_cluster_config {
       subnetwork = "%s"
     }
+
+    master_config {
+      machine_type  = "n1-standard-2"
+    }
+
+    worker_config {
+      machine_type  = "n1-standard-2"
+    }
+
     dataproc_metric_config {
       metrics {
         metric_source = "HDFS"
@@ -1637,7 +1705,7 @@ resource "google_compute_node_template" "nodetmpl" {
     tfacc = "test"
   }
 
-  node_type = "n1-node-96-624"
+  node_type = "n2-node-80-640"
 
   cpu_overcommit_type = "ENABLED"
 }
@@ -1655,9 +1723,6 @@ resource "google_dataproc_cluster" "basic" {
   region = "us-central1"
 
   cluster_config {
-    software_config {
-      image_version = "2.0.35-debian10"
-    }
     gce_cluster_config {
       subnetwork = "%s"
       zone = "us-central1-f"
@@ -1686,6 +1751,9 @@ resource "google_dataproc_cluster" "single_node_cluster" {
       override_properties = {
         "dataproc:dataproc.allow.zero.workers" = "true"
       }
+    }
+    master_config {
+      machine_type  = "n1-standard-2"
     }
   }
 }
@@ -1770,14 +1838,13 @@ resource "google_dataproc_cluster" "with_init_action" {
 
     # Keep the costs down with smallest config we can get away with
     software_config {
-      image_version = "2.0.35-debian10"
       override_properties = {
         "dataproc:dataproc.allow.zero.workers" = "true"
       }
     }
 
     master_config {
-      machine_type = "e2-medium"
+      machine_type = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -1795,7 +1862,7 @@ resource "google_dataproc_cluster" "with_init_action" {
 `, bucket, rnd, objName, objName, rnd, subnetworkName)
 }
 
-func testAccDataprocCluster_updatable(rnd string, w, p int) string {
+func testAccDataprocCluster_updatable(rnd, subnetworkName string, w, p int) string {
 	return fmt.Sprintf(`
 resource "google_dataproc_cluster" "updatable" {
   name   = "tf-test-dproc-%s"
@@ -1803,9 +1870,13 @@ resource "google_dataproc_cluster" "updatable" {
   graceful_decommission_timeout = "0.2s"
 
   cluster_config {
+    gce_cluster_config {
+      subnetwork = "%s"
+    }
+
     master_config {
       num_instances = "1"
-      machine_type  = "e2-medium"
+      machine_type  = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -1813,7 +1884,7 @@ resource "google_dataproc_cluster" "updatable" {
 
     worker_config {
       num_instances = "%d"
-      machine_type  = "e2-medium"
+      machine_type  = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -1827,7 +1898,7 @@ resource "google_dataproc_cluster" "updatable" {
     }
   }
 }
-`, rnd, w, p)
+`, rnd, subnetworkName, w, p)
 }
 
 func testAccDataprocCluster_nonPreemptibleSecondary(rnd, subnetworkName string) string {
@@ -1843,7 +1914,7 @@ resource "google_dataproc_cluster" "non_preemptible_secondary" {
 
     master_config {
       num_instances = "1"
-      machine_type  = "e2-medium"
+      machine_type  = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -1851,7 +1922,7 @@ resource "google_dataproc_cluster" "non_preemptible_secondary" {
   
     worker_config {
       num_instances = "2"
-      machine_type  = "e2-medium"
+      machine_type  = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -1882,7 +1953,7 @@ resource "google_dataproc_cluster" "spot_secondary" {
 
     master_config {
       num_instances = "1"
-      machine_type  = "e2-medium"
+      machine_type  = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -1890,7 +1961,7 @@ resource "google_dataproc_cluster" "spot_secondary" {
 
     worker_config {
       num_instances = "2"
-      machine_type  = "e2-medium"
+      machine_type  = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -1908,16 +1979,20 @@ resource "google_dataproc_cluster" "spot_secondary" {
 	`, rnd, subnetworkName)
 }
 
-func testAccDataprocCluster_spotWithInstanceFlexibilityPolicy(rnd string) string {
+func testAccDataprocCluster_spotWithInstanceFlexibilityPolicy(rnd, subnetworkName string) string {
 	return fmt.Sprintf(`
 resource "google_dataproc_cluster" "spot_with_instance_flexibility_policy" {
   name   = "tf-test-dproc-%s"
   region = "us-central1"
 
   cluster_config {
+    gce_cluster_config {
+      subnetwork = "%s"
+    }
+
     master_config {
       num_instances = "1"
-      machine_type  = "e2-medium"
+      machine_type  = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -1925,7 +2000,7 @@ resource "google_dataproc_cluster" "spot_with_instance_flexibility_policy" {
 
     worker_config {
       num_instances = "2"
-      machine_type  = "e2-medium"
+      machine_type  = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -1946,19 +2021,23 @@ resource "google_dataproc_cluster" "spot_with_instance_flexibility_policy" {
     }
   }
 }
-	`, rnd)
+	`, rnd, subnetworkName)
 }
 
-func testAccDataprocCluster_withAuxiliaryNodeGroups(rnd string) string {
+func testAccDataprocCluster_withAuxiliaryNodeGroups(rnd, subnetworkName string) string {
 	return fmt.Sprintf(`
 resource "google_dataproc_cluster" "with_auxiliary_node_groups" {
   name   = "tf-test-dproc-%s"
   region = "us-central1"
 
   cluster_config {
+    gce_cluster_config {
+      subnetwork = "%s"
+    }
+
     master_config {
       num_instances = "1"
-      machine_type  = "e2-medium"
+      machine_type  = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -1966,7 +2045,7 @@ resource "google_dataproc_cluster" "with_auxiliary_node_groups" {
 
     worker_config {
       num_instances = "2"
-      machine_type  = "e2-medium"
+      machine_type  = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -1995,7 +2074,7 @@ resource "google_dataproc_cluster" "with_auxiliary_node_groups" {
     }
   }
 }
-	`, rnd)
+	`, rnd, subnetworkName)
 }
 
 func testAccDataprocCluster_withStagingBucketOnly(bucketName string) string {
@@ -2035,14 +2114,13 @@ resource "google_dataproc_cluster" "with_bucket" {
 
     # Keep the costs down with smallest config we can get away with
     software_config {
-      image_version = "2.0.35-debian10"
       override_properties = {
         "dataproc:dataproc.allow.zero.workers" = "true"
       }
     }
 
     master_config {
-      machine_type = "e2-medium"
+      machine_type = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -2069,14 +2147,13 @@ resource "google_dataproc_cluster" "with_bucket" {
 
     # Keep the costs down with smallest config we can get away with
     software_config {
-      image_version = "2.0.35-debian10"
       override_properties = {
         "dataproc:dataproc.allow.zero.workers" = "true"
       }
     }
 
     master_config {
-      machine_type = "e2-medium"
+      machine_type = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -2094,6 +2171,16 @@ resource "google_dataproc_cluster" "with_labels" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+    }
+
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
     }
   }
 
@@ -2113,6 +2200,16 @@ resource "google_dataproc_cluster" "with_labels" {
     gce_cluster_config {
       subnetwork = "%s"
     }
+
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
   }
 
   labels = {
@@ -2131,6 +2228,16 @@ resource "google_dataproc_cluster" "with_labels" {
     gce_cluster_config {
       subnetwork = "%s"
     }
+
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
   }
 }
 `, rnd, subnetworkName)
@@ -2145,6 +2252,16 @@ resource "google_dataproc_cluster" "with_endpoint_config" {
 	cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+    }
+
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
     }
 
 		endpoint_config {
@@ -2166,6 +2283,16 @@ resource "google_dataproc_cluster" "with_image_version" {
       subnetwork = "%s"
     }
 
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
     software_config {
       image_version = "%s"
     }
@@ -2183,6 +2310,16 @@ resource "google_dataproc_cluster" "with_opt_components" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+    }
+
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
     }
 
     software_config {
@@ -2204,6 +2341,16 @@ resource "google_dataproc_cluster" "with_lifecycle_config" {
       subnetwork = "%s"
     }
 
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
     lifecycle_config {
       idle_delete_ttl = "%s"
     }
@@ -2221,6 +2368,16 @@ resource "google_dataproc_cluster" "with_lifecycle_config" {
  cluster_config {
   gce_cluster_config {
       subnetwork = "%s"
+    }
+
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
     }
 
    lifecycle_config {
@@ -2259,14 +2416,13 @@ resource "google_dataproc_cluster" "with_service_account" {
   cluster_config {
     # Keep the costs down with smallest config we can get away with
     software_config {
-      image_version = "2.0.35-debian10"
       override_properties = {
         "dataproc:dataproc.allow.zero.workers" = "true"
       }
     }
 
     master_config {
-      machine_type = "e2-medium"
+      machine_type = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -2345,7 +2501,7 @@ resource "google_dataproc_cluster" "with_net_ref_by_name" {
     }
 
     master_config {
-      machine_type = "e2-medium"
+      machine_type = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -2353,6 +2509,9 @@ resource "google_dataproc_cluster" "with_net_ref_by_name" {
 
     gce_cluster_config {
       network = google_compute_network.dataproc_network.name
+      # The network we are creating does not have private Google access, so it
+      # cannot support internal IPs only.
+      internal_ip_only = false
     }
   }
 }
@@ -2372,7 +2531,7 @@ resource "google_dataproc_cluster" "with_net_ref_by_url" {
     }
 
     master_config {
-      machine_type = "e2-medium"
+      machine_type = "n1-standard-2"
       disk_config {
         boot_disk_size_gb = 35
       }
@@ -2380,6 +2539,9 @@ resource "google_dataproc_cluster" "with_net_ref_by_url" {
 
     gce_cluster_config {
       network = google_compute_network.dataproc_network.self_link
+      # The network we are creating does not have private Google access, so it
+      # cannot support internal IPs only.
+      internal_ip_only = false
     }
   }
 }
@@ -2426,6 +2588,16 @@ resource "google_dataproc_cluster" "kerb" {
       subnetwork = "%s"
     }
 
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
     security_config {
       kerberos_config {
         root_principal_password_uri = google_storage_bucket_object.password.self_link
@@ -2446,6 +2618,16 @@ resource "google_dataproc_cluster" "basic" {
   cluster_config {
     gce_cluster_config {
       subnetwork = "%s"
+    }
+
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
     }
 
     autoscaling_config {
@@ -2484,6 +2666,16 @@ resource "google_dataproc_cluster" "basic" {
       subnetwork = "%s"
     }
 
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+
     autoscaling_config {
       policy_uri = ""
     }
@@ -2509,13 +2701,24 @@ resource "google_dataproc_autoscaling_policy" "asp" {
 `, rnd, subnetworkName, rnd)
 }
 
-func testAccDataprocCluster_withMetastoreConfig(clusterName, serviceId string) string {
+func testAccDataprocCluster_withMetastoreConfig(projectName, clusterName, subnetworkName, serviceId string) string {
 	return fmt.Sprintf(`
 resource "google_dataproc_cluster" "with_metastore_config" {
   name                  = "%s"
   region                = "us-central1"
 
   cluster_config {
+    gce_cluster_config {
+      subnetwork = "%s"
+    }
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
     metastore_config {
       dataproc_metastore_service = google_dataproc_metastore_service.ms.name
     }
@@ -2536,17 +2739,34 @@ resource "google_dataproc_metastore_service" "ms" {
   hive_metastore_config {
     version = "3.1.2"
   }
+
+  network_config {
+    consumers {
+      subnetwork = "projects/%s/regions/us-central1/subnetworks/%s"
+    }
+  }
 }
-`, clusterName, serviceId)
+`, clusterName, subnetworkName, serviceId, projectName, subnetworkName)
 }
 
-func testAccDataprocCluster_withMetastoreConfig_update(clusterName, serviceId string) string {
+func testAccDataprocCluster_withMetastoreConfig_update(projectName, clusterName, subnetworkName, serviceId string) string {
 	return fmt.Sprintf(`
 resource "google_dataproc_cluster" "with_metastore_config" {
   name                  = "%s"
   region                = "us-central1"
 
   cluster_config {
+    gce_cluster_config {
+      subnetwork = "%s"
+    }
+    master_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
+    worker_config {
+      # The Terraform testing projects have a lot more n1 quota than anything else.
+      machine_type = "n1-standard-2"
+    }
     metastore_config {
       dataproc_metastore_service = google_dataproc_metastore_service.ms.name
     }
@@ -2567,6 +2787,12 @@ resource "google_dataproc_metastore_service" "ms" {
   hive_metastore_config {
     version = "3.1.2"
   }
+
+  network_config {
+    consumers {
+      subnetwork = "projects/%s/regions/us-central1/subnetworks/%s"
+    }
+  }
 }
-`, clusterName, serviceId)
+`, clusterName, subnetworkName, serviceId, projectName, subnetworkName)
 }

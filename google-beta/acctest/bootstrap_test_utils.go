@@ -917,7 +917,7 @@ func BootstrapSubnetForDataprocBatches(t *testing.T, subnetName string, networkN
 	subnetOptions := map[string]interface{}{
 		"privateIpGoogleAccess": true,
 	}
-	return BootstrapSubnetWithOverrides(t, subnetName, networkName, subnetOptions)
+	return bootstrapSubnetWithOverrides(t, subnetName, networkName, subnetOptions, "10.78.0.0/20")
 }
 
 func BootstrapSubnet(t *testing.T, subnetName string, networkName string) string {
@@ -932,6 +932,10 @@ func BootstrapSubnetWithFirewallForDataprocBatches(t *testing.T, testId string, 
 }
 
 func BootstrapSubnetWithOverrides(t *testing.T, subnetName string, networkName string, subnetOptions map[string]interface{}) string {
+	return bootstrapSubnetWithOverrides(t, subnetName, networkName, subnetOptions, "10.77.0.0/20")
+}
+
+func bootstrapSubnetWithOverrides(t *testing.T, subnetName string, networkName string, subnetOptions map[string]interface{}, ipCidrRange string) string {
 	projectID := envvar.GetTestProjectFromEnv()
 	region := envvar.GetTestRegionFromEnv()
 
@@ -957,7 +961,7 @@ func BootstrapSubnetWithOverrides(t *testing.T, subnetName string, networkName s
 			"name":        subnetName,
 			"region ":     region,
 			"network":     networkUrl,
-			"ipCidrRange": "10.77.0.0/20",
+			"ipCidrRange": ipCidrRange,
 		}
 
 		if len(subnetOptions) != 0 {

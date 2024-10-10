@@ -52,7 +52,7 @@ func TestAccDataprocJob_updatable(t *testing.T) {
 	rnd := acctest.RandString(t, 10)
 	jobId := fmt.Sprintf("dproc-update-job-id-%s", rnd)
 	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
-	subnetworkName := acctest.BootstrapSubnet(t, "dataproc-cluster", networkName)
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
 	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -85,7 +85,7 @@ func TestAccDataprocJob_PySpark(t *testing.T) {
 	rnd := acctest.RandString(t, 10)
 	jobId := fmt.Sprintf("dproc-custom-job-id-%s", rnd)
 	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
-	subnetworkName := acctest.BootstrapSubnet(t, "dataproc-cluster", networkName)
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
 	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -127,7 +127,7 @@ func TestAccDataprocJob_Spark(t *testing.T) {
 	var job dataproc.Job
 	rnd := acctest.RandString(t, 10)
 	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
-	subnetworkName := acctest.BootstrapSubnet(t, "dataproc-cluster", networkName)
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
 	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -163,7 +163,7 @@ func TestAccDataprocJob_Hadoop(t *testing.T) {
 	var job dataproc.Job
 	rnd := acctest.RandString(t, 10)
 	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
-	subnetworkName := acctest.BootstrapSubnet(t, "dataproc-cluster", networkName)
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
 	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -199,7 +199,7 @@ func TestAccDataprocJob_Hive(t *testing.T) {
 	var job dataproc.Job
 	rnd := acctest.RandString(t, 10)
 	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
-	subnetworkName := acctest.BootstrapSubnet(t, "dataproc-cluster", networkName)
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
 	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -235,7 +235,7 @@ func TestAccDataprocJob_Pig(t *testing.T) {
 	var job dataproc.Job
 	rnd := acctest.RandString(t, 10)
 	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
-	subnetworkName := acctest.BootstrapSubnet(t, "dataproc-cluster", networkName)
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
 	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -271,7 +271,7 @@ func TestAccDataprocJob_SparkSql(t *testing.T) {
 	var job dataproc.Job
 	rnd := acctest.RandString(t, 10)
 	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
-	subnetworkName := acctest.BootstrapSubnet(t, "dataproc-cluster", networkName)
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
 	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -307,7 +307,7 @@ func TestAccDataprocJob_Presto(t *testing.T) {
 	var job dataproc.Job
 	rnd := acctest.RandString(t, 10)
 	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
-	subnetworkName := acctest.BootstrapSubnet(t, "dataproc-cluster", networkName)
+	subnetworkName := acctest.BootstrapSubnetForDataprocBatches(t, "dataproc-cluster-internal", networkName)
 	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -868,6 +868,8 @@ resource "google_dataproc_cluster" "basic" {
       override_properties = {
         "dataproc:dataproc.allow.zero.workers" = "true"
       }
+      # 2.1 removes Presto in favor of Trino. So use 2.0 for the Presto test.
+      image_version = "2.0"
       optional_components = ["PRESTO"]
     }
 
