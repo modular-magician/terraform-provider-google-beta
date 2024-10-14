@@ -267,10 +267,11 @@ If not set, defaults to 14 days.`,
 				},
 			},
 			"database_version": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				Description: `The database engine major version. This is an optional field and it's populated at the Cluster creation time. This field cannot be changed after cluster creation.`,
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional: true,
+				Description: `The database engine major version. This is an optional field and it's populated at the Cluster creation time.
+Note: Changing this field to a higer version results in upgrading the AlloyDB cluster which is an irreversible change.`,
 			},
 			"display_name": {
 				Type:        schema.TypeString,
@@ -1229,6 +1230,40 @@ func resourceAlloydbClusterUpdate(d *schema.ResourceData, meta interface{}) erro
 	if err != nil {
 		return err
 	}
+	// Implementation for cluster upgrade
+	if d.HasChange("database_version") && !tpgresource.IsEmptyValue(reflect.ValueOf(d.Get("database_version"))) {
+		upgradeUrl := strings.Split(url, "?updateMask")[0] + ":upgrade"
+		patchObj := make(map[string]interface{})
+		patchObj["version"] = obj["databaseVersion"]
+		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		upgradeClusterTimeout := 58 * time.Hour
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
+			Project:   billingProject,
+			RawURL:    upgradeUrl,
+			UserAgent: userAgent,
+			Body:      patchObj,
+			Timeout:   upgradeClusterTimeout,
+		})
+		if err != nil {
+			return fmt.Errorf("Error upgrading cluster: %v", err)
+		}
+
+		err = AlloydbOperationWaitTime(
+			config, res, project, "Upgrading cluster", userAgent,
+			upgradeClusterTimeout)
+
+		if err != nil {
+			return fmt.Errorf("Error waiting to upgrade cluster: %s", err)
+		}
+
+		log.Printf("[DEBUG] Finished upgrading cluster %q: %#v", d.Id(), res)
+	}
+
 	// Restrict setting secondary_config if cluster_type is PRIMARY
 	if d.Get("cluster_type") == "PRIMARY" && !tpgresource.IsEmptyValue(reflect.ValueOf(d.Get("secondary_config"))) {
 		return fmt.Errorf("Can not set secondary config for primary cluster.")

@@ -321,7 +321,8 @@ The following arguments are supported:
 
 * `database_version` -
   (Optional)
-  The database engine major version. This is an optional field and it's populated at the Cluster creation time. This field cannot be changed after cluster creation.
+  The database engine major version. This is an optional field and it's populated at the Cluster creation time.
+  Note: Changing this field to a higer version results in upgrading the AlloyDB cluster which is an irreversible change.
 
 * `psc_config` -
   (Optional)
