@@ -63,6 +63,162 @@ func ResourceVmwareengineCluster() *schema.Resource {
 Resource names are schemeless URIs that follow the conventions in https://cloud.google.com/apis/design/resource_names.
 For example: projects/my-project/locations/us-west1-a/privateClouds/my-cloud`,
 			},
+			"autoscaling_settings": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Configuration of the autoscaling applied to this cluster`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"autoscaling_policies": {
+							Type:     schema.TypeSet,
+							Required: true,
+							Description: `The map with autoscaling policies applied to the cluster.
+The key is the identifier of the policy.
+It must meet the following requirements:
+  * Only contains 1-63 alphanumeric characters and hyphens
+  * Begins with an alphabetical character
+  * Ends with a non-hyphen character
+  * Not formatted as a UUID
+  * Complies with [RFC 1034](https://datatracker.ietf.org/doc/html/rfc1034) (section 3.5)
+
+Currently there map must contain only one element
+that describes the autoscaling policy for compute nodes.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"autoscale_policy_id": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"node_type_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `The canonical identifier of the node type to add or remove.`,
+									},
+									"scale_out_size": {
+										Type:     schema.TypeInt,
+										Required: true,
+										Description: `Number of nodes to add to a cluster during a scale-out operation.
+Must be divisible by 2 for stretched clusters.`,
+									},
+									"consumed_memory_thresholds": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Utilization thresholds pertaining to amount of consumed memory.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"scale_in": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `The utilization triggering the scale-in operation in percent.`,
+												},
+												"scale_out": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `The utilization triggering the scale-out operation in percent.`,
+												},
+											},
+										},
+									},
+									"cpu_thresholds": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Utilization thresholds pertaining to CPU utilization.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"scale_in": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `The utilization triggering the scale-in operation in percent.`,
+												},
+												"scale_out": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `The utilization triggering the scale-out operation in percent.`,
+												},
+											},
+										},
+									},
+									"granted_memory_thresholds": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Utilization thresholds pertaining to amount of granted memory.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"scale_in": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `The utilization triggering the scale-in operation in percent.`,
+												},
+												"scale_out": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `The utilization triggering the scale-out operation in percent.`,
+												},
+											},
+										},
+									},
+									"max_node_count": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Description: `Maximum number of nodes of the given type in a cluster.
+The number is coerced to the maximum number of nodes of any type in the cluster.`,
+									},
+									"min_node_count": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Description: `Minimum number of nodes of the given type in a cluster.
+The number is coerced to the minimum number of nodes of any type in the cluster.`,
+									},
+									"storage_thresholds": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Utilization thresholds pertaining to amount of consumed storage.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"scale_in": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `The utilization triggering the scale-in operation in percent.`,
+												},
+												"scale_out": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `The utilization triggering the scale-out operation in percent.`,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"cool_down_period": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The minimum duration between consecutive autoscale operations.
+It starts once addition or removal of nodes is fully completed.
+Defaults to 30m if not specified.
+Cool down period must be in whole minutes (for example, 30m, 31m, 50m).`,
+						},
+						"max_cluster_node_count": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							Description: `Maximum number of nodes of any type in a cluster.
+If not specified the default limits apply.`,
+						},
+						"min_cluster_node_count": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							Description: `Minimum number of nodes of any type in a cluster.
+If not specified the default limits apply.`,
+						},
+					},
+				},
+			},
 			"node_type_configs": {
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -126,6 +282,12 @@ func resourceVmwareengineClusterCreate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("node_type_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(nodeTypeConfigsProp)) && (ok || !reflect.DeepEqual(v, nodeTypeConfigsProp)) {
 		obj["nodeTypeConfigs"] = nodeTypeConfigsProp
+	}
+	autoscalingSettingsProp, err := expandVmwareengineClusterAutoscalingSettings(d.Get("autoscaling_settings"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("autoscaling_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(autoscalingSettingsProp)) && (ok || !reflect.DeepEqual(v, autoscalingSettingsProp)) {
+		obj["autoscalingSettings"] = autoscalingSettingsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{VmwareengineBasePath}}{{parent}}/clusters?clusterId={{name}}")
@@ -224,6 +386,9 @@ func resourceVmwareengineClusterRead(d *schema.ResourceData, meta interface{}) e
 	if err := d.Set("node_type_configs", flattenVmwareengineClusterNodeTypeConfigs(res["nodeTypeConfigs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
+	if err := d.Set("autoscaling_settings", flattenVmwareengineClusterAutoscalingSettings(res["autoscalingSettings"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Cluster: %s", err)
+	}
 
 	return nil
 }
@@ -245,6 +410,12 @@ func resourceVmwareengineClusterUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("node_type_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nodeTypeConfigsProp)) {
 		obj["nodeTypeConfigs"] = nodeTypeConfigsProp
 	}
+	autoscalingSettingsProp, err := expandVmwareengineClusterAutoscalingSettings(d.Get("autoscaling_settings"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("autoscaling_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, autoscalingSettingsProp)) {
+		obj["autoscalingSettings"] = autoscalingSettingsProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{VmwareengineBasePath}}{{parent}}/clusters/{{name}}")
 	if err != nil {
@@ -257,6 +428,10 @@ func resourceVmwareengineClusterUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("node_type_configs") {
 		updateMask = append(updateMask, "nodeTypeConfigs.*.nodeCount")
+	}
+
+	if d.HasChange("autoscaling_settings") {
+		updateMask = append(updateMask, "autoscalingSettings")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -434,6 +609,336 @@ func flattenVmwareengineClusterNodeTypeConfigsCustomCoreCount(v interface{}, d *
 	return v // let terraform core handle it otherwise
 }
 
+func flattenVmwareengineClusterAutoscalingSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["autoscaling_policies"] =
+		flattenVmwareengineClusterAutoscalingSettingsAutoscalingPolicies(original["autoscalingPolicies"], d, config)
+	transformed["min_cluster_node_count"] =
+		flattenVmwareengineClusterAutoscalingSettingsMinClusterNodeCount(original["minClusterNodeCount"], d, config)
+	transformed["max_cluster_node_count"] =
+		flattenVmwareengineClusterAutoscalingSettingsMaxClusterNodeCount(original["maxClusterNodeCount"], d, config)
+	transformed["cool_down_period"] =
+		flattenVmwareengineClusterAutoscalingSettingsCoolDownPeriod(original["coolDownPeriod"], d, config)
+	return []interface{}{transformed}
+}
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPolicies(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.(map[string]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for k, raw := range l {
+		original := raw.(map[string]interface{})
+		transformed = append(transformed, map[string]interface{}{
+			"autoscale_policy_id":        k,
+			"node_type_id":               flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesNodeTypeId(original["nodeTypeId"], d, config),
+			"scale_out_size":             flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesScaleOutSize(original["scaleOutSize"], d, config),
+			"min_node_count":             flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesMinNodeCount(original["minNodeCount"], d, config),
+			"max_node_count":             flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesMaxNodeCount(original["maxNodeCount"], d, config),
+			"cpu_thresholds":             flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholds(original["cpuThresholds"], d, config),
+			"granted_memory_thresholds":  flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholds(original["grantedMemoryThresholds"], d, config),
+			"consumed_memory_thresholds": flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholds(original["consumedMemoryThresholds"], d, config),
+			"storage_thresholds":         flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholds(original["storageThresholds"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesNodeTypeId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesScaleOutSize(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesMinNodeCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesMaxNodeCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["scale_out"] =
+		flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholdsScaleOut(original["scaleOut"], d, config)
+	transformed["scale_in"] =
+		flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholdsScaleIn(original["scaleIn"], d, config)
+	return []interface{}{transformed}
+}
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholdsScaleOut(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholdsScaleIn(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["scale_out"] =
+		flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholdsScaleOut(original["scaleOut"], d, config)
+	transformed["scale_in"] =
+		flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholdsScaleIn(original["scaleIn"], d, config)
+	return []interface{}{transformed}
+}
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholdsScaleOut(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholdsScaleIn(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["scale_out"] =
+		flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholdsScaleOut(original["scaleOut"], d, config)
+	transformed["scale_in"] =
+		flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholdsScaleIn(original["scaleIn"], d, config)
+	return []interface{}{transformed}
+}
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholdsScaleOut(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholdsScaleIn(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["scale_out"] =
+		flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholdsScaleOut(original["scaleOut"], d, config)
+	transformed["scale_in"] =
+		flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholdsScaleIn(original["scaleIn"], d, config)
+	return []interface{}{transformed}
+}
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholdsScaleOut(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholdsScaleIn(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsMinClusterNodeCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsMaxClusterNodeCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenVmwareengineClusterAutoscalingSettingsCoolDownPeriod(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandVmwareengineClusterNodeTypeConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
 	if v == nil {
 		return map[string]interface{}{}, nil
@@ -471,5 +976,283 @@ func expandVmwareengineClusterNodeTypeConfigsNodeCount(v interface{}, d tpgresou
 }
 
 func expandVmwareengineClusterNodeTypeConfigsCustomCoreCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAutoscalingPolicies, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPolicies(original["autoscaling_policies"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAutoscalingPolicies); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["autoscalingPolicies"] = transformedAutoscalingPolicies
+	}
+
+	transformedMinClusterNodeCount, err := expandVmwareengineClusterAutoscalingSettingsMinClusterNodeCount(original["min_cluster_node_count"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMinClusterNodeCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["minClusterNodeCount"] = transformedMinClusterNodeCount
+	}
+
+	transformedMaxClusterNodeCount, err := expandVmwareengineClusterAutoscalingSettingsMaxClusterNodeCount(original["max_cluster_node_count"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxClusterNodeCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["maxClusterNodeCount"] = transformedMaxClusterNodeCount
+	}
+
+	transformedCoolDownPeriod, err := expandVmwareengineClusterAutoscalingSettingsCoolDownPeriod(original["cool_down_period"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCoolDownPeriod); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["coolDownPeriod"] = transformedCoolDownPeriod
+	}
+
+	return transformed, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPolicies(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
+	if v == nil {
+		return map[string]interface{}{}, nil
+	}
+	m := make(map[string]interface{})
+	for _, raw := range v.(*schema.Set).List() {
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedNodeTypeId, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesNodeTypeId(original["node_type_id"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedNodeTypeId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["nodeTypeId"] = transformedNodeTypeId
+		}
+
+		transformedScaleOutSize, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesScaleOutSize(original["scale_out_size"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedScaleOutSize); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["scaleOutSize"] = transformedScaleOutSize
+		}
+
+		transformedMinNodeCount, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesMinNodeCount(original["min_node_count"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMinNodeCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["minNodeCount"] = transformedMinNodeCount
+		}
+
+		transformedMaxNodeCount, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesMaxNodeCount(original["max_node_count"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMaxNodeCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["maxNodeCount"] = transformedMaxNodeCount
+		}
+
+		transformedCpuThresholds, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholds(original["cpu_thresholds"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCpuThresholds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["cpuThresholds"] = transformedCpuThresholds
+		}
+
+		transformedGrantedMemoryThresholds, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholds(original["granted_memory_thresholds"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedGrantedMemoryThresholds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["grantedMemoryThresholds"] = transformedGrantedMemoryThresholds
+		}
+
+		transformedConsumedMemoryThresholds, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholds(original["consumed_memory_thresholds"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedConsumedMemoryThresholds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["consumedMemoryThresholds"] = transformedConsumedMemoryThresholds
+		}
+
+		transformedStorageThresholds, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholds(original["storage_thresholds"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedStorageThresholds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["storageThresholds"] = transformedStorageThresholds
+		}
+
+		transformedAutoscalePolicyId, err := tpgresource.ExpandString(original["autoscale_policy_id"], d, config)
+		if err != nil {
+			return nil, err
+		}
+		m[transformedAutoscalePolicyId] = transformed
+	}
+	return m, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesNodeTypeId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesScaleOutSize(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesMinNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesMaxNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedScaleOut, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholdsScaleOut(original["scale_out"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedScaleOut); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["scaleOut"] = transformedScaleOut
+	}
+
+	transformedScaleIn, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholdsScaleIn(original["scale_in"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedScaleIn); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["scaleIn"] = transformedScaleIn
+	}
+
+	return transformed, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholdsScaleOut(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesCpuThresholdsScaleIn(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedScaleOut, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholdsScaleOut(original["scale_out"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedScaleOut); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["scaleOut"] = transformedScaleOut
+	}
+
+	transformedScaleIn, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholdsScaleIn(original["scale_in"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedScaleIn); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["scaleIn"] = transformedScaleIn
+	}
+
+	return transformed, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholdsScaleOut(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesGrantedMemoryThresholdsScaleIn(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedScaleOut, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholdsScaleOut(original["scale_out"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedScaleOut); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["scaleOut"] = transformedScaleOut
+	}
+
+	transformedScaleIn, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholdsScaleIn(original["scale_in"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedScaleIn); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["scaleIn"] = transformedScaleIn
+	}
+
+	return transformed, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholdsScaleOut(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesConsumedMemoryThresholdsScaleIn(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedScaleOut, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholdsScaleOut(original["scale_out"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedScaleOut); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["scaleOut"] = transformedScaleOut
+	}
+
+	transformedScaleIn, err := expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholdsScaleIn(original["scale_in"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedScaleIn); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["scaleIn"] = transformedScaleIn
+	}
+
+	return transformed, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholdsScaleOut(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsAutoscalingPoliciesStorageThresholdsScaleIn(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsMinClusterNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsMaxClusterNodeCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVmwareengineClusterAutoscalingSettingsCoolDownPeriod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
