@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"google.golang.org/api/firebase/v1beta1"
+	firebase "google.golang.org/api/firebase/v1beta1"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -30,8 +30,8 @@ func NewGoogleFirebaseAndroidAppConfigDataSource() datasource.DataSource {
 
 // GoogleFirebaseAndroidAppConfigDataSource defines the data source implementation
 type GoogleFirebaseAndroidAppConfigDataSource struct {
-	client  *firebase.Service
-	project types.String
+	fwresource.DataSourceWithConfigure
+	fwresource.WithGetProject
 }
 
 type GoogleFirebaseAndroidAppConfigModel struct {
@@ -86,28 +86,6 @@ func (d *GoogleFirebaseAndroidAppConfigDataSource) Schema(ctx context.Context, r
 	}
 }
 
-func (d *GoogleFirebaseAndroidAppConfigDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	// Prevent panic if the provider has not been configured.
-	if req.ProviderData == nil {
-		return
-	}
-
-	p, ok := req.ProviderData.(*fwtransport.FrameworkProviderConfig)
-	if !ok {
-		resp.Diagnostics.AddError(
-			"Unexpected Data Source Configure Type",
-			fmt.Sprintf("Expected *fwtransport.FrameworkProviderConfig, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-		return
-	}
-
-	d.client = p.NewFirebaseClient(p.UserAgent, &resp.Diagnostics)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	d.project = p.Project
-}
-
 func (d *GoogleFirebaseAndroidAppConfigDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data GoogleFirebaseAndroidAppConfigModel
 	var metaData *fwmodels.ProviderMetaModel
@@ -125,15 +103,18 @@ func (d *GoogleFirebaseAndroidAppConfigDataSource) Read(ctx context.Context, req
 	}
 
 	// Use provider_meta to set User-Agent
-	d.client.UserAgent = fwtransport.GenerateFrameworkUserAgentString(metaData, d.client.UserAgent)
+	userAgent := fwtransport.GenerateFrameworkUserAgentString(metaData, d.Config.UserAgent)
 
-	data.Project = fwresource.GetProjectFramework(data.Project, d.project, &resp.Diagnostics)
+	// Check if provider-default value(s) need to be used
+	project := d.GetProject(data.Project, d.Config, &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	data.Project = project
 
 	// GET Request
-	service := firebase.NewProjectsAndroidAppsService(d.client)
+	client := d.Config.NewFirebaseClient(ctx, userAgent)
+	service := firebase.NewProjectsAndroidAppsService(client)
 	appName := fmt.Sprintf("projects/%s/androidApps/%s/config", data.Project.ValueString(), data.AppId.ValueString())
 	clientResp, err := service.GetConfig(appName).Do()
 	if err != nil {
