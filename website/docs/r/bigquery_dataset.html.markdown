@@ -28,10 +28,6 @@ To get more information about Dataset, see:
 * How-to Guides
     * [Datasets Intro](https://cloud.google.com/bigquery/docs/datasets-intro)
 
-~> **Warning:** You must specify the role field using the legacy format `OWNER` instead of `roles/bigquery.dataOwner`.
-The API does accept both formats but it will always return the legacy format which results in Terraform
-showing permanent diff on each plan and apply operation.
-
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=bigquery_dataset_basic&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
