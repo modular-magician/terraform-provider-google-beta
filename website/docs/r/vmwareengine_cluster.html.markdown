@@ -94,6 +94,30 @@ resource "google_vmwareengine_private_cloud" "cluster-pc" {
       node_count   = 3
       custom_core_count = 32
     }
+    autoscaling_settings {
+      autoscaling_policies {
+        autoscale_policy_id = "autoscaling-policy"
+        node_type_id = "standard-72"
+        scale_out_size = 1
+        min_node_count = 3 
+        max_node_count = 8
+        cpu_thresholds {
+          scale_out = 75
+          scale_in = 15
+        }
+        consumed_memory_thresholds {
+          scale_out = 85
+          scale_in = 10
+        }
+        storage_thresholds {
+          scale_out = 79
+          scale_in = 20
+        }
+      }
+      min_cluster_node_count = 3
+      max_cluster_node_count = 8
+      cool_down_period = "1800s"
+    }
   }
 }
 
@@ -130,6 +154,11 @@ The following arguments are supported:
   where the key is canonical identifier of the node type (corresponds to the NodeType).
   Structure is [documented below](#nested_node_type_configs).
 
+* `autoscaling_settings` -
+  (Optional)
+  Configuration of the autoscaling applied to this cluster
+  Structure is [documented below](#nested_autoscaling_settings).
+
 
 <a name="nested_node_type_configs"></a>The `node_type_configs` block supports:
 
@@ -145,6 +174,124 @@ The following arguments are supported:
   This number must always be one of `nodeType.availableCustomCoreCounts`.
   If zero is provided max value from `nodeType.availableCustomCoreCounts` will be used.
   Once the customer is created then corecount cannot be changed.
+
+<a name="nested_autoscaling_settings"></a>The `autoscaling_settings` block supports:
+
+* `autoscaling_policies` -
+  (Required)
+  The map with autoscaling policies applied to the cluster.
+  The key is the identifier of the policy.
+  It must meet the following requirements:
+    * Only contains 1-63 alphanumeric characters and hyphens
+    * Begins with an alphabetical character
+    * Ends with a non-hyphen character
+    * Not formatted as a UUID
+    * Complies with [RFC 1034](https://datatracker.ietf.org/doc/html/rfc1034) (section 3.5)
+  Currently there map must contain only one element
+  that describes the autoscaling policy for compute nodes.
+  Structure is [documented below](#nested_autoscaling_policies).
+
+* `min_cluster_node_count` -
+  (Optional)
+  Minimum number of nodes of any type in a cluster.
+  If not specified the default limits apply.
+
+* `max_cluster_node_count` -
+  (Optional)
+  Maximum number of nodes of any type in a cluster.
+  If not specified the default limits apply.
+
+* `cool_down_period` -
+  (Optional)
+  The minimum duration between consecutive autoscale operations.
+  It starts once addition or removal of nodes is fully completed.
+  Defaults to 30m if not specified. 
+  Cool down period must be in whole minutes (for example, 30m, 31m, 50m).
+
+
+<a name="nested_autoscaling_policies"></a>The `autoscaling_policies` block supports:
+
+* `autoscale_policy_id` - (Required) The identifier for this object. Format specified above.
+
+* `node_type_id` -
+  (Required)
+  The canonical identifier of the node type to add or remove.
+
+* `scale_out_size` -
+  (Required)
+  Number of nodes to add to a cluster during a scale-out operation.
+  Must be divisible by 2 for stretched clusters.
+
+* `min_node_count` -
+  (Optional)
+  Minimum number of nodes of the given type in a cluster.
+  The number is coerced to the minimum number of nodes of any type in the cluster.
+
+* `max_node_count` -
+  (Optional)
+  Maximum number of nodes of the given type in a cluster.
+  The number is coerced to the maximum number of nodes of any type in the cluster.
+
+* `cpu_thresholds` -
+  (Optional)
+  Utilization thresholds pertaining to CPU utilization.
+  Structure is [documented below](#nested_cpu_thresholds).
+
+* `granted_memory_thresholds` -
+  (Optional)
+  Utilization thresholds pertaining to amount of granted memory.
+  Structure is [documented below](#nested_granted_memory_thresholds).
+
+* `consumed_memory_thresholds` -
+  (Optional)
+  Utilization thresholds pertaining to amount of consumed memory.
+  Structure is [documented below](#nested_consumed_memory_thresholds).
+
+* `storage_thresholds` -
+  (Optional)
+  Utilization thresholds pertaining to amount of consumed storage.
+  Structure is [documented below](#nested_storage_thresholds).
+
+
+<a name="nested_cpu_thresholds"></a>The `cpu_thresholds` block supports:
+
+* `scale_out` -
+  (Optional)
+  The utilization triggering the scale-out operation in percent.
+
+* `scale_in` -
+  (Optional)
+  The utilization triggering the scale-in operation in percent.
+
+<a name="nested_granted_memory_thresholds"></a>The `granted_memory_thresholds` block supports:
+
+* `scale_out` -
+  (Optional)
+  The utilization triggering the scale-out operation in percent.
+
+* `scale_in` -
+  (Optional)
+  The utilization triggering the scale-in operation in percent.
+
+<a name="nested_consumed_memory_thresholds"></a>The `consumed_memory_thresholds` block supports:
+
+* `scale_out` -
+  (Optional)
+  The utilization triggering the scale-out operation in percent.
+
+* `scale_in` -
+  (Optional)
+  The utilization triggering the scale-in operation in percent.
+
+<a name="nested_storage_thresholds"></a>The `storage_thresholds` block supports:
+
+* `scale_out` -
+  (Optional)
+  The utilization triggering the scale-out operation in percent.
+
+* `scale_in` -
+  (Optional)
+  The utilization triggering the scale-in operation in percent.
 
 ## Attributes Reference
 
