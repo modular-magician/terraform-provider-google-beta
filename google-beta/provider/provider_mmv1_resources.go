@@ -127,6 +127,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicemanagement"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/servicenetworking"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/serviceusage"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/serviceusagev2"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/siteverification"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/sourcerepo"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/spanner"
@@ -493,9 +494,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 539
+// Generated resources: 540
 // Generated IAM resources: 291
-// Total generated resources: 830
+// Total generated resources: 831
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1246,6 +1247,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_endpoints_service_consumers_iam_policy":                              tpgiamresource.ResourceIamPolicy(servicemanagement.ServiceManagementServiceConsumersIamSchema, servicemanagement.ServiceManagementServiceConsumersIamUpdaterProducer, servicemanagement.ServiceManagementServiceConsumersIdParseFunc),
 	"google_service_networking_vpc_service_controls":                             servicenetworking.ResourceServiceNetworkingVPCServiceControls(),
 	"google_service_usage_consumer_quota_override":                               serviceusage.ResourceServiceUsageConsumerQuotaOverride(),
+	"google_service_usage_v2_consumer_policy":                                    serviceusagev2.ResourceServiceUsageV2ConsumerPolicy(),
 	"google_site_verification_web_resource":                                      siteverification.ResourceSiteVerificationWebResource(),
 	"google_sourcerepo_repository":                                               sourcerepo.ResourceSourceRepoRepository(),
 	"google_sourcerepo_repository_iam_binding":                                   tpgiamresource.ResourceIamBinding(sourcerepo.SourceRepoRepositoryIamSchema, sourcerepo.SourceRepoRepositoryIamUpdaterProducer, sourcerepo.SourceRepoRepositoryIdParseFunc),
