@@ -112,7 +112,7 @@ func testSweepBackupDRBackupVault(region string) error {
 			continue
 		}
 
-		deleteTemplate := "https://backupdr.googleapis.com/v1/projects/{{project}}/locations/{{location}}/backupVaults/{{backup_vault_id}}?force={{force_delete}}&allowMissing={{allow_missing}}"
+		deleteTemplate := "https://backupdr.googleapis.com/v1/projects/{{project}}/locations/{{location}}/backupVaults/{{backup_vault_id}}?force={{ignore_inactive_datasources}}&ignoreBackupPlanReferences={{ignore_backup_plan_references}}&allowMissing={{allow_missing}}"
 		deleteUrl, err := tpgresource.ReplaceVars(d, config, deleteTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing delete url: %s", err)
