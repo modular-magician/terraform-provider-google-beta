@@ -20,7 +20,7 @@ description: |-
 # google_compute_per_instance_config
 
 A config defined for a single managed instance that belongs to an instance group manager. It preserves the instance name
-across instance group manager operations and can define stateful disks or metadata that are unique to the instance.
+across instance group manager operations and can define stateful disks, ips or metadata that are unique to the instance.
 
 
 To get more information about PerInstanceConfig, see:
