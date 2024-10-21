@@ -452,14 +452,14 @@ resource "google_compute_region_per_instance_config" "config_one" {
     }
     internal_ip {
       ip_address {
-				address = google_compute_address.static_internal_ip.self_link
+				address = google_compute_address.static_internal_ip.id
       }
       auto_delete    = "NEVER"
       interface_name = "nic0"
     }
     external_ip {
       ip_address {
-        address = google_compute_address.static_external_ip.self_link
+        address = google_compute_address.static_external_ip.id
       }
       auto_delete    = "NEVER"
       interface_name = "nic0"
@@ -556,14 +556,14 @@ resource "google_compute_region_per_instance_config" "default" {
     }
     internal_ip {
       ip_address {
-	    address = google_compute_address.static_internal_ip.self_link
+	    address = google_compute_address.static_internal_ip.id
       }
       auto_delete    = "NEVER"
       interface_name = "nic0"
     }
     external_ip {
       ip_address {
-        address = google_compute_address.static_external_ip.self_link
+        address = google_compute_address.static_external_ip.id
       }
       auto_delete    = "NEVER"
       interface_name = "nic0"
@@ -632,14 +632,14 @@ resource "google_compute_region_per_instance_config" "default" {
     }
     internal_ip {
       ip_address {
-	    address = google_compute_address.static_internal_ip.self_link
+	    address = google_compute_address.static_internal_ip.id
       }
       auto_delete    = "ON_PERMANENT_INSTANCE_DELETION"
       interface_name = "nic0"
     }
     external_ip {
       ip_address {
-        address = google_compute_address.static_external_ip.self_link
+        address = google_compute_address.static_external_ip.id
       }
       auto_delete    = "ON_PERMANENT_INSTANCE_DELETION"
       interface_name = "nic0"

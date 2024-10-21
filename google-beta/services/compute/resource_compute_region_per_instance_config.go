@@ -812,7 +812,11 @@ func flattenNestedComputeRegionPerInstanceConfigPreservedStateInternalIpIpAddres
 	if v == nil {
 		return v
 	}
-	return tpgresource.ConvertSelfLinkToV1(v.(string))
+	relative, err := tpgresource.GetRelativePath(v.(string))
+	if err != nil {
+		return v
+	}
+	return relative
 }
 
 func flattenNestedComputeRegionPerInstanceConfigPreservedStateExternalIp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -852,7 +856,11 @@ func flattenNestedComputeRegionPerInstanceConfigPreservedStateExternalIpIpAddres
 	if v == nil {
 		return v
 	}
-	return tpgresource.ConvertSelfLinkToV1(v.(string))
+	relative, err := tpgresource.GetRelativePath(v.(string))
+	if err != nil {
+		return v
+	}
+	return relative
 }
 
 func expandNestedComputeRegionPerInstanceConfigName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
