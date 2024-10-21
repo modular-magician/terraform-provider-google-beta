@@ -99,14 +99,6 @@ Please refer to the field 'effective_annotations' for all of the annotations pre
 				Optional:    true,
 				Description: `Optional. Time after which the BackupVault resource is locked.`,
 			},
-			"force_delete": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Description: `If set, the following restrictions against deletion of the backup vault instance can be overridden:
-   * deletion of a backup vault instance containing no backups, but still containing empty datasources.
-   * deletion of a backup vault instance that is being referenced by an active backup plan.`,
-				Default: false,
-			},
 			"force_update": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -114,6 +106,20 @@ Please refer to the field 'effective_annotations' for all of the annotations pre
  the restriction against conflicting retention periods. This conflict may occur when the
  expiration schedule defined by the associated backup plan is shorter than the minimum
  retention set by the backup vault.`,
+				Default: false,
+			},
+			"ignore_backup_plan_references": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `If set, the following restrictions against deletion of the backup vault instance can be overridden:
+   * deletion of a backup vault instance that is being referenced by an active backup plan.`,
+				Default: false,
+			},
+			"ignore_inactive_datasources": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `If set, the following restrictions against deletion of the backup vault instance can be overridden:
+   * deletion of a backup vault instance containing no backups, but still containing empty datasources.`,
 				Default: false,
 			},
 			"labels": {
@@ -553,7 +559,7 @@ func resourceBackupDRBackupVaultDelete(d *schema.ResourceData, meta interface{})
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{BackupDRBasePath}}projects/{{project}}/locations/{{location}}/backupVaults/{{backup_vault_id}}?force={{force_delete}}&allowMissing={{allow_missing}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{BackupDRBasePath}}projects/{{project}}/locations/{{location}}/backupVaults/{{backup_vault_id}}?force={{ignore_inactive_datasources}}&ignoreBackupPlanReferences={{ignore_backup_plan_references}}&allowMissing={{allow_missing}}")
 	if err != nil {
 		return err
 	}

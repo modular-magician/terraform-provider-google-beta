@@ -44,7 +44,8 @@ resource "google_backup_dr_backup_vault" "backup-vault-test" {
     annotations2 = "baz1"
   }
   force_update = "true"
-  force_delete = "true"
+  ignore_inactive_datasources = "true"
+  ignore_backup_plan_references = "true"
   allow_missing = "true"
 }
 ```
@@ -98,10 +99,14 @@ The following arguments are supported:
    expiration schedule defined by the associated backup plan is shorter than the minimum
    retention set by the backup vault.
 
-* `force_delete` -
+* `ignore_inactive_datasources` -
   (Optional)
   If set, the following restrictions against deletion of the backup vault instance can be overridden:
      * deletion of a backup vault instance containing no backups, but still containing empty datasources.
+
+* `ignore_backup_plan_references` -
+  (Optional)
+  If set, the following restrictions against deletion of the backup vault instance can be overridden:
      * deletion of a backup vault instance that is being referenced by an active backup plan.
 
 * `allow_missing` -
