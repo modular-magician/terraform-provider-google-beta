@@ -686,10 +686,11 @@ encryption key that protects this resource.`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: tpgresource.CompareResourceNames,
-				Description: `The URL of the storage pool in which the new disk is created.
+				Description: `The URL or the name of the storage pool in which the new disk is created.
 For example:
 * https://www.googleapis.com/compute/v1/projects/{project}/zones/{zone}/storagePools/{storagePool}
-* /projects/{project}/zones/{zone}/storagePools/{storagePool}`,
+* /projects/{project}/zones/{zone}/storagePools/{storagePool}
+* /zones/{zone}/storagePools/{storagePool}`,
 			},
 			"type": {
 				Type:             schema.TypeString,
@@ -2100,7 +2101,35 @@ func expandComputeDiskLicenses(v interface{}, d tpgresource.TerraformResourceDat
 }
 
 func expandComputeDiskStoragePool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
+	formattedStr := v.(string)
+	if strings.HasPrefix(v.(string), "/") {
+		formattedStr = formattedStr[1:]
+	}
+	replacedStr := ""
+
+	// This method returns a full self link from a partial self link.
+	if v == nil || v.(string) == "" {
+		// It does not try to construct anything from empty.
+		return "", nil
+	} else if strings.HasPrefix(v.(string), "https://") {
+		// Anything that starts with a URL scheme is assumed to be a self link worth using.
+		return v, nil
+	} else if strings.HasPrefix(v.(string), "projects/") || strings.HasPrefix(v.(string), "/projects") {
+		// If the self link references a project, we'll just stuck the compute prefix on it
+		replacedStr = "{{ComputeBasePath}}" + formattedStr
+	} else if strings.HasPrefix(v.(string), "zones/") || strings.HasPrefix(v.(string), "/zones") {
+		// For regional or zonal resources which include their region or zone, just put the project in front.
+		replacedStr = "{{ComputeBasePath}}projects/{{project}}/" + formattedStr
+	} else {
+		// Anything else is assumed to be a zonal resource, with a partial link that begins with the resource name.
+		replacedStr = "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/storagePools/" + formattedStr
+	}
+
+	url, err := tpgresource.ReplaceVars(d, config, replacedStr)
+	if err != nil {
+		return nil, err
+	}
+	return url, nil
 }
 
 func expandComputeDiskAccessMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
