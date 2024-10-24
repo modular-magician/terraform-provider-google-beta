@@ -5,8 +5,8 @@ package container_test
 import (
 	"bytes"
 	"fmt"
-	"regexp"
 	"testing"
+	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/plancheck"
@@ -23,9 +23,9 @@ func TestAccContainerCluster_basic(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
@@ -36,23 +36,23 @@ func TestAccContainerCluster_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportStateId:           fmt.Sprintf("us-central1-a/%s", clusterName),
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportStateId:     fmt.Sprintf("us-central1-a/%s", clusterName),
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportStateId:           fmt.Sprintf("%s/us-central1-a/%s", envvar.GetTestProjectFromEnv(), clusterName),
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:	     "google_container_cluster.primary",
+				ImportStateId:     fmt.Sprintf("%s/us-central1-a/%s", envvar.GetTestProjectFromEnv(), clusterName),
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:	     "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -102,26 +102,26 @@ func TestAccContainerCluster_networkingModeRoutes(t *testing.T) {
 	firstClusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	secondClusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_networkingModeRoutes(firstClusterName, secondClusterName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("google_container_cluster.primary", "networking_mode", "ROUTES"),
-					resource.TestCheckResourceAttr("google_container_cluster.secondary", "networking_mode", "ROUTES")),
+					resource.TestCheckResourceAttr("google_container_cluster.secondary", "networking_mode", "ROUTES"),				),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:	     "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
-				ResourceName:            "google_container_cluster.secondary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:	     "google_container_cluster.secondary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -136,9 +136,9 @@ func TestAccContainerCluster_misc(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_misc(clusterName, networkName, subnetworkName),
@@ -175,17 +175,17 @@ func TestAccContainerCluster_withAddons(t *testing.T) {
 	pid := envvar.GetTestProjectFromEnv()
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withAddons(pid, clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:      "google_container_cluster.primary",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
 				// TODO: clean up this list in `4.0.0`, remove both `workload_identity_config` fields (same for below)
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
@@ -219,9 +219,9 @@ func TestAccContainerCluster_withDeletionProtection(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withDeletionProtection(clusterName, networkName, subnetworkName, "false"),
@@ -236,7 +236,7 @@ func TestAccContainerCluster_withDeletionProtection(t *testing.T) {
 				Config: testAccContainerCluster_withDeletionProtection(clusterName, networkName, subnetworkName, "true"),
 			},
 			{
-				Config:      testAccContainerCluster_withDeletionProtection(clusterName, networkName, subnetworkName, "true"),
+				Config: testAccContainerCluster_withDeletionProtection(clusterName, networkName, subnetworkName, "true"),
 				Destroy:     true,
 				ExpectError: regexp.MustCompile("Cannot destroy cluster because deletion_protection is set to true. Set it to false to proceed with cluster deletion."),
 			},
@@ -257,44 +257,44 @@ func TestAccContainerCluster_withNotificationConfig(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNotificationConfig(clusterName, topic, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.notification_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.notification_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withNotificationConfig(clusterName, newTopic, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.notification_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.notification_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_disableNotificationConfig(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.notification_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.notification_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withNotificationConfig(clusterName, newTopic, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.notification_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.notification_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -311,35 +311,35 @@ func TestAccContainerCluster_withFilteredNotificationConfig(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withFilteredNotificationConfig(clusterName, topic, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.filtered_notification_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.filtered_notification_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withFilteredNotificationConfigUpdate(clusterName, newTopic, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.filtered_notification_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.filtered_notification_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_disableFilteredNotificationConfig(clusterName, newTopic, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.filtered_notification_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.filtered_notification_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -355,9 +355,9 @@ func TestAccContainerCluster_withConfidentialNodes(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withConfidentialNodes(clusterName, npName, networkName, subnetworkName),
@@ -399,35 +399,35 @@ func TestAccContainerCluster_withILBSubsetting(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_disableILBSubSetting(clusterName, npName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.confidential_nodes",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.confidential_nodes",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withILBSubSetting(clusterName, npName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.confidential_nodes",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.confidential_nodes",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_disableILBSubSetting(clusterName, npName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.confidential_nodes",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.confidential_nodes",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -440,17 +440,17 @@ func TestAccContainerCluster_withMultiNetworking(t *testing.T) {
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_enableMultiNetworking(clusterName),
 			},
 			{
-				ResourceName:            "google_container_cluster.cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.cluster",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -463,26 +463,26 @@ func TestAccContainerCluster_withFQDNNetworkPolicy(t *testing.T) {
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withFQDNNetworkPolicy(clusterName, false),
 			},
 			{
-				ResourceName:            "google_container_cluster.cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.cluster",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withFQDNNetworkPolicy(clusterName, true),
 			},
 			{
-				ResourceName:            "google_container_cluster.cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.cluster",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
@@ -495,17 +495,17 @@ func TestAccContainerCluster_withAdditiveVPC(t *testing.T) {
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withAdditiveVPC(clusterName),
 			},
 			{
-				ResourceName:            "google_container_cluster.cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.cluster",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
@@ -520,9 +520,9 @@ func TestAccContainerCluster_withMasterAuthConfig_NoCert(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withMasterAuthNoCert(clusterName, networkName, subnetworkName),
@@ -531,9 +531,9 @@ func TestAccContainerCluster_withMasterAuthConfig_NoCert(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_master_auth_no_cert",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_master_auth_no_cert",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -547,9 +547,9 @@ func TestAccContainerCluster_withAuthenticatorGroupsConfig(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
@@ -559,9 +559,9 @@ func TestAccContainerCluster_withAuthenticatorGroupsConfig(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
@@ -572,9 +572,9 @@ func TestAccContainerCluster_withAuthenticatorGroupsConfig(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
@@ -585,14 +585,16 @@ func TestAccContainerCluster_withAuthenticatorGroupsConfig(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
 	})
 }
+
+
 
 func TestUnitContainerCluster_Rfc3339TimeDiffSuppress(t *testing.T) {
 	cases := map[string]struct {
@@ -636,6 +638,7 @@ func TestUnitContainerCluster_Rfc3339TimeDiffSuppress(t *testing.T) {
 		}
 	}
 }
+
 
 func testAccContainerCluster_enableMultiNetworking(clusterName string) string {
 	return fmt.Sprintf(`
@@ -781,9 +784,9 @@ func TestAccContainerCluster_withNetworkPolicyEnabled(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNetworkPolicyEnabled(clusterName, networkName, subnetworkName),
@@ -838,13 +841,14 @@ func TestAccContainerCluster_withNetworkPolicyEnabled(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"remove_default_node_pool", "deletion_protection"},
 			},
 			{
-				Config:             testAccContainerCluster_withNetworkPolicyConfigDisabled(clusterName, networkName, subnetworkName),
-				PlanOnly:           true,
+				Config:				testAccContainerCluster_withNetworkPolicyConfigDisabled(clusterName, networkName, subnetworkName),
+				PlanOnly:			true,
 				ExpectNonEmptyPlan: false,
 			},
 		},
 	})
 }
+
 
 func TestAccContainerCluster_withReleaseChannelEnabled(t *testing.T) {
 	t.Parallel()
@@ -853,9 +857,9 @@ func TestAccContainerCluster_withReleaseChannelEnabled(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withReleaseChannelEnabled(clusterName, "STABLE", networkName, subnetworkName),
@@ -888,9 +892,9 @@ func TestAccContainerCluster_withReleaseChannelEnabledDefaultVersion(t *testing.
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withReleaseChannelEnabledDefaultVersion(clusterName, "REGULAR", networkName, subnetworkName),
@@ -955,12 +959,12 @@ func TestAccContainerCluster_withInvalidReleaseChannel(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config:      testAccContainerCluster_withReleaseChannelEnabled(clusterName, "CANARY", networkName, subnetworkName),
+				Config: testAccContainerCluster_withReleaseChannelEnabled(clusterName, "CANARY", networkName, subnetworkName),
 				ExpectError: regexp.MustCompile(`expected release_channel\.0\.channel to be one of \["?UNSPECIFIED"? "?RAPID"? "?REGULAR"? "?STABLE"? "?EXTENDED"?\], got CANARY`),
 			},
 		},
@@ -974,9 +978,9 @@ func TestAccContainerCluster_withTelemetryEnabled(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withTelemetryEnabled(clusterName, "ENABLED", networkName, subnetworkName),
@@ -1018,9 +1022,9 @@ func TestAccContainerCluster_withMasterAuthorizedNetworksConfig(t *testing.T) {
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withMasterAuthorizedNetworksConfig(clusterName, []string{}, ""),
@@ -1039,18 +1043,18 @@ func TestAccContainerCluster_withMasterAuthorizedNetworksConfig(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_master_authorized_networks",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		     "google_container_cluster.with_master_authorized_networks",
+				ImportState:		     true,
+				ImportStateVerify:	     true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withMasterAuthorizedNetworksConfig(clusterName, []string{"10.0.0.0/8", "8.8.8.8/32"}, ""),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_master_authorized_networks",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		     "google_container_cluster.with_master_authorized_networks",
+				ImportState:		     true,
+				ImportStateVerify:	     true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
@@ -1061,18 +1065,18 @@ func TestAccContainerCluster_withMasterAuthorizedNetworksConfig(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_master_authorized_networks",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		     "google_container_cluster.with_master_authorized_networks",
+				ImportState:		     true,
+				ImportStateVerify:	     true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_removeMasterAuthorizedNetworksConfig(clusterName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_master_authorized_networks",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		     "google_container_cluster.with_master_authorized_networks",
+				ImportState:		     true,
+				ImportStateVerify:	     true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1087,9 +1091,9 @@ func TestAccContainerCluster_withGcpPublicCidrsAccessEnabledToggle(t *testing.T)
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withoutGcpPublicCidrsAccessEnabled(clusterName, networkName, subnetworkName),
@@ -1099,10 +1103,10 @@ func TestAccContainerCluster_withGcpPublicCidrsAccessEnabledToggle(t *testing.T)
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_gcp_public_cidrs_access_enabled",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
+				ResourceName:				"google_container_cluster.with_gcp_public_cidrs_access_enabled",
+				ImportState:				true,
+				ImportStateVerify:			true,
+				ImportStateVerifyIgnore:	[]string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withGcpPublicCidrsAccessEnabled(clusterName, "false", networkName, subnetworkName),
@@ -1112,10 +1116,10 @@ func TestAccContainerCluster_withGcpPublicCidrsAccessEnabledToggle(t *testing.T)
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_gcp_public_cidrs_access_enabled",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
+				ResourceName:				"google_container_cluster.with_gcp_public_cidrs_access_enabled",
+				ImportState:				true,
+				ImportStateVerify:			true,
+				ImportStateVerifyIgnore:	[]string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withGcpPublicCidrsAccessEnabled(clusterName, "true", networkName, subnetworkName),
@@ -1178,17 +1182,17 @@ func TestAccContainerCluster_regional(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_regional(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.regional",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.regional",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1204,17 +1208,17 @@ func TestAccContainerCluster_regionalWithNodePool(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_regionalWithNodePool(clusterName, npName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.regional",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.regional",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1229,26 +1233,26 @@ func TestAccContainerCluster_regionalWithNodeLocations(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_regionalNodeLocations(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_locations",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_locations",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_regionalUpdateNodeLocations(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_locations",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_locations",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1262,9 +1266,9 @@ func TestAccContainerCluster_withTpu(t *testing.T) {
 	containerNetName := fmt.Sprintf("tf-test-container-net-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withTpu(containerNetName, clusterName),
@@ -1273,9 +1277,9 @@ func TestAccContainerCluster_withTpu(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_tpu",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_tpu",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1289,26 +1293,26 @@ func TestAccContainerCluster_withPrivateClusterConfigBasic(t *testing.T) {
 	containerNetName := fmt.Sprintf("tf-test-container-net-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withPrivateClusterConfig(containerNetName, clusterName, false),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_private_cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_private_cluster",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withPrivateClusterConfig(containerNetName, clusterName, true),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_private_cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_private_cluster",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1322,12 +1326,12 @@ func TestAccContainerCluster_withPrivateClusterConfigMissingCidrBlock(t *testing
 	containerNetName := fmt.Sprintf("tf-test-container-net-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config:      testAccContainerCluster_withPrivateClusterConfigMissingCidrBlock(containerNetName, clusterName, "us-central1-a", false),
+				Config:	testAccContainerCluster_withPrivateClusterConfigMissingCidrBlock(containerNetName, clusterName, "us-central1-a", false),
 				ExpectError: regexp.MustCompile("master_ipv4_cidr_block must be set if enable_private_nodes is true"),
 			},
 		},
@@ -1341,17 +1345,17 @@ func TestAccContainerCluster_withPrivateClusterConfigMissingCidrBlock_withAutopi
 	containerNetName := fmt.Sprintf("tf-test-container-net-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccContainerCluster_withPrivateClusterConfigMissingCidrBlock(containerNetName, clusterName, "us-central1", true),
+				Config:	testAccContainerCluster_withPrivateClusterConfigMissingCidrBlock(containerNetName, clusterName, "us-central1", true),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_private_cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_private_cluster",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1374,18 +1378,18 @@ func TestAccContainerCluster_withPrivateClusterConfigGlobalAccessEnabledOnly(t *
 				Config: testAccContainerCluster_withPrivateClusterConfigGlobalAccessEnabledOnly(clusterName, networkName, subnetworkName, true),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_private_cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_private_cluster",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withPrivateClusterConfigGlobalAccessEnabledOnly(clusterName, networkName, subnetworkName, false),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_private_cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_private_cluster",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1400,9 +1404,9 @@ func TestAccContainerCluster_withIntraNodeVisibility(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withIntraNodeVisibility(clusterName, networkName, subnetworkName),
@@ -1411,9 +1415,9 @@ func TestAccContainerCluster_withIntraNodeVisibility(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_intranode_visibility",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.with_intranode_visibility",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
@@ -1423,9 +1427,9 @@ func TestAccContainerCluster_withIntraNodeVisibility(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_intranode_visibility",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.with_intranode_visibility",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1440,17 +1444,17 @@ func TestAccContainerCluster_withVersion(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withVersion(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_version",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:			 "google_container_cluster.with_version",
+				ImportState:			 true,
+				ImportStateVerify:		 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
@@ -1465,26 +1469,26 @@ func TestAccContainerCluster_updateVersion(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withLowerVersion(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_version",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:			 "google_container_cluster.with_version",
+				ImportState:			 true,
+				ImportStateVerify:		 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_updateVersion(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_version",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:			 "google_container_cluster.with_version",
+				ImportState:			 true,
+				ImportStateVerify:		 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
@@ -1499,26 +1503,26 @@ func TestAccContainerCluster_withNodeConfig(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodeConfig(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		         "google_container_cluster.with_node_config",
+				ImportState:		         true,
+				ImportStateVerify:	     true,
 				ImportStateVerifyIgnore: []string{"node_config.0.taint", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withNodeConfigUpdate(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		         "google_container_cluster.with_node_config",
+				ImportState:		         true,
+				ImportStateVerify:	     true,
 				ImportStateVerifyIgnore: []string{"node_config.0.taint", "deletion_protection"},
 			},
 		},
@@ -1532,9 +1536,9 @@ func TestAccContainerCluster_withNodeConfigGcfsConfig(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodeConfigGcfsConfig(clusterName, networkName, subnetworkName, false),
@@ -1575,9 +1579,9 @@ func TestAccContainerCluster_withNodeConfigKubeletConfigSettingsUpdates(t *testi
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodeConfigKubeletConfigSettingsBaseline(clusterName, networkName, subnetworkName),
@@ -1633,9 +1637,9 @@ func TestAccContainerCluster_withInsecureKubeletReadonlyPortEnabledInNodePool(t 
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withInsecureKubeletReadonlyPortEnabledInNodePool(clusterName, nodePoolName, networkName, subnetworkName, "TRUE"),
@@ -1659,9 +1663,9 @@ func TestAccContainerCluster_withInsecureKubeletReadonlyPortEnabledDefaultsUpdat
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			// Test API default (no value set in config) first
 			{
@@ -1724,6 +1728,7 @@ func TestAccContainerCluster_withInsecureKubeletReadonlyPortEnabledDefaultsUpdat
 	})
 }
 
+
 func TestAccContainerCluster_withLoggingVariantInNodeConfig(t *testing.T) {
 	t.Parallel()
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
@@ -1731,9 +1736,9 @@ func TestAccContainerCluster_withLoggingVariantInNodeConfig(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withLoggingVariantInNodeConfig(clusterName, "MAX_THROUGHPUT", networkName, subnetworkName),
@@ -1756,9 +1761,9 @@ func TestAccContainerCluster_withLoggingVariantInNodePool(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withLoggingVariantInNodePool(clusterName, nodePoolName, "MAX_THROUGHPUT", networkName, subnetworkName),
@@ -1780,9 +1785,9 @@ func TestAccContainerCluster_withLoggingVariantUpdates(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withLoggingVariantNodePoolDefault(clusterName, "DEFAULT", networkName, subnetworkName),
@@ -1823,9 +1828,9 @@ func TestAccContainerCluster_withAdvancedMachineFeaturesInNodePool(t *testing.T)
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withAdvancedMachineFeaturesInNodePool(clusterName, nodePoolName, networkName, subnetworkName, true),
@@ -1846,9 +1851,9 @@ func TestAccContainerCluster_withNodePoolDefaults(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:         func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
@@ -1858,10 +1863,10 @@ func TestAccContainerCluster_withNodePoolDefaults(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportStateId:           fmt.Sprintf("us-central1-a/%s", clusterName),
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportStateId:     fmt.Sprintf("us-central1-a/%s", clusterName),
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
@@ -1874,25 +1879,25 @@ func TestAccContainerCluster_withNodePoolDefaults(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool_defaults",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection"},
+					ResourceName:            "google_container_cluster.with_node_pool_defaults",
+					ImportState:             true,
+					ImportStateVerify:       true,
+					ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
-				Config: testAccContainerCluster_withNodePoolDefaults(clusterName, "false", networkName, subnetworkName),
-				Check: resource.ComposeAggregateTestCheckFunc(
+					Config: testAccContainerCluster_withNodePoolDefaults(clusterName, "false", networkName, subnetworkName),
+					Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool_defaults",
-						"node_pool_defaults.0.node_config_defaults.0.gcfs_config.#", "1"),
+							"node_pool_defaults.0.node_config_defaults.0.gcfs_config.#", "1"),
 					resource.TestCheckResourceAttr("google_container_cluster.with_node_pool_defaults",
-						"node_pool_defaults.0.node_config_defaults.0.gcfs_config.0.enabled", "false"),
-				),
+							"node_pool_defaults.0.node_config_defaults.0.gcfs_config.0.enabled", "false"),
+					),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool_defaults",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection"},
+					ResourceName:            "google_container_cluster.with_node_pool_defaults",
+					ImportState:             true,
+					ImportStateVerify:       true,
+					ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
 	})
@@ -1906,17 +1911,17 @@ func TestAccContainerCluster_withNodeConfigScopeAlias(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodeConfigScopeAlias(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_config_scope_alias",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_config_scope_alias",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1931,17 +1936,17 @@ func TestAccContainerCluster_withNodeConfigShieldedInstanceConfig(t *testing.T) 
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodeConfigShieldedInstanceConfig(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.with_node_config",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1956,9 +1961,9 @@ func TestAccContainerCluster_withNodeConfigReservationAffinity(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodeConfigReservationAffinity(clusterName, networkName, subnetworkName),
@@ -1970,9 +1975,9 @@ func TestAccContainerCluster_withNodeConfigReservationAffinity(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.with_node_config",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -1982,15 +1987,15 @@ func TestAccContainerCluster_withNodeConfigReservationAffinity(t *testing.T) {
 func TestAccContainerCluster_withNodeConfigReservationAffinitySpecific(t *testing.T) {
 	t.Parallel()
 
-	reservationName := fmt.Sprintf("tf-test-reservation-%s", acctest.RandString(t, 10))
+    reservationName := fmt.Sprintf("tf-test-reservation-%s", acctest.RandString(t, 10))
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodeConfigReservationAffinitySpecific(reservationName, clusterName, networkName, subnetworkName),
@@ -2008,9 +2013,9 @@ func TestAccContainerCluster_withNodeConfigReservationAffinitySpecific(t *testin
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.with_node_config",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2025,9 +2030,9 @@ func TestAccContainerCluster_withWorkloadMetadataConfig(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withWorkloadMetadataConfig(clusterName, networkName, subnetworkName),
@@ -2037,14 +2042,15 @@ func TestAccContainerCluster_withWorkloadMetadataConfig(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_workload_metadata_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:			 "google_container_cluster.with_workload_metadata_config",
+				ImportState:			 true,
+				ImportStateVerify:		 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
 	})
 }
+
 
 func TestAccContainerCluster_withSandboxConfig(t *testing.T) {
 	t.Parallel()
@@ -2054,9 +2060,9 @@ func TestAccContainerCluster_withSandboxConfig(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withSandboxConfig(clusterName, networkName, subnetworkName),
@@ -2076,7 +2082,7 @@ func TestAccContainerCluster_withSandboxConfig(t *testing.T) {
 			{
 				// GKE sets automatic labels and taints on nodes. This makes
 				// sure we ignore the automatic ones and keep our own.
-				Config: testAccContainerCluster_withSandboxConfig(clusterName, networkName, subnetworkName),
+				Config:   testAccContainerCluster_withSandboxConfig(clusterName, networkName, subnetworkName),
 				// When we use PlanOnly without ExpectNonEmptyPlan, we're
 				// guaranteeing that the computed fields of the resources don't
 				// force an unintentional change to the plan. That is, we
@@ -2116,9 +2122,9 @@ func TestAccContainerCluster_withBootDiskKmsKey(t *testing.T) {
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withBootDiskKmsKey(clusterName, kms.CryptoKey.Name, networkName, subnetworkName),
@@ -2140,23 +2146,23 @@ func TestAccContainerCluster_network(t *testing.T) {
 	network := fmt.Sprintf("tf-test-net-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_networkRef(clusterName, network),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_net_ref_by_url",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		     "google_container_cluster.with_net_ref_by_url",
+				ImportState:		     true,
+				ImportStateVerify:	     true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
-				ResourceName:            "google_container_cluster.with_net_ref_by_name",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		     "google_container_cluster.with_net_ref_by_name",
+				ImportState:		     true,
+				ImportStateVerify:	     true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2171,17 +2177,17 @@ func TestAccContainerCluster_backend(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_backendRef(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.primary",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2197,17 +2203,17 @@ func TestAccContainerCluster_withNodePoolBasic(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodePoolBasic(clusterName, npName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_pool",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2223,26 +2229,26 @@ func TestAccContainerCluster_withNodePoolUpdateVersion(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodePoolLowerVersion(clusterName, npName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:			 "google_container_cluster.with_node_pool",
+				ImportState:			 true,
+				ImportStateVerify:		 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withNodePoolUpdateVersion(clusterName, npName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:			 "google_container_cluster.with_node_pool",
+				ImportState:			 true,
+				ImportStateVerify:		 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
@@ -2258,9 +2264,9 @@ func TestAccContainerCluster_withNodePoolResize(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodePoolNodeLocations(clusterName, npName, networkName, subnetworkName),
@@ -2269,9 +2275,9 @@ func TestAccContainerCluster_withNodePoolResize(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_pool",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
@@ -2281,9 +2287,9 @@ func TestAccContainerCluster_withNodePoolResize(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_pool",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2299,9 +2305,9 @@ func TestAccContainerCluster_withNodePoolAutoscaling(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerNodePoolDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerNodePoolDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodePoolAutoscaling(clusterName, npName, networkName, subnetworkName),
@@ -2311,9 +2317,9 @@ func TestAccContainerCluster_withNodePoolAutoscaling(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_pool",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
@@ -2324,9 +2330,9 @@ func TestAccContainerCluster_withNodePoolAutoscaling(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_pool",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
@@ -2337,9 +2343,9 @@ func TestAccContainerCluster_withNodePoolAutoscaling(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_pool",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2355,9 +2361,9 @@ func TestAccContainerCluster_withNodePoolCIA(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerNodePoolDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerNodePoolDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerRegionalCluster_withNodePoolCIA(clusterName, npName, networkName, subnetworkName),
@@ -2370,9 +2376,9 @@ func TestAccContainerCluster_withNodePoolCIA(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_pool",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
@@ -2386,9 +2392,9 @@ func TestAccContainerCluster_withNodePoolCIA(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_pool",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
@@ -2401,9 +2407,9 @@ func TestAccContainerCluster_withNodePoolCIA(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_pool",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
@@ -2421,17 +2427,17 @@ func TestAccContainerCluster_withNodePoolNamePrefix(t *testing.T) {
 	npNamePrefix := "tf-test-np-"
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodePoolNamePrefix(clusterName, npNamePrefix, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool_name_prefix",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:			 "google_container_cluster.with_node_pool_name_prefix",
+				ImportState:			 true,
+				ImportStateVerify:		 true,
 				ImportStateVerifyIgnore: []string{"node_pool.0.name_prefix", "deletion_protection"},
 			},
 		},
@@ -2447,17 +2453,17 @@ func TestAccContainerCluster_withNodePoolMultiple(t *testing.T) {
 	npNamePrefix := "tf-test-np-"
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodePoolMultiple(clusterName, npNamePrefix, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool_multiple",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_pool_multiple",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2471,12 +2477,12 @@ func TestAccContainerCluster_withNodePoolConflictingNameFields(t *testing.T) {
 	npPrefix := "tf-test-np"
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config:      testAccContainerCluster_withNodePoolConflictingNameFields(clusterName, npPrefix),
+				Config:		 testAccContainerCluster_withNodePoolConflictingNameFields(clusterName, npPrefix),
 				ExpectError: regexp.MustCompile("Cannot specify both name and name_prefix for a node_pool"),
 			},
 		},
@@ -2492,17 +2498,17 @@ func TestAccContainerCluster_withNodePoolNodeConfig(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withNodePoolNodeConfig(cluster, np, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_node_pool_node_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_node_pool_node_config",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2518,17 +2524,17 @@ func TestAccContainerCluster_withMaintenanceWindow(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withMaintenanceWindow(clusterName, "03:00", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 resourceName,
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
@@ -2539,9 +2545,9 @@ func TestAccContainerCluster_withMaintenanceWindow(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      resourceName,
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:		 resourceName,
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				// maintenance_policy.# = 0 is equivalent to no maintenance policy at all,
 				// but will still cause an import diff
 				ImportStateVerifyIgnore: []string{"maintenance_policy.#", "deletion_protection"},
@@ -2558,9 +2564,9 @@ func TestAccContainerCluster_withRecurringMaintenanceWindow(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withRecurringMaintenanceWindow(cluster, "2019-01-01T00:00:00Z", "2019-01-02T00:00:00Z", networkName, subnetworkName),
@@ -2570,11 +2576,12 @@ func TestAccContainerCluster_withRecurringMaintenanceWindow(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
+
 			},
 			{
 				Config: testAccContainerCluster_withRecurringMaintenanceWindow(cluster, "", "", networkName, subnetworkName),
@@ -2586,10 +2593,10 @@ func TestAccContainerCluster_withRecurringMaintenanceWindow(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:        resourceName,
+				ResourceName:		 resourceName,
 				ImportStateIdPrefix: "us-central1-a/",
-				ImportState:         true,
-				ImportStateVerify:   true,
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				// maintenance_policy.# = 0 is equivalent to no maintenance policy at all,
 				// but will still cause an import diff
 				ImportStateVerifyIgnore: []string{"maintenance_policy.#", "deletion_protection"},
@@ -2606,28 +2613,28 @@ func TestAccContainerCluster_withMaintenanceExclusionWindow(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withExclusion_RecurringMaintenanceWindow(cluster, "2019-01-01T00:00:00Z", "2019-01-02T00:00:00Z", "2019-05-01T00:00:00Z", "2019-05-02T00:00:00Z", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withExclusion_DailyMaintenanceWindow(cluster, "2020-01-01T00:00:00Z", "2020-01-02T00:00:00Z", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2642,25 +2649,25 @@ func TestAccContainerCluster_withMaintenanceExclusionOptions(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withExclusionOptions_RecurringMaintenanceWindow(
 					cluster, "2019-01-01T00:00:00Z", "2019-01-02T00:00:00Z", "2019-05-01T00:00:00Z", "2019-05-02T00:00:00Z", "NO_MINOR_UPGRADES", "NO_MINOR_OR_NODE_UPGRADES", networkName, subnetworkName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope", "NO_MINOR_UPGRADES"),
-					resource.TestCheckResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope", "NO_MINOR_OR_NODE_UPGRADES"),
+						resource.TestCheckResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope", "NO_MINOR_UPGRADES"),
+						resource.TestCheckResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope", "NO_MINOR_OR_NODE_UPGRADES"),
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2675,42 +2682,42 @@ func TestAccContainerCluster_deleteMaintenanceExclusionOptions(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withExclusionOptions_RecurringMaintenanceWindow(
 					cluster, "2019-01-01T00:00:00Z", "2019-01-02T00:00:00Z", "2019-05-01T00:00:00Z", "2019-05-02T00:00:00Z", "NO_UPGRADES", "NO_MINOR_OR_NODE_UPGRADES", networkName, subnetworkName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope", "NO_UPGRADES"),
-					resource.TestCheckResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope", "NO_MINOR_OR_NODE_UPGRADES"),
+						resource.TestCheckResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope", "NO_UPGRADES"),
+						resource.TestCheckResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope", "NO_MINOR_OR_NODE_UPGRADES"),
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_NoExclusionOptions_RecurringMaintenanceWindow(
 					cluster, "2019-01-01T00:00:00Z", "2019-01-02T00:00:00Z", "2019-05-01T00:00:00Z", "2019-05-02T00:00:00Z", networkName, subnetworkName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckNoResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope"),
-					resource.TestCheckNoResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope"),
+						resource.TestCheckNoResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope"),
+						resource.TestCheckNoResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope"),
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2728,64 +2735,65 @@ func TestAccContainerCluster_updateMaintenanceExclusionOptions(t *testing.T) {
 	// step2: add exclusion scopes to the maintenancePolicy,
 	// step3: update the maintenceExclusion with new scopes
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_NoExclusionOptions_RecurringMaintenanceWindow(
 					cluster, "2019-01-01T00:00:00Z", "2019-01-02T00:00:00Z", "2019-05-01T00:00:00Z", "2019-05-02T00:00:00Z", networkName, subnetworkName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckNoResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope"),
-					resource.TestCheckNoResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope"),
+						resource.TestCheckNoResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope"),
+						resource.TestCheckNoResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope"),
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withExclusionOptions_RecurringMaintenanceWindow(
 					cluster, "2019-01-01T00:00:00Z", "2019-01-02T00:00:00Z", "2019-05-01T00:00:00Z", "2019-05-02T00:00:00Z", "NO_MINOR_UPGRADES", "NO_MINOR_OR_NODE_UPGRADES", networkName, subnetworkName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope", "NO_MINOR_UPGRADES"),
-					resource.TestCheckResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope", "NO_MINOR_OR_NODE_UPGRADES"),
+						resource.TestCheckResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope", "NO_MINOR_UPGRADES"),
+						resource.TestCheckResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope", "NO_MINOR_OR_NODE_UPGRADES"),
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_updateExclusionOptions_RecurringMaintenanceWindow(
 					cluster, "2019-01-01T00:00:00Z", "2019-01-02T00:00:00Z", "2019-05-01T00:00:00Z", "2019-05-02T00:00:00Z", "NO_UPGRADES", "NO_MINOR_UPGRADES", networkName, subnetworkName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope", "NO_UPGRADES"),
-					resource.TestCheckResourceAttr(resourceName,
-						"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope", "NO_MINOR_UPGRADES"),
+						resource.TestCheckResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.0.exclusion_options.0.scope", "NO_UPGRADES"),
+						resource.TestCheckResourceAttr(resourceName,
+							"maintenance_policy.0.maintenance_exclusion.1.exclusion_options.0.scope", "NO_MINOR_UPGRADES"),
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
 	})
 }
+
 
 func TestAccContainerCluster_deleteExclusionWindow(t *testing.T) {
 	t.Parallel()
@@ -2795,38 +2803,38 @@ func TestAccContainerCluster_deleteExclusionWindow(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withExclusion_DailyMaintenanceWindow(cluster, "2020-01-01T00:00:00Z", "2020-01-02T00:00:00Z", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withExclusion_RecurringMaintenanceWindow(cluster, "2019-01-01T00:00:00Z", "2019-01-02T00:00:00Z", "2019-05-01T00:00:00Z", "2019-05-02T00:00:00Z", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withExclusion_NoMaintenanceWindow(cluster, "2020-01-01T00:00:00Z", "2020-01-02T00:00:00Z", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2839,17 +2847,17 @@ func TestAccContainerCluster_withIPAllocationPolicy_existingSecondaryRanges(t *t
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	containerNetName := fmt.Sprintf("tf-test-container-net-%s", acctest.RandString(t, 10))
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withIPAllocationPolicy_existingSecondaryRanges(containerNetName, clusterName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_ip_allocation_policy",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_ip_allocation_policy",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2862,17 +2870,17 @@ func TestAccContainerCluster_withIPAllocationPolicy_specificIPRanges(t *testing.
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	containerNetName := fmt.Sprintf("tf-test-container-net-%s", acctest.RandString(t, 10))
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withIPAllocationPolicy_specificIPRanges(containerNetName, clusterName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_ip_allocation_policy",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_ip_allocation_policy",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2885,17 +2893,17 @@ func TestAccContainerCluster_withIPAllocationPolicy_specificSizes(t *testing.T) 
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	containerNetName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withIPAllocationPolicy_specificSizes(containerNetName, clusterName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_ip_allocation_policy",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_ip_allocation_policy",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2910,9 +2918,9 @@ func TestAccContainerCluster_stackType_withDualStack(t *testing.T) {
 	resourceName := "google_container_cluster.with_stack_type"
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_stackType_withDualStack(containerNetName, clusterName),
@@ -2921,9 +2929,9 @@ func TestAccContainerCluster_stackType_withDualStack(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 resourceName,
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2938,9 +2946,9 @@ func TestAccContainerCluster_stackType_withSingleStack(t *testing.T) {
 	resourceName := "google_container_cluster.with_stack_type"
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_stackType_withSingleStack(containerNetName, clusterName),
@@ -2949,9 +2957,9 @@ func TestAccContainerCluster_stackType_withSingleStack(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 resourceName,
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -2994,9 +3002,9 @@ func TestAccContainerCluster_nodeAutoprovisioning(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autoprovisioning(clusterName, networkName, subnetworkName, true, false),
@@ -3006,9 +3014,9 @@ func TestAccContainerCluster_nodeAutoprovisioning(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_autoprovisioning",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_autoprovisioning",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
@@ -3019,9 +3027,9 @@ func TestAccContainerCluster_nodeAutoprovisioning(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_autoprovisioning",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_autoprovisioning",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
@@ -3037,9 +3045,9 @@ func TestAccContainerCluster_nodeAutoprovisioningDefaults(t *testing.T) {
 	includeMinCpuPlatform := true
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autoprovisioningDefaults(clusterName, networkName, subnetworkName, false),
@@ -3049,13 +3057,13 @@ func TestAccContainerCluster_nodeAutoprovisioningDefaults(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_autoprovisioning",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_autoprovisioning",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
-				Config:             testAccContainerCluster_autoprovisioningDefaults(clusterName, networkName, subnetworkName, true),
+				Config: testAccContainerCluster_autoprovisioningDefaults(clusterName, networkName, subnetworkName, true),
 				PlanOnly:           true,
 				ExpectNonEmptyPlan: false,
 			},
@@ -3063,18 +3071,18 @@ func TestAccContainerCluster_nodeAutoprovisioningDefaults(t *testing.T) {
 				Config: testAccContainerCluster_autoprovisioningDefaultsMinCpuPlatform(clusterName, networkName, subnetworkName, includeMinCpuPlatform),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_autoprovisioning",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_autoprovisioning",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_autoprovisioningDefaultsMinCpuPlatform(clusterName, networkName, subnetworkName, !includeMinCpuPlatform),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_autoprovisioning",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_autoprovisioning",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
@@ -3089,17 +3097,17 @@ func TestAccContainerCluster_autoprovisioningDefaultsUpgradeSettings(t *testing.
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autoprovisioningDefaultsUpgradeSettings(clusterName, networkName, subnetworkName, 2, 1, "SURGE"),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_autoprovisioning_upgrade_settings",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_autoprovisioning_upgrade_settings",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
@@ -3107,12 +3115,12 @@ func TestAccContainerCluster_autoprovisioningDefaultsUpgradeSettings(t *testing.
 				ExpectError: regexp.MustCompile(`Surge upgrade settings max_surge/max_unavailable can only be used when strategy is set to SURGE`),
 			},
 			{
-				Config: testAccContainerCluster_autoprovisioningDefaultsUpgradeSettingsWithBlueGreenStrategy(clusterName, networkName, subnetworkName, "3.500s", "BLUE_GREEN"),
+				Config:      testAccContainerCluster_autoprovisioningDefaultsUpgradeSettingsWithBlueGreenStrategy(clusterName, networkName, subnetworkName, "3.500s", "BLUE_GREEN"),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_autoprovisioning_upgrade_settings",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_autoprovisioning_upgrade_settings",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -3127,9 +3135,9 @@ func TestAccContainerCluster_nodeAutoprovisioningNetworkTags(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autoprovisioning(clusterName, networkName, subnetworkName, true, true),
@@ -3156,26 +3164,26 @@ func TestAccContainerCluster_withShieldedNodes(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withShieldedNodes(clusterName, networkName, subnetworkName, true),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_shielded_nodes",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_shielded_nodes",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withShieldedNodes(clusterName, networkName, subnetworkName, false),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_shielded_nodes",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_shielded_nodes",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -3346,7 +3354,7 @@ func TestAccContainerCluster_withAutopilot_withNodePoolDefaults(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withAutopilot_withNodePoolDefaults(clusterName, networkName, subnetworkName),
@@ -3360,6 +3368,7 @@ func TestAccContainerCluster_withAutopilot_withNodePoolDefaults(t *testing.T) {
 		},
 	})
 }
+
 
 func TestAccContainerCluster_withAutopilotResourceManagerTags(t *testing.T) {
 	t.Parallel()
@@ -3426,35 +3435,35 @@ func TestAccContainerCluster_withWorkloadIdentityConfig(t *testing.T) {
 	pid := envvar.GetTestProjectFromEnv()
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withWorkloadIdentityConfigEnabled(pid, clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_workload_identity_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.with_workload_identity_config",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"remove_default_node_pool", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_updateWorkloadIdentityConfig(pid, clusterName, networkName, subnetworkName, false),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_workload_identity_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.with_workload_identity_config",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"remove_default_node_pool", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_updateWorkloadIdentityConfig(pid, clusterName, networkName, subnetworkName, true),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_workload_identity_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.with_workload_identity_config",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"remove_default_node_pool", "deletion_protection"},
 			},
 		},
@@ -3492,44 +3501,44 @@ func TestAccContainerCluster_withIdentityServiceConfig(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withIdentityServiceConfigEnabled(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withIdentityServiceConfigUpdated(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -3594,53 +3603,53 @@ func TestAccContainerCluster_withLoggingConfig(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withLoggingConfigEnabled(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withLoggingConfigDisabled(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withLoggingConfigUpdated(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -3652,26 +3661,26 @@ func TestAccContainerCluster_withMonitoringConfigAdvancedDatapathObservabilityCo
 
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withMonitoringConfigAdvancedDatapathObservabilityConfigEnabled(clusterName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withMonitoringConfigAdvancedDatapathObservabilityConfigDisabled(clusterName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
@@ -3685,53 +3694,53 @@ func TestAccContainerCluster_withMonitoringConfig(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withMonitoringConfigEnabled(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withMonitoringConfigDisabled(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withMonitoringConfigUpdated(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withMonitoringConfigPrometheusUpdated(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			// Back to basic settings to test setting Prometheus on its own
@@ -3739,36 +3748,36 @@ func TestAccContainerCluster_withMonitoringConfig(t *testing.T) {
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withMonitoringConfigPrometheusOnly(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withMonitoringConfigPrometheusOnly2(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
@@ -3782,17 +3791,17 @@ func TestAccContainerCluster_withSoleTenantGroup(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withSoleTenantGroup(resourceName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -3806,28 +3815,28 @@ func TestAccContainerCluster_withAutoscalingProfile(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withAutoscalingProfile(clusterName, "BALANCED", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.autoscaling_with_profile",
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.autoscaling_with_profile",
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withAutoscalingProfile(clusterName, "OPTIMIZE_UTILIZATION", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.autoscaling_with_profile",
-				ImportStateIdPrefix:     "us-central1-a/",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.autoscaling_with_profile",
+				ImportStateIdPrefix: "us-central1-a/",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -3843,12 +3852,12 @@ func TestAccContainerCluster_withInvalidAutoscalingProfile(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config:      testAccContainerCluster_withAutoscalingProfile(clusterName, "AS_CHEAP_AS_POSSIBLE", networkName, subnetworkName),
+				Config: testAccContainerCluster_withAutoscalingProfile(clusterName, "AS_CHEAP_AS_POSSIBLE", networkName, subnetworkName),
 				ExpectError: regexp.MustCompile(`expected cluster_autoscaling\.0\.autoscaling_profile to be one of \["?BALANCED"? "?OPTIMIZE_UTILIZATION"?\], got AS_CHEAP_AS_POSSIBLE`),
 			},
 		},
@@ -3867,18 +3876,18 @@ func TestAccContainerCluster_sharedVpc(t *testing.T) {
 	suffix := acctest.RandString(t, 10)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_sharedVpc(org, billingId, projectName, clusterName, suffix),
 			},
 			{
-				ResourceName:            "google_container_cluster.shared_vpc_cluster",
-				ImportStateId:           fmt.Sprintf("%s-service/us-central1-a/%s", projectName, clusterName),
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.shared_vpc_cluster",
+				ImportStateId: fmt.Sprintf("%s-service/us-central1-a/%s", projectName, clusterName),
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -3893,26 +3902,26 @@ func TestAccContainerCluster_withBinaryAuthorizationEnabledBool(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withBinaryAuthorizationEnabledBool(clusterName, networkName, subnetworkName, true),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_binary_authorization_enabled_bool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_binary_authorization_enabled_bool",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withBinaryAuthorizationEnabledBool(clusterName, networkName, subnetworkName, false),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_binary_authorization_enabled_bool",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_binary_authorization_enabled_bool",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -3927,26 +3936,26 @@ func TestAccContainerCluster_withBinaryAuthorizationEvaluationModeAutopilot(t *t
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withBinaryAuthorizationEvaluationMode(clusterName, true, "PROJECT_SINGLETON_POLICY_ENFORCE", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_binary_authorization_evaluation_mode",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_binary_authorization_evaluation_mode",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withBinaryAuthorizationEvaluationMode(clusterName, true, "DISABLED", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_binary_authorization_evaluation_mode",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_binary_authorization_evaluation_mode",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -3961,26 +3970,26 @@ func TestAccContainerCluster_withBinaryAuthorizationEvaluationModeClassic(t *tes
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withBinaryAuthorizationEvaluationMode(clusterName, false, "PROJECT_SINGLETON_POLICY_ENFORCE", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_binary_authorization_evaluation_mode",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_binary_authorization_evaluation_mode",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withBinaryAuthorizationEvaluationMode(clusterName, false, "DISABLED", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_binary_authorization_evaluation_mode",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_binary_authorization_evaluation_mode",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -3994,17 +4003,17 @@ func TestAccContainerCluster_withFlexiblePodCIDR(t *testing.T) {
 	containerNetName := fmt.Sprintf("tf-test-container-net-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withFlexiblePodCIDR(containerNetName, clusterName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_flexible_cidr",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_flexible_cidr",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -4020,9 +4029,9 @@ func TestAccContainerCluster_nodeAutoprovisioningDefaultsDiskSizeGb(t *testing.T
 	includeDiskSizeGb := true
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autoprovisioningDefaultsDiskSizeGb(clusterName, networkName, subnetworkName, includeDiskSizeGb),
@@ -4055,9 +4064,9 @@ func TestAccContainerCluster_nodeAutoprovisioningDefaultsDiskType(t *testing.T) 
 	includeDiskType := true
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autoprovisioningDefaultsDiskType(clusterName, networkName, subnetworkName, includeDiskType),
@@ -4090,9 +4099,9 @@ func TestAccContainerCluster_nodeAutoprovisioningDefaultsImageType(t *testing.T)
 	includeImageType := true
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autoprovisioningDefaultsImageType(clusterName, networkName, subnetworkName, includeImageType),
@@ -4129,17 +4138,17 @@ func TestAccContainerCluster_nodeAutoprovisioningDefaultsBootDiskKmsKey(t *testi
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autoprovisioningDefaultsBootDiskKmsKey(clusterName, kms.CryptoKey.Name, networkName, subnetworkName),
 			},
 			{
-				ResourceName:      "google_container_cluster.nap_boot_disk_kms_key",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "google_container_cluster.nap_boot_disk_kms_key",
+				ImportState:             true,
+				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{
 					"min_master_version",
 					"deletion_protection",
@@ -4158,9 +4167,9 @@ func TestAccContainerCluster_nodeAutoprovisioningDefaultsShieldedInstance(t *tes
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autoprovisioningDefaultsShieldedInstance(clusterName, networkName, subnetworkName),
@@ -4183,9 +4192,9 @@ func TestAccContainerCluster_autoprovisioningDefaultsManagement(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autoprovisioningDefaultsManagement(clusterName, networkName, subnetworkName, false, false),
@@ -4217,9 +4226,9 @@ func TestAccContainerCluster_autoprovisioningLocations(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autoprovisioningLocations(clusterName, networkName, subnetworkName, []string{"us-central1-a", "us-central1-f"}),
@@ -4298,22 +4307,22 @@ func TestAccContainerCluster_errorCleanDanglingCluster(t *testing.T) {
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: initConfig,
 			},
 			{
-				ResourceName:            "google_container_cluster.cidr_error_preempt",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		     "google_container_cluster.cidr_error_preempt",
+				ImportState:		     true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				// First attempt to create the overlapping cluster with no timeout, this should fail and taint the resource.
-				Config:      overlapConfig,
+				Config:		   overlapConfig,
 				ExpectError: regexp.MustCompile("Error waiting for creating GKE cluster"),
 			},
 			{
@@ -4321,11 +4330,11 @@ func TestAccContainerCluster_errorCleanDanglingCluster(t *testing.T) {
 				Config:             overlapConfig,
 				PlanOnly:           true,
 				ExpectNonEmptyPlan: true,
-				Check:              checkTaintApplied,
+				Check: checkTaintApplied,
 			},
 			{
 				// Next attempt to create the overlapping cluster with a 1s timeout. This will fail with a different error.
-				Config:      overlapConfigWithTimeout,
+				Config:		   overlapConfigWithTimeout,
 				ExpectError: regexp.MustCompile("timeout while waiting for state to become 'DONE'"),
 			},
 			{
@@ -4333,7 +4342,7 @@ func TestAccContainerCluster_errorCleanDanglingCluster(t *testing.T) {
 				Config:             overlapConfig,
 				PlanOnly:           true,
 				ExpectNonEmptyPlan: true,
-				Check:              checkTaintApplied,
+				Check: checkTaintApplied,
 			},
 		},
 	})
@@ -4343,12 +4352,12 @@ func TestAccContainerCluster_errorNoClusterCreated(t *testing.T) {
 	t.Parallel()
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config:      testAccContainerCluster_withInvalidLocation("wonderland"),
+				Config:		 testAccContainerCluster_withInvalidLocation("wonderland"),
 				ExpectError: regexp.MustCompile(`(Location "wonderland" does not exist)|(Permission denied on 'locations\/wonderland' \(or it may not exist\))`),
 			},
 		},
@@ -4364,9 +4373,9 @@ func TestAccContainerCluster_withExternalIpsConfig(t *testing.T) {
 	pid := envvar.GetTestProjectFromEnv()
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withExternalIpsConfig(pid, clusterName, networkName, subnetworkName, true),
@@ -4399,9 +4408,9 @@ func TestAccContainerCluster_withMeshCertificatesConfig(t *testing.T) {
 	pid := envvar.GetTestProjectFromEnv()
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withMeshCertificatesConfigEnabled(pid, clusterName, networkName, subnetworkName),
@@ -4443,26 +4452,26 @@ func TestAccContainerCluster_withCostManagementConfig(t *testing.T) {
 	pid := envvar.GetTestProjectFromEnv()
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_updateCostManagementConfig(pid, clusterName, networkName, subnetworkName, true),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_cost_management_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_cost_management_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_updateCostManagementConfig(pid, clusterName, networkName, subnetworkName, false),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_cost_management_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_cost_management_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -4484,27 +4493,27 @@ func TestAccContainerCluster_withDatabaseEncryption(t *testing.T) {
 	kmsData := acctest.BootstrapKMSKeyInLocation(t, "us-central1")
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withDatabaseEncryption(clusterName, kmsData, networkName, subnetworkName),
 				Check:  resource.TestCheckResourceAttrSet("data.google_kms_key_ring_iam_policy.test_key_ring_iam_policy", "policy_data"),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -4519,17 +4528,17 @@ func TestAccContainerCluster_withAdvancedDatapath(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withDatapathProvider(clusterName, "ADVANCED_DATAPATH", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.primary",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -4639,35 +4648,35 @@ func TestAccContainerCluster_withResourceUsageExportConfig(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withResourceUsageExportConfig(clusterName, datesetId, "true", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_resource_usage_export_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.with_resource_usage_export_config",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withResourceUsageExportConfig(clusterName, datesetId, "false", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_resource_usage_export_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.with_resource_usage_export_config",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withResourceUsageExportConfigNoConfig(clusterName, datesetId, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_resource_usage_export_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:        "google_container_cluster.with_resource_usage_export_config",
+				ImportState:         true,
+				ImportStateVerify:   true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -4681,9 +4690,9 @@ func TestAccContainerCluster_withMasterAuthorizedNetworksDisabled(t *testing.T) 
 	containerNetName := fmt.Sprintf("tf-test-container-net-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withMasterAuthorizedNetworksDisabled(containerNetName, clusterName),
@@ -4692,9 +4701,9 @@ func TestAccContainerCluster_withMasterAuthorizedNetworksDisabled(t *testing.T) 
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_private_cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:		 "google_container_cluster.with_private_cluster",
+				ImportState:		 true,
+				ImportStateVerify:	 true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -4710,17 +4719,17 @@ func TestAccContainerCluster_withEnableKubernetesAlpha(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withEnableKubernetesAlpha(clusterName, npName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -4735,9 +4744,9 @@ func TestAccContainerCluster_withEnableKubernetesBetaAPIs(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withEnableKubernetesBetaAPIs(clusterName, networkName, subnetworkName),
@@ -4760,9 +4769,9 @@ func TestAccContainerCluster_withEnableKubernetesBetaAPIsOnExistingCluster(t *te
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withoutEnableKubernetesBetaAPIs(clusterName, networkName, subnetworkName),
@@ -4792,13 +4801,13 @@ func TestAccContainerCluster_withIncompatibleMasterVersionNodeVersion(t *testing
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck: func(){acctest.AccTestPreCheck(t)},
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config:      testAccContainerCluster_withIncompatibleMasterVersionNodeVersion(clusterName),
-				PlanOnly:    true,
+				Config: testAccContainerCluster_withIncompatibleMasterVersionNodeVersion(clusterName),
+				PlanOnly: true,
 				ExpectError: regexp.MustCompile(`Resource argument node_version`),
 			},
 		},
@@ -4810,9 +4819,9 @@ func TestAccContainerCluster_withIPv4Error(t *testing.T) {
 
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccContainerCluster_withIPv4Error(clusterName),
@@ -4830,9 +4839,9 @@ func TestAccContainerCluster_withDNSConfig(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_basic(clusterName, networkName, subnetworkName),
@@ -4862,30 +4871,30 @@ func TestAccContainerCluster_withGatewayApiConfig(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config:      testAccContainerCluster_withGatewayApiConfig(clusterName, "CANARY", networkName, subnetworkName),
+				Config: testAccContainerCluster_withGatewayApiConfig(clusterName, "CANARY", networkName, subnetworkName),
 				ExpectError: regexp.MustCompile(`expected gateway_api_config\.0\.channel to be one of [^,]+, got CANARY`),
 			},
 			{
 				Config: testAccContainerCluster_withGatewayApiConfig(clusterName, "CHANNEL_DISABLED", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withGatewayApiConfig(clusterName, "CHANNEL_STANDARD", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 		},
@@ -4898,9 +4907,9 @@ func TestAccContainerCluster_withTPUConfig(t *testing.T) {
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	containerNetName := fmt.Sprintf("tf-test-container-net-%s", acctest.RandString(t, 10))
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withTPUConfig(containerNetName, clusterName),
@@ -4966,9 +4975,9 @@ func TestAccContainerCluster_withSecurityPostureConfig(t *testing.T) {
 				Config: testAccContainerCluster_SetSecurityPostureToStandard(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_security_posture_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_security_posture_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
@@ -4981,30 +4990,30 @@ func TestAccContainerCluster_withSecurityPostureConfig(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
-				Config: testAccContainerCluster_SetWorkloadVulnerabilityToStandard(clusterName, networkName, subnetworkName),
+			 	Config: testAccContainerCluster_SetWorkloadVulnerabilityToStandard(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_security_posture_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_security_posture_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_SetWorkloadVulnerabilityToEnterprise(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_security_posture_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+			 	ResourceName:      "google_container_cluster.with_security_posture_config",
+			 	ImportState:       true,
+			 	ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_DisableALL(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_security_posture_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_security_posture_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -5034,16 +5043,16 @@ func TestAccContainerCluster_withFleetConfig(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
 			},
 			{
-				Config:      testAccContainerCluster_withFleetConfig(clusterName, "random-project", networkName, subnetworkName),
+				Config:		testAccContainerCluster_withFleetConfig(clusterName, "random-project", networkName, subnetworkName),
 				ExpectError: regexp.MustCompile(`changing existing fleet host project is not supported`),
 			},
 			{
 				Config: testAccContainerCluster_DisableFleet(clusterName, networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -5058,17 +5067,17 @@ func TestAccContainerCluster_withWorkloadALTSConfig(t *testing.T) {
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	pid := envvar.GetTestProjectFromEnv()
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:     func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withWorkloadALTSConfig(pid, networkName, subnetworkName, clusterName, true),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_workload_alts_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_workload_alts_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 				Check: resource.TestCheckResourceAttr(
 					"google_container_cluster.with_workload_alts_config", "workload_alts_config.enable_alts", "true"),
@@ -5077,9 +5086,9 @@ func TestAccContainerCluster_withWorkloadALTSConfig(t *testing.T) {
 				Config: testAccContainerCluster_withWorkloadALTSConfig(pid, networkName, subnetworkName, clusterName, false),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_workload_alts_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.with_workload_alts_config",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 				Check: resource.TestCheckResourceAttr(
 					"google_container_cluster.with_workload_alts_config", "workload_alts_config.enable_alts", "false"),
@@ -5247,17 +5256,17 @@ func TestAccContainerCluster_autopilot_minimal(t *testing.T) {
 
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autopilot_minimal(clusterName),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -5272,36 +5281,36 @@ func TestAccContainerCluster_autopilot_net_admin(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_autopilot_net_admin(clusterName, networkName, subnetworkName, true),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore:	[]string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_autopilot_net_admin(clusterName, networkName, subnetworkName, false),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore:	[]string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_autopilot_net_admin(clusterName, networkName, subnetworkName, true),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore:	[]string{"min_master_version", "deletion_protection"},
 			},
 		},
 	})
@@ -5312,17 +5321,17 @@ func TestAccContainerCluster_additional_pod_ranges_config_on_create(t *testing.T
 
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_additional_pod_ranges_config(clusterName, 1),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -5334,53 +5343,53 @@ func TestAccContainerCluster_additional_pod_ranges_config_on_update(t *testing.T
 
 	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_additional_pod_ranges_config(clusterName, 0),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_additional_pod_ranges_config(clusterName, 2),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_additional_pod_ranges_config(clusterName, 0),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_additional_pod_ranges_config(clusterName, 1),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_additional_pod_ranges_config(clusterName, 0),
 			},
 			{
-				ResourceName:            "google_container_cluster.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.primary",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -6134,6 +6143,7 @@ resource "google_container_cluster" "primary" {
 `, name, networkName, subnetworkName)
 }
 
+
 func testAccContainerCluster_withMasterAuthorizedNetworksConfig(clusterName string, cidrs []string, emptyValue string) string {
 
 	cidrBlocks := emptyValue
@@ -6202,18 +6212,18 @@ func TestAccContainerCluster_withPrivateEndpointSubnetwork(t *testing.T) {
 	containerNetName := fmt.Sprintf("tf-test-container-net-%s", r)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withPrivateEndpointSubnetwork(containerNetName, clusterName, subnet1Name, subnet1Cidr, subnet2Name, subnet2Cidr),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_private_endpoint_subnetwork",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
+				ResourceName:				"google_container_cluster.with_private_endpoint_subnetwork",
+				ImportState:				true,
+				ImportStateVerify:			true,
+				ImportStateVerifyIgnore:	[]string{"min_master_version", "deletion_protection"},
 			},
 		},
 	})
@@ -6272,9 +6282,9 @@ func TestAccContainerCluster_withPrivateClusterConfigPrivateEndpointSubnetwork(t
 	containerNetName := fmt.Sprintf("tf-test-container-net-%s", r)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withPrivateClusterConfigPrivateEndpointSubnetwork(containerNetName, clusterName),
@@ -6355,10 +6365,10 @@ func TestAccContainerCluster_withCidrBlockWithoutPrivateEndpointSubnetwork(t *te
 				Config: testAccContainerCluster_withCidrBlockWithoutPrivateEndpointSubnetwork(containerNetName, clusterName, "us-central1-a"),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_private_flexible_cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
+				ResourceName:				"google_container_cluster.with_private_flexible_cluster",
+				ImportState:				true,
+				ImportStateVerify:			true,
+				ImportStateVerifyIgnore:	[]string{"min_master_version", "deletion_protection"},
 			},
 		},
 	})
@@ -6404,27 +6414,27 @@ func TestAccContainerCluster_withEnablePrivateEndpointToggle(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withEnablePrivateEndpoint(clusterName, "true", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_enable_private_endpoint",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
+				ResourceName:				"google_container_cluster.with_enable_private_endpoint",
+				ImportState:				true,
+				ImportStateVerify:			true,
+				ImportStateVerifyIgnore:	[]string{"min_master_version", "deletion_protection"},
 			},
 			{
 				Config: testAccContainerCluster_withEnablePrivateEndpoint(clusterName, "false", networkName, subnetworkName),
 			},
 			{
-				ResourceName:            "google_container_cluster.with_enable_private_endpoint",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"min_master_version", "deletion_protection"},
+				ResourceName:				"google_container_cluster.with_enable_private_endpoint",
+				ImportState:				true,
+				ImportStateVerify:			true,
+				ImportStateVerifyIgnore:	[]string{"min_master_version", "deletion_protection"},
 			},
 		},
 	})
@@ -6562,6 +6572,7 @@ resource "google_container_cluster" "with_tpu" {
 }
 `, containerNetName, clusterName)
 }
+
 
 func testAccContainerCluster_withIntraNodeVisibility(clusterName, networkName, subnetworkName string) string {
 	return fmt.Sprintf(`
@@ -6917,7 +6928,7 @@ resource "google_container_cluster" "with_advanced_machine_features_in_node_pool
 }
 
 func testAccContainerCluster_withNodePoolDefaults(clusterName, enabled, networkName, subnetworkName string) string {
-	return fmt.Sprintf(`
+        return fmt.Sprintf(`
 resource "google_container_cluster" "with_node_pool_defaults" {
   name               = "%s"
   location           = "us-central1-f"
@@ -7195,6 +7206,7 @@ resource "google_container_cluster" "with_workload_metadata_config" {
 }
 `, clusterName, networkName, subnetworkName)
 }
+
 
 func testAccContainerCluster_withSandboxConfig(clusterName, networkName, subnetworkName string) string {
 	return fmt.Sprintf(`
@@ -7665,7 +7677,7 @@ resource "google_container_cluster" "with_autoprovisioning" {
         "https://www.googleapis.com/auth/devstorage.read_only",`,
 		cluster, networkName, subnetworkName)
 
-	if monitoringWrite {
+if monitoringWrite {
 		config += `
         "https://www.googleapis.com/auth/monitoring.write",
 `
@@ -7720,9 +7732,9 @@ resource "google_container_cluster" "with_autoprovisioning" {
 }
 
 func testAccContainerCluster_autoprovisioningDefaultsUpgradeSettings(clusterName, networkName, subnetworkName string, maxSurge, maxUnavailable int, strategy string) string {
-	blueGreenSettings := ""
-	if strategy == "BLUE_GREEN" {
-		blueGreenSettings = `
+  blueGreenSettings := ""
+  if strategy == "BLUE_GREEN" {
+    blueGreenSettings = `
       blue_green_settings {
         node_pool_soak_duration = "3.500s"
         standard_rollout_policy {
@@ -7731,9 +7743,9 @@ func testAccContainerCluster_autoprovisioningDefaultsUpgradeSettings(clusterName
         }
       }
     `
-	}
+  }
 
-	return fmt.Sprintf(`
+  return fmt.Sprintf(`
     resource "google_container_cluster" "with_autoprovisioning_upgrade_settings" {
       name               = "%s"
       location           = "us-central1-f"
@@ -8878,6 +8890,7 @@ resource "google_container_cluster" "with_workload_identity_config" {
 `, projectID, clusterName)
 }
 
+
 func testAccContainerCluster_updateWorkloadIdentityConfig(projectID, clusterName, networkName, subnetworkName string, enable bool) string {
 	workloadIdentityConfig := ""
 	if enable {
@@ -8885,12 +8898,12 @@ func testAccContainerCluster_updateWorkloadIdentityConfig(projectID, clusterName
 			workload_identity_config {
 		  workload_pool = "${data.google_project.project.project_id}.svc.id.goog"
 		}`
-	} else {
+        } else {
 		workloadIdentityConfig = `
 			workload_identity_config {
 			workload_pool = ""
 		}`
-	}
+        }
 	return fmt.Sprintf(`
 data "google_project" "project" {
   project_id = "%s"
@@ -8908,6 +8921,8 @@ resource "google_container_cluster" "with_workload_identity_config" {
 }
 `, projectID, clusterName, workloadIdentityConfig, networkName, subnetworkName)
 }
+
+
 
 func testAccContainerCluster_sharedVpc(org, billingId, projectName, name string, suffix string) string {
 	return fmt.Sprintf(`
@@ -9163,6 +9178,7 @@ resource "google_container_cluster" "cidr_error_overlap" {
 }
 `, initConfig, secondCluster)
 }
+
 
 func testAccContainerCluster_withCIDROverlapWithTimeout(initConfig, secondCluster, createTimeout string) string {
 	return fmt.Sprintf(`
@@ -9887,7 +9903,7 @@ resource "google_container_cluster" "primary" {
 }
 
 func testAccContainerCluster_withMonitoringConfigEnabled(name, networkName, subnetworkName string) string {
-	return fmt.Sprintf(`
+       return fmt.Sprintf(`
 data "google_container_engine_versions" "uscentral1a" {
   location = "us-central1-a"
 }
@@ -9907,7 +9923,7 @@ resource "google_container_cluster" "primary" {
 }
 
 func testAccContainerCluster_withMonitoringConfigDisabled(name, networkName, subnetworkName string) string {
-	return fmt.Sprintf(`
+       return fmt.Sprintf(`
 resource "google_container_cluster" "primary" {
   name               = "%s"
   location           = "us-central1-a"
@@ -9923,7 +9939,7 @@ resource "google_container_cluster" "primary" {
 }
 
 func testAccContainerCluster_withMonitoringConfigUpdated(name, networkName, subnetworkName string) string {
-	return fmt.Sprintf(`
+       return fmt.Sprintf(`
 resource "google_container_cluster" "primary" {
   name               = "%s"
   location           = "us-central1-a"
@@ -9939,7 +9955,7 @@ resource "google_container_cluster" "primary" {
 }
 
 func testAccContainerCluster_withMonitoringConfigPrometheusUpdated(name, networkName, subnetworkName string) string {
-	return fmt.Sprintf(`
+       return fmt.Sprintf(`
 resource "google_container_cluster" "primary" {
   name               = "%s"
   location           = "us-central1-a"
@@ -9958,7 +9974,7 @@ resource "google_container_cluster" "primary" {
 }
 
 func testAccContainerCluster_withMonitoringConfigPrometheusOnly(name, networkName, subnetworkName string) string {
-	return fmt.Sprintf(`
+       return fmt.Sprintf(`
 resource "google_container_cluster" "primary" {
   name               = "%s"
   location           = "us-central1-a"
@@ -9977,7 +9993,7 @@ resource "google_container_cluster" "primary" {
 }
 
 func testAccContainerCluster_withMonitoringConfigPrometheusOnly2(name, networkName, subnetworkName string) string {
-	return fmt.Sprintf(`
+       return fmt.Sprintf(`
 resource "google_container_cluster" "primary" {
   name               = "%s"
   location           = "us-central1-a"
@@ -9995,7 +10011,7 @@ resource "google_container_cluster" "primary" {
 }
 
 func testAccContainerCluster_withMonitoringConfigAdvancedDatapathObservabilityConfigEnabled(name string) string {
-	return fmt.Sprintf(`
+       return fmt.Sprintf(`
 resource "google_compute_network" "container_network" {
   name                    = "%s-nw"
   auto_create_subnetworks = false
@@ -10045,7 +10061,7 @@ resource "google_container_cluster" "primary" {
 }
 
 func testAccContainerCluster_withMonitoringConfigAdvancedDatapathObservabilityConfigDisabled(name string) string {
-	return fmt.Sprintf(`
+       return fmt.Sprintf(`
 resource "google_compute_network" "container_network" {
   name                    = "%s-nw"
   auto_create_subnetworks = false
@@ -10225,6 +10241,7 @@ resource "google_container_cluster" "primary" {
 `, name, networkName, subnetworkName)
 }
 
+
 func testAccContainerCluster_autopilot_minimal(name string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "primary" {
@@ -10252,6 +10269,7 @@ resource "google_container_cluster" "primary" {
 `, name, networkName, subnetworkName, enabled)
 }
 
+
 func TestAccContainerCluster_customPlacementPolicy(t *testing.T) {
 	t.Parallel()
 
@@ -10275,9 +10293,9 @@ func TestAccContainerCluster_customPlacementPolicy(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "google_container_cluster.cluster",
-				ImportState:             true,
-				ImportStateVerify:       true,
+				ResourceName:      "google_container_cluster.cluster",
+				ImportState:       true,
+				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 		},
@@ -10414,9 +10432,9 @@ func TestAccContainerCluster_withConfidentialBootDisk(t *testing.T) {
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withConfidentialBootDisk(clusterName, npName, kms.CryptoKey.Name, networkName, subnetworkName),
@@ -10476,9 +10494,9 @@ func TestAccContainerCluster_withConfidentialBootDiskNodeConfig(t *testing.T) {
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withConfidentialBootDiskNodeConfig(clusterName, kms.CryptoKey.Name, networkName, subnetworkName),
@@ -10531,9 +10549,9 @@ func TestAccContainerCluster_withoutConfidentialBootDisk(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withoutConfidentialBootDisk(clusterName, npName, networkName, subnetworkName),
@@ -10576,7 +10594,7 @@ resource "google_container_cluster" "without_confidential_boot_disk" {
 }
 
 func testAccContainerCluster_withWorkloadALTSConfig(projectID, name, networkName, subnetworkName string, enable bool) string {
-	return fmt.Sprintf(`
+  return fmt.Sprintf(`
   data "google_project" "project" {
     provider = google-beta
     project_id = "%s"
@@ -10613,7 +10631,7 @@ func testAccContainerCluster_withWorkloadALTSConfig(projectID, name, networkName
 }
 
 func testAccContainerCluster_withWorkloadALTSConfigAutopilot(projectID, name string, enable bool) string {
-	return fmt.Sprintf(`
+  return fmt.Sprintf(`
   data "google_project" "project" {
     provider = google-beta
     project_id = "%s"
@@ -10635,8 +10653,10 @@ func testAccContainerCluster_withWorkloadALTSConfigAutopilot(projectID, name str
 `, projectID, name, enable)
 }
 
+
+
 func testAccContainerCluster_withAutopilotKubeletConfigBaseline(name string) string {
-	return fmt.Sprintf(`
+  return fmt.Sprintf(`
   resource "google_container_cluster" "with_autopilot_kubelet_config" {
     name                = "%s"
     location            = "us-central1"
@@ -10648,7 +10668,7 @@ func testAccContainerCluster_withAutopilotKubeletConfigBaseline(name string) str
 }
 
 func testAccContainerCluster_withAutopilotKubeletConfigUpdates(name, insecureKubeletReadonlyPortEnabled string) string {
-	return fmt.Sprintf(`
+  return fmt.Sprintf(`
   resource "google_container_cluster" "with_autopilot_kubelet_config" {
     name               = "%s"
     location           = "us-central1"
@@ -10667,7 +10687,7 @@ func testAccContainerCluster_withAutopilotKubeletConfigUpdates(name, insecureKub
 }
 
 func testAccContainerCluster_withAutopilot_withNodePoolDefaults(name, networkName, subnetworkName string) string {
-	return fmt.Sprintf(`
+  return fmt.Sprintf(`
 resource "google_container_cluster" "primary" {
   name                = "%s"
   location            = "us-central1"
@@ -11475,9 +11495,9 @@ func TestAccContainerCluster_withProviderDefaultLabels(t *testing.T) {
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		PreCheck:	  func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		CheckDestroy: testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccContainerCluster_withProviderDefaultLabels(clusterName, networkName, subnetworkName),
@@ -11759,7 +11779,7 @@ func TestAccContainerCluster_withAutopilotGcpFilestoreCsiDriver(t *testing.T) {
 				ResourceName:            "google_container_cluster.with_autopilot_gcp_filestore",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection"},
+				ImportStateVerifyIgnore: []string{ "deletion_protection"},
 			},
 		},
 	})
@@ -11791,4 +11811,378 @@ resource "google_container_cluster" "with_autopilot_gcp_filestore" {
   }
 }
 `, name)
+}
+
+func TestAccContainerCluster_migratePrivateNodes(t *testing.T) {
+	t.Parallel()
+
+	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerCluster_migratePrivateNodesDeprecatedFormat(clusterName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "network_config.0.default_enable_private_nodes"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "private_cluster_config.0.enable_private_nodes", "true"),
+				),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+			{
+				Config: 
+				Config: testAccContainerCluster_migratePrivateNodesNewFormat(clusterName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "network_config.0.default_enable_private_nodes"),
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "private_cluster_config.0.enable_private_nodes", "true"),
+				),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+			{
+				Config: testAccContainerCluster_migratePrivateNodesDeprecatedFormat(clusterName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "network_config.0.default_enable_private_nodes"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "private_cluster_config.0.enable_private_nodes", "true"),
+				),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+		},
+	})
+}
+
+func testAccContainerCluster_migratePrivateNodesDeprecatedFormat(name string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "primary" {
+	name                = "%s"
+	location            = "us-central1-a"
+	initial_node_count  = 1
+	deletion_protection = false
+	private_cluster_config {
+		enable_private_nodes = true
+	}
+}`, name),
+}
+
+func testAccContainerCluster_migratePrivateNodesNewFormat(name string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "primary" {
+	name                = "%s"
+	location            = "us-central1-a"
+	initial_node_count  = 1
+	deletion_protection = false
+	network_config {
+		default_enable_private_nodes = true
+	}
+}`, name),
+}
+
+func TestAccContainerCluster_migratePrivateClusterConfig(t *testing.T) {
+	t.Parallel()
+
+	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerCluster_migratePrivateNodesDeprecatedFormat(clusterName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.enabled"),
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.enable_public_endpoint"),
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.global_access"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "private_cluster_config.0.enable_private_nodes", "true"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "private_cluster_config.0.master_global_access_config.0.enabled", "true"),
+				),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+			{
+				Config: 
+				Config: testAccContainerCluster_migratePrivateNodesNewFormat(clusterName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.enabled"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.enable_public_endpoint"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.global_access"),
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "private_cluster_config.0.enable_private_nodes"),
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "private_cluster_config.0.master_global_access_config"),
+				),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+			{
+				Config: testAccContainerCluster_migratePrivateNodesDeprecatedFormat(clusterName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.enabled", "true"),
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.enable_public_endpoint", "false"),
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.global_access", "true"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "private_cluster_config.0.enable_private_nodes", "true"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "private_cluster_config.0.master_global_access_config.0.enabled", "true"),
+				),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+		},
+	})
+}
+
+func testAccContainerCluster_migratePrivateClusterConfigDeprecatedFormat(name string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "primary" {
+	name                = "%s"
+	location            = "us-central1-a"
+	initial_node_count  = 1
+	deletion_protection = false
+	private_cluster_config {
+		enable_private_endpoint = true
+		master_global_access_config {
+			enable = true
+		}
+	}
+}`, name),
+}
+
+func testAccContainerCluster_migratePrivateClusterConfigNewFormat(name string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "primary" {
+	name                = "%s"
+	location            = "us-central1-a"
+	initial_node_count  = 1
+	deletion_protection = false
+	control_plane_endpoints_config {
+		ip_endpoints_config {
+			enabled = true
+			enable_public_endpoint = false
+			global_access = true
+		}
+	}
+}`, name),
+}
+
+func TestAccContainerCluster_migrateAuthorizedNetworks(t *testing.T) {
+	t.Parallel()
+
+	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerCluster_migrateAuthorizedNetworksDeprecatedFormat(clusterName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "master_authorized_networks_config.0.cidr_blocks.#", "1"),
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.authorized_networks_config.#"),
+				),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+			{
+				Config: 
+				Config: testAccContainerCluster_migratePrivateNodesNewFormat(clusterName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "master_authorized_networks_config.#"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.authorized_networks_config.0.cidr_blocks.#", "1"),
+				),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+			{
+				Config: testAccContainerCluster_migratePrivateNodesDeprecatedFormat(clusterName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "master_authorized_networks_config.0.cidr_blocks.#", "1"),
+					resource.TestCheckNoResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.authorized_networks_config.#"),
+				),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+		},
+	})
+}
+
+func testAccContainerCluster_migrateAuthorizedNetworksDeprecatedFormat(name string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "primary" {
+	name                = "%s"
+	location            = "us-central1-a"
+	initial_node_count  = 1
+	deletion_protection = false
+	authorized_networks_config {
+		cidr_blocks {
+			cidr_block = "10.0.0.0/8"
+			display_name = "cidr1"
+		}
+		private_endpoint_enforcement_enabled = true
+	}
+}`, name),
+}
+
+func testAccContainerCluster_migrateAuthorizedNetworksNewFormat(name string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "primary" {
+	name                = "%s"
+	location            = "us-central1-a"
+	initial_node_count  = 1
+	deletion_protection = false
+	control_plane_endpoints_config {
+		ip_endpoints_config {
+			enabled = true
+			authorized_networks_config {
+				cidr_blocks {
+					cidr_block = "10.0.0.0/8"
+					display_name = "cidr1"
+				}
+        		private_endpoint_enforcement_enabled = true
+			}
+		}
+	}
+}`, name),
+}
+
+func TestAccContainerCluster_withDnsEndpoint(t *testing.T) {
+	t.Parallel()
+
+	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerCluster_withDnsEndpointDisabled(clusterName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					// The DNS endpoint should always be set, even if allow_external_traffic is false.
+					resource.TestCheckResourceAttrSet("google_container_cluster.primary", "control_plane_endpoints_config.0.dns_endpoint_config.0.endpoint"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.dns_endpoint_config.0.allow_external_traffic", "false"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.enabled", "true"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.enable_public_endpoint", "false"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.authorized_networks_config.#", "1"),
+					resource.TestCheckResourceAttrSet("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.private_endpoint"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.public_endpoint", ""),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "network_config.0.default_enable_private_nodes", "true"),
+				),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+			{
+				Config: testAccContainerCluster_withDnsEndpointEnabledAndIpDisabled(clusterName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttrSet("google_container_cluster.primary", "control_plane_endpoints_config.0.dns_endpoint_config.0.endpoint"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.dns_endpoint_config.0.allow_external_traffic", "true"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.enabled", "false"),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.private_endpoint", ""),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "control_plane_endpoints_config.0.ip_endpoints_config.0.public_endpoint", ""),
+					resource.TestCheckResourceAttr("google_container_cluster.primary", "network_config.0.default_enable_private_nodes", "true"),
+				),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+		},
+	})
+}
+
+func testAccContainerCluster_withDnsEndpointDisabled(name string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "primary" {
+	name                = "%s"
+	location            = "us-central1-a"
+	initial_node_count  = 1
+	deletion_protection = false
+	control_plane_endpoints_config {
+    	dns_endpoint_config {
+      		allow_external_traffic = false
+    	}
+		ip_endpoints_config {
+			enabled = true
+			enable_public_endpoint = false
+			authorized_networks_config {
+				cidr_blocks {
+					cidr_block = "10.0.0.0/8"
+					display_name = "cidr1"
+				}
+        		private_endpoint_enforcement_enabled = true
+			}
+		}
+  	}
+	network_config {
+		default_enable_private_nodes = true
+	}
+}`, name),
+}
+
+func testAccContainerCluster_withDnsEndpointEnabledAndIpDisabled(name string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "primary" {
+	name                = "%s"
+	location            = "us-central1-a"
+	initial_node_count  = 1
+	deletion_protection = false
+	control_plane_endpoints_config {
+    	dns_endpoint_config {
+      		allow_external_traffic = true
+    	}
+		ip_endpoints_config {
+			enabled = false
+			enable_public_endpoint = false
+			authorized_networks_config {
+				cidr_blocks {
+					cidr_block = "10.0.0.0/8"
+					display_name = "cidr1"
+				}
+        		private_endpoint_enforcement_enabled = true
+			}
+		}
+  	}
+	network_config {
+		default_enable_private_nodes = true
+	}
+}`, name),
 }
