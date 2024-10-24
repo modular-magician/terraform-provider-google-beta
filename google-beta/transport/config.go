@@ -266,6 +266,7 @@ type Config struct {
 	GkeonpremBasePath                string
 	HealthcareBasePath               string
 	IAM2BasePath                     string
+	IAM3BasePath                     string
 	IAMBetaBasePath                  string
 	IAMWorkforcePoolBasePath         string
 	IapBasePath                      string
@@ -425,6 +426,7 @@ const GKEHub2BasePathKey = "GKEHub2"
 const GkeonpremBasePathKey = "Gkeonprem"
 const HealthcareBasePathKey = "Healthcare"
 const IAM2BasePathKey = "IAM2"
+const IAM3BasePathKey = "IAM3"
 const IAMBetaBasePathKey = "IAMBeta"
 const IAMWorkforcePoolBasePathKey = "IAMWorkforcePool"
 const IapBasePathKey = "Iap"
@@ -578,6 +580,7 @@ var DefaultBasePaths = map[string]string{
 	GkeonpremBasePathKey:                "https://gkeonprem.googleapis.com/v1/",
 	HealthcareBasePathKey:               "https://healthcare.googleapis.com/v1beta1/",
 	IAM2BasePathKey:                     "https://iam.googleapis.com/v2beta/",
+	IAM3BasePathKey:                     "https://iam.googleapis.com/v3beta/",
 	IAMBetaBasePathKey:                  "https://iam.googleapis.com/v1/",
 	IAMWorkforcePoolBasePathKey:         "https://iam.googleapis.com/v1/",
 	IapBasePathKey:                      "https://iap.googleapis.com/v1/",
@@ -1109,6 +1112,11 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 		d.Set("iam2_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_IAM2_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[IAM2BasePathKey]))
+	}
+	if d.Get("iam3_custom_endpoint") == "" {
+		d.Set("iam3_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_IAM3_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[IAM3BasePathKey]))
 	}
 	if d.Get("iam_beta_custom_endpoint") == "" {
 		d.Set("iam_beta_custom_endpoint", MultiEnvDefault([]string{
@@ -2429,6 +2437,7 @@ func ConfigureBasePaths(c *Config) {
 	c.GkeonpremBasePath = DefaultBasePaths[GkeonpremBasePathKey]
 	c.HealthcareBasePath = DefaultBasePaths[HealthcareBasePathKey]
 	c.IAM2BasePath = DefaultBasePaths[IAM2BasePathKey]
+	c.IAM3BasePath = DefaultBasePaths[IAM3BasePathKey]
 	c.IAMBetaBasePath = DefaultBasePaths[IAMBetaBasePathKey]
 	c.IAMWorkforcePoolBasePath = DefaultBasePaths[IAMWorkforcePoolBasePathKey]
 	c.IapBasePath = DefaultBasePaths[IapBasePathKey]
