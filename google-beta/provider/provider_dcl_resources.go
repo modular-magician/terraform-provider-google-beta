@@ -41,7 +41,6 @@ var dclResources = map[string]*schema.Resource{
 	"google_cloudbuild_worker_pool":              cloudbuild.ResourceCloudbuildWorkerPool(),
 	"google_clouddeploy_delivery_pipeline":       clouddeploy.ResourceClouddeployDeliveryPipeline(),
 	"google_clouddeploy_target":                  clouddeploy.ResourceClouddeployTarget(),
-	"google_compute_firewall_policy":             compute.ResourceComputeFirewallPolicy(),
 	"google_compute_firewall_policy_association": compute.ResourceComputeFirewallPolicyAssociation(),
 	"google_compute_firewall_policy_rule":        compute.ResourceComputeFirewallPolicyRule(),
 	"google_container_aws_cluster":               containeraws.ResourceContainerAwsCluster(),
