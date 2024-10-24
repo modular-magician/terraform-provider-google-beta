@@ -496,9 +496,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 544
+// Generated resources: 545
 // Generated IAM resources: 291
-// Total generated resources: 835
+// Total generated resources: 836
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -766,6 +766,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_compute_region_network_firewall_policy_rule":                         compute.ResourceComputeRegionNetworkFirewallPolicyRule(),
 	"google_compute_region_network_firewall_policy_with_rules":                   compute.ResourceComputeRegionNetworkFirewallPolicyWithRules(),
 	"google_compute_region_per_instance_config":                                  compute.ResourceComputeRegionPerInstanceConfig(),
+	"google_compute_region_resize_request":                                       compute.ResourceComputeRegionResizeRequest(),
 	"google_compute_region_security_policy":                                      compute.ResourceComputeRegionSecurityPolicy(),
 	"google_compute_region_security_policy_rule":                                 compute.ResourceComputeRegionSecurityPolicyRule(),
 	"google_compute_region_ssl_certificate":                                      compute.ResourceComputeRegionSslCertificate(),

@@ -31,14 +31,14 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-func ResourceComputeResizeRequest() *schema.Resource {
+func ResourceComputeRegionResizeRequest() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceComputeResizeRequestCreate,
-		Read:   resourceComputeResizeRequestRead,
-		Delete: resourceComputeResizeRequestDelete,
+		Create: resourceComputeRegionResizeRequestCreate,
+		Read:   resourceComputeRegionResizeRequestRead,
+		Delete: resourceComputeRegionResizeRequestDelete,
 
 		Importer: &schema.ResourceImporter{
-			State: resourceComputeResizeRequestImport,
+			State: resourceComputeRegionResizeRequestImport,
 		},
 
 		Timeouts: &schema.ResourceTimeout{
@@ -56,7 +56,7 @@ func ResourceComputeResizeRequest() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
-				Description: `The name of the managed instance group. The name should conform to RFC1035 or be a resource ID.
+				Description: `The name of the regional managed instance group. The name should conform to RFC1035 or be a resource ID.
 Authorization requires the following IAM permission on the specified resource instanceGroupManager:
 *compute.instanceGroupManagers.update`,
 			},
@@ -66,18 +66,18 @@ Authorization requires the following IAM permission on the specified resource in
 				ForceNew:    true,
 				Description: `The name of this resize request. The name must be 1-63 characters long, and comply with RFC1035.`,
 			},
+			"region": {
+				Type:             schema.TypeString,
+				Required:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				Description:      `Name of the compute region scoping this request. Name should conform to RFC1035.`,
+			},
 			"resize_by": {
 				Type:        schema.TypeInt,
 				Required:    true,
 				ForceNew:    true,
 				Description: `The number of instances to be created by this resize request. The group's target size will be increased by this number.`,
-			},
-			"zone": {
-				Type:             schema.TypeString,
-				Required:         true,
-				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
-				Description:      `Name of the compute zone scoping this request. Name should conform to RFC1035.`,
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -89,7 +89,7 @@ Authorization requires the following IAM permission on the specified resource in
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
-				Description: `Requested run duration for instances that will be created by this request. At the end of the run duration instance will be deleted.`,
+				Description: `Requested run duration for instances that will be created by this request. At the end of the run duration instances will be deleted.`,
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -457,7 +457,7 @@ Keys must match /[a-z][a-zA-Z0-9-_]+/ but should ideally be lowerCamelCase. Also
 	}
 }
 
-func resourceComputeResizeRequestCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceComputeRegionResizeRequestCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
@@ -465,42 +465,42 @@ func resourceComputeResizeRequestCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	obj := make(map[string]interface{})
-	nameProp, err := expandComputeResizeRequestName(d.Get("name"), d, config)
+	nameProp, err := expandComputeRegionResizeRequestName(d.Get("name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
-	descriptionProp, err := expandComputeResizeRequestDescription(d.Get("description"), d, config)
+	descriptionProp, err := expandComputeRegionResizeRequestDescription(d.Get("description"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
-	resizeByProp, err := expandComputeResizeRequestResizeBy(d.Get("resize_by"), d, config)
+	resizeByProp, err := expandComputeRegionResizeRequestResizeBy(d.Get("resize_by"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("resize_by"); !tpgresource.IsEmptyValue(reflect.ValueOf(resizeByProp)) && (ok || !reflect.DeepEqual(v, resizeByProp)) {
 		obj["resizeBy"] = resizeByProp
 	}
-	requestedRunDurationProp, err := expandComputeResizeRequestRequestedRunDuration(d.Get("requested_run_duration"), d, config)
+	requestedRunDurationProp, err := expandComputeRegionResizeRequestRequestedRunDuration(d.Get("requested_run_duration"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("requested_run_duration"); !tpgresource.IsEmptyValue(reflect.ValueOf(requestedRunDurationProp)) && (ok || !reflect.DeepEqual(v, requestedRunDurationProp)) {
 		obj["requestedRunDuration"] = requestedRunDurationProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests")
+	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests")
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[DEBUG] Creating new ResizeRequest: %#v", obj)
+	log.Printf("[DEBUG] Creating new RegionResizeRequest: %#v", obj)
 	billingProject := ""
 
 	project, err := tpgresource.GetProject(d, config)
 	if err != nil {
-		return fmt.Errorf("Error fetching project for ResizeRequest: %s", err)
+		return fmt.Errorf("Error fetching project for RegionResizeRequest: %s", err)
 	}
 	billingProject = project
 
@@ -521,39 +521,39 @@ func resourceComputeResizeRequestCreate(d *schema.ResourceData, meta interface{}
 		Headers:   headers,
 	})
 	if err != nil {
-		return fmt.Errorf("Error creating ResizeRequest: %s", err)
+		return fmt.Errorf("Error creating RegionResizeRequest: %s", err)
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
 
 	err = ComputeOperationWaitTime(
-		config, res, project, "Creating ResizeRequest", userAgent,
+		config, res, project, "Creating RegionResizeRequest", userAgent,
 		d.Timeout(schema.TimeoutCreate))
 
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
-		return fmt.Errorf("Error waiting to create ResizeRequest: %s", err)
+		return fmt.Errorf("Error waiting to create RegionResizeRequest: %s", err)
 	}
 
-	log.Printf("[DEBUG] Finished creating ResizeRequest %q: %#v", d.Id(), res)
+	log.Printf("[DEBUG] Finished creating RegionResizeRequest %q: %#v", d.Id(), res)
 
-	return resourceComputeResizeRequestRead(d, meta)
+	return resourceComputeRegionResizeRequestRead(d, meta)
 }
 
-func resourceComputeResizeRequestRead(d *schema.ResourceData, meta interface{}) error {
+func resourceComputeRegionResizeRequestRead(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -562,7 +562,7 @@ func resourceComputeResizeRequestRead(d *schema.ResourceData, meta interface{}) 
 
 	project, err := tpgresource.GetProject(d, config)
 	if err != nil {
-		return fmt.Errorf("Error fetching project for ResizeRequest: %s", err)
+		return fmt.Errorf("Error fetching project for RegionResizeRequest: %s", err)
 	}
 	billingProject = project
 
@@ -581,39 +581,39 @@ func resourceComputeResizeRequestRead(d *schema.ResourceData, meta interface{}) 
 		Headers:   headers,
 	})
 	if err != nil {
-		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ComputeResizeRequest %q", d.Id()))
+		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ComputeRegionResizeRequest %q", d.Id()))
 	}
 
 	if err := d.Set("project", project); err != nil {
-		return fmt.Errorf("Error reading ResizeRequest: %s", err)
+		return fmt.Errorf("Error reading RegionResizeRequest: %s", err)
 	}
 
-	if err := d.Set("creation_timestamp", flattenComputeResizeRequestCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
-		return fmt.Errorf("Error reading ResizeRequest: %s", err)
+	if err := d.Set("creation_timestamp", flattenComputeRegionResizeRequestCreationTimestamp(res["creationTimestamp"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionResizeRequest: %s", err)
 	}
-	if err := d.Set("state", flattenComputeResizeRequestState(res["state"], d, config)); err != nil {
-		return fmt.Errorf("Error reading ResizeRequest: %s", err)
+	if err := d.Set("state", flattenComputeRegionResizeRequestState(res["state"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionResizeRequest: %s", err)
 	}
-	if err := d.Set("name", flattenComputeResizeRequestName(res["name"], d, config)); err != nil {
-		return fmt.Errorf("Error reading ResizeRequest: %s", err)
+	if err := d.Set("name", flattenComputeRegionResizeRequestName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionResizeRequest: %s", err)
 	}
-	if err := d.Set("description", flattenComputeResizeRequestDescription(res["description"], d, config)); err != nil {
-		return fmt.Errorf("Error reading ResizeRequest: %s", err)
+	if err := d.Set("description", flattenComputeRegionResizeRequestDescription(res["description"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionResizeRequest: %s", err)
 	}
-	if err := d.Set("resize_by", flattenComputeResizeRequestResizeBy(res["resizeBy"], d, config)); err != nil {
-		return fmt.Errorf("Error reading ResizeRequest: %s", err)
+	if err := d.Set("resize_by", flattenComputeRegionResizeRequestResizeBy(res["resizeBy"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionResizeRequest: %s", err)
 	}
-	if err := d.Set("requested_run_duration", flattenComputeResizeRequestRequestedRunDuration(res["requestedRunDuration"], d, config)); err != nil {
-		return fmt.Errorf("Error reading ResizeRequest: %s", err)
+	if err := d.Set("requested_run_duration", flattenComputeRegionResizeRequestRequestedRunDuration(res["requestedRunDuration"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionResizeRequest: %s", err)
 	}
-	if err := d.Set("status", flattenComputeResizeRequestStatus(res["status"], d, config)); err != nil {
-		return fmt.Errorf("Error reading ResizeRequest: %s", err)
+	if err := d.Set("status", flattenComputeRegionResizeRequestStatus(res["status"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionResizeRequest: %s", err)
 	}
 
 	return nil
 }
 
-func resourceComputeResizeRequestDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceComputeRegionResizeRequestDelete(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
@@ -628,7 +628,7 @@ func resourceComputeResizeRequestDelete(d *schema.ResourceData, meta interface{}
 
 	// Get cancel url
 	var cancelUrl string
-	cancelUrl, err = tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}/cancel")
+	cancelUrl, err = tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}/cancel")
 
 	if err != nil {
 		return err
@@ -636,7 +636,7 @@ func resourceComputeResizeRequestDelete(d *schema.ResourceData, meta interface{}
 
 	// Get delete url
 	var deleteUrl string
-	deleteUrl, err = tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}")
+	deleteUrl, err = tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -684,22 +684,21 @@ func resourceComputeResizeRequestDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 	return nil
-
 }
 
-func resourceComputeResizeRequestImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+func resourceComputeRegionResizeRequestImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
 	if err := tpgresource.ParseImportId([]string{
-		"^projects/(?P<project>[^/]+)/zones/(?P<zone>[^/]+)/instanceGroupManagers/(?P<instance_group_manager>[^/]+)/resizeRequests/(?P<name>[^/]+)$",
-		"^(?P<project>[^/]+)/(?P<zone>[^/]+)/(?P<instance_group_manager>[^/]+)/(?P<name>[^/]+)$",
-		"^(?P<zone>[^/]+)/(?P<instance_group_manager>[^/]+)/(?P<name>[^/]+)$",
+		"^projects/(?P<project>[^/]+)/regions/(?P<region>[^/]+)/instanceGroupManagers/(?P<instance_group_manager>[^/]+)/resizeRequests/(?P<name>[^/]+)$",
+		"^(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<instance_group_manager>[^/]+)/(?P<name>[^/]+)$",
+		"^(?P<region>[^/]+)/(?P<instance_group_manager>[^/]+)/(?P<name>[^/]+)$",
 		"^(?P<instance_group_manager>[^/]+)/(?P<name>[^/]+)$",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -708,23 +707,23 @@ func resourceComputeResizeRequestImport(d *schema.ResourceData, meta interface{}
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenComputeResizeRequestCreationTimestamp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestCreationTimestamp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestResizeBy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestResizeBy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
@@ -741,7 +740,7 @@ func flattenComputeResizeRequestResizeBy(v interface{}, d *schema.ResourceData, 
 	return v // let terraform core handle it otherwise
 }
 
-func flattenComputeResizeRequestRequestedRunDuration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestRequestedRunDuration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -751,16 +750,16 @@ func flattenComputeResizeRequestRequestedRunDuration(v interface{}, d *schema.Re
 	}
 	transformed := make(map[string]interface{})
 	transformed["seconds"] =
-		flattenComputeResizeRequestRequestedRunDurationSeconds(original["seconds"], d, config)
+		flattenComputeRegionResizeRequestRequestedRunDurationSeconds(original["seconds"], d, config)
 	transformed["nanos"] =
-		flattenComputeResizeRequestRequestedRunDurationNanos(original["nanos"], d, config)
+		flattenComputeRegionResizeRequestRequestedRunDurationNanos(original["nanos"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestRequestedRunDurationSeconds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestRequestedRunDurationSeconds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestRequestedRunDurationNanos(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestRequestedRunDurationNanos(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
@@ -777,7 +776,7 @@ func flattenComputeResizeRequestRequestedRunDurationNanos(v interface{}, d *sche
 	return v // let terraform core handle it otherwise
 }
 
-func flattenComputeResizeRequestStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -787,12 +786,12 @@ func flattenComputeResizeRequestStatus(v interface{}, d *schema.ResourceData, co
 	}
 	transformed := make(map[string]interface{})
 	transformed["error"] =
-		flattenComputeResizeRequestStatusError(original["error"], d, config)
+		flattenComputeRegionResizeRequestStatusError(original["error"], d, config)
 	transformed["last_attempt"] =
-		flattenComputeResizeRequestStatusLastAttempt(original["lastAttempt"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttempt(original["lastAttempt"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusError(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusError(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -802,10 +801,10 @@ func flattenComputeResizeRequestStatusError(v interface{}, d *schema.ResourceDat
 	}
 	transformed := make(map[string]interface{})
 	transformed["errors"] =
-		flattenComputeResizeRequestStatusErrorErrors(original["errors"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrors(original["errors"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusErrorErrors(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrors(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
 	}
@@ -818,27 +817,27 @@ func flattenComputeResizeRequestStatusErrorErrors(v interface{}, d *schema.Resou
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"code":          flattenComputeResizeRequestStatusErrorErrorsCode(original["code"], d, config),
-			"location":      flattenComputeResizeRequestStatusErrorErrorsLocation(original["location"], d, config),
-			"message":       flattenComputeResizeRequestStatusErrorErrorsMessage(original["message"], d, config),
-			"error_details": flattenComputeResizeRequestStatusErrorErrorsErrorDetails(original["errorDetails"], d, config),
+			"code":          flattenComputeRegionResizeRequestStatusErrorErrorsCode(original["code"], d, config),
+			"location":      flattenComputeRegionResizeRequestStatusErrorErrorsLocation(original["location"], d, config),
+			"message":       flattenComputeRegionResizeRequestStatusErrorErrorsMessage(original["message"], d, config),
+			"error_details": flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetails(original["errorDetails"], d, config),
 		})
 	}
 	return transformed
 }
-func flattenComputeResizeRequestStatusErrorErrorsCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
 	}
@@ -851,15 +850,15 @@ func flattenComputeResizeRequestStatusErrorErrorsErrorDetails(v interface{}, d *
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"error_info":        flattenComputeResizeRequestStatusErrorErrorsErrorDetailsErrorInfo(original["errorInfo"], d, config),
-			"quota_info":        flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfo(original["quotaInfo"], d, config),
-			"help":              flattenComputeResizeRequestStatusErrorErrorsErrorDetailsHelp(original["help"], d, config),
-			"localized_message": flattenComputeResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessage(original["localizedMessage"], d, config),
+			"error_info":        flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsErrorInfo(original["errorInfo"], d, config),
+			"quota_info":        flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfo(original["quotaInfo"], d, config),
+			"help":              flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsHelp(original["help"], d, config),
+			"localized_message": flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessage(original["localizedMessage"], d, config),
 		})
 	}
 	return transformed
 }
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsErrorInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsErrorInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -869,26 +868,26 @@ func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsErrorInfo(v interfa
 	}
 	transformed := make(map[string]interface{})
 	transformed["reason"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsErrorInfoReason(original["reason"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsErrorInfoReason(original["reason"], d, config)
 	transformed["domain"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsErrorInfoDomain(original["domain"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsErrorInfoDomain(original["domain"], d, config)
 	transformed["metadatas"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsErrorInfoMetadatas(original["metadatas"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsErrorInfoMetadatas(original["metadatas"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsErrorInfoReason(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsErrorInfoReason(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsErrorInfoDomain(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsErrorInfoDomain(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsErrorInfoMetadatas(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsErrorInfoMetadatas(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -898,32 +897,32 @@ func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfo(v interfa
 	}
 	transformed := make(map[string]interface{})
 	transformed["metric_name"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoMetricName(original["metricName"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoMetricName(original["metricName"], d, config)
 	transformed["limit_name"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoLimitName(original["limitName"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoLimitName(original["limitName"], d, config)
 	transformed["dimensions"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoDimensions(original["dimensions"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoDimensions(original["dimensions"], d, config)
 	transformed["limit"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoLimit(original["limit"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoLimit(original["limit"], d, config)
 	transformed["future_limit"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoFutureLimit(original["futureLimit"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoFutureLimit(original["futureLimit"], d, config)
 	transformed["rollout_status"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoRolloutStatus(original["rolloutStatus"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoRolloutStatus(original["rolloutStatus"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoMetricName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoMetricName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoLimitName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoLimitName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoDimensions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoDimensions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoLimit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoLimit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
@@ -940,7 +939,7 @@ func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoLimit(v in
 	return v // let terraform core handle it otherwise
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoFutureLimit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoFutureLimit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
@@ -957,11 +956,11 @@ func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoFutureLimi
 	return v // let terraform core handle it otherwise
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoRolloutStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsQuotaInfoRolloutStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsHelp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsHelp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -971,10 +970,10 @@ func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsHelp(v interface{},
 	}
 	transformed := make(map[string]interface{})
 	transformed["links"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsHelpLinks(original["links"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsHelpLinks(original["links"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsHelpLinks(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsHelpLinks(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -984,20 +983,20 @@ func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsHelpLinks(v interfa
 	}
 	transformed := make(map[string]interface{})
 	transformed["description"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsHelpLinksDescription(original["description"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsHelpLinksDescription(original["description"], d, config)
 	transformed["url"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsHelpLinksUrl(original["url"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsHelpLinksUrl(original["url"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsHelpLinksDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsHelpLinksDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsHelpLinksUrl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsHelpLinksUrl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -1007,20 +1006,20 @@ func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessage(v 
 	}
 	transformed := make(map[string]interface{})
 	transformed["locale"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessageLocale(original["locale"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessageLocale(original["locale"], d, config)
 	transformed["message"] =
-		flattenComputeResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessageMessage(original["message"], d, config)
+		flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessageMessage(original["message"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessageLocale(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessageLocale(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessageMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusErrorErrorsErrorDetailsLocalizedMessageMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttempt(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttempt(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -1030,10 +1029,10 @@ func flattenComputeResizeRequestStatusLastAttempt(v interface{}, d *schema.Resou
 	}
 	transformed := make(map[string]interface{})
 	transformed["error"] =
-		flattenComputeResizeRequestStatusLastAttemptError(original["error"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptError(original["error"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusLastAttemptError(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptError(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -1043,10 +1042,10 @@ func flattenComputeResizeRequestStatusLastAttemptError(v interface{}, d *schema.
 	}
 	transformed := make(map[string]interface{})
 	transformed["errors"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrors(original["errors"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrors(original["errors"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusLastAttemptErrorErrors(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrors(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
 	}
@@ -1059,27 +1058,27 @@ func flattenComputeResizeRequestStatusLastAttemptErrorErrors(v interface{}, d *s
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"code":          flattenComputeResizeRequestStatusLastAttemptErrorErrorsCode(original["code"], d, config),
-			"location":      flattenComputeResizeRequestStatusLastAttemptErrorErrorsLocation(original["location"], d, config),
-			"message":       flattenComputeResizeRequestStatusLastAttemptErrorErrorsMessage(original["message"], d, config),
-			"error_details": flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetails(original["errorDetails"], d, config),
+			"code":          flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsCode(original["code"], d, config),
+			"location":      flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsLocation(original["location"], d, config),
+			"message":       flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsMessage(original["message"], d, config),
+			"error_details": flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetails(original["errorDetails"], d, config),
 		})
 	}
 	return transformed
 }
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
 	}
@@ -1092,15 +1091,15 @@ func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetails(v inter
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"error_info":        flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfo(original["errorInfo"], d, config),
-			"quota_info":        flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfo(original["quotaInfo"], d, config),
-			"help":              flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelp(original["help"], d, config),
-			"localized_message": flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessage(original["localizedMessage"], d, config),
+			"error_info":        flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfo(original["errorInfo"], d, config),
+			"quota_info":        flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfo(original["quotaInfo"], d, config),
+			"help":              flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelp(original["help"], d, config),
+			"localized_message": flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessage(original["localizedMessage"], d, config),
 		})
 	}
 	return transformed
 }
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -1110,26 +1109,26 @@ func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInf
 	}
 	transformed := make(map[string]interface{})
 	transformed["reason"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoReason(original["reason"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoReason(original["reason"], d, config)
 	transformed["domain"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoDomain(original["domain"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoDomain(original["domain"], d, config)
 	transformed["metadatas"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoMetadatas(original["metadatas"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoMetadatas(original["metadatas"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoReason(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoReason(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoDomain(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoDomain(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoMetadatas(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsErrorInfoMetadatas(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -1139,32 +1138,32 @@ func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInf
 	}
 	transformed := make(map[string]interface{})
 	transformed["metric_name"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoMetricName(original["metricName"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoMetricName(original["metricName"], d, config)
 	transformed["limit_name"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoLimitName(original["limitName"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoLimitName(original["limitName"], d, config)
 	transformed["dimensions"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoDimensions(original["dimensions"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoDimensions(original["dimensions"], d, config)
 	transformed["limit"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoLimit(original["limit"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoLimit(original["limit"], d, config)
 	transformed["future_limit"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoFutureLimit(original["futureLimit"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoFutureLimit(original["futureLimit"], d, config)
 	transformed["rollout_status"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoRolloutStatus(original["rolloutStatus"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoRolloutStatus(original["rolloutStatus"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoMetricName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoMetricName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoLimitName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoLimitName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoDimensions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoDimensions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoLimit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoLimit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
@@ -1181,7 +1180,7 @@ func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInf
 	return v // let terraform core handle it otherwise
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoFutureLimit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoFutureLimit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
@@ -1198,11 +1197,11 @@ func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInf
 	return v // let terraform core handle it otherwise
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoRolloutStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsQuotaInfoRolloutStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -1212,10 +1211,10 @@ func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelp(v i
 	}
 	transformed := make(map[string]interface{})
 	transformed["links"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinks(original["links"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinks(original["links"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinks(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinks(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -1225,20 +1224,20 @@ func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLink
 	}
 	transformed := make(map[string]interface{})
 	transformed["description"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinksDescription(original["description"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinksDescription(original["description"], d, config)
 	transformed["url"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinksUrl(original["url"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinksUrl(original["url"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinksDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinksDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinksUrl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsHelpLinksUrl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
 	}
@@ -1248,32 +1247,32 @@ func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalize
 	}
 	transformed := make(map[string]interface{})
 	transformed["locale"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessageLocale(original["locale"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessageLocale(original["locale"], d, config)
 	transformed["message"] =
-		flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessageMessage(original["message"], d, config)
+		flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessageMessage(original["message"], d, config)
 	return []interface{}{transformed}
 }
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessageLocale(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessageLocale(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func flattenComputeResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessageMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+func flattenComputeRegionResizeRequestStatusLastAttemptErrorErrorsErrorDetailsLocalizedMessageMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
-func expandComputeResizeRequestName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandComputeRegionResizeRequestName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandComputeResizeRequestDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandComputeRegionResizeRequestDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandComputeResizeRequestResizeBy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandComputeRegionResizeRequestResizeBy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandComputeResizeRequestRequestedRunDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandComputeRegionResizeRequestRequestedRunDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1282,14 +1281,14 @@ func expandComputeResizeRequestRequestedRunDuration(v interface{}, d tpgresource
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedSeconds, err := expandComputeResizeRequestRequestedRunDurationSeconds(original["seconds"], d, config)
+	transformedSeconds, err := expandComputeRegionResizeRequestRequestedRunDurationSeconds(original["seconds"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedSeconds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["seconds"] = transformedSeconds
 	}
 
-	transformedNanos, err := expandComputeResizeRequestRequestedRunDurationNanos(original["nanos"], d, config)
+	transformedNanos, err := expandComputeRegionResizeRequestRequestedRunDurationNanos(original["nanos"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedNanos); val.IsValid() && !tpgresource.IsEmptyValue(val) {
@@ -1299,10 +1298,10 @@ func expandComputeResizeRequestRequestedRunDuration(v interface{}, d tpgresource
 	return transformed, nil
 }
 
-func expandComputeResizeRequestRequestedRunDurationSeconds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandComputeRegionResizeRequestRequestedRunDurationSeconds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
-func expandComputeResizeRequestRequestedRunDurationNanos(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+func expandComputeRegionResizeRequestRequestedRunDurationNanos(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

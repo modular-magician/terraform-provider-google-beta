@@ -14,35 +14,38 @@
 # ----------------------------------------------------------------------------
 subcategory: "Compute Engine"
 description: |-
-  Represents a Managed Instance Group Resize Request
+  Represents a Regional Managed Instance Group Resize Request
   Resize Requests are the Managed Instance Group implementation of Dynamic Workload Scheduler Flex Start.
 ---
 
-# google_compute_resize_request
+# google_compute_region_resize_request
 
-Represents a Managed Instance Group Resize Request
+Represents a Regional Managed Instance Group Resize Request
 
 Resize Requests are the Managed Instance Group implementation of Dynamic Workload Scheduler Flex Start.
 
-With Dynamic Workload Scheduler in Flex Start mode, you submit a GPU capacity request for your AI/ML jobs by indicating how many you need, a duration, and your preferred zone. Dynamic Workload Scheduler intelligently persists the request; once the capacity becomes available, it automatically provisions your VMs enabling your workloads to run continuously for the entire duration of the capacity allocation.
+With Dynamic Workload Scheduler in Flex Start mode, you submit a GPU capacity request for your AI/ML jobs by indicating how many you need, a duration, and your preferred region. Dynamic Workload Scheduler intelligently persists the request; once the capacity becomes available, it automatically provisions your VMs enabling your workloads to run continuously for the entire duration of the capacity allocation.
 
+~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
+See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
 
-To get more information about ResizeRequest, see:
+To get more information about RegionResizeRequest, see:
 
-* [API documentation](https://cloud.google.com/compute/docs/reference/rest/v1/instanceGroupManagerResizeRequests)
+* [API documentation](https://cloud.google.com/compute/docs/reference/rest/beta/regionInstanceGroupManagerResizeRequests)
 * How-to Guides
     * [ABOUT_RESIZE_REQUEST_IN_MIG](https://cloud.google.com/compute/docs/instance-groups/about-resize-requests-mig)
 
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=compute_mig_resize_request&open_in_editor=main.tf" target="_blank">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=compute_rmig_resize_request&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
 </div>
-## Example Usage - Compute Mig Resize Request
+## Example Usage - Compute Rmig Resize Request
 
 
 ```hcl
 resource "google_compute_region_instance_template" "a3_dws" {
+  provider = google-beta
   name                 = "a3-dws"
   region               = "us-central1"
   description          = "This template is used to create a mig instance that is compatible with DWS resize requests."
@@ -83,27 +86,34 @@ resource "google_compute_region_instance_template" "a3_dws" {
   }
 }
 
-resource "google_compute_instance_group_manager" "a3_dws" {
+resource "google_compute_region_instance_group_manager" "a3_dws" {
+  provider = google-beta
   name               = "a3-dws"
   base_instance_name = "a3-dws"
-  zone               = "us-central1-a"
-
+  region               = "us-central1"
   version {
     instance_template = google_compute_region_instance_template.a3_dws.self_link
   }
-
   instance_lifecycle_policy {
     default_action_on_failure = "DO_NOTHING"
   }
-
+  distribution_policy_target_shape = "ANY_SINGLE_ZONE"
+  distribution_policy_zones        = ["us-central1-a", "us-central1-b", "us-central1-c", "us-central1-f"]
+  update_policy {
+    instance_redistribution_type = "NONE"
+    type                         = "OPPORTUNISTIC"
+    minimal_action               = "REPLACE"
+    max_surge_fixed              = 0
+    max_unavailable_fixed        = 6
+  }
   wait_for_instances = false
-
 }
 
-resource "google_compute_resize_request" "a3_resize_request" {
+resource "google_compute_region_resize_request" "a3_resize_request" {
+  provider = google-beta
   name                   = "a3-dws"
-  instance_group_manager = google_compute_instance_group_manager.a3_dws.name
-  zone                   = "us-central1-a"
+  instance_group_manager = google_compute_region_instance_group_manager.a3_dws.name
+  region                 = "us-central1"
   description            = "Test resize request resource"
   resize_by              = 2
   requested_run_duration {
@@ -126,13 +136,13 @@ The following arguments are supported:
   (Required)
   The number of instances to be created by this resize request. The group's target size will be increased by this number.
 
-* `zone` -
+* `region` -
   (Required)
-  Name of the compute zone scoping this request. Name should conform to RFC1035.
+  Name of the compute region scoping this request. Name should conform to RFC1035.
 
 * `instance_group_manager` -
   (Required)
-  The name of the managed instance group. The name should conform to RFC1035 or be a resource ID.
+  The name of the regional managed instance group. The name should conform to RFC1035 or be a resource ID.
   Authorization requires the following IAM permission on the specified resource instanceGroupManager:
   *compute.instanceGroupManagers.update
 
@@ -146,7 +156,7 @@ The following arguments are supported:
 
 * `requested_run_duration` -
   (Optional)
-  Requested run duration for instances that will be created by this request. At the end of the run duration instance will be deleted.
+  Requested run duration for instances that will be created by this request. At the end of the run duration instances will be deleted.
   Structure is [documented below](#nested_requested_run_duration).
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
@@ -167,7 +177,7 @@ The following arguments are supported:
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}`
+* `id` - an identifier for the resource with format `projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}`
 
 * `creation_timestamp` -
   The creation timestamp for this resize request in RFC3339 text format.
@@ -452,30 +462,30 @@ This resource provides the following
 ## Import
 
 
-ResizeRequest can be imported using any of these accepted formats:
+RegionResizeRequest can be imported using any of these accepted formats:
 
-* `projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}`
-* `{{project}}/{{zone}}/{{instance_group_manager}}/{{name}}`
-* `{{zone}}/{{instance_group_manager}}/{{name}}`
+* `projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}`
+* `{{project}}/{{region}}/{{instance_group_manager}}/{{name}}`
+* `{{region}}/{{instance_group_manager}}/{{name}}`
 * `{{instance_group_manager}}/{{name}}`
 
 
-In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import ResizeRequest using one of the formats above. For example:
+In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import RegionResizeRequest using one of the formats above. For example:
 
 ```tf
 import {
-  id = "projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}"
-  to = google_compute_resize_request.default
+  id = "projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}"
+  to = google_compute_region_resize_request.default
 }
 ```
 
-When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), ResizeRequest can be imported using one of the formats above. For example:
+When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), RegionResizeRequest can be imported using one of the formats above. For example:
 
 ```
-$ terraform import google_compute_resize_request.default projects/{{project}}/zones/{{zone}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}
-$ terraform import google_compute_resize_request.default {{project}}/{{zone}}/{{instance_group_manager}}/{{name}}
-$ terraform import google_compute_resize_request.default {{zone}}/{{instance_group_manager}}/{{name}}
-$ terraform import google_compute_resize_request.default {{instance_group_manager}}/{{name}}
+$ terraform import google_compute_region_resize_request.default projects/{{project}}/regions/{{region}}/instanceGroupManagers/{{instance_group_manager}}/resizeRequests/{{name}}
+$ terraform import google_compute_region_resize_request.default {{project}}/{{region}}/{{instance_group_manager}}/{{name}}
+$ terraform import google_compute_region_resize_request.default {{region}}/{{instance_group_manager}}/{{name}}
+$ terraform import google_compute_region_resize_request.default {{instance_group_manager}}/{{name}}
 ```
 
 ## User Project Overrides
