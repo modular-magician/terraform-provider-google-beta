@@ -54,6 +54,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/datapipeline"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataplex"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataproc"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataprocgdc"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/dataprocmetastore"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/datastream"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/deploymentmanager"
@@ -496,9 +497,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 544
+// Generated resources: 545
 // Generated IAM resources: 291
-// Total generated resources: 835
+// Total generated resources: 836
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -881,6 +882,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_dataproc_autoscaling_policy_iam_member":                              tpgiamresource.ResourceIamMember(dataproc.DataprocAutoscalingPolicyIamSchema, dataproc.DataprocAutoscalingPolicyIamUpdaterProducer, dataproc.DataprocAutoscalingPolicyIdParseFunc),
 	"google_dataproc_autoscaling_policy_iam_policy":                              tpgiamresource.ResourceIamPolicy(dataproc.DataprocAutoscalingPolicyIamSchema, dataproc.DataprocAutoscalingPolicyIamUpdaterProducer, dataproc.DataprocAutoscalingPolicyIdParseFunc),
 	"google_dataproc_batch":                                                      dataproc.ResourceDataprocBatch(),
+	"google_dataproc_gdc_service_instance":                                       dataprocgdc.ResourceDataprocGdcServiceInstance(),
 	"google_dataproc_metastore_federation":                                       dataprocmetastore.ResourceDataprocMetastoreFederation(),
 	"google_dataproc_metastore_federation_iam_binding":                           tpgiamresource.ResourceIamBinding(dataprocmetastore.DataprocMetastoreFederationIamSchema, dataprocmetastore.DataprocMetastoreFederationIamUpdaterProducer, dataprocmetastore.DataprocMetastoreFederationIdParseFunc),
 	"google_dataproc_metastore_federation_iam_member":                            tpgiamresource.ResourceIamMember(dataprocmetastore.DataprocMetastoreFederationIamSchema, dataprocmetastore.DataprocMetastoreFederationIamUpdaterProducer, dataprocmetastore.DataprocMetastoreFederationIdParseFunc),
