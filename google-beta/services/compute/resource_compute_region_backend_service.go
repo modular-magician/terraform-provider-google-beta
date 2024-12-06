@@ -693,11 +693,11 @@ or serverless NEG as a backend.`,
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"EXTERNAL", "EXTERNAL_MANAGED", "INTERNAL", "INTERNAL_MANAGED", ""}),
+				ValidateFunc: verify.ValidateEnum([]string{"EXTERNAL", "EXTERNAL_MANAGED", "INTERNAL", "INTERNAL_MANAGED", "INTERNAL_SELF_MANAGED", ""}),
 				Description: `Indicates what kind of load balancing this regional backend service
 will be used for. A backend service created for one type of load
 balancing cannot be used with the other(s). For more information, refer to
-[Choosing a load balancer](https://cloud.google.com/load-balancing/docs/backend-service). Default value: "INTERNAL" Possible values: ["EXTERNAL", "EXTERNAL_MANAGED", "INTERNAL", "INTERNAL_MANAGED"]`,
+[Choosing a load balancer](https://cloud.google.com/load-balancing/docs/backend-service). Default value: "INTERNAL" Possible values: ["EXTERNAL", "EXTERNAL_MANAGED", "INTERNAL", "INTERNAL_MANAGED", "INTERNAL_SELF_MANAGED"]`,
 				Default: "INTERNAL",
 			},
 			"locality_lb_policy": {
@@ -4475,8 +4475,8 @@ func resourceComputeRegionBackendServiceEncoder(d *schema.ResourceData, meta int
 	_, ok := obj["subsetting"]
 	if !ok {
 		loadBalancingScheme, ok := obj["loadBalancingScheme"]
-		// External load balancing scheme does not support subsetting
-		if !ok || loadBalancingScheme.(string) != "EXTERNAL" {
+		// External load balancing scheme and Traffic Director (internal self managed) do not support subsetting
+		if !ok || (loadBalancingScheme.(string) != "EXTERNAL" && loadBalancingScheme.(string) != "INTERNAL_SELF_MANAGED") {
 			data := map[string]interface{}{}
 			data["policy"] = "NONE"
 			obj["subsetting"] = data

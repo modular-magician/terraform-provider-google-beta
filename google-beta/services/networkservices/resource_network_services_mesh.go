@@ -83,6 +83,13 @@ deployments.`,
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"location": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Location (region) of the Mesh resource to be created. Defaults to global if omitted.`,
+				Default:     "global",
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -149,7 +156,7 @@ func resourceNetworkServicesMeshCreate(d *schema.ResourceData, meta interface{})
 		obj["labels"] = labelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/meshes?meshId={{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/meshes?meshId={{name}}")
 	if err != nil {
 		return err
 	}
@@ -184,7 +191,7 @@ func resourceNetworkServicesMeshCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/meshes/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/meshes/{{name}}")
 	if err != nil {
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
@@ -212,7 +219,7 @@ func resourceNetworkServicesMeshRead(d *schema.ResourceData, meta interface{}) e
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/meshes/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/meshes/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -310,7 +317,7 @@ func resourceNetworkServicesMeshUpdate(d *schema.ResourceData, meta interface{})
 		obj["labels"] = labelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/meshes/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/meshes/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -388,7 +395,7 @@ func resourceNetworkServicesMeshDelete(d *schema.ResourceData, meta interface{})
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/global/meshes/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/meshes/{{name}}")
 	if err != nil {
 		return err
 	}
@@ -432,15 +439,15 @@ func resourceNetworkServicesMeshDelete(d *schema.ResourceData, meta interface{})
 func resourceNetworkServicesMeshImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
 	if err := tpgresource.ParseImportId([]string{
-		"^projects/(?P<project>[^/]+)/locations/global/meshes/(?P<name>[^/]+)$",
-		"^(?P<project>[^/]+)/(?P<name>[^/]+)$",
-		"^(?P<name>[^/]+)$",
+		"^projects/(?P<project>[^/]+)/locations/(?P<location>[^/]+)/meshes/(?P<name>[^/]+)$",
+		"^(?P<project>[^/]+)/(?P<location>[^/]+)/(?P<name>[^/]+)$",
+		"^(?P<location>[^/]+)/(?P<name>[^/]+)$",
 	}, d, config); err != nil {
 		return nil, err
 	}
 
 	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/global/meshes/{{name}}")
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/meshes/{{name}}")
 	if err != nil {
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
