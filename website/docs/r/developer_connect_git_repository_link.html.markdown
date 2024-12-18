@@ -21,8 +21,6 @@ description: |-
 
 A git repository link to a parent connection.
 
-~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](https://terraform.io/docs/providers/google/guides/provider_versions.html) for more details on beta resources.
 
 
 ## Example Usage - Developer Connect Git Repository Link Github Doc
@@ -30,7 +28,6 @@ See [Provider Versions](https://terraform.io/docs/providers/google/guides/provid
 
 ```hcl
 resource "google_secret_manager_secret" "github-token-secret" {
-  provider = google-beta
   secret_id = "github-token-secret"
 
   replication {
@@ -73,7 +70,458 @@ resource "google_developer_connect_git_repository_link" "my-repository" {
   location = "us-central1"
   git_repository_link_id = "my-repo"
   parent_connection = google_developer_connect_connection.my-connection.connection_id
-  remote_uri = "https://github.com/myuser/myrepo.git"
+  clone_uri = "https://github.com/myuser/myrepo.git"
+}
+```
+## Example Usage - Developer Connect Git Repository Link Github Enterprise Doc
+
+
+```hcl
+resource "google_secret_manager_secret" "private-key-secret" {
+  secret_id = "ghe-pk-secret"
+
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "private-key-secret-version" {
+  secret = google_secret_manager_secret.private-key-secret.id
+  secret_data = file("private-key.pem")
+}
+
+resource "google_secret_manager_secret" "webhook-secret-secret" {
+  secret_id = "ghe-token-secret"
+
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "webhook-secret-secret-version" {
+  secret = google_secret_manager_secret.webhook-secret-secret.id
+  secret_data = "<webhook-secret-data>"
+}
+
+data "google_iam_policy" "p4sa-secretAccessor" {
+  binding {
+    role = "roles/secretmanager.secretAccessor"
+    // Here, 123456789 is the Google Cloud project number for the project that contains the connection.
+    members = ["serviceAccount:service-123456789@gcp-sa-devconnect.iam.gserviceaccount.com"]
+  }
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-pk" {
+  secret_id = google_secret_manager_secret.private-key-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-whs" {
+  secret_id = google_secret_manager_secret.webhook-secret-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_developer_connect_connection" "my-connection" {
+  location = "us-central1"
+  connection_id = "my-connection"
+
+  github_enterprise_config {
+    host_uri = "https://ghe.com"
+    private_key_secret_version = google_secret_manager_secret_version.private-key-secret-version.id
+    webhook_secret_secret_version = google_secret_manager_secret_version.webhook-secret-secret-version.id
+    app_id = 100
+    app_installation_id = 123123
+  }
+
+  depends_on = [
+    google_secret_manager_secret_iam_policy.policy-pk,
+    google_secret_manager_secret_iam_policy.policy-whs
+  ]
+}
+
+resource "google_developer_connect_git_repository_link" "my-repository" {
+  location = "us-central1"
+  git_repository_link_id = "my-repo"
+  parent_connection = google_developer_connect_connection.my-connection.connection_id
+  clone_uri = "https://ghe.com/myuser/myrepo.git"
+}
+```
+## Example Usage - Developer Connect Git Repository Link Gitlab Doc
+
+
+```hcl
+resource "google_secret_manager_secret" "gitlab-read-cred-secret" {
+  secret_id = "gitlab-read-cred"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "gitlab-read-cred-secret-version" {
+  secret = google_secret_manager_secret.gitlab-read-cred-secret.id
+  secret_data = file("my-gitlab-read-cred.txt")
+}
+
+resource "google_secret_manager_secret" "gitlab-auth-cred-secret" {
+  secret_id = "gitlab-auth-cred"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "gitlab-auth-cred-secret-version" {
+  secret = google_secret_manager_secret.gitlab-auth-cred-secret.id
+  secret_data = file("my-gitlab-auth-cred.txt")
+}
+
+resource "google_secret_manager_secret" "gitlab-webhook-secret-secret" {
+  secret_id = "gitlab-webhook-secret"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "gitlab-webhook-secret-secret-version" {
+  secret = google_secret_manager_secret.gitlab-webhook-secret-secret.id
+  secret_data = file("my-gitlab-webhook-secret.txt")
+
+data "google_iam_policy" "p4sa-secretAccessor" {
+  binding {
+    role = "roles/secretmanager.secretAccessor"
+    // Here, 123456789 is the Google Cloud project number for the project that contains the connection.
+    members = ["serviceAccount:service-123456789@gcp-sa-devconnect.iam.gserviceaccount.com"]
+  }
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-rc" {
+  secret_id = google_secret_manager_secret.gitlab-read-cred-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-ac" {
+  secret_id = google_secret_manager_secret.gitlab-auth-cred-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-wh" {
+  secret_id = google_secret_manager_secret.gitlab-webhook-secret-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_developer_connect_connection" "my-connection" {
+
+  location = "us-central1"
+  connection_id = "my-connection"
+
+  gitlab_config {
+    webhook_secret_secret_version = google_secret_manager_secret_version.gitlab-webhook-secret-secret-version.id
+
+    read_authorizer_credential {
+      user_token_secret_version = google_secret_manager_secret_version.gitlab-read-cred-secret-version.id
+    }
+
+    authorizer_credential {
+      user_token_secret_version = google_secret_manager_secret_version.gitlab-auth-cred-secret-version.id
+    }
+  }
+
+  depends_on = [
+    google_secret_manager_secret_iam_policy.policy-rc,
+    google_secret_manager_secret_iam_policy.policy-ac,
+    google_secret_manager_secret_iam_policy.policy-wh
+  ]
+}
+
+resource "google_developer_connect_git_repository_link" "my-repository" {
+  location = "us-central1"
+  git_repository_link_id = "my-repo"
+  parent_connection = google_developer_connect_connection.my-connection.connection_id
+  clone_uri = "https://gitlab.com/myuser/myrepo.git"
+}
+```
+## Example Usage - Developer Connect Git Repository Link Gitlab Enterprise Doc
+
+
+```hcl
+resource "google_secret_manager_secret" "gitlab-read-cred-secret" {
+  secret_id = "gitlab-read-cred"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "gitlab-read-cred-secret-version" {
+  secret = google_secret_manager_secret.gitlab-read-cred-secret.id
+  secret_data = file("my-gitlab-read-cred.txt")
+}
+
+resource "google_secret_manager_secret" "gitlab-auth-cred-secret" {
+  secret_id = "gitlab-auth-cred"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "gitlab-auth-cred-secret-version" {
+  secret = google_secret_manager_secret.gitlab-auth-cred-secret.id
+  secret_data = file("my-gitlab-auth-cred.txt")
+}
+
+resource "google_secret_manager_secret" "gitlab-webhook-secret-secret" {
+  secret_id = "gitlab-webhook-secret"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "gitlab-webhook-secret-secret-version" {
+  secret = google_secret_manager_secret.gitlab-webhook-secret-secret.id
+  secret_data = file("my-gitlab-webhook-secret.txt")
+
+data "google_iam_policy" "p4sa-secretAccessor" {
+  binding {
+    role = "roles/secretmanager.secretAccessor"
+    // Here, 123456789 is the Google Cloud project number for the project that contains the connection.
+    members = ["serviceAccount:service-123456789@gcp-sa-devconnect.iam.gserviceaccount.com"]
+  }
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-rc" {
+  secret_id = google_secret_manager_secret.gitlab-read-cred-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-ac" {
+  secret_id = google_secret_manager_secret.gitlab-auth-cred-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-wh" {
+  secret_id = google_secret_manager_secret.gitlab-webhook-secret-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_developer_connect_connection" "my-connection" {
+
+  location = "us-central1"
+  connection_id = "my-connection"
+
+  gitlab_enterprise_config {
+    host_uri = "https://gle.com"
+
+    webhook_secret_secret_version = google_secret_manager_secret_version.gitlab-webhook-secret-secret-version.id
+
+    read_authorizer_credential {
+      user_token_secret_version = google_secret_manager_secret_version.gitlab-read-cred-secret-version.id
+    }
+
+    authorizer_credential {
+      user_token_secret_version = google_secret_manager_secret_version.gitlab-auth-cred-secret-version.id
+    }
+  }
+
+  depends_on = [
+    google_secret_manager_secret_iam_policy.policy-rc,
+    google_secret_manager_secret_iam_policy.policy-ac,
+    google_secret_manager_secret_iam_policy.policy-wh
+  ]
+}
+
+resource "google_developer_connect_git_repository_link" "my-repository" {
+  location = "us-central1"
+  git_repository_link_id = "my-repo"
+  parent_connection = google_developer_connect_connection.my-connection.connection_id
+  clone_uri = "https://gle.com/myuser/myrepo.git"
+}
+```
+## Example Usage - Developer Connect Git Repository Link Bitbucket Cloud Doc
+
+
+```hcl
+resource "google_secret_manager_secret" "bbc-read-cred-secret" {
+  secret_id = "bbc-read-cred"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "bbc-read-cred-secret-version" {
+  secret = google_secret_manager_secret.bbc-read-cred-secret.id
+  secret_data = file("my-bbc-read-cred.txt")
+}
+
+resource "google_secret_manager_secret" "bbc-auth-cred-secret" {
+  secret_id = "bbc-auth-cred"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "bbc-auth-cred-secret-version" {
+  secret = google_secret_manager_secret.bbc-auth-cred-secret.id
+  secret_data = file("my-bbc-auth-cred.txt")
+}
+
+resource "google_secret_manager_secret" "bbc-webhook-secret-secret" {
+  secret_id = "bbc-webhook-secret"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "bbc-webhook-secret-secret-version" {
+  secret = google_secret_manager_secret.bbc-webhook-secret-secret.id
+  secret_data = file("my-bbc-webhook-secret.txt")
+
+data "google_iam_policy" "p4sa-secretAccessor" {
+  binding {
+    role = "roles/secretmanager.secretAccessor"
+    // Here, 123456789 is the Google Cloud project number for the project that contains the connection.
+    members = ["serviceAccount:service-123456789@gcp-sa-devconnect.iam.gserviceaccount.com"]
+  }
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-rc" {
+  secret_id = google_secret_manager_secret.bbc-read-cred-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-ac" {
+  secret_id = google_secret_manager_secret.bbc-auth-cred-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-wh" {
+  secret_id = google_secret_manager_secret.bbc-webhook-secret-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_developer_connect_connection" "my-connection" {
+
+  location = "us-central1"
+  connection_id = "my-connection"
+
+  bitbucket_cloud_config {
+    workspace = "test-workspace"
+
+    webhook_secret_secret_version = google_secret_manager_secret_version.bbc-webhook-secret-secret-version.id
+
+    read_authorizer_credential {
+      user_token_secret_version = google_secret_manager_secret_version.bbc-read-cred-secret-version.id
+    }
+
+    authorizer_credential {
+      user_token_secret_version = google_secret_manager_secret_version.bbc-auth-cred-secret-version.id
+    }
+  }
+
+  depends_on = [
+    google_secret_manager_secret_iam_policy.policy-rc,
+    google_secret_manager_secret_iam_policy.policy-ac,
+    google_secret_manager_secret_iam_policy.policy-wh
+  ]
+}
+
+resource "google_developer_connect_git_repository_link" "my-repository" {
+  location = "us-central1"
+  git_repository_link_id = "my-repo"
+  parent_connection = google_developer_connect_connection.my-connection.connection_id
+  clone_uri = "https://bitbucket.org/test-workspace/myrepo.git"
+}
+```
+## Example Usage - Developer Connect Git Repository Link Bitbucket Cloud Doc
+
+
+```hcl
+resource "google_secret_manager_secret" "bbc-read-cred-secret" {
+  secret_id = "bbc-read-cred"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "bbc-read-cred-secret-version" {
+  secret = google_secret_manager_secret.bbc-read-cred-secret.id
+  secret_data = file("my-bbc-read-cred.txt")
+}
+
+resource "google_secret_manager_secret" "bbc-auth-cred-secret" {
+  secret_id = "bbc-auth-cred"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "bbc-auth-cred-secret-version" {
+  secret = google_secret_manager_secret.bbc-auth-cred-secret.id
+  secret_data = file("my-bbc-auth-cred.txt")
+}
+
+resource "google_secret_manager_secret" "bbc-webhook-secret-secret" {
+  secret_id = "bbc-webhook-secret"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "bbc-webhook-secret-secret-version" {
+  secret = google_secret_manager_secret.bbc-webhook-secret-secret.id
+  secret_data = file("my-bbc-webhook-secret.txt")
+
+data "google_iam_policy" "p4sa-secretAccessor" {
+  binding {
+    role = "roles/secretmanager.secretAccessor"
+    // Here, 123456789 is the Google Cloud project number for the project that contains the connection.
+    members = ["serviceAccount:service-123456789@gcp-sa-devconnect.iam.gserviceaccount.com"]
+  }
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-rc" {
+  secret_id = google_secret_manager_secret.bbc-read-cred-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-ac" {
+  secret_id = google_secret_manager_secret.bbc-auth-cred-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_secret_manager_secret_iam_policy" "policy-wh" {
+  secret_id = google_secret_manager_secret.bbc-webhook-secret-secret.secret_id
+  policy_data = data.google_iam_policy.p4sa-secretAccessor.policy_data
+}
+
+resource "google_developer_connect_connection" "my-connection" {
+
+  location = "us-central1"
+  connection_id = "my-connection"
+
+  bitbucket_cloud_config {
+    workspace = "test-workspace"
+
+    webhook_secret_secret_version = google_secret_manager_secret_version.bbc-webhook-secret-secret-version.id
+
+    read_authorizer_credential {
+      user_token_secret_version = google_secret_manager_secret_version.bbc-read-cred-secret-version.id
+    }
+
+    authorizer_credential {
+      user_token_secret_version = google_secret_manager_secret_version.bbc-auth-cred-secret-version.id
+    }
+  }
+
+  depends_on = [
+    google_secret_manager_secret_iam_policy.policy-rc,
+    google_secret_manager_secret_iam_policy.policy-ac,
+    google_secret_manager_secret_iam_policy.policy-wh
+  ]
+}
+
+resource "google_developer_connect_git_repository_link" "my-repository" {
+  location = "us-central1"
+  git_repository_link_id = "my-repo"
+  parent_connection = google_developer_connect_connection.my-connection.connection_id
+  clone_uri = "https://bitbucket.org/test-workspace/myrepo.git"
 }
 ```
 
@@ -88,11 +536,11 @@ The following arguments are supported:
 
 * `location` -
   (Required)
-  Resource ID segment making up resource `name`. It identifies the resource within its parent collection as described in https://google.aip.dev/122. See documentation for resource type `developerconnect.googleapis.com/GitRepositoryLink`.
+  Resource ID segment making up resource `name`. It identifies the resource within its parent collection as described in https://google.aip.dev/122.
 
 * `parent_connection` -
   (Required)
-  Resource ID segment making up resource `name`. It identifies the resource within its parent collection as described in https://google.aip.dev/122. See documentation for resource type `developerconnect.googleapis.com/GitRepositoryLink`.
+  Resource ID segment making up resource `name`. It identifies the resource within its parent collection as described in https://google.aip.dev/122.
 
 * `git_repository_link_id` -
   (Required)
@@ -106,21 +554,21 @@ The following arguments are supported:
 
 * `labels` -
   (Optional)
-  Optional. Labels as key value pairs 
+  Optional. Labels as key value pairs
   **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
   Please refer to the field `effective_labels` for all of the labels present on the resource.
+
+* `annotations` -
+  (Optional)
+  Optional. Allows clients to store small amounts of arbitrary data.
+  **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration.
+  Please refer to the field `effective_annotations` for all of the annotations present on the resource.
 
 * `etag` -
   (Optional)
   Optional. This checksum is computed by the server based on the value of other
   fields, and may be sent on update and delete requests to ensure the
   client has an up-to-date value before proceeding.
-
-* `annotations` -
-  (Optional)
-  Optional. Allows clients to store small amounts of arbitrary data. 
-  **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration.
-  Please refer to the field `effective_annotations` for all of the annotations present on the resource.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
@@ -132,12 +580,12 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `id` - an identifier for the resource with format `projects/{{project}}/locations/{{location}}/connections/{{parent_connection}}/gitRepositoryLinks/{{git_repository_link_id}}`
 
+* `uid` -
+  Output only. A system-assigned unique identifier for a the GitRepositoryLink.
+
 * `name` -
   Identifier. Resource name of the repository, in the format
   `projects/*/locations/*/connections/*/gitRepositoryLinks/*`.
-
-* `create_time` -
-  Output only. [Output only] Create timestamp
 
 * `update_time` -
   Output only. [Output only] Update timestamp
@@ -149,8 +597,11 @@ In addition to the arguments listed above, the following computed attributes are
   Output only. Set to true when the connection is being set up or updated in the
   background.
 
-* `uid` -
-  Output only. A system-assigned unique identifier for a the GitRepositoryLink.
+* `webhook_id` -
+  Output only. External ID of the webhook created for the repository.
+
+* `create_time` -
+  Output only. [Output only] Create timestamp
 
 * `terraform_labels` -
   The combination of labels configured directly on the resource

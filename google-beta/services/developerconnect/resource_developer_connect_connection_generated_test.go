@@ -30,7 +30,7 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-func TestAccDeveloperConnectConnection_developerConnectConnectionBasicExample(t *testing.T) {
+func TestAccDeveloperConnectConnection_developerConnectConnectionGithubExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -39,11 +39,11 @@ func TestAccDeveloperConnectConnection_developerConnectConnectionBasicExample(t 
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckDeveloperConnectConnectionDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDeveloperConnectConnection_developerConnectConnectionBasicExample(context),
+				Config: testAccDeveloperConnectConnection_developerConnectConnectionGithubExample(context),
 			},
 			{
 				ResourceName:            "google_developer_connect_connection.my-connection",
@@ -55,10 +55,9 @@ func TestAccDeveloperConnectConnection_developerConnectConnectionBasicExample(t 
 	})
 }
 
-func testAccDeveloperConnectConnection_developerConnectConnectionBasicExample(context map[string]interface{}) string {
+func testAccDeveloperConnectConnection_developerConnectConnectionGithubExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_developer_connect_connection" "my-connection" {
-  provider = google-beta
   location = "us-central1"
   connection_id = "tf-test-tf-test-connection%{random_suffix}"
 
@@ -67,6 +66,237 @@ resource "google_developer_connect_connection" "my-connection" {
 
     authorizer_credential {
       oauth_token_secret_version = "projects/devconnect-terraform-creds/secrets/tf-test-do-not-change-github-oauthtoken-e0b9e7/versions/1"
+    }
+  }
+}
+`, context)
+}
+
+func TestAccDeveloperConnectConnection_developerConnectConnectionGithubEnterpriseExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDeveloperConnectConnectionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDeveloperConnectConnection_developerConnectConnectionGithubEnterpriseExample(context),
+			},
+			{
+				ResourceName:            "google_developer_connect_connection.my-connection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "connection_id", "labels", "location", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDeveloperConnectConnection_developerConnectConnectionGithubEnterpriseExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_developer_connect_connection" "my-connection" {
+  location = "us-central1"
+  connection_id = "tf-test-tf-test-connection%{random_suffix}"
+
+  github_enterprise_config {
+    host_uri = "https://ghe.proctor-staging-test.com"
+    app_id = 864434
+    private_key_secret_version = "projects/devconnect-terraform-creds/secrets/tf-test-ghe-do-not-change-ghe-private-key-f522d2/versions/latest"
+    webhook_secret_secret_version = "projects/devconnect-terraform-creds/secrets/tf-test-ghe-do-not-change-ghe-webhook-secret-3c806f/versions/latest"
+    app_installation_id = 837537
+  }
+}
+`, context)
+}
+
+func TestAccDeveloperConnectConnection_developerConnectConnectionGitlabExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDeveloperConnectConnectionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDeveloperConnectConnection_developerConnectConnectionGitlabExample(context),
+			},
+			{
+				ResourceName:            "google_developer_connect_connection.my-connection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "connection_id", "labels", "location", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDeveloperConnectConnection_developerConnectConnectionGitlabExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_developer_connect_connection" "my-connection" {
+  location = "us-central1"
+  connection_id = "tf-test-tf-test-connection%{random_suffix}"
+
+  gitlab_config {
+    webhook_secret_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-webhook/versions/latest"
+    
+    read_authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-read-cred/versions/latest"
+    }
+    
+    authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-auth-cred/versions/latest"
+    }
+  }
+}
+`, context)
+}
+
+func TestAccDeveloperConnectConnection_developerConnectConnectionGitlabEnterpriseExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDeveloperConnectConnectionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDeveloperConnectConnection_developerConnectConnectionGitlabEnterpriseExample(context),
+			},
+			{
+				ResourceName:            "google_developer_connect_connection.my-connection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "connection_id", "labels", "location", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDeveloperConnectConnection_developerConnectConnectionGitlabEnterpriseExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_developer_connect_connection" "my-connection" {
+  location = "us-central1"
+  connection_id = "tf-test-tf-test-connection%{random_suffix}"
+
+  gitlab_enterprise_config {
+    host_uri = "https://gle-us-central1.gcb-test.com"
+    
+    webhook_secret_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-enterprise-webhook/versions/latest"
+
+    read_authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-enterprise-read-cred/versions/latest"
+    }
+
+    authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-enterprise-auth-cred/versions/latest"
+    }
+  }
+}
+`, context)
+}
+
+func TestAccDeveloperConnectConnection_developerConnectConnectionBitbucketCloudExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDeveloperConnectConnectionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDeveloperConnectConnection_developerConnectConnectionBitbucketCloudExample(context),
+			},
+			{
+				ResourceName:            "google_developer_connect_connection.my-connection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "connection_id", "labels", "location", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDeveloperConnectConnection_developerConnectConnectionBitbucketCloudExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_developer_connect_connection" "my-connection" {
+  location = "us-central1"
+  connection_id = "tf-test-tf-test-connection%{random_suffix}"
+
+  bitbucket_cloud_config {
+    workspace = "proctor-test-dc"
+    webhook_secret_secret_version = "projects/devconnect-terraform-creds/secrets/bbc-webhook/versions/latest"
+
+    read_authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/bbc-read-token/versions/latest"
+    }
+
+    authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/bbc-auth-token/versions/latest"
+    }
+  }
+}
+`, context)
+}
+
+func TestAccDeveloperConnectConnection_developerConnectConnectionBbdcExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDeveloperConnectConnectionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDeveloperConnectConnection_developerConnectConnectionBbdcExample(context),
+			},
+			{
+				ResourceName:            "google_developer_connect_connection.my-connection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "connection_id", "labels", "location", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDeveloperConnectConnection_developerConnectConnectionBbdcExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_developer_connect_connection" "my-connection" {
+  location = "us-central1"
+  connection_id = "tf-test-tf-test-connection%{random_suffix}"
+
+  bitbucket_data_center_config {
+    host_uri = "https://bitbucket-us-central.gcb-test.com"
+
+    webhook_secret_secret_version = "projects/devconnect-terraform-creds/secrets/bbdc-webhook/versions/latest"
+
+    read_authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/bbdc-read-token/versions/latest"
+    }
+
+    authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/bbdc-auth-token/versions/latest"
     }
   }
 }

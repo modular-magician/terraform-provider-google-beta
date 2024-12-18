@@ -39,7 +39,7 @@ func TestAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkG
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckDeveloperConnectGitRepositoryLinkDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -58,19 +58,17 @@ func TestAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkG
 func testAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkGithubExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_developer_connect_git_repository_link" "primary" {
-  provider = google-beta
-  git_repository_link_id              = "tf-test-my-repository%{random_suffix}"
+  git_repository_link_id = "tf-test-my-repository%{random_suffix}"
   parent_connection = google_developer_connect_connection.github_conn.connection_id
-  clone_uri        = "https://github.com/gcb-developerconnect-robot/tf-demo.git"
-  location          = "us-central1"
-  annotations       = {}
-}
-
-resource "google_developer_connect_connection" "github_conn" {
-  
-  provider = google-beta
+  clone_uri = "https://github.com/gcb-developerconnect-robot/tf-demo.git"
   location = "us-central1"
-  connection_id     = "tf-test-my-connection%{random_suffix}"
+  annotations = {}
+  labels = {}
+}
+  
+resource "google_developer_connect_connection" "github_conn" {
+  location = "us-central1"
+  connection_id = "tf-test-my-connection%{random_suffix}"
   disabled = false
 
   github_config {
@@ -79,6 +77,293 @@ resource "google_developer_connect_connection" "github_conn" {
 
     authorizer_credential {
       oauth_token_secret_version = "projects/devconnect-terraform-creds/secrets/tf-test-do-not-change-github-oauthtoken-e0b9e7/versions/1"
+    }
+  }
+}
+`, context)
+}
+
+func TestAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkGithubEnterpriseExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDeveloperConnectGitRepositoryLinkDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkGithubEnterpriseExample(context),
+			},
+			{
+				ResourceName:            "google_developer_connect_git_repository_link.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "git_repository_link_id", "labels", "location", "parent_connection", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkGithubEnterpriseExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_developer_connect_git_repository_link" "primary" {
+  git_repository_link_id = "tf-test-my-repository%{random_suffix}"
+  parent_connection = google_developer_connect_connection.github_enterprise_conn.connection_id
+  clone_uri = "https://ghe.proctor-staging-test.com/proctorteam/inarayanan-test.git"
+  location = "us-central1"
+  annotations = {}
+  labels = {}
+}
+
+resource "google_developer_connect_connection" "github_enterprise_conn" {
+  
+  location = "us-central1"
+  connection_id = "tf-test-my-connection%{random_suffix}"
+  disabled = false
+
+  github_enterprise_config {
+    host_uri = "https://ghe.proctor-staging-test.com"
+    app_id = 864434
+    private_key_secret_version = "projects/devconnect-terraform-creds/secrets/tf-test-ghe-do-not-change-ghe-private-key-f522d2/versions/latest"
+    webhook_secret_secret_version = "projects/devconnect-terraform-creds/secrets/tf-test-ghe-do-not-change-ghe-webhook-secret-3c806f/versions/latest"
+    app_installation_id = 837537
+  }
+}
+`, context)
+}
+
+func TestAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkGitlabExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDeveloperConnectGitRepositoryLinkDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkGitlabExample(context),
+			},
+			{
+				ResourceName:            "google_developer_connect_git_repository_link.my-connection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "git_repository_link_id", "labels", "location", "parent_connection", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkGitlabExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_developer_connect_git_repository_link" "my-connection" {
+  git_repository_link_id = "tf-test-my-repository%{random_suffix}"
+  parent_connection = google_developer_connect_connection.gitlab_conn.connection_id
+  clone_uri = "https://gitlab.com/devconnect-eng-team/inarayanan-test.git"
+  location = "us-central1"
+  annotations = {}
+  labels = {}
+}
+
+resource "google_developer_connect_connection" "gitlab_conn" {
+  
+  location = "us-central1"
+  connection_id = "tf-test-tf-test-connection%{random_suffix}"
+  disabled = false
+
+  gitlab_config {
+    webhook_secret_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-webhook/versions/latest"
+
+    read_authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-read-cred/versions/latest"
+    }
+
+    authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-auth-cred/versions/latest"
+    }
+  }
+}
+`, context)
+}
+
+func TestAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkGitlabEnterpriseExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDeveloperConnectGitRepositoryLinkDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkGitlabEnterpriseExample(context),
+			},
+			{
+				ResourceName:            "google_developer_connect_git_repository_link.my-connection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "git_repository_link_id", "labels", "location", "parent_connection", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkGitlabEnterpriseExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_developer_connect_git_repository_link" "my-connection" {
+  git_repository_link_id = "tf-test-my-repository%{random_suffix}"
+  parent_connection = google_developer_connect_connection.gitlab_enterprise_conn.connection_id
+  clone_uri = "https://gle-us-central1.gcb-test.com/test-group/inarayanan-test.git"
+  location = "us-central1"
+  annotations = {}
+  labels = {}
+}
+
+resource "google_developer_connect_connection" "gitlab_enterprise_conn" {
+
+  location = "us-central1"
+  connection_id = "tf-test-tf-test-connection%{random_suffix}"
+  disabled = false
+
+  gitlab_enterprise_config {
+    host_uri = "https://gle-us-central1.gcb-test.com"
+    
+    webhook_secret_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-enterprise-webhook/versions/latest"
+
+    read_authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-enterprise-read-cred/versions/latest"
+    }
+
+    authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/gitlab-enterprise-auth-cred/versions/latest"
+    }
+  }
+}
+`, context)
+}
+
+func TestAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkBitbucketCloudExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDeveloperConnectGitRepositoryLinkDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkBitbucketCloudExample(context),
+			},
+			{
+				ResourceName:            "google_developer_connect_git_repository_link.my-connection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "git_repository_link_id", "labels", "location", "parent_connection", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkBitbucketCloudExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_developer_connect_git_repository_link" "my-connection" {
+  git_repository_link_id = "tf-test-my-repository%{random_suffix}"
+  parent_connection = google_developer_connect_connection.bbc_conn.connection_id
+  clone_uri = "https://bitbucket.org/proctor-test-dc/inarayanan-test.git"
+  location = "us-central1"
+  annotations = {}
+  labels = {}
+}
+
+resource "google_developer_connect_connection" "bbc_conn" {
+
+  location = "us-central1"
+  connection_id = "tf-test-tf-test-connection%{random_suffix}"
+  disabled = false
+
+  bitbucket_cloud_config {
+    workspace = "proctor-test-dc"
+
+    webhook_secret_secret_version = "projects/devconnect-terraform-creds/secrets/bbc-webhook/versions/latest"
+
+    read_authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/bbc-read-token/versions/latest"
+    }
+
+    authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/bbc-auth-token/versions/latest"
+    }
+  }
+}
+`, context)
+}
+
+func TestAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkBbdcExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDeveloperConnectGitRepositoryLinkDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkBbdcExample(context),
+			},
+			{
+				ResourceName:            "google_developer_connect_git_repository_link.my-connection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"annotations", "git_repository_link_id", "labels", "location", "parent_connection", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDeveloperConnectGitRepositoryLink_developerConnectGitRepositoryLinkBbdcExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_developer_connect_git_repository_link" "my-connection" {
+  git_repository_link_id = "tf-test-my-repository%{random_suffix}"
+  parent_connection = google_developer_connect_connection.bbdc_conn.connection_id
+  clone_uri = "https://bitbucket-us-central.gcb-test.com/scm/test/inarayanan-test.git"
+  location = "us-central1"
+  annotations = {}
+  labels = {}
+}
+
+resource "google_developer_connect_connection" "bbdc_conn" {
+
+  location = "us-central1"
+  connection_id = "tf-test-tf-test-connection%{random_suffix}"
+  disabled = false
+
+  bitbucket_data_center_config {
+    host_uri = "https://bitbucket-us-central.gcb-test.com"
+
+    webhook_secret_secret_version = "projects/devconnect-terraform-creds/secrets/bbdc-webhook/versions/latest"
+
+    read_authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/bbdc-read-token/versions/latest"
+    }
+
+    authorizer_credential {
+      user_token_secret_version = "projects/devconnect-terraform-creds/secrets/bbdc-auth-token/versions/latest"
     }
   }
 }

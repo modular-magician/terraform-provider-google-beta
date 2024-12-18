@@ -73,19 +73,19 @@ Allows alphanumeric characters and any of -._~%!$&'()*+,;=@.`,
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: `Resource ID segment making up resource 'name'. It identifies the resource within its parent collection as described in https://google.aip.dev/122. See documentation for resource type 'developerconnect.googleapis.com/GitRepositoryLink'.`,
+				Description: `Resource ID segment making up resource 'name'. It identifies the resource within its parent collection as described in https://google.aip.dev/122.`,
 			},
 			"parent_connection": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: `Resource ID segment making up resource 'name'. It identifies the resource within its parent collection as described in https://google.aip.dev/122. See documentation for resource type 'developerconnect.googleapis.com/GitRepositoryLink'.`,
+				Description: `Resource ID segment making up resource 'name'. It identifies the resource within its parent collection as described in https://google.aip.dev/122.`,
 			},
 			"annotations": {
 				Type:     schema.TypeMap,
 				Optional: true,
 				ForceNew: true,
-				Description: `Optional. Allows clients to store small amounts of arbitrary data. 
+				Description: `Optional. Allows clients to store small amounts of arbitrary data.
 
 **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration.
 Please refer to the field 'effective_annotations' for all of the annotations present on the resource.`,
@@ -102,7 +102,7 @@ client has an up-to-date value before proceeding.`,
 			"labels": {
 				Type:     schema.TypeMap,
 				Optional: true,
-				Description: `Optional. Labels as key value pairs 
+				Description: `Optional. Labels as key value pairs
 
 **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
@@ -160,6 +160,11 @@ background.`,
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `Output only. [Output only] Update timestamp`,
+			},
+			"webhook_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `Output only. External ID of the webhook created for the repository.`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -317,13 +322,19 @@ func resourceDeveloperConnectGitRepositoryLinkRead(d *schema.ResourceData, meta 
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
 
-	if err := d.Set("name", flattenDeveloperConnectGitRepositoryLinkName(res["name"], d, config)); err != nil {
-		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
-	}
 	if err := d.Set("clone_uri", flattenDeveloperConnectGitRepositoryLinkCloneUri(res["cloneUri"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
-	if err := d.Set("create_time", flattenDeveloperConnectGitRepositoryLinkCreateTime(res["createTime"], d, config)); err != nil {
+	if err := d.Set("labels", flattenDeveloperConnectGitRepositoryLinkLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
+	}
+	if err := d.Set("annotations", flattenDeveloperConnectGitRepositoryLinkAnnotations(res["annotations"], d, config)); err != nil {
+		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
+	}
+	if err := d.Set("uid", flattenDeveloperConnectGitRepositoryLinkUid(res["uid"], d, config)); err != nil {
+		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
+	}
+	if err := d.Set("name", flattenDeveloperConnectGitRepositoryLinkName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
 	if err := d.Set("update_time", flattenDeveloperConnectGitRepositoryLinkUpdateTime(res["updateTime"], d, config)); err != nil {
@@ -332,19 +343,16 @@ func resourceDeveloperConnectGitRepositoryLinkRead(d *schema.ResourceData, meta 
 	if err := d.Set("delete_time", flattenDeveloperConnectGitRepositoryLinkDeleteTime(res["deleteTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
-	if err := d.Set("labels", flattenDeveloperConnectGitRepositoryLinkLabels(res["labels"], d, config)); err != nil {
-		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
-	}
 	if err := d.Set("etag", flattenDeveloperConnectGitRepositoryLinkEtag(res["etag"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
 	if err := d.Set("reconciling", flattenDeveloperConnectGitRepositoryLinkReconciling(res["reconciling"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
-	if err := d.Set("annotations", flattenDeveloperConnectGitRepositoryLinkAnnotations(res["annotations"], d, config)); err != nil {
+	if err := d.Set("webhook_id", flattenDeveloperConnectGitRepositoryLinkWebhookId(res["webhookId"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
-	if err := d.Set("uid", flattenDeveloperConnectGitRepositoryLinkUid(res["uid"], d, config)); err != nil {
+	if err := d.Set("create_time", flattenDeveloperConnectGitRepositoryLinkCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GitRepositoryLink: %s", err)
 	}
 	if err := d.Set("terraform_labels", flattenDeveloperConnectGitRepositoryLinkTerraformLabels(res["labels"], d, config)); err != nil {
@@ -441,23 +449,7 @@ func resourceDeveloperConnectGitRepositoryLinkImport(d *schema.ResourceData, met
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenDeveloperConnectGitRepositoryLinkName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
 func flattenDeveloperConnectGitRepositoryLinkCloneUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenDeveloperConnectGitRepositoryLinkCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenDeveloperConnectGitRepositoryLinkUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenDeveloperConnectGitRepositoryLinkDeleteTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -476,14 +468,6 @@ func flattenDeveloperConnectGitRepositoryLinkLabels(v interface{}, d *schema.Res
 	return transformed
 }
 
-func flattenDeveloperConnectGitRepositoryLinkEtag(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenDeveloperConnectGitRepositoryLinkReconciling(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
 func flattenDeveloperConnectGitRepositoryLinkAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -500,6 +484,34 @@ func flattenDeveloperConnectGitRepositoryLinkAnnotations(v interface{}, d *schem
 }
 
 func flattenDeveloperConnectGitRepositoryLinkUid(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDeveloperConnectGitRepositoryLinkName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDeveloperConnectGitRepositoryLinkUpdateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDeveloperConnectGitRepositoryLinkDeleteTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDeveloperConnectGitRepositoryLinkEtag(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDeveloperConnectGitRepositoryLinkReconciling(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDeveloperConnectGitRepositoryLinkWebhookId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDeveloperConnectGitRepositoryLinkCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
