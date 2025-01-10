@@ -415,6 +415,7 @@ var generatedIAMDatasources = map[string]*schema.Resource{
 	"google_compute_disk_iam_policy":                         tpgiamresource.DataSourceIamPolicy(compute.ComputeDiskIamSchema, compute.ComputeDiskIamUpdaterProducer),
 	"google_compute_image_iam_policy":                        tpgiamresource.DataSourceIamPolicy(compute.ComputeImageIamSchema, compute.ComputeImageIamUpdaterProducer),
 	"google_compute_instance_iam_policy":                     tpgiamresource.DataSourceIamPolicy(compute.ComputeInstanceIamSchema, compute.ComputeInstanceIamUpdaterProducer),
+	"google_compute_instance_template_iam_policy":            tpgiamresource.DataSourceIamPolicy(compute.ComputeInstanceTemplateIamSchema, compute.ComputeInstanceTemplateIamUpdaterProducer),
 	"google_compute_machine_image_iam_policy":                tpgiamresource.DataSourceIamPolicy(compute.ComputeMachineImageIamSchema, compute.ComputeMachineImageIamUpdaterProducer),
 	"google_compute_region_backend_service_iam_policy":       tpgiamresource.DataSourceIamPolicy(compute.ComputeRegionBackendServiceIamSchema, compute.ComputeRegionBackendServiceIamUpdaterProducer),
 	"google_compute_region_disk_iam_policy":                  tpgiamresource.DataSourceIamPolicy(compute.ComputeRegionDiskIamSchema, compute.ComputeRegionDiskIamUpdaterProducer),
@@ -516,8 +517,8 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 
 // Resources
 // Generated resources: 582
-// Generated IAM resources: 294
-// Total generated resources: 876
+// Generated IAM resources: 297
+// Total generated resources: 879
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -749,6 +750,9 @@ var generatedResources = map[string]*schema.Resource{
 	"google_compute_instance_group_membership":                                   compute.ResourceComputeInstanceGroupMembership(),
 	"google_compute_instance_group_named_port":                                   compute.ResourceComputeInstanceGroupNamedPort(),
 	"google_compute_instance_settings":                                           compute.ResourceComputeInstanceSettings(),
+	"google_compute_instance_template_iam_binding":                               tpgiamresource.ResourceIamBinding(compute.ComputeInstanceTemplateIamSchema, compute.ComputeInstanceTemplateIamUpdaterProducer, compute.ComputeInstanceTemplateIdParseFunc),
+	"google_compute_instance_template_iam_member":                                tpgiamresource.ResourceIamMember(compute.ComputeInstanceTemplateIamSchema, compute.ComputeInstanceTemplateIamUpdaterProducer, compute.ComputeInstanceTemplateIdParseFunc),
+	"google_compute_instance_template_iam_policy":                                tpgiamresource.ResourceIamPolicy(compute.ComputeInstanceTemplateIamSchema, compute.ComputeInstanceTemplateIamUpdaterProducer, compute.ComputeInstanceTemplateIdParseFunc),
 	"google_compute_interconnect":                                                compute.ResourceComputeInterconnect(),
 	"google_compute_interconnect_attachment":                                     compute.ResourceComputeInterconnectAttachment(),
 	"google_compute_machine_image":                                               compute.ResourceComputeMachineImage(),
