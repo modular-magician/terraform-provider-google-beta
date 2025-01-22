@@ -593,7 +593,7 @@ var DefaultBasePaths = map[string]string{
 	FirebaseHostingBasePathKey:          "https://firebasehosting.googleapis.com/v1beta1/",
 	FirebaseStorageBasePathKey:          "https://firebasestorage.googleapis.com/v1beta/",
 	FirestoreBasePathKey:                "https://firestore.googleapis.com/v1/",
-	GeminiBasePathKey:                   "https://cloudaicompanion.googleapis.com/v1/",
+	GeminiBasePathKey:                   "https://staging-cloudaicompanion.sandbox.googleapis.com/v1/",
 	GKEBackupBasePathKey:                "https://gkebackup.googleapis.com/v1/",
 	GKEHubBasePathKey:                   "https://gkehub.googleapis.com/v1beta1/",
 	GKEHub2BasePathKey:                  "https://gkehub.googleapis.com/v1beta/",

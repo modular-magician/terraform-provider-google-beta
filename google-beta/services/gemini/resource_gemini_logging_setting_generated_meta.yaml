@@ -1,22 +1,20 @@
-resource: 'google_gemini_code_repository_index'
+resource: 'google_gemini_logging_setting'
 generation_type: 'mmv1'
 api_service_name: 'staging-cloudaicompanion.sandbox.googleapis.com'
 api_version: 'v1'
-api_resource_type_kind: 'CodeRepositoryIndex'
+api_resource_type_kind: 'LoggingSetting'
 fields:
-  - field: 'code_repository_index_id'
-    provider_only: true
   - field: 'create_time'
   - field: 'effective_labels'
     provider_only: true
-  - field: 'force_destroy'
-    provider_only: true
-  - field: 'kms_key'
   - field: 'labels'
   - field: 'location'
     provider_only: true
+  - field: 'log_prompts_and_responses'
+  - field: 'logging_setting_id'
+    provider_only: true
   - field: 'name'
-  - field: 'state'
+  - field: 'slog_metadata'
   - field: 'terraform_labels'
     provider_only: true
   - field: 'update_time'

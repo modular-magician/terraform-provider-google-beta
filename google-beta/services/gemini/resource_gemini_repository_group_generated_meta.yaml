@@ -1,6 +1,6 @@
 resource: 'google_gemini_repository_group'
 generation_type: 'mmv1'
-api_service_name: 'cloudaicompanion.googleapis.com'
+api_service_name: 'staging-cloudaicompanion.sandbox.googleapis.com'
 api_version: 'v1'
 api_resource_type_kind: 'RepositoryGroup'
 fields:

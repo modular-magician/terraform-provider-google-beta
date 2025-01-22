@@ -30,12 +30,12 @@ import (
 )
 
 func init() {
-	sweeper.AddTestSweepers("GeminiRepositoryGroup", testSweepGeminiRepositoryGroup)
+	sweeper.AddTestSweepers("GeminiLoggingSetting", testSweepGeminiLoggingSetting)
 }
 
 // At the time of writing, the CI only passes us-central1 as the region
-func testSweepGeminiRepositoryGroup(region string) error {
-	resourceName := "GeminiRepositoryGroup"
+func testSweepGeminiLoggingSetting(region string) error {
+	resourceName := "GeminiLoggingSetting"
 	log.Printf("[INFO][SWEEPER_LOG] Starting sweeper for %s", resourceName)
 
 	config, err := sweeper.SharedConfigForRegion(region)
@@ -64,7 +64,7 @@ func testSweepGeminiRepositoryGroup(region string) error {
 		},
 	}
 
-	listTemplate := strings.Split("https://staging-cloudaicompanion.sandbox.googleapis.com/v1/projects/{{project}}/locations/{{location}}/codeRepositoryIndexes/{{code_repository_index}}/repositoryGroups", "?")[0]
+	listTemplate := strings.Split("https://staging-cloudaicompanion.sandbox.googleapis.com/v1/projects/{{project}}/locations/{{location}}/loggingSettings", "?")[0]
 	listUrl, err := tpgresource.ReplaceVars(d, config, listTemplate)
 	if err != nil {
 		log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
@@ -83,7 +83,7 @@ func testSweepGeminiRepositoryGroup(region string) error {
 		return nil
 	}
 
-	resourceList, ok := res["repositoryGroups"]
+	resourceList, ok := res["loggingSettings"]
 	if !ok {
 		log.Printf("[INFO][SWEEPER_LOG] Nothing found in response.")
 		return nil
@@ -112,7 +112,7 @@ func testSweepGeminiRepositoryGroup(region string) error {
 			continue
 		}
 
-		deleteTemplate := "https://staging-cloudaicompanion.sandbox.googleapis.com/v1/projects/{{project}}/locations/{{location}}/codeRepositoryIndexes/{{code_repository_index}}/repositoryGroups/{{repository_group_id}}"
+		deleteTemplate := "https://staging-cloudaicompanion.sandbox.googleapis.com/v1/projects/{{project}}/locations/{{location}}/loggingSettings/{{logging_setting_id}}"
 		deleteUrl, err := tpgresource.ReplaceVars(d, config, deleteTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing delete url: %s", err)
