@@ -42,6 +42,10 @@ func ResourceWorkflowsWorkflow() *schema.Resource {
 		Update: resourceWorkflowsWorkflowUpdate,
 		Delete: resourceWorkflowsWorkflowDelete,
 
+		Importer: &schema.ResourceImporter{
+			State: resourceWorkflowsWorkflowImport,
+		},
+
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(20 * time.Minute),
 			Update: schema.DefaultTimeout(20 * time.Minute),
@@ -634,6 +638,32 @@ func resourceWorkflowsWorkflowDelete(d *schema.ResourceData, meta interface{}) e
 
 	log.Printf("[DEBUG] Finished deleting Workflow %q: %#v", d.Id(), res)
 	return nil
+}
+
+func resourceWorkflowsWorkflowImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	config := meta.(*transport_tpg.Config)
+	if err := tpgresource.ParseImportId([]string{
+		"^projects/(?P<project>[^/]+)/locations/(?P<region>[^/]+)/workflows/(?P<name>[^/]+)$",
+		"^(?P<project>[^/]+)/(?P<region>[^/]+)/(?P<name>[^/]+)$",
+		"^(?P<region>[^/]+)/(?P<name>[^/]+)$",
+		"^(?P<name>[^/]+)$",
+	}, d, config); err != nil {
+		return nil, err
+	}
+
+	// Replace import id for the resource id
+	id, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/workflows/{{name}}")
+	if err != nil {
+		return nil, fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
+
+	// Explicitly set virtual fields to default values on import
+	if err := d.Set("deletion_protection", true); err != nil {
+		return nil, fmt.Errorf("Error setting deletion_protection: %s", err)
+	}
+
+	return []*schema.ResourceData{d}, nil
 }
 
 func flattenWorkflowsWorkflowName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

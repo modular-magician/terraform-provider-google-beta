@@ -45,6 +45,12 @@ func TestAccWorkflowsWorkflow_workflowBasicExample(t *testing.T) {
 			{
 				Config: testAccWorkflowsWorkflow_workflowBasicExample(context),
 			},
+			{
+				ResourceName:            "google_workflows_workflow.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection", "labels", "region", "tags", "terraform_labels"},
+			},
 		},
 	})
 }
@@ -115,6 +121,12 @@ func TestAccWorkflowsWorkflow_workflowTagsExample(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccWorkflowsWorkflow_workflowTagsExample(context),
+			},
+			{
+				ResourceName:            "google_workflows_workflow.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection", "labels", "region", "tags", "terraform_labels"},
 			},
 		},
 	})
