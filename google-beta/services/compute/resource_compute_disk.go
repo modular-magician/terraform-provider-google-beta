@@ -27,6 +27,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"google.golang.org/api/googleapi"
@@ -2390,7 +2391,11 @@ func resourceComputeDiskEncoder(d *schema.ResourceData, meta interface{}, obj ma
 		obj["sourceImage"] = imageUrl
 		log.Printf("[DEBUG] Image name resolved to: %s", imageUrl)
 	}
-
+	if rawKey, _ := d.GetRawConfigAt(cty.GetAttrPath("disk_encryption_key").IndexInt(0).GetAttr("rawKey")); !rawKey.IsNull() {
+		obj["diskEncryptionKey"] = map[string]interface{}{
+			"rawKey": rawKey.AsString(),
+		}
+	}
 	return obj, nil
 }
 

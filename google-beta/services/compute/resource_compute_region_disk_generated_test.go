@@ -83,6 +83,62 @@ resource "google_compute_snapshot" "snapdisk" {
 `, context)
 }
 
+func TestAccComputeRegionDisk_regionDiskDiskEncryptionKeyWoExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeRegionDiskDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeRegionDisk_regionDiskDiskEncryptionKeyWoExample(context),
+			},
+			{
+				ResourceName:            "google_compute_region_disk.regiondisk",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"interface", "labels", "region", "snapshot", "terraform_labels", "type"},
+			},
+		},
+	})
+}
+
+func testAccComputeRegionDisk_regionDiskDiskEncryptionKeyWoExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_region_disk" "regiondisk" {
+  name                      = "tf-test-my-region-disk%{random_suffix}"
+  snapshot                  = google_compute_snapshot.snapdisk.id
+  type                      = "pd-ssd"
+  region                    = "us-central1"
+  physical_block_size_bytes = 4096
+
+  replica_zones = ["us-central1-a", "us-central1-f"]
+}
+
+resource "google_compute_disk" "disk" {
+  name  = "tf-test-my-disk%{random_suffix}"
+  image = "debian-cloud/debian-11"
+  size  = 50
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+  disk_encryption_key = {
+    raw_key_wo = "tf_test_write_only_key%{random_suffix}"
+  }
+}
+
+resource "google_compute_snapshot" "snapdisk" {
+  name        = "tf-test-my-snapshot%{random_suffix}"
+  source_disk = google_compute_disk.disk.name
+  zone        = "us-central1-a"
+}
+`, context)
+}
+
 func TestAccComputeRegionDisk_regionDiskAsyncExample(t *testing.T) {
 	t.Parallel()
 
