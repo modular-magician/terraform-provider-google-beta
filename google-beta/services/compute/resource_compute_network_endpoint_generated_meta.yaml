@@ -1,5 +1,14 @@
 resource: 'google_compute_network_endpoint'
 generation_type: 'mmv1'
+source_file: 'products/compute/NetworkEndpoint.yaml'
 api_service_name: 'compute.googleapis.com'
 api_version: 'beta'
 api_resource_type_kind: 'NetworkEndpointGroup'
+fields:
+  - field: 'instance'
+  - field: 'ip_address'
+  - field: 'network_endpoint_group'
+    provider_only: true
+  - field: 'port'
+  - field: 'zone'
+    provider_only: true

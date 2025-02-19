@@ -178,6 +178,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
+			"apihub_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
 			"app_engine_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -263,6 +268,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
+			"chronicle_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
 			"cloud_asset_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -329,6 +339,11 @@ func Provider() *schema.Provider {
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
 			"cloud_tasks_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
+			"colab_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
@@ -468,6 +483,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
+			"eventarc_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
 			"filestore_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -484,6 +504,11 @@ func Provider() *schema.Provider {
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
 			"firebase_database_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
+			"firebase_data_connect_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
@@ -674,6 +699,16 @@ func Provider() *schema.Provider {
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
 			"parallelstore_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
+			"parameter_manager_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
+			"parameter_manager_regional_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
@@ -1061,6 +1096,7 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.AlloydbBasePath = d.Get("alloydb_custom_endpoint").(string)
 	config.ApiGatewayBasePath = d.Get("api_gateway_custom_endpoint").(string)
 	config.ApigeeBasePath = d.Get("apigee_custom_endpoint").(string)
+	config.ApihubBasePath = d.Get("apihub_custom_endpoint").(string)
 	config.AppEngineBasePath = d.Get("app_engine_custom_endpoint").(string)
 	config.ApphubBasePath = d.Get("apphub_custom_endpoint").(string)
 	config.ArtifactRegistryBasePath = d.Get("artifact_registry_custom_endpoint").(string)
@@ -1078,6 +1114,7 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.BinaryAuthorizationBasePath = d.Get("binary_authorization_custom_endpoint").(string)
 	config.BlockchainNodeEngineBasePath = d.Get("blockchain_node_engine_custom_endpoint").(string)
 	config.CertificateManagerBasePath = d.Get("certificate_manager_custom_endpoint").(string)
+	config.ChronicleBasePath = d.Get("chronicle_custom_endpoint").(string)
 	config.CloudAssetBasePath = d.Get("cloud_asset_custom_endpoint").(string)
 	config.CloudBuildBasePath = d.Get("cloud_build_custom_endpoint").(string)
 	config.Cloudbuildv2BasePath = d.Get("cloudbuildv2_custom_endpoint").(string)
@@ -1092,6 +1129,7 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.CloudRunV2BasePath = d.Get("cloud_run_v2_custom_endpoint").(string)
 	config.CloudSchedulerBasePath = d.Get("cloud_scheduler_custom_endpoint").(string)
 	config.CloudTasksBasePath = d.Get("cloud_tasks_custom_endpoint").(string)
+	config.ColabBasePath = d.Get("colab_custom_endpoint").(string)
 	config.ComposerBasePath = d.Get("composer_custom_endpoint").(string)
 	config.ComputeBasePath = d.Get("compute_custom_endpoint").(string)
 	config.ContainerAnalysisBasePath = d.Get("container_analysis_custom_endpoint").(string)
@@ -1119,10 +1157,12 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.EdgecontainerBasePath = d.Get("edgecontainer_custom_endpoint").(string)
 	config.EdgenetworkBasePath = d.Get("edgenetwork_custom_endpoint").(string)
 	config.EssentialContactsBasePath = d.Get("essential_contacts_custom_endpoint").(string)
+	config.EventarcBasePath = d.Get("eventarc_custom_endpoint").(string)
 	config.FilestoreBasePath = d.Get("filestore_custom_endpoint").(string)
 	config.FirebaseBasePath = d.Get("firebase_custom_endpoint").(string)
 	config.FirebaseAppCheckBasePath = d.Get("firebase_app_check_custom_endpoint").(string)
 	config.FirebaseDatabaseBasePath = d.Get("firebase_database_custom_endpoint").(string)
+	config.FirebaseDataConnectBasePath = d.Get("firebase_data_connect_custom_endpoint").(string)
 	config.FirebaseExtensionsBasePath = d.Get("firebase_extensions_custom_endpoint").(string)
 	config.FirebaseHostingBasePath = d.Get("firebase_hosting_custom_endpoint").(string)
 	config.FirebaseStorageBasePath = d.Get("firebase_storage_custom_endpoint").(string)
@@ -1161,6 +1201,8 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.OSConfigBasePath = d.Get("os_config_custom_endpoint").(string)
 	config.OSLoginBasePath = d.Get("os_login_custom_endpoint").(string)
 	config.ParallelstoreBasePath = d.Get("parallelstore_custom_endpoint").(string)
+	config.ParameterManagerBasePath = d.Get("parameter_manager_custom_endpoint").(string)
+	config.ParameterManagerRegionalBasePath = d.Get("parameter_manager_regional_custom_endpoint").(string)
 	config.PrivatecaBasePath = d.Get("privateca_custom_endpoint").(string)
 	config.PrivilegedAccessManagerBasePath = d.Get("privileged_access_manager_custom_endpoint").(string)
 	config.PublicCABasePath = d.Get("public_ca_custom_endpoint").(string)

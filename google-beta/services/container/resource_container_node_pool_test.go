@@ -49,6 +49,8 @@ func TestAccContainerNodePool_resourceManagerTags(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
+	bootstrapGkeTagManagerServiceAgents(t)
+
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -527,7 +529,7 @@ func TestAccContainerNodePool_withKubeletConfig(t *testing.T) {
 		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccContainerNodePool_withKubeletConfig(cluster, np, "static", "100ms", networkName, subnetworkName, "TRUE", true, 2048),
+				Config: testAccContainerNodePool_withKubeletConfig(cluster, np, "static", "100ms", networkName, subnetworkName, "TRUE", "100Mi", "1m", "10m", true, 2048, 10, 10, 85),
 				ConfigPlanChecks: resource.ConfigPlanChecks{
 					PreApply: []plancheck.PlanCheck{
 						acctest.ExpectNoDelete(),
@@ -540,6 +542,20 @@ func TestAccContainerNodePool_withKubeletConfig(t *testing.T) {
 						"node_config.0.kubelet_config.0.insecure_kubelet_readonly_port_enabled", "TRUE"),
 					resource.TestCheckResourceAttr("google_container_node_pool.with_kubelet_config",
 						"node_config.0.kubelet_config.0.pod_pids_limit", "2048"),
+					resource.TestCheckResourceAttr("google_container_node_pool.with_kubelet_config",
+						"node_config.0.kubelet_config.0.container_log_max_size", "100Mi"),
+					resource.TestCheckResourceAttr("google_container_node_pool.with_kubelet_config",
+						"node_config.0.kubelet_config.0.container_log_max_files", "10"),
+					resource.TestCheckResourceAttr("google_container_node_pool.with_kubelet_config",
+						"node_config.0.kubelet_config.0.image_gc_low_threshold_percent", "10"),
+					resource.TestCheckResourceAttr("google_container_node_pool.with_kubelet_config",
+						"node_config.0.kubelet_config.0.image_gc_high_threshold_percent", "85"),
+					resource.TestCheckResourceAttr("google_container_node_pool.with_kubelet_config",
+						"node_config.0.kubelet_config.0.image_minimum_gc_age", "1m"),
+					resource.TestCheckResourceAttr("google_container_node_pool.with_kubelet_config",
+						"node_config.0.kubelet_config.0.image_maximum_gc_age", "10m"),
+					// resource.TestCheckResourceAttr("google_container_node_pool.with_kubelet_config",
+					//      "node_config.0.kubelet_config.0.allowed_unsafe_sysctls.0", "kernel.shm*"),
 				),
 			},
 			{
@@ -548,7 +564,7 @@ func TestAccContainerNodePool_withKubeletConfig(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccContainerNodePool_withKubeletConfig(cluster, np, "", "", networkName, subnetworkName, "FALSE", false, 1024),
+				Config: testAccContainerNodePool_withKubeletConfig(cluster, np, "", "", networkName, subnetworkName, "FALSE", "200Mi", "30s", "", false, 1024, 5, 50, 80),
 				ConfigPlanChecks: resource.ConfigPlanChecks{
 					PreApply: []plancheck.PlanCheck{
 						acctest.ExpectNoDelete(),
@@ -586,7 +602,7 @@ func TestAccContainerNodePool_withInvalidKubeletCpuManagerPolicy(t *testing.T) {
 		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config:      testAccContainerNodePool_withKubeletConfig(cluster, np, "dontexist", "100us", networkName, subnetworkName, "TRUE", false, 1024),
+				Config:      testAccContainerNodePool_withKubeletConfig(cluster, np, "dontexist", "100us", networkName, subnetworkName, "TRUE", "", "", "", false, 1024, 2, 70, 75),
 				ExpectError: regexp.MustCompile(`.*to be one of \["?static"? "?none"? "?"?\].*`),
 			},
 		},
@@ -877,9 +893,12 @@ func TestAccContainerNodePool_withBootDiskKmsKey(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
-	if acctest.BootstrapPSARole(t, "service-", "compute-system", "roles/cloudkms.cryptoKeyEncrypterDecrypter") {
-		t.Fatal("Stopping the test because a role was added to the policy.")
-	}
+	acctest.BootstrapIamMembers(t, []acctest.IamMember{
+		{
+			Member: "serviceAccount:service-{project_number}@compute-system.iam.gserviceaccount.com",
+			Role:   "roles/cloudkms.cryptoKeyEncrypterDecrypter",
+		},
+	})
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -3149,7 +3168,8 @@ resource "google_container_node_pool" "with_sandbox_config" {
 `, cluster, networkName, subnetworkName, np)
 }
 
-func testAccContainerNodePool_withKubeletConfig(cluster, np, policy, period, networkName, subnetworkName, insecureKubeletReadonlyPortEnabled string, quota bool, podPidsLimit int) string {
+// TODO: add allowed_unsafe_sysctls in the test after GKE version 1.32.0-gke.1448000 is default version in regular channel and used in Terraform test.
+func testAccContainerNodePool_withKubeletConfig(cluster, np, policy, period, networkName, subnetworkName, insecureKubeletReadonlyPortEnabled, containerLogMaxSize, imageMinimumGcAge, imageMaximumGcAge string, quota bool, podPidsLimit, containerLogMaxFiles, imageGcLowThresholdPercent, imageGcHighThresholdPercent int) string {
 	return fmt.Sprintf(`
 data "google_container_engine_versions" "central1a" {
   location = "us-central1-a"
@@ -3180,6 +3200,13 @@ resource "google_container_node_pool" "with_kubelet_config" {
       cpu_cfs_quota_period                   = %q
       insecure_kubelet_readonly_port_enabled = "%s"
       pod_pids_limit                         = %d
+      container_log_max_size                 = %q
+      container_log_max_files                = %d
+      image_gc_low_threshold_percent         = %d
+      image_gc_high_threshold_percent        = %d
+      image_minimum_gc_age                   = %q
+      image_maximum_gc_age                   = %q
+      # allowed_unsafe_sysctls               = ["kernel.shm*", "kernel.msg*", "kernel.sem", "fs.mqueue.*", "net.*"]
     }
     oauth_scopes = [
       "https://www.googleapis.com/auth/logging.write",
@@ -3188,7 +3215,7 @@ resource "google_container_node_pool" "with_kubelet_config" {
     logging_variant = "DEFAULT"
   }
 }
-`, cluster, networkName, subnetworkName, np, policy, quota, period, insecureKubeletReadonlyPortEnabled, podPidsLimit)
+`, cluster, networkName, subnetworkName, np, policy, quota, period, insecureKubeletReadonlyPortEnabled, podPidsLimit, containerLogMaxSize, containerLogMaxFiles, imageGcLowThresholdPercent, imageGcHighThresholdPercent, imageMinimumGcAge, imageMaximumGcAge)
 }
 
 func testAccContainerNodePool_withLinuxNodeConfig(cluster, np, tcpMem, networkName, subnetworkName string) string {
@@ -3210,6 +3237,7 @@ func testAccContainerNodePool_withLinuxNodeConfig(cluster, np, tcpMem, networkNa
         "net.ipv4.tcp_rmem"           = "%s"
         "net.ipv4.tcp_wmem"           = "%s"
         "net.ipv4.tcp_tw_reuse"       = 1
+	"kernel.shmmni"               = 8192
       }
     }
 `, tcpMem, tcpMem)
@@ -3937,6 +3965,7 @@ resource "google_container_cluster" "cluster" {
   deletion_protection = false
   network             = "%s"
   subnetwork          = "%s"
+  min_master_version  = "1.32.0-gke.1448000"
 }
 
 resource "google_container_node_pool" "np1" {
@@ -3944,6 +3973,8 @@ resource "google_container_node_pool" "np1" {
   location           = "us-central1-a"
   cluster            = google_container_cluster.cluster.name
   initial_node_count = 2
+  // 2025-02-03: current default cluster version is 1.31.5-gke.1023000. This will change over time.
+  // Reference:  https://cloud.google.com/kubernetes-engine/docs/release-notes#current_versions
 }
 
 resource "google_container_node_pool" "np2" {
@@ -3951,6 +3982,8 @@ resource "google_container_node_pool" "np2" {
   location           = "us-central1-a"
   cluster            = google_container_cluster.cluster.name
   initial_node_count = 2
+  // 2025-02-03: current default cluster version is 1.31.5-gke.1023000. This will change over time.
+  // Reference:  https://cloud.google.com/kubernetes-engine/docs/release-notes#current_versions
 }
 `, cluster, networkName, subnetworkName, np1, np2)
 }
@@ -3958,12 +3991,13 @@ resource "google_container_node_pool" "np2" {
 func testAccContainerNodePool_concurrentUpdate(cluster, np1, np2, networkName, subnetworkName string) string {
 	return fmt.Sprintf(`
 resource "google_container_cluster" "cluster" {
-  name               = "%s"
-  location           = "us-central1-a"
-  initial_node_count = 3
+  name                = "%s"
+  location            = "us-central1-a"
+  initial_node_count  = 3
   deletion_protection = false
-  network    = "%s"
-  subnetwork    = "%s"
+  network             = "%s"
+  subnetwork          = "%s"
+  min_master_version  = "1.32.0-gke.1448000"
 }
 
 resource "google_container_node_pool" "np1" {
@@ -3971,7 +4005,11 @@ resource "google_container_node_pool" "np1" {
   location           = "us-central1-a"
   cluster            = google_container_cluster.cluster.name
   initial_node_count = 2
-  version            = "1.29.4-gke.1043002"
+  version            = "1.32.0-gke.1448000"
+  // The node version must remain within one minor version of the cluster ("master") version, and it must not exceed the cluster ("master") version
+  // Cross-ref: https://github.com/hashicorp/terraform-provider-google/issues/21116
+  // Cross-ref: https://github.com/GoogleCloudPlatform/magic-modules/pull/11115
+  // Reference:  https://cloud.google.com/kubernetes-engine/docs/release-notes#current_versions
 }
 
 resource "google_container_node_pool" "np2" {
@@ -3979,7 +4017,11 @@ resource "google_container_node_pool" "np2" {
   location           = "us-central1-a"
   cluster            = google_container_cluster.cluster.name
   initial_node_count = 2
-  version            = "1.29.4-gke.1043002"
+  version            = "1.32.0-gke.1448000"
+  // The node version must remain within one minor version of the cluster ("master") version, and it must not exceed the cluster ("master") version
+  // Cross-ref: https://github.com/hashicorp/terraform-provider-google/issues/21116
+  // Cross-ref: https://github.com/GoogleCloudPlatform/magic-modules/pull/11115
+  // Reference:  https://cloud.google.com/kubernetes-engine/docs/release-notes#current_versions
 }
 `, cluster, networkName, subnetworkName, np1, np2)
 }
@@ -4200,6 +4242,101 @@ resource "google_container_node_pool" "np" {
 `, clusterName, mode, networkName, subnetworkName, np, mode)
 }
 
+func TestAccContainerNodePool_withMaxRunDuration(t *testing.T) {
+	t.Parallel()
+
+	clusterName := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
+	np := fmt.Sprintf("tf-test-cluster-nodepool-%s", acctest.RandString(t, 10))
+	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
+	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccContainerNodePool_withMaxRunDuration(clusterName, np, networkName, subnetworkName, "3600s"),
+			},
+			{
+				ResourceName:      "google_container_node_pool.np",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccContainerNodePool_withMaxRunDuration(clusterName, np, networkName, subnetworkName, "1800s"),
+			},
+			{
+				ResourceName:      "google_container_node_pool.np",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccContainerNodePool_disableMaxRunDuration(clusterName, np, networkName, subnetworkName),
+			},
+			{
+				ResourceName:      "google_container_node_pool.np",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccContainerNodePool_withMaxRunDuration(clusterName, np, networkName, subnetworkName, duration string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "cluster" {
+  name               = "%s"
+  location           = "us-central1-a"
+  initial_node_count = 1
+  node_config {
+	max_run_duration = "%s"
+    machine_type = "n1-standard-1"
+  }
+  deletion_protection = false
+  network    = "%s"
+  subnetwork    = "%s"
+}
+
+resource "google_container_node_pool" "np" {
+  name               = "%s"
+  location           = "us-central1-a"
+  cluster            = google_container_cluster.cluster.name
+  initial_node_count = 1
+  node_config {
+   	machine_type = "n1-standard-1"
+	max_run_duration = "%s"
+  }
+}
+`, clusterName, duration, networkName, subnetworkName, np, duration)
+}
+
+func testAccContainerNodePool_disableMaxRunDuration(clusterName, np, networkName, subnetworkName string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "cluster" {
+  name               = "%s"
+  location           = "us-central1-a"
+  initial_node_count = 1
+  node_config {
+    machine_type = "n1-standard-1"
+  }
+  deletion_protection = false
+  network    = "%s"
+  subnetwork    = "%s"
+}
+
+resource "google_container_node_pool" "np" {
+  name               = "%s"
+  location           = "us-central1-a"
+  cluster            = google_container_cluster.cluster.name
+  initial_node_count = 1
+  node_config {
+   	machine_type = "n1-standard-1"
+  }
+}
+`, clusterName, networkName, subnetworkName, np)
+}
+
 func TestAccContainerNodePool_tpuTopology(t *testing.T) {
 	t.Parallel()
 	t.Skip("https://github.com/hashicorp/terraform-provider-google/issues/15254#issuecomment-1646277473")
@@ -4335,9 +4472,12 @@ func TestAccContainerNodePool_withConfidentialBootDisk(t *testing.T) {
 	networkName := acctest.BootstrapSharedTestNetwork(t, "gke-cluster")
 	subnetworkName := acctest.BootstrapSubnet(t, "gke-cluster", networkName)
 
-	if acctest.BootstrapPSARole(t, "service-", "compute-system", "roles/cloudkms.cryptoKeyEncrypterDecrypter") {
-		t.Fatal("Stopping the test because a role was added to the policy.")
-	}
+	acctest.BootstrapIamMembers(t, []acctest.IamMember{
+		{
+			Member: "serviceAccount:service-{project_number}@compute-system.iam.gserviceaccount.com",
+			Role:   "roles/cloudkms.cryptoKeyEncrypterDecrypter",
+		},
+	})
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -4461,38 +4601,6 @@ data "google_project" "project" {
   project_id = "%[1]s"
 }
 
-resource "google_project_iam_member" "tagHoldAdmin" {
-  project = "%[1]s"
-  role    = "roles/resourcemanager.tagHoldAdmin"
-  member  = "serviceAccount:service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
-}
-
-resource "google_project_iam_member" "tagUser1" {
-  project = "%[1]s"
-  role    = "roles/resourcemanager.tagUser"
-  member  = "serviceAccount:service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
-
-  depends_on = [google_project_iam_member.tagHoldAdmin]
-}
-
-resource "google_project_iam_member" "tagUser2" {
-  project = "%[1]s"
-  role    = "roles/resourcemanager.tagUser"
-  member  = "serviceAccount:${data.google_project.project.number}@cloudservices.gserviceaccount.com"
-
-  depends_on = [google_project_iam_member.tagHoldAdmin]
-}
-
-resource "time_sleep" "wait_120_seconds" {
-  create_duration = "120s"
-
-  depends_on = [
-    google_project_iam_member.tagHoldAdmin,
-    google_project_iam_member.tagUser1,
-    google_project_iam_member.tagUser2,
-  ]
-}
-
 resource "google_tags_tag_key" "key1" {
   parent      = "projects/%[1]s"
   short_name  = "foobarbaz1-%[2]s"
@@ -4550,8 +4658,6 @@ resource "google_container_cluster" "primary" {
     create = "30m"
     update = "40m"
   }
-
-  depends_on = [time_sleep.wait_120_seconds]
 }
 
 # Separately Managed Node Pool
@@ -4581,38 +4687,6 @@ data "google_project" "project" {
   project_id = "%[1]s"
 }
 
-resource "google_project_iam_member" "tagHoldAdmin" {
-  project = "%[1]s"
-  role    = "roles/resourcemanager.tagHoldAdmin"
-  member  = "serviceAccount:service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
-}
-
-resource "google_project_iam_member" "tagUser1" {
-  project = "%[1]s"
-  role    = "roles/resourcemanager.tagUser"
-  member  = "serviceAccount:service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
-
-  depends_on = [google_project_iam_member.tagHoldAdmin]
-}
-
-resource "google_project_iam_member" "tagUser2" {
-  project = "%[1]s"
-  role    = "roles/resourcemanager.tagUser"
-  member  = "serviceAccount:${data.google_project.project.number}@cloudservices.gserviceaccount.com"
-
-  depends_on = [google_project_iam_member.tagHoldAdmin]
-}
-
-resource "time_sleep" "wait_120_seconds" {
-  create_duration = "120s"
-
-  depends_on = [
-    google_project_iam_member.tagHoldAdmin,
-    google_project_iam_member.tagUser1,
-    google_project_iam_member.tagUser2,
-  ]
-}
-
 resource "google_tags_tag_key" "key1" {
   parent      = "projects/%[1]s"
   short_name  = "foobarbaz1-%[2]s"
@@ -4670,8 +4744,6 @@ resource "google_container_cluster" "primary" {
     create = "30m"
     update = "40m"
   }
-
-  depends_on = [time_sleep.wait_120_seconds]
 }
 
 # Separately Managed Node Pool
@@ -4702,38 +4774,6 @@ data "google_project" "project" {
   project_id = "%[1]s"
 }
 
-resource "google_project_iam_member" "tagHoldAdmin" {
-  project = "%[1]s"
-  role    = "roles/resourcemanager.tagHoldAdmin"
-  member  = "serviceAccount:service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
-}
-
-resource "google_project_iam_member" "tagUser1" {
-  project = "%[1]s"
-  role    = "roles/resourcemanager.tagUser"
-  member  = "serviceAccount:service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
-
-  depends_on = [google_project_iam_member.tagHoldAdmin]
-}
-
-resource "google_project_iam_member" "tagUser2" {
-  project = "%[1]s"
-  role    = "roles/resourcemanager.tagUser"
-  member  = "serviceAccount:${data.google_project.project.number}@cloudservices.gserviceaccount.com"
-
-  depends_on = [google_project_iam_member.tagHoldAdmin]
-}
-
-resource "time_sleep" "wait_120_seconds" {
-  create_duration = "120s"
-
-  depends_on = [
-    google_project_iam_member.tagHoldAdmin,
-    google_project_iam_member.tagUser1,
-    google_project_iam_member.tagUser2,
-  ]
-}
-
 resource "google_tags_tag_key" "key1" {
   parent      = "projects/%[1]s"
   short_name  = "foobarbaz1-%[2]s"
@@ -4791,8 +4831,6 @@ resource "google_container_cluster" "primary" {
     create = "30m"
     update = "40m"
   }
-
-  depends_on = [time_sleep.wait_120_seconds]
 }
 
 # Separately Managed Node Pool
@@ -5009,7 +5047,6 @@ resource "google_container_node_pool" "np" {
 }
 
 func TestAccContainerNodePool_defaultDriverInstallation(t *testing.T) {
-	acctest.SkipIfVcr(t)
 	t.Parallel()
 
 	cluster := fmt.Sprintf("tf-test-cluster-%s", acctest.RandString(t, 10))
@@ -5055,7 +5092,6 @@ resource "google_container_node_pool" "np" {
   location           = "us-central1-a"
   cluster            = google_container_cluster.cluster.name
   initial_node_count = 2
-  version            = "1.30.1-gke.1329003"
 
   node_config {
     service_account = "default"

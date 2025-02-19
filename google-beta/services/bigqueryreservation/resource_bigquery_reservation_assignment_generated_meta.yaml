@@ -1,5 +1,15 @@
 resource: 'google_bigquery_reservation_assignment'
 generation_type: 'mmv1'
+source_file: 'products/bigqueryreservation/ReservationAssignment.yaml'
 api_service_name: 'bigqueryreservation.googleapis.com'
 api_version: 'v1'
-api_resource_type_kind: 'ReservationAssignment'
+api_resource_type_kind: 'Assignment'
+fields:
+  - field: 'assignee'
+  - field: 'job_type'
+  - field: 'location'
+    provider_only: true
+  - field: 'name'
+  - field: 'reservation'
+    provider_only: true
+  - field: 'state'

@@ -1,5 +1,20 @@
 resource: 'google_cloud_asset_project_feed'
 generation_type: 'mmv1'
+source_file: 'products/cloudasset/ProjectFeed.yaml'
 api_service_name: 'cloudasset.googleapis.com'
 api_version: 'v1'
 api_resource_type_kind: 'Feed'
+fields:
+  - field: 'asset_names'
+  - field: 'asset_types'
+  - field: 'billing_project'
+    provider_only: true
+  - field: 'condition.description'
+  - field: 'condition.expression'
+  - field: 'condition.location'
+  - field: 'condition.title'
+  - field: 'content_type'
+  - field: 'feed_id'
+    provider_only: true
+  - field: 'feed_output_config.pubsub_destination.topic'
+  - field: 'name'

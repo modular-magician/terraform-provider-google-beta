@@ -1,5 +1,14 @@
 resource: 'google_firebase_app_check_device_check_config'
 generation_type: 'mmv1'
+source_file: 'products/firebaseappcheck/DeviceCheckConfig.yaml'
 api_service_name: 'firebaseappcheck.googleapis.com'
 api_version: 'v1beta'
 api_resource_type_kind: 'DeviceCheckConfig'
+fields:
+  - field: 'app_id'
+    provider_only: true
+  - field: 'key_id'
+  - field: 'name'
+  - field: 'private_key'
+  - field: 'private_key_set'
+  - field: 'token_ttl'

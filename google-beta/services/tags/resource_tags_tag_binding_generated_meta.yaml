@@ -1,5 +1,10 @@
 resource: 'google_tags_tag_binding'
 generation_type: 'mmv1'
+source_file: 'products/tags/TagBinding.yaml'
 api_service_name: 'cloudresourcemanager.googleapis.com'
 api_version: 'v3'
 api_resource_type_kind: 'TagBinding'
+fields:
+  - field: 'name'
+  - field: 'parent'
+  - field: 'tag_value'
