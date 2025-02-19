@@ -3,15 +3,13 @@
 package sweeper_test
 
 import (
-	"testing"
-
-	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/accessapproval"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/accesscontextmanager"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/activedirectory"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/alloydb"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/apigateway"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/apigee"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/apihub"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/appengine"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/apphub"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/artifactregistry"
@@ -29,6 +27,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/binaryauthorization"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/blockchainnodeengine"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/certificatemanager"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/chronicle"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudasset"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudbuild"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudbuildv2"
@@ -43,6 +42,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudrunv2"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudscheduler"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudtasks"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/colab"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/composer"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/containeranalysis"
@@ -70,10 +70,12 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/edgecontainer"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/edgenetwork"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/essentialcontacts"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/eventarc"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/filestore"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebase"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebaseappcheck"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebasedatabase"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebasedataconnect"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebaseextensions"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebasehosting"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebasestorage"
@@ -112,6 +114,8 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/osconfig"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/oslogin"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/parallelstore"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/parametermanager"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/parametermanagerregional"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/privateca"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/privilegedaccessmanager"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/publicca"
@@ -149,6 +153,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/workbench"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/workflows"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/workstations"
+	"testing"
 
 	// Manually add the services for DCL resource and handwritten resource sweepers if they are not in the above list
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/apikeys"
@@ -163,8 +168,14 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebaserules"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/networkconnectivity"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/recaptchaenterprise"
+
+	// TODO: remove dependency on hashicorp flags
+	// need to blank import hashicorp sweeper code to maintain the flags declared in their package
+	_ "github.com/hashicorp/terraform-plugin-testing/helper/resource"
+
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/sweeper"
 )
 
-func TestMain(m *testing.M) {
-	resource.TestMain(m)
+func TestAccExecuteSweepers(t *testing.T) {
+	sweeper.ExecuteSweepers(t)
 }

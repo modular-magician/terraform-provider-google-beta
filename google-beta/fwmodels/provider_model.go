@@ -36,6 +36,7 @@ type ProviderModel struct {
 	AlloydbCustomEndpoint                  types.String `tfsdk:"alloydb_custom_endpoint"`
 	ApiGatewayCustomEndpoint               types.String `tfsdk:"api_gateway_custom_endpoint"`
 	ApigeeCustomEndpoint                   types.String `tfsdk:"apigee_custom_endpoint"`
+	ApihubCustomEndpoint                   types.String `tfsdk:"apihub_custom_endpoint"`
 	AppEngineCustomEndpoint                types.String `tfsdk:"app_engine_custom_endpoint"`
 	ApphubCustomEndpoint                   types.String `tfsdk:"apphub_custom_endpoint"`
 	ArtifactRegistryCustomEndpoint         types.String `tfsdk:"artifact_registry_custom_endpoint"`
@@ -53,6 +54,7 @@ type ProviderModel struct {
 	BinaryAuthorizationCustomEndpoint      types.String `tfsdk:"binary_authorization_custom_endpoint"`
 	BlockchainNodeEngineCustomEndpoint     types.String `tfsdk:"blockchain_node_engine_custom_endpoint"`
 	CertificateManagerCustomEndpoint       types.String `tfsdk:"certificate_manager_custom_endpoint"`
+	ChronicleCustomEndpoint                types.String `tfsdk:"chronicle_custom_endpoint"`
 	CloudAssetCustomEndpoint               types.String `tfsdk:"cloud_asset_custom_endpoint"`
 	CloudBuildCustomEndpoint               types.String `tfsdk:"cloud_build_custom_endpoint"`
 	Cloudbuildv2CustomEndpoint             types.String `tfsdk:"cloudbuildv2_custom_endpoint"`
@@ -67,6 +69,7 @@ type ProviderModel struct {
 	CloudRunV2CustomEndpoint               types.String `tfsdk:"cloud_run_v2_custom_endpoint"`
 	CloudSchedulerCustomEndpoint           types.String `tfsdk:"cloud_scheduler_custom_endpoint"`
 	CloudTasksCustomEndpoint               types.String `tfsdk:"cloud_tasks_custom_endpoint"`
+	ColabCustomEndpoint                    types.String `tfsdk:"colab_custom_endpoint"`
 	ComposerCustomEndpoint                 types.String `tfsdk:"composer_custom_endpoint"`
 	ComputeCustomEndpoint                  types.String `tfsdk:"compute_custom_endpoint"`
 	ContainerAnalysisCustomEndpoint        types.String `tfsdk:"container_analysis_custom_endpoint"`
@@ -94,10 +97,12 @@ type ProviderModel struct {
 	EdgecontainerCustomEndpoint            types.String `tfsdk:"edgecontainer_custom_endpoint"`
 	EdgenetworkCustomEndpoint              types.String `tfsdk:"edgenetwork_custom_endpoint"`
 	EssentialContactsCustomEndpoint        types.String `tfsdk:"essential_contacts_custom_endpoint"`
+	EventarcCustomEndpoint                 types.String `tfsdk:"eventarc_custom_endpoint"`
 	FilestoreCustomEndpoint                types.String `tfsdk:"filestore_custom_endpoint"`
 	FirebaseCustomEndpoint                 types.String `tfsdk:"firebase_custom_endpoint"`
 	FirebaseAppCheckCustomEndpoint         types.String `tfsdk:"firebase_app_check_custom_endpoint"`
 	FirebaseDatabaseCustomEndpoint         types.String `tfsdk:"firebase_database_custom_endpoint"`
+	FirebaseDataConnectCustomEndpoint      types.String `tfsdk:"firebase_data_connect_custom_endpoint"`
 	FirebaseExtensionsCustomEndpoint       types.String `tfsdk:"firebase_extensions_custom_endpoint"`
 	FirebaseHostingCustomEndpoint          types.String `tfsdk:"firebase_hosting_custom_endpoint"`
 	FirebaseStorageCustomEndpoint          types.String `tfsdk:"firebase_storage_custom_endpoint"`
@@ -136,6 +141,8 @@ type ProviderModel struct {
 	OSConfigCustomEndpoint                 types.String `tfsdk:"os_config_custom_endpoint"`
 	OSLoginCustomEndpoint                  types.String `tfsdk:"os_login_custom_endpoint"`
 	ParallelstoreCustomEndpoint            types.String `tfsdk:"parallelstore_custom_endpoint"`
+	ParameterManagerCustomEndpoint         types.String `tfsdk:"parameter_manager_custom_endpoint"`
+	ParameterManagerRegionalCustomEndpoint types.String `tfsdk:"parameter_manager_regional_custom_endpoint"`
 	PrivatecaCustomEndpoint                types.String `tfsdk:"privateca_custom_endpoint"`
 	PrivilegedAccessManagerCustomEndpoint  types.String `tfsdk:"privileged_access_manager_custom_endpoint"`
 	PublicCACustomEndpoint                 types.String `tfsdk:"public_ca_custom_endpoint"`
@@ -193,7 +200,6 @@ type ProviderModel struct {
 	AssuredWorkloadsCustomEndpoint     types.String `tfsdk:"assured_workloads_custom_endpoint"`
 	CloudBuildWorkerPoolCustomEndpoint types.String `tfsdk:"cloud_build_worker_pool_custom_endpoint"`
 	CloudResourceManagerCustomEndpoint types.String `tfsdk:"cloud_resource_manager_custom_endpoint"`
-	EventarcCustomEndpoint             types.String `tfsdk:"eventarc_custom_endpoint"`
 	FirebaserulesCustomEndpoint        types.String `tfsdk:"firebaserules_custom_endpoint"`
 	RecaptchaEnterpriseCustomEndpoint  types.String `tfsdk:"recaptcha_enterprise_custom_endpoint"`
 

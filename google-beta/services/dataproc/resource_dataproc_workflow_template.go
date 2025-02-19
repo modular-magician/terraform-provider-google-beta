@@ -110,6 +110,15 @@ func ResourceDataprocWorkflowTemplate() *schema.Resource {
 				Description: "All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.",
 			},
 
+			"encryption_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Optional. The encryption configuration for the workflow template.",
+				MaxItems:    1,
+				Elem:        DataprocWorkflowTemplateEncryptionConfigSchema(),
+			},
+
 			"parameters": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -2083,6 +2092,20 @@ func DataprocWorkflowTemplatePlacementManagedClusterConfigWorkerConfigManagedGro
 	}
 }
 
+func DataprocWorkflowTemplateEncryptionConfigSchema() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"kms_key": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				Description:      "Optional. The Cloud KMS key name to use for encryption.",
+			},
+		},
+	}
+}
+
 func DataprocWorkflowTemplateParametersSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -2180,15 +2203,16 @@ func resourceDataprocWorkflowTemplateCreate(d *schema.ResourceData, meta interfa
 	}
 
 	obj := &dataproc.WorkflowTemplate{
-		Jobs:       expandDataprocWorkflowTemplateJobsArray(d.Get("jobs")),
-		Location:   dcl.String(d.Get("location").(string)),
-		Name:       dcl.String(d.Get("name").(string)),
-		Placement:  expandDataprocWorkflowTemplatePlacement(d.Get("placement")),
-		DagTimeout: dcl.String(d.Get("dag_timeout").(string)),
-		Labels:     tpgresource.CheckStringMap(d.Get("effective_labels")),
-		Parameters: expandDataprocWorkflowTemplateParametersArray(d.Get("parameters")),
-		Project:    dcl.String(project),
-		Version:    dcl.Int64OrNil(int64(d.Get("version").(int))),
+		Jobs:             expandDataprocWorkflowTemplateJobsArray(d.Get("jobs")),
+		Location:         dcl.String(d.Get("location").(string)),
+		Name:             dcl.String(d.Get("name").(string)),
+		Placement:        expandDataprocWorkflowTemplatePlacement(d.Get("placement")),
+		DagTimeout:       dcl.String(d.Get("dag_timeout").(string)),
+		Labels:           tpgresource.CheckStringMap(d.Get("effective_labels")),
+		EncryptionConfig: expandDataprocWorkflowTemplateEncryptionConfig(d.Get("encryption_config")),
+		Parameters:       expandDataprocWorkflowTemplateParametersArray(d.Get("parameters")),
+		Project:          dcl.String(project),
+		Version:          dcl.Int64OrNil(int64(d.Get("version").(int))),
 	}
 
 	id, err := obj.ID()
@@ -2236,15 +2260,16 @@ func resourceDataprocWorkflowTemplateRead(d *schema.ResourceData, meta interface
 	}
 
 	obj := &dataproc.WorkflowTemplate{
-		Jobs:       expandDataprocWorkflowTemplateJobsArray(d.Get("jobs")),
-		Location:   dcl.String(d.Get("location").(string)),
-		Name:       dcl.String(d.Get("name").(string)),
-		Placement:  expandDataprocWorkflowTemplatePlacement(d.Get("placement")),
-		DagTimeout: dcl.String(d.Get("dag_timeout").(string)),
-		Labels:     tpgresource.CheckStringMap(d.Get("effective_labels")),
-		Parameters: expandDataprocWorkflowTemplateParametersArray(d.Get("parameters")),
-		Project:    dcl.String(project),
-		Version:    dcl.Int64OrNil(int64(d.Get("version").(int))),
+		Jobs:             expandDataprocWorkflowTemplateJobsArray(d.Get("jobs")),
+		Location:         dcl.String(d.Get("location").(string)),
+		Name:             dcl.String(d.Get("name").(string)),
+		Placement:        expandDataprocWorkflowTemplatePlacement(d.Get("placement")),
+		DagTimeout:       dcl.String(d.Get("dag_timeout").(string)),
+		Labels:           tpgresource.CheckStringMap(d.Get("effective_labels")),
+		EncryptionConfig: expandDataprocWorkflowTemplateEncryptionConfig(d.Get("encryption_config")),
+		Parameters:       expandDataprocWorkflowTemplateParametersArray(d.Get("parameters")),
+		Project:          dcl.String(project),
+		Version:          dcl.Int64OrNil(int64(d.Get("version").(int))),
 	}
 
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
@@ -2287,6 +2312,9 @@ func resourceDataprocWorkflowTemplateRead(d *schema.ResourceData, meta interface
 	if err = d.Set("effective_labels", res.Labels); err != nil {
 		return fmt.Errorf("error setting effective_labels in state: %s", err)
 	}
+	if err = d.Set("encryption_config", flattenDataprocWorkflowTemplateEncryptionConfig(res.EncryptionConfig)); err != nil {
+		return fmt.Errorf("error setting encryption_config in state: %s", err)
+	}
 	if err = d.Set("parameters", flattenDataprocWorkflowTemplateParametersArray(res.Parameters)); err != nil {
 		return fmt.Errorf("error setting parameters in state: %s", err)
 	}
@@ -2325,15 +2353,16 @@ func resourceDataprocWorkflowTemplateDelete(d *schema.ResourceData, meta interfa
 	}
 
 	obj := &dataproc.WorkflowTemplate{
-		Jobs:       expandDataprocWorkflowTemplateJobsArray(d.Get("jobs")),
-		Location:   dcl.String(d.Get("location").(string)),
-		Name:       dcl.String(d.Get("name").(string)),
-		Placement:  expandDataprocWorkflowTemplatePlacement(d.Get("placement")),
-		DagTimeout: dcl.String(d.Get("dag_timeout").(string)),
-		Labels:     tpgresource.CheckStringMap(d.Get("effective_labels")),
-		Parameters: expandDataprocWorkflowTemplateParametersArray(d.Get("parameters")),
-		Project:    dcl.String(project),
-		Version:    dcl.Int64OrNil(int64(d.Get("version").(int))),
+		Jobs:             expandDataprocWorkflowTemplateJobsArray(d.Get("jobs")),
+		Location:         dcl.String(d.Get("location").(string)),
+		Name:             dcl.String(d.Get("name").(string)),
+		Placement:        expandDataprocWorkflowTemplatePlacement(d.Get("placement")),
+		DagTimeout:       dcl.String(d.Get("dag_timeout").(string)),
+		Labels:           tpgresource.CheckStringMap(d.Get("effective_labels")),
+		EncryptionConfig: expandDataprocWorkflowTemplateEncryptionConfig(d.Get("encryption_config")),
+		Parameters:       expandDataprocWorkflowTemplateParametersArray(d.Get("parameters")),
+		Project:          dcl.String(project),
+		Version:          dcl.Int64OrNil(int64(d.Get("version").(int))),
 	}
 
 	log.Printf("[DEBUG] Deleting WorkflowTemplate %q", d.Id())
@@ -4131,6 +4160,32 @@ func flattenDataprocWorkflowTemplatePlacementManagedClusterConfigWorkerConfigMan
 	return []interface{}{transformed}
 
 }
+
+func expandDataprocWorkflowTemplateEncryptionConfig(o interface{}) *dataproc.WorkflowTemplateEncryptionConfig {
+	if o == nil {
+		return dataproc.EmptyWorkflowTemplateEncryptionConfig
+	}
+	objArr := o.([]interface{})
+	if len(objArr) == 0 || objArr[0] == nil {
+		return dataproc.EmptyWorkflowTemplateEncryptionConfig
+	}
+	obj := objArr[0].(map[string]interface{})
+	return &dataproc.WorkflowTemplateEncryptionConfig{
+		KmsKey: dcl.String(obj["kms_key"].(string)),
+	}
+}
+
+func flattenDataprocWorkflowTemplateEncryptionConfig(obj *dataproc.WorkflowTemplateEncryptionConfig) interface{} {
+	if obj == nil || obj.Empty() {
+		return nil
+	}
+	transformed := map[string]interface{}{
+		"kms_key": obj.KmsKey,
+	}
+
+	return []interface{}{transformed}
+
+}
 func expandDataprocWorkflowTemplateParametersArray(o interface{}) []dataproc.WorkflowTemplateParameters {
 	if o == nil {
 		return make([]dataproc.WorkflowTemplateParameters, 0)
@@ -4280,7 +4335,7 @@ func flattenDataprocWorkflowTemplateLabels(v map[string]string, d *schema.Resour
 
 	transformed := make(map[string]interface{})
 	if l, ok := d.Get("labels").(map[string]interface{}); ok {
-		for k, _ := range l {
+		for k := range l {
 			transformed[k] = v[k]
 		}
 	}
@@ -4295,7 +4350,7 @@ func flattenDataprocWorkflowTemplateTerraformLabels(v map[string]string, d *sche
 
 	transformed := make(map[string]interface{})
 	if l, ok := d.Get("terraform_labels").(map[string]interface{}); ok {
-		for k, _ := range l {
+		for k := range l {
 			transformed[k] = v[k]
 		}
 	}

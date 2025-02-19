@@ -1,5 +1,16 @@
 resource: 'google_scc_event_threat_detection_custom_module'
 generation_type: 'mmv1'
+source_file: 'products/securitycenter/EventThreatDetectionCustomModule.yaml'
 api_service_name: 'securitycenter.googleapis.com'
 api_version: 'v1'
 api_resource_type_kind: 'EventThreatDetectionCustomModule'
+fields:
+  - field: 'config'
+  - field: 'display_name'
+  - field: 'enablement_state'
+  - field: 'last_editor'
+  - field: 'name'
+  - field: 'organization'
+    provider_only: true
+  - field: 'type'
+  - field: 'update_time'
