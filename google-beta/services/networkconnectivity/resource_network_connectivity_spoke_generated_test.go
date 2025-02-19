@@ -93,6 +93,76 @@ resource "google_network_connectivity_spoke" "primary"  {
 `, context)
 }
 
+func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedVpcNetworkGroupExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkConnectivitySpokeDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedVpcNetworkGroupExample(context),
+			},
+			{
+				ResourceName:            "google_network_connectivity_spoke.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"hub", "labels", "location", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedVpcNetworkGroupExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_network" "network" {
+  name                    = "tf-test-net-spoke%{random_suffix}"
+  auto_create_subnetworks = false
+}
+
+resource "google_network_connectivity_hub" "basic_hub" {
+  name        = "tf-test-hub1-spoke%{random_suffix}"
+  description = "A sample hub"
+  labels = {
+    label-two = "value-one"
+  }
+}
+
+resource "google_network_connectivity_group" "default_group"  {
+ hub         = google_network_connectivity_hub.basic_hub.id
+ name        = "default"
+ description = "A sample hub group"
+}
+
+resource "google_network_connectivity_spoke" "primary"  {
+  name = "tf-test-group-spoke1%{random_suffix}"
+  location = "global"
+  description = "A sample spoke with a linked VPC"
+  labels = {
+    label-one = "value-one"
+  }
+  hub = google_network_connectivity_hub.basic_hub.id
+  linked_vpc_network {
+    exclude_export_ranges = [
+      "198.51.100.0/24",
+      "10.10.0.0/16"
+    ]
+    include_export_ranges = [
+      "198.51.100.0/23",
+      "10.0.0.0/8"
+    ]
+    uri = google_compute_network.network.self_link
+  }
+  group = google_network_connectivity_group.default_group.id
+}
+`, context)
+}
+
 func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeRouterApplianceBasicExample(t *testing.T) {
 	t.Parallel()
 
@@ -494,6 +564,130 @@ resource "google_network_connectivity_spoke" "primary"  {
     ]
   }
   depends_on  = [google_network_connectivity_spoke.linked_vpc_spoke]
+}
+`, context)
+}
+
+func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeCenterGroupExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkConnectivitySpokeDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkConnectivitySpoke_networkConnectivitySpokeCenterGroupExample(context),
+			},
+			{
+				ResourceName:            "google_network_connectivity_spoke.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"hub", "labels", "location", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccNetworkConnectivitySpoke_networkConnectivitySpokeCenterGroupExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_network" "network" {
+  name                    = "tf-net"
+  auto_create_subnetworks = false
+}
+
+resource "google_network_connectivity_hub" "star_hub" {
+  name = "tf-test-hub-basic%{random_suffix}"
+  preset_topology = "STAR"
+}
+
+resource "google_network_connectivity_group" "center_group" { 
+  name = "center"  # (default , center , edge)
+  hub  = google_network_connectivity_hub.star_hub.id
+  auto_accept {
+    auto_accept_projects = [
+      "foo%{random_suffix}", 
+      "bar%{random_suffix}", 
+    ]
+  }
+}
+
+resource "google_network_connectivity_spoke" "primary"  {
+  name = "tf-test-vpc-spoke%{random_suffix}"
+  location = "global"
+  description = "A sample spoke"
+  labels = {
+    label-one = "value-one"
+  }
+  hub = google_network_connectivity_hub.star_hub.id
+  group  = google_network_connectivity_group.center_group.id
+
+  linked_vpc_network {
+    uri = google_compute_network.network.self_link
+  }
+}
+`, context)
+}
+
+func TestAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedVpcNetworkIpv6SupportExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetworkConnectivitySpokeDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedVpcNetworkIpv6SupportExample(context),
+			},
+			{
+				ResourceName:            "google_network_connectivity_spoke.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"hub", "labels", "location", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccNetworkConnectivitySpoke_networkConnectivitySpokeLinkedVpcNetworkIpv6SupportExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_network" "network" {
+  name                    = "net%{random_suffix}"
+  auto_create_subnetworks = false
+}
+
+resource "google_network_connectivity_hub" "basic_hub" {
+  name        = "hub1%{random_suffix}"
+  description = "A sample hub"
+  labels = {
+    label-two = "value-one"
+  }
+}
+
+resource "google_network_connectivity_spoke" "primary"  {
+  name = "tf-test-spoke1-ipv6%{random_suffix}"
+  location = "global"
+  description = "A sample spoke with a linked VPC that include export ranges of all IPv6"
+  labels = {
+    label-one = "value-one"
+  }
+  hub = google_network_connectivity_hub.basic_hub.id
+  linked_vpc_network {
+    include_export_ranges = [
+      "ALL_IPV6_RANGES",
+      "ALL_PRIVATE_IPV4_RANGES"
+    ]
+    uri = google_compute_network.network.self_link
+  }
 }
 `, context)
 }

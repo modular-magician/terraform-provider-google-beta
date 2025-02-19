@@ -1,5 +1,23 @@
 resource: 'google_certificate_manager_certificate_issuance_config'
 generation_type: 'mmv1'
+source_file: 'products/certificatemanager/CertificateIssuanceConfig.yaml'
 api_service_name: 'certificatemanager.googleapis.com'
 api_version: 'v1'
 api_resource_type_kind: 'CertificateIssuanceConfig'
+fields:
+  - field: 'certificate_authority_config.certificate_authority_service_config.ca_pool'
+  - field: 'create_time'
+  - field: 'description'
+  - field: 'effective_labels'
+    provider_only: true
+  - field: 'key_algorithm'
+  - field: 'labels'
+  - field: 'lifetime'
+  - field: 'location'
+    provider_only: true
+  - field: 'name'
+    provider_only: true
+  - field: 'rotation_window_percentage'
+  - field: 'terraform_labels'
+    provider_only: true
+  - field: 'update_time'

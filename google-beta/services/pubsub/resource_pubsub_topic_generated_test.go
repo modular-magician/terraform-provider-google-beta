@@ -104,6 +104,7 @@ resource "google_pubsub_topic" "example" {
     allowed_persistence_regions = [
       "europe-west3",
     ]
+    enforce_in_transit = true
   }
 }
 `, context)
@@ -240,6 +241,139 @@ resource "google_pubsub_topic" "example" {
     }
     platform_logs_settings {
         severity = "WARNING"
+    }
+  }
+}
+`, context)
+}
+
+func TestAccPubsubTopic_pubsubTopicIngestionAzureEventHubsExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckPubsubTopicDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccPubsubTopic_pubsubTopicIngestionAzureEventHubsExample(context),
+			},
+			{
+				ResourceName:            "google_pubsub_topic.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccPubsubTopic_pubsubTopicIngestionAzureEventHubsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_pubsub_topic" "example" {
+  name = "tf-test-example-topic%{random_suffix}"
+
+  # Outside of automated terraform-provider-google CI tests, these values must be of actual Azure resources for the test to pass.
+  ingestion_data_source_settings {
+    azure_event_hubs {
+        resource_group = "azure-ingestion-resource-group"
+        namespace = "azure-ingestion-namespace"
+        event_hub = "azure-ingestion-event-hub"
+        client_id = "aZZZZZZZ-YYYY-HHHH-GGGG-abcdef569123"
+        tenant_id = "0XXXXXXX-YYYY-HHHH-GGGG-123456789123"
+        subscription_id = "bXXXXXXX-YYYY-HHHH-GGGG-123456789123"
+        gcp_service_account = "fake-service-account@fake-gcp-project.iam.gserviceaccount.com"
+    }
+  }
+}
+`, context)
+}
+
+func TestAccPubsubTopic_pubsubTopicIngestionAwsMskExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckPubsubTopicDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccPubsubTopic_pubsubTopicIngestionAwsMskExample(context),
+			},
+			{
+				ResourceName:            "google_pubsub_topic.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccPubsubTopic_pubsubTopicIngestionAwsMskExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_pubsub_topic" "example" {
+  name = "tf-test-example-topic%{random_suffix}"
+
+  # Outside of automated terraform-provider-google CI tests, these values must be of actual AWS resources for the test to pass.
+  ingestion_data_source_settings {
+    aws_msk {
+        cluster_arn = "arn:aws:kinesis:us-west-2:111111111111:stream/fake-stream-name"
+        topic = "test-topic"
+        aws_role_arn = "arn:aws:iam::111111111111:role/fake-role-name"
+        gcp_service_account = "fake-service-account@fake-gcp-project.iam.gserviceaccount.com"
+    }
+  }
+}
+`, context)
+}
+
+func TestAccPubsubTopic_pubsubTopicIngestionConfluentCloudExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckPubsubTopicDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccPubsubTopic_pubsubTopicIngestionConfluentCloudExample(context),
+			},
+			{
+				ResourceName:            "google_pubsub_topic.example",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccPubsubTopic_pubsubTopicIngestionConfluentCloudExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_pubsub_topic" "example" {
+  name = "tf-test-example-topic%{random_suffix}"
+
+  # Outside of automated terraform-provider-google CI tests, these values must be of actual Confluent Cloud resources for the test to pass.
+  ingestion_data_source_settings {
+    confluent_cloud {
+        bootstrap_server = "test.us-west2.gcp.confluent.cloud:1111"
+        cluster_id = "1234"
+        topic = "test-topic"
+        identity_pool_id = "test-identity-pool-id"
+        gcp_service_account = "fake-service-account@fake-gcp-project.iam.gserviceaccount.com"
     }
   }
 }

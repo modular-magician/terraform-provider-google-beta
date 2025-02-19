@@ -1,5 +1,20 @@
 resource: 'google_notebooks_environment'
 generation_type: 'mmv1'
+source_file: 'products/notebooks/Environment.yaml'
 api_service_name: 'notebooks.googleapis.com'
 api_version: 'v1'
 api_resource_type_kind: 'Environment'
+fields:
+  - field: 'container_image.repository'
+  - field: 'container_image.tag'
+  - field: 'create_time'
+  - field: 'description'
+  - field: 'display_name'
+  - field: 'location'
+    provider_only: true
+  - field: 'name'
+    provider_only: true
+  - field: 'post_startup_script'
+  - field: 'vm_image.image_family'
+  - field: 'vm_image.image_name'
+  - field: 'vm_image.project'

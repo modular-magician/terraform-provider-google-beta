@@ -424,12 +424,27 @@ resource "google_artifact_registry_repository" "my-repo" {
   format        = "DOCKER"
   cleanup_policy_dry_run = false
   cleanup_policies {
+    id     = "delete-untagged"
+    action = "DELETE"
+    condition {
+      tag_state    = "UNTAGGED"
+    }
+  }
+  cleanup_policies {
+    id     = "keep-new-untagged"
+    action = "KEEP"
+    condition {
+      tag_state    = "UNTAGGED"
+      newer_than   = "7d"
+    }
+  }
+  cleanup_policies {
     id     = "delete-prerelease"
     action = "DELETE"
     condition {
       tag_state    = "TAGGED"
       tag_prefixes = ["alpha", "v0"]
-      older_than   = "2592000s"
+      older_than   = "30d"
     }
   }
   cleanup_policies {
@@ -906,9 +921,10 @@ resource "google_artifact_registry_repository" "my-repo" {
   remote_repository_config {
     description = "pull-through cache of another Artifact Registry repository by URL"
     common_repository {
-      uri         = "https://us-central1-docker.pkg.dev//tf-test-example-upstream-repo%{random_suffix}"
+      uri         = "https://us-central1-docker.pkg.dev/${data.google_project.project.project_id}/tf-test-example-upstream-repo%{random_suffix}"
     }
   }
+  depends_on = [google_artifact_registry_repository.upstream_repo]
 }
 `, context)
 }
@@ -978,6 +994,45 @@ resource "google_artifact_registry_repository" "my-repo" {
         password_secret_version = google_secret_manager_secret_version.tf-test-example-remote-secret%{random_suffix}_version.name
       }
     }
+  }
+}
+`, context)
+}
+
+func TestAccArtifactRegistryRepository_artifactRegistryRepositoryVulnerabilityScanningExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckArtifactRegistryRepositoryDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccArtifactRegistryRepository_artifactRegistryRepositoryVulnerabilityScanningExample(context),
+			},
+			{
+				ResourceName:            "google_artifact_registry_repository.my-repo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "repository_id", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccArtifactRegistryRepository_artifactRegistryRepositoryVulnerabilityScanningExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_artifact_registry_repository" "my-repo" {
+  location      = "us-central1"
+  repository_id = "tf-test-my-repository%{random_suffix}"
+  description   = "example docker repository with vulnerability scanning %{random_suffix}"
+  format        = "DOCKER"
+  vulnerability_scanning_config {
+    enablement_config = "INHERITED"
   }
 }
 `, context)
