@@ -1,0 +1,19 @@
+resource: 'google_beyondcorp_security_gateway'
+generation_type: 'mmv1'
+source_file: 'products/beyondcorp/SecurityGateway.yaml'
+api_service_name: 'beyondcorp.googleapis.com'
+api_version: 'v1'
+api_resource_type_kind: 'SecurityGateway'
+autogen_status: true
+fields:
+  - field: 'create_time'
+  - field: 'display_name'
+  - field: 'external_ips'
+  - field: 'hubs.hub.internet_gateway.assigned_ips'
+  - field: 'location'
+    provider_only: true
+  - field: 'name'
+  - field: 'security_gateway_id'
+    provider_only: true
+  - field: 'state'
+  - field: 'update_time'

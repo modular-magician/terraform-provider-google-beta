@@ -1,5 +1,24 @@
 resource: 'google_dataplex_aspect_type'
 generation_type: 'mmv1'
+source_file: 'products/dataplex/AspectType.yaml'
 api_service_name: 'dataplex.googleapis.com'
 api_version: 'v1'
 api_resource_type_kind: 'AspectType'
+fields:
+  - field: 'aspect_type_id'
+    provider_only: true
+  - field: 'create_time'
+  - field: 'description'
+  - field: 'display_name'
+  - field: 'effective_labels'
+    provider_only: true
+  - field: 'labels'
+  - field: 'location'
+    provider_only: true
+  - field: 'metadata_template'
+  - field: 'name'
+  - field: 'terraform_labels'
+    provider_only: true
+  - field: 'transfer_status'
+  - field: 'uid'
+  - field: 'update_time'

@@ -1,5 +1,16 @@
 resource: 'google_logging_log_scope'
 generation_type: 'mmv1'
+source_file: 'products/logging/LogScope.yaml'
 api_service_name: 'logging.googleapis.com'
 api_version: 'v2'
 api_resource_type_kind: 'LogScope'
+fields:
+  - field: 'create_time'
+  - field: 'description'
+  - field: 'location'
+    provider_only: true
+  - field: 'name'
+  - field: 'parent'
+    provider_only: true
+  - field: 'resource_names'
+  - field: 'update_time'

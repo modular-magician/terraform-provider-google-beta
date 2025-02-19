@@ -196,6 +196,7 @@ type Config struct {
 	AlloydbBasePath                  string
 	ApiGatewayBasePath               string
 	ApigeeBasePath                   string
+	ApihubBasePath                   string
 	AppEngineBasePath                string
 	ApphubBasePath                   string
 	ArtifactRegistryBasePath         string
@@ -213,6 +214,7 @@ type Config struct {
 	BinaryAuthorizationBasePath      string
 	BlockchainNodeEngineBasePath     string
 	CertificateManagerBasePath       string
+	ChronicleBasePath                string
 	CloudAssetBasePath               string
 	CloudBuildBasePath               string
 	Cloudbuildv2BasePath             string
@@ -227,6 +229,7 @@ type Config struct {
 	CloudRunV2BasePath               string
 	CloudSchedulerBasePath           string
 	CloudTasksBasePath               string
+	ColabBasePath                    string
 	ComposerBasePath                 string
 	ComputeBasePath                  string
 	ContainerAnalysisBasePath        string
@@ -254,10 +257,12 @@ type Config struct {
 	EdgecontainerBasePath            string
 	EdgenetworkBasePath              string
 	EssentialContactsBasePath        string
+	EventarcBasePath                 string
 	FilestoreBasePath                string
 	FirebaseBasePath                 string
 	FirebaseAppCheckBasePath         string
 	FirebaseDatabaseBasePath         string
+	FirebaseDataConnectBasePath      string
 	FirebaseExtensionsBasePath       string
 	FirebaseHostingBasePath          string
 	FirebaseStorageBasePath          string
@@ -296,6 +301,8 @@ type Config struct {
 	OSConfigBasePath                 string
 	OSLoginBasePath                  string
 	ParallelstoreBasePath            string
+	ParameterManagerBasePath         string
+	ParameterManagerRegionalBasePath string
 	PrivatecaBasePath                string
 	PrivilegedAccessManagerBasePath  string
 	PublicCABasePath                 string
@@ -358,6 +365,7 @@ const ActiveDirectoryBasePathKey = "ActiveDirectory"
 const AlloydbBasePathKey = "Alloydb"
 const ApiGatewayBasePathKey = "ApiGateway"
 const ApigeeBasePathKey = "Apigee"
+const ApihubBasePathKey = "Apihub"
 const AppEngineBasePathKey = "AppEngine"
 const ApphubBasePathKey = "Apphub"
 const ArtifactRegistryBasePathKey = "ArtifactRegistry"
@@ -375,6 +383,7 @@ const BillingBasePathKey = "Billing"
 const BinaryAuthorizationBasePathKey = "BinaryAuthorization"
 const BlockchainNodeEngineBasePathKey = "BlockchainNodeEngine"
 const CertificateManagerBasePathKey = "CertificateManager"
+const ChronicleBasePathKey = "Chronicle"
 const CloudAssetBasePathKey = "CloudAsset"
 const CloudBuildBasePathKey = "CloudBuild"
 const Cloudbuildv2BasePathKey = "Cloudbuildv2"
@@ -389,6 +398,7 @@ const CloudRunBasePathKey = "CloudRun"
 const CloudRunV2BasePathKey = "CloudRunV2"
 const CloudSchedulerBasePathKey = "CloudScheduler"
 const CloudTasksBasePathKey = "CloudTasks"
+const ColabBasePathKey = "Colab"
 const ComposerBasePathKey = "Composer"
 const ComputeBasePathKey = "Compute"
 const ContainerAnalysisBasePathKey = "ContainerAnalysis"
@@ -416,10 +426,12 @@ const DocumentAIWarehouseBasePathKey = "DocumentAIWarehouse"
 const EdgecontainerBasePathKey = "Edgecontainer"
 const EdgenetworkBasePathKey = "Edgenetwork"
 const EssentialContactsBasePathKey = "EssentialContacts"
+const EventarcBasePathKey = "Eventarc"
 const FilestoreBasePathKey = "Filestore"
 const FirebaseBasePathKey = "Firebase"
 const FirebaseAppCheckBasePathKey = "FirebaseAppCheck"
 const FirebaseDatabaseBasePathKey = "FirebaseDatabase"
+const FirebaseDataConnectBasePathKey = "FirebaseDataConnect"
 const FirebaseExtensionsBasePathKey = "FirebaseExtensions"
 const FirebaseHostingBasePathKey = "FirebaseHosting"
 const FirebaseStorageBasePathKey = "FirebaseStorage"
@@ -458,6 +470,8 @@ const OrgPolicyBasePathKey = "OrgPolicy"
 const OSConfigBasePathKey = "OSConfig"
 const OSLoginBasePathKey = "OSLogin"
 const ParallelstoreBasePathKey = "Parallelstore"
+const ParameterManagerBasePathKey = "ParameterManager"
+const ParameterManagerRegionalBasePathKey = "ParameterManagerRegional"
 const PrivatecaBasePathKey = "Privateca"
 const PrivilegedAccessManagerBasePathKey = "PrivilegedAccessManager"
 const PublicCABasePathKey = "PublicCA"
@@ -514,6 +528,7 @@ var DefaultBasePaths = map[string]string{
 	AlloydbBasePathKey:                  "https://alloydb.googleapis.com/v1beta/",
 	ApiGatewayBasePathKey:               "https://apigateway.googleapis.com/v1beta/",
 	ApigeeBasePathKey:                   "https://apigee.googleapis.com/v1/",
+	ApihubBasePathKey:                   "https://apihub.googleapis.com/v1/",
 	AppEngineBasePathKey:                "https://appengine.googleapis.com/v1beta/",
 	ApphubBasePathKey:                   "https://apphub.googleapis.com/v1/",
 	ArtifactRegistryBasePathKey:         "https://artifactregistry.googleapis.com/v1/",
@@ -531,6 +546,7 @@ var DefaultBasePaths = map[string]string{
 	BinaryAuthorizationBasePathKey:      "https://binaryauthorization.googleapis.com/v1/",
 	BlockchainNodeEngineBasePathKey:     "https://blockchainnodeengine.googleapis.com/v1/",
 	CertificateManagerBasePathKey:       "https://certificatemanager.googleapis.com/v1/",
+	ChronicleBasePathKey:                "https://{{location}}-chronicle.googleapis.com/v1beta/",
 	CloudAssetBasePathKey:               "https://cloudasset.googleapis.com/v1/",
 	CloudBuildBasePathKey:               "https://cloudbuild.googleapis.com/v1/",
 	Cloudbuildv2BasePathKey:             "https://cloudbuild.googleapis.com/v2/",
@@ -540,11 +556,12 @@ var DefaultBasePaths = map[string]string{
 	Cloudfunctions2BasePathKey:          "https://cloudfunctions.googleapis.com/v2beta/",
 	CloudIdentityBasePathKey:            "https://cloudidentity.googleapis.com/v1beta1/",
 	CloudIdsBasePathKey:                 "https://ids.googleapis.com/v1/",
-	CloudQuotasBasePathKey:              "https://cloudquotas.googleapis.com/v1/",
+	CloudQuotasBasePathKey:              "https://cloudquotas.googleapis.com/v1beta/",
 	CloudRunBasePathKey:                 "https://{{location}}-run.googleapis.com/",
 	CloudRunV2BasePathKey:               "https://run.googleapis.com/v2/",
 	CloudSchedulerBasePathKey:           "https://cloudscheduler.googleapis.com/v1/",
 	CloudTasksBasePathKey:               "https://cloudtasks.googleapis.com/v2/",
+	ColabBasePathKey:                    "https://{{region}}-aiplatform.googleapis.com/v1beta1/",
 	ComposerBasePathKey:                 "https://composer.googleapis.com/v1beta1/",
 	ComputeBasePathKey:                  "https://compute.googleapis.com/compute/beta/",
 	ContainerAnalysisBasePathKey:        "https://containeranalysis.googleapis.com/v1beta1/",
@@ -572,10 +589,12 @@ var DefaultBasePaths = map[string]string{
 	EdgecontainerBasePathKey:            "https://edgecontainer.googleapis.com/v1/",
 	EdgenetworkBasePathKey:              "https://edgenetwork.googleapis.com/v1/",
 	EssentialContactsBasePathKey:        "https://essentialcontacts.googleapis.com/v1/",
+	EventarcBasePathKey:                 "https://eventarc.googleapis.com/v1/",
 	FilestoreBasePathKey:                "https://file.googleapis.com/v1beta1/",
 	FirebaseBasePathKey:                 "https://firebase.googleapis.com/v1beta1/",
 	FirebaseAppCheckBasePathKey:         "https://firebaseappcheck.googleapis.com/v1beta/",
 	FirebaseDatabaseBasePathKey:         "https://firebasedatabase.googleapis.com/v1beta/",
+	FirebaseDataConnectBasePathKey:      "https://firebasedataconnect.googleapis.com/v1beta/",
 	FirebaseExtensionsBasePathKey:       "https://firebaseextensions.googleapis.com/v1beta/",
 	FirebaseHostingBasePathKey:          "https://firebasehosting.googleapis.com/v1beta1/",
 	FirebaseStorageBasePathKey:          "https://firebasestorage.googleapis.com/v1beta/",
@@ -614,6 +633,8 @@ var DefaultBasePaths = map[string]string{
 	OSConfigBasePathKey:                 "https://osconfig.googleapis.com/v1beta/",
 	OSLoginBasePathKey:                  "https://oslogin.googleapis.com/v1/",
 	ParallelstoreBasePathKey:            "https://parallelstore.googleapis.com/v1beta/",
+	ParameterManagerBasePathKey:         "https://parametermanager.googleapis.com/v1/",
+	ParameterManagerRegionalBasePathKey: "https://parametermanager.{{location}}.rep.googleapis.com/v1/",
 	PrivatecaBasePathKey:                "https://privateca.googleapis.com/v1/",
 	PrivilegedAccessManagerBasePathKey:  "https://privilegedaccessmanager.googleapis.com/v1beta/",
 	PublicCABasePathKey:                 "https://publicca.googleapis.com/v1beta1/",
@@ -643,7 +664,7 @@ var DefaultBasePaths = map[string]string{
 	StorageTransferBasePathKey:          "https://storagetransfer.googleapis.com/v1/",
 	TagsBasePathKey:                     "https://cloudresourcemanager.googleapis.com/v3/",
 	TPUBasePathKey:                      "https://tpu.googleapis.com/v1/",
-	TpuV2BasePathKey:                    "https://tpu.googleapis.com/v2/",
+	TpuV2BasePathKey:                    "https://tpu.googleapis.com/v2alpha1/",
 	TranscoderBasePathKey:               "https://transcoder.googleapis.com/v1/",
 	VertexAIBasePathKey:                 "https://{{region}}-aiplatform.googleapis.com/v1beta1/",
 	VmwareengineBasePathKey:             "https://vmwareengine.googleapis.com/v1/",
@@ -765,6 +786,11 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 			"GOOGLE_APIGEE_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[ApigeeBasePathKey]))
 	}
+	if d.Get("apihub_custom_endpoint") == "" {
+		d.Set("apihub_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_APIHUB_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[ApihubBasePathKey]))
+	}
 	if d.Get("app_engine_custom_endpoint") == "" {
 		d.Set("app_engine_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_APP_ENGINE_CUSTOM_ENDPOINT",
@@ -850,6 +876,11 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 			"GOOGLE_CERTIFICATE_MANAGER_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[CertificateManagerBasePathKey]))
 	}
+	if d.Get("chronicle_custom_endpoint") == "" {
+		d.Set("chronicle_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_CHRONICLE_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[ChronicleBasePathKey]))
+	}
 	if d.Get("cloud_asset_custom_endpoint") == "" {
 		d.Set("cloud_asset_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_CLOUD_ASSET_CUSTOM_ENDPOINT",
@@ -919,6 +950,11 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 		d.Set("cloud_tasks_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_CLOUD_TASKS_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[CloudTasksBasePathKey]))
+	}
+	if d.Get("colab_custom_endpoint") == "" {
+		d.Set("colab_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_COLAB_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[ColabBasePathKey]))
 	}
 	if d.Get("composer_custom_endpoint") == "" {
 		d.Set("composer_custom_endpoint", MultiEnvDefault([]string{
@@ -1055,6 +1091,11 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 			"GOOGLE_ESSENTIAL_CONTACTS_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[EssentialContactsBasePathKey]))
 	}
+	if d.Get("eventarc_custom_endpoint") == "" {
+		d.Set("eventarc_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_EVENTARC_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[EventarcBasePathKey]))
+	}
 	if d.Get("filestore_custom_endpoint") == "" {
 		d.Set("filestore_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_FILESTORE_CUSTOM_ENDPOINT",
@@ -1074,6 +1115,11 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 		d.Set("firebase_database_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_FIREBASE_DATABASE_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[FirebaseDatabaseBasePathKey]))
+	}
+	if d.Get("firebase_data_connect_custom_endpoint") == "" {
+		d.Set("firebase_data_connect_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_FIREBASE_DATA_CONNECT_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[FirebaseDataConnectBasePathKey]))
 	}
 	if d.Get("firebase_extensions_custom_endpoint") == "" {
 		d.Set("firebase_extensions_custom_endpoint", MultiEnvDefault([]string{
@@ -1264,6 +1310,16 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 		d.Set("parallelstore_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_PARALLELSTORE_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[ParallelstoreBasePathKey]))
+	}
+	if d.Get("parameter_manager_custom_endpoint") == "" {
+		d.Set("parameter_manager_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_PARAMETER_MANAGER_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[ParameterManagerBasePathKey]))
+	}
+	if d.Get("parameter_manager_regional_custom_endpoint") == "" {
+		d.Set("parameter_manager_regional_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_PARAMETER_MANAGER_REGIONAL_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[ParameterManagerRegionalBasePathKey]))
 	}
 	if d.Get("privateca_custom_endpoint") == "" {
 		d.Set("privateca_custom_endpoint", MultiEnvDefault([]string{
@@ -1539,11 +1595,20 @@ func (c *Config) LoadAndValidate(ctx context.Context) error {
 	}
 
 	c.TokenSource = tokenSource
-
 	cleanCtx := context.WithValue(ctx, oauth2.HTTPClient, cleanhttp.DefaultClient())
+	clientOptions := []option.ClientOption{option.WithTokenSource(tokenSource)}
+
+	// The client libraries allow setting the GOOGLE_CLOUD_QUOTA_PROJECT environment variable
+	// directly, which unintentionally takes precedence over provider settings. Ensure that
+	// provider settings take precedence by applying to the client library's client directly
+	// b/360405077#comment8 - go/tpg-issue/17882
+	if c.UserProjectOverride && c.BillingProject != "" {
+		quotaProject := c.BillingProject
+		clientOptions = append(clientOptions, option.WithQuotaProject(quotaProject))
+	}
 
 	// 1. MTLS TRANSPORT/CLIENT - sets up proper auth headers
-	client, _, err := transport.NewHTTPClient(cleanCtx, option.WithTokenSource(tokenSource))
+	client, _, err := transport.NewHTTPClient(cleanCtx, clientOptions...)
 	if err != nil {
 		return err
 	}
@@ -1572,6 +1637,10 @@ func (c *Config) LoadAndValidate(ctx context.Context) error {
 
 	// Ensure $userProject is set for all HTTP requests using the client if specified by the provider config
 	// See https://cloud.google.com/apis/docs/system-parameters
+	// option.WithQuotaProject automatically sets the quota project in the client.
+	// However, this setting won't appear in our request logs since our logging
+	// transport sits above the Google client's internal transport. To ensure
+	// visibility in debug logging, we explicitly set the quota project here as well.
 	if c.UserProjectOverride && c.BillingProject != "" {
 		headerTransport.Set("X-Goog-User-Project", c.BillingProject)
 	}
@@ -2397,6 +2466,7 @@ func ConfigureBasePaths(c *Config) {
 	c.AlloydbBasePath = DefaultBasePaths[AlloydbBasePathKey]
 	c.ApiGatewayBasePath = DefaultBasePaths[ApiGatewayBasePathKey]
 	c.ApigeeBasePath = DefaultBasePaths[ApigeeBasePathKey]
+	c.ApihubBasePath = DefaultBasePaths[ApihubBasePathKey]
 	c.AppEngineBasePath = DefaultBasePaths[AppEngineBasePathKey]
 	c.ApphubBasePath = DefaultBasePaths[ApphubBasePathKey]
 	c.ArtifactRegistryBasePath = DefaultBasePaths[ArtifactRegistryBasePathKey]
@@ -2414,6 +2484,7 @@ func ConfigureBasePaths(c *Config) {
 	c.BinaryAuthorizationBasePath = DefaultBasePaths[BinaryAuthorizationBasePathKey]
 	c.BlockchainNodeEngineBasePath = DefaultBasePaths[BlockchainNodeEngineBasePathKey]
 	c.CertificateManagerBasePath = DefaultBasePaths[CertificateManagerBasePathKey]
+	c.ChronicleBasePath = DefaultBasePaths[ChronicleBasePathKey]
 	c.CloudAssetBasePath = DefaultBasePaths[CloudAssetBasePathKey]
 	c.CloudBuildBasePath = DefaultBasePaths[CloudBuildBasePathKey]
 	c.Cloudbuildv2BasePath = DefaultBasePaths[Cloudbuildv2BasePathKey]
@@ -2428,6 +2499,7 @@ func ConfigureBasePaths(c *Config) {
 	c.CloudRunV2BasePath = DefaultBasePaths[CloudRunV2BasePathKey]
 	c.CloudSchedulerBasePath = DefaultBasePaths[CloudSchedulerBasePathKey]
 	c.CloudTasksBasePath = DefaultBasePaths[CloudTasksBasePathKey]
+	c.ColabBasePath = DefaultBasePaths[ColabBasePathKey]
 	c.ComposerBasePath = DefaultBasePaths[ComposerBasePathKey]
 	c.ComputeBasePath = DefaultBasePaths[ComputeBasePathKey]
 	c.ContainerAnalysisBasePath = DefaultBasePaths[ContainerAnalysisBasePathKey]
@@ -2455,10 +2527,12 @@ func ConfigureBasePaths(c *Config) {
 	c.EdgecontainerBasePath = DefaultBasePaths[EdgecontainerBasePathKey]
 	c.EdgenetworkBasePath = DefaultBasePaths[EdgenetworkBasePathKey]
 	c.EssentialContactsBasePath = DefaultBasePaths[EssentialContactsBasePathKey]
+	c.EventarcBasePath = DefaultBasePaths[EventarcBasePathKey]
 	c.FilestoreBasePath = DefaultBasePaths[FilestoreBasePathKey]
 	c.FirebaseBasePath = DefaultBasePaths[FirebaseBasePathKey]
 	c.FirebaseAppCheckBasePath = DefaultBasePaths[FirebaseAppCheckBasePathKey]
 	c.FirebaseDatabaseBasePath = DefaultBasePaths[FirebaseDatabaseBasePathKey]
+	c.FirebaseDataConnectBasePath = DefaultBasePaths[FirebaseDataConnectBasePathKey]
 	c.FirebaseExtensionsBasePath = DefaultBasePaths[FirebaseExtensionsBasePathKey]
 	c.FirebaseHostingBasePath = DefaultBasePaths[FirebaseHostingBasePathKey]
 	c.FirebaseStorageBasePath = DefaultBasePaths[FirebaseStorageBasePathKey]
@@ -2497,6 +2571,8 @@ func ConfigureBasePaths(c *Config) {
 	c.OSConfigBasePath = DefaultBasePaths[OSConfigBasePathKey]
 	c.OSLoginBasePath = DefaultBasePaths[OSLoginBasePathKey]
 	c.ParallelstoreBasePath = DefaultBasePaths[ParallelstoreBasePathKey]
+	c.ParameterManagerBasePath = DefaultBasePaths[ParameterManagerBasePathKey]
+	c.ParameterManagerRegionalBasePath = DefaultBasePaths[ParameterManagerRegionalBasePathKey]
 	c.PrivatecaBasePath = DefaultBasePaths[PrivatecaBasePathKey]
 	c.PrivilegedAccessManagerBasePath = DefaultBasePaths[PrivilegedAccessManagerBasePathKey]
 	c.PublicCABasePath = DefaultBasePaths[PublicCABasePathKey]
