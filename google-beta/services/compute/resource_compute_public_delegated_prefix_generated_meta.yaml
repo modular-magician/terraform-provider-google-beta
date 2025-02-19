@@ -1,5 +1,16 @@
 resource: 'google_compute_public_delegated_prefix'
 generation_type: 'mmv1'
+source_file: 'products/compute/PublicDelegatedPrefix.yaml'
 api_service_name: 'compute.googleapis.com'
 api_version: 'beta'
 api_resource_type_kind: 'PublicDelegatedPrefix'
+fields:
+  - field: 'allocatable_prefix_length'
+  - field: 'description'
+  - field: 'ip_cidr_range'
+  - field: 'is_live_migration'
+  - field: 'mode'
+  - field: 'name'
+  - field: 'parent_prefix'
+  - field: 'region'
+    provider_only: true

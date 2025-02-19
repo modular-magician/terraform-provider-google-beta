@@ -31,10 +31,12 @@ var (
 		"scheduling.0.min_node_cpus",
 		"scheduling.0.provisioning_model",
 		"scheduling.0.instance_termination_action",
+		"scheduling.0.availability_domain",
 		"scheduling.0.max_run_duration",
 		"scheduling.0.on_instance_stop_action",
 		"scheduling.0.maintenance_interval",
 		"scheduling.0.host_error_timeout_seconds",
+		"scheduling.0.graceful_shutdown",
 		"scheduling.0.local_ssd_recovery_timeout",
 	}
 
@@ -142,6 +144,14 @@ func ResourceComputeInstanceTemplate() *schema.Resource {
 							Description: `Name of the disk. When not provided, this defaults to the name of the instance.`,
 						},
 
+						"architecture": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Computed:    true,
+							Description: `The architecture of the image. Allowed values are ARM64 or X86_64.`,
+						},
+
 						"disk_size_gb": {
 							Type:        schema.TypeInt,
 							Optional:    true,
@@ -193,6 +203,16 @@ func ResourceComputeInstanceTemplate() *schema.Resource {
 							Description: `A map of resource manager tags. Resource manager tag keys and values have the same definition as resource manager tags. Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/456. The field is ignored (both PUT & PATCH) when empty.`,
 						},
 
+						"guest_os_features": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `A list of features to enable on the guest operating system. Applicable only for bootable images.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+
 						"source_image": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -215,6 +235,20 @@ images are encrypted with your own keys.`,
 							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"raw_key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Specifies a 256-bit customer-supplied encryption key, encoded in RFC 4648 base64 to either encrypt or decrypt this resource. Only one of kms_key_self_link, rsa_encrypted_key and raw_key may be set.`,
+										Sensitive:   true,
+									},
+									"rsa_encrypted_key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Specifies an RFC 4648 base64 encoded, RSA-wrapped 2048-bit customer-supplied encryption key to either encrypt or decrypt this resource. Only one of kms_key_self_link, rsa_encrypted_key and raw_key may be set.`,
+										Sensitive:   true,
+									},
 									"kms_key_service_account": {
 										Type:     schema.TypeString,
 										Optional: true,
@@ -225,10 +259,10 @@ Engine default service account is used.`,
 									},
 									"kms_key_self_link": {
 										Type:     schema.TypeString,
-										Required: true,
+										Optional: true,
 										ForceNew: true,
 										Description: `The self link of the encryption key that is stored in
-Google Cloud KMS.`,
+Google Cloud KMS. Only one of kms_key_self_link, rsa_encrypted_key and raw_key may be set.`,
 									},
 								},
 							},
@@ -250,6 +284,21 @@ required except for local SSD.`,
 							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"raw_key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Specifies a 256-bit customer-supplied encryption key, encoded in RFC 4648 base64 to either encrypt or decrypt this resource. Only one of kms_key_self_link, rsa_encrypted_key and raw_key may be set.`,
+										Sensitive:   true,
+									},
+
+									"rsa_encrypted_key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Specifies an RFC 4648 base64 encoded, RSA-wrapped 2048-bit customer-supplied encryption key to either encrypt or decrypt this resource. Only one of kms_key_self_link, rsa_encrypted_key and raw_key may be set.`,
+										Sensitive:   true,
+									},
 									"kms_key_service_account": {
 										Type:     schema.TypeString,
 										Optional: true,
@@ -260,10 +309,10 @@ Engine default service account is used.`,
 									},
 									"kms_key_self_link": {
 										Type:     schema.TypeString,
-										Required: true,
+										Optional: true,
 										ForceNew: true,
 										Description: `The self link of the encryption key that is stored in
-Google Cloud KMS.`,
+Google Cloud KMS. Only one of kms_key_self_link, rsa_encrypted_key and raw_key may be set.`,
 									},
 								},
 							},
@@ -308,9 +357,15 @@ Google Cloud KMS.`,
 							Description: `Encrypts or decrypts a disk using a customer-supplied encryption key.`,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"kms_key_service_account": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `The service account being used for the encryption request for the given KMS key. If absent, the Compute Engine default service account is used.`,
+									},
 									"kms_key_self_link": {
 										Type:             schema.TypeString,
-										Required:         true,
+										Optional:         true,
 										ForceNew:         true,
 										DiffSuppressFunc: tpgresource.CompareSelfLinkRelativePaths,
 										Description:      `The self link of the encryption key that is stored in Google Cloud KMS.`,
@@ -539,7 +594,7 @@ Google Cloud KMS.`,
 							Optional:     true,
 							Computed:     true,
 							ForceNew:     true,
-							ValidateFunc: validation.StringInSlice([]string{"IPV4_ONLY", "IPV4_IPV6", ""}, false),
+							ValidateFunc: validation.StringInSlice([]string{"IPV4_ONLY", "IPV4_IPV6", "IPV6_ONLY", ""}, false),
 							Description:  `The stack type for this network interface to identify whether the IPv6 feature is enabled or not. If not specified, IPV4_ONLY will be used.`,
 						},
 
@@ -712,6 +767,13 @@ Google Cloud KMS.`,
 							AtLeastOneOf: schedulingInstTemplateKeys,
 							Description:  `Specifies the action GCE should take when SPOT VM is preempted.`,
 						},
+						"availability_domain": {
+							Type:         schema.TypeInt,
+							Optional:     true,
+							ForceNew:     true,
+							AtLeastOneOf: schedulingInstTemplateKeys,
+							Description:  `Specifies the availability domain, which this instance should be scheduled on.`,
+						},
 						"max_run_duration": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -796,6 +858,52 @@ Must be from 0 to 315,576,000,000 inclusive.`,
 resolution. Durations less than one second are represented
 with a 0 seconds field and a positive nanos field. Must
 be from 0 to 999,999,999 inclusive.`,
+									},
+								},
+							},
+						},
+
+						"graceful_shutdown": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `Settings for the instance to perform a graceful shutdown.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:        schema.TypeBool,
+										Required:    true,
+										ForceNew:    true,
+										Description: `Opts-in for graceful shutdown.`,
+									},
+									"max_duration": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Description: `The time allotted for the instance to gracefully shut down.
+										If the graceful shutdown isn't complete after this time, then the instance
+										transitions to the STOPPING state.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"seconds": {
+													Type:     schema.TypeInt,
+													Required: true,
+													ForceNew: true,
+													Description: `Span of time at a resolution of a second.
+													The value must be between 1 and 3600, which is 3,600 seconds (one hour).`,
+												},
+												"nanos": {
+													Type:     schema.TypeInt,
+													Optional: true,
+													ForceNew: true,
+													Description: `Span of time that's a fraction of a second at nanosecond
+													resolution. Durations less than one second are represented
+													with a 0 seconds field and a positive nanos field. Must
+													be from 0 to 999,999,999 inclusive.`,
+												},
+											},
+										},
 									},
 								},
 							},
@@ -1255,6 +1363,9 @@ func buildDisks(d *schema.ResourceData, config *transport_tpg.Config) ([]*comput
 			if v, ok := d.GetOk(prefix + ".disk_encryption_key.0.kms_key_self_link"); ok {
 				disk.DiskEncryptionKey.KmsKeyName = v.(string)
 			}
+			if v, ok := d.GetOk(prefix + ".disk_encryption_key.0.kms_key_service_account"); ok {
+				disk.DiskEncryptionKey.KmsKeyServiceAccount = v.(string)
+			}
 		}
 		// Assign disk.DiskSizeGb and disk.InitializeParams.DiskSizeGb the same value
 		if v, ok := d.GetOk(prefix + ".disk_size_gb"); ok {
@@ -1312,6 +1423,12 @@ func buildDisks(d *schema.ResourceData, config *transport_tpg.Config) ([]*comput
 				if v, ok := d.GetOk(prefix + ".source_image_encryption_key.0.kms_key_service_account"); ok {
 					disk.InitializeParams.SourceImageEncryptionKey.KmsKeyServiceAccount = v.(string)
 				}
+				if v, ok := d.GetOk(prefix + ".source_image_encryption_key.0.raw_key"); ok {
+					disk.InitializeParams.SourceImageEncryptionKey.RawKey = v.(string)
+				}
+				if v, ok := d.GetOk(prefix + ".source_image_encryption_key.0.rsa_encrypted_key"); ok {
+					disk.InitializeParams.SourceImageEncryptionKey.RsaEncryptedKey = v.(string)
+				}
 			}
 
 			if v, ok := d.GetOk(prefix + ".source_snapshot"); ok {
@@ -1325,6 +1442,12 @@ func buildDisks(d *schema.ResourceData, config *transport_tpg.Config) ([]*comput
 				}
 				if v, ok := d.GetOk(prefix + ".source_snapshot_encryption_key.0.kms_key_service_account"); ok {
 					disk.InitializeParams.SourceSnapshotEncryptionKey.KmsKeyServiceAccount = v.(string)
+				}
+				if v, ok := d.GetOk(prefix + ".source_snapshot_encryption_key.0.raw_key"); ok {
+					disk.InitializeParams.SourceSnapshotEncryptionKey.RawKey = v.(string)
+				}
+				if v, ok := d.GetOk(prefix + ".source_snapshot_encryption_key.0.rsa_encrypted_key"); ok {
+					disk.InitializeParams.SourceSnapshotEncryptionKey.RsaEncryptedKey = v.(string)
 				}
 			}
 
@@ -1344,6 +1467,14 @@ func buildDisks(d *schema.ResourceData, config *transport_tpg.Config) ([]*comput
 
 		if v, ok := d.GetOk(prefix + ".type"); ok {
 			disk.Type = v.(string)
+		}
+
+		if v, ok := d.GetOk(prefix + ".guest_os_features"); ok {
+			disk.GuestOsFeatures = expandComputeInstanceGuestOsFeatures(v.([]interface{}))
+		}
+
+		if v, ok := d.GetOk(prefix + ".architecture"); ok {
+			disk.Architecture = v.(string)
 		}
 
 		disks = append(disks, &disk)
@@ -1599,6 +1730,13 @@ func flattenDisk(disk *compute.AttachedDisk, configDisk map[string]any, defaultP
 		encryption := make([]map[string]interface{}, 1)
 		encryption[0] = make(map[string]interface{})
 		encryption[0]["kms_key_self_link"] = disk.DiskEncryptionKey.KmsKeyName
+		if diskEncryptionKey, ok := configDisk["disk_encryption_key"].([]interface{}); ok && len(diskEncryptionKey) > 0 {
+			if encryptionKeyMap, ok := diskEncryptionKey[0].(map[string]interface{}); ok {
+				if kmsSa, ok := encryptionKeyMap["kms_key_service_account"].(string); ok && kmsSa != "" {
+					encryption[0]["kms_key_service_account"] = kmsSa
+				}
+			}
+		}
 		diskMap["disk_encryption_key"] = encryption
 	}
 
@@ -1609,6 +1747,8 @@ func flattenDisk(disk *compute.AttachedDisk, configDisk map[string]any, defaultP
 	diskMap["source"] = tpgresource.ConvertSelfLinkToV1(disk.Source)
 	diskMap["mode"] = disk.Mode
 	diskMap["type"] = disk.Type
+	diskMap["guest_os_features"] = flattenComputeInstanceGuestOsFeatures(disk.GuestOsFeatures)
+	diskMap["architecture"] = configDisk["architecture"]
 
 	return diskMap, nil
 }
@@ -1886,6 +2026,17 @@ func resourceComputeInstanceTemplateRead(d *schema.ResourceData, meta interface{
 	}
 	if instanceTemplate.Properties.Scheduling != nil {
 		scheduling := flattenScheduling(instanceTemplate.Properties.Scheduling)
+
+		// Workaroud: API doesn't update the scheduling.graceful_shutdown.max_duration.nanos field.
+		// To avoid diff, we need to set the value from the state not from API response.
+		if nanos, ok := d.GetOk("scheduling.0.graceful_shutdown.0.max_duration.0.nanos"); ok {
+			graceful_shutdown := scheduling[0]["graceful_shutdown"].([]interface{})[0].(map[string]interface{})
+			max_duration := graceful_shutdown["max_duration"].([]interface{})[0].(map[string]interface{})
+			max_duration["nanos"] = int64(nanos.(int))
+
+			graceful_shutdown["max_duration"] = []interface{}{max_duration}
+			scheduling[0]["graceful_shutdown"] = []interface{}{graceful_shutdown}
+		}
 		if err = d.Set("scheduling", scheduling); err != nil {
 			return fmt.Errorf("Error setting scheduling: %s", err)
 		}

@@ -1,5 +1,21 @@
 resource: 'google_bigquery_capacity_commitment'
 generation_type: 'mmv1'
+source_file: 'products/bigqueryreservation/CapacityCommitment.yaml'
 api_service_name: 'bigqueryreservation.googleapis.com'
 api_version: 'v1'
 api_resource_type_kind: 'CapacityCommitment'
+fields:
+  - field: 'capacity_commitment_id'
+    provider_only: true
+  - field: 'commitment_end_time'
+  - field: 'commitment_start_time'
+  - field: 'edition'
+  - field: 'enforce_single_admin_project_per_org'
+    provider_only: true
+  - field: 'location'
+    provider_only: true
+  - field: 'name'
+  - field: 'plan'
+  - field: 'renewal_plan'
+  - field: 'slot_count'
+  - field: 'state'
