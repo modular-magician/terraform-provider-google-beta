@@ -146,6 +146,8 @@ fields:
     api_field: 'routing.path_matchers.route_rules.route_action.url_rewrite.path_prefix_rewrite'
   - field: 'routing.path_matcher.route_rule.route_action.url_rewrite.path_template_rewrite'
     api_field: 'routing.path_matchers.route_rules.route_action.url_rewrite.path_template_rewrite'
+  - field: 'routing.path_matcher.route_rule.route_action.wasm_action'
+    api_field: 'routing.path_matchers.route_rules.route_action.wasm_action'
   - field: 'routing.path_matcher.route_rule.route_methods.allowed_methods'
     api_field: 'routing.path_matchers.route_rules.route_methods.allowed_methods'
   - field: 'routing.path_matcher.route_rule.url_redirect.host_redirect'

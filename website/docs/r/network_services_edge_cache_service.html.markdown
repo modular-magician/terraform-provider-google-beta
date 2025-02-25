@@ -248,6 +248,7 @@ resource "google_network_services_edge_cache_service" "instance" {
             allow_headers = ["dev"]
             expose_headers = ["prod"]
           }
+          wasm_action = "projects/{project_number}/locations/global/wasmActions/fruit-action"
         }
       }
       route_rule {
@@ -694,6 +695,10 @@ The following arguments are supported:
   Setting the compression mode to automatic enables dynamic compression for every eligible response.
   When dynamic compression is enabled, it is recommended to also set a cache policy to maximize efficiency.
   Possible values are: `DISABLED`, `AUTOMATIC`.
+
+* `wasm_action` -
+  (Optional)
+  The wasmAction resource that is executed on this route.
 
 
 <a name="nested_routing_path_matcher_path_matcher_route_rule_route_rule_route_action_cdn_policy"></a>The `cdn_policy` block supports:
