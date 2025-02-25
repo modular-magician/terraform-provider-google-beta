@@ -2230,8 +2230,6 @@ func TestAccSqlDatabaseInstance_SqlServerTimezoneUpdate(t *testing.T) {
 }
 
 func TestAccSqlDatabaseInstance_activationPolicy(t *testing.T) {
-	t.Parallel()
-
 	instanceName := "tf-test-" + acctest.RandString(t, 10)
 
 	acctest.VcrTest(t, resource.TestCase{
