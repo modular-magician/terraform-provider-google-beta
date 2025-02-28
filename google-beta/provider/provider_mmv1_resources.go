@@ -453,6 +453,7 @@ var generatedIAMDatasources = map[string]*schema.Resource{
 	"google_data_fusion_instance_iam_policy":                 tpgiamresource.DataSourceIamPolicy(datafusion.DataFusionInstanceIamSchema, datafusion.DataFusionInstanceIamUpdaterProducer),
 	"google_dataplex_aspect_type_iam_policy":                 tpgiamresource.DataSourceIamPolicy(dataplex.DataplexAspectTypeIamSchema, dataplex.DataplexAspectTypeIamUpdaterProducer),
 	"google_dataplex_asset_iam_policy":                       tpgiamresource.DataSourceIamPolicy(dataplex.DataplexAssetIamSchema, dataplex.DataplexAssetIamUpdaterProducer),
+	"google_dataplex_category_iam_policy":                    tpgiamresource.DataSourceIamPolicy(dataplex.DataplexCategoryIamSchema, dataplex.DataplexCategoryIamUpdaterProducer),
 	"google_dataplex_datascan_iam_policy":                    tpgiamresource.DataSourceIamPolicy(dataplex.DataplexDatascanIamSchema, dataplex.DataplexDatascanIamUpdaterProducer),
 	"google_dataplex_entry_group_iam_policy":                 tpgiamresource.DataSourceIamPolicy(dataplex.DataplexEntryGroupIamSchema, dataplex.DataplexEntryGroupIamUpdaterProducer),
 	"google_dataplex_entry_type_iam_policy":                  tpgiamresource.DataSourceIamPolicy(dataplex.DataplexEntryTypeIamSchema, dataplex.DataplexEntryTypeIamUpdaterProducer),
@@ -539,9 +540,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 615
-// Generated IAM resources: 306
-// Total generated resources: 921
+// Generated resources: 616
+// Generated IAM resources: 309
+// Total generated resources: 925
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -938,6 +939,10 @@ var generatedResources = map[string]*schema.Resource{
 	"google_dataplex_asset_iam_binding":                                          tpgiamresource.ResourceIamBinding(dataplex.DataplexAssetIamSchema, dataplex.DataplexAssetIamUpdaterProducer, dataplex.DataplexAssetIdParseFunc),
 	"google_dataplex_asset_iam_member":                                           tpgiamresource.ResourceIamMember(dataplex.DataplexAssetIamSchema, dataplex.DataplexAssetIamUpdaterProducer, dataplex.DataplexAssetIdParseFunc),
 	"google_dataplex_asset_iam_policy":                                           tpgiamresource.ResourceIamPolicy(dataplex.DataplexAssetIamSchema, dataplex.DataplexAssetIamUpdaterProducer, dataplex.DataplexAssetIdParseFunc),
+	"google_dataplex_category":                                                   dataplex.ResourceDataplexCategory(),
+	"google_dataplex_category_iam_binding":                                       tpgiamresource.ResourceIamBinding(dataplex.DataplexCategoryIamSchema, dataplex.DataplexCategoryIamUpdaterProducer, dataplex.DataplexCategoryIdParseFunc),
+	"google_dataplex_category_iam_member":                                        tpgiamresource.ResourceIamMember(dataplex.DataplexCategoryIamSchema, dataplex.DataplexCategoryIamUpdaterProducer, dataplex.DataplexCategoryIdParseFunc),
+	"google_dataplex_category_iam_policy":                                        tpgiamresource.ResourceIamPolicy(dataplex.DataplexCategoryIamSchema, dataplex.DataplexCategoryIamUpdaterProducer, dataplex.DataplexCategoryIdParseFunc),
 	"google_dataplex_datascan":                                                   dataplex.ResourceDataplexDatascan(),
 	"google_dataplex_datascan_iam_binding":                                       tpgiamresource.ResourceIamBinding(dataplex.DataplexDatascanIamSchema, dataplex.DataplexDatascanIamUpdaterProducer, dataplex.DataplexDatascanIdParseFunc),
 	"google_dataplex_datascan_iam_member":                                        tpgiamresource.ResourceIamMember(dataplex.DataplexDatascanIamSchema, dataplex.DataplexDatascanIamUpdaterProducer, dataplex.DataplexDatascanIdParseFunc),
