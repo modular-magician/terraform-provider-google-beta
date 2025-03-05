@@ -566,6 +566,51 @@ resource "google_compute_network" "custom-test" {
 `, context)
 }
 
+func TestAccComputeSubnetwork_subnetworkIpcollectionExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"ip_collection_url": "projects/tf-static-byoip/regions/us-central1/publicDelegatedPrefixes/tf-test-forwarding-rule-mode-pdp",
+		"random_suffix":     acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckComputeSubnetworkDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeSubnetwork_subnetworkIpcollectionExample(context),
+			},
+			{
+				ResourceName:            "google_compute_subnetwork.subnetwork-ip-collection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"network", "region", "reserved_internal_range"},
+			},
+		},
+	})
+}
+
+func testAccComputeSubnetwork_subnetworkIpcollectionExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_subnetwork" "subnetwork-ip-collection" {
+  provider      = google-beta
+  name          = "tf-test-subnet-ip-collection%{random_suffix}"
+  ip_cidr_range = "10.2.0.0/16"
+  region        = "us-central1"
+  network       = google_compute_network.custom-test.id
+  ip_collection = "%{ip_collection_url}"
+}
+
+resource "google_compute_network" "custom-test" {
+  provider                = google-beta
+  name                    = "tf-test-website-net%{random_suffix}"
+  auto_create_subnetworks = false
+}
+`, context)
+}
+
 func testAccCheckComputeSubnetworkDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

@@ -12,6 +12,7 @@ fields:
   - field: 'gateway_address'
   - field: 'internal_ipv6_prefix'
   - field: 'ip_cidr_range'
+  - field: 'ip_collection'
   - field: 'ipv6_access_type'
   - field: 'ipv6_cidr_range'
   - field: 'log_config.aggregation_interval'

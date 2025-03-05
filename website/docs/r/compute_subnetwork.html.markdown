@@ -324,6 +324,30 @@ resource "google_network_connectivity_internal_range" "reserved_secondary" {
   ]
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=subnetwork_ipcollection&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Subnetwork Ipcollection
+
+
+```hcl
+resource "google_compute_subnetwork" "subnetwork-ip-collection" {
+  provider      = google-beta
+  name          = "subnet-ip-collection"
+  ip_cidr_range = "10.2.0.0/16"
+  region        = "us-central1"
+  network       = google_compute_network.custom-test.id
+  ip_collection = ""projects/tf-static-byoip/regions/us-central1/publicDelegatedPrefixes/tf-test-forwarding-rule-mode-pdp""
+}
+
+resource "google_compute_network" "custom-test" {
+  provider                = google-beta
+  name                    = "website-net"
+  auto_create_subnetworks = false
+}
+```
 
 ## Argument Reference
 
@@ -443,6 +467,18 @@ The following arguments are supported:
   existing resources are dropped and prevented from leaving the VPC.
   Setting this field to true will allow these packets to match dynamic routes injected
   via BGP even if their destinations match existing subnet ranges.
+
+* `ip_collection` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Resource reference of a PublicDelegatedPrefix. The PDP must be a sub-PDP
+  in EXTERNAL_IPV6_FORWARDING_RULE_CREATION mode.
+  Use one of the following formats to specify a sub-PDP when creating an
+  IPv6 NetLB forwarding rule using BYOIP:
+  Full resource URL, as in:
+    * `https://www.googleapis.com/compute/v1/projects/{{projectId}}/regions/{{region}}/publicDelegatedPrefixes/{{sub-pdp-name}}`
+  Partial URL, as in:
+    * `projects/{{projectId}}/regions/region/publicDelegatedPrefixes/{{sub-pdp-name}}`
+    * `regions/{{region}}/publicDelegatedPrefixes/{{sub-pdp-name}}`
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
