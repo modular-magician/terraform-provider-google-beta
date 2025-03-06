@@ -119,6 +119,17 @@ See https://cloud.google.com/bigquery/docs/locations for supported locations.`,
 organize and group your datasets.`,
 							Elem: &schema.Schema{Type: schema.TypeString},
 						},
+						"resource_tags": {
+							Type:     schema.TypeMap,
+							Optional: true,
+							ForceNew: true,
+							Description: `Tag keys are globally unique. Tag key is expected to bein the namespaced format,
+for example "123456789012/environment" where 123456789012 is the ID of the parent organization
+or project resource for this tag key. Tag value is expected to be the short name,
+for example "Production". See [Tag definitions](https://cloud.google.com/iam/docs/tags-access-control#definitions)
+for more details.`,
+							Elem: &schema.Schema{Type: schema.TypeString},
+						},
 					},
 				},
 			},
@@ -602,6 +613,13 @@ func expandBigqueryAnalyticsHubListingSubscriptionDestinationDataset(v interface
 		transformed["labels"] = transformedLabels
 	}
 
+	transformedResourceTags, err := expandBigqueryAnalyticsHubListingSubscriptionDestinationDatasetResourceTags(original["resource_tags"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedResourceTags); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["resourceTags"] = transformedResourceTags
+	}
+
 	return transformed, nil
 }
 
@@ -652,6 +670,17 @@ func expandBigqueryAnalyticsHubListingSubscriptionDestinationDatasetDescription(
 }
 
 func expandBigqueryAnalyticsHubListingSubscriptionDestinationDatasetLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
+func expandBigqueryAnalyticsHubListingSubscriptionDestinationDatasetResourceTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
 	}

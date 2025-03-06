@@ -103,6 +103,93 @@ resource "google_bigquery_analytics_hub_listing_subscription" "subscription" {
 `, context)
 }
 
+func TestAccBigqueryAnalyticsHubListingSubscription_bigqueryAnalyticshubListingSubscriptionResourceTagsExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckBigqueryAnalyticsHubListingSubscriptionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBigqueryAnalyticsHubListingSubscription_bigqueryAnalyticshubListingSubscriptionResourceTagsExample(context),
+			},
+			{
+				ResourceName:            "google_bigquery_analytics_hub_listing_subscription.subscription",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"data_exchange_id", "destination_dataset", "listing_id", "location", "subscription_id"},
+			},
+		},
+	})
+}
+
+func testAccBigqueryAnalyticsHubListingSubscription_bigqueryAnalyticshubListingSubscriptionResourceTagsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "project" {}
+
+resource "google_tags_tag_key" "tag_key1" {
+  parent     = data.google_project.project.id
+  short_name = "tf_test_tag_key1%{random_suffix}"
+}
+
+resource "google_tags_tag_value" "tag_value1" {
+  parent     = google_tags_tag_key.tag_key1.id
+  short_name = "tf_test_tag_value1%{random_suffix}"
+}
+
+resource "google_bigquery_analytics_hub_data_exchange" "subscription" {
+  location         = "US"
+  data_exchange_id = "tf_test_my_data_exchange%{random_suffix}"
+  display_name     = "tf_test_my_data_exchange%{random_suffix}"
+  description      = "example data exchange%{random_suffix}"
+}
+
+resource "google_bigquery_analytics_hub_listing" "subscription" {
+  location         = "US"
+  data_exchange_id = google_bigquery_analytics_hub_data_exchange.subscription.data_exchange_id
+  listing_id       = "tf_test_my_listing%{random_suffix}"
+  display_name     = "tf_test_my_listing%{random_suffix}"
+  description      = "example data exchange%{random_suffix}"
+
+  bigquery_dataset {
+    dataset = google_bigquery_dataset.subscription.id
+  }
+}
+
+resource "google_bigquery_dataset" "subscription" {
+  dataset_id                  = "tf_test_my_listing%{random_suffix}"
+  friendly_name               = "tf_test_my_listing%{random_suffix}"
+  description                 = "example data exchange%{random_suffix}"
+  location                    = "US"
+}
+
+resource "google_bigquery_analytics_hub_listing_subscription" "subscription" {
+  location = "US"
+  data_exchange_id = google_bigquery_analytics_hub_data_exchange.subscription.data_exchange_id
+  listing_id       = google_bigquery_analytics_hub_listing.subscription.listing_id
+  destination_dataset {
+    description = "A test subscription"
+    friendly_name = "👋"
+    labels = {
+      testing = "123"
+    }
+    dataset_reference {
+      dataset_id = "tf_test_destination_dataset%{random_suffix}"
+      project_id = google_bigquery_dataset.subscription.project
+    }
+    resource_tags = {
+      (google_tags_tag_key.tag_key1.namespaced_name) = google_tags_tag_value.tag_value1.short_name
+    }
+  }
+}
+`, context)
+}
+
 func testAccCheckBigqueryAnalyticsHubListingSubscriptionDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

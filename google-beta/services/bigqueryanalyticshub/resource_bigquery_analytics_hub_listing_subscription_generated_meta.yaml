@@ -14,6 +14,7 @@ fields:
   - field: 'destination_dataset.friendly_name'
   - field: 'destination_dataset.labels'
   - field: 'destination_dataset.location'
+  - field: 'destination_dataset.resource_tags'
   - field: 'last_modify_time'
   - field: 'linked_dataset_map.linked_resource.linked_dataset'
   - field: 'linked_dataset_map.linked_resource.listing'

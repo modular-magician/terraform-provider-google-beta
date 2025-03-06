@@ -132,6 +132,14 @@ The following arguments are supported:
   The labels associated with this dataset. You can use these to
   organize and group your datasets.
 
+* `resource_tags` -
+  (Optional)
+  Tag keys are globally unique. Tag key is expected to bein the namespaced format,
+  for example "123456789012/environment" where 123456789012 is the ID of the parent organization
+  or project resource for this tag key. Tag value is expected to be the short name,
+  for example "Production". See [Tag definitions](https://cloud.google.com/iam/docs/tags-access-control#definitions)
+  for more details.
+
 
 <a name="nested_destination_dataset_dataset_reference"></a>The `dataset_reference` block supports:
 
