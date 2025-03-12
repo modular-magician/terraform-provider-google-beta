@@ -333,7 +333,7 @@ no Platform Logs will be written. Default value: "SEVERITY_UNSPECIFIED" Possible
 			"kms_key_name": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Description: `The resource name of the Cloud KMS CryptoKey to be used to protect access
+				Description: `TestThe resource name of the Cloud KMS CryptoKey to be used to protect access
 to messages published on this topic. Your project's PubSub service account
 ('service-{{PROJECT_NUMBER}}@gcp-sa-pubsub.iam.gserviceaccount.com') must have
 'roles/cloudkms.cryptoKeyEncrypterDecrypter' to use this feature.
