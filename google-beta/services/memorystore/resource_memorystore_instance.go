@@ -396,6 +396,30 @@ Format: projects/{project}/locations/{location}/instances/{instance}`,
 					},
 				},
 			},
+			"psc_attachment_details": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: `Configuration of a service attachment of the cluster, for creating PSC connections.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"connection_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Service attachment URI which your self-created PscConnection should use as target.`,
+						},
+						"dns_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Recommended to create a DNS record with the dnsName per client and point to the PSC endpoint IP address.`,
+						},
+						"service_attachment": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `Service attachment URI which your self-created PscConnection should use as target.`,
+						},
+					},
+				},
+			},
 			"psc_auto_connections": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -483,6 +507,16 @@ DELETING`,
 							Description: `Represents information about instance with state UPDATING.`,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"target_engine_version": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: `Output only. Target engine version for the instance.`,
+									},
+									"target_node_type": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: `Output only. Target node type for the instance.`,
+									},
 									"target_replica_count": {
 										Type:        schema.TypeInt,
 										Computed:    true,
@@ -830,6 +864,9 @@ func resourceMemorystoreInstanceRead(d *schema.ResourceData, meta interface{}) e
 	if err := d.Set("mode", flattenMemorystoreInstanceMode(res["mode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	if err := d.Set("psc_attachment_details", flattenMemorystoreInstancePscAttachmentDetails(res["pscAttachmentDetails"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
 	if err := d.Set("psc_auto_connections", flattenMemorystoreInstancePscAutoConnections(res["pscAutoConnections"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
@@ -1111,6 +1148,10 @@ func flattenMemorystoreInstanceStateInfoUpdateInfo(v interface{}, d *schema.Reso
 		flattenMemorystoreInstanceStateInfoUpdateInfoTargetShardCount(original["targetShardCount"], d, config)
 	transformed["target_replica_count"] =
 		flattenMemorystoreInstanceStateInfoUpdateInfoTargetReplicaCount(original["targetReplicaCount"], d, config)
+	transformed["target_engine_version"] =
+		flattenMemorystoreInstanceStateInfoUpdateInfoTargetEngineVersion(original["targetEngineVersion"], d, config)
+	transformed["target_node_type"] =
+		flattenMemorystoreInstanceStateInfoUpdateInfoTargetNodeType(original["targetNodeType"], d, config)
 	return []interface{}{transformed}
 }
 func flattenMemorystoreInstanceStateInfoUpdateInfoTargetShardCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1145,6 +1186,14 @@ func flattenMemorystoreInstanceStateInfoUpdateInfoTargetReplicaCount(v interface
 	}
 
 	return v // let terraform core handle it otherwise
+}
+
+func flattenMemorystoreInstanceStateInfoUpdateInfoTargetEngineVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenMemorystoreInstanceStateInfoUpdateInfoTargetNodeType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenMemorystoreInstanceUid(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1464,6 +1513,38 @@ func flattenMemorystoreInstanceEndpointsConnectionsPscAutoConnectionPort(v inter
 }
 
 func flattenMemorystoreInstanceMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenMemorystoreInstancePscAttachmentDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"service_attachment": flattenMemorystoreInstancePscAttachmentDetailsServiceAttachment(original["serviceAttachment"], d, config),
+			"dns_name":           flattenMemorystoreInstancePscAttachmentDetailsDnsName(original["dnsName"], d, config),
+			"connection_type":    flattenMemorystoreInstancePscAttachmentDetailsConnectionType(original["connectionType"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenMemorystoreInstancePscAttachmentDetailsServiceAttachment(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenMemorystoreInstancePscAttachmentDetailsDnsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenMemorystoreInstancePscAttachmentDetailsConnectionType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
