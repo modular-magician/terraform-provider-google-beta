@@ -215,9 +215,6 @@ In addition to the arguments listed above, the following computed attributes are
   Populated in FULL view.
   Structure is [documented below](#nested_compilation_diagnostics).
 
-* `data_tables` -
-  Output only. Resource names of the data tables used in this rule.
-
 
 <a name="nested_severity"></a>The `severity` block contains:
 

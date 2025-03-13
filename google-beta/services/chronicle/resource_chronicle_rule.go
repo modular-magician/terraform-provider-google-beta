@@ -188,14 +188,6 @@ FAILED`,
 				Description: `Output only. The timestamp of when the rule was created.
 Populated in FULL view.`,
 			},
-			"data_tables": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: `Output only. Resource names of the data tables used in this rule.`,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"display_name": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -480,9 +472,6 @@ func resourceChronicleRuleRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Rule: %s", err)
 	}
 	if err := d.Set("compilation_diagnostics", flattenChronicleRuleCompilationDiagnostics(res["compilationDiagnostics"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Rule: %s", err)
-	}
-	if err := d.Set("data_tables", flattenChronicleRuleDataTables(res["dataTables"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Rule: %s", err)
 	}
 
@@ -856,10 +845,6 @@ func flattenChronicleRuleCompilationDiagnosticsSeverity(v interface{}, d *schema
 }
 
 func flattenChronicleRuleCompilationDiagnosticsUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenChronicleRuleDataTables(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 

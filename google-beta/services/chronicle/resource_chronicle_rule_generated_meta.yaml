@@ -17,7 +17,6 @@ fields:
   - field: 'compilation_diagnostics.uri'
   - field: 'compilation_state'
   - field: 'create_time'
-  - field: 'data_tables'
   - field: 'deletion_policy'
     provider_only: true
   - field: 'display_name'
