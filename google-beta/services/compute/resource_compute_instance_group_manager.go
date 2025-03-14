@@ -360,6 +360,16 @@ func ResourceComputeInstanceGroupManager() *schema.Resource {
 							ValidateFunc: validation.StringInSlice([]string{"YES", "NO"}, true),
 							Description:  `Specifies whether to apply the group's latest configuration when repairing a VM. Valid options are: YES, NO. If YES and you updated the group's instance template or per-instance configurations after the VM was created, then these changes are applied when VM is repaired. If NO (default), then updates are applied in accordance with the group's update policy type.`,
 						},
+						"on_failed_health": {
+							Type:         schema.TypeString,
+							Default:      "DEFAULT_ACTION",
+							Optional:     true,
+							ValidateFunc: validation.StringInSlice([]string{"DEFAULT_ACTION", "REPAIR", "DO_NOTHING"}, true),
+							Description: `The action that a MIG performs on an unhealthy VM. A VM is marked as unhealthy when the application running on that VM fails a health check. Valid values are:
+							- DEFAULT_ACTION (default): MIG uses the same action configured for instanceLifecyclePolicy.defaultActionOnFailure field.
+							- REPAIR: MIG automatically repairs an unhealthy VM by recreating it.
+							- DO_NOTHING: MIG doesn't repair an unhealthy VM.`,
+						},
 					},
 				},
 			},
@@ -1295,6 +1305,7 @@ func expandInstanceLifecyclePolicy(configured []interface{}) *compute.InstanceGr
 		data := raw.(map[string]interface{})
 		instanceLifecyclePolicy.ForceUpdateOnRepair = data["force_update_on_repair"].(string)
 		instanceLifecyclePolicy.DefaultActionOnFailure = data["default_action_on_failure"].(string)
+		instanceLifecyclePolicy.OnFailedHealthCheck = data["on_failed_health"].(string)
 	}
 	return instanceLifecyclePolicy
 }
@@ -1487,6 +1498,7 @@ func flattenInstanceLifecyclePolicy(instanceLifecyclePolicy *compute.InstanceGro
 		ilp := map[string]interface{}{}
 		ilp["force_update_on_repair"] = instanceLifecyclePolicy.ForceUpdateOnRepair
 		ilp["default_action_on_failure"] = instanceLifecyclePolicy.DefaultActionOnFailure
+		ilp["on_failed_health"] = instanceLifecyclePolicy.OnFailedHealthCheck
 		results = append(results, ilp)
 	}
 	return results

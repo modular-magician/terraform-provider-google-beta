@@ -298,6 +298,14 @@ func ResourceComputeRegionInstanceGroupManager() *schema.Resource {
 				Description: `The shape to which the group converges either proactively or on resize events (depending on the value set in updatePolicy.instanceRedistributionType).`,
 			},
 
+			"failover_action": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.StringInSlice([]string{"NO_FAILOVER"}, true),
+				Description:  `The action to perform in case of zone failure. Only one value is supported, NO_FAILOVER. The default is NO_FAILOVER.`,
+			},
+
 			"instance_lifecycle_policy": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -319,6 +327,16 @@ func ResourceComputeRegionInstanceGroupManager() *schema.Resource {
 							Optional:     true,
 							ValidateFunc: validation.StringInSlice([]string{"YES", "NO"}, false),
 							Description:  `Specifies whether to apply the group's latest configuration when repairing a VM. Valid options are: YES, NO. If YES and you updated the group's instance template or per-instance configurations after the VM was created, then these changes are applied when VM is repaired. If NO (default), then updates are applied in accordance with the group's update policy type.`,
+						},
+						"on_failed_health": {
+							Type:         schema.TypeString,
+							Default:      "DEFAULT_ACTION",
+							Optional:     true,
+							ValidateFunc: validation.StringInSlice([]string{"DEFAULT_ACTION", "REPAIR", "DO_NOTHING"}, true),
+							Description: `The action that a MIG performs on an unhealthy VM. A VM is marked as unhealthy when the application running on that VM fails a health check. Valid values are:
+							- DEFAULT_ACTION (default): MIG uses the same action configured for instanceLifecyclePolicy.defaultActionOnFailure field.
+							- REPAIR: MIG automatically repairs an unhealthy VM by recreating it.
+							- DO_NOTHING: MIG doesn't repair an unhealthy VM.`,
 						},
 					},
 				},
@@ -671,6 +689,7 @@ func resourceComputeRegionInstanceGroupManagerCreate(d *schema.ResourceData, met
 		AllInstancesConfig:          expandAllInstancesConfig(nil, d.Get("all_instances_config").([]interface{})),
 		DistributionPolicy:          expandDistributionPolicyForCreate(d),
 		StatefulPolicy:              expandStatefulPolicy(d),
+		FailoverAction:              d.Get("failover_action").(string),
 		Params:                      expandInstanceGroupManagerParams(d),
 		// Force send TargetSize to allow size of 0.
 		ForceSendFields: []string{"TargetSize"},
@@ -881,6 +900,9 @@ func resourceComputeRegionInstanceGroupManagerRead(d *schema.ResourceData, meta 
 		if err = d.Set("all_instances_config", flattenAllInstancesConfig(manager.AllInstancesConfig)); err != nil {
 			return fmt.Errorf("Error setting all_instances_config in state: %s", err.Error())
 		}
+	}
+	if err = d.Set("failover_action", manager.FailoverAction); err != nil {
+		return fmt.Errorf("Error setting failover_action in state: %s", err.Error())
 	}
 	if err = d.Set("stateful_disk", flattenStatefulPolicy(manager.StatefulPolicy)); err != nil {
 		return fmt.Errorf("Error setting stateful_disk in state: %s", err.Error())
