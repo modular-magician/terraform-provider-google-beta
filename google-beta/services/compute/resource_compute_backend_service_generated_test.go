@@ -662,6 +662,54 @@ resource "google_compute_backend_service" "default" {
 `, context)
 }
 
+func TestAccComputeBackendService_backendServiceLogConfigExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeBackendServiceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeBackendService_backendServiceLogConfigExample(context),
+			},
+			{
+				ResourceName:            "google_compute_backend_service.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"iap.0.oauth2_client_secret", "security_settings.0.aws_v4_authentication.0.access_key"},
+			},
+		},
+	})
+}
+
+func testAccComputeBackendService_backendServiceLogConfigExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_backend_service" "default" {
+  name          = "tf-test-backend-service%{random_suffix}"
+  health_checks = [google_compute_http_health_check.default.id]
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+  log_config {
+     enable      = true
+     sample_rate = 1.0
+     optional_mode = "CUSTOM"
+     optional_fields = [ "orca.cpu_utilization", "orca.named_metrics.foo" ]
+   }  
+}
+
+resource "google_compute_http_health_check" "default" {
+  name               = "tf-test-health-check%{random_suffix}"
+  request_path       = "/"
+  check_interval_sec = 1
+  timeout_sec        = 1
+}
+`, context)
+}
+
 func TestAccComputeBackendService_backendServiceCustomMetricsExample(t *testing.T) {
 	t.Parallel()
 

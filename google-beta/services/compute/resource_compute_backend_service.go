@@ -913,7 +913,25 @@ If logging is enabled, logs will be exported to Stackdriver.`,
 							Type:         schema.TypeBool,
 							Optional:     true,
 							Description:  `Whether to enable logging for the load balancer traffic served by this backend service.`,
-							AtLeastOneOf: []string{"log_config.0.enable", "log_config.0.sample_rate"},
+							AtLeastOneOf: []string{"log_config.0.enable", "log_config.0.sample_rate", "log_config.0.optional_mode"},
+						},
+						"optional_fields": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Optional:    true,
+							Description: `Specifies the fields to include in logging. This field can only be specified if logging is enabled for this backend service.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"optional_mode": {
+							Type:         schema.TypeString,
+							Computed:     true,
+							Optional:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"INCLUDE_ALL_OPTIONAL", "EXCLUDE_ALL_OPTIONAL", "CUSTOM", ""}),
+							Description: `Specifies the optional logging mode for the load balancer traffic.
+Supported values: INCLUDE_ALL_OPTIONAL, EXCLUDE_ALL_OPTIONAL, CUSTOM. Possible values: ["INCLUDE_ALL_OPTIONAL", "EXCLUDE_ALL_OPTIONAL", "CUSTOM"]`,
+							AtLeastOneOf: []string{"log_config.0.enable", "log_config.0.sample_rate", "log_config.0.optional_mode"},
 						},
 						"sample_rate": {
 							Type:             schema.TypeFloat,
@@ -924,7 +942,7 @@ the field must be in [0, 1]. This configures the sampling rate of requests to th
 where 1.0 means all logged requests are reported and 0.0 means no logged requests are reported.
 The default value is 1.0.`,
 							Default:      1.0,
-							AtLeastOneOf: []string{"log_config.0.enable", "log_config.0.sample_rate"},
+							AtLeastOneOf: []string{"log_config.0.enable", "log_config.0.sample_rate", "log_config.0.optional_mode"},
 						},
 					},
 				},
@@ -3722,6 +3740,10 @@ func flattenComputeBackendServiceLogConfig(v interface{}, d *schema.ResourceData
 		flattenComputeBackendServiceLogConfigEnable(original["enable"], d, config)
 	transformed["sample_rate"] =
 		flattenComputeBackendServiceLogConfigSampleRate(original["sampleRate"], d, config)
+	transformed["optional_mode"] =
+		flattenComputeBackendServiceLogConfigOptionalMode(original["optionalMode"], d, config)
+	transformed["optional_fields"] =
+		flattenComputeBackendServiceLogConfigOptionalFields(original["optionalFields"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeBackendServiceLogConfigEnable(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -3729,6 +3751,14 @@ func flattenComputeBackendServiceLogConfigEnable(v interface{}, d *schema.Resour
 }
 
 func flattenComputeBackendServiceLogConfigSampleRate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeBackendServiceLogConfigOptionalMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeBackendServiceLogConfigOptionalFields(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -5126,6 +5156,20 @@ func expandComputeBackendServiceLogConfig(v interface{}, d tpgresource.Terraform
 		transformed["sampleRate"] = transformedSampleRate
 	}
 
+	transformedOptionalMode, err := expandComputeBackendServiceLogConfigOptionalMode(original["optional_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOptionalMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["optionalMode"] = transformedOptionalMode
+	}
+
+	transformedOptionalFields, err := expandComputeBackendServiceLogConfigOptionalFields(original["optional_fields"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOptionalFields); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["optionalFields"] = transformedOptionalFields
+	}
+
 	return transformed, nil
 }
 
@@ -5134,6 +5178,14 @@ func expandComputeBackendServiceLogConfigEnable(v interface{}, d tpgresource.Ter
 }
 
 func expandComputeBackendServiceLogConfigSampleRate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeBackendServiceLogConfigOptionalMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeBackendServiceLogConfigOptionalFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

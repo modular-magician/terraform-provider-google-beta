@@ -90,6 +90,8 @@ fields:
   - field: 'locality_lb_policies.policy.name'
   - field: 'locality_lb_policy'
   - field: 'log_config.enable'
+  - field: 'log_config.optional_fields'
+  - field: 'log_config.optional_mode'
   - field: 'log_config.sample_rate'
   - field: 'name'
   - field: 'outlier_detection.base_ejection_time.nanos'
