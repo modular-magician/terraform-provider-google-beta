@@ -482,25 +482,25 @@ resource "google_compute_health_check" "default" {
 
 ```hcl
 resource "google_compute_backend_service" "default" {
+  provider = google-beta
   name          = "backend-service"
   health_checks = [google_compute_health_check.default.id]
   load_balancing_scheme = "EXTERNAL_MANAGED"
   protocol = "HTTPS"
   tls_settings {
     sni = "example.com"
-    subjectAltNames = [
-      {
+    subject_alt_names {
         dns_name = "example.com"
-      },
-      {
+    }
+    subject_alt_names {
         uniform_resource_identifier = "https://example.com"
-      }
-    ]
-    authentication_config = [google_network_security_backend_authentication_config.default.id]
+    }
+    authentication_config = "//networksecurity.googleapis.com/${google_network_security_backend_authentication_config.default.id}"
   }
 }
 
 resource "google_compute_health_check" "default" {
+  provider = google-beta
   name = "health-check"
   http_health_check {
     port = 80
@@ -508,6 +508,7 @@ resource "google_compute_health_check" "default" {
 }
 
 resource "google_network_security_backend_authentication_config" "default" {
+  provider = google-beta
   name             = "authentication"
   well_known_roots = "PUBLIC_ROOTS"
 }
