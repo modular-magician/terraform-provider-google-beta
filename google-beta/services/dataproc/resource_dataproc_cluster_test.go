@@ -354,6 +354,32 @@ func TestAccDataprocCluster_withMetadataAndTags(t *testing.T) {
 	})
 }
 
+func TestAccDataprocCluster_withResourceManagerTags(t *testing.T) {
+	t.Parallel()
+
+	var cluster dataproc.Cluster
+	randString := acctest.RandString(t, 10)
+	project_id := envvar.GetTestProjectFromEnv()
+	networkName := acctest.BootstrapSharedTestNetwork(t, "dataproc-cluster")
+	subnetworkName := acctest.BootstrapSubnet(t, "dataproc-cluster", networkName)
+	acctest.BootstrapFirewallForDataprocSharedNetwork(t, "dataproc-cluster", networkName)
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDataprocClusterDestroy(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDataprocCluster_withResourceManagerTags(project_id, randString, subnetworkName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.basic", &cluster),
+					resource.TestCheckResourceAttrSet("google_dataproc_cluster.basic", "cluster_config.0.gce_cluster_config.0.resource_manager_tags.%"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccDataprocCluster_withMinNumInstances(t *testing.T) {
 	t.Parallel()
 
@@ -1678,6 +1704,57 @@ resource "google_dataproc_cluster" "basic" {
   }
 }
 `, rnd, subnetworkName)
+}
+
+func testAccDataprocCluster_withResourceManagerTags(project_id, randString, subnetworkName string) string {
+	return fmt.Sprintf(`
+
+	data "google_project" "project" {
+		project_id = "%s"
+	}
+
+	resource "google_tags_tag_key" "key" {
+	parent      = "projects/${data.google_project.project.number}"
+	short_name  = "testkey"
+	description = "For keyname resources."
+	}
+
+	resource "google_tags_tag_value" "value" {
+	parent      = google_tags_tag_key.key.id
+	short_name  = "testvalue"
+	description = "For valuename resources."
+	}
+
+	resource "google_tags_tag_binding" "binding" {
+	parent    = "//cloudresourcemanager.googleapis.com/projects/${data.google_project.project.number}"
+	tag_value = google_tags_tag_value.value.id
+	}
+
+
+	resource "google_dataproc_cluster" "basic" {
+		provider = google-beta
+		name     = "tf-test-dataproc-%s"
+		region   = "us-central1"
+
+		cluster_config {
+			master_config {
+				num_instances = 1
+				machine_type  = "e2-medium"
+			}
+			worker_config {
+				num_instances = 2
+				machine_type  = "e2-medium"
+			}
+			gce_cluster_config {
+				subnetwork       = "%s"
+				zone             = "us-central1-a"
+				internal_ip_only = true
+				resource_manager_tags = {
+					"${google_tags_tag_key.key.id}" = "${google_tags_tag_value.value.id}"
+				}
+			}
+		}
+	}`, project_id, randString, subnetworkName)
 }
 
 func testAccDataprocCluster_withMinNumInstances(rnd, subnetworkName string) string {
