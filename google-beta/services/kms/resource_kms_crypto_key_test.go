@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
@@ -336,6 +337,10 @@ func TestAccKmsCryptoKey_keyAccessJustificationsPolicy(t *testing.T) {
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
 		Steps: []resource.TestStep{
 			{
+				// Give time for CSS to pickup the newly created project
+				PreConfig: func() {
+					time.Sleep(60 * time.Second)
+				},
 				Config: testGoogleKmsCryptoKey_keyAccessJustificationsPolicy(projectId, projectOrg, projectBillingAccount, keyRingName, cryptoKeyName, allowedAccessReason),
 			},
 			{
