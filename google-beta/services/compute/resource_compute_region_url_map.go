@@ -608,18 +608,18 @@ you create the resource.`,
 				Description: `The list of named PathMatchers to use against the URL.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: `The name to which this PathMatcher is referred by the HostRule.`,
-						},
 						"default_service": {
 							Type:             schema.TypeString,
-							Optional:         true,
+							Required:         true,
 							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
 							Description: `A reference to a RegionBackendService resource. This will be used if
 none of the pathRules defined by this PathMatcher is matched by
 the URL's path portion.`,
+						},
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `The name to which this PathMatcher is referred by the HostRule.`,
 						},
 						"default_url_redirect": {
 							Type:     schema.TypeList,

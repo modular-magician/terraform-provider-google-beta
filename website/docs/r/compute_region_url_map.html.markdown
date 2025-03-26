@@ -1116,7 +1116,7 @@ The following arguments are supported:
 <a name="nested_path_matcher"></a>The `path_matcher` block supports:
 
 * `default_service` -
-  (Optional)
+  (Required)
   A reference to a RegionBackendService resource. This will be used if
   none of the pathRules defined by this PathMatcher is matched by
   the URL's path portion.

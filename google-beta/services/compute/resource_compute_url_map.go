@@ -811,6 +811,12 @@ prior to sending the response back to the client.`,
 				Description: `The list of named PathMatchers to use against the URL.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"default_service": {
+							Type:             schema.TypeString,
+							Required:         true,
+							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+							Description:      `The backend service or backend bucket to use when none of the given paths match.`,
+						},
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
@@ -1335,12 +1341,6 @@ The value must be between 0 and 1000`,
 									},
 								},
 							},
-						},
-						"default_service": {
-							Type:             schema.TypeString,
-							Optional:         true,
-							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
-							Description:      `The backend service or backend bucket to use when none of the given paths match.`,
 						},
 						"default_url_redirect": {
 							Type:     schema.TypeList,
