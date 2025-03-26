@@ -554,9 +554,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 633
+// Generated resources: 634
 // Generated IAM resources: 312
-// Total generated resources: 945
+// Total generated resources: 946
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1002,6 +1002,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_datastream_private_connection":                                       datastream.ResourceDatastreamPrivateConnection(),
 	"google_datastream_stream":                                                   datastream.ResourceDatastreamStream(),
 	"google_deployment_manager_deployment":                                       deploymentmanager.ResourceDeploymentManagerDeployment(),
+	"google_developer_connect_account_connector":                                 developerconnect.ResourceDeveloperConnectAccountConnector(),
 	"google_developer_connect_connection":                                        developerconnect.ResourceDeveloperConnectConnection(),
 	"google_developer_connect_git_repository_link":                               developerconnect.ResourceDeveloperConnectGitRepositoryLink(),
 	"google_dialogflow_agent":                                                    dialogflow.ResourceDialogflowAgent(),
