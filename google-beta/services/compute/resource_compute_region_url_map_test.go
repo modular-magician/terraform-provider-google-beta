@@ -259,7 +259,6 @@ resource "google_compute_region_url_map" "foobar" {
   }
 
   path_matcher {
-    default_service = google_compute_region_backend_service.foobar.self_link
     name            = "boop"
 
     path_rule {
@@ -306,7 +305,6 @@ resource "google_compute_region_url_map" "foobar" {
   }
 
   path_matcher {
-    default_service = google_compute_region_backend_service.foobar.self_link
     name            = "blip"
 
     path_rule {
@@ -358,7 +356,6 @@ resource "google_compute_region_url_map" "foobar" {
   }
 
   path_matcher {
-    default_service = google_compute_region_backend_service.foobar.self_link
     name            = "blop"
 
     path_rule {
@@ -368,7 +365,6 @@ resource "google_compute_region_url_map" "foobar" {
   }
 
   path_matcher {
-    default_service = google_compute_region_backend_service.foobar.self_link
     name            = "blip"
 
     path_rule {
@@ -419,7 +415,6 @@ resource "google_compute_region_url_map" "foobar" {
   }
 
   path_matcher {
-    default_service = google_compute_region_backend_service.foobar.self_link
     name            = "blep"
 
     path_rule {
@@ -434,7 +429,6 @@ resource "google_compute_region_url_map" "foobar" {
   }
 
   path_matcher {
-    default_service = google_compute_region_backend_service.foobar.self_link
     name            = "blub"
 
     path_rule {
@@ -444,7 +438,6 @@ resource "google_compute_region_url_map" "foobar" {
   }
 
   path_matcher {
-    default_service = google_compute_region_backend_service.foobar.self_link
     name            = "blip"
 
     path_rule {
@@ -485,7 +478,6 @@ resource "google_compute_region_url_map" "foobar" {
   }
 
   path_matcher {
-    default_service = google_compute_region_backend_service.foobar.self_link
     name            = "boop"
   }
 
@@ -512,7 +504,6 @@ resource "google_compute_region_url_map" "foobar" {
 
   path_matcher {
     name = "allpaths"
-    default_service = google_compute_region_backend_service.home.self_link
 
     path_rule {
       paths   = ["/home"]
@@ -618,7 +609,6 @@ resource "google_compute_region_url_map" "foobar" {
 
   path_matcher {
     name = "allpaths2"
-    default_service = google_compute_region_backend_service.home.self_link
 
     path_rule {
       paths   = ["/home2"]
@@ -733,7 +723,6 @@ resource "google_compute_region_url_map" "foobar" {
 
   path_matcher {
     name = "allpaths"
-    default_service = google_compute_region_backend_service.home.self_link
 
     route_rules {
       priority = 1
@@ -820,7 +809,6 @@ resource "google_compute_region_url_map" "foobar" {
 
   path_matcher {
     name = "allpaths2"
-    default_service = google_compute_region_backend_service.home2.self_link
 
     route_rules {
       priority = 2
