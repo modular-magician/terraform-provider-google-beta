@@ -42,7 +42,7 @@ To get more information about Snapshot, see:
     * [Official Documentation](https://cloud.google.com/compute/docs/disks/create-snapshots)
 
 ~> **Warning:** All arguments including the following potentially sensitive
-values will be stored in the raw state as plain text: `snapshot_encryption_key.raw_key`, `snapshot_encryption_key.rsa_encrypted_key`, `source_disk_encryption_key.raw_key`.
+values will be stored in the raw state as plain text: `source_instant_snapshot_encryption_key.raw_key`, `source_instant_snapshot_encryption_key.rsa_encrypted_key`, `snapshot_encryption_key.raw_key`, `snapshot_encryption_key.rsa_encrypted_key`, `source_disk_encryption_key.raw_key`.
 [Read more about sensitive data in state](https://www.terraform.io/language/state/sensitive-data).
 
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
@@ -126,10 +126,6 @@ The following arguments are supported:
   characters must be a dash, lowercase letter, or digit, except the last
   character, which cannot be a dash.
 
-* `source_disk` -
-  (Required)
-  A reference to the disk used to create this snapshot.
-
 
 - - -
 
@@ -157,6 +153,19 @@ The following arguments are supported:
   **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
   Please refer to the field `effective_labels` for all of the labels present on the resource.
 
+* `source_disk` -
+  (Optional)
+  A reference to the disk used to create this snapshot.
+
+* `source_instant_snapshot` -
+  (Optional)
+  The source instant snapshot used to create this snapshot
+
+* `source_instant_snapshot_encryption_key` -
+  (Optional)
+  A nested object resource.
+  Structure is [documented below](#nested_source_instant_snapshot_encryption_key).
+
 * `zone` -
   (Optional)
   A reference to the zone where the disk is hosted.
@@ -182,9 +191,55 @@ The following arguments are supported:
   key.
   Structure is [documented below](#nested_source_disk_encryption_key).
 
+* `guest_os_features` -
+  (Optional)
+  A list of features to enable on the guest operating system.
+  Applicable only for bootable disks.
+  Structure is [documented below](#nested_guest_os_features).
+
+* `architecture` -
+  (Optional)
+  The architecture of the disk.
+
+* `snapshot_type` -
+  (Optional)
+  Indicates the type of the snapshot.
+
+* `source_disk_for_recovery_checkpoint` -
+  (Optional)
+  The source disk whose recovery checkpoint will be used to create this snapshot.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+
+<a name="nested_source_instant_snapshot_encryption_key"></a>The `source_instant_snapshot_encryption_key` block supports:
+
+* `raw_key` -
+  (Optional)
+  Specifies a 256-bit customer-supplied encryption key, encoded in
+  RFC 4648 base64 to decrypt the source instant snapshot.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `rsa_encrypted_key` -
+  (Optional)
+  Specifies an encryption key stored in Google Cloud KMS, encoded in
+  RFC 4648 base64 to decrypt the source instant snapshot.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `sha256` -
+  (Output)
+  The RFC 4648 base64 encoded SHA-256 hash of the customer-supplied
+  encryption key that protects the source instant snapshot.
+
+* `kms_key_self_link` -
+  (Optional)
+  The name of the encryption key that is stored in Google Cloud KMS.
+
+* `kms_key_service_account` -
+  (Optional)
+  The service account used for the encryption request for the given KMS key.
+  If absent, the Compute Engine Service Agent service account is used.
 
 <a name="nested_snapshot_encryption_key"></a>The `snapshot_encryption_key` block supports:
 
@@ -226,6 +281,12 @@ The following arguments are supported:
   (Optional)
   The service account used for the encryption request for the given KMS key.
   If absent, the Compute Engine Service Agent service account is used.
+
+<a name="nested_guest_os_features"></a>The `guest_os_features` block supports:
+
+* `type` -
+  (Required)
+  The type of supported feature. Read [Enabling guest operating system features](https://cloud.google.com/compute/docs/images/create-delete-deprecate-private-images#guest-os-features) to see a list of available options.
 
 ## Attributes Reference
 

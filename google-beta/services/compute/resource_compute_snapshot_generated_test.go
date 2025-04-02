@@ -49,7 +49,7 @@ func TestAccComputeSnapshot_snapshotBasicExample(t *testing.T) {
 				ResourceName:            "google_compute_snapshot.snapshot",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "snapshot_encryption_key.0.raw_key", "snapshot_encryption_key.0.rsa_encrypted_key", "source_disk", "source_disk_encryption_key", "terraform_labels", "zone"},
+				ImportStateVerifyIgnore: []string{"architecture", "labels", "snapshot_encryption_key.0.raw_key", "snapshot_encryption_key.0.rsa_encrypted_key", "snapshot_type", "source_disk", "source_disk_encryption_key", "source_disk_for_recovery_checkpoint", "source_instant_snapshot", "source_instant_snapshot_encryption_key.0.raw_key", "source_instant_snapshot_encryption_key.0.rsa_encrypted_key", "terraform_labels", "zone"},
 			},
 		},
 	})
@@ -101,7 +101,7 @@ func TestAccComputeSnapshot_snapshotChainnameExample(t *testing.T) {
 				ResourceName:            "google_compute_snapshot.snapshot",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "snapshot_encryption_key.0.raw_key", "snapshot_encryption_key.0.rsa_encrypted_key", "source_disk", "source_disk_encryption_key", "terraform_labels", "zone"},
+				ImportStateVerifyIgnore: []string{"architecture", "labels", "snapshot_encryption_key.0.raw_key", "snapshot_encryption_key.0.rsa_encrypted_key", "snapshot_type", "source_disk", "source_disk_encryption_key", "source_disk_for_recovery_checkpoint", "source_instant_snapshot", "source_instant_snapshot_encryption_key.0.raw_key", "source_instant_snapshot_encryption_key.0.rsa_encrypted_key", "terraform_labels", "zone"},
 			},
 		},
 	})
