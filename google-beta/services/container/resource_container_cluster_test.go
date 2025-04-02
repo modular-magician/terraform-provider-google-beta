@@ -5444,6 +5444,56 @@ func TestAccContainerCluster_withSecurityPostureConfig(t *testing.T) {
 	})
 }
 
+func TestSuppressDiffForPreRegisteredFleet(t *testing.T) {
+	cases := map[string]struct {
+		Old, New       string
+		ExpectSuppress bool
+	}{
+		"both unset": {
+			Old:            `null`,
+			New:            `null`,
+			ExpectSuppress: true,
+		},
+		"empty list vs empty project": {
+			Old:            `[]`,
+			New:            `[{"project": ""}]`,
+			ExpectSuppress: true,
+		},
+		"both empty project": {
+			Old:            `[{"project": ""}]`,
+			New:            `[{"project": ""}]`,
+			ExpectSuppress: true,
+		},
+		"equal project value": {
+			Old:            `[{"project": "my-project"}]`,
+			New:            `[{"project": "my-project"}]`,
+			ExpectSuppress: true,
+		},
+		"different project values": {
+			Old:            `[{"project": "old-project"}]`,
+			New:            `[{"project": "new-project"}]`,
+			ExpectSuppress: false,
+		},
+		"project vs no project": {
+			Old:            `[{"project": "my-project"}]`,
+			New:            `[]`,
+			ExpectSuppress: false,
+		},
+		"invalid JSON": {
+			Old:            `invalid-json`,
+			New:            `[{"project": ""}]`,
+			ExpectSuppress: false,
+		},
+	}
+
+	for name, tc := range cases {
+		result := container.suppressDiffForPreRegisteredFleet("fleet", tc.Old, tc.New, nil)
+		if result != tc.ExpectSuppress {
+			t.Errorf("case %q: expected %v, got %v", name, tc.ExpectSuppress, result)
+		}
+	}
+}
+
 func TestAccContainerCluster_withFleetConfig(t *testing.T) {
 	t.Parallel()
 
@@ -5473,6 +5523,9 @@ func TestAccContainerCluster_withFleetConfig(t *testing.T) {
 			},
 			{
 				Config: testAccContainerCluster_DisableFleet(clusterName, networkName, subnetworkName),
+			},
+			{
+				Config: testAccContainerCluster_WithEmptyFleetConfig(clusterName, networkName, subnetworkName),
 			},
 			{
 				ResourceName:            "google_container_cluster.primary",
@@ -5582,6 +5635,25 @@ resource "google_container_cluster" "primary" {
   deletion_protection = false
 }
 `, resource_name, networkName, subnetworkName)
+}
+
+func testAccContainerCluster_withEmptyFleetConfig(name, networkName, subnetworkName string) string {
+	return fmt.Sprintf(`
+resource "google_container_cluster" "primary" {
+  name               = "%s"
+  location           = "us-central1-a"
+  initial_node_count = 1
+
+  fleet {
+    project = ""
+  }
+
+  network    = "%s"
+  subnetwork = "%s"
+
+  deletion_protection = false
+}
+`, name, networkName, subnetworkName)
 }
 
 func testAccContainerCluster_withIncompatibleMasterVersionNodeVersion(name string) string {
