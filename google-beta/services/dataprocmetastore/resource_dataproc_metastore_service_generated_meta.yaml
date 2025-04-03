@@ -9,6 +9,8 @@ fields:
   - field: 'create_time'
   - field: 'database_type'
   - field: 'deletion_protection'
+  - field: 'deletion_protection'
+    provider_only: true
   - field: 'effective_labels'
     provider_only: true
   - field: 'encryption_config.kms_key'

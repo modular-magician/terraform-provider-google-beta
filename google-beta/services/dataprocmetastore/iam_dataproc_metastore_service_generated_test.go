@@ -145,6 +145,7 @@ resource "google_dataproc_metastore_service" "default" {
   labels = {
     env = "test"
   }
+  deletion_protection = false
 }
 
 resource "google_dataproc_metastore_service_iam_member" "foo" {
@@ -177,6 +178,7 @@ resource "google_dataproc_metastore_service" "default" {
   labels = {
     env = "test"
   }
+  deletion_protection = false
 }
 
 data "google_iam_policy" "foo" {
@@ -224,6 +226,7 @@ resource "google_dataproc_metastore_service" "default" {
   labels = {
     env = "test"
   }
+  deletion_protection = false
 }
 
 data "google_iam_policy" "foo" {
@@ -258,6 +261,7 @@ resource "google_dataproc_metastore_service" "default" {
   labels = {
     env = "test"
   }
+  deletion_protection = false
 }
 
 resource "google_dataproc_metastore_service_iam_binding" "foo" {
@@ -290,6 +294,7 @@ resource "google_dataproc_metastore_service" "default" {
   labels = {
     env = "test"
   }
+  deletion_protection = false
 }
 
 resource "google_dataproc_metastore_service_iam_binding" "foo" {
