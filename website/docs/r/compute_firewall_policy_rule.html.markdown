@@ -280,6 +280,23 @@ The following arguments are supported:
   When set to true, the firewall policy rule is not enforced and traffic behaves as if it did not exist.
   If this is unspecified, the firewall policy rule will be enabled.
 
+* `target_secure_tags` -
+  (Optional)
+  A list of secure tags that controls which instances the firewall rule applies to.
+  If targetSecureTag are specified, then the firewall rule applies only to instances in the VPC network that have one of those EFFECTIVE secure tags, if all the targetSecureTag are in INEFFECTIVE state, then this rule will be ignored.
+  targetSecureTag may not be set at the same time as targetServiceAccounts. If neither targetServiceAccounts nor targetSecureTag are specified, the firewall rule applies to all instances on the specified network. Maximum number of target label tags allowed is 256.
+  Structure is [documented below](#nested_target_secure_tags).
+
+
+<a name="nested_target_secure_tags"></a>The `target_secure_tags` block supports:
+
+* `name` -
+  (Optional)
+  Name of the secure tag, created with TagManager's TagValue API.
+
+* `state` -
+  (Output)
+  State of the secure tag, either EFFECTIVE or INEFFECTIVE. A secure tag is INEFFECTIVE when it is deleted or its network is deleted.
 
 ## Attributes Reference
 

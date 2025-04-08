@@ -32,5 +32,7 @@ fields:
   - field: 'rule_tuple_count'
   - field: 'security_profile_group'
   - field: 'target_resources'
+  - field: 'target_secure_tags.name'
+  - field: 'target_secure_tags.state'
   - field: 'target_service_accounts'
   - field: 'tls_inspect'
