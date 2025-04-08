@@ -73,17 +73,23 @@ provider "google" {
   user_project_override = true
   scopes = [
     "https://www.googleapis.com/auth/siteverification",
+    "https://www.googleapis.com/auth/siteverification.verify_only",
     "https://www.googleapis.com/auth/cloud-platform",
     "https://www.googleapis.com/auth/userinfo.email",
+
+    https://www.googleapis.com/auth/sqlservice.login,
+    https://www.googleapis.com/auth/accounts.reauth
   ]
 }
 
 resource "google_service_account" "test-account1" {
+  provider     = google.scoped
   account_id   = "%{account1}"
   display_name = "Site Verification Testing Account One"
 }
 
 resource "google_service_account" "test-account2" {
+  provider     = google.scoped
   account_id   = "%{account2}"
   display_name = "Site Verification Testing Account Two"
 }
@@ -140,6 +146,7 @@ provider "google" {
   user_project_override = true
   scopes = [
     "https://www.googleapis.com/auth/siteverification",
+    "https://www.googleapis.com/auth/siteverification.verify_only",
     "https://www.googleapis.com/auth/cloud-platform",
     "https://www.googleapis.com/auth/userinfo.email",
   ]
@@ -213,6 +220,7 @@ provider "google" {
   user_project_override = true
   scopes = [
     "https://www.googleapis.com/auth/siteverification",
+    "https://www.googleapis.com/auth/siteverification.verify_only",
     "https://www.googleapis.com/auth/cloud-platform",
     "https://www.googleapis.com/auth/userinfo.email",
   ]
@@ -264,6 +272,7 @@ provider "google" {
   user_project_override = true
   scopes = [
     "https://www.googleapis.com/auth/siteverification",
+    "https://www.googleapis.com/auth/siteverification.verify_only",
     "https://www.googleapis.com/auth/cloud-platform",
     "https://www.googleapis.com/auth/userinfo.email",
   ]
