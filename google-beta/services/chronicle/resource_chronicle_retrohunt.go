@@ -247,14 +247,6 @@ func resourceChronicleRetrohuntCreate(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error waiting to create Retrohunt: %s", err)
 	}
 
-	opRes, err = resourceChronicleRetrohuntDecoder(d, meta, opRes)
-	if err != nil {
-		return fmt.Errorf("Error decoding response from operation: %s", err)
-	}
-	if opRes == nil {
-		return fmt.Errorf("Error decoding response from operation, could not find object")
-	}
-
 	if err := d.Set("name", flattenChronicleRetrohuntName(opRes["name"], d, config)); err != nil {
 		return err
 	}
@@ -265,19 +257,6 @@ func resourceChronicleRetrohuntCreate(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
-
-	metadata := res["metadata"].(map[string]interface{})
-	retrohunt := metadata["retrohunt"].(string)
-	parts := strings.Split(retrohunt, "/")
-	retrohunt_id := parts[len(parts)-1]
-
-	log.Printf("[DEBUG] Setting retrohunt id to %s", retrohunt_id)
-
-	// retrohunt value is set by API response and required to GET the connection
-	// it is set by extracting id from the "retrohunt" field in the response metadata rather than a field in the response
-	if err := d.Set("retrohunt", retrohunt_id); err != nil {
-		return fmt.Errorf("Error reading Retrohunt ID: %s", err)
-	}
 
 	log.Printf("[DEBUG] Finished creating Retrohunt %q: %#v", d.Id(), res)
 
@@ -320,18 +299,6 @@ func resourceChronicleRetrohuntRead(d *schema.ResourceData, meta interface{}) er
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ChronicleRetrohunt %q", d.Id()))
-	}
-
-	res, err = resourceChronicleRetrohuntDecoder(d, meta, res)
-	if err != nil {
-		return err
-	}
-
-	if res == nil {
-		// Decoding the object has resulted in it being gone. It may be marked deleted
-		log.Printf("[DEBUG] Removing ChronicleRetrohunt because it no longer exists.")
-		d.SetId("")
-		return nil
 	}
 
 	if err := d.Set("project", project); err != nil {
@@ -448,7 +415,8 @@ func flattenChronicleRetrohuntState(v interface{}, d *schema.ResourceData, confi
 }
 
 func flattenChronicleRetrohuntRetrohunt(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
+	parts := strings.Split(d.Get("name").(string), "/")
+	return parts[len(parts)-1]
 }
 
 func expandChronicleRetrohuntProcessInterval(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -487,19 +455,4 @@ func expandChronicleRetrohuntProcessIntervalEndTime(v interface{}, d tpgresource
 
 func expandChronicleRetrohuntRetrohunt(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
-}
-
-func resourceChronicleRetrohuntDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
-	name, ok := res["name"].(string)
-	if !ok {
-		log.Printf("[ERROR] 'name' not found in response")
-	}
-	parts := strings.Split(name, "/")
-	retrohunt_id := parts[len(parts)-1]
-
-	log.Printf("[DEBUG] Setting retrohunt to %s", retrohunt_id)
-
-	res["retrohunt"] = retrohunt_id
-
-	return res, nil
 }
