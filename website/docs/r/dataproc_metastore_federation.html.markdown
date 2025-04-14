@@ -144,16 +144,18 @@ The following arguments are supported:
   **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
   Please refer to the field `effective_labels` for all of the labels present on the resource.
 
+* `tags` -
+  (Optional)
+  A map of resource manager tags.
+  Resource manager tag keys and values have the same definition as resource manager tags.
+  Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/{tag_value_id}.
+
 * `location` -
   (Optional)
   The location where the metastore federation should reside.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
-
-* `deletion_protection` - (Optional) Whether Terraform will be prevented from destroying the federation. Defaults to false.
-When the field is set to true in Terraform state, a `terraform apply`
-or `terraform destroy` that would delete the federation will fail.
 
 
 ## Attributes Reference
