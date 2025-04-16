@@ -54,6 +54,36 @@ resource "google_discovery_engine_data_store" "basic" {
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=discoveryengine_datastore_starting_schema&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Discoveryengine Datastore Starting Schema
+
+
+```hcl
+resource "google_discovery_engine_data_store" "starting_schema" {
+  location                     = "global"
+  data_store_id                = "data-store-id"
+  display_name                 = "tf-test-structured-datastore"
+  industry_vertical            = "GENERIC"
+  content_config               = "NO_CONTENT"
+  solution_types               = ["SOLUTION_TYPE_SEARCH"]
+  create_advanced_site_search  = false
+  skip_default_schema_creation = false
+  starting_schema {
+    json_schema                = <<EOF
+    {
+      "$schema" : "https://json-schema.org/draft/2020-12/schema",
+      "datetime_detection":true,
+      "type":"object",
+      "geolocation_detection":true
+    }
+    EOF
+  }
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=discoveryengine_datastore_document_processing_config&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
@@ -156,6 +186,18 @@ The following arguments are supported:
   (Optional)
   Configuration for Document understanding and enrichment.
   Structure is [documented below](#nested_document_processing_config).
+
+* `starting_schema` -
+  (Optional)
+  The start schema to use for this DataStore when provisioning it. If unset,
+  a default vertical specialized schema will be used.
+  This field is only used by DataStoreService.CreateDataStore API, and will
+  be ignored if used in other APIs. This field will be omitted from all API
+  responses including DataStoreService.CreateDataStore API. To retrieve a
+  schema of a DataStore, use SchemaService.GetSchema API instead.
+  The provided schema will be validated against certain rules on schema.
+  Learn more from: https://cloud.google.com/generative-ai-app-builder/docs/provide-schema.
+  Structure is [documented below](#nested_starting_schema).
 
 * `create_advanced_site_search` -
   (Optional)
@@ -280,6 +322,19 @@ The following arguments are supported:
 * `use_native_text` -
   (Optional)
   If true, will use native text instead of OCR text on pages containing native text.
+
+<a name="nested_starting_schema"></a>The `starting_schema` block supports:
+
+* `name` -
+  (Output)
+  The unique full resource name of the schema. Values are of the format
+  `projects/{project}/locations/{location}/collections/{collection_id}/dataStores/{data_store_id}/schemas/{schema_id}`.
+  This field must be a UTF-8 encoded string with a length limit of 1024
+  characters.
+
+* `json_schema` -
+  (Optional)
+  The JSON representation of the schema.
 
 ## Attributes Reference
 

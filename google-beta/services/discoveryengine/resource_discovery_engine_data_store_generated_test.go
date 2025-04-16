@@ -70,6 +70,56 @@ resource "google_discovery_engine_data_store" "basic" {
 `, context)
 }
 
+func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreStartingSchemaExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDiscoveryEngineDataStoreDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDiscoveryEngineDataStore_discoveryengineDatastoreStartingSchemaExample(context),
+			},
+			{
+				ResourceName:            "google_discovery_engine_data_store.starting_schema",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "location", "skip_default_schema_creation"},
+			},
+		},
+	})
+}
+
+func testAccDiscoveryEngineDataStore_discoveryengineDatastoreStartingSchemaExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_discovery_engine_data_store" "starting_schema" {
+  location                     = "global"
+  data_store_id                = "tf-test-data-store-id%{random_suffix}"
+  display_name                 = "tf-test-structured-datastore"
+  industry_vertical            = "GENERIC"
+  content_config               = "NO_CONTENT"
+  solution_types               = ["SOLUTION_TYPE_SEARCH"]
+  create_advanced_site_search  = false
+  skip_default_schema_creation = false
+  starting_schema {
+    json_schema                = <<EOF
+    {
+      "$schema" : "https://json-schema.org/draft/2020-12/schema",
+      "datetime_detection":true,
+      "type":"object",
+      "geolocation_detection":true
+    }
+    EOF
+  }
+}
+`, context)
+}
+
 func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreDocumentProcessingConfigExample(t *testing.T) {
 	t.Parallel()
 

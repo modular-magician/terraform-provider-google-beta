@@ -290,6 +290,39 @@ specified.`,
 					ValidateFunc: verify.ValidateEnum([]string{"SOLUTION_TYPE_RECOMMENDATION", "SOLUTION_TYPE_SEARCH", "SOLUTION_TYPE_CHAT", "SOLUTION_TYPE_GENERATIVE_CHAT"}),
 				},
 			},
+			"starting_schema": {
+				Type:     schema.TypeList,
+				Optional: true,
+				ForceNew: true,
+				Description: `The start schema to use for this DataStore when provisioning it. If unset,
+a default vertical specialized schema will be used.
+This field is only used by DataStoreService.CreateDataStore API, and will
+be ignored if used in other APIs. This field will be omitted from all API
+responses including DataStoreService.CreateDataStore API. To retrieve a
+schema of a DataStore, use SchemaService.GetSchema API instead.
+The provided schema will be validated against certain rules on schema.
+Learn more from: https://cloud.google.com/generative-ai-app-builder/docs/provide-schema.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"json_schema": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							Description:  `The JSON representation of the schema.`,
+							ExactlyOneOf: []string{},
+						},
+						"name": {
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `The unique full resource name of the schema. Values are of the format
+'projects/{project}/locations/{location}/collections/{collection_id}/dataStores/{data_store_id}/schemas/{schema_id}'.
+This field must be a UTF-8 encoded string with a length limit of 1024
+characters.`,
+						},
+					},
+				},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -362,6 +395,12 @@ func resourceDiscoveryEngineDataStoreCreate(d *schema.ResourceData, meta interfa
 		return err
 	} else if v, ok := d.GetOkExists("document_processing_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(documentProcessingConfigProp)) && (ok || !reflect.DeepEqual(v, documentProcessingConfigProp)) {
 		obj["documentProcessingConfig"] = documentProcessingConfigProp
+	}
+	startingSchemaProp, err := expandDiscoveryEngineDataStoreStartingSchema(d.Get("starting_schema"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("starting_schema"); !tpgresource.IsEmptyValue(reflect.ValueOf(startingSchemaProp)) && (ok || !reflect.DeepEqual(v, startingSchemaProp)) {
+		obj["startingSchema"] = startingSchemaProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{DiscoveryEngineBasePath}}projects/{{project}}/locations/{{location}}/collections/default_collection/dataStores?dataStoreId={{data_store_id}}&createAdvancedSiteSearch={{create_advanced_site_search}}&skipDefaultSchemaCreation={{skip_default_schema_creation}}")
@@ -487,6 +526,9 @@ func resourceDiscoveryEngineDataStoreRead(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error reading DataStore: %s", err)
 	}
 	if err := d.Set("create_time", flattenDiscoveryEngineDataStoreCreateTime(res["createTime"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataStore: %s", err)
+	}
+	if err := d.Set("starting_schema", flattenDiscoveryEngineDataStoreStartingSchema(res["startingSchema"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataStore: %s", err)
 	}
 
@@ -860,6 +902,29 @@ func flattenDiscoveryEngineDataStoreCreateTime(v interface{}, d *schema.Resource
 	return v
 }
 
+func flattenDiscoveryEngineDataStoreStartingSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["name"] =
+		flattenDiscoveryEngineDataStoreStartingSchemaName(original["name"], d, config)
+	transformed["json_schema"] =
+		flattenDiscoveryEngineDataStoreStartingSchemaJsonSchema(original["jsonSchema"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDiscoveryEngineDataStoreStartingSchemaName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineDataStoreStartingSchemaJsonSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandDiscoveryEngineDataStoreDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1188,4 +1253,38 @@ func expandDiscoveryEngineDataStoreDocumentProcessingConfigParsingConfigOverride
 	transformed := make(map[string]interface{})
 
 	return transformed, nil
+}
+
+func expandDiscoveryEngineDataStoreStartingSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedName, err := expandDiscoveryEngineDataStoreStartingSchemaName(original["name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["name"] = transformedName
+	}
+
+	transformedJsonSchema, err := expandDiscoveryEngineDataStoreStartingSchemaJsonSchema(original["json_schema"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedJsonSchema); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["jsonSchema"] = transformedJsonSchema
+	}
+
+	return transformed, nil
+}
+
+func expandDiscoveryEngineDataStoreStartingSchemaName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineDataStoreStartingSchemaJsonSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }

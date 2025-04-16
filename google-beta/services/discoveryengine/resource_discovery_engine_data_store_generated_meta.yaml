@@ -33,3 +33,5 @@ fields:
   - field: 'skip_default_schema_creation'
     provider_only: true
   - field: 'solution_types'
+  - field: 'starting_schema.json_schema'
+  - field: 'starting_schema.name'
