@@ -495,6 +495,7 @@ var generatedIAMDatasources = map[string]*schema.Resource{
 	"google_iap_tunnel_instance_iam_policy":                        tpgiamresource.DataSourceIamPolicy(iap.IapTunnelInstanceIamSchema, iap.IapTunnelInstanceIamUpdaterProducer),
 	"google_iap_web_iam_policy":                                    tpgiamresource.DataSourceIamPolicy(iap.IapWebIamSchema, iap.IapWebIamUpdaterProducer),
 	"google_iap_web_backend_service_iam_policy":                    tpgiamresource.DataSourceIamPolicy(iap.IapWebBackendServiceIamSchema, iap.IapWebBackendServiceIamUpdaterProducer),
+	"google_iap_web_cloud_run_service_iam_policy":                  tpgiamresource.DataSourceIamPolicy(iap.IapWebCloudRunServiceIamSchema, iap.IapWebCloudRunServiceIamUpdaterProducer),
 	"google_iap_web_region_backend_service_iam_policy":             tpgiamresource.DataSourceIamPolicy(iap.IapWebRegionBackendServiceIamSchema, iap.IapWebRegionBackendServiceIamUpdaterProducer),
 	"google_iap_web_type_app_engine_iam_policy":                    tpgiamresource.DataSourceIamPolicy(iap.IapWebTypeAppEngineIamSchema, iap.IapWebTypeAppEngineIamUpdaterProducer),
 	"google_iap_web_type_compute_iam_policy":                       tpgiamresource.DataSourceIamPolicy(iap.IapWebTypeComputeIamSchema, iap.IapWebTypeComputeIamUpdaterProducer),
@@ -561,8 +562,8 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 
 // Resources
 // Generated resources: 642
-// Generated IAM resources: 324
-// Total generated resources: 966
+// Generated IAM resources: 327
+// Total generated resources: 969
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1185,6 +1186,9 @@ var generatedResources = map[string]*schema.Resource{
 	"google_iap_web_backend_service_iam_binding":                                 tpgiamresource.ResourceIamBinding(iap.IapWebBackendServiceIamSchema, iap.IapWebBackendServiceIamUpdaterProducer, iap.IapWebBackendServiceIdParseFunc),
 	"google_iap_web_backend_service_iam_member":                                  tpgiamresource.ResourceIamMember(iap.IapWebBackendServiceIamSchema, iap.IapWebBackendServiceIamUpdaterProducer, iap.IapWebBackendServiceIdParseFunc),
 	"google_iap_web_backend_service_iam_policy":                                  tpgiamresource.ResourceIamPolicy(iap.IapWebBackendServiceIamSchema, iap.IapWebBackendServiceIamUpdaterProducer, iap.IapWebBackendServiceIdParseFunc),
+	"google_iap_web_cloud_run_service_iam_binding":                               tpgiamresource.ResourceIamBinding(iap.IapWebCloudRunServiceIamSchema, iap.IapWebCloudRunServiceIamUpdaterProducer, iap.IapWebCloudRunServiceIdParseFunc),
+	"google_iap_web_cloud_run_service_iam_member":                                tpgiamresource.ResourceIamMember(iap.IapWebCloudRunServiceIamSchema, iap.IapWebCloudRunServiceIamUpdaterProducer, iap.IapWebCloudRunServiceIdParseFunc),
+	"google_iap_web_cloud_run_service_iam_policy":                                tpgiamresource.ResourceIamPolicy(iap.IapWebCloudRunServiceIamSchema, iap.IapWebCloudRunServiceIamUpdaterProducer, iap.IapWebCloudRunServiceIdParseFunc),
 	"google_iap_web_region_backend_service_iam_binding":                          tpgiamresource.ResourceIamBinding(iap.IapWebRegionBackendServiceIamSchema, iap.IapWebRegionBackendServiceIamUpdaterProducer, iap.IapWebRegionBackendServiceIdParseFunc),
 	"google_iap_web_region_backend_service_iam_member":                           tpgiamresource.ResourceIamMember(iap.IapWebRegionBackendServiceIamSchema, iap.IapWebRegionBackendServiceIamUpdaterProducer, iap.IapWebRegionBackendServiceIdParseFunc),
 	"google_iap_web_region_backend_service_iam_policy":                           tpgiamresource.ResourceIamPolicy(iap.IapWebRegionBackendServiceIamSchema, iap.IapWebRegionBackendServiceIamUpdaterProducer, iap.IapWebRegionBackendServiceIdParseFunc),
