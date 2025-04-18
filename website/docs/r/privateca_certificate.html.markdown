@@ -28,6 +28,11 @@ A Certificate corresponds to a signed X.509 certificate issued by a Certificate.
 `tier = "ENTERPRISE"`
 
 
+To get more information about Certificate, see:
+
+* [API documentation](https://cloud.google.com/certificate-authority-service/docs/reference/rest/v1/projects.locations.caPools.certificates)
+* How-to Guides
+    * [Certificate Authority Service Overview](https://cloud.google.com/certificate-authority-service/docs/overview)
 
 ## Example Usage - Privateca Certificate Generated Key
 
