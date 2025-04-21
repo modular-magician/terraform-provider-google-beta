@@ -5,10 +5,10 @@ package secretmanager_test
 import (
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
-
-	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccSecretManagerSecret_import(t *testing.T) {
@@ -458,6 +458,44 @@ func TestAccSecretManagerSecret_updateBetweenTtlAndExpireTime(t *testing.T) {
 			},
 			{
 				ResourceName:            "google_secret_manager_secret.secret-basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"ttl", "labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func TestAccSecretManagerSecret_DeletionProtectionUpdate(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSecretManagerSecret_deletionprotectionBasic(context),
+			},
+			{
+				ResourceName:            "google_secret_manager_secret.secret-deletionprotection",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"ttl", "labels", "terraform_labels"},
+			},
+			{
+				Config: testAccSecretManagerSecret_deletionprotectionUpdate(context),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("google_secret_manager_secret.secret-deletionprotection", plancheck.ResourceActionUpdate),
+					},
+				},
+			},
+			{
+				ResourceName:            "google_secret_manager_secret.secret-deletionprotection",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"ttl", "labels", "terraform_labels"},
@@ -1219,6 +1257,60 @@ resource "google_secret_manager_secret" "secret-basic" {
 
   expire_time = "2122-09-26T10:55:55.163240682Z"
 
+}
+`, context)
+}
+
+func testAccSecretManagerSecret_deletionprotectionBasic(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_secret_manager_secret" "secret-deletionprotection" {
+	secret_id = "tf-test-secret-%{random_suffix}"
+
+	labels = {
+		label = "my-label"
+	}
+
+	replication {
+		user_managed {
+			replicas {
+				location = "us-central1"
+			}
+			replicas {
+				location = "us-east1"
+			}
+		}
+	}
+
+	ttl = "3600s"
+
+	deletion_protection = true
+}
+`, context)
+}
+
+func testAccSecretManagerSecret_deletionprotectionUpdate(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_secret_manager_secret" "secret-deletionprotection" {
+	secret_id = "tf-test-secret-%{random_suffix}"
+
+	labels = {
+		label = "my-label"
+	}
+
+	replication {
+		user_managed {
+			replicas {
+				location = "us-central1"
+			}
+			replicas {
+				location = "us-east1"
+			}
+		}
+	}
+
+	ttl = "3600s"
+
+	deletion_protection = false
 }
 `, context)
 }
