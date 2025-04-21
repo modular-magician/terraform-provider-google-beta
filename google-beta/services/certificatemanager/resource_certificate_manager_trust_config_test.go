@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/acctest"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 )
 
 func TestAccCertificateManagerTrustConfig_update(t *testing.T) {
@@ -92,6 +93,52 @@ resource "google_certificate_manager_trust_config" "default" {
 
   labels = {
     "bar" = "foo"
+  }
+}
+`, context)
+}
+
+func TestAccCertificateManagerTrustConfig_tags(t *testing.T) {
+	t.Parallel()
+
+	tagKey := acctest.BootstrapSharedTestTagKey(t, "certificate-manager-trust-config-tagkey")
+
+	context := map[string]interface{}{
+		"org":           envvar.GetTestOrgFromEnv(t),
+		"tagKey":        tagKey,
+		"tagValue":      acctest.BootstrapSharedTestTagValue(t, "certificate-manager-trust-config-tagvalue", tagKey),
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckCertificateManagerTrustConfigDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCertificateManagerTrustConfigTags(context),
+			},
+			{
+				ResourceName:            "google_certificate_manager_trust_config.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "tags"},
+			},
+		},
+	})
+}
+
+func testAccCertificateManagerTrustConfigTags(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_certificate_manager_trust_config" "default" {
+        name        = "tf-test-trust-config%{random_suffix}"
+        description = "sample description for the trust config 2"
+        location    = "global"
+        allowlisted_certificates  {
+          pem_certificate = file("test-fixtures/cert.pem") 
+        }
+tags = {
+	"%{org}/%{tagKey}" = "%{tagValue}"
   }
 }
 `, context)

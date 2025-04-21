@@ -18,6 +18,7 @@ fields:
   - field: 'name'
     provider_only: true
   - field: 'rotation_window_percentage'
+  - field: 'tags'
   - field: 'terraform_labels'
     provider_only: true
   - field: 'update_time'
