@@ -125,115 +125,15 @@ func ResourceClouddeployDeployPolicy() *schema.Resource {
 													Description: `Optional. One-time windows within which actions are restricted.`,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
-															"end_date": {
-																Type:        schema.TypeList,
+															"end": {
+																Type:        schema.TypeString,
 																Required:    true,
-																Description: `Required. End date.`,
-																MaxItems:    1,
-																Elem: &schema.Resource{
-																	Schema: map[string]*schema.Schema{
-																		"day": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Day of a month. Must be from 1 to 31 and valid for the year and month.`,
-																		},
-																		"month": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Month of a year. Must be from 1 to 12.`,
-																		},
-																		"year": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Year of the date. Must be from 1 to 9999.`,
-																		},
-																	},
-																},
+																Description: `Required. End date and time,  in the datetime format, e.g. 2025-01-02 09:00:00.`,
 															},
-															"end_time": {
-																Type:        schema.TypeList,
+															"start": {
+																Type:        schema.TypeString,
 																Required:    true,
-																Description: `Required. End time (exclusive). You may use 24:00 for the end of the day.`,
-																MaxItems:    1,
-																Elem: &schema.Resource{
-																	Schema: map[string]*schema.Schema{
-																		"hours": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Hours of a day in 24 hour format. Must be greater than or equal to 0 and typically must be less than or equal to 23. An API may choose to allow the value "24:00:00" for scenarios like business closing time.`,
-																		},
-																		"minutes": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Minutes of an hour. Must be greater than or equal to 0 and less than or equal to 59.`,
-																		},
-																		"nanos": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Fractions of seconds, in nanoseconds. Must be greater than or equal to 0 and less than or equal to 999,999,999.`,
-																		},
-																		"seconds": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Seconds of a minute. Must be greater than or equal to 0 and typically must be less than or equal to 59. An API may allow the value 60 if it allows leap-seconds.`,
-																		},
-																	},
-																},
-															},
-															"start_date": {
-																Type:        schema.TypeList,
-																Required:    true,
-																Description: `Required. Start date.`,
-																MaxItems:    1,
-																Elem: &schema.Resource{
-																	Schema: map[string]*schema.Schema{
-																		"day": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn't significant.`,
-																		},
-																		"month": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.`,
-																		},
-																		"year": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.`,
-																		},
-																	},
-																},
-															},
-															"start_time": {
-																Type:        schema.TypeList,
-																Required:    true,
-																Description: `Required. Start time (inclusive). Use 00:00 for the beginning of the day.`,
-																MaxItems:    1,
-																Elem: &schema.Resource{
-																	Schema: map[string]*schema.Schema{
-																		"hours": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Hours of a day in 24 hour format. Must be greater than or equal to 0 and typically must be less than or equal to 23. An API may choose to allow the value "24:00:00" for scenarios like business closing time.`,
-																		},
-																		"minutes": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Minutes of an hour. Must be greater than or equal to 0 and less than or equal to 59.`,
-																		},
-																		"nanos": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Fractions of seconds, in nanoseconds. Must be greater than or equal to 0 and less than or equal to 999,999,999.`,
-																		},
-																		"seconds": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Seconds of a minute. Must be greater than or equal to 0 and typically must be less than or equal to 59. An API may allow the value 60 if it allows leap-seconds.`,
-																		},
-																	},
-																},
+																Description: `Required. Start date and time in the datetime format, e.g. 2024-01-02 09:00:00.`,
 															},
 														},
 													},
@@ -254,64 +154,14 @@ func ResourceClouddeployDeployPolicy() *schema.Resource {
 																},
 															},
 															"end_time": {
-																Type:        schema.TypeList,
+																Type:        schema.TypeString,
 																Optional:    true,
 																Description: `Optional. End time (exclusive). Use 24:00 to indicate midnight. If you specify endTime you must also specify startTime. If left empty, this will block for the entire day for the days specified in daysOfWeek.`,
-																MaxItems:    1,
-																Elem: &schema.Resource{
-																	Schema: map[string]*schema.Schema{
-																		"hours": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Hours of a day in 24 hour format. Must be greater than or equal to 0 and typically must be less than or equal to 23. An API may choose to allow the value "24:00:00" for scenarios like business closing time.`,
-																		},
-																		"minutes": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Minutes of an hour. Must be greater than or equal to 0 and less than or equal to 59.`,
-																		},
-																		"nanos": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Fractions of seconds, in nanoseconds. Must be greater than or equal to 0 and less than or equal to 999,999,999.`,
-																		},
-																		"seconds": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Seconds of a minute. Must be greater than or equal to 0 and typically must be less than or equal to 59. An API may allow the value 60 if it allows leap-seconds.`,
-																		},
-																	},
-																},
 															},
 															"start_time": {
-																Type:        schema.TypeList,
+																Type:        schema.TypeString,
 																Optional:    true,
 																Description: `Optional. Start time (inclusive). Use 00:00 for the beginning of the day. If you specify startTime you must also specify endTime. If left empty, this will block for the entire day for the days specified in daysOfWeek.`,
-																MaxItems:    1,
-																Elem: &schema.Resource{
-																	Schema: map[string]*schema.Schema{
-																		"hours": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Hours of a day in 24 hour format. Must be greater than or equal to 0 and typically must be less than or equal to 23. An API may choose to allow the value "24:00:00" for scenarios like business closing time.`,
-																		},
-																		"minutes": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Minutes of an hour. Must be greater than or equal to 0 and less than or equal to 59.`,
-																		},
-																		"nanos": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Fractions of seconds, in nanoseconds. Must be greater than or equal to 0 and less than or equal to 999,999,999.`,
-																		},
-																		"seconds": {
-																			Type:        schema.TypeInt,
-																			Optional:    true,
-																			Description: `Seconds of a minute. Must be greater than or equal to 0 and typically must be less than or equal to 59. An API may allow the value 60 if it allows leap-seconds.`,
-																		},
-																	},
-																},
 															},
 														},
 													},
@@ -1039,333 +889,60 @@ func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsTimeZone(v 
 
 func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindows(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
-		return v
+		return nil
 	}
+
 	l := v.([]interface{})
-	transformed := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		original := raw.(map[string]interface{})
-		if len(original) < 1 {
-			// Do not include empty json objects coming back from the api
+	if len(l) == 0 {
+		return nil
+	}
+
+	result := make([]interface{}, len(l))
+	for i, raw := range l {
+		if raw == nil {
 			continue
 		}
-		transformed = append(transformed, map[string]interface{}{
-			"start_date": flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDate(original["startDate"], d, config),
-			"end_date":   flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDate(original["endDate"], d, config),
-			"start_time": flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTime(original["startTime"], d, config),
-			"end_time":   flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTime(original["endTime"], d, config),
-		})
-	}
-	return transformed
-}
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["year"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateYear(original["year"], d, config)
-	transformed["month"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateMonth(original["month"], d, config)
-	transformed["day"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateDay(original["day"], d, config)
-	return []interface{}{transformed}
-}
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateYear(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]string)
+		startDate := original["startDate"].((map[string]interface{}))
+		startTime := original["startTime"].(map[string]interface{})
+		endDate := original["endDate"].((map[string]interface{}))
+		endTime := original["endTime"].(map[string]interface{})
+		start := dateTimeString(startDate, startTime)
+		end := dateTimeString(endDate, endTime)
+		transformed["start"] = start
+		transformed["end"] = end
+		result[i] = transformed
 	}
 
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
+	return result
 }
 
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateMonth(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
+func dateTimeString(d map[string]interface{}, t map[string]interface{}) string {
+
+	var year int
+	var month int
+	var day int
+	var hours int
+	var minutes int
+
+	if floatVal, ok := d["year"].(float64); ok {
+		year = int(floatVal)
+	}
+	if floatVal, ok := d["month"].(float64); ok {
+		month = int(floatVal)
+	}
+	if floatVal, ok := d["day"].(float64); ok {
+		day = int(floatVal)
+	}
+	if floatVal, ok := t["hours"].(float64); ok {
+		hours = int(floatVal)
+	}
+	if floatVal, ok := t["minutes"].(float64); ok {
+		minutes = int(floatVal)
 	}
 
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateDay(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["year"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateYear(original["year"], d, config)
-	transformed["month"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateMonth(original["month"], d, config)
-	transformed["day"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateDay(original["day"], d, config)
-	return []interface{}{transformed}
-}
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateYear(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateMonth(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateDay(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["hours"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeHours(original["hours"], d, config)
-	transformed["minutes"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeMinutes(original["minutes"], d, config)
-	transformed["seconds"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeSeconds(original["seconds"], d, config)
-	transformed["nanos"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeNanos(original["nanos"], d, config)
-	return []interface{}{transformed}
-}
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeHours(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeMinutes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeSeconds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeNanos(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["hours"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeHours(original["hours"], d, config)
-	transformed["minutes"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeMinutes(original["minutes"], d, config)
-	transformed["seconds"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeSeconds(original["seconds"], d, config)
-	transformed["nanos"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeNanos(original["nanos"], d, config)
-	return []interface{}{transformed}
-}
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeHours(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeMinutes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeSeconds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeNanos(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
+	return fmt.Sprintf("%04d-%02d-%02d %02d:%02d", year, month, day, hours, minutes)
 }
 
 func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindows(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1397,86 +974,17 @@ func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindo
 		return nil
 	}
 	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
+	var hours int
+	var minutes int
+
+	if floatVal, ok := original["hours"].(float64); ok {
+		hours = int(floatVal)
 	}
-	transformed := make(map[string]interface{})
-	transformed["hours"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeHours(original["hours"], d, config)
-	transformed["minutes"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeMinutes(original["minutes"], d, config)
-	transformed["seconds"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeSeconds(original["seconds"], d, config)
-	transformed["nanos"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeNanos(original["nanos"], d, config)
-	return []interface{}{transformed}
-}
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeHours(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
+	if floatVal, ok := original["minutes"].(float64); ok {
+		minutes = int(floatVal)
 	}
 
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeMinutes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeSeconds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeNanos(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
+	return fmt.Sprintf("%02d:%02d", hours, minutes)
 }
 
 func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1484,86 +992,17 @@ func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindo
 		return nil
 	}
 	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
+	var hours int
+	var minutes int
+
+	if floatVal, ok := original["hours"].(float64); ok {
+		hours = int(floatVal)
 	}
-	transformed := make(map[string]interface{})
-	transformed["hours"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeHours(original["hours"], d, config)
-	transformed["minutes"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeMinutes(original["minutes"], d, config)
-	transformed["seconds"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeSeconds(original["seconds"], d, config)
-	transformed["nanos"] =
-		flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeNanos(original["nanos"], d, config)
-	return []interface{}{transformed}
-}
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeHours(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
+	if floatVal, ok := original["minutes"].(float64); ok {
+		minutes = int(floatVal)
 	}
 
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeMinutes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeSeconds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
-}
-
-func flattenClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeNanos(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	// Handles the string fixed64 format
-	if strVal, ok := v.(string); ok {
-		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
-			return intVal
-		}
-	}
-
-	// number values are represented as float64
-	if floatVal, ok := v.(float64); ok {
-		intVal := int(floatVal)
-		return intVal
-	}
-
-	return v // let terraform core handle it otherwise
+	return fmt.Sprintf("%02d:%02d", hours, minutes)
 }
 
 func flattenClouddeployDeployPolicyEffectiveAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1819,9 +1258,48 @@ func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsTimeZone(v i
 	return v, nil
 }
 
+type Date struct {
+	// Day: Day of a month. Must be from 1 to 31 and valid for the year and month,
+	// or 0 to specify a year by itself or a year and month where the day isn't
+	// significant.
+	Day int `json:"day,omitempty"`
+	// Month: Month of a year. Must be from 1 to 12, or 0 to specify a year without
+	// a month and day.
+	Month int `json:"month,omitempty"`
+	// Year: Year of the date. Must be from 1 to 9999, or 0 to specify a date
+	// without a year.
+	Year int `json:"year,omitempty"`
+}
+
+type TimeOfDay struct {
+	// Hours: Hours of a day in 24 hour format. Must be greater than or equal to 0
+	// and typically must be less than or equal to 23. An API may choose to allow
+	// the value "24:00:00" for scenarios like business closing time.
+	Hours int `json:"hours,omitempty"`
+	// Minutes: Minutes of an hour. Must be greater than or equal to 0 and less
+	// than or equal to 59.
+	Minutes int `json:"minutes,omitempty"`
+	// Nanos: Fractions of seconds, in nanoseconds. Must be greater than or equal
+	// to 0 and less than or equal to 999,999,999.
+	Nanos int `json:"nanos,omitempty"`
+	// Seconds: Seconds of a minute. Must be greater than or equal to 0 and
+	// typically must be less than or equal to 59. An API may allow the value 60 if
+	// it allows leap-seconds.
+	Seconds int `json:"seconds,omitempty"`
+}
+
 func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindows(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+
 	l := v.([]interface{})
-	req := make([]interface{}, 0, len(l))
+	if len(l) == 0 {
+		return nil, nil
+	}
+	layout := "2006-01-02 15:04"
+	result := make([]interface{}, len(l))
+
 	for _, raw := range l {
 		if raw == nil {
 			continue
@@ -1829,239 +1307,42 @@ func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindo
 		original := raw.(map[string]interface{})
 		transformed := make(map[string]interface{})
 
-		transformedStartDate, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDate(original["start_date"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedStartDate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["startDate"] = transformedStartDate
+		if val := reflect.ValueOf(original["start"]); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			dt, err := time.Parse(layout, original["start"].(string))
+			if err != nil {
+				return nil, fmt.Errorf("failed to parse time '%s' with supported formats (%v): %w", original, layout, err)
+			}
+			transformed["startDate"] = Date{
+				Day:   dt.Day(),
+				Month: int(dt.Month()),
+				Year:  dt.Year(),
+			}
+			transformed["startTime"] = TimeOfDay{
+				Hours:   dt.Hour(),
+				Minutes: dt.Minute(),
+			}
+		}
+		if val := reflect.ValueOf(original["end"]); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			dt, err := time.Parse(layout, original["end"].(string))
+			if err != nil {
+				return nil, fmt.Errorf("failed to parse time '%s' with supported formats (%v): %w", original, layout, err)
+			}
+			transformed["endDate"] = Date{
+				Day:   dt.Day(),
+				Month: int(dt.Month()),
+				Year:  dt.Year(),
+			}
+			transformed["endTime"] = TimeOfDay{
+				Hours:   dt.Hour(),
+				Minutes: dt.Minute(),
+			}
 		}
 
-		transformedEndDate, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDate(original["end_date"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedEndDate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["endDate"] = transformedEndDate
-		}
-
-		transformedStartTime, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTime(original["start_time"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedStartTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["startTime"] = transformedStartTime
-		}
-
-		transformedEndTime, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTime(original["end_time"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedEndTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["endTime"] = transformedEndTime
-		}
-
-		req = append(req, transformed)
-	}
-	return req, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedYear, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateYear(original["year"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedYear); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["year"] = transformedYear
+		result = append(result, transformed)
 	}
 
-	transformedMonth, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateMonth(original["month"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedMonth); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["month"] = transformedMonth
-	}
+	return result, nil
 
-	transformedDay, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateDay(original["day"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedDay); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["day"] = transformedDay
-	}
-
-	return transformed, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateYear(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateMonth(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartDateDay(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedYear, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateYear(original["year"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedYear); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["year"] = transformedYear
-	}
-
-	transformedMonth, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateMonth(original["month"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedMonth); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["month"] = transformedMonth
-	}
-
-	transformedDay, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateDay(original["day"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedDay); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["day"] = transformedDay
-	}
-
-	return transformed, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateYear(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateMonth(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndDateDay(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedHours, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeHours(original["hours"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedHours); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["hours"] = transformedHours
-	}
-
-	transformedMinutes, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeMinutes(original["minutes"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedMinutes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["minutes"] = transformedMinutes
-	}
-
-	transformedSeconds, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeSeconds(original["seconds"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSeconds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["seconds"] = transformedSeconds
-	}
-
-	transformedNanos, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeNanos(original["nanos"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedNanos); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["nanos"] = transformedNanos
-	}
-
-	return transformed, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeHours(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeMinutes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeSeconds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsStartTimeNanos(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedHours, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeHours(original["hours"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedHours); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["hours"] = transformedHours
-	}
-
-	transformedMinutes, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeMinutes(original["minutes"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedMinutes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["minutes"] = transformedMinutes
-	}
-
-	transformedSeconds, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeSeconds(original["seconds"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSeconds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["seconds"] = transformedSeconds
-	}
-
-	transformedNanos, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeNanos(original["nanos"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedNanos); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["nanos"] = transformedNanos
-	}
-
-	return transformed, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeHours(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeMinutes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeSeconds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsOneTimeWindowsEndTimeNanos(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindows(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -2105,115 +1386,37 @@ func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindow
 }
 
 func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
+	if v == nil {
 		return nil, nil
 	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedHours, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeHours(original["hours"], d, config)
+	layout := "15:04"
+	original := v.(string)
+	t, err := time.Parse(layout, original)
 	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedHours); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["hours"] = transformedHours
+		return nil, fmt.Errorf("failed to parse time '%s' with supported formats (%v): %w", original, layout, err)
+
 	}
-
-	transformedMinutes, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeMinutes(original["minutes"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedMinutes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["minutes"] = transformedMinutes
-	}
-
-	transformedSeconds, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeSeconds(original["seconds"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSeconds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["seconds"] = transformedSeconds
-	}
-
-	transformedNanos, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeNanos(original["nanos"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedNanos); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["nanos"] = transformedNanos
-	}
-
-	return transformed, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeHours(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeMinutes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeSeconds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsStartTimeNanos(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
+	return TimeOfDay{
+		Hours:   t.Hour(),
+		Minutes: t.Minute(),
+	}, nil
 }
 
 func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
+	if v == nil {
 		return nil, nil
 	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedHours, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeHours(original["hours"], d, config)
+	layout := "15:04"
+	original := v.(string)
+	t, err := time.Parse(layout, original)
 	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedHours); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["hours"] = transformedHours
+		return nil, fmt.Errorf("failed to parse time '%s' with supported formats (%v): %w", original, layout, err)
+
 	}
-
-	transformedMinutes, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeMinutes(original["minutes"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedMinutes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["minutes"] = transformedMinutes
-	}
-
-	transformedSeconds, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeSeconds(original["seconds"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedSeconds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["seconds"] = transformedSeconds
-	}
-
-	transformedNanos, err := expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeNanos(original["nanos"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedNanos); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["nanos"] = transformedNanos
-	}
-
-	return transformed, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeHours(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeMinutes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeSeconds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandClouddeployDeployPolicyRulesRolloutRestrictionTimeWindowsWeeklyWindowsEndTimeNanos(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
+	return TimeOfDay{
+		Hours:   t.Hour(),
+		Minutes: t.Minute(),
+	}, nil
 }
 
 func expandClouddeployDeployPolicyEffectiveAnnotations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {

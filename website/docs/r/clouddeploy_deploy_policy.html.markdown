@@ -53,14 +53,8 @@ resource "google_clouddeploy_deploy_policy" "b-deploy-policy" {
       time_windows {
         time_zone = "America/Los_Angeles"
         weekly_windows {
-            start_time {
-                hours = "12"
-                minutes = "00"
-            }
-            end_time {
-                hours = "13"
-                minutes = "00"
-            }
+            start_time ="12:00"
+            end_time = "13:00"
         }
       }
     }
@@ -111,18 +105,8 @@ resource "google_clouddeploy_deploy_policy" "f-deploy-policy" {
       time_windows {
         time_zone = "America/Los_Angeles"
         weekly_windows {
-            start_time {
-                hours = "12"
-                minutes = "00"
-                seconds = "00"
-                nanos = "00"
-            }
-            end_time {
-                hours = "13"
-                minutes = "00"
-                seconds = "00"
-                nanos = "00"
-            }
+            start_time ="12:00"
+            end_time = "13:00"
         }
       }
     }
@@ -135,45 +119,15 @@ resource "google_clouddeploy_deploy_policy" "f-deploy-policy" {
         time_windows {
         time_zone = "America/Los_Angeles"
         weekly_windows {
-            start_time {
-                hours = "13"
-                minutes = "00"
-                seconds = "00"
-                nanos = "00"
-            }
-            end_time {
-                hours = "14"
-                minutes = "00"
-                seconds = "00"
-                nanos = "00"
-            }
+            start_time = "13:00"
+            end_time = "14:00"
             days_of_week = ["MONDAY"]
           }
 
         one_time_windows {
-        start_time {
-            hours = "15"
-            minutes = "00"
-            seconds = "00"
-            nanos = "00"
+          start = "2024-12-22 17:00"
+          end = "2025-01-02 09:00"
         }
-        end_time {
-            hours = "16"
-            minutes = "00"
-            seconds = "00"
-            nanos = "00"
-        }
-        start_date {
-            year = "2019"
-            month = "01"
-            day = "01"
-        }
-        end_date {
-            year = "2019"
-            month = "12"
-            day = "31"
-        }
-      }
      }
     }
   }
@@ -288,90 +242,13 @@ The following arguments are supported:
 
 <a name="nested_rules_rules_rollout_restriction_time_windows_one_time_windows"></a>The `one_time_windows` block supports:
 
-* `start_date` -
+* `start` -
   (Required)
-  Required. Start date.
-  Structure is [documented below](#nested_rules_rules_rollout_restriction_time_windows_one_time_windows_one_time_windows_start_date).
+  Required. Start date and time in the datetime format, e.g. 2024-01-02 09:00:00.
 
-* `end_date` -
+* `end` -
   (Required)
-  Required. End date.
-  Structure is [documented below](#nested_rules_rules_rollout_restriction_time_windows_one_time_windows_one_time_windows_end_date).
-
-* `start_time` -
-  (Required)
-  Required. Start time (inclusive). Use 00:00 for the beginning of the day.
-  Structure is [documented below](#nested_rules_rules_rollout_restriction_time_windows_one_time_windows_one_time_windows_start_time).
-
-* `end_time` -
-  (Required)
-  Required. End time (exclusive). You may use 24:00 for the end of the day.
-  Structure is [documented below](#nested_rules_rules_rollout_restriction_time_windows_one_time_windows_one_time_windows_end_time).
-
-
-<a name="nested_rules_rules_rollout_restriction_time_windows_one_time_windows_one_time_windows_start_date"></a>The `start_date` block supports:
-
-* `year` -
-  (Optional)
-  Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
-
-* `month` -
-  (Optional)
-  Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day.
-
-* `day` -
-  (Optional)
-  Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn't significant.
-
-<a name="nested_rules_rules_rollout_restriction_time_windows_one_time_windows_one_time_windows_end_date"></a>The `end_date` block supports:
-
-* `year` -
-  (Optional)
-  Year of the date. Must be from 1 to 9999.
-
-* `month` -
-  (Optional)
-  Month of a year. Must be from 1 to 12.
-
-* `day` -
-  (Optional)
-  Day of a month. Must be from 1 to 31 and valid for the year and month.
-
-<a name="nested_rules_rules_rollout_restriction_time_windows_one_time_windows_one_time_windows_start_time"></a>The `start_time` block supports:
-
-* `hours` -
-  (Optional)
-  Hours of a day in 24 hour format. Must be greater than or equal to 0 and typically must be less than or equal to 23. An API may choose to allow the value "24:00:00" for scenarios like business closing time.
-
-* `minutes` -
-  (Optional)
-  Minutes of an hour. Must be greater than or equal to 0 and less than or equal to 59.
-
-* `seconds` -
-  (Optional)
-  Seconds of a minute. Must be greater than or equal to 0 and typically must be less than or equal to 59. An API may allow the value 60 if it allows leap-seconds.
-
-* `nanos` -
-  (Optional)
-  Fractions of seconds, in nanoseconds. Must be greater than or equal to 0 and less than or equal to 999,999,999.
-
-<a name="nested_rules_rules_rollout_restriction_time_windows_one_time_windows_one_time_windows_end_time"></a>The `end_time` block supports:
-
-* `hours` -
-  (Optional)
-  Hours of a day in 24 hour format. Must be greater than or equal to 0 and typically must be less than or equal to 23. An API may choose to allow the value "24:00:00" for scenarios like business closing time.
-
-* `minutes` -
-  (Optional)
-  Minutes of an hour. Must be greater than or equal to 0 and less than or equal to 59.
-
-* `seconds` -
-  (Optional)
-  Seconds of a minute. Must be greater than or equal to 0 and typically must be less than or equal to 59. An API may allow the value 60 if it allows leap-seconds.
-
-* `nanos` -
-  (Optional)
-  Fractions of seconds, in nanoseconds. Must be greater than or equal to 0 and less than or equal to 999,999,999.
+  Required. End date and time,  in the datetime format, e.g. 2025-01-02 09:00:00.
 
 <a name="nested_rules_rules_rollout_restriction_time_windows_weekly_windows"></a>The `weekly_windows` block supports:
 
@@ -383,49 +260,10 @@ The following arguments are supported:
 * `start_time` -
   (Optional)
   Optional. Start time (inclusive). Use 00:00 for the beginning of the day. If you specify startTime you must also specify endTime. If left empty, this will block for the entire day for the days specified in daysOfWeek.
-  Structure is [documented below](#nested_rules_rules_rollout_restriction_time_windows_weekly_windows_weekly_windows_start_time).
 
 * `end_time` -
   (Optional)
   Optional. End time (exclusive). Use 24:00 to indicate midnight. If you specify endTime you must also specify startTime. If left empty, this will block for the entire day for the days specified in daysOfWeek.
-  Structure is [documented below](#nested_rules_rules_rollout_restriction_time_windows_weekly_windows_weekly_windows_end_time).
-
-
-<a name="nested_rules_rules_rollout_restriction_time_windows_weekly_windows_weekly_windows_start_time"></a>The `start_time` block supports:
-
-* `hours` -
-  (Optional)
-  Hours of a day in 24 hour format. Must be greater than or equal to 0 and typically must be less than or equal to 23. An API may choose to allow the value "24:00:00" for scenarios like business closing time.
-
-* `minutes` -
-  (Optional)
-  Minutes of an hour. Must be greater than or equal to 0 and less than or equal to 59.
-
-* `seconds` -
-  (Optional)
-  Seconds of a minute. Must be greater than or equal to 0 and typically must be less than or equal to 59. An API may allow the value 60 if it allows leap-seconds.
-
-* `nanos` -
-  (Optional)
-  Fractions of seconds, in nanoseconds. Must be greater than or equal to 0 and less than or equal to 999,999,999.
-
-<a name="nested_rules_rules_rollout_restriction_time_windows_weekly_windows_weekly_windows_end_time"></a>The `end_time` block supports:
-
-* `hours` -
-  (Optional)
-  Hours of a day in 24 hour format. Must be greater than or equal to 0 and typically must be less than or equal to 23. An API may choose to allow the value "24:00:00" for scenarios like business closing time.
-
-* `minutes` -
-  (Optional)
-  Minutes of an hour. Must be greater than or equal to 0 and less than or equal to 59.
-
-* `seconds` -
-  (Optional)
-  Seconds of a minute. Must be greater than or equal to 0 and typically must be less than or equal to 59. An API may allow the value 60 if it allows leap-seconds.
-
-* `nanos` -
-  (Optional)
-  Fractions of seconds, in nanoseconds. Must be greater than or equal to 0 and less than or equal to 999,999,999.
 
 - - -
 
