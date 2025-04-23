@@ -561,9 +561,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 646
+// Generated resources: 648
 // Generated IAM resources: 327
-// Total generated resources: 973
+// Total generated resources: 975
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1435,6 +1435,8 @@ var generatedResources = map[string]*schema.Resource{
 	"google_service_directory_service_iam_binding":                               tpgiamresource.ResourceIamBinding(servicedirectory.ServiceDirectoryServiceIamSchema, servicedirectory.ServiceDirectoryServiceIamUpdaterProducer, servicedirectory.ServiceDirectoryServiceIdParseFunc),
 	"google_service_directory_service_iam_member":                                tpgiamresource.ResourceIamMember(servicedirectory.ServiceDirectoryServiceIamSchema, servicedirectory.ServiceDirectoryServiceIamUpdaterProducer, servicedirectory.ServiceDirectoryServiceIdParseFunc),
 	"google_service_directory_service_iam_policy":                                tpgiamresource.ResourceIamPolicy(servicedirectory.ServiceDirectoryServiceIamSchema, servicedirectory.ServiceDirectoryServiceIamUpdaterProducer, servicedirectory.ServiceDirectoryServiceIdParseFunc),
+	"google_service_directory_endpointabc":                                       servicedirectory.ResourceServiceDirectoryEndpointabc(),
+	"google_service_directory_endpointabc1":                                      servicedirectory.ResourceServiceDirectoryEndpointabc1(),
 	"google_endpoints_service_iam_binding":                                       tpgiamresource.ResourceIamBinding(servicemanagement.ServiceManagementServiceIamSchema, servicemanagement.ServiceManagementServiceIamUpdaterProducer, servicemanagement.ServiceManagementServiceIdParseFunc),
 	"google_endpoints_service_iam_member":                                        tpgiamresource.ResourceIamMember(servicemanagement.ServiceManagementServiceIamSchema, servicemanagement.ServiceManagementServiceIamUpdaterProducer, servicemanagement.ServiceManagementServiceIdParseFunc),
 	"google_endpoints_service_iam_policy":                                        tpgiamresource.ResourceIamPolicy(servicemanagement.ServiceManagementServiceIamSchema, servicemanagement.ServiceManagementServiceIamUpdaterProducer, servicemanagement.ServiceManagementServiceIdParseFunc),
