@@ -1,28 +1,12 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
-
-// ----------------------------------------------------------------------------
-//
-//     ***     AUTO GENERATED CODE    ***    Type: DCL     ***
-//
-// ----------------------------------------------------------------------------
-//
-//     This file is managed by Magic Modules (https://github.com/GoogleCloudPlatform/magic-modules)
-//     and is based on the DCL (https://github.com/GoogleCloudPlatform/declarative-resource-client-library).
-//     Changes will need to be made to the DCL or Magic Modules instead of here.
-//
-//     We are not currently able to accept contributions to this file. If changes
-//     are required, please file an issue at https://github.com/hashicorp/terraform-provider-google/issues/new/choose
-//
-// ----------------------------------------------------------------------------
-
 package assuredworkloads_test
 
 import (
 	"context"
 	"fmt"
 	dcl "github.com/GoogleCloudPlatform/declarative-resource-client-library/dcl"
-	assuredworkloads "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/assuredworkloads/beta"
+	assuredworkloads "github.com/GoogleCloudPlatform/declarative-resource-client-library/services/google/assuredworkloads"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"strings"
@@ -33,59 +17,35 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-func TestAccAssuredWorkloadsWorkload_SovereignControlsWorkload(t *testing.T) {
+func TestAccAssuredWorkloadsWorkload_BasicHandWritten(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
 		"billing_acct":  envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":        envvar.GetTestOrgFromEnv(t),
+		"region":        envvar.GetTestRegionFromEnv(),
 		"random_suffix": acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
-		PreCheck: func() { acctest.AccTestPreCheck(t) },
-
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
-		CheckDestroy:             testAccCheckAssuredWorkloadsWorkloadDestroyProducer(t),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccAssuredWorkloadsWorkload_SovereignControlsWorkload(context),
-			},
-			{
-				ResourceName:            "google_assured_workloads_workload.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"billing_account", "kms_settings", "resource_settings", "workload_options", "provisioned_resources_parent", "partner_services_billing_account", "labels", "terraform_labels"},
-			},
-			{
-				Config: testAccAssuredWorkloadsWorkload_SovereignControlsWorkloadUpdate0(context),
-			},
-			{
-				ResourceName:            "google_assured_workloads_workload.primary",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"billing_account", "kms_settings", "resource_settings", "workload_options", "provisioned_resources_parent", "partner_services_billing_account", "labels", "terraform_labels"},
-			},
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"time": {},
 		},
-	})
-}
-func TestAccAssuredWorkloadsWorkload_SplitBillingPartnerWorkload(t *testing.T) {
-	t.Parallel()
-
-	context := map[string]interface{}{
-		"billing_acct":  envvar.GetTestBillingAccountFromEnv(t),
-		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"random_suffix": acctest.RandString(t, 10),
-	}
-
-	acctest.VcrTest(t, resource.TestCase{
-		PreCheck: func() { acctest.AccTestPreCheck(t) },
-
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
-		CheckDestroy:             testAccCheckAssuredWorkloadsWorkloadDestroyProducer(t),
+		CheckDestroy: testAccCheckAssuredWorkloadsWorkloadDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAssuredWorkloadsWorkload_SplitBillingPartnerWorkload(context),
+				Config: testAccAssuredWorkloadsWorkload_BasicHandWritten(context),
+			},
+			{
+				ResourceName:            "google_assured_workloads_workload.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"billing_account", "kms_settings", "resource_settings", "workload_options", "provisioned_resources_parent", "partner_services_billing_account", "labels", "terraform_labels"},
+			},
+			{
+				Config: testAccAssuredWorkloadsWorkload_BasicHandWrittenUpdate0(context),
 			},
 			{
 				ResourceName:            "google_assured_workloads_workload.primary",
@@ -97,100 +57,132 @@ func TestAccAssuredWorkloadsWorkload_SplitBillingPartnerWorkload(t *testing.T) {
 	})
 }
 
-func testAccAssuredWorkloadsWorkload_SovereignControlsWorkload(context map[string]interface{}) string {
+func TestAccAssuredWorkloadsWorkload_FullHandWritten(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"billing_acct":  envvar.GetTestBillingAccountFromEnv(t),
+		"org_id":        envvar.GetTestOrgFromEnv(t),
+		"region":        envvar.GetTestRegionFromEnv(),
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"time": {},
+		},
+		CheckDestroy: testAccCheckAssuredWorkloadsWorkloadDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAssuredWorkloadsWorkload_FullHandWritten(context),
+			},
+			{
+				ResourceName:            "google_assured_workloads_workload.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"billing_account", "kms_settings", "resource_settings", "workload_options", "provisioned_resources_parent", "partner_services_billing_account", "labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccAssuredWorkloadsWorkload_BasicHandWritten(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_assured_workloads_workload" "primary" {
-  compliance_regime         = "EU_REGIONS_AND_SUPPORT"
-  display_name              = "tf-test-display%{random_suffix}"
-  location                  = "europe-west9"
-  organization              = "%{org_id}"
-  billing_account           = "billingAccounts/%{billing_acct}"
-  enable_sovereign_controls = true
-
-  kms_settings {
-    next_rotation_time = "9999-10-02T15:01:23Z"
-    rotation_period    = "10368000s"
+  display_name = "tf-test-name%{random_suffix}"
+  labels = {
+    a = "a"
   }
-
+  billing_account = "billingAccounts/%{billing_acct}"
+  compliance_regime = "FEDRAMP_MODERATE"
+  provisioned_resources_parent = google_folder.folder1.name
+  organization = "%{org_id}"
+  location = "us-central1"
+  workload_options {
+    kaj_enrollment_type = "KEY_ACCESS_TRANSPARENCY_OFF"
+  }
   resource_settings {
     resource_type = "CONSUMER_FOLDER"
+    display_name = "folder-display-name"
   }
-
-  resource_settings {
-    resource_type = "ENCRYPTION_KEYS_PROJECT"
-  }
-
-  resource_settings {
-    resource_id   = "tf-test-ring%{random_suffix}"
-    resource_type = "KEYRING"
-  }
-
-  labels = {
-    label-one = "value-one"
-  }
-  provider                  = google-beta
-}
-
-`, context)
-}
-
-func testAccAssuredWorkloadsWorkload_SovereignControlsWorkloadUpdate0(context map[string]interface{}) string {
-	return acctest.Nprintf(`
-resource "google_assured_workloads_workload" "primary" {
-  compliance_regime = "EU_REGIONS_AND_SUPPORT"
-  display_name      = "updated-example"
-  location          = "europe-west9"
-  organization      = "%{org_id}"
-  billing_account   = "billingAccounts/%{billing_acct}"
-
-  labels = {
-    label-two = "value-two-eu-regions-and-support"
-  }
-  provider          = google-beta
-}
-
-`, context)
-}
-
-func testAccAssuredWorkloadsWorkload_SplitBillingPartnerWorkload(context map[string]interface{}) string {
-	return acctest.Nprintf(`
-resource "google_assured_workloads_workload" "primary" {
-  compliance_regime = "ASSURED_WORKLOADS_FOR_PARTNERS"
-  display_name      = "tf-test-display%{random_suffix}"
-  location          = "europe-west8"
-  organization      = "%{org_id}"
-  billing_account   = "billingAccounts/%{billing_acct}"
-  partner           = "SOVEREIGN_CONTROLS_BY_PSN"
-
-  partner_permissions {
-    assured_workloads_monitoring = true
-    data_logs_viewer             = true
-    service_access_approver      = true
-  }
-
-  partner_services_billing_account = "billingAccounts/01BF3F-2C6DE5-30C607"
-
-  resource_settings {
-    resource_type = "CONSUMER_FOLDER"
-  }
-
-  resource_settings {
-    resource_type = "ENCRYPTION_KEYS_PROJECT"
-  }
-
-  resource_settings {
-    resource_id   = "tf-test-ring%{random_suffix}"
-    resource_type = "KEYRING"
-  }
-
   violation_notifications_enabled = true
-
-  labels = {
-    label-one = "value-one"
-  }
-  provider          = google-beta
+  depends_on = [time_sleep.wait_120_seconds]
 }
 
+resource "google_folder" "folder1" {
+  display_name = "tf-test-name%{random_suffix}"
+  parent       = "organizations/%{org_id}"
+  deletion_protection = false
+}
+
+resource "time_sleep" "wait_120_seconds" {
+  create_duration = "120s"
+  depends_on = [google_folder.folder1]
+}
+`, context)
+}
+
+func testAccAssuredWorkloadsWorkload_BasicHandWrittenUpdate0(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_assured_workloads_workload" "primary" {
+  display_name = "tf-test-name%{random_suffix}"
+  labels = {
+    a = "b"
+  }
+  billing_account = "billingAccounts/%{billing_acct}"
+  compliance_regime = "FEDRAMP_MODERATE"
+  provisioned_resources_parent = google_folder.folder1.name
+  organization = "%{org_id}"
+  location = "us-central1"
+  resource_settings {
+    resource_type = "CONSUMER_FOLDER"
+    display_name = "folder-display-name"
+  }
+  violation_notifications_enabled = true
+  depends_on = [time_sleep.wait_120_seconds]
+}
+
+resource "google_folder" "folder1" {
+  display_name = "tf-test-name%{random_suffix}"
+  parent       = "organizations/%{org_id}"
+  deletion_protection = false
+}
+
+resource "time_sleep" "wait_120_seconds" {
+  create_duration = "120s"
+  depends_on = [google_folder.folder1]
+}
+`, context)
+}
+
+func testAccAssuredWorkloadsWorkload_FullHandWritten(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_assured_workloads_workload" "primary" {
+  display_name = "tf-test-name%{random_suffix}"
+  billing_account = "billingAccounts/%{billing_acct}"
+  compliance_regime = "FEDRAMP_MODERATE"
+  organization = "%{org_id}"
+  location = "us-central1"
+  kms_settings {
+    next_rotation_time = "2022-10-02T15:01:23Z"
+    rotation_period = "864000s"
+  }
+  provisioned_resources_parent = google_folder.folder1.name
+  depends_on = [time_sleep.wait_120_seconds]
+}
+
+resource "google_folder" "folder1" {
+  display_name = "tf-test-name%{random_suffix}"
+  parent       = "organizations/%{org_id}"
+  deletion_protection = false
+}
+
+resource "time_sleep" "wait_120_seconds" {
+  create_duration = "120s"
+  depends_on = [google_folder.folder1]
+}
 `, context)
 }
 
