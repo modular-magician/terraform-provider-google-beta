@@ -63,6 +63,20 @@ var sqlDatabaseFlagSchemaElem *schema.Resource = &schema.Resource{
 		},
 	},
 }
+var sqlConnectionPoolFlagSchemaElem *schema.Resource = &schema.Resource{
+	Schema: map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: `Name of the flag.`,
+		},
+		"value": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: `Value of the flag.`,
+		},
+	},
+}
 
 var (
 	backupConfigurationKeys = []string{
@@ -736,6 +750,29 @@ is set to true. Defaults to ZONAL.`,
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Description: `When this parameter is set to true, Cloud SQL retains backups of the instance even after the instance is deleted. The ON_DEMAND backup will be retained until customer deletes the backup or the project. The AUTOMATED backup will be retained based on the backups retention setting.`,
+						},
+						"connection_pool_config": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"connection_pooling_enabled": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `Whether managed connection pooling is enabled.`,
+									},
+									"flags": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: `List of connection pool configuration flags.`,
+										Set:         schema.HashResource(sqlConnectionPoolFlagSchemaElem),
+										Elem:        sqlConnectionPoolFlagSchemaElem,
+									},
+								},
+							},
+							Description:      `The managed connection pooling configuration for the instance.`,
+							DiffSuppressFunc: connectionPoolConfigDiffSuppress,
 						},
 					},
 				},
@@ -1429,6 +1466,7 @@ func expandSqlDatabaseInstanceSettings(configured []interface{}, databaseVersion
 		MaintenanceWindow:             expandMaintenanceWindow(_settings["maintenance_window"].([]interface{})),
 		InsightsConfig:                expandInsightsConfig(_settings["insights_config"].([]interface{})),
 		PasswordValidationPolicy:      expandPasswordValidationPolicy(_settings["password_validation_policy"].([]interface{})),
+		ConnectionPoolConfig:          expandConnectionPoolConfig(_settings["connection_pool_config"].([]interface{})),
 	}
 
 	resize := _settings["disk_autoresize"].(bool)
@@ -1730,6 +1768,38 @@ func expandPasswordValidationPolicy(configured []interface{}) *sqladmin.Password
 		PasswordChangeInterval:    _passwordValidationPolicy["password_change_interval"].(string),
 		EnablePasswordPolicy:      _passwordValidationPolicy["enable_password_policy"].(bool),
 	}
+}
+func expandConnectionPoolConfig(configured []interface{}) *sqladmin.ConnectionPoolConfig {
+	if len(configured) == 0 || configured[0] == nil {
+		return nil
+	}
+
+	_connectionPoolConfig := configured[0].(map[string]interface{})
+	return &sqladmin.ConnectionPoolConfig{
+		ConnectionPoolingEnabled: _connectionPoolConfig["connection_pooling_enabled"].(bool),
+		Flags:                    expandConnectionPoolFlags(_connectionPoolConfig["flags"]),
+	}
+}
+
+func expandConnectionPoolFlags(configured interface{}) []*sqladmin.ConnectionPoolFlags {
+	s := configured.(*schema.Set)
+	if s.Len() == 0 {
+		return nil
+	}
+
+	connectionPoolFlags := make([]*sqladmin.ConnectionPoolFlags, 0, s.Len())
+	for _, _flag := range s.List() {
+		if _flag == nil {
+			continue
+		}
+		_entry := _flag.(map[string]interface{})
+
+		connectionPoolFlags = append(connectionPoolFlags, &sqladmin.ConnectionPoolFlags{
+			Name:  _entry["name"].(string),
+			Value: _entry["value"].(string),
+		})
+	}
+	return connectionPoolFlags
 }
 
 func resourceSqlDatabaseInstanceRead(d *schema.ResourceData, meta interface{}) error {
@@ -2132,8 +2202,10 @@ func resourceSqlDatabaseInstanceUpdate(d *schema.ResourceData, meta interface{})
 		instance.InstanceType = d.Get("instance_type").(string)
 	}
 
-	// Database Version is required for all calls with Google ML integration enabled or it will be rejected by the API.
-	if d.Get("settings.0.enable_google_ml_integration").(bool) {
+	// Database Version is required for all calls with Google ML integration or Managed Connection Pool enabled
+	// or it will be rejected by the API.
+	if d.Get("settings.0.enable_google_ml_integration").(bool) ||
+		d.Get("settings.0.connection_pool_config.0.connection_pooling_enabled").(bool) {
 		instance.DatabaseVersion = databaseVersion
 	}
 
@@ -2218,6 +2290,24 @@ func databaseVersionDiffSuppress(_, oldVersion, newVersion string, _ *schema.Res
 		}
 	}
 
+	return false
+}
+func connectionPoolConfigDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
+	if k == "settings.0.connection_pool_config.#" {
+		if old == "0" && new == "1" {
+			if _, n := d.GetChange("settings.0.connection_pool_config.0.connection_pooling_enabled"); !n.(bool) {
+				_, f := d.GetChange("settings.0.connection_pool_config.0.flags")
+				return f.(*schema.Set).Len() == 0
+			}
+		}
+
+		if old == "1" && new == "0" {
+			if o, _ := d.GetChange("settings.0.connection_pool_config.0.connection_pooling_enabled"); !o.(bool) {
+				f, _ := d.GetChange("settings.0.connection_pool_config.0.flags")
+				return f.(*schema.Set).Len() == 0
+			}
+		}
+	}
 	return false
 }
 
@@ -2374,6 +2464,9 @@ func flattenSettings(settings *sqladmin.Settings, d *schema.ResourceData) []map[
 
 	if settings.AdvancedMachineFeatures != nil {
 		data["advanced_machine_features"] = flattenSqlServerAdvancedMachineFeatures(settings.AdvancedMachineFeatures)
+	}
+	if settings.ConnectionPoolConfig != nil {
+		data["connection_pool_config"] = flattenConnectionPoolConfig(settings.ConnectionPoolConfig)
 	}
 
 	return []map[string]interface{}{data}
@@ -2697,6 +2790,28 @@ func flattenEdition(v interface{}) string {
 	}
 
 	return v.(string)
+}
+func flattenConnectionPoolConfig(connPoolCfg *sqladmin.ConnectionPoolConfig) interface{} {
+	data := map[string]interface{}{
+		"connection_pooling_enabled": connPoolCfg.ConnectionPoolingEnabled,
+		"flags":                      flattenConnectionPoolFlags(connPoolCfg.Flags),
+	}
+	return []map[string]interface{}{data}
+}
+
+func flattenConnectionPoolFlags(connPoolFlags []*sqladmin.ConnectionPoolFlags) []map[string]interface{} {
+	flags := make([]map[string]interface{}, 0, len(connPoolFlags))
+
+	for _, flag := range connPoolFlags {
+		data := map[string]interface{}{
+			"name":  flag.Name,
+			"value": flag.Value,
+		}
+
+		flags = append(flags, data)
+	}
+
+	return flags
 }
 
 func instanceMutexKey(project, instance_name string) string {
