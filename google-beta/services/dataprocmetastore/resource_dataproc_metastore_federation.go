@@ -111,6 +111,16 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				ForceNew:    true,
 				Description: `The location where the metastore federation should reside.`,
 			},
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Description: `A map of resource manager tags.
+Resource manager tag keys and values have the same definition as resource manager tags.
+Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/{tag_value_id}.
+The field is ignored (both PUT & PATCH) when empty.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -159,14 +169,6 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				Computed:    true,
 				Description: `Output only. The time when the metastore federation was last updated.`,
 			},
-			"deletion_protection": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Description: `Whether Terraform will be prevented from destroying the federation. Defaults to false.
-When the field is set to true in Terraform state, a 'terraform apply'
-or 'terraform destroy' that would delete the federation will fail.`,
-				Default: false,
-			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -197,6 +199,12 @@ func resourceDataprocMetastoreFederationCreate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("backend_metastores"); !tpgresource.IsEmptyValue(reflect.ValueOf(backendMetastoresProp)) && (ok || !reflect.DeepEqual(v, backendMetastoresProp)) {
 		obj["backendMetastores"] = backendMetastoresProp
+	}
+	tagsProp, err := expandDataprocMetastoreFederationTags(d.Get("tags"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tags"); !tpgresource.IsEmptyValue(reflect.ValueOf(tagsProp)) && (ok || !reflect.DeepEqual(v, tagsProp)) {
+		obj["tags"] = tagsProp
 	}
 	labelsProp, err := expandDataprocMetastoreFederationEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -299,12 +307,6 @@ func resourceDataprocMetastoreFederationRead(d *schema.ResourceData, meta interf
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("DataprocMetastoreFederation %q", d.Id()))
 	}
 
-	// Explicitly set virtual fields to default values if unset
-	if _, ok := d.GetOkExists("deletion_protection"); !ok {
-		if err := d.Set("deletion_protection", false); err != nil {
-			return fmt.Errorf("Error setting deletion_protection: %s", err)
-		}
-	}
 	if err := d.Set("project", project); err != nil {
 		return fmt.Errorf("Error reading Federation: %s", err)
 	}
@@ -465,9 +467,6 @@ func resourceDataprocMetastoreFederationDelete(d *schema.ResourceData, meta inte
 	}
 
 	headers := make(http.Header)
-	if d.Get("deletion_protection").(bool) {
-		return fmt.Errorf("cannot destroy metastore federation without setting deletion_protection=false and running `terraform apply`")
-	}
 
 	log.Printf("[DEBUG] Deleting Federation %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
@@ -512,11 +511,6 @@ func resourceDataprocMetastoreFederationImport(d *schema.ResourceData, meta inte
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
-
-	// Explicitly set virtual fields to default values on import
-	if err := d.Set("deletion_protection", false); err != nil {
-		return nil, fmt.Errorf("Error setting deletion_protection: %s", err)
-	}
 
 	return []*schema.ResourceData{d}, nil
 }
@@ -653,6 +647,17 @@ func expandDataprocMetastoreFederationBackendMetastoresName(v interface{}, d tpg
 
 func expandDataprocMetastoreFederationBackendMetastoresMetastoreType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandDataprocMetastoreFederationTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }
 
 func expandDataprocMetastoreFederationEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
