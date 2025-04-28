@@ -369,6 +369,17 @@ resolution and up to nine fractional digits.`,
  and default labels configured on the provider.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"deletion_protection": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `Whether Terraform will be prevented from destroying the instance. Defaults to true.
+When a'terraform destroy' or 'terraform apply' would delete the instance,
+the command will fail if this field is not set to false in Terraform state.
+When the field is set to true or unset in Terraform state, a 'terraform apply'
+or 'terraform destroy' that would delete the instance will fail.
+When the field is set to false, deleting the instance is allowed.`,
+				Default: true,
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -553,6 +564,12 @@ func resourceMemcacheInstanceRead(d *schema.ResourceData, meta interface{}) erro
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("MemcacheInstance %q", d.Id()))
 	}
 
+	// Explicitly set virtual fields to default values if unset
+	if _, ok := d.GetOkExists("deletion_protection"); !ok {
+		if err := d.Set("deletion_protection", true); err != nil {
+			return fmt.Errorf("Error setting deletion_protection: %s", err)
+		}
+	}
 	if err := d.Set("project", project); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
@@ -794,6 +811,9 @@ func resourceMemcacheInstanceDelete(d *schema.ResourceData, meta interface{}) er
 	}
 
 	headers := make(http.Header)
+	if d.Get("deletion_protection").(bool) {
+		return fmt.Errorf("cannot destroy memcache instance without setting deletion_protection=false and running `terraform apply`")
+	}
 
 	log.Printf("[DEBUG] Deleting Instance %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
@@ -839,6 +859,11 @@ func resourceMemcacheInstanceImport(d *schema.ResourceData, meta interface{}) ([
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
+
+	// Explicitly set virtual fields to default values on import
+	if err := d.Set("deletion_protection", true); err != nil {
+		return nil, fmt.Errorf("Error setting deletion_protection: %s", err)
+	}
 
 	return []*schema.ResourceData{d}, nil
 }
