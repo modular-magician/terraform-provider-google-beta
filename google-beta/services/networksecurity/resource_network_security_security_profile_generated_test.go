@@ -141,7 +141,7 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileMirrori
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckNetworkSecuritySecurityProfileDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -160,27 +160,23 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileMirrori
 func testAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileMirroringExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_network" "default" {
-  provider                = google-beta
   name                    = "tf-test-my-network%{random_suffix}"
   auto_create_subnetworks = false
 }
 
 resource "google_network_security_mirroring_deployment_group" "default" {
-  provider                      = google-beta
   mirroring_deployment_group_id = "tf-test-my-dg%{random_suffix}"
   location                      = "global"
   network                       = google_compute_network.default.id
 }
 
 resource "google_network_security_mirroring_endpoint_group" "default" {
-  provider                      = google-beta
-  mirroring_endpoint_group_id   = "tf-test-my-eg%{random_suffix}"
-  location                      = "global"
-  mirroring_deployment_group    = google_network_security_mirroring_deployment_group.default.id
+  mirroring_endpoint_group_id = "tf-test-my-eg%{random_suffix}"
+  location                    = "global"
+  mirroring_deployment_group  = google_network_security_mirroring_deployment_group.default.id
 }
 
 resource "google_network_security_security_profile" "default" {
-  provider    = google-beta
   name        = "tf-test-my-security-profile%{random_suffix}"
   parent      = "organizations/%{org_id}"
   description = "my description"
@@ -203,7 +199,7 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileInterce
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckNetworkSecuritySecurityProfileDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -222,27 +218,23 @@ func TestAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileInterce
 func testAccNetworkSecuritySecurityProfile_networkSecuritySecurityProfileInterceptExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_network" "default" {
-  provider                = google-beta
   name                    = "tf-test-my-network%{random_suffix}"
   auto_create_subnetworks = false
 }
 
 resource "google_network_security_intercept_deployment_group" "default" {
-  provider                      = google-beta
   intercept_deployment_group_id = "tf-test-my-dg%{random_suffix}"
   location                      = "global"
   network                       = google_compute_network.default.id
 }
 
 resource "google_network_security_intercept_endpoint_group" "default" {
-  provider                      = google-beta
-  intercept_endpoint_group_id   = "tf-test-my-eg%{random_suffix}"
-  location                      = "global"
-  intercept_deployment_group    = google_network_security_intercept_deployment_group.default.id
+  intercept_endpoint_group_id = "tf-test-my-eg%{random_suffix}"
+  location                    = "global"
+  intercept_deployment_group  = google_network_security_intercept_deployment_group.default.id
 }
 
 resource "google_network_security_security_profile" "default" {
-  provider    = google-beta
   name        = "tf-test-my-security-profile%{random_suffix}"
   parent      = "organizations/%{org_id}"
   description = "my description"

@@ -83,27 +83,23 @@ resource "google_network_security_security_profile" "default" {
 
 ```hcl
 resource "google_compute_network" "default" {
-  provider                = google-beta
   name                    = "my-network"
   auto_create_subnetworks = false
 }
 
 resource "google_network_security_mirroring_deployment_group" "default" {
-  provider                      = google-beta
   mirroring_deployment_group_id = "my-dg"
   location                      = "global"
   network                       = google_compute_network.default.id
 }
 
 resource "google_network_security_mirroring_endpoint_group" "default" {
-  provider                      = google-beta
-  mirroring_endpoint_group_id   = "my-eg"
-  location                      = "global"
-  mirroring_deployment_group    = google_network_security_mirroring_deployment_group.default.id
+  mirroring_endpoint_group_id = "my-eg"
+  location                    = "global"
+  mirroring_deployment_group  = google_network_security_mirroring_deployment_group.default.id
 }
 
 resource "google_network_security_security_profile" "default" {
-  provider    = google-beta
   name        = "my-security-profile"
   parent      = "organizations/123456789"
   description = "my description"
@@ -119,27 +115,23 @@ resource "google_network_security_security_profile" "default" {
 
 ```hcl
 resource "google_compute_network" "default" {
-  provider                = google-beta
   name                    = "my-network"
   auto_create_subnetworks = false
 }
 
 resource "google_network_security_intercept_deployment_group" "default" {
-  provider                      = google-beta
   intercept_deployment_group_id = "my-dg"
   location                      = "global"
   network                       = google_compute_network.default.id
 }
 
 resource "google_network_security_intercept_endpoint_group" "default" {
-  provider                      = google-beta
-  intercept_endpoint_group_id   = "my-eg"
-  location                      = "global"
-  intercept_deployment_group    = google_network_security_intercept_deployment_group.default.id
+  intercept_endpoint_group_id = "my-eg"
+  location                    = "global"
+  intercept_deployment_group  = google_network_security_intercept_deployment_group.default.id
 }
 
 resource "google_network_security_security_profile" "default" {
-  provider    = google-beta
   name        = "my-security-profile"
   parent      = "organizations/123456789"
   description = "my description"
