@@ -379,6 +379,7 @@ resource "google_workbench_instance" "instance" {
 
   gce_setup {
     metadata = {
+      "serial-port-logging-enable" = "true",
       terraform = "true"
       "resource-url" = "new-fake-value",
     }
@@ -403,6 +404,7 @@ resource "google_workbench_instance" "instance" {
       terraform = "true",
       "idle-timeout-seconds" = "10800",
       "image-url" = "fake-value",
+      "serial-port-logging-enable" = "true",
     }
   }
 
