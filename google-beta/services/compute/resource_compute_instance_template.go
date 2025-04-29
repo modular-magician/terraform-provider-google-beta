@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 	"time"
 
@@ -653,6 +654,13 @@ Google Cloud KMS. Only one of kms_key_self_link, rsa_encrypted_key and raw_key m
 						},
 					},
 				},
+			},
+
+			"numeric_id": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Computed:    true,
+				Description: `The ID of the template in numeric format.`,
 			},
 
 			"project": {
@@ -1911,6 +1919,10 @@ func resourceComputeInstanceTemplateRead(d *schema.ResourceData, meta interface{
 		if err = d.Set("metadata", _md); err != nil {
 			return fmt.Errorf("Error setting metadata: %s", err)
 		}
+	}
+
+	if err = d.Set("numeric_id", strconv.FormatUint(instanceTemplate.Id, 10)); err != nil {
+		return fmt.Errorf("Error setting numeric_id: %s", err)
 	}
 
 	if instanceTemplate.Properties.PartnerMetadata != nil {
