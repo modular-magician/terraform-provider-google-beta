@@ -1741,7 +1741,7 @@ func TestAccSQLDatabaseInstance_DefaultEdition(t *testing.T) {
 	t.Parallel()
 	databaseName := "tf-test-" + acctest.RandString(t, 10)
 	databaseVersion := "POSTGRES_16"
-	enterprisePlusTier := "db-perf-optimized-N-2"
+	enterprisePlusTier := "db-c4a-highmem-4"
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -2926,6 +2926,9 @@ func TestAccSqlDatabaseInstance_useCasBasedServerCa(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "settings.0.ip_configuration.0.server_ca_mode", "GOOGLE_MANAGED_CAS_CA"),
 					resource.TestCheckResourceAttr(resourceName, "settings.0.ip_configuration.0.server_ca_pool", ""),
+					resource.TestCheckResourceAttr(resourceName, "dns_names.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "dns_names.0.connection_type", "PUBLIC"),
+					resource.TestCheckResourceAttr(resourceName, "dns_names.0.dns_scope", "INSTANCE"),
 				),
 			},
 			{
@@ -2953,7 +2956,10 @@ func TestAccSqlDatabaseInstance_useCustomSubjectAlternateName(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccSqlDatabaseInstanceDestroyProducer(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"time": {},
+		},
+		CheckDestroy: testAccSqlDatabaseInstanceDestroyProducer(t),
 
 		Steps: []resource.TestStep{
 			{
@@ -2987,7 +2993,10 @@ func TestAccSqlDatabaseInstance_useCustomerManagedServerCa(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccSqlDatabaseInstanceDestroyProducer(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"time": {},
+		},
+		CheckDestroy: testAccSqlDatabaseInstanceDestroyProducer(t),
 
 		Steps: []resource.TestStep{
 			{
@@ -3067,6 +3076,15 @@ resource "google_privateca_ca_pool_iam_member" "granting" {
   member = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-cloud-sql.iam.gserviceaccount.com"
 }
 
+resource "time_sleep" "wait_2_mins" {
+  depends_on = [
+    google_privateca_certificate_authority.customer_ca,
+    google_privateca_ca_pool_iam_member.granting
+  ]
+
+  create_duration = "120s"
+}
+
 resource "google_sql_database_instance" "instance" {
   name                = "%{databaseName}"
   region              = "us-central1"
@@ -3082,10 +3100,7 @@ resource "google_sql_database_instance" "instance" {
 	}
   }
 
-  depends_on = [
-      google_privateca_certificate_authority.customer_ca,
-      google_privateca_ca_pool_iam_member.granting
-  ]
+  depends_on = [time_sleep.wait_2_mins]
 }
 `, context)
 }
@@ -3151,6 +3166,16 @@ resource "google_privateca_ca_pool_iam_member" "granting" {
   member = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-cloud-sql.iam.gserviceaccount.com"
 }
 
+
+resource "time_sleep" "wait_2_mins" {
+  depends_on = [
+    google_privateca_certificate_authority.customer_ca,
+    google_privateca_ca_pool_iam_member.granting
+  ]
+
+  create_duration = "120s"
+}
+
 resource "google_sql_database_instance" "instance" {
   name                = "%{databaseName}"
   region              = "us-central1"
@@ -3165,10 +3190,7 @@ resource "google_sql_database_instance" "instance" {
 	}
   }
 
-  depends_on = [
-      google_privateca_certificate_authority.customer_ca,
-      google_privateca_ca_pool_iam_member.granting
-  ]
+  depends_on = [time_sleep.wait_2_mins]
 }
 `, context)
 }
