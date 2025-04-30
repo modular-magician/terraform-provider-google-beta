@@ -84,6 +84,12 @@ resource "google_project_iam_member" "storage_viewer" {
   member  = "serviceAccount:${google_service_account.custom_service_account.email}"
 }
 
+resource "google_project_iam_member" "artifact_registry_admin {
+  project = google_project_service.service.project
+  role = "roles/artifactregistry.admin"
+  member  = "serviceAccount:${google_service_account.custom_service_account.email}"
+}
+
 resource "google_app_engine_flexible_app_version" "myapp_v1" {
   version_id = "v1"
   project    = google_project_iam_member.gae_api.project
