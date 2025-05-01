@@ -323,8 +323,8 @@ func resourceApigeeOrganizationCreate(d *schema.ResourceData, meta interface{}) 
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = ApigeeOperationWaitTimeWithResponse(
 		config, res, &opRes, "Creating Organization", userAgent,
@@ -336,8 +336,9 @@ func resourceApigeeOrganizationCreate(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error waiting to create Organization: %s", err)
 	}
 
-	if err := d.Set("name", flattenApigeeOrganizationName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceApigeeOrganizationPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -847,4 +848,12 @@ func expandApigeeOrganizationPropertiesPropertyValue(v interface{}, d tpgresourc
 func resourceApigeeOrganizationEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
 	obj["name"] = d.Get("project_id").(string)
 	return obj, nil
+}
+
+func resourceApigeeOrganizationPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("name", flattenApigeeOrganizationName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }

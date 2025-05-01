@@ -202,8 +202,8 @@ func resourceDialogflowCXVersionCreate(d *schema.ResourceData, meta interface{})
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = DialogflowCXOperationWaitTimeWithResponse(
 		config, res, &opRes, "Creating Version", userAgent,
@@ -215,8 +215,9 @@ func resourceDialogflowCXVersionCreate(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error waiting to create Version: %s", err)
 	}
 
-	if err := d.Set("name", flattenDialogflowCXVersionName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceDialogflowCXVersionPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -523,4 +524,12 @@ func expandDialogflowCXVersionDisplayName(v interface{}, d tpgresource.Terraform
 
 func expandDialogflowCXVersionDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceDialogflowCXVersionPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("name", flattenDialogflowCXVersionName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }

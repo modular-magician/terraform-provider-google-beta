@@ -173,8 +173,8 @@ func resourceServiceUsageConsumerQuotaOverrideCreate(d *schema.ResourceData, met
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = ServiceUsageOperationWaitTimeWithResponse(
 		config, res, &opRes, project, "Creating ConsumerQuotaOverride", userAgent,
@@ -186,18 +186,9 @@ func resourceServiceUsageConsumerQuotaOverrideCreate(d *schema.ResourceData, met
 		return fmt.Errorf("Error waiting to create ConsumerQuotaOverride: %s", err)
 	}
 
-	if _, ok := opRes["overrides"]; ok {
-		opRes, err = flattenNestedServiceUsageConsumerQuotaOverride(d, meta, opRes)
-		if err != nil {
-			return fmt.Errorf("Error getting nested object from operation response: %s", err)
-		}
-		if opRes == nil {
-			// Object isn't there any more - remove it from the state.
-			return fmt.Errorf("Error decoding response from operation, could not find nested object")
-		}
-	}
-	if err := d.Set("name", flattenNestedServiceUsageConsumerQuotaOverrideName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceServiceUsageConsumerQuotaOverridePostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -499,4 +490,21 @@ func resourceServiceUsageConsumerQuotaOverrideFindNestedObjectInList(d *schema.R
 		return idx, item, nil
 	}
 	return -1, nil, nil
+}
+func resourceServiceUsageConsumerQuotaOverridePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if _, ok := res["overrides"]; ok {
+		res, err := flattenNestedServiceUsageConsumerQuotaOverride(d, meta, res)
+		if err != nil {
+			return fmt.Errorf("Error getting nested object from operation response: %s", err)
+		}
+		if res == nil {
+			// Object isn't there any more - remove it from the state.
+			return fmt.Errorf("Error decoding response from operation, could not find nested object")
+		}
+	}
+	if err := d.Set("name", flattenNestedServiceUsageConsumerQuotaOverrideName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }

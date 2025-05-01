@@ -289,8 +289,8 @@ func resourceSpannerInstanceConfigCreate(d *schema.ResourceData, meta interface{
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = SpannerOperationWaitTimeWithResponse(
 		config, res, &opRes, project, "Creating InstanceConfig", userAgent,
@@ -302,19 +302,9 @@ func resourceSpannerInstanceConfigCreate(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("Error waiting to create InstanceConfig: %s", err)
 	}
 
-	opRes, err = resourceSpannerInstanceConfigDecoder(d, meta, opRes)
+	err = resourceSpannerInstanceConfigPostCreateSetComputedFields(d, meta, opRes)
 	if err != nil {
-		return fmt.Errorf("Error decoding response from operation: %s", err)
-	}
-	if opRes == nil {
-		return fmt.Errorf("Error decoding response from operation, could not find object")
-	}
-
-	// name is set by API when unset
-	if tpgresource.IsEmptyValue(reflect.ValueOf(d.Get("name"))) {
-		if err := d.Set("name", flattenSpannerInstanceConfigName(opRes["name"], d, config)); err != nil {
-			return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
-		}
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -801,4 +791,21 @@ func resourceSpannerInstanceConfigDecoder(d *schema.ResourceData, meta interface
 	res["replicas"] = cR
 	d.SetId(id)
 	return res, nil
+}
+func resourceSpannerInstanceConfigPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	res, err := resourceSpannerInstanceConfigDecoder(d, meta, res)
+	if err != nil {
+		return fmt.Errorf("decoding response: %w", err)
+	}
+	if res == nil {
+		return fmt.Errorf("decoding response, could not find object")
+	}
+	// name is set by API when unset
+	if tpgresource.IsEmptyValue(reflect.ValueOf(d.Get("name"))) {
+		if err := d.Set("name", flattenSpannerInstanceConfigName(res["name"], d, config)); err != nil {
+			return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+		}
+	}
+	return nil
 }

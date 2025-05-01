@@ -384,8 +384,8 @@ func resourceVertexAIIndexCreate(d *schema.ResourceData, meta interface{}) error
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = VertexAIOperationWaitTimeWithResponse(
 		config, res, &opRes, project, "Creating Index", userAgent,
@@ -397,8 +397,9 @@ func resourceVertexAIIndexCreate(d *schema.ResourceData, meta interface{}) error
 		return fmt.Errorf("Error waiting to create Index: %s", err)
 	}
 
-	if err := d.Set("name", flattenVertexAIIndexName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceVertexAIIndexPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -1229,4 +1230,12 @@ func expandVertexAIIndexEffectiveLabels(v interface{}, d tpgresource.TerraformRe
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func resourceVertexAIIndexPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("name", flattenVertexAIIndexName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }

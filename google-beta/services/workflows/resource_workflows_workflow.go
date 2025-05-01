@@ -327,8 +327,8 @@ func resourceWorkflowsWorkflowCreate(d *schema.ResourceData, meta interface{}) e
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = WorkflowsOperationWaitTimeWithResponse(
 		config, res, &opRes, project, "Creating Workflow", userAgent,
@@ -340,11 +340,9 @@ func resourceWorkflowsWorkflowCreate(d *schema.ResourceData, meta interface{}) e
 		return fmt.Errorf("Error waiting to create Workflow: %s", err)
 	}
 
-	// name is set by API when unset
-	if tpgresource.IsEmptyValue(reflect.ValueOf(d.Get("name"))) {
-		if err := d.Set("name", flattenWorkflowsWorkflowName(opRes["name"], d, config)); err != nil {
-			return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
-		}
+	err = resourceWorkflowsWorkflowPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -925,4 +923,14 @@ func ResourceWorkflowsWorkflowUpgradeV0(_ context.Context, rawState map[string]i
 
 	log.Printf("[DEBUG] Attributes after migration: %#v", rawState)
 	return rawState, nil
+}
+func resourceWorkflowsWorkflowPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	// name is set by API when unset
+	if tpgresource.IsEmptyValue(reflect.ValueOf(d.Get("name"))) {
+		if err := d.Set("name", flattenWorkflowsWorkflowName(res["name"], d, config)); err != nil {
+			return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+		}
+	}
+	return nil
 }

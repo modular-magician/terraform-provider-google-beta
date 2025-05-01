@@ -182,8 +182,8 @@ func resourceDialogflowCXEnvironmentCreate(d *schema.ResourceData, meta interfac
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = DialogflowCXOperationWaitTimeWithResponse(
 		config, res, &opRes, "Creating Environment", userAgent,
@@ -195,8 +195,9 @@ func resourceDialogflowCXEnvironmentCreate(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("Error waiting to create Environment: %s", err)
 	}
 
-	if err := d.Set("name", flattenDialogflowCXEnvironmentName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceDialogflowCXEnvironmentPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -532,4 +533,12 @@ func expandDialogflowCXEnvironmentVersionConfigs(v interface{}, d tpgresource.Te
 
 func expandDialogflowCXEnvironmentVersionConfigsVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceDialogflowCXEnvironmentPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("name", flattenDialogflowCXEnvironmentName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }

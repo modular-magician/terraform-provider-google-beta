@@ -134,8 +134,8 @@ func resourceTagsTagBindingCreate(d *schema.ResourceData, meta interface{}) erro
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = TagsOperationWaitTimeWithResponse(
 		config, res, &opRes, "Creating TagBinding", userAgent,
@@ -147,18 +147,9 @@ func resourceTagsTagBindingCreate(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error waiting to create TagBinding: %s", err)
 	}
 
-	if _, ok := opRes["tagBindings"]; ok {
-		opRes, err = flattenNestedTagsTagBinding(d, meta, opRes)
-		if err != nil {
-			return fmt.Errorf("Error getting nested object from operation response: %s", err)
-		}
-		if opRes == nil {
-			// Object isn't there any more - remove it from the state.
-			return fmt.Errorf("Error decoding response from operation, could not find nested object")
-		}
-	}
-	if err := d.Set("name", flattenNestedTagsTagBindingName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceTagsTagBindingPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -383,4 +374,21 @@ func resourceTagsTagBindingFindNestedObjectInList(d *schema.ResourceData, meta i
 		return idx, item, nil
 	}
 	return -1, nil, nil
+}
+func resourceTagsTagBindingPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if _, ok := res["tagBindings"]; ok {
+		res, err := flattenNestedTagsTagBinding(d, meta, res)
+		if err != nil {
+			return fmt.Errorf("Error getting nested object from operation response: %s", err)
+		}
+		if res == nil {
+			// Object isn't there any more - remove it from the state.
+			return fmt.Errorf("Error decoding response from operation, could not find nested object")
+		}
+	}
+	if err := d.Set("name", flattenNestedTagsTagBindingName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }

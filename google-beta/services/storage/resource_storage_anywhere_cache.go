@@ -472,3 +472,11 @@ func expandStorageAnywhereCacheAdmissionPolicy(v interface{}, d tpgresource.Terr
 func expandStorageAnywhereCacheTtl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
+
+func resourceStorageAnywhereCachePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("anywhere_cache_id", flattenStorageAnywhereCacheAnywhereCacheId(res["anywhereCacheId"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "anywhere_cache_id": %s`, err)
+	}
+	return nil
+}

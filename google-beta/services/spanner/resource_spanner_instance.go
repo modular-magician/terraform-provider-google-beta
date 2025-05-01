@@ -473,8 +473,8 @@ func resourceSpannerInstanceCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = SpannerOperationWaitTimeWithResponse(
 		config, res, &opRes, project, "Creating Instance", userAgent,
@@ -486,19 +486,9 @@ func resourceSpannerInstanceCreate(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error waiting to create Instance: %s", err)
 	}
 
-	opRes, err = resourceSpannerInstanceDecoder(d, meta, opRes)
+	err = resourceSpannerInstancePostCreateSetComputedFields(d, meta, opRes)
 	if err != nil {
-		return fmt.Errorf("Error decoding response from operation: %s", err)
-	}
-	if opRes == nil {
-		return fmt.Errorf("Error decoding response from operation, could not find object")
-	}
-
-	// name is set by API when unset
-	if tpgresource.IsEmptyValue(reflect.ValueOf(d.Get("name"))) {
-		if err := d.Set("name", flattenSpannerInstanceName(opRes["name"], d, config)); err != nil {
-			return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
-		}
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -1551,4 +1541,21 @@ func resourceSpannerInstanceDecoder(d *schema.ResourceData, meta interface{}, re
 	}
 	d.SetId(id)
 	return res, nil
+}
+func resourceSpannerInstancePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	res, err := resourceSpannerInstanceDecoder(d, meta, res)
+	if err != nil {
+		return fmt.Errorf("decoding response: %w", err)
+	}
+	if res == nil {
+		return fmt.Errorf("decoding response, could not find object")
+	}
+	// name is set by API when unset
+	if tpgresource.IsEmptyValue(reflect.ValueOf(d.Get("name"))) {
+		if err := d.Set("name", flattenSpannerInstanceName(res["name"], d, config)); err != nil {
+			return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+		}
+	}
+	return nil
 }

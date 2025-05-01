@@ -203,8 +203,8 @@ func resourceTagsTagKeyCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = TagsOperationWaitTimeWithResponse(
 		config, res, &opRes, "Creating TagKey", userAgent,
@@ -216,8 +216,9 @@ func resourceTagsTagKeyCreate(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error waiting to create TagKey: %s", err)
 	}
 
-	if err := d.Set("name", flattenTagsTagKeyName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceTagsTagKeyPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -507,4 +508,12 @@ func expandTagsTagKeyPurposeData(v interface{}, d tpgresource.TerraformResourceD
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func resourceTagsTagKeyPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("name", flattenTagsTagKeyName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }

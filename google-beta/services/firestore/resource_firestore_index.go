@@ -319,8 +319,8 @@ func resourceFirestoreIndexCreate(d *schema.ResourceData, meta interface{}) erro
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = FirestoreOperationWaitTimeWithResponse(
 		config, res, &opRes, project, "Creating Index", userAgent,
@@ -332,8 +332,9 @@ func resourceFirestoreIndexCreate(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error waiting to create Index: %s", err)
 	}
 
-	if err := d.Set("name", flattenFirestoreIndexName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceFirestoreIndexPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -739,4 +740,12 @@ func resourceFirestoreIndexEncoder(d *schema.ResourceData, meta interface{}, obj
 	delete(obj, "database")
 	delete(obj, "collection")
 	return obj, nil
+}
+
+func resourceFirestoreIndexPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("name", flattenFirestoreIndexName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }

@@ -250,8 +250,8 @@ func resourceDiscoveryEngineTargetSiteCreate(d *schema.ResourceData, meta interf
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = DiscoveryEngineOperationWaitTimeWithResponse(
 		config, res, &opRes, project, "Creating TargetSite", userAgent,
@@ -263,8 +263,9 @@ func resourceDiscoveryEngineTargetSiteCreate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error waiting to create TargetSite: %s", err)
 	}
 
-	if err := d.Set("name", flattenDiscoveryEngineTargetSiteName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceDiscoveryEngineTargetSitePostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -535,4 +536,12 @@ func expandDiscoveryEngineTargetSiteType(v interface{}, d tpgresource.TerraformR
 
 func expandDiscoveryEngineTargetSiteExactMatch(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceDiscoveryEngineTargetSitePostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("name", flattenDiscoveryEngineTargetSiteName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }

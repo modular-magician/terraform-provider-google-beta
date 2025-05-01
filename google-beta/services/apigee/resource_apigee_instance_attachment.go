@@ -128,8 +128,8 @@ func resourceApigeeInstanceAttachmentCreate(d *schema.ResourceData, meta interfa
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = ApigeeOperationWaitTimeWithResponse(
 		config, res, &opRes, "Creating InstanceAttachment", userAgent,
@@ -141,8 +141,9 @@ func resourceApigeeInstanceAttachmentCreate(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("Error waiting to create InstanceAttachment: %s", err)
 	}
 
-	if err := d.Set("name", flattenApigeeInstanceAttachmentName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceApigeeInstanceAttachmentPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -287,4 +288,12 @@ func flattenApigeeInstanceAttachmentName(v interface{}, d *schema.ResourceData, 
 
 func expandApigeeInstanceAttachmentEnvironment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceApigeeInstanceAttachmentPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("name", flattenApigeeInstanceAttachmentName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }

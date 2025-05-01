@@ -215,8 +215,8 @@ func resourceFirebaseAndroidAppCreate(d *schema.ResourceData, meta interface{}) 
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = FirebaseOperationWaitTimeWithResponse(
 		config, res, &opRes, project, "Creating AndroidApp", userAgent,
@@ -228,8 +228,9 @@ func resourceFirebaseAndroidAppCreate(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error waiting to create AndroidApp: %s", err)
 	}
 
-	if err := d.Set("app_id", flattenFirebaseAndroidAppAppId(opRes["appId"], d, config)); err != nil {
-		return err
+	err = resourceFirebaseAndroidAppPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -578,4 +579,12 @@ func expandFirebaseAndroidAppApiKeyId(v interface{}, d tpgresource.TerraformReso
 
 func expandFirebaseAndroidAppEtag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceFirebaseAndroidAppPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("app_id", flattenFirebaseAndroidAppAppId(res["appId"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "app_id": %s`, err)
+	}
+	return nil
 }

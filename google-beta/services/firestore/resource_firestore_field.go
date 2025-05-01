@@ -229,8 +229,8 @@ func resourceFirestoreFieldCreate(d *schema.ResourceData, meta interface{}) erro
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = FirestoreOperationWaitTimeWithResponse(
 		config, res, &opRes, project, "Creating Field", userAgent,
@@ -242,8 +242,9 @@ func resourceFirestoreFieldCreate(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error waiting to create Field: %s", err)
 	}
 
-	if err := d.Set("name", flattenFirestoreFieldName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceFirestoreFieldPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -660,4 +661,12 @@ func resourceFirestoreFieldEncoder(d *schema.ResourceData, meta interface{}, obj
 	delete(obj, "collection")
 	delete(obj, "field")
 	return obj, nil
+}
+
+func resourceFirestoreFieldPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("name", flattenFirestoreFieldName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }

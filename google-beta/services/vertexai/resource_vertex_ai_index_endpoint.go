@@ -261,8 +261,8 @@ func resourceVertexAIIndexEndpointCreate(d *schema.ResourceData, meta interface{
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
+	// Set computed resource properties from create API response so that they're available on the subsequent Read
+	// call.
 	var opRes map[string]interface{}
 	err = VertexAIOperationWaitTimeWithResponse(
 		config, res, &opRes, project, "Creating IndexEndpoint", userAgent,
@@ -274,8 +274,9 @@ func resourceVertexAIIndexEndpointCreate(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("Error waiting to create IndexEndpoint: %s", err)
 	}
 
-	if err := d.Set("name", flattenVertexAIIndexEndpointName(opRes["name"], d, config)); err != nil {
-		return err
+	err = resourceVertexAIIndexEndpointPostCreateSetComputedFields(d, meta, opRes)
+	if err != nil {
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -690,4 +691,12 @@ func expandVertexAIIndexEndpointEffectiveLabels(v interface{}, d tpgresource.Ter
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func resourceVertexAIIndexEndpointPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	if err := d.Set("name", flattenVertexAIIndexEndpointName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }
