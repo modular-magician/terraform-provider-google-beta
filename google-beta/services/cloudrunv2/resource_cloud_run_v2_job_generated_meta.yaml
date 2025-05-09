@@ -46,6 +46,7 @@ fields:
   - field: 'reconciling'
   - field: 'run_execution_token'
   - field: 'start_execution_token'
+  - field: 'tags'
   - field: 'template.annotations'
   - field: 'template.labels'
   - field: 'template.parallelism'

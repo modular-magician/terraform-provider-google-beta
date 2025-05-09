@@ -60,6 +60,7 @@ fields:
   - field: 'scaling.manual_instance_count'
   - field: 'scaling.min_instance_count'
   - field: 'scaling.scaling_mode'
+  - field: 'tags'
   - field: 'template.annotations'
   - field: 'template.containers.args'
   - field: 'template.containers.base_image_uri'
