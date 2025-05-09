@@ -49,7 +49,7 @@ func ResourceStorageBucket() *schema.Resource {
 			Read:   schema.DefaultTimeout(4 * time.Minute),
 		},
 
-		SchemaVersion: 3,
+		SchemaVersion: 4,
 		StateUpgraders: []schema.StateUpgrader{
 			{
 				Type:    resourceStorageBucketV0().CoreConfigSchema().ImpliedType(),
@@ -65,6 +65,11 @@ func ResourceStorageBucket() *schema.Resource {
 				Type:    resourceStorageBucketV2().CoreConfigSchema().ImpliedType(),
 				Upgrade: ResourceStorageBucketStateUpgradeV2,
 				Version: 2,
+			},
+			{
+				Type:    resourceStorageBucketV3().CoreConfigSchema().ImpliedType(),
+				Upgrade: ResourceStorageBucketStateUpgradeV3,
+				Version: 3,
 			},
 		},
 
@@ -172,9 +177,10 @@ func ResourceStorageBucket() *schema.Resource {
 			},
 
 			"lifecycle_rule": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 100,
+				Type:       schema.TypeList,
+				Optional:   true,
+				MaxItems:   100,
+				Deprecated: "`lifecycle_rule` is deprecated and will be removed in a future major release. Use `google_storage_bucket_life_cycle_config` instead.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"action": {
