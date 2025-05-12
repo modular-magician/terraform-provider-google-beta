@@ -683,6 +683,11 @@ Default value: "true"
   Preferred windows to perform maintenance. Currently limited to 1.
   Structure is [documented below](#nested_maintenance_update_policy_maintenance_windows).
 
+* `deny_maintenance_periods` -
+  (Optional)
+  Periods to deny maintenance. Currently limited to 1.
+  Structure is [documented below](#nested_maintenance_update_policy_deny_maintenance_periods).
+
 
 <a name="nested_maintenance_update_policy_maintenance_windows"></a>The `maintenance_windows` block supports:
 
@@ -714,6 +719,65 @@ Default value: "true"
 * `nanos` -
   (Optional)
   Fractions of seconds in nanoseconds. Currently, only the value 0 is supported.
+
+<a name="nested_maintenance_update_policy_deny_maintenance_periods"></a>The `deny_maintenance_periods` block supports:
+
+* `start_date` -
+  (Required)
+  Deny period start date. This can be either a full date, with non-zero year, month and day values OR
+  a month and day value, with a zero year for recurring.
+  Structure is [documented below](#nested_maintenance_update_policy_deny_maintenance_periods_deny_maintenance_periods_start_date).
+
+* `end_date` -
+  (Required)
+  Deny period end date. This can be either a full date, with non-zero year, month and day values OR
+  a month and day value, with a zero year for recurring.
+  Structure is [documented below](#nested_maintenance_update_policy_deny_maintenance_periods_deny_maintenance_periods_end_date).
+
+* `time` -
+  (Required)
+  Time in UTC when the deny period starts on start date and ends on end date. This can be: full time OR
+  all zeros for 00:00:00 UTC
+  Structure is [documented below](#nested_maintenance_update_policy_deny_maintenance_periods_deny_maintenance_periods_time).
+
+
+<a name="nested_maintenance_update_policy_deny_maintenance_periods_deny_maintenance_periods_start_date"></a>The `start_date` block supports:
+
+* `year` -
+  (Required)
+  Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
+
+* `month` -
+  (Required)
+  Month of a year. Must be from 1 to 12.
+
+* `day` -
+  (Required)
+  Day of a month. Must be from 1 to 31 and valid for the year and month.
+
+<a name="nested_maintenance_update_policy_deny_maintenance_periods_deny_maintenance_periods_end_date"></a>The `end_date` block supports:
+
+* `year` -
+  (Required)
+  Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.
+
+* `month` -
+  (Required)
+  Month of a year. Must be from 1 to 12.
+
+* `day` -
+  (Required)
+  Day of a month. Must be from 1 to 31 and valid for the year and month.
+
+<a name="nested_maintenance_update_policy_deny_maintenance_periods_deny_maintenance_periods_time"></a>The `time` block supports:
+
+* `hours` -
+  (Required)
+  Hours of day in 24 hour format. Should be from 0 to 23.
+
+* `minutes` -
+  (Required)
+  Minutes of hour of day.
 
 ## Attributes Reference
 

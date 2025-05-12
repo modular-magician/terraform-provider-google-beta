@@ -333,11 +333,94 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 			},
 			"maintenance_update_policy": {
 				Type:        schema.TypeList,
+				Computed:    true,
 				Optional:    true,
 				Description: `MaintenanceUpdatePolicy defines the policy for system updates.`,
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"deny_maintenance_periods": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Periods to deny maintenance. Currently limited to 1.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"end_date": {
+										Type:     schema.TypeList,
+										Required: true,
+										Description: `Deny period end date. This can be either a full date, with non-zero year, month and day values OR
+a month and day value, with a zero year for recurring.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"day": {
+													Type:        schema.TypeInt,
+													Required:    true,
+													Description: `Day of a month. Must be from 1 to 31 and valid for the year and month.`,
+												},
+												"month": {
+													Type:        schema.TypeInt,
+													Required:    true,
+													Description: `Month of a year. Must be from 1 to 12.`,
+												},
+												"year": {
+													Type:        schema.TypeInt,
+													Required:    true,
+													Description: `Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.`,
+												},
+											},
+										},
+									},
+									"start_date": {
+										Type:     schema.TypeList,
+										Required: true,
+										Description: `Deny period start date. This can be either a full date, with non-zero year, month and day values OR
+a month and day value, with a zero year for recurring.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"day": {
+													Type:        schema.TypeInt,
+													Required:    true,
+													Description: `Day of a month. Must be from 1 to 31 and valid for the year and month.`,
+												},
+												"month": {
+													Type:        schema.TypeInt,
+													Required:    true,
+													Description: `Month of a year. Must be from 1 to 12.`,
+												},
+												"year": {
+													Type:        schema.TypeInt,
+													Required:    true,
+													Description: `Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year.`,
+												},
+											},
+										},
+									},
+									"time": {
+										Type:     schema.TypeList,
+										Required: true,
+										Description: `Time in UTC when the deny period starts on start date and ends on end date. This can be: full time OR
+all zeros for 00:00:00 UTC`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"hours": {
+													Type:        schema.TypeInt,
+													Required:    true,
+													Description: `Hours of day in 24 hour format. Should be from 0 to 23.`,
+												},
+												"minutes": {
+													Type:        schema.TypeInt,
+													Required:    true,
+													Description: `Minutes of hour of day.`,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
 						"maintenance_windows": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -2080,6 +2163,8 @@ func flattenAlloydbClusterMaintenanceUpdatePolicy(v interface{}, d *schema.Resou
 	transformed := make(map[string]interface{})
 	transformed["maintenance_windows"] =
 		flattenAlloydbClusterMaintenanceUpdatePolicyMaintenanceWindows(original["maintenanceWindows"], d, config)
+	transformed["deny_maintenance_periods"] =
+		flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriods(original["denyMaintenancePeriods"], d, config)
 	return []interface{}{transformed}
 }
 func flattenAlloydbClusterMaintenanceUpdatePolicyMaintenanceWindows(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2176,6 +2261,211 @@ func flattenAlloydbClusterMaintenanceUpdatePolicyMaintenanceWindowsStartTimeSeco
 }
 
 func flattenAlloydbClusterMaintenanceUpdatePolicyMaintenanceWindowsStartTimeNanos(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriods(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"start_date": flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDate(original["startDate"], d, config),
+			"end_date":   flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDate(original["endDate"], d, config),
+			"time":       flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTime(original["time"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["year"] =
+		flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateYear(original["year"], d, config)
+	transformed["month"] =
+		flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateMonth(original["month"], d, config)
+	transformed["day"] =
+		flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateDay(original["day"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateYear(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateMonth(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateDay(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["year"] =
+		flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateYear(original["year"], d, config)
+	transformed["month"] =
+		flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateMonth(original["month"], d, config)
+	transformed["day"] =
+		flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateDay(original["day"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateYear(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateMonth(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateDay(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["hours"] =
+		flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTimeHours(original["hours"], d, config)
+	transformed["minutes"] =
+		flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTimeMinutes(original["minutes"], d, config)
+	return []interface{}{transformed}
+}
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTimeHours(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTimeMinutes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
@@ -2804,6 +3094,13 @@ func expandAlloydbClusterMaintenanceUpdatePolicy(v interface{}, d tpgresource.Te
 		transformed["maintenanceWindows"] = transformedMaintenanceWindows
 	}
 
+	transformedDenyMaintenancePeriods, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriods(original["deny_maintenance_periods"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDenyMaintenancePeriods); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["denyMaintenancePeriods"] = transformedDenyMaintenancePeriods
+	}
+
 	return transformed, nil
 }
 
@@ -2893,6 +3190,166 @@ func expandAlloydbClusterMaintenanceUpdatePolicyMaintenanceWindowsStartTimeSecon
 }
 
 func expandAlloydbClusterMaintenanceUpdatePolicyMaintenanceWindowsStartTimeNanos(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriods(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedStartDate, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDate(original["start_date"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedStartDate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["startDate"] = transformedStartDate
+		}
+
+		transformedEndDate, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDate(original["end_date"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEndDate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["endDate"] = transformedEndDate
+		}
+
+		transformedTime, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTime(original["time"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedTime); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["time"] = transformedTime
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedYear, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateYear(original["year"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedYear); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["year"] = transformedYear
+	}
+
+	transformedMonth, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateMonth(original["month"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMonth); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["month"] = transformedMonth
+	}
+
+	transformedDay, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateDay(original["day"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDay); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["day"] = transformedDay
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateYear(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateMonth(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsStartDateDay(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedYear, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateYear(original["year"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedYear); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["year"] = transformedYear
+	}
+
+	transformedMonth, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateMonth(original["month"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMonth); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["month"] = transformedMonth
+	}
+
+	transformedDay, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateDay(original["day"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDay); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["day"] = transformedDay
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateYear(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateMonth(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsEndDateDay(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedHours, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTimeHours(original["hours"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedHours); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["hours"] = transformedHours
+	}
+
+	transformedMinutes, err := expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTimeMinutes(original["minutes"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMinutes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["minutes"] = transformedMinutes
+	}
+
+	return transformed, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTimeHours(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbClusterMaintenanceUpdatePolicyDenyMaintenancePeriodsTimeMinutes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
