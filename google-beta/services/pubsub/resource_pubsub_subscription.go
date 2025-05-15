@@ -614,7 +614,7 @@ func resourcePubsubSubscriptionCreate(d *schema.ResourceData, meta interface{}) 
 	expirationPolicyProp, err := expandPubsubSubscriptionExpirationPolicy(d.Get("expiration_policy"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("expiration_policy"); ok || !reflect.DeepEqual(v, expirationPolicyProp) {
+	} else if v, ok := d.GetOkExists("expiration_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(expirationPolicyProp)) && (ok || !reflect.DeepEqual(v, expirationPolicyProp)) {
 		obj["expirationPolicy"] = expirationPolicyProp
 	}
 	filterProp, err := expandPubsubSubscriptionFilter(d.Get("filter"), d, config)
@@ -904,7 +904,7 @@ func resourcePubsubSubscriptionUpdate(d *schema.ResourceData, meta interface{}) 
 	expirationPolicyProp, err := expandPubsubSubscriptionExpirationPolicy(d.Get("expiration_policy"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("expiration_policy"); ok || !reflect.DeepEqual(v, expirationPolicyProp) {
+	} else if v, ok := d.GetOkExists("expiration_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, expirationPolicyProp)) {
 		obj["expirationPolicy"] = expirationPolicyProp
 	}
 	deadLetterPolicyProp, err := expandPubsubSubscriptionDeadLetterPolicy(d.Get("dead_letter_policy"), d, config)
@@ -1379,6 +1379,9 @@ func flattenPubsubSubscriptionExpirationPolicy(v interface{}, d *schema.Resource
 		return nil
 	}
 	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
 	transformed := make(map[string]interface{})
 	transformed["ttl"] =
 		flattenPubsubSubscriptionExpirationPolicyTtl(original["ttl"], d, config)
@@ -1862,13 +1865,8 @@ func expandPubsubSubscriptionRetainAckedMessages(v interface{}, d tpgresource.Te
 
 func expandPubsubSubscriptionExpirationPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	l := v.([]interface{})
-	if len(l) == 0 {
+	if len(l) == 0 || l[0] == nil {
 		return nil, nil
-	}
-
-	if l[0] == nil {
-		transformed := make(map[string]interface{})
-		return transformed, nil
 	}
 	raw := l[0]
 	original := raw.(map[string]interface{})
