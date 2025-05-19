@@ -68,12 +68,6 @@ The following arguments are supported:
   (Required)
   Display name.
 
-* `vpc_peering_config` -
-  (Required)
-  The VPC Peering configuration is used to create VPC peering
-  between Datastream and the consumer's VPC.
-  Structure is [documented below](#nested_vpc_peering_config).
-
 * `private_connection_id` -
   (Required)
   The private connectivity identifier.
@@ -82,17 +76,6 @@ The following arguments are supported:
   (Required)
   The name of the location this private connection is located in.
 
-
-<a name="nested_vpc_peering_config"></a>The `vpc_peering_config` block supports:
-
-* `vpc` -
-  (Required)
-  Fully qualified name of the VPC that Datastream will peer to.
-  Format: projects/{project}/global/{networks}/{name}
-
-* `subnet` -
-  (Required)
-  A free subnet for peering. (CIDR of /29)
 
 - - -
 
@@ -103,6 +86,18 @@ The following arguments are supported:
   **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
   Please refer to the field `effective_labels` for all of the labels present on the resource.
 
+* `vpc_peering_config` -
+  (Optional)
+  The VPC Peering configuration is used to create VPC peering
+  between Datastream and the consumer's VPC.
+  Structure is [documented below](#nested_vpc_peering_config).
+
+* `psc_interface_config` -
+  (Optional)
+  The PSCI (Private Service Connect Interface) configuration.
+  # Mark as required: false here as the 'oneof' at the parent level handles the mutual exclusivity
+  Structure is [documented below](#nested_psc_interface_config).
+
 * `create_without_validation` -
   (Optional)
   If set to true, will skip validations.
@@ -110,6 +105,29 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+
+<a name="nested_vpc_peering_config"></a>The `vpc_peering_config` block supports:
+
+* `vpc` -
+  (Required)
+  Fully qualified name of the VPC that Datastream will peer to.
+  Format: projects/{project}/global/{networks}/{name}
+
+* `subnet` -
+  (Optional)
+  A free subnet for peering. (CIDR of /29)
+  required: true
+
+<a name="nested_psc_interface_config"></a>The `psc_interface_config` block supports:
+
+* `network_attachment` -
+  (Required)
+  The full resource name of the Network Attachment to use for PSCI.
+  Format: projects/{project}/regions/{region}/networkAttachments/{networkAttachmentId}
+  To get Datastream project for the accepted list:
+  `gcloud datastream private-connections create [PC ID] --location=[LOCATION] --network-attachment=[NA URI] --validate-only --display-name=[ANY STRING]`        
+  Add Datastream project to the attachment accepted list:
+  `gcloud compute network-attachments update [NA URI] --region=[NA region] --producer-accept-list=[TP from prev command]`
 
 ## Attributes Reference
 

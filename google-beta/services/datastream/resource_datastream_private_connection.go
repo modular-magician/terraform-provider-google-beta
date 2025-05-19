@@ -119,31 +119,6 @@ func ResourceDatastreamPrivateConnection() *schema.Resource {
 				ForceNew:    true,
 				Description: `The private connectivity identifier.`,
 			},
-			"vpc_peering_config": {
-				Type:     schema.TypeList,
-				Required: true,
-				ForceNew: true,
-				Description: `The VPC Peering configuration is used to create VPC peering
-between Datastream and the consumer's VPC.`,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"subnet": {
-							Type:        schema.TypeString,
-							Required:    true,
-							ForceNew:    true,
-							Description: `A free subnet for peering. (CIDR of /29)`,
-						},
-						"vpc": {
-							Type:     schema.TypeString,
-							Required: true,
-							ForceNew: true,
-							Description: `Fully qualified name of the VPC that Datastream will peer to.
-Format: projects/{project}/global/{networks}/{name}`,
-						},
-					},
-				},
-			},
 			"create_without_validation": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -159,6 +134,57 @@ Format: projects/{project}/global/{networks}/{name}`,
 **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
+			},
+			"psc_interface_config": {
+				Type:     schema.TypeList,
+				Optional: true,
+				ForceNew: true,
+				Description: `The PSCI (Private Service Connect Interface) configuration.
+# Mark as required: false here as the 'oneof' at the parent level handles the mutual exclusivity`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"network_attachment": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+							Description: `The full resource name of the Network Attachment to use for PSCI.
+Format: projects/{project}/regions/{region}/networkAttachments/{networkAttachmentId}
+To get Datastream project for the accepted list:
+'gcloud datastream private-connections create [PC ID] --location=[LOCATION] --network-attachment=[NA URI] --validate-only --display-name=[ANY STRING]'        
+Add Datastream project to the attachment accepted list:
+'gcloud compute network-attachments update [NA URI] --region=[NA region] --producer-accept-list=[TP from prev command]'`,
+						},
+					},
+				},
+				ExactlyOneOf: []string{"vpc_peering_config", "psc_interface_config"},
+			},
+			"vpc_peering_config": {
+				Type:     schema.TypeList,
+				Optional: true,
+				ForceNew: true,
+				Description: `The VPC Peering configuration is used to create VPC peering
+between Datastream and the consumer's VPC.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"vpc": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+							Description: `Fully qualified name of the VPC that Datastream will peer to.
+Format: projects/{project}/global/{networks}/{name}`,
+						},
+						"subnet": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+							Description: `A free subnet for peering. (CIDR of /29)
+required: true`,
+						},
+					},
+				},
+				ExactlyOneOf: []string{"vpc_peering_config", "psc_interface_config"},
 			},
 			"effective_labels": {
 				Type:        schema.TypeMap,
@@ -234,6 +260,12 @@ func resourceDatastreamPrivateConnectionCreate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("vpc_peering_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(vpcPeeringConfigProp)) && (ok || !reflect.DeepEqual(v, vpcPeeringConfigProp)) {
 		obj["vpcPeeringConfig"] = vpcPeeringConfigProp
+	}
+	pscInterfaceConfigProp, err := expandDatastreamPrivateConnectionPscInterfaceConfig(d.Get("psc_interface_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("psc_interface_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(pscInterfaceConfigProp)) && (ok || !reflect.DeepEqual(v, pscInterfaceConfigProp)) {
+		obj["pscInterfaceConfig"] = pscInterfaceConfigProp
 	}
 	labelsProp, err := expandDatastreamPrivateConnectionEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -374,6 +406,9 @@ func resourceDatastreamPrivateConnectionRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
 	if err := d.Set("vpc_peering_config", flattenDatastreamPrivateConnectionVpcPeeringConfig(res["vpcPeeringConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PrivateConnection: %s", err)
+	}
+	if err := d.Set("psc_interface_config", flattenDatastreamPrivateConnectionPscInterfaceConfig(res["pscInterfaceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PrivateConnection: %s", err)
 	}
 	if err := d.Set("terraform_labels", flattenDatastreamPrivateConnectionTerraformLabels(res["labels"], d, config)); err != nil {
@@ -549,6 +584,23 @@ func flattenDatastreamPrivateConnectionVpcPeeringConfigSubnet(v interface{}, d *
 	return v
 }
 
+func flattenDatastreamPrivateConnectionPscInterfaceConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["network_attachment"] =
+		flattenDatastreamPrivateConnectionPscInterfaceConfigNetworkAttachment(original["network_attachment"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatastreamPrivateConnectionPscInterfaceConfigNetworkAttachment(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenDatastreamPrivateConnectionTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -603,6 +655,29 @@ func expandDatastreamPrivateConnectionVpcPeeringConfigVpc(v interface{}, d tpgre
 }
 
 func expandDatastreamPrivateConnectionVpcPeeringConfigSubnet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamPrivateConnectionPscInterfaceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedNetworkAttachment, err := expandDatastreamPrivateConnectionPscInterfaceConfigNetworkAttachment(original["network_attachment"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedNetworkAttachment); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["network_attachment"] = transformedNetworkAttachment
+	}
+
+	return transformed, nil
+}
+
+func expandDatastreamPrivateConnectionPscInterfaceConfigNetworkAttachment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
