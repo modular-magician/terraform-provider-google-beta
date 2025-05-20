@@ -20,7 +20,7 @@ func TestAccComputeNetworkFirewallPolicyWithRules_update(t *testing.T) {
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckComputeNetworkFirewallPolicyWithRulesDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -46,13 +46,11 @@ func TestAccComputeNetworkFirewallPolicyWithRules_update(t *testing.T) {
 func testAccComputeNetworkFirewallPolicyWithRules_full(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 data "google_project" "project" {
-  provider = google-beta
 }
 
 resource "google_compute_network_firewall_policy_with_rules" "network-firewall-policy-with-rules" {
   name = "tf-test-tf-fw-policy-with-rules%{random_suffix}"
   description = "Terraform test"
-  provider = google-beta
 
   rule {
     description    = "tcp rule"
@@ -116,7 +114,6 @@ resource "google_compute_network_firewall_policy_with_rules" "network-firewall-p
 }
 
 resource "google_network_security_address_group" "address_group_1" {
-  provider    = google-beta
   name        = "tf-test-tf-address-group%{random_suffix}"
   parent      = "projects/${data.google_project.project.name}"
   description = "Global address group"
@@ -127,7 +124,6 @@ resource "google_network_security_address_group" "address_group_1" {
 }
 
 resource "google_tags_tag_key" "secure_tag_key_1" {
-  provider    = google-beta
   description = "Tag key"
   parent      = "projects/${data.google_project.project.name}"
   purpose     = "GCE_FIREWALL"
@@ -138,14 +134,12 @@ resource "google_tags_tag_key" "secure_tag_key_1" {
 }
 
 resource "google_tags_tag_value" "secure_tag_value_1" {
-  provider    = google-beta
   description = "Tag value"
   parent      = google_tags_tag_key.secure_tag_key_1.id
   short_name  = "tf-test-tf-tag-value%{random_suffix}"
 }
 
 resource "google_network_security_security_profile_group" "security_profile_group_1" {
-  provider                  = google-beta
   name                      = "tf-test-tf-security-profile-group%{random_suffix}"
   parent                    = "organizations/%{org_id}"
   description               = "my description"
@@ -153,7 +147,6 @@ resource "google_network_security_security_profile_group" "security_profile_grou
 }
 
 resource "google_network_security_security_profile" "security_profile_1" {
-  provider    = google-beta
   name        = "tf-test-tf-security-profile%{random_suffix}"
   type        = "THREAT_PREVENTION"
   parent      = "organizations/%{org_id}"
@@ -165,13 +158,11 @@ resource "google_network_security_security_profile" "security_profile_1" {
 func testAccComputeNetworkFirewallPolicyWithRules_update(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 data "google_project" "project" {
-   provider    = google-beta 
 }
 
 resource "google_compute_network_firewall_policy_with_rules" "network-firewall-policy-with-rules" {
   name = "tf-test-tf-fw-policy-with-rules%{random_suffix}"
   description = "Terraform test - update"
-  provider    = google-beta
 
   rule {
     description    = "tcp rule - changed"
@@ -214,7 +205,6 @@ resource "google_compute_network_firewall_policy_with_rules" "network-firewall-p
 }
 
 resource "google_network_security_address_group" "address_group_1" {
-  provider    = google-beta
   name        = "tf-test-tf-address-group%{random_suffix}"
   parent      = "projects/${data.google_project.project.name}"
   description = "Global address group"
@@ -225,7 +215,6 @@ resource "google_network_security_address_group" "address_group_1" {
 }
 
 resource "google_tags_tag_key" "secure_tag_key_1" {
-  provider    = google-beta
   description = "Tag key"
   parent      = "projects/${data.google_project.project.name}"
   purpose     = "GCE_FIREWALL"
@@ -236,14 +225,12 @@ resource "google_tags_tag_key" "secure_tag_key_1" {
 }
 
 resource "google_tags_tag_value" "secure_tag_value_1" {
-  provider    = google-beta
   description = "Tag value"
   parent      = google_tags_tag_key.secure_tag_key_1.id
   short_name  = "tf-test-tf-tag-value%{random_suffix}"
 }
 
 resource "google_network_security_security_profile_group" "security_profile_group_1" {
-  provider                  = google-beta
   name                      = "tf-test-tf-security-profile-group%{random_suffix}"
   parent                    = "organizations/%{org_id}"
   description               = "my description"
@@ -251,7 +238,6 @@ resource "google_network_security_security_profile_group" "security_profile_grou
 }
 
 resource "google_network_security_security_profile" "security_profile_1" {
-  provider    = google-beta
   name        = "tf-test-tf-security-profile%{random_suffix}"
   type        = "THREAT_PREVENTION"
   parent      = "organizations/%{org_id}"
