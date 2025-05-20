@@ -72,7 +72,7 @@ The following arguments are supported:
 
 * `policy` -
   (Required)
-  Required. Immutable. The resource name of the policy to be bound. The binding parent and policy must belong to the same Organization (or Project).
+  Immutable. The resource name of the policy to be bound. The binding parent and policy must belong to the same Organization (or Project).
 
 * `organization` -
   (Required)
@@ -90,8 +90,8 @@ The following arguments are supported:
 <a name="nested_target"></a>The `target` block supports:
 
 * `principal_set` -
-  (Optional)
-  Required. Immutable. Full Resource Name of the principal set used for principal access boundary policy bindings.
+  (Required)
+  Immutable. Full Resource Name of the principal set used for principal access boundary policy bindings.
   Examples for each one of the following supported principal set types:
   * Organization `//cloudresourcemanager.googleapis.com/organizations/ORGANIZATION_ID`
   * Workforce Identity: `//iam.googleapis.com/locations/global/workforcePools/WORKFORCE_POOL_ID`
