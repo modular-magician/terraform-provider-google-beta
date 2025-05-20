@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
@@ -19,6 +20,7 @@ type ResourceDataMock struct {
 	FieldsInSchema      map[string]interface{}
 	FieldsWithHasChange []string
 	id                  string
+	identity            *schema.IdentityData
 }
 
 func (d *ResourceDataMock) HasChange(key string) bool {
@@ -35,6 +37,10 @@ func (d *ResourceDataMock) HasChange(key string) bool {
 func (d *ResourceDataMock) Get(key string) interface{} {
 	v, _ := d.GetOk(key)
 	return v
+}
+
+func (d *ResourceDataMock) GetRawConfig() cty.Value {
+	return d.GetRawConfig()
 }
 
 func (d *ResourceDataMock) GetOk(key string) (interface{}, bool) {
@@ -71,6 +77,10 @@ func (d *ResourceDataMock) Id() string {
 
 func (d *ResourceDataMock) GetProviderMeta(dst interface{}) error {
 	return nil
+}
+
+func (d *ResourceDataMock) Identity() (*schema.IdentityData, error) {
+	return d.identity, nil
 }
 
 func (d *ResourceDataMock) Timeout(key string) time.Duration {
