@@ -440,6 +440,13 @@ To disable automatic snapshot creation you have to remove the whole snapshot_pol
 							Description: `Optional. Time in days to mark the volume's data block as cold and make it eligible for tiering, can be range from 2-183.
 Default is 31.`,
 						},
+						"hot_tier_bypass_mode_enabled": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `Optional. Flag indicating that the hot tier bypass mode is enabled. Default is false.
+Only applicable to Flex service level.`,
+							Default: false,
+						},
 						"tier_action": {
 							Type:         schema.TypeString,
 							Optional:     true,
@@ -1098,7 +1105,8 @@ func resourceNetappVolumeUpdate(d *schema.ResourceData, meta interface{}) error 
 
 	if d.HasChange("tiering_policy") {
 		updateMask = append(updateMask, "tiering_policy.cooling_threshold_days",
-			"tiering_policy.tier_action")
+			"tiering_policy.tier_action",
+			"tiering_policy.hot_tier_bypass_mode_enabled")
 	}
 
 	if d.HasChange("effective_labels") {
@@ -1813,6 +1821,8 @@ func flattenNetappVolumeTieringPolicy(v interface{}, d *schema.ResourceData, con
 		flattenNetappVolumeTieringPolicyCoolingThresholdDays(original["coolingThresholdDays"], d, config)
 	transformed["tier_action"] =
 		flattenNetappVolumeTieringPolicyTierAction(original["tierAction"], d, config)
+	transformed["hot_tier_bypass_mode_enabled"] =
+		flattenNetappVolumeTieringPolicyHotTierBypassModeEnabled(original["hotTierBypassModeEnabled"], d, config)
 	return []interface{}{transformed}
 }
 func flattenNetappVolumeTieringPolicyCoolingThresholdDays(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1833,6 +1843,10 @@ func flattenNetappVolumeTieringPolicyCoolingThresholdDays(v interface{}, d *sche
 }
 
 func flattenNetappVolumeTieringPolicyTierAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenNetappVolumeTieringPolicyHotTierBypassModeEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2406,6 +2420,13 @@ func expandNetappVolumeTieringPolicy(v interface{}, d tpgresource.TerraformResou
 		transformed["tierAction"] = transformedTierAction
 	}
 
+	transformedHotTierBypassModeEnabled, err := expandNetappVolumeTieringPolicyHotTierBypassModeEnabled(original["hot_tier_bypass_mode_enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedHotTierBypassModeEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["hotTierBypassModeEnabled"] = transformedHotTierBypassModeEnabled
+	}
+
 	return transformed, nil
 }
 
@@ -2414,6 +2435,10 @@ func expandNetappVolumeTieringPolicyCoolingThresholdDays(v interface{}, d tpgres
 }
 
 func expandNetappVolumeTieringPolicyTierAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNetappVolumeTieringPolicyHotTierBypassModeEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
