@@ -24,7 +24,6 @@ import (
 	"log"
 	"net/http"
 	"reflect"
-	"regexp"
 	"strings"
 	"time"
 
@@ -34,51 +33,6 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
-
-const workloadIdentityPoolNamespaceIdRegexp = `^[0-9a-z-]+$`
-
-func ValidateWorkloadIdentityPoolNamespaceId(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-
-	if !regexp.MustCompile(workloadIdentityPoolNamespaceIdRegexp).MatchString(value) {
-		errors = append(errors, fmt.Errorf(
-			"%q must contain only lowercase letters (a-z), numbers (0-9), or dashes (-)", k))
-	}
-
-	if len(value) < 2 {
-		errors = append(errors, fmt.Errorf(
-			"%q cannot be less than 2 characters", k))
-		return
-	}
-
-	if len(value) > 63 {
-		errors = append(errors, fmt.Errorf(
-			"%q cannot be greater than 63 characters", k))
-	}
-
-	isLowerAlphaNumeric := func(r byte) bool {
-		return (r >= '0' && r <= '9') || (r >= 'a' && r <= 'z')
-	}
-
-	firstChar := value[0]
-	if !isLowerAlphaNumeric(firstChar) {
-		errors = append(errors, fmt.Errorf(
-			"%q must start with an alphanumeric character", k))
-	}
-
-	lastChar := value[len(value)-1]
-	if !isLowerAlphaNumeric(lastChar) {
-		errors = append(errors, fmt.Errorf(
-			"%q must end with an alphanumeric character", k))
-	}
-
-	if strings.HasPrefix(value, "gcp-") {
-		errors = append(errors, fmt.Errorf(
-			"%q (%q) can not start with \"gcp-\"", k, value))
-	}
-
-	return
-}
 
 func ResourceIAMBetaWorkloadIdentityPoolNamespace() *schema.Resource {
 	return &schema.Resource{
@@ -111,10 +65,9 @@ value should be 4-32 characters, and may contain the characters [a-z0-9-]. The p
 'gcp-' is reserved for use by Google, and may not be specified.`,
 			},
 			"workload_identity_pool_namespace_id": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: ValidateWorkloadIdentityPoolNamespaceId,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 				Description: `The ID to use for the namespace. This value must:
 * contain at most 63 characters
 * contain only lowercase alphanumeric characters or '-'
