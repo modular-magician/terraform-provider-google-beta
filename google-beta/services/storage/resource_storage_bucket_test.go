@@ -66,14 +66,14 @@ func TestAccStorageBucket_basic(t *testing.T) {
 				ResourceName:            "google_storage_bucket.bucket",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_destroy"},
+				ImportStateVerifyIgnore: []string{"force_destroy", "custom_headers"},
 			},
 			{
 				ResourceName:            "google_storage_bucket.bucket",
 				ImportStateId:           fmt.Sprintf("%s/%s", envvar.GetTestProjectFromEnv(), bucketName),
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_destroy"},
+				ImportStateVerifyIgnore: []string{"force_destroy", "custom_headers"},
 			},
 		},
 	})
@@ -153,7 +153,7 @@ func TestAccStorageBucket_AutoclassDiffSuppress(t *testing.T) {
 				ResourceName:            "google_storage_bucket.bucket",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_destroy"},
+				ImportStateVerifyIgnore: []string{"force_destroy", "custom_headers"},
 			},
 			{
 				Config: testAccStorageBucket_basicWithAutoclass(bucketName, false),
@@ -192,7 +192,7 @@ func TestAccStorageBucket_AutoclassDiffSuppress(t *testing.T) {
 				ResourceName:            "google_storage_bucket.bucket",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_destroy"},
+				ImportStateVerifyIgnore: []string{"force_destroy", "custom_headers"},
 			},
 		},
 	})
@@ -1127,7 +1127,7 @@ func TestAccStorageBucket_logging(t *testing.T) {
 				ResourceName:            "google_storage_bucket.bucket",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_destroy"},
+				ImportStateVerifyIgnore: []string{"force_destroy", "custom_headers"},
 			},
 		},
 	})
@@ -1159,7 +1159,7 @@ func TestAccStorageBucket_cors(t *testing.T) {
 				ResourceName:            "google_storage_bucket.bucket",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_destroy"},
+				ImportStateVerifyIgnore: []string{"force_destroy", "custom_headers"},
 			},
 		},
 	})
@@ -1308,7 +1308,7 @@ func TestAccStorageBucket_labels(t *testing.T) {
 				ResourceName:            "google_storage_bucket.bucket",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_destroy", "labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"force_destroy", "labels", "terraform_labels", "custom_headers"},
 			},
 		},
 	})
@@ -1460,7 +1460,7 @@ func TestAccStorageBucket_SoftDeletePolicy(t *testing.T) {
 				ResourceName:            "google_storage_bucket.bucket",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_destroy"},
+				ImportStateVerifyIgnore: []string{"force_destroy", "custom_headers"},
 			},
 			{
 				Config: testAccStorageBucket_SoftDeletePolicy(bucketName, 7776000),
@@ -1893,6 +1893,10 @@ func testAccStorageBucket_basic(bucketName string) string {
 resource "google_storage_bucket" "bucket" {
   name     = "%s"
   location = "US"
+  custom_headers = {
+    "X-goog-custom-audit-metauser"= "user"
+    "X-goog-custom-audit-customerId"= "customer_id"
+  }
 }
 `, bucketName)
 }
