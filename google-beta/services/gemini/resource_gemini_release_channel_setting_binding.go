@@ -94,8 +94,8 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				Type:         schema.TypeString,
 				Computed:     true,
 				Optional:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"GEMINI_CLOUD_ASSIST", "GEMINI_CODE_ASSIST", ""}),
-				Description:  `Product type of the setting binding. Possible values: ["GEMINI_CLOUD_ASSIST", "GEMINI_CODE_ASSIST"]`,
+				ValidateFunc: verify.ValidateEnum([]string{"GEMINI_CLOUD_ASSIST", "GEMINI_CODE_ASSIST", "GEMINI_IN_BIGQUERY", ""}),
+				Description:  `Product type of the setting binding. Possible values: ["GEMINI_CLOUD_ASSIST", "GEMINI_CODE_ASSIST", "GEMINI_IN_BIGQUERY"]`,
 			},
 			"create_time": {
 				Type:        schema.TypeString,
