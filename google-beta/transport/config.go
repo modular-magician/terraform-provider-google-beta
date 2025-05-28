@@ -647,7 +647,7 @@ var DefaultBasePaths = map[string]string{
 	ContainerAttachedBasePathKey:        "https://{{location}}-gkemulticloud.googleapis.com/v1/",
 	CoreBillingBasePathKey:              "https://cloudbilling.googleapis.com/v1/",
 	DatabaseMigrationServiceBasePathKey: "https://datamigration.googleapis.com/v1/",
-	DataCatalogBasePathKey:              "https://datacatalog.googleapis.com/v1beta1/",
+	DataCatalogBasePathKey:              "https://datacatalog.googleapis.com/v1/",
 	DataformBasePathKey:                 "https://dataform.googleapis.com/v1beta1/",
 	DataFusionBasePathKey:               "https://datafusion.googleapis.com/v1beta1/",
 	DataLossPreventionBasePathKey:       "https://dlp.googleapis.com/v2/",

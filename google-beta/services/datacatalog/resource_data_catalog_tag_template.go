@@ -96,6 +96,14 @@ func createTagTemplateField(d *schema.ResourceData, config *transport_tpg.Config
 	return nil
 }
 
+func suppressMissingDefault(k, old, new string, d *schema.ResourceData) bool {
+	if old == "" && new == "DATAPLEX_TRANSFER_STATUS_UNSPECIFIED" {
+		log.Printf("[INFO] API returned empty value for the default")
+		return true
+	}
+	return false
+}
+
 func ResourceDataCatalogTagTemplate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceDataCatalogTagTemplateCreate,
@@ -212,6 +220,16 @@ Multiple fields can have the same order, and field orders within a tag do not ha
 				ValidateFunc: verify.ValidateRegexp(`^[a-z_][a-z0-9_]{0,63}$`),
 				Description:  `The id of the tag template to create.`,
 			},
+			"dataplex_transfer_status": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateFunc:     verify.ValidateEnum([]string{"DATAPLEX_TRANSFER_STATUS_UNSPECIFIED", "TRANSFERRED", ""}),
+				DiffSuppressFunc: suppressMissingDefault,
+				Description: `Transfer status of the TagTemplate:
+DATAPLEX_TRANSFER_STATUS_UNSPECIFIED: Default value. TagTemplate and its tags are only visible and editable in DataCatalog.
+TRANSFERRED: TagTemplate and its tags are auto-copied to Dataplex service. Visible in both services. Editable in Dataplex, read-only in DataCatalog. Default value: "DATAPLEX_TRANSFER_STATUS_UNSPECIFIED" Possible values: ["DATAPLEX_TRANSFER_STATUS_UNSPECIFIED", "TRANSFERRED"]`,
+				Default: "DATAPLEX_TRANSFER_STATUS_UNSPECIFIED",
+			},
 			"display_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -222,6 +240,16 @@ Multiple fields can have the same order, and field orders within a tag do not ha
 				Optional:    true,
 				Description: `This confirms the deletion of any possible tags using this template. Must be set to true in order to delete the tag template.`,
 				Default:     false,
+			},
+			"is_publicly_readable": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `Indicates whether tags created with this template are public. Public tags do not require tag template
+access to appear in ListTags API response.
+
+Additionally, you can search for a public tag by value with a simple search query in addition to using
+a tag: predicate.`,
+				Default: false,
 			},
 			"region": {
 				Type:        schema.TypeString,
@@ -271,6 +299,18 @@ func resourceDataCatalogTagTemplateCreate(d *schema.ResourceData, meta interface
 		return err
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
+	}
+	isPubliclyReadableProp, err := expandDataCatalogTagTemplateIsPubliclyReadable(d.Get("is_publicly_readable"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("is_publicly_readable"); !tpgresource.IsEmptyValue(reflect.ValueOf(isPubliclyReadableProp)) && (ok || !reflect.DeepEqual(v, isPubliclyReadableProp)) {
+		obj["isPubliclyReadable"] = isPubliclyReadableProp
+	}
+	dataplexTransferStatusProp, err := expandDataCatalogTagTemplateDataplexTransferStatus(d.Get("dataplex_transfer_status"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("dataplex_transfer_status"); !tpgresource.IsEmptyValue(reflect.ValueOf(dataplexTransferStatusProp)) && (ok || !reflect.DeepEqual(v, dataplexTransferStatusProp)) {
+		obj["dataplexTransferStatus"] = dataplexTransferStatusProp
 	}
 	fieldsProp, err := expandDataCatalogTagTemplateFields(d.Get("fields"), d, config)
 	if err != nil {
@@ -387,6 +427,12 @@ func resourceDataCatalogTagTemplateRead(d *schema.ResourceData, meta interface{}
 	if err := d.Set("display_name", flattenDataCatalogTagTemplateDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagTemplate: %s", err)
 	}
+	if err := d.Set("is_publicly_readable", flattenDataCatalogTagTemplateIsPubliclyReadable(res["isPubliclyReadable"], d, config)); err != nil {
+		return fmt.Errorf("Error reading TagTemplate: %s", err)
+	}
+	if err := d.Set("dataplex_transfer_status", flattenDataCatalogTagTemplateDataplexTransferStatus(res["dataplexTransferStatus"], d, config)); err != nil {
+		return fmt.Errorf("Error reading TagTemplate: %s", err)
+	}
 	if err := d.Set("fields", flattenDataCatalogTagTemplateFields(res["fields"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TagTemplate: %s", err)
 	}
@@ -416,6 +462,18 @@ func resourceDataCatalogTagTemplateUpdate(d *schema.ResourceData, meta interface
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
+	isPubliclyReadableProp, err := expandDataCatalogTagTemplateIsPubliclyReadable(d.Get("is_publicly_readable"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("is_publicly_readable"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, isPubliclyReadableProp)) {
+		obj["isPubliclyReadable"] = isPubliclyReadableProp
+	}
+	dataplexTransferStatusProp, err := expandDataCatalogTagTemplateDataplexTransferStatus(d.Get("dataplex_transfer_status"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("dataplex_transfer_status"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, dataplexTransferStatusProp)) {
+		obj["dataplexTransferStatus"] = dataplexTransferStatusProp
+	}
 	fieldsProp, err := expandDataCatalogTagTemplateFields(d.Get("fields"), d, config)
 	if err != nil {
 		return err
@@ -434,6 +492,14 @@ func resourceDataCatalogTagTemplateUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("display_name") {
 		updateMask = append(updateMask, "displayName")
+	}
+
+	if d.HasChange("is_publicly_readable") {
+		updateMask = append(updateMask, "isPubliclyReadable")
+	}
+
+	if d.HasChange("dataplex_transfer_status") {
+		updateMask = append(updateMask, "dataplexTransferStatus")
 	}
 
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
@@ -685,6 +751,14 @@ func flattenDataCatalogTagTemplateDisplayName(v interface{}, d *schema.ResourceD
 	return v
 }
 
+func flattenDataCatalogTagTemplateIsPubliclyReadable(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDataCatalogTagTemplateDataplexTransferStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenDataCatalogTagTemplateFields(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -793,6 +867,14 @@ func flattenDataCatalogTagTemplateFieldsOrder(v interface{}, d *schema.ResourceD
 }
 
 func expandDataCatalogTagTemplateDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataCatalogTagTemplateIsPubliclyReadable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataCatalogTagTemplateDataplexTransferStatus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

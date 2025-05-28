@@ -140,6 +140,8 @@ resource "google_data_catalog_tag_template" "tag_template" {
   tag_template_id = "my_template"
   region = "us-central1"
   display_name = "Demo Tag Template"
+  dataplex_transfer_status = "DATAPLEX_TRANSFER_STATUS_UNSPECIFIED"
+  is_publicly_readable = true
 
   fields {
     field_id = "source"
@@ -253,6 +255,9 @@ resource "google_data_catalog_tag_template" "tag_template" {
   tag_template_id = "my_template"
   region = "us-central1"
   display_name = "Demo Tag Template"
+
+  dataplex_transfer_status = "DATAPLEX_TRANSFER_STATUS_UNSPECIFIED"
+  is_publicly_readable = false
 
   fields {
     field_id = "source"

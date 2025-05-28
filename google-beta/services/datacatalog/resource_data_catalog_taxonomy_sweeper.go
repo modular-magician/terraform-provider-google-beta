@@ -117,7 +117,7 @@ func listAndActionDataCatalogTaxonomy(action sweeper.ResourceAction) error {
 		}
 
 		// Prepare list URL
-		listTemplate := strings.Split("https://datacatalog.googleapis.com/v1beta1/projects/{{project}}/locations/{{region}}/taxonomies", "?")[0]
+		listTemplate := strings.Split("https://datacatalog.googleapis.com/v1/projects/{{project}}/locations/{{region}}/taxonomies", "?")[0]
 		listUrl, err := tpgresource.ReplaceVars(mockConfig, config, listTemplate)
 		if err != nil {
 			log.Printf("[INFO][SWEEPER_LOG] error preparing sweeper list url: %s", err)
@@ -194,7 +194,7 @@ func deleteResourceDataCatalogTaxonomy(config *transport_tpg.Config, d *tpgresou
 		return nil
 	}
 
-	deleteTemplate := "https://datacatalog.googleapis.com/v1beta1/{{name}}"
+	deleteTemplate := "https://datacatalog.googleapis.com/v1/{{name}}"
 
 	url, err := tpgresource.ReplaceVars(d, config, deleteTemplate)
 	if err != nil {

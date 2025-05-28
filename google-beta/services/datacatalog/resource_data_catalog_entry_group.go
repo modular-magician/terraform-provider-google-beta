@@ -86,6 +86,12 @@ contain only English letters, numbers and underscores, and be at most 64 charact
 				ForceNew:    true,
 				Description: `EntryGroup location region.`,
 			},
+			"transferred_to_dataplex": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `When set to [true], it means DataCatalog EntryGroup was transferred to Dataplex Catalog Service. It makes EntryGroup and its Entries to be read-only in DataCatalog.
+However, new Tags on EntryGroup and its Entries can be created. After setting the flag to [true] it cannot be unset.`,
+			},
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -121,6 +127,12 @@ func resourceDataCatalogEntryGroupCreate(d *schema.ResourceData, meta interface{
 		return err
 	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
+	}
+	transferredToDataplexProp, err := expandDataCatalogEntryGroupTransferredToDataplex(d.Get("transferred_to_dataplex"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("transferred_to_dataplex"); !tpgresource.IsEmptyValue(reflect.ValueOf(transferredToDataplexProp)) && (ok || !reflect.DeepEqual(v, transferredToDataplexProp)) {
+		obj["transferredToDataplex"] = transferredToDataplexProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{DataCatalogBasePath}}projects/{{project}}/locations/{{region}}/entryGroups?entryGroupId={{entry_group_id}}")
@@ -234,6 +246,9 @@ func resourceDataCatalogEntryGroupRead(d *schema.ResourceData, meta interface{})
 	if err := d.Set("description", flattenDataCatalogEntryGroupDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading EntryGroup: %s", err)
 	}
+	if err := d.Set("transferred_to_dataplex", flattenDataCatalogEntryGroupTransferredToDataplex(res["transferredToDataplex"], d, config)); err != nil {
+		return fmt.Errorf("Error reading EntryGroup: %s", err)
+	}
 
 	return nil
 }
@@ -266,6 +281,12 @@ func resourceDataCatalogEntryGroupUpdate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
 	}
+	transferredToDataplexProp, err := expandDataCatalogEntryGroupTransferredToDataplex(d.Get("transferred_to_dataplex"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("transferred_to_dataplex"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, transferredToDataplexProp)) {
+		obj["transferredToDataplex"] = transferredToDataplexProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{DataCatalogBasePath}}{{name}}")
 	if err != nil {
@@ -282,6 +303,10 @@ func resourceDataCatalogEntryGroupUpdate(d *schema.ResourceData, meta interface{
 
 	if d.HasChange("description") {
 		updateMask = append(updateMask, "description")
+	}
+
+	if d.HasChange("transferred_to_dataplex") {
+		updateMask = append(updateMask, "transferredToDataplex")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -406,11 +431,19 @@ func flattenDataCatalogEntryGroupDescription(v interface{}, d *schema.ResourceDa
 	return v
 }
 
+func flattenDataCatalogEntryGroupTransferredToDataplex(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandDataCatalogEntryGroupDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func expandDataCatalogEntryGroupDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataCatalogEntryGroupTransferredToDataplex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

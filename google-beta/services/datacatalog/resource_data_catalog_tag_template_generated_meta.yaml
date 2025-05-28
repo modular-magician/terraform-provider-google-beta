@@ -2,9 +2,10 @@ resource: 'google_data_catalog_tag_template'
 generation_type: 'mmv1'
 source_file: 'products/datacatalog/TagTemplate.yaml'
 api_service_name: 'datacatalog.googleapis.com'
-api_version: 'v1beta1'
+api_version: 'v1'
 api_resource_type_kind: 'TagTemplate'
 fields:
+  - field: 'dataplex_transfer_status'
   - field: 'display_name'
   - field: 'fields.field.description'
   - field: 'fields.field.display_name'
@@ -15,6 +16,7 @@ fields:
   - field: 'fields.field.type.primitive_type'
   - field: 'force_delete'
     provider_only: true
+  - field: 'is_publicly_readable'
   - field: 'name'
   - field: 'region'
     provider_only: true

@@ -46,6 +46,9 @@ resource "google_data_catalog_tag_template" "basic_tag_template" {
   region = "us-central1"
   display_name = "Demo Tag Template"
 
+  dataplex_transfer_status = "DATAPLEX_TRANSFER_STATUS_UNSPECIFIED"
+  is_publicly_readable = false
+
   fields {
     field_id = "source"
     display_name = "Source of data asset"
@@ -171,6 +174,21 @@ The following arguments are supported:
 * `display_name` -
   (Optional)
   The display name for this template.
+
+* `is_publicly_readable` -
+  (Optional)
+  Indicates whether tags created with this template are public. Public tags do not require tag template
+  access to appear in ListTags API response.
+  Additionally, you can search for a public tag by value with a simple search query in addition to using
+  a tag: predicate.
+
+* `dataplex_transfer_status` -
+  (Optional)
+  Transfer status of the TagTemplate:
+  DATAPLEX_TRANSFER_STATUS_UNSPECIFIED: Default value. TagTemplate and its tags are only visible and editable in DataCatalog.
+  TRANSFERRED: TagTemplate and its tags are auto-copied to Dataplex service. Visible in both services. Editable in Dataplex, read-only in DataCatalog.
+  Default value is `DATAPLEX_TRANSFER_STATUS_UNSPECIFIED`.
+  Possible values are: `DATAPLEX_TRANSFER_STATUS_UNSPECIFIED`, `TRANSFERRED`.
 
 * `region` -
   (Optional)

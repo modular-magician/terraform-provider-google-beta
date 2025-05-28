@@ -58,6 +58,7 @@ resource "google_data_catalog_entry_group" "basic_entry_group" {
 
   display_name = "terraform entry group"
   description = "entry group created by Terraform"
+  transferred_to_dataplex = false
 }
 ```
 
@@ -82,6 +83,11 @@ The following arguments are supported:
 * `description` -
   (Optional)
   Entry group description, which can consist of several sentences or paragraphs that describe entry group contents.
+
+* `transferred_to_dataplex` -
+  (Optional)
+  When set to [true], it means DataCatalog EntryGroup was transferred to Dataplex Catalog Service. It makes EntryGroup and its Entries to be read-only in DataCatalog.
+  However, new Tags on EntryGroup and its Entries can be created. After setting the flag to [true] it cannot be unset.
 
 * `region` -
   (Optional)
