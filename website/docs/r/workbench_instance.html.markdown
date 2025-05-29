@@ -382,7 +382,7 @@ The following arguments are supported:
 
 * `metadata` -
   (Optional)
-  Optional. Custom metadata to apply to this instance.
+  Optional. Custom metadata to apply to this instance. Note that the `serial-port-logging-enable` can be set but is not updatable.
 
 * `enable_ip_forwarding` -
   (Optional)

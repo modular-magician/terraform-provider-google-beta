@@ -299,6 +299,7 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 						"post_startup_script_config": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Deprecated:  "The use of post-startup scripts is unavailable at this time. For feedback and questions about Preview features, contact Vertex AI.",
 							ForceNew:    true,
 							Description: `Post startup script config.`,
 							MaxItems:    1,

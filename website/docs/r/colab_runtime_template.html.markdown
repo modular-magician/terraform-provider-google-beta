@@ -307,9 +307,11 @@ The following arguments are supported:
   Structure is [documented below](#nested_software_config_env).
 
 * `post_startup_script_config` -
-  (Optional)
+  (Optional, Deprecated)
   Post startup script config.
   Structure is [documented below](#nested_software_config_post_startup_script_config).
+
+  ~> **Warning:** The use of post-startup scripts is unavailable at this time. For feedback and questions about Preview features, contact Vertex AI.
 
 
 <a name="nested_software_config_env"></a>The `env` block supports:
