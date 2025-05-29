@@ -77,7 +77,7 @@ The following arguments are supported:
 * `product` -
   (Optional)
   Product type of the setting binding.
-  Possible values are: `GEMINI_IN_BIGQUERY`.
+  Possible values are: `GEMINI_CLOUD_ASSIST`.
 
 * `location` -
   (Optional)
