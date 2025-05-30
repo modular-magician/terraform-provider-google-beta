@@ -495,6 +495,10 @@ func testAccGkeonpremVmwareCluster_vmwareClusterUpdateManualLb(context map[strin
     auto_repair_config {
       enabled = true
     }
+    private_registry_config {
+      address: "test-adddress"
+      caCert: "test-ca-cert"
+    }
   }
 `, context)
 }
