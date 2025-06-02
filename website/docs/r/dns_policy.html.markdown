@@ -125,6 +125,9 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+* `enable_dns64_all_queries` - (Optional) Specifies whether to allow networks bound to this policy to use DNS64
+for IPv6-only VM instances.
+
 
 <a name="nested_alternative_name_server_config"></a>The `alternative_name_server_config` block supports:
 

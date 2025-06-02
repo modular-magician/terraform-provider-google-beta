@@ -157,6 +157,12 @@ Defaults to no logging if not set.`,
 					return tpgresource.Hashcode(buf.String())
 				},
 			},
+			"enable_dns64_all_queries": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `Specifies whether to allow networks bound to this policy to use DNS64
+for IPv6-only VM instances.`,
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -274,6 +280,14 @@ func resourceDNSPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	headers := make(http.Header)
+	if val, ok := d.GetOk("enable_dns64_all_queries"); ok {
+		castedVal, _ := val.(bool)
+		dns64Config := make(map[string]interface{})
+		scope := make(map[string]interface{})
+		scope["allQueries"] = castedVal
+		dns64Config["scope"] = scope
+		obj["dns64Config"] = dns64Config
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -337,7 +351,17 @@ func resourceDNSPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("DNSPolicy %q", d.Id()))
 	}
+	if dns64Config, ok := res["dns64Config"].(map[string]interface{}); ok {
+		if scope, ok := dns64Config["scope"].(map[string]interface{}); ok {
+			if allQueries, ok := scope["allQueries"].(bool); ok {
+				if err := d.Set("enable_dns64_all_queries", allQueries); err != nil {
+					log.Printf("[ERROR] Unable to set enable_dns64_all_queries: %s", err)
+				}
+			}
+		}
+	}
 
+	// Explicitly set virtual fields to default values if unset
 	if err := d.Set("project", project); err != nil {
 		return fmt.Errorf("Error reading Policy: %s", err)
 	}
@@ -424,6 +448,15 @@ func resourceDNSPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 		}
 
 		headers := make(http.Header)
+		if d.HasChange("enable_dns64_all_queries") {
+			if val, ok := d.Get("enable_dns64_all_queries").(bool); ok {
+				dns64Config := make(map[string]interface{})
+				scope := make(map[string]interface{})
+				scope["allQueries"] = val
+				dns64Config["scope"] = scope
+				obj["dns64Config"] = dns64Config
+			}
+		}
 
 		// err == nil indicates that the billing_project value was found
 		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
@@ -540,6 +573,8 @@ func resourceDNSPolicyImport(d *schema.ResourceData, meta interface{}) ([]*schem
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
+
+	// Explicitly set virtual fields to default values on import
 
 	return []*schema.ResourceData{d}, nil
 }

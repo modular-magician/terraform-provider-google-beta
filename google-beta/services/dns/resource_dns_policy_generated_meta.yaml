@@ -9,6 +9,8 @@ fields:
   - field: 'alternative_name_server_config.target_name_servers.ipv4_address'
   - field: 'description'
   - field: 'dns64_config.scope.all_queries'
+  - field: 'enable_dns64_all_queries'
+    provider_only: true
   - field: 'enable_inbound_forwarding'
   - field: 'enable_logging'
   - field: 'name'

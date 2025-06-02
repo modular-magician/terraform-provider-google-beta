@@ -36,7 +36,7 @@ func TestAccDNSPolicy_update(t *testing.T) {
 		CheckDestroy:             testAccCheckDNSPolicyDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDnsPolicy_privateUpdate(policySuffix, "true", "172.16.1.10", "172.16.1.30", "network-1"),
+				Config: testAccDnsPolicy_privateUpdate(policySuffix, "true", "172.16.1.10", "172.16.1.30", "network-1", "true"),
 			},
 			{
 				ResourceName:      "google_dns_policy.example-policy",
@@ -44,7 +44,7 @@ func TestAccDNSPolicy_update(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccDnsPolicy_privateUpdate(policySuffix, "false", "172.16.1.20", "172.16.1.40", "network-2"),
+				Config: testAccDnsPolicy_privateUpdate(policySuffix, "false", "172.16.1.20", "172.16.1.40", "network-2", "false"),
 			},
 			{
 				ResourceName:      "google_dns_policy.example-policy",
@@ -55,12 +55,12 @@ func TestAccDNSPolicy_update(t *testing.T) {
 	})
 }
 
-func testAccDnsPolicy_privateUpdate(suffix, forwarding, first_nameserver, second_nameserver, network string) string {
+func testAccDnsPolicy_privateUpdate(suffix, forwarding, first_nameserver, second_nameserver, network, dns64 string) string {
 	return fmt.Sprintf(`
 resource "google_dns_policy" "example-policy" {
   name                      = "example-policy-%s"
   enable_inbound_forwarding = %s
-
+  enable_dns64_all_queries = %s
   alternative_name_server_config {
     target_name_servers {
       ipv4_address = "%s"
@@ -85,7 +85,7 @@ resource "google_compute_network" "network-2" {
   name                    = "tf-test-network-2-%s"
   auto_create_subnetworks = false
 }
-`, suffix, forwarding, first_nameserver, second_nameserver, network, suffix, suffix)
+`, suffix, forwarding, dns64, first_nameserver, second_nameserver, network, suffix, suffix)
 }
 
 func TestAccDNSPolicy_dnsPolicyDns64(t *testing.T) {
