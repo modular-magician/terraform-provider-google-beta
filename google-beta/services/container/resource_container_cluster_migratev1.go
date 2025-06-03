@@ -1080,10 +1080,18 @@ func resourceContainerClusterResourceV1() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
-							Type:        schema.TypeBool,
-							Required:    true,
-							ForceNew:    true,
-							Description: `Whether Confidential Nodes feature is enabled for all nodes in this cluster.`,
+							Type:             schema.TypeBool,
+							Required:         true,
+							ForceNew:         true,
+							DiffSuppressFunc: suppressDiffForConfidentialNodes,
+							Description:      `Whether Confidential Nodes feature is enabled for all nodes in this cluster.`,
+						},
+						"confidential_instance_type": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							Description:  `Defines the type of technology used by the confidential node.`,
+							ValidateFunc: validation.StringInSlice([]string{"CONFIDENTIAL_INSTANCE_TYPE_UNSPECIFIED", "SEV", "SEV_SNP", "TDX"}, false),
 						},
 					},
 				},
