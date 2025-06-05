@@ -1,0 +1,11 @@
+resource: 'google_cloud_trace_trace_sink'
+generation_type: 'mmv1'
+source_file: 'products/cloudtrace/TraceSink.yaml'
+api_service_name: 'cloudtrace.googleapis.com'
+api_version: 'v2beta1'
+api_resource_type_kind: 'TraceSink'
+fields:
+  - field: 'name'
+    provider_only: true
+  - field: 'output_config.destination'
+  - field: 'writer_identity'

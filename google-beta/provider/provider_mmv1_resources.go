@@ -57,6 +57,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudrunv2"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudscheduler"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudtasks"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/cloudtrace"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/colab"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/composer"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
@@ -587,9 +588,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 671
+// Generated resources: 672
 // Generated IAM resources: 339
-// Total generated resources: 1010
+// Total generated resources: 1011
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -809,6 +810,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_cloud_tasks_queue_iam_binding":                                       tpgiamresource.ResourceIamBinding(cloudtasks.CloudTasksQueueIamSchema, cloudtasks.CloudTasksQueueIamUpdaterProducer, cloudtasks.CloudTasksQueueIdParseFunc),
 	"google_cloud_tasks_queue_iam_member":                                        tpgiamresource.ResourceIamMember(cloudtasks.CloudTasksQueueIamSchema, cloudtasks.CloudTasksQueueIamUpdaterProducer, cloudtasks.CloudTasksQueueIdParseFunc),
 	"google_cloud_tasks_queue_iam_policy":                                        tpgiamresource.ResourceIamPolicy(cloudtasks.CloudTasksQueueIamSchema, cloudtasks.CloudTasksQueueIamUpdaterProducer, cloudtasks.CloudTasksQueueIdParseFunc),
+	"google_cloud_trace_trace_sink":                                              cloudtrace.ResourceCloudTraceTraceSink(),
 	"google_colab_notebook_execution":                                            colab.ResourceColabNotebookExecution(),
 	"google_colab_runtime":                                                       colab.ResourceColabRuntime(),
 	"google_colab_runtime_template":                                              colab.ResourceColabRuntimeTemplate(),
@@ -1814,6 +1816,7 @@ func UseGeneratedProducts() {
 	var _ = cloudrunv2.ProductName
 	var _ = cloudscheduler.ProductName
 	var _ = cloudtasks.ProductName
+	var _ = cloudtrace.ProductName
 	var _ = colab.ProductName
 	var _ = composer.ProductName
 	var _ = compute.ProductName
