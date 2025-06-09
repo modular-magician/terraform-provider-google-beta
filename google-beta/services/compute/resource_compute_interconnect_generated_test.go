@@ -64,7 +64,7 @@ resource "google_compute_interconnect" "example-interconnect" {
   customer_name        = "internal_customer" # Special customer only available for Google testing.
   interconnect_type    = "DEDICATED"
   link_type            = "LINK_TYPE_ETHERNET_10G_LR"
-  location             = "https://www.googleapis.com/compute/v1/projects/${data.google_project.project.name}/global/interconnectLocations/z2z-us-east4-zone1-lciadl-a" # Special location only available for Google testing.
+  location             = "https://www.googleapis.com/compute/v1/projects/${data.google_project.project.id}/global/interconnectLocations/z2z-us-east4-zone1-lciadl-a" # Special location only available for Google testing.
   requested_link_count = 1
   admin_enabled        = true
   description          = "example description"
@@ -74,6 +74,57 @@ resource "google_compute_interconnect" "example-interconnect" {
   labels = {
     mykey = "myvalue"
   }
+}
+`, context)
+}
+
+func TestAccComputeInterconnect_computeInterconnectCrossSiteNetworkUpdateExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckComputeInterconnectDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeInterconnect_computeInterconnectCrossSiteNetworkUpdateExample(context),
+			},
+			{
+				ResourceName:            "google_compute_interconnect.example-interconnect-cross-site-network",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccComputeInterconnect_computeInterconnectCrossSiteNetworkUpdateExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "project" {
+   provider = google-beta
+}
+
+resource "google_compute_cross_site_network" "example-cross-site-network" {
+  name        = "tf-test-example-cross-site-network%{random_suffix}"
+  description = "Example cross site network"
+  provider    = google-beta
+}
+
+resource "google_compute_interconnect" "example-interconnect-cross-site-network" {
+  name                 = "tf-test-example-interconnect-cross-site-network%{random_suffix}"
+  customer_name        = "tf_test_example_customer%{random_suffix}"
+  interconnect_type    = "DEDICATED"
+  requested_features  = ["CROSS_SITE_NETWORK"]
+  provider            = google-beta
+  link_type            = "LINK_TYPE_ETHERNET_10G_LR"
+  location             = "https://www.googleapis.com/compute/v1/projects/${data.google_project.project.id}/global/interconnectLocations/z2z-us-west8-zone2-tzphxd-z" # Special location only available for Google testing.
+  requested_link_count = 1
+  description          = "Example Interconnect%{random_suffix}"
 }
 `, context)
 }
