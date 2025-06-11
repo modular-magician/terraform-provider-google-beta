@@ -91,6 +91,7 @@ The following arguments are supported:
 * `endpoints` -
   (Optional)
   Endpoints grouped by location, each mapping to interconnect configurations.
+  Structure is [documented below](#nested_endpoints).
 
 * `admin_enabled` -
   (Optional)
@@ -109,6 +110,26 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+
+<a name="nested_endpoints"></a>The `endpoints` block supports:
+
+* `endpoint` - (Required) The identifier for this object. Format specified above.
+
+* `interconnects` -
+  (Optional)
+  Structure is [documented below](#nested_endpoints_endpoints_interconnects).
+
+
+<a name="nested_endpoints_endpoints_interconnects"></a>The `interconnects` block supports:
+
+* `interconnect_name` - (Required) The identifier for this object. Format specified above.
+
+* `interconnect` -
+  (Optional)
+
+* `vlan_tags` -
+  (Optional)
+  VLAN tags for the interconnect.
 
 <a name="nested_wire_group_properties"></a>The `wire_group_properties` block supports:
 
