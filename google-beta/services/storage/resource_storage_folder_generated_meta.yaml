@@ -8,6 +8,8 @@ fields:
   - field: 'bucket'
     provider_only: true
   - field: 'create_time'
+  - field: 'custom_headers'
+    provider_only: true
   - field: 'force_destroy'
     provider_only: true
   - field: 'metageneration'

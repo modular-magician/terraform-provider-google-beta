@@ -80,6 +80,7 @@ The following arguments are supported:
 
 
 * `force_destroy` - (Optional) If set to true, items within folder if any will be force destroyed.
+* `custom_headers` - (Optional) Users can set custom headers send to API operations
 
 ## Attributes Reference
 

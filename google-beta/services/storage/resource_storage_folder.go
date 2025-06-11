@@ -91,6 +91,12 @@ trailing '/'. For example, 'example_dir/example_dir2/', 'example@#/', 'a-b/d-f/'
 				Description: `If set to true, items within folder if any will be force destroyed.`,
 				Default:     false,
 			},
+			"custom_headers": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: `Users can set custom headers send to API operations`,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 
 			"self_link": {
 				Type:     schema.TypeString,
@@ -130,6 +136,11 @@ func resourceStorageFolderCreate(d *schema.ResourceData, meta interface{}) error
 	}
 
 	headers := make(http.Header)
+	if v_headers, ok := d.GetOk("custom_headers"); ok {
+		for k, v := range v_headers.(map[string]interface{}) {
+			headers.Add(k, v.(string))
+		}
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -176,6 +187,11 @@ func resourceStorageFolderRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	headers := make(http.Header)
+	if v_headers, ok := d.GetOk("custom_headers"); ok {
+		for k, v := range v_headers.(map[string]interface{}) {
+			headers.Add(k, v.(string))
+		}
+	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "GET",
@@ -292,7 +308,13 @@ func resourceStorageFolderDelete(d *schema.ResourceData, meta interface{}) error
 	}
 
 	err = retry.Retry(1*time.Minute, func() *retry.RetryError {
-		err := config.NewStorageClient(userAgent).Folders.Delete(bucket, name).Do()
+		deleteCall := config.NewStorageClient(userAgent).Folders.Delete(bucket, name)
+		if v_headers, ok := d.GetOk("custom_headers"); ok {
+			for k, v := range v_headers.(map[string]interface{}) {
+				deleteCall.Header().Add(k, v.(string))
+			}
+		}
+		err = deleteCall.Do()
 		if err == nil {
 			return nil
 		}
