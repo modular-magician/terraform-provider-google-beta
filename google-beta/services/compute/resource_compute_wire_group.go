@@ -85,10 +85,43 @@ lowercase letter, or digit, except the last character, which cannot be a dash.`,
 				Description: `An optional description of this resource. Provide this property when you create the resource.`,
 			},
 			"endpoints": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: `Endpoints grouped by location, each mapping to interconnect configurations.`,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"endpoint": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"interconnects": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: ``,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"interconnect_name": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"interconnect": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: ``,
+									},
+									"vlan_tags": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `VLAN tags for the interconnect.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 			"wire_group_properties": {
 				Type:        schema.TypeList,
@@ -622,6 +655,41 @@ func flattenComputeWireGroupName(v interface{}, d *schema.ResourceData, config *
 }
 
 func flattenComputeWireGroupEndpoints(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.(map[string]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for k, raw := range l {
+		original := raw.(map[string]interface{})
+		transformed = append(transformed, map[string]interface{}{
+			"endpoint":      k,
+			"interconnects": flattenComputeWireGroupEndpointsInterconnects(original["interconnects"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenComputeWireGroupEndpointsInterconnects(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.(map[string]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for k, raw := range l {
+		original := raw.(map[string]interface{})
+		transformed = append(transformed, map[string]interface{}{
+			"interconnect_name": k,
+			"interconnect":      flattenComputeWireGroupEndpointsInterconnectsInterconnect(original["interconnect"], d, config),
+			"vlan_tags":         flattenComputeWireGroupEndpointsInterconnectsVlanTags(original["vlan_tags"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenComputeWireGroupEndpointsInterconnectsInterconnect(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeWireGroupEndpointsInterconnectsVlanTags(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -822,15 +890,69 @@ func expandComputeWireGroupName(v interface{}, d tpgresource.TerraformResourceDa
 	return v, nil
 }
 
-func expandComputeWireGroupEndpoints(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+func expandComputeWireGroupEndpoints(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
 	if v == nil {
-		return map[string]string{}, nil
+		return map[string]interface{}{}, nil
 	}
-	m := make(map[string]string)
-	for k, val := range v.(map[string]interface{}) {
-		m[k] = val.(string)
+	m := make(map[string]interface{})
+	for _, raw := range v.(*schema.Set).List() {
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedInterconnects, err := expandComputeWireGroupEndpointsInterconnects(original["interconnects"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedInterconnects); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["interconnects"] = transformedInterconnects
+		}
+
+		transformedEndpoint, err := tpgresource.ExpandString(original["endpoint"], d, config)
+		if err != nil {
+			return nil, err
+		}
+		m[transformedEndpoint] = transformed
 	}
 	return m, nil
+}
+
+func expandComputeWireGroupEndpointsInterconnects(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
+	if v == nil {
+		return map[string]interface{}{}, nil
+	}
+	m := make(map[string]interface{})
+	for _, raw := range v.(*schema.Set).List() {
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedInterconnect, err := expandComputeWireGroupEndpointsInterconnectsInterconnect(original["interconnect"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedInterconnect); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["interconnect"] = transformedInterconnect
+		}
+
+		transformedVlanTags, err := expandComputeWireGroupEndpointsInterconnectsVlanTags(original["vlan_tags"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedVlanTags); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["vlan_tags"] = transformedVlanTags
+		}
+
+		transformedInterconnectName, err := tpgresource.ExpandString(original["interconnect_name"], d, config)
+		if err != nil {
+			return nil, err
+		}
+		m[transformedInterconnectName] = transformed
+	}
+	return m, nil
+}
+
+func expandComputeWireGroupEndpointsInterconnectsInterconnect(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeWireGroupEndpointsInterconnectsVlanTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandComputeWireGroupAdminEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

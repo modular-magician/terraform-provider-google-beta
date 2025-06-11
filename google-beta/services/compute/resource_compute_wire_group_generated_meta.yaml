@@ -10,7 +10,8 @@ fields:
   - field: 'cross_site_network'
     provider_only: true
   - field: 'description'
-  - field: 'endpoints'
+  - field: 'endpoints.endpoints.interconnects.interconnects.interconnect'
+  - field: 'endpoints.endpoints.interconnects.interconnects.vlan_tags'
   - field: 'name'
   - field: 'topology.endpoints.city'
   - field: 'topology.endpoints.label'
