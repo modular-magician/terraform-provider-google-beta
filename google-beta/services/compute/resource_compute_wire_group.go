@@ -74,21 +74,10 @@ long and match the regular expression '[a-z]([-a-z0-9]*[a-z0-9])?' which means t
 character must be a lowercase letter, and all following characters must be a dash,
 lowercase letter, or digit, except the last character, which cannot be a dash.`,
 			},
-			"admin_enabled": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `Indicates whether the wire group is administratively enabled.`,
-			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: `An optional description of this resource. Provide this property when you create the resource.`,
-			},
-			"endpoints": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: `Endpoints grouped by location, each mapping to interconnect configurations.`,
-				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"wire_group_properties": {
 				Type:        schema.TypeList,
@@ -149,12 +138,12 @@ DISABLE_PORT: set the port line protocol down when inline probes detect a fault.
 								Schema: map[string]*schema.Schema{
 									"city": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: ``,
 									},
 									"label": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: ``,
 									},
 								},
@@ -171,23 +160,23 @@ DISABLE_PORT: set the port line protocol down when inline probes detect a fault.
 					Schema: map[string]*schema.Schema{
 						"admin_enabled": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: ``,
 						},
 						"endpoints": {
 							Type:        schema.TypeList,
-							Optional:    true,
+							Computed:    true,
 							Description: `'Wire endpoints are specific Interconnect connections.'`,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"interconnect": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: ``,
 									},
 									"vlan_tag": {
 										Type:        schema.TypeString,
-										Optional:    true,
+										Computed:    true,
 										Description: ``,
 									},
 								},
@@ -195,7 +184,7 @@ DISABLE_PORT: set the port line protocol down when inline probes detect a fault.
 						},
 						"label": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: ``,
 						},
 						"wire_properties": {
@@ -250,18 +239,6 @@ func resourceComputeWireGroupCreate(d *schema.ResourceData, meta interface{}) er
 		return err
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
-	}
-	endpointsProp, err := expandComputeWireGroupEndpoints(d.Get("endpoints"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("endpoints"); !tpgresource.IsEmptyValue(reflect.ValueOf(endpointsProp)) && (ok || !reflect.DeepEqual(v, endpointsProp)) {
-		obj["endpoints"] = endpointsProp
-	}
-	adminEnabledProp, err := expandComputeWireGroupAdminEnabled(d.Get("admin_enabled"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("admin_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(adminEnabledProp)) && (ok || !reflect.DeepEqual(v, adminEnabledProp)) {
-		obj["adminEnabled"] = adminEnabledProp
 	}
 	wireGroupPropertiesProp, err := expandComputeWireGroupWireGroupProperties(d.Get("wire_group_properties"), d, config)
 	if err != nil {
@@ -383,12 +360,6 @@ func resourceComputeWireGroupRead(d *schema.ResourceData, meta interface{}) erro
 	if err := d.Set("name", flattenComputeWireGroupName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WireGroup: %s", err)
 	}
-	if err := d.Set("endpoints", flattenComputeWireGroupEndpoints(res["endpoints"], d, config)); err != nil {
-		return fmt.Errorf("Error reading WireGroup: %s", err)
-	}
-	if err := d.Set("admin_enabled", flattenComputeWireGroupAdminEnabled(res["adminEnabled"], d, config)); err != nil {
-		return fmt.Errorf("Error reading WireGroup: %s", err)
-	}
 	if err := d.Set("wire_group_properties", flattenComputeWireGroupWireGroupProperties(res["wireGroupProperties"], d, config)); err != nil {
 		return fmt.Errorf("Error reading WireGroup: %s", err)
 	}
@@ -433,18 +404,6 @@ func resourceComputeWireGroupUpdate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
-	endpointsProp, err := expandComputeWireGroupEndpoints(d.Get("endpoints"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("endpoints"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, endpointsProp)) {
-		obj["endpoints"] = endpointsProp
-	}
-	adminEnabledProp, err := expandComputeWireGroupAdminEnabled(d.Get("admin_enabled"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("admin_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, adminEnabledProp)) {
-		obj["adminEnabled"] = adminEnabledProp
-	}
 	wireGroupPropertiesProp, err := expandComputeWireGroupWireGroupProperties(d.Get("wire_group_properties"), d, config)
 	if err != nil {
 		return err
@@ -473,14 +432,6 @@ func resourceComputeWireGroupUpdate(d *schema.ResourceData, meta interface{}) er
 
 	if d.HasChange("name") {
 		updateMask = append(updateMask, "name")
-	}
-
-	if d.HasChange("endpoints") {
-		updateMask = append(updateMask, "endpoints")
-	}
-
-	if d.HasChange("admin_enabled") {
-		updateMask = append(updateMask, "adminEnabled")
 	}
 
 	if d.HasChange("wire_group_properties") {
@@ -618,14 +569,6 @@ func flattenComputeWireGroupCreationTimestamp(v interface{}, d *schema.ResourceD
 }
 
 func flattenComputeWireGroupName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenComputeWireGroupEndpoints(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenComputeWireGroupAdminEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -819,21 +762,6 @@ func expandComputeWireGroupDescription(v interface{}, d tpgresource.TerraformRes
 }
 
 func expandComputeWireGroupName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeWireGroupEndpoints(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
-	if v == nil {
-		return map[string]string{}, nil
-	}
-	m := make(map[string]string)
-	for k, val := range v.(map[string]interface{}) {
-		m[k] = val.(string)
-	}
-	return m, nil
-}
-
-func expandComputeWireGroupAdminEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

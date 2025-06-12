@@ -88,14 +88,6 @@ The following arguments are supported:
   (Optional)
   An optional description of this resource. Provide this property when you create the resource.
 
-* `endpoints` -
-  (Optional)
-  Endpoints grouped by location, each mapping to interconnect configurations.
-
-* `admin_enabled` -
-  (Optional)
-  Indicates whether the wire group is administratively enabled.
-
 * `wire_group_properties` -
   (Optional)
   Properties specific to the wire group.
@@ -152,10 +144,10 @@ In addition to the arguments listed above, the following computed attributes are
 <a name="nested_wires"></a>The `wires` block contains:
 
 * `label` -
-  (Optional)
+  (Output)
 
 * `endpoints` -
-  (Optional)
+  (Output)
   'Wire endpoints are specific Interconnect connections.'
   Structure is [documented below](#nested_wires_wires_endpoints).
 
@@ -165,16 +157,16 @@ In addition to the arguments listed above, the following computed attributes are
   Structure is [documented below](#nested_wires_wires_wire_properties).
 
 * `admin_enabled` -
-  (Optional)
+  (Output)
 
 
-<a name="nested_wires_wires_endpoints"></a>The `endpoints` block supports:
+<a name="nested_wires_wires_endpoints"></a>The `endpoints` block contains:
 
 * `interconnect` -
-  (Optional)
+  (Output)
 
 * `vlan_tag` -
-  (Optional)
+  (Output)
 
 <a name="nested_wires_wires_wire_properties"></a>The `wire_properties` block contains:
 
@@ -194,10 +186,10 @@ In addition to the arguments listed above, the following computed attributes are
 <a name="nested_topology_endpoints"></a>The `endpoints` block supports:
 
 * `label` -
-  (Optional)
+  (Output)
 
 * `city` -
-  (Optional)
+  (Output)
 
 ## Timeouts
 
