@@ -1,0 +1,15 @@
+resource: 'google_licensemanager_license_configuration'
+generation_type: 'mmv1'
+source_file: 'products/licensemanager/LicenseConfiguration.yaml'
+api_service_name: 'licensemanager.googleapis.com'
+api_version: 'v1'
+api_resource_type_kind: 'LicenseConfiguration'
+fields:
+  - field: 'current_billing_info.user_count_billing.user_count'
+  - field: 'display_name'
+  - field: 'license_configuration_name'
+    provider_only: true
+  - field: 'location'
+    provider_only: true
+  - field: 'next_billing_info.user_count_billing.user_count'
+  - field: 'product'

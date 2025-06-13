@@ -111,6 +111,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/integrationconnectors"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/integrations"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/kms"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/licensemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/logging"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/looker"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/lustre"
@@ -588,9 +589,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 672
+// Generated resources: 673
 // Generated IAM resources: 339
-// Total generated resources: 1011
+// Total generated resources: 1012
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1288,6 +1289,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_kms_key_ring":                                                        kms.ResourceKMSKeyRing(),
 	"google_kms_key_ring_import_job":                                             kms.ResourceKMSKeyRingImportJob(),
 	"google_kms_secret_ciphertext":                                               kms.ResourceKMSSecretCiphertext(),
+	"google_licensemanager_license_configuration":                                licensemanager.ResourceLicenseManagerLicenseConfiguration(),
 	"google_logging_folder_settings":                                             logging.ResourceLoggingFolderSettings(),
 	"google_logging_linked_dataset":                                              logging.ResourceLoggingLinkedDataset(),
 	"google_logging_log_scope":                                                   logging.ResourceLoggingLogScope(),
@@ -1870,6 +1872,7 @@ func UseGeneratedProducts() {
 	var _ = integrationconnectors.ProductName
 	var _ = integrations.ProductName
 	var _ = kms.ProductName
+	var _ = licensemanager.ProductName
 	var _ = logging.ProductName
 	var _ = looker.ProductName
 	var _ = lustre.ProductName
