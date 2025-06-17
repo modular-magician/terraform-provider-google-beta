@@ -61,7 +61,7 @@ resource "google_cloud_run_v2_worker_pool" "default" {
   name     = "tf-test-cloudrun-worker-pool%{random_suffix}"
   location = "us-central1"
   deletion_protection = false
-  launch_stage = "ALPHA"
+  launch_stage = "BETA"
   
   template {
     containers {
@@ -103,7 +103,7 @@ resource "google_cloud_run_v2_worker_pool" "default" {
   name     = "tf-test-cloudrun-worker-pool%{random_suffix}"
   location = "us-central1"
   deletion_protection = false
-  launch_stage = "ALPHA"
+  launch_stage = "BETA"
 
   template {
     containers {
@@ -152,7 +152,7 @@ resource "google_cloud_run_v2_worker_pool" "default" {
   name     = "tf-test-cloudrun-worker-pool%{random_suffix}"
   location = "us-central1"
   deletion_protection = false
-  launch_stage = "ALPHA"
+  launch_stage = "BETA"
   
   template {
   
@@ -259,7 +259,7 @@ resource "google_cloud_run_v2_worker_pool" "default" {
   name     = "tf-test-cloudrun-worker-pool%{random_suffix}"
   location = "us-central1"
   deletion_protection = false
-  launch_stage = "ALPHA"
+  launch_stage = "BETA"
 
   template {
     containers {
@@ -360,7 +360,7 @@ resource "google_cloud_run_v2_worker_pool" "default" {
   name     = "tf-test-cloudrun-worker-pool%{random_suffix}"
   location = "us-central1"
   deletion_protection = false
-  launch_stage = "ALPHA"
+  launch_stage = "BETA"
 
   template {
     volumes {
@@ -502,7 +502,7 @@ resource "google_cloud_run_v2_worker_pool" "default" {
 
   location     = "us-central1"
   deletion_protection = false
-  launch_stage = "ALPHA"
+  launch_stage = "BETA"
 
   template {
     containers {
@@ -564,7 +564,7 @@ resource "google_cloud_run_v2_worker_pool" "default" {
 
   location     = "us-central1"
   deletion_protection = false
-  launch_stage = "ALPHA"
+  launch_stage = "BETA"
 
   template {
     containers {
@@ -641,7 +641,7 @@ resource "google_cloud_run_v2_worker_pool" "default" {
   name     = "tf-test-cloudrun-worker-pool%{random_suffix}"
   location = "us-central1"
   deletion_protection = false
-  launch_stage = "ALPHA"
+  launch_stage = "BETA"
 
   custom_audiences = ["aud1"]
   template {
