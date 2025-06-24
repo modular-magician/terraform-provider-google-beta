@@ -540,6 +540,9 @@ func expandIAM2AccessBoundaryPolicyRulesDescription(v interface{}, d tpgresource
 }
 
 func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -581,6 +584,9 @@ func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailablePermissions(v
 }
 
 func expandIAM2AccessBoundaryPolicyRulesAccessBoundaryRuleAvailabilityCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

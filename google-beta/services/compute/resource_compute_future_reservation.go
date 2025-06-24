@@ -2046,6 +2046,9 @@ func expandComputeFutureReservationTimeWindowEndTime(v interface{}, d tpgresourc
 }
 
 func expandComputeFutureReservationTimeWindowDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2260,6 +2263,9 @@ func expandComputeFutureReservationSpecificSkuProperties(v interface{}, d tpgres
 }
 
 func expandComputeFutureReservationSpecificSkuPropertiesInstanceProperties(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2325,6 +2331,9 @@ func expandComputeFutureReservationSpecificSkuPropertiesInstancePropertiesMachin
 }
 
 func expandComputeFutureReservationSpecificSkuPropertiesInstancePropertiesGuestAccelerators(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -2366,6 +2375,9 @@ func expandComputeFutureReservationSpecificSkuPropertiesInstancePropertiesMinCpu
 }
 
 func expandComputeFutureReservationSpecificSkuPropertiesInstancePropertiesLocalSsds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {

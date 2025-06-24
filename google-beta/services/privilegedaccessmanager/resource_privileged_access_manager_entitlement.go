@@ -1034,6 +1034,9 @@ func expandPrivilegedAccessManagerEntitlementApprovalWorkflow(v interface{}, d t
 }
 
 func expandPrivilegedAccessManagerEntitlementApprovalWorkflowManualApprovals(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1064,6 +1067,9 @@ func expandPrivilegedAccessManagerEntitlementApprovalWorkflowManualApprovalsRequ
 }
 
 func expandPrivilegedAccessManagerEntitlementApprovalWorkflowManualApprovalsSteps(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -1100,6 +1106,9 @@ func expandPrivilegedAccessManagerEntitlementApprovalWorkflowManualApprovalsStep
 }
 
 func expandPrivilegedAccessManagerEntitlementApprovalWorkflowManualApprovalsStepsApprovers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -1155,6 +1164,9 @@ func expandPrivilegedAccessManagerEntitlementPrivilegedAccess(v interface{}, d t
 }
 
 func expandPrivilegedAccessManagerEntitlementPrivilegedAccessGcpIamAccess(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1196,6 +1208,9 @@ func expandPrivilegedAccessManagerEntitlementPrivilegedAccessGcpIamAccessResourc
 }
 
 func expandPrivilegedAccessManagerEntitlementPrivilegedAccessGcpIamAccessRoleBindings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {

@@ -881,6 +881,9 @@ func expandStorageInsightsReportConfigFrequencyOptionsFrequency(v interface{}, d
 }
 
 func expandStorageInsightsReportConfigFrequencyOptionsStartDate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -926,6 +929,9 @@ func expandStorageInsightsReportConfigFrequencyOptionsStartDateYear(v interface{
 }
 
 func expandStorageInsightsReportConfigFrequencyOptionsEndDate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1068,6 +1074,9 @@ func expandStorageInsightsReportConfigObjectMetadataReportOptionsMetadataFields(
 }
 
 func expandStorageInsightsReportConfigObjectMetadataReportOptionsStorageFilters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1091,6 +1100,9 @@ func expandStorageInsightsReportConfigObjectMetadataReportOptionsStorageFiltersB
 }
 
 func expandStorageInsightsReportConfigObjectMetadataReportOptionsStorageDestinationOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

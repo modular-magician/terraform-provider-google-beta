@@ -782,6 +782,9 @@ func expandSecurityCenterFolderCustomModuleCustomConfig(v interface{}, d tpgreso
 }
 
 func expandSecurityCenterFolderCustomModuleCustomConfigPredicate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -838,6 +841,9 @@ func expandSecurityCenterFolderCustomModuleCustomConfigPredicateLocation(v inter
 }
 
 func expandSecurityCenterFolderCustomModuleCustomConfigCustomOutput(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -857,6 +863,9 @@ func expandSecurityCenterFolderCustomModuleCustomConfigCustomOutput(v interface{
 }
 
 func expandSecurityCenterFolderCustomModuleCustomConfigCustomOutputProperties(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -890,6 +899,9 @@ func expandSecurityCenterFolderCustomModuleCustomConfigCustomOutputPropertiesNam
 }
 
 func expandSecurityCenterFolderCustomModuleCustomConfigCustomOutputPropertiesValueExpression(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -946,6 +958,9 @@ func expandSecurityCenterFolderCustomModuleCustomConfigCustomOutputPropertiesVal
 }
 
 func expandSecurityCenterFolderCustomModuleCustomConfigResourceSelector(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

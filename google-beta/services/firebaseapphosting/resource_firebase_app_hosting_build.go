@@ -873,6 +873,9 @@ func expandFirebaseAppHostingBuildSource(v interface{}, d tpgresource.TerraformR
 }
 
 func expandFirebaseAppHostingBuildSourceContainer(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -896,6 +899,9 @@ func expandFirebaseAppHostingBuildSourceContainerImage(v interface{}, d tpgresou
 }
 
 func expandFirebaseAppHostingBuildSourceCodebase(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -980,6 +986,9 @@ func expandFirebaseAppHostingBuildSourceCodebaseUri(v interface{}, d tpgresource
 }
 
 func expandFirebaseAppHostingBuildSourceCodebaseAuthor(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

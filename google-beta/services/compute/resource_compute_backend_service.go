@@ -4314,6 +4314,9 @@ func expandComputeBackendServiceBackendMaxUtilization(v interface{}, d tpgresour
 }
 
 func expandComputeBackendServiceBackendCustomMetrics(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -4416,6 +4419,9 @@ func expandComputeBackendServiceCircuitBreakers(v interface{}, d tpgresource.Ter
 }
 
 func expandComputeBackendServiceCircuitBreakersConnectTimeout(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4507,6 +4513,9 @@ func expandComputeBackendServiceConsistentHash(v interface{}, d tpgresource.Terr
 }
 
 func expandComputeBackendServiceConsistentHashHttpCookie(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4540,6 +4549,9 @@ func expandComputeBackendServiceConsistentHashHttpCookie(v interface{}, d tpgres
 }
 
 func expandComputeBackendServiceConsistentHashHttpCookieTtl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4683,6 +4695,9 @@ func expandComputeBackendServiceCdnPolicyRequestCoalescing(v interface{}, d tpgr
 }
 
 func expandComputeBackendServiceCdnPolicyCacheKeyPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4794,6 +4809,9 @@ func expandComputeBackendServiceCdnPolicyNegativeCaching(v interface{}, d tpgres
 }
 
 func expandComputeBackendServiceCdnPolicyNegativeCachingPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -4839,6 +4857,9 @@ func expandComputeBackendServiceCdnPolicyServeWhileStale(v interface{}, d tpgres
 }
 
 func expandComputeBackendServiceCdnPolicyBypassCacheOnRequestHeaders(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -5013,6 +5034,9 @@ func expandComputeBackendServiceLocalityLbPolicies(v interface{}, d tpgresource.
 }
 
 func expandComputeBackendServiceLocalityLbPoliciesPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5036,6 +5060,9 @@ func expandComputeBackendServiceLocalityLbPoliciesPolicyName(v interface{}, d tp
 }
 
 func expandComputeBackendServiceLocalityLbPoliciesCustomPolicy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5200,6 +5227,9 @@ func expandComputeBackendServiceOutlierDetection(v interface{}, d tpgresource.Te
 }
 
 func expandComputeBackendServiceOutlierDetectionBaseEjectionTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5254,6 +5284,9 @@ func expandComputeBackendServiceOutlierDetectionEnforcingSuccessRate(v interface
 }
 
 func expandComputeBackendServiceOutlierDetectionInterval(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5361,6 +5394,9 @@ func expandComputeBackendServiceSecuritySettingsSubjectAltNames(v interface{}, d
 }
 
 func expandComputeBackendServiceSecuritySettingsAwsV4Authentication(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5454,6 +5490,9 @@ func expandComputeBackendServiceStrongSessionAffinityCookie(v interface{}, d tpg
 }
 
 func expandComputeBackendServiceStrongSessionAffinityCookieTtl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5597,6 +5636,9 @@ func expandComputeBackendServiceTlsSettingsSni(v interface{}, d tpgresource.Terr
 }
 
 func expandComputeBackendServiceTlsSettingsSubjectAltNames(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -5691,6 +5733,9 @@ func expandComputeBackendServiceNetworkPassThroughLbTrafficPolicy(v interface{},
 }
 
 func expandComputeBackendServiceNetworkPassThroughLbTrafficPolicyZonalAffinity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5744,6 +5789,9 @@ func expandComputeBackendServiceDynamicForwarding(v interface{}, d tpgresource.T
 }
 
 func expandComputeBackendServiceDynamicForwardingIpPortSelection(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

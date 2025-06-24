@@ -1424,6 +1424,9 @@ func expandDataPipelinePipelineWorkload(v interface{}, d tpgresource.TerraformRe
 }
 
 func expandDataPipelinePipelineWorkloadDataflowLaunchTemplateRequest(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1479,6 +1482,9 @@ func expandDataPipelinePipelineWorkloadDataflowLaunchTemplateRequestValidateOnly
 }
 
 func expandDataPipelinePipelineWorkloadDataflowLaunchTemplateRequestLaunchParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1541,6 +1547,9 @@ func expandDataPipelinePipelineWorkloadDataflowLaunchTemplateRequestLaunchParame
 }
 
 func expandDataPipelinePipelineWorkloadDataflowLaunchTemplateRequestLaunchParametersEnvironment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1759,6 +1768,9 @@ func expandDataPipelinePipelineWorkloadDataflowLaunchTemplateRequestGcsPath(v in
 }
 
 func expandDataPipelinePipelineWorkloadDataflowFlexTemplateRequest(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1803,6 +1815,9 @@ func expandDataPipelinePipelineWorkloadDataflowFlexTemplateRequestProjectId(v in
 }
 
 func expandDataPipelinePipelineWorkloadDataflowFlexTemplateRequestLaunchParameter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1890,6 +1905,9 @@ func expandDataPipelinePipelineWorkloadDataflowFlexTemplateRequestLaunchParamete
 }
 
 func expandDataPipelinePipelineWorkloadDataflowFlexTemplateRequestLaunchParameterEnvironment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

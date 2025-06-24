@@ -813,6 +813,9 @@ func expandNetworkSecurityServerTlsPolicyServerCertificate(v interface{}, d tpgr
 }
 
 func expandNetworkSecurityServerTlsPolicyServerCertificateGrpcEndpoint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -836,6 +839,9 @@ func expandNetworkSecurityServerTlsPolicyServerCertificateGrpcEndpointTargetUri(
 }
 
 func expandNetworkSecurityServerTlsPolicyServerCertificateCertificateProviderInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -900,6 +906,9 @@ func expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationTrustConfig(v
 }
 
 func expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationCa(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -929,6 +938,9 @@ func expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationCa(v interfac
 }
 
 func expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationCaGrpcEndpoint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -952,6 +964,9 @@ func expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationCaGrpcEndpoin
 }
 
 func expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationCaCertificateProviderInstance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

@@ -2167,6 +2167,9 @@ func expandOSConfigPatchDeploymentInstanceFilterAll(v interface{}, d tpgresource
 }
 
 func expandOSConfigPatchDeploymentInstanceFilterGroupLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -2295,6 +2298,9 @@ func expandOSConfigPatchDeploymentPatchConfigRebootConfig(v interface{}, d tpgre
 }
 
 func expandOSConfigPatchDeploymentPatchConfigApt(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2340,6 +2346,9 @@ func expandOSConfigPatchDeploymentPatchConfigAptExclusivePackages(v interface{},
 }
 
 func expandOSConfigPatchDeploymentPatchConfigYum(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2396,6 +2405,9 @@ func expandOSConfigPatchDeploymentPatchConfigYumExclusivePackages(v interface{},
 }
 
 func expandOSConfigPatchDeploymentPatchConfigGoo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2419,6 +2431,9 @@ func expandOSConfigPatchDeploymentPatchConfigGooEnabled(v interface{}, d tpgreso
 }
 
 func expandOSConfigPatchDeploymentPatchConfigZypper(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2497,6 +2512,9 @@ func expandOSConfigPatchDeploymentPatchConfigZypperExclusivePatches(v interface{
 }
 
 func expandOSConfigPatchDeploymentPatchConfigWindowsUpdate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2542,6 +2560,9 @@ func expandOSConfigPatchDeploymentPatchConfigWindowsUpdateExclusivePatches(v int
 }
 
 func expandOSConfigPatchDeploymentPatchConfigPreStep(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2568,6 +2589,9 @@ func expandOSConfigPatchDeploymentPatchConfigPreStep(v interface{}, d tpgresourc
 }
 
 func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2620,6 +2644,9 @@ func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigLocalPath
 }
 
 func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2665,6 +2692,9 @@ func expandOSConfigPatchDeploymentPatchConfigPreStepLinuxExecStepConfigGcsObject
 }
 
 func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2717,6 +2747,9 @@ func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigLocalPa
 }
 
 func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2762,6 +2795,9 @@ func expandOSConfigPatchDeploymentPatchConfigPreStepWindowsExecStepConfigGcsObje
 }
 
 func expandOSConfigPatchDeploymentPatchConfigPostStep(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2788,6 +2824,9 @@ func expandOSConfigPatchDeploymentPatchConfigPostStep(v interface{}, d tpgresour
 }
 
 func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2840,6 +2879,9 @@ func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigLocalPat
 }
 
 func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2885,6 +2927,9 @@ func expandOSConfigPatchDeploymentPatchConfigPostStepLinuxExecStepConfigGcsObjec
 }
 
 func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2937,6 +2982,9 @@ func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigLocalP
 }
 
 func expandOSConfigPatchDeploymentPatchConfigPostStepWindowsExecStepConfigGcsObject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3077,6 +3125,9 @@ func expandOSConfigPatchDeploymentRecurringSchedule(v interface{}, d tpgresource
 }
 
 func expandOSConfigPatchDeploymentRecurringScheduleTimeZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3119,6 +3170,9 @@ func expandOSConfigPatchDeploymentRecurringScheduleEndTime(v interface{}, d tpgr
 }
 
 func expandOSConfigPatchDeploymentRecurringScheduleTimeOfDay(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3183,6 +3237,9 @@ func expandOSConfigPatchDeploymentRecurringScheduleNextExecuteTime(v interface{}
 }
 
 func expandOSConfigPatchDeploymentRecurringScheduleWeekly(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3206,6 +3263,9 @@ func expandOSConfigPatchDeploymentRecurringScheduleWeeklyDayOfWeek(v interface{}
 }
 
 func expandOSConfigPatchDeploymentRecurringScheduleMonthly(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3232,6 +3292,9 @@ func expandOSConfigPatchDeploymentRecurringScheduleMonthly(v interface{}, d tpgr
 }
 
 func expandOSConfigPatchDeploymentRecurringScheduleMonthlyWeekDayOfMonth(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3311,6 +3374,9 @@ func expandOSConfigPatchDeploymentRolloutMode(v interface{}, d tpgresource.Terra
 }
 
 func expandOSConfigPatchDeploymentRolloutDisruptionBudget(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

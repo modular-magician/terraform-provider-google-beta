@@ -2580,6 +2580,9 @@ func expandGkeonpremVmwareClusterControlPlaneNodeReplicas(v interface{}, d tpgre
 }
 
 func expandGkeonpremVmwareClusterControlPlaneNodeAutoResizeConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2603,6 +2606,9 @@ func expandGkeonpremVmwareClusterControlPlaneNodeAutoResizeConfigEnabled(v inter
 }
 
 func expandGkeonpremVmwareClusterControlPlaneNodeVsphereConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2752,6 +2758,9 @@ func expandGkeonpremVmwareClusterNetworkConfigPodAddressCidrBlocks(v interface{}
 }
 
 func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2771,6 +2780,9 @@ func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfig(v interface{}, d tp
 }
 
 func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -2815,6 +2827,9 @@ func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksGateway(v in
 }
 
 func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIps(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -2852,6 +2867,9 @@ func expandGkeonpremVmwareClusterNetworkConfigStaticIpConfigIpBlocksIpsHostname(
 }
 
 func expandGkeonpremVmwareClusterNetworkConfigDhcpIpConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2879,6 +2897,9 @@ func expandGkeonpremVmwareClusterNetworkConfigVcenterNetwork(v interface{}, d tp
 }
 
 func expandGkeonpremVmwareClusterNetworkConfigHostConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2924,6 +2945,9 @@ func expandGkeonpremVmwareClusterNetworkConfigHostConfigDnsSearchDomains(v inter
 }
 
 func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2Config(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2943,6 +2967,9 @@ func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2Config(v interface{}
 }
 
 func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlock(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2984,6 +3011,9 @@ func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIp
 }
 
 func expandGkeonpremVmwareClusterNetworkConfigControlPlaneV2ConfigControlPlaneIpBlockIps(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3061,6 +3091,9 @@ func expandGkeonpremVmwareClusterLoadBalancer(v interface{}, d tpgresource.Terra
 }
 
 func expandGkeonpremVmwareClusterLoadBalancerVipConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3095,6 +3128,9 @@ func expandGkeonpremVmwareClusterLoadBalancerVipConfigIngressVip(v interface{}, 
 }
 
 func expandGkeonpremVmwareClusterLoadBalancerF5Config(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3140,6 +3176,9 @@ func expandGkeonpremVmwareClusterLoadBalancerF5ConfigSnatPool(v interface{}, d t
 }
 
 func expandGkeonpremVmwareClusterLoadBalancerManualLbConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3196,6 +3235,9 @@ func expandGkeonpremVmwareClusterLoadBalancerManualLbConfigKonnectivityServerNod
 }
 
 func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3215,6 +3257,9 @@ func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfig(v interface{}, d tpgr
 }
 
 func expandGkeonpremVmwareClusterLoadBalancerMetalLbConfigAddressPools(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3365,6 +3410,9 @@ func expandGkeonpremVmwareClusterAuthorization(v interface{}, d tpgresource.Terr
 }
 
 func expandGkeonpremVmwareClusterAuthorizationAdminUsers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {

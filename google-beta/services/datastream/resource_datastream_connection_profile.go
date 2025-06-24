@@ -1718,6 +1718,9 @@ func expandDatastreamConnectionProfileMysqlProfileSecretManagerStoredPassword(v 
 }
 
 func expandDatastreamConnectionProfileMysqlProfileSslConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1926,6 +1929,9 @@ func expandDatastreamConnectionProfileSalesforceProfileDomain(v interface{}, d t
 }
 
 func expandDatastreamConnectionProfileSalesforceProfileUserCredentials(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1993,6 +1999,9 @@ func expandDatastreamConnectionProfileSalesforceProfileUserCredentialsSecretMana
 }
 
 func expandDatastreamConnectionProfileSalesforceProfileOauth2ClientCredentials(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

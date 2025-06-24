@@ -574,6 +574,9 @@ func expandApigeeAddonsConfigAddonsConfig(v interface{}, d tpgresource.Terraform
 }
 
 func expandApigeeAddonsConfigAddonsConfigAdvancedApiOpsConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -597,6 +600,9 @@ func expandApigeeAddonsConfigAddonsConfigAdvancedApiOpsConfigEnabled(v interface
 }
 
 func expandApigeeAddonsConfigAddonsConfigIntegrationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -620,6 +626,9 @@ func expandApigeeAddonsConfigAddonsConfigIntegrationConfigEnabled(v interface{},
 }
 
 func expandApigeeAddonsConfigAddonsConfigMonetizationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -643,6 +652,9 @@ func expandApigeeAddonsConfigAddonsConfigMonetizationConfigEnabled(v interface{}
 }
 
 func expandApigeeAddonsConfigAddonsConfigApiSecurityConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -677,6 +689,9 @@ func expandApigeeAddonsConfigAddonsConfigApiSecurityConfigExpiresAt(v interface{
 }
 
 func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

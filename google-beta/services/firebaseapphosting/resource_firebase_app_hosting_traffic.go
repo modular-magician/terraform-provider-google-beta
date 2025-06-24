@@ -669,6 +669,9 @@ func expandFirebaseAppHostingTrafficTarget(v interface{}, d tpgresource.Terrafor
 }
 
 func expandFirebaseAppHostingTrafficTargetSplits(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {

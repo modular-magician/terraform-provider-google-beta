@@ -1855,6 +1855,9 @@ func expandEdgecontainerClusterAuthorization(v interface{}, d tpgresource.Terraf
 }
 
 func expandEdgecontainerClusterAuthorizationAdminUsers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1908,6 +1911,9 @@ func expandEdgecontainerClusterMaintenancePolicy(v interface{}, d tpgresource.Te
 }
 
 func expandEdgecontainerClusterMaintenancePolicyWindow(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1927,6 +1933,9 @@ func expandEdgecontainerClusterMaintenancePolicyWindow(v interface{}, d tpgresou
 }
 
 func expandEdgecontainerClusterMaintenancePolicyWindowRecurringWindow(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1953,6 +1962,9 @@ func expandEdgecontainerClusterMaintenancePolicyWindowRecurringWindow(v interfac
 }
 
 func expandEdgecontainerClusterMaintenancePolicyWindowRecurringWindowWindow(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1991,6 +2003,9 @@ func expandEdgecontainerClusterMaintenancePolicyWindowRecurringWindowRecurrence(
 }
 
 func expandEdgecontainerClusterMaintenancePolicyMaintenanceExclusions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -2020,6 +2035,9 @@ func expandEdgecontainerClusterMaintenancePolicyMaintenanceExclusions(v interfac
 }
 
 func expandEdgecontainerClusterMaintenancePolicyMaintenanceExclusionsWindow(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2084,6 +2102,9 @@ func expandEdgecontainerClusterControlPlane(v interface{}, d tpgresource.Terrafo
 }
 
 func expandEdgecontainerClusterControlPlaneRemote(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2107,6 +2128,9 @@ func expandEdgecontainerClusterControlPlaneRemoteNodeLocation(v interface{}, d t
 }
 
 func expandEdgecontainerClusterControlPlaneLocal(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2182,6 +2206,9 @@ func expandEdgecontainerClusterSystemAddonsConfig(v interface{}, d tpgresource.T
 }
 
 func expandEdgecontainerClusterSystemAddonsConfigIngress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2272,6 +2299,9 @@ func expandEdgecontainerClusterControlPlaneEncryptionKmsKeyState(v interface{}, 
 }
 
 func expandEdgecontainerClusterControlPlaneEncryptionKmsStatus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

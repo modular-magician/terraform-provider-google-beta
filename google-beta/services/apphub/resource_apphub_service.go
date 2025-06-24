@@ -880,6 +880,9 @@ func expandApphubServiceAttributes(v interface{}, d tpgresource.TerraformResourc
 }
 
 func expandApphubServiceAttributesCriticality(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -903,6 +906,9 @@ func expandApphubServiceAttributesCriticalityType(v interface{}, d tpgresource.T
 }
 
 func expandApphubServiceAttributesEnvironment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -926,6 +932,9 @@ func expandApphubServiceAttributesEnvironmentType(v interface{}, d tpgresource.T
 }
 
 func expandApphubServiceAttributesDeveloperOwners(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -963,6 +972,9 @@ func expandApphubServiceAttributesDeveloperOwnersEmail(v interface{}, d tpgresou
 }
 
 func expandApphubServiceAttributesOperatorOwners(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -1000,6 +1012,9 @@ func expandApphubServiceAttributesOperatorOwnersEmail(v interface{}, d tpgresour
 }
 
 func expandApphubServiceAttributesBusinessOwners(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {

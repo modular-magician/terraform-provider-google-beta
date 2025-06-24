@@ -1403,6 +1403,9 @@ func expandCloudbuildv2ConnectionGithubConfig(v interface{}, d tpgresource.Terra
 }
 
 func expandCloudbuildv2ConnectionGithubConfigAuthorizerCredential(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1533,6 +1536,9 @@ func expandCloudbuildv2ConnectionGithubEnterpriseConfigAppInstallationId(v inter
 }
 
 func expandCloudbuildv2ConnectionGithubEnterpriseConfigServiceDirectoryConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1629,6 +1635,9 @@ func expandCloudbuildv2ConnectionGitlabConfigWebhookSecretSecretVersion(v interf
 }
 
 func expandCloudbuildv2ConnectionGitlabConfigReadAuthorizerCredential(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1663,6 +1672,9 @@ func expandCloudbuildv2ConnectionGitlabConfigReadAuthorizerCredentialUsername(v 
 }
 
 func expandCloudbuildv2ConnectionGitlabConfigAuthorizerCredential(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1697,6 +1709,9 @@ func expandCloudbuildv2ConnectionGitlabConfigAuthorizerCredentialUsername(v inte
 }
 
 func expandCloudbuildv2ConnectionGitlabConfigServiceDirectoryConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1797,6 +1812,9 @@ func expandCloudbuildv2ConnectionBitbucketDataCenterConfigWebhookSecretSecretVer
 }
 
 func expandCloudbuildv2ConnectionBitbucketDataCenterConfigReadAuthorizerCredential(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1831,6 +1849,9 @@ func expandCloudbuildv2ConnectionBitbucketDataCenterConfigReadAuthorizerCredenti
 }
 
 func expandCloudbuildv2ConnectionBitbucketDataCenterConfigAuthorizerCredential(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1865,6 +1886,9 @@ func expandCloudbuildv2ConnectionBitbucketDataCenterConfigAuthorizerCredentialUs
 }
 
 func expandCloudbuildv2ConnectionBitbucketDataCenterConfigServiceDirectoryConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1944,6 +1968,9 @@ func expandCloudbuildv2ConnectionBitbucketCloudConfigWebhookSecretSecretVersion(
 }
 
 func expandCloudbuildv2ConnectionBitbucketCloudConfigReadAuthorizerCredential(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1978,6 +2005,9 @@ func expandCloudbuildv2ConnectionBitbucketCloudConfigReadAuthorizerCredentialUse
 }
 
 func expandCloudbuildv2ConnectionBitbucketCloudConfigAuthorizerCredential(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

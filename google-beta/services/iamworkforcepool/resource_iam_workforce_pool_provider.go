@@ -1239,6 +1239,9 @@ func expandIAMWorkforcePoolWorkforcePoolProviderOidcClientId(v interface{}, d tp
 }
 
 func expandIAMWorkforcePoolWorkforcePoolProviderOidcClientSecret(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1258,6 +1261,9 @@ func expandIAMWorkforcePoolWorkforcePoolProviderOidcClientSecret(v interface{}, 
 }
 
 func expandIAMWorkforcePoolWorkforcePoolProviderOidcClientSecretValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1292,6 +1298,9 @@ func expandIAMWorkforcePoolWorkforcePoolProviderOidcClientSecretValueThumbprint(
 }
 
 func expandIAMWorkforcePoolWorkforcePoolProviderOidcWebSsoConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1396,6 +1405,9 @@ func expandIAMWorkforcePoolWorkforcePoolProviderExtraAttributesOauth2ClientClien
 }
 
 func expandIAMWorkforcePoolWorkforcePoolProviderExtraAttributesOauth2ClientClientSecret(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1415,6 +1427,9 @@ func expandIAMWorkforcePoolWorkforcePoolProviderExtraAttributesOauth2ClientClien
 }
 
 func expandIAMWorkforcePoolWorkforcePoolProviderExtraAttributesOauth2ClientClientSecretValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1453,6 +1468,9 @@ func expandIAMWorkforcePoolWorkforcePoolProviderExtraAttributesOauth2ClientAttri
 }
 
 func expandIAMWorkforcePoolWorkforcePoolProviderExtraAttributesOauth2ClientQueryParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

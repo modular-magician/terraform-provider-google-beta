@@ -850,6 +850,9 @@ func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettings(v interf
 }
 
 func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettingsScope(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -869,6 +872,9 @@ func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettingsScope(v i
 }
 
 func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettingsScopeClientScope(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -888,6 +894,9 @@ func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettingsScopeClie
 }
 
 func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettingsScopeClientScopeRestrictedClientApplication(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -911,6 +920,9 @@ func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettingsScopeClie
 }
 
 func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettingsActiveSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -941,6 +953,9 @@ func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettingsActiveSet
 }
 
 func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettingsActiveSettingsSessionSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1008,6 +1023,9 @@ func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettingsActiveSet
 }
 
 func expandAccessContextManagerGcpUserAccessBindingScopedAccessSettingsDryRunSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

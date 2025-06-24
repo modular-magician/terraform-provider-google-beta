@@ -1605,6 +1605,9 @@ func expandDataprocBatchRuntimeConfigEffectiveProperties(v interface{}, d tpgres
 }
 
 func expandDataprocBatchRuntimeConfigAutotuningConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1658,6 +1661,9 @@ func expandDataprocBatchEnvironmentConfig(v interface{}, d tpgresource.Terraform
 }
 
 func expandDataprocBatchEnvironmentConfigExecutionConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1747,6 +1753,9 @@ func expandDataprocBatchEnvironmentConfigExecutionConfigSubnetworkUri(v interfac
 }
 
 func expandDataprocBatchEnvironmentConfigPeripheralsConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -1782,6 +1791,9 @@ func expandDataprocBatchEnvironmentConfigPeripheralsConfigMetastoreService(v int
 }
 
 func expandDataprocBatchEnvironmentConfigPeripheralsConfigSparkHistoryServerConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
