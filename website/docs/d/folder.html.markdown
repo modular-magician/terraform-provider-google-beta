@@ -13,7 +13,6 @@
 #     overwritten during the next generation cycle.
 #
 # ----------------------------------------------------------------------------
-subcategory: "Cloud Platform"
 description: |-
   Get information about a Google Cloud Folder.
 ---
