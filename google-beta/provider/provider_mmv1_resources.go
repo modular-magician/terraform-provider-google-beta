@@ -589,9 +589,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 677
+// Generated resources: 678
 // Generated IAM resources: 339
-// Total generated resources: 1016
+// Total generated resources: 1017
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1491,6 +1491,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_scc_v2_organization_source_iam_binding":                              tpgiamresource.ResourceIamBinding(securitycenterv2.SecurityCenterV2OrganizationSourceIamSchema, securitycenterv2.SecurityCenterV2OrganizationSourceIamUpdaterProducer, securitycenterv2.SecurityCenterV2OrganizationSourceIdParseFunc),
 	"google_scc_v2_organization_source_iam_member":                               tpgiamresource.ResourceIamMember(securitycenterv2.SecurityCenterV2OrganizationSourceIamSchema, securitycenterv2.SecurityCenterV2OrganizationSourceIamUpdaterProducer, securitycenterv2.SecurityCenterV2OrganizationSourceIdParseFunc),
 	"google_scc_v2_organization_source_iam_policy":                               tpgiamresource.ResourceIamPolicy(securitycenterv2.SecurityCenterV2OrganizationSourceIamSchema, securitycenterv2.SecurityCenterV2OrganizationSourceIamUpdaterProducer, securitycenterv2.SecurityCenterV2OrganizationSourceIdParseFunc),
+	"google_scc_v2_organization_source_finding":                                  securitycenterv2.ResourceSecurityCenterV2OrganizationSourceFinding(),
 	"google_scc_v2_project_mute_config":                                          securitycenterv2.ResourceSecurityCenterV2ProjectMuteConfig(),
 	"google_scc_v2_project_notification_config":                                  securitycenterv2.ResourceSecurityCenterV2ProjectNotificationConfig(),
 	"google_scc_v2_project_scc_big_query_export":                                 securitycenterv2.ResourceSecurityCenterV2ProjectSccBigQueryExport(),

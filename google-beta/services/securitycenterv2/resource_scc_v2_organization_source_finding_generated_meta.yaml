@@ -1,0 +1,19 @@
+resource: 'google_scc_v2_organization_source_finding'
+generation_type: 'mmv1'
+source_file: 'products/securitycenterv2/OrganizationSourceFinding.yaml'
+api_service_name: 'securitycenter.googleapis.com'
+api_version: 'v2'
+api_resource_type_kind: 'Finding'
+fields:
+  - field: 'category'
+  - field: 'event_time'
+  - field: 'finding_id'
+    provider_only: true
+  - field: 'location'
+    provider_only: true
+  - field: 'organization'
+    provider_only: true
+  - field: 'resource_name'
+  - field: 'source'
+    provider_only: true
+  - field: 'state'
