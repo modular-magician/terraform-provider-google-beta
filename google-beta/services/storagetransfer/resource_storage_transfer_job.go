@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"regexp"
 	"strings"
 	"time"
 
@@ -708,13 +709,24 @@ func gcsDataSchema() *schema.Resource {
 				Description: `Google Cloud Storage bucket name.`,
 			},
 			"path": {
-				Optional:    true,
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: `Google Cloud Storage path in bucket to transfer`,
+				Optional:     true,
+				Type:         schema.TypeString,
+				Description:  `Google Cloud Storage path in bucket to transfer`,
+				ValidateFunc: validatePath,
 			},
 		},
 	}
+}
+
+func validatePath(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	value = strings.TrimSpace(value)
+	// checks if path not started with "/"
+	regex, err := regexp.Compile("^/+")
+	if err == nil && len(value) > 0 && regex.Match([]byte(value)) {
+		errors = append(errors, fmt.Errorf("%q cannot start with /", k))
+	}
+	return
 }
 
 func awsS3DataSchema() *schema.Resource {
