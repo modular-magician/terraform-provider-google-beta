@@ -425,6 +425,15 @@ resource "google_dataplex_datascan" "full_quality_test" {
         sql_statement = "select * from %{project_name}.${google_bigquery_dataset.tf_test_dataset.dataset_id}.${google_bigquery_table.tf_test_table.table_id} where address is null"
       }
     }
+
+    rules {
+      column = "footprint_length"
+      dimension = "VALIDITY"
+      row_condition_expectation {
+        sql_expression = "footprint_length > 0 AND footprint_length <= 100"
+      }
+      suspended = true
+    }
   }
 
 

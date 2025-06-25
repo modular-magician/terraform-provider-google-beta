@@ -220,7 +220,6 @@ resource "google_dataplex_datascan" "full_quality" {
       }
     }
 
-
     rules {
       column = "address"
       dimension = "UNIQUENESS"
@@ -259,6 +258,15 @@ resource "google_dataplex_datascan" "full_quality" {
       sql_assertion {
         sql_statement = "select * from bigquery-public-data.austin_bikeshare.bikeshare_stations where station_id is null"
       }
+    }
+
+    rules {
+      column = "footprint_length"
+      dimension = "VALIDITY"
+      row_condition_expectation {
+        sql_expression = "footprint_length > 0 AND footprint_length <= 100"
+      }
+      suspended = true
     }
   }
 
@@ -581,6 +589,10 @@ The following arguments are supported:
   (Optional)
   Description of the rule.
   The maximum length is 1,024 characters.
+
+* `suspended` -
+  (Optional)
+  Whether the Rule is active or suspended. Default is false.
 
 * `range_expectation` -
   (Optional)
