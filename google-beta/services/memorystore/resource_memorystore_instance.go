@@ -281,7 +281,7 @@ A duration in seconds with up to nine fractional digits, ending with 's'. Exampl
 							Required: true,
 							ForceNew: true,
 							Description: `URIs of the GCS objects to import.
-Example: gs://bucket1/object1, gs//bucket2/folder2/object2`,
+Example: gs://bucket1/object1, gs://bucket2/folder2/object2`,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -290,6 +290,12 @@ Example: gs://bucket1/object1, gs//bucket2/folder2/object2`,
 					},
 				},
 				ConflictsWith: []string{"managed_backup_source"},
+			},
+			"kms_key": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `The KMS key used to encrypt the at-rest data of the cluster`,
 			},
 			"labels": {
 				Type:     schema.TypeMap,
@@ -406,7 +412,7 @@ resolution and up to nine fractional digits.`,
 							Type:        schema.TypeString,
 							Required:    true,
 							ForceNew:    true,
-							Description: `Example: //memorystore.googleapis.com/projects/{project}/locations/{location}/backups/{backupId}. In this case, it assumes the backup is under memorystore.googleapis.com.`,
+							Description: `Example: 'projects/{project}/locations/{location}/backupCollections/{collection}/backups/{backup}'.`,
 						},
 					},
 				},
@@ -1034,6 +1040,12 @@ func resourceMemorystoreInstanceCreate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("managed_backup_source"); !tpgresource.IsEmptyValue(reflect.ValueOf(managedBackupSourceProp)) && (ok || !reflect.DeepEqual(v, managedBackupSourceProp)) {
 		obj["managedBackupSource"] = managedBackupSourceProp
 	}
+	kmsKeyProp, err := expandMemorystoreInstanceKmsKey(d.Get("kms_key"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("kms_key"); !tpgresource.IsEmptyValue(reflect.ValueOf(kmsKeyProp)) && (ok || !reflect.DeepEqual(v, kmsKeyProp)) {
+		obj["kmsKey"] = kmsKeyProp
+	}
 	labelsProp, err := expandMemorystoreInstanceEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -1087,37 +1099,15 @@ func resourceMemorystoreInstanceCreate(d *schema.ResourceData, meta interface{})
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
-	var opRes map[string]interface{}
-	err = MemorystoreOperationWaitTimeWithResponse(
-		config, res, &opRes, project, "Creating Instance", userAgent,
+	err = MemorystoreOperationWaitTime(
+		config, res, project, "Creating Instance", userAgent,
 		d.Timeout(schema.TimeoutCreate))
+
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
-
 		return fmt.Errorf("Error waiting to create Instance: %s", err)
 	}
-
-	opRes, err = resourceMemorystoreInstanceDecoder(d, meta, opRes)
-	if err != nil {
-		return fmt.Errorf("Error decoding response from operation: %s", err)
-	}
-	if opRes == nil {
-		return fmt.Errorf("Error decoding response from operation, could not find object")
-	}
-
-	if err := d.Set("name", flattenMemorystoreInstanceName(opRes["name"], d, config)); err != nil {
-		return err
-	}
-
-	// This may have caused the ID to update - update it if so.
-	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/instances/{{instance_id}}")
-	if err != nil {
-		return fmt.Errorf("Error constructing id: %s", err)
-	}
-	d.SetId(id)
 
 	log.Printf("[DEBUG] Finished creating Instance %q: %#v", d.Id(), res)
 
@@ -1261,6 +1251,9 @@ func resourceMemorystoreInstanceRead(d *schema.ResourceData, meta interface{}) e
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err := d.Set("backup_collection", flattenMemorystoreInstanceBackupCollection(res["backupCollection"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err := d.Set("kms_key", flattenMemorystoreInstanceKmsKey(res["kmsKey"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
 	if err := d.Set("terraform_labels", flattenMemorystoreInstanceTerraformLabels(res["labels"], d, config)); err != nil {
@@ -2446,6 +2439,10 @@ func flattenMemorystoreInstanceBackupCollection(v interface{}, d *schema.Resourc
 	return v
 }
 
+func flattenMemorystoreInstanceKmsKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenMemorystoreInstanceTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -3129,6 +3126,10 @@ func expandMemorystoreInstanceManagedBackupSource(v interface{}, d tpgresource.T
 }
 
 func expandMemorystoreInstanceManagedBackupSourceBackup(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandMemorystoreInstanceKmsKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -115,6 +115,7 @@ resource "google_memorystore_instance" "instance-full" {
   node_type               = "SHARED_CORE_NANO"
   transit_encryption_mode = "TRANSIT_ENCRYPTION_DISABLED"
   authorization_mode      = "AUTH_DISABLED"
+  kms_key                 = "my-key"
   engine_configs = {
     maxmemory-policy = "volatile-ttl"
   }
@@ -496,6 +497,10 @@ The following arguments are supported:
   Managed backup source for the instance.
   Structure is [documented below](#nested_managed_backup_source).
 
+* `kms_key` -
+  (Optional)
+  The KMS key used to encrypt the at-rest data of the cluster
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -755,13 +760,13 @@ The following arguments are supported:
 * `uris` -
   (Required)
   URIs of the GCS objects to import.
-  Example: gs://bucket1/object1, gs//bucket2/folder2/object2
+  Example: gs://bucket1/object1, gs://bucket2/folder2/object2
 
 <a name="nested_managed_backup_source"></a>The `managed_backup_source` block supports:
 
 * `backup` -
   (Required)
-  Example: //memorystore.googleapis.com/projects/{project}/locations/{location}/backups/{backupId}. In this case, it assumes the backup is under memorystore.googleapis.com.
+  Example: `projects/{project}/locations/{location}/backupCollections/{collection}/backups/{backup}`.
 
 ## Attributes Reference
 
