@@ -634,7 +634,7 @@ func (r *DataFusionInstanceFWResource) Update(ctx context.Context, req resource.
 	}
 
 	var project, billingProject types.String
-	project = fwresource.GetProjectFramework(data.Project, types.StringValue(r.providerConfig.Project), &resp.Diagnostics)
+	project = fwresource.GetProjectFramework(plan.Project, types.StringValue(r.providerConfig.Project), &resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -709,7 +709,7 @@ func (r *DataFusionInstanceFWResource) Update(ctx context.Context, req resource.
 		obj["labels"] = labelsProp
 	}
 
-	updateTimeout, diags := data.Timeouts.Update(ctx, 20*time.Minute)
+	updateTimeout, diags := plan.Timeouts.Update(ctx, 20*time.Minute)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -862,12 +862,12 @@ func (r *DataFusionInstanceFWResource) ImportState(ctx context.Context, req reso
 func (r *DataFusionInstanceFWResource) DataFusionInstanceFWRefresh(ctx context.Context, data *DataFusionInstanceFWModel, state *tfsdk.State, req interface{}, diag *diag.Diagnostics) {
 	var metaData *fwmodels.ProviderMetaModel
 	//load default values
-	project := fwresource.GetProjectFramework(data.Project, types.StringValue(r.providerConfig.Project), &resp.Diagnostics)
-	if resp.Diagnostics.HasError() {
+	project := fwresource.GetProjectFramework(data.Project, types.StringValue(r.providerConfig.Project), diag)
+	if diag.HasError() {
 		return
 	}
-	region := fwresource.GetRegionFramework(data.Region, types.StringValue(r.providerConfig.Region), &resp.Diagnostics)
-	if resp.Diagnostics.HasError() {
+	region := fwresource.GetRegionFramework(data.Region, types.StringValue(r.providerConfig.Region), diag)
+	if diag.HasError() {
 		return
 	}
 
@@ -878,8 +878,8 @@ func (r *DataFusionInstanceFWResource) DataFusionInstanceFWRefresh(ctx context.C
 	// Use provider_meta to set User-Agent
 	userAgent := fwtransport.GenerateFrameworkUserAgentString(metaData, r.providerConfig.UserAgent)
 
-	url := fwtransport.ReplaceVars(ctx, req, &resp.Diagnostics, schemaDefaultVals, r.providerConfig, "{{DataFusionBasePath}}projects/{{project}}/locations/{{region}}/instances/{{name}}")
-	if resp.Diagnostics.HasError() {
+	url := fwtransport.ReplaceVars(ctx, req, diag, schemaDefaultVals, r.providerConfig, "{{DataFusionBasePath}}projects/{{project}}/locations/{{region}}/instances/{{name}}")
+	if diag.HasError() {
 		return
 	}
 
@@ -894,228 +894,228 @@ func (r *DataFusionInstanceFWResource) DataFusionInstanceFWRefresh(ctx context.C
 		UserAgent: userAgent,
 		Timeout:   createTimeout,
 		Headers:   headers,
-	}, &resp.Diagnostics)
-	if resp.Diagnostics.HasError() {
-		fwtransport.HandleNotFoundError(ctx, err, &resp.State, fmt.Sprintf("DataFusionInstance %s", data.Id.ValueString()), &resp.Diagnostics)
-		if resp.Diagnostics.HasError() {
+	}, diag)
+	if diag.HasError() {
+		fwtransport.HandleNotFoundError(ctx, err, &resp.State, fmt.Sprintf("DataFusionInstance %s", data.Id.ValueString()), diag)
+		if diag.HasError() {
 			return
 		}
 	}
 
-	data.Name = res["name"]
+	data.Name = res["name"].(string)
 	nameProp, diags := data.Name.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.Type = res["type"]
+	data.Type = res["type"].(string)
 	typeProp, diags := data.Type.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
 	data.Accelerators = res["accelerators"]
 	acceleratorsProp, diags := data.Accelerators.ToListValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
 	data.CryptoKeyConfig = res["cryptoKeyConfig"]
 	cryptoKeyConfigProp, diags := data.CryptoKeyConfig.ToNestedValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.DataprocServiceAccount = res["dataprocServiceAccount"]
+	data.DataprocServiceAccount = res["dataprocServiceAccount"].(string)
 	dataprocServiceAccountProp, diags := data.DataprocServiceAccount.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.Description = res["description"]
+	data.Description = res["description"].(string)
 	descriptionProp, diags := data.Description.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.DisplayName = res["displayName"]
+	data.DisplayName = res["displayName"].(string)
 	displayNameProp, diags := data.DisplayName.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.EnableRbac = res["enableRbac"]
+	data.EnableRbac = res["enableRbac"].(bool)
 	enableRbacProp, diags := data.EnableRbac.ToBoolValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.EnableStackdriverLogging = res["enableStackdriverLogging"]
+	data.EnableStackdriverLogging = res["enableStackdriverLogging"].(bool)
 	enableStackdriverLoggingProp, diags := data.EnableStackdriverLogging.ToBoolValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.EnableStackdriverMonitoring = res["enableStackdriverMonitoring"]
+	data.EnableStackdriverMonitoring = res["enableStackdriverMonitoring"].(bool)
 	enableStackdriverMonitoringProp, diags := data.EnableStackdriverMonitoring.ToBoolValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
 	data.EventPublishConfig = res["eventPublishConfig"]
 	eventPublishConfigProp, diags := data.EventPublishConfig.ToNestedValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
 	data.Labels = res["labels"]
 	labelsProp, diags := data.Labels.ToMapValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
 	data.NetworkConfig = res["networkConfig"]
 	networkConfigProp, diags := data.NetworkConfig.ToNestedValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
 	data.Options = res["options"]
 	optionsProp, diags := data.Options.ToMapValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.PrivateInstance = res["privateInstance"]
+	data.PrivateInstance = res["privateInstance"].(bool)
 	privateInstanceProp, diags := data.PrivateInstance.ToBoolValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.Region = res["region"]
+	data.Region = res["region"].(string)
 	regionProp, diags := data.Region.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
 	data.Tags = res["tags"]
 	tagsProp, diags := data.Tags.ToMapValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.Version = res["version"]
+	data.Version = res["version"].(string)
 	versionProp, diags := data.Version.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.Zone = res["zone"]
+	data.Zone = res["zone"].(string)
 	zoneProp, diags := data.Zone.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.ApiEndpoint = res["apiEndpoint"]
+	data.ApiEndpoint = res["apiEndpoint"].(string)
 	apiEndpointProp, diags := data.ApiEndpoint.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.CreateTime = res["createTime"]
+	data.CreateTime = res["createTime"].(string)
 	createTimeProp, diags := data.CreateTime.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
 	data.EffectiveLabels = res["labels"]
 	labelsProp, diags := data.EffectiveLabels.ToMapValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.GcsBucket = res["gcsBucket"]
+	data.GcsBucket = res["gcsBucket"].(string)
 	gcsBucketProp, diags := data.GcsBucket.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.P4ServiceAccount = res["p4ServiceAccount"]
+	data.P4ServiceAccount = res["p4ServiceAccount"].(string)
 	p4ServiceAccountProp, diags := data.P4ServiceAccount.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.ServiceAccount = res["serviceAccount"]
+	data.ServiceAccount = res["serviceAccount"].(string)
 	serviceAccountProp, diags := data.ServiceAccount.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.ServiceEndpoint = res["serviceEndpoint"]
+	data.ServiceEndpoint = res["serviceEndpoint"].(string)
 	serviceEndpointProp, diags := data.ServiceEndpoint.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.State = res["state"]
+	data.State = res["state"].(string)
 	stateProp, diags := data.State.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.StateMessage = res["stateMessage"]
+	data.StateMessage = res["stateMessage"].(string)
 	stateMessageProp, diags := data.StateMessage.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.TenantProjectId = res["tenantProjectId"]
+	data.TenantProjectId = res["tenantProjectId"].(string)
 	tenantProjectIdProp, diags := data.TenantProjectId.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
 	data.TerraformLabels = res["labels"]
 	labelsProp, diags := data.TerraformLabels.ToMapValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
-	data.UpdateTime = res["updateTime"]
+	data.UpdateTime = res["updateTime"].(string)
 	updateTimeProp, diags := data.UpdateTime.ToStringValue(ctx)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	diag.Append(diags...)
+	if diag.HasError() {
 		return
 	}
 
