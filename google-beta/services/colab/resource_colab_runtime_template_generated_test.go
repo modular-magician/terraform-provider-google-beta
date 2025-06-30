@@ -180,17 +180,30 @@ resource "google_colab_runtime_template" "runtime-template" {
   }
 
   euc_config {
-    euc_disabled = false
+    euc_disabled = true
   }
 
   shielded_vm_config {
-    enable_secure_boot = false
+    enable_secure_boot = true
   }
 
   network_tags = ["abc", "def"]
 
   encryption_spec {
     kms_key_name = "%{key_name}"
+  }
+
+  software_config {
+    env {
+      name         = "TEST"
+      value   = 1
+    }
+
+    post_startup_script_config {
+      post_startup_script = "echo 'hello world'"
+      post_startup_script_url = "gs://colab-enterprise-pss-secure/secure_pss.sh"
+      post_startup_script_behavior = "RUN_ONCE"
+    }
   }
 }
 `, context)

@@ -86,7 +86,7 @@ func TestAccComputeDisk_diskAsyncExample(t *testing.T) {
 				Config: testAccComputeDisk_diskAsyncExample(context),
 			},
 			{
-				ResourceName:            "google_compute_disk.secondary",
+				ResourceName:            "google_compute_disk.primary",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"architecture", "interface", "labels", "params", "snapshot", "source_storage_object", "terraform_labels", "type", "zone"},

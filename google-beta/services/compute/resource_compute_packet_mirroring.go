@@ -584,7 +584,7 @@ func flattenComputePacketMirroringRegion(v interface{}, d *schema.ResourceData, 
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenComputePacketMirroringNetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

@@ -230,15 +230,29 @@ func resourceVertexAIFeatureGroupCreate(d *schema.ResourceData, meta interface{}
 	}
 	d.SetId(id)
 
-	err = VertexAIOperationWaitTime(
-		config, res, project, "Creating FeatureGroup", userAgent,
+	// Use the resource in the operation response to populate
+	// identity fields and d.Id() before read
+	var opRes map[string]interface{}
+	err = VertexAIOperationWaitTimeWithResponse(
+		config, res, &opRes, project, "Creating FeatureGroup", userAgent,
 		d.Timeout(schema.TimeoutCreate))
-
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
+
 		return fmt.Errorf("Error waiting to create FeatureGroup: %s", err)
 	}
+
+	if err := d.Set("name", flattenVertexAIFeatureGroupName(opRes["name"], d, config)); err != nil {
+		return err
+	}
+
+	// This may have caused the ID to update - update it if so.
+	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{region}}/featureGroups/{{name}}")
+	if err != nil {
+		return fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
 
 	log.Printf("[DEBUG] Finished creating FeatureGroup %q: %#v", d.Id(), res)
 
@@ -504,7 +518,7 @@ func flattenVertexAIFeatureGroupName(v interface{}, d *schema.ResourceData, conf
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenVertexAIFeatureGroupCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

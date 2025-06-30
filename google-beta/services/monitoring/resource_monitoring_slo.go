@@ -1672,7 +1672,7 @@ func flattenMonitoringSloSloId(v interface{}, d *schema.ResourceData, config *tr
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func expandMonitoringSloDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

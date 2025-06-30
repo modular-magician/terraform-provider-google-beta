@@ -41,7 +41,7 @@ To get more information about OrganizationSccBigQueryExports, see:
 
 ```hcl
 resource "google_bigquery_dataset" "default" {
-  dataset_id                  = "my-dataset"
+  dataset_id                  = ""
   friendly_name               = "test"
   description                 = "This is a test description"
   location                    = "US"

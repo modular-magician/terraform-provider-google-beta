@@ -206,15 +206,29 @@ func resourceGeminiCodeRepositoryIndexCreate(d *schema.ResourceData, meta interf
 	}
 	d.SetId(id)
 
-	err = GeminiOperationWaitTime(
-		config, res, project, "Creating CodeRepositoryIndex", userAgent,
+	// Use the resource in the operation response to populate
+	// identity fields and d.Id() before read
+	var opRes map[string]interface{}
+	err = GeminiOperationWaitTimeWithResponse(
+		config, res, &opRes, project, "Creating CodeRepositoryIndex", userAgent,
 		d.Timeout(schema.TimeoutCreate))
-
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
+
 		return fmt.Errorf("Error waiting to create CodeRepositoryIndex: %s", err)
 	}
+
+	if err := d.Set("name", flattenGeminiCodeRepositoryIndexName(opRes["name"], d, config)); err != nil {
+		return err
+	}
+
+	// This may have caused the ID to update - update it if so.
+	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/codeRepositoryIndexes/{{code_repository_index_id}}")
+	if err != nil {
+		return fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
 
 	log.Printf("[DEBUG] Finished creating CodeRepositoryIndex %q: %#v", d.Id(), res)
 
@@ -406,7 +420,7 @@ func resourceGeminiCodeRepositoryIndexDelete(d *schema.ResourceData, meta interf
 	transport_tpg.MutexStore.Lock(lockName)
 	defer transport_tpg.MutexStore.Unlock(lockName)
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{GeminiBasePath}}projects/{{project}}/locations/{{location}}/codeRepositoryIndexes/{{code_repository_index_id}}?force={{force_destroy}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{GeminiBasePath}}projects/{{project}}/locations/{{location}}/codeRepositoryIndexes/{{code_repository_index_id}}")
 	if err != nil {
 		return err
 	}
@@ -419,6 +433,12 @@ func resourceGeminiCodeRepositoryIndexDelete(d *schema.ResourceData, meta interf
 	}
 
 	headers := make(http.Header)
+	obj = make(map[string]interface{})
+	if v, ok := d.GetOk("force_destroy"); ok {
+		if v == true {
+			obj["force"] = true
+		}
+	}
 
 	log.Printf("[DEBUG] Deleting CodeRepositoryIndex %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{

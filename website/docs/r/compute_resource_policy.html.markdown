@@ -209,6 +209,7 @@ resource "google_compute_resource_policy" "cgroup" {
 resource "google_compute_resource_policy" "bar" {
   name   = "gce-policy"
   region = "europe-west1"
+  provider = google-beta
   workload_policy {
     type = "HIGH_AVAILABILITY"
   }
@@ -226,6 +227,7 @@ resource "google_compute_resource_policy" "bar" {
 resource "google_compute_resource_policy" "bar" {
   name   = "gce-policy"
   region = "europe-west1"
+  provider = google-beta
   workload_policy {
     type = "HIGH_THROUGHPUT"
     accelerator_topology = "SOME NEW TOPOLOGY"
@@ -244,6 +246,7 @@ resource "google_compute_resource_policy" "bar" {
 resource "google_compute_resource_policy" "bar" {
   name   = "gce-policy"
   region = "europe-west1"
+  provider = google-beta
   workload_policy {
     type = "HIGH_THROUGHPUT"
     max_topology_distance = "BLOCK"
@@ -260,6 +263,7 @@ resource "google_compute_resource_policy" "bar" {
 
 ```hcl
 resource "google_compute_resource_policy" "baz" {
+  provider = google-beta
   name   = "gce-policy"
   region = "europe-west9"
   group_placement_policy {
@@ -333,7 +337,7 @@ The following arguments are supported:
   Structure is [documented below](#nested_disk_consistency_group_policy).
 
 * `workload_policy` -
-  (Optional)
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Represents the workload policy.
   Structure is [documented below](#nested_workload_policy).
 
@@ -485,7 +489,7 @@ The following arguments are supported:
   Specifies the number of max logical switches.
 
 * `gpu_topology` -
-  (Optional)
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Specifies the shape of the GPU slice, in slice based GPU families eg. A4X.
 
 * `tpu_topology` -

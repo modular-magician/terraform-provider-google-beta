@@ -39,7 +39,6 @@ resource "google_gemini_gemini_gcp_enablement_setting" "example" {
     location = "global"
     labels = {"my_key": "my_value"}
     enable_customer_data_sharing = true
-    disable_web_grounding = true
 }
 ```
 
@@ -69,10 +68,6 @@ The following arguments are supported:
 * `enable_customer_data_sharing` -
   (Optional)
   Whether customer data sharing should be enabled.
-
-* `disable_web_grounding` -
-  (Optional)
-  Whether web grounding should be disabled.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

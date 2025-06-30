@@ -229,15 +229,25 @@ func resourceNotebooksEnvironmentCreate(d *schema.ResourceData, meta interface{}
 	}
 	d.SetId(id)
 
-	err = NotebooksOperationWaitTime(
-		config, res, project, "Creating Environment", userAgent,
+	// Use the resource in the operation response to populate
+	// identity fields and d.Id() before read
+	var opRes map[string]interface{}
+	err = NotebooksOperationWaitTimeWithResponse(
+		config, res, &opRes, project, "Creating Environment", userAgent,
 		d.Timeout(schema.TimeoutCreate))
-
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
+
 		return fmt.Errorf("Error waiting to create Environment: %s", err)
 	}
+
+	// This may have caused the ID to update - update it if so.
+	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/environments/{{name}}")
+	if err != nil {
+		return fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
 
 	log.Printf("[DEBUG] Finished creating Environment %q: %#v", d.Id(), res)
 

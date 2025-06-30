@@ -167,8 +167,6 @@ The following arguments are supported:
   EntityKey of the member.
   Structure is [documented below](#nested_preferred_member_key).
 
-* `create_ignore_already_exists` - (Optional) If set to true, skip group member creation if a membership with the same name already exists. Defaults to false.
-
 
 <a name="nested_member_key"></a>The `member_key` block supports:
 

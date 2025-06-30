@@ -371,7 +371,7 @@ resource "google_cloudbuild_trigger" "manual-trigger" {
 
 ```hcl
 resource "google_cloudbuild_trigger" "manual-ghe-trigger" {
-  name        = "my-trigger"
+  name        = ""
 
   source_to_build {
     uri       = "https://hashicorp/terraform-provider-google-beta"

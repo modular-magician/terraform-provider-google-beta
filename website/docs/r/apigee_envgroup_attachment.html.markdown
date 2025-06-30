@@ -37,8 +37,8 @@ To get more information about EnvgroupAttachment, see:
 resource "google_project" "project" {
   project_id      = "my-project"
   name            = "my-project"
-  org_id          = "123456789"
-  billing_account = "000000-0000000-0000000-000000"
+  org_id          = ""
+  billing_account = ""
   deletion_policy = "DELETE"
 }
 

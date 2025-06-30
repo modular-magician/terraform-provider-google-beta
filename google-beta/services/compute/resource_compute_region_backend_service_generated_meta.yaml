@@ -74,7 +74,6 @@ fields:
   - field: 'custom_metrics.dry_run'
   - field: 'custom_metrics.name'
   - field: 'description'
-  - field: 'dynamic_forwarding.ip_port_selection.enabled'
   - field: 'enable_cdn'
   - field: 'failover_policy.disable_connection_drain_on_failover'
   - field: 'failover_policy.drop_traffic_if_unhealthy'
@@ -119,5 +118,4 @@ fields:
   - field: 'strong_session_affinity_cookie.ttl.nanos'
   - field: 'strong_session_affinity_cookie.ttl.seconds'
   - field: 'subsetting.policy'
-  - field: 'subsetting.subset_size'
   - field: 'timeout_sec'

@@ -434,7 +434,7 @@ func flattenNestedServiceUsageConsumerQuotaOverrideName(v interface{}, d *schema
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func expandNestedServiceUsageConsumerQuotaOverrideOverrideValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

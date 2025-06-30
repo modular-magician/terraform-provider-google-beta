@@ -49,7 +49,7 @@ func TestAccDatabaseMigrationServicePrivateConnection_databaseMigrationServicePr
 				ResourceName:            "google_database_migration_service_private_connection.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"create_without_validation", "labels", "location", "private_connection_id", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "private_connection_id", "terraform_labels"},
 			},
 		},
 	})
@@ -70,8 +70,6 @@ resource "google_database_migration_service_private_connection" "default" {
 		vpc_name = resource.google_compute_network.default.id
 		subnet = "10.0.0.0/29"
 	}
-
-	create_without_validation = false
 }
 
 resource "google_compute_network" "default" {

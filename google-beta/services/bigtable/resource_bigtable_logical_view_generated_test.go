@@ -35,8 +35,7 @@ func TestAccBigtableLogicalView_bigtableLogicalViewExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"deletion_protection": false,
-		"random_suffix":       acctest.RandString(t, 10),
+		"random_suffix": acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -83,7 +82,6 @@ resource "google_bigtable_table" "table" {
 resource "google_bigtable_logical_view" "logical_view" {
   logical_view_id = "tf-test-bt-logical-view%{random_suffix}"
   instance        = google_bigtable_instance.instance.name
-  deletion_protection  = false
   query = <<EOT
 SELECT _key, CF
 FROM `+"`tf-test-bt-table%{random_suffix}`"+`

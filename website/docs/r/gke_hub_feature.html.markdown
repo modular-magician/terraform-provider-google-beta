@@ -301,20 +301,6 @@ resource "google_gke_hub_feature" "feature" {
   }
 }
 ```
-## Example Usage - Gkehub Feature Rbacrolebinding Actuation
-
-
-```hcl
-resource "google_gke_hub_feature" "feature" {
-  name = "rbacrolebindingactuation"
-  location = "global"
-  spec {
-    rbacrolebindingactuation {
-      allowed_custom_roles = ["custom-role1","custom-role2","custom-role3"]
-    }
-  }
-}
-```
 
 ## Argument Reference
 
@@ -369,11 +355,6 @@ The following arguments are supported:
   (Optional)
   Clusterupgrade feature spec.
   Structure is [documented below](#nested_spec_clusterupgrade).
-
-* `rbacrolebindingactuation` -
-  (Optional)
-  RBACRolebinding Actuation feature spec.
-  Structure is [documented below](#nested_spec_rbacrolebindingactuation).
 
 
 <a name="nested_spec_multiclusteringress"></a>The `multiclusteringress` block supports:
@@ -468,12 +449,6 @@ The following arguments are supported:
 * `soaking` -
   (Required)
   Amount of time to "soak" after a rollout has been finished before marking it COMPLETE. Cannot exceed 30 days.
-
-<a name="nested_spec_rbacrolebindingactuation"></a>The `rbacrolebindingactuation` block supports:
-
-* `allowed_custom_roles` -
-  (Optional)
-  The list of allowed custom roles (ClusterRoles). If a custom role is not part of this list, it cannot be used in a fleet scope RBACRoleBinding. If a custom role in this list is in use, it cannot be removed from the list until the scope RBACRolebindings using it are deleted.
 
 <a name="nested_fleet_default_member_config"></a>The `fleet_default_member_config` block supports:
 

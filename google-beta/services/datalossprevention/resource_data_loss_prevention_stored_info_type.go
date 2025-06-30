@@ -685,7 +685,7 @@ func flattenDataLossPreventionStoredInfoTypeName(v interface{}, d *schema.Resour
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenDataLossPreventionStoredInfoTypeDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

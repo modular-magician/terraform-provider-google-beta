@@ -37,7 +37,6 @@ resource "google_gemini_data_sharing_with_google_setting" "basic" {
     location = "global"
     labels = {"my_key": "my_value"}
     enable_preview_data_sharing = true
-    enable_data_sharing = true
 }
 
 resource "google_gemini_data_sharing_with_google_setting_binding" "example" {
@@ -71,7 +70,8 @@ The following arguments are supported:
 
 * `product` -
   (Optional)
-  Product type of the setting binding. Values include GEMINI_IN_BIGQUERY, GEMINI_CLOUD_ASSIST, etc. See [product reference](https://cloud.google.com/gemini/docs/api/reference/rest/v1/projects.locations.dataSharingWithGoogleSettings.settingBindings) for a complete list.
+  Product type of the setting binding.
+  Possible values are: `GEMINI_CLOUD_ASSIST`.
 
 * `labels` -
   (Optional)

@@ -129,10 +129,6 @@ resource "google_compute_node_template" "template" {
 The following arguments are supported:
 
 
-* `name` -
-  (Required)
-  Name of the resource.
-
 
 - - -
 
@@ -140,6 +136,10 @@ The following arguments are supported:
 * `description` -
   (Optional)
   An optional textual description of the resource.
+
+* `name` -
+  (Optional)
+  Name of the resource.
 
 * `node_affinity_labels` -
   (Optional)

@@ -15,7 +15,7 @@
 //
 // ----------------------------------------------------------------------------
 
-package dataplex_test
+package tpu_test
 
 import (
 	"fmt"
@@ -30,7 +30,7 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-func TestAccDataplexGlossary_dataplexGlossaryBasicExample(t *testing.T) {
+func TestAccTPUNode_tpuNodeBasicExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -40,72 +40,97 @@ func TestAccDataplexGlossary_dataplexGlossaryBasicExample(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckDataplexGlossaryDestroyProducer(t),
+		CheckDestroy:             testAccCheckTPUNodeDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataplexGlossary_dataplexGlossaryBasicExample(context),
+				Config: testAccTPUNode_tpuNodeBasicExample(context),
 			},
 			{
-				ResourceName:            "google_dataplex_glossary.glossary_test_id",
+				ResourceName:            "google_tpu_node.tpu",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"glossary_id", "labels", "location", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "zone"},
 			},
 		},
 	})
 }
 
-func testAccDataplexGlossary_dataplexGlossaryBasicExample(context map[string]interface{}) string {
+func testAccTPUNode_tpuNodeBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_dataplex_glossary" "glossary_test_id" {
-  glossary_id = "tf-test-glossary-basic%{random_suffix}"
-  location = "us-central1"
+data "google_tpu_tensorflow_versions" "available" {
+}
+
+resource "google_tpu_node" "tpu" {
+  name = "tf-test-test-tpu%{random_suffix}"
+  zone = "us-central1-b"
+
+  accelerator_type   = "v3-8"
+  tensorflow_version = data.google_tpu_tensorflow_versions.available.versions[0]
+  cidr_block         = "10.2.0.0/29"
 }
 `, context)
 }
 
-func TestAccDataplexGlossary_dataplexGlossaryFullExample(t *testing.T) {
+func TestAccTPUNode_tpuNodeFullTestExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "vpc-network-1"),
 		"random_suffix": acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckDataplexGlossaryDestroyProducer(t),
+		CheckDestroy:             testAccCheckTPUNodeDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataplexGlossary_dataplexGlossaryFullExample(context),
+				Config: testAccTPUNode_tpuNodeFullTestExample(context),
 			},
 			{
-				ResourceName:            "google_dataplex_glossary.glossary_test_id_full",
+				ResourceName:            "google_tpu_node.tpu",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"glossary_id", "labels", "location", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "zone"},
 			},
 		},
 	})
 }
 
-func testAccDataplexGlossary_dataplexGlossaryFullExample(context map[string]interface{}) string {
+func testAccTPUNode_tpuNodeFullTestExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_dataplex_glossary" "glossary_test_id_full" {
-  glossary_id = "tf-test-glossary-full%{random_suffix}"
-  location     = "us-central1"
+resource "google_tpu_node" "tpu" {
+  name = "tf-test-test-tpu%{random_suffix}"
+  zone = "us-central1-b"
 
-  labels = { "tag": "test-tf" }
-  display_name = "terraform glossary"
-  description = "glossary created by Terraform"
+  accelerator_type = "v3-8"
+
+  tensorflow_version = "2.10.0"
+
+  description = "Terraform Google Provider test TPU"
+  use_service_networking = true
+
+  network = data.google_compute_network.network.id
+
+  labels = {
+    foo = "bar"
+  }
+
+  scheduling_config {
+    preemptible = true
+  }
+}
+
+data "google_compute_network" "network" {
+  name = "%{network_name}"
 }
 `, context)
 }
 
-func testAccCheckDataplexGlossaryDestroyProducer(t *testing.T) func(s *terraform.State) error {
+func testAccCheckTPUNodeDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
-			if rs.Type != "google_dataplex_glossary" {
+			if rs.Type != "google_tpu_node" {
 				continue
 			}
 			if strings.HasPrefix(name, "data.") {
@@ -114,7 +139,7 @@ func testAccCheckDataplexGlossaryDestroyProducer(t *testing.T) func(s *terraform
 
 			config := acctest.GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{DataplexBasePath}}projects/{{project}}/locations/{{location}}/glossaries/{{glossary_id}}")
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{TPUBasePath}}projects/{{project}}/locations/{{zone}}/nodes/{{name}}")
 			if err != nil {
 				return err
 			}
@@ -133,7 +158,7 @@ func testAccCheckDataplexGlossaryDestroyProducer(t *testing.T) func(s *terraform
 				UserAgent: config.UserAgent,
 			})
 			if err == nil {
-				return fmt.Errorf("DataplexGlossary still exists at %s", url)
+				return fmt.Errorf("TPUNode still exists at %s", url)
 			}
 		}
 

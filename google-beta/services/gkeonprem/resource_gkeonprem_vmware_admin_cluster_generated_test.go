@@ -91,10 +91,6 @@ resource "google_gkeonprem_vmware_admin_cluster" "admin-cluster-basic" {
       snat_pool = "test-snat-pool"
     }
   }
-  private_registry_config {
-    address = "test-address"
-    ca_cert = "test-ca-cert"
-  }
 }
 `, context)
 }
@@ -212,10 +208,6 @@ resource "google_gkeonprem_vmware_admin_cluster" "admin-cluster-full" {
   platform_config {
     required_platform_version = "1.31.0"
   }
-  private_registry_config {
-    address = "test-address"
-    ca_cert = "test-ca-cert"
-  }
 }
 `, context)
 }
@@ -283,10 +275,6 @@ resource "google_gkeonprem_vmware_admin_cluster" "admin-cluster-metallb" {
     metal_lb_config {
       enabled = true
     }
-  }
-  private_registry_config {
-    address = "test-address"
-    ca_cert = "test-ca-cert"
   }
 }
 `, context)

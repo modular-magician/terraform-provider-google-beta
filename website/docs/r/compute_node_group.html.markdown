@@ -154,10 +154,6 @@ resource "google_compute_node_group" "nodes" {
 The following arguments are supported:
 
 
-* `name` -
-  (Required)
-  Name of the resource.
-
 * `node_template` -
   (Required)
   The URL of the node template to which this node group belongs.
@@ -169,6 +165,10 @@ The following arguments are supported:
 * `description` -
   (Optional)
   An optional textual description of the resource.
+
+* `name` -
+  (Optional)
+  Name of the resource.
 
 * `initial_size` -
   (Optional)

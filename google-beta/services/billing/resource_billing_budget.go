@@ -775,7 +775,7 @@ func flattenBillingBudgetName(v interface{}, d *schema.ResourceData, config *tra
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenBillingBudgetDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

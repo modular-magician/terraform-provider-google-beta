@@ -35,7 +35,6 @@ func TestAccDataLossPreventionDiscoveryConfig_dlpDiscoveryConfigOrgFolderPausedE
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"location":      envvar.GetTestRegionFromEnv(),
 		"organization":  envvar.GetTestOrgFromEnv(t),
 		"project":       envvar.GetTestProjectFromEnv(),
 		"random_suffix": acctest.RandString(t, 10),
@@ -62,8 +61,8 @@ func TestAccDataLossPreventionDiscoveryConfig_dlpDiscoveryConfigOrgFolderPausedE
 func testAccDataLossPreventionDiscoveryConfig_dlpDiscoveryConfigOrgFolderPausedExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_data_loss_prevention_discovery_config" "org_folder_paused" {
-	parent = "organizations/%{organization}/locations/%{location}"
-    location = "%{location}"
+	parent = "organizations/%{organization}/locations/us"
+    location = "us"
 
     targets {
         big_query_target {

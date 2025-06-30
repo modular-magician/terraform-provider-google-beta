@@ -390,7 +390,7 @@ func TestAccComputeResourcePolicy_resourcePolicyWorkloadPolicyExample(t *testing
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
 		CheckDestroy:             testAccCheckComputeResourcePolicyDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -411,6 +411,7 @@ func testAccComputeResourcePolicy_resourcePolicyWorkloadPolicyExample(context ma
 resource "google_compute_resource_policy" "bar" {
   name   = "tf-test-gce-policy%{random_suffix}"
   region = "europe-west1"
+  provider = google-beta
   workload_policy {
     type = "HIGH_AVAILABILITY"
   }
@@ -427,7 +428,7 @@ func TestAccComputeResourcePolicy_resourcePolicyWorkloadPolicyAcceleratorTopolog
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
 		CheckDestroy:             testAccCheckComputeResourcePolicyDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -448,6 +449,7 @@ func testAccComputeResourcePolicy_resourcePolicyWorkloadPolicyAcceleratorTopolog
 resource "google_compute_resource_policy" "bar" {
   name   = "tf-test-gce-policy%{random_suffix}"
   region = "europe-west1"
+  provider = google-beta
   workload_policy {
     type = "HIGH_THROUGHPUT"
     accelerator_topology = "SOME NEW TOPOLOGY"
@@ -465,7 +467,7 @@ func TestAccComputeResourcePolicy_resourcePolicyWorkloadPolicyMaxTopologyDistanc
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
 		CheckDestroy:             testAccCheckComputeResourcePolicyDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -486,6 +488,7 @@ func testAccComputeResourcePolicy_resourcePolicyWorkloadPolicyMaxTopologyDistanc
 resource "google_compute_resource_policy" "bar" {
   name   = "tf-test-gce-policy%{random_suffix}"
   region = "europe-west1"
+  provider = google-beta
   workload_policy {
     type = "HIGH_THROUGHPUT"
     max_topology_distance = "BLOCK"
@@ -503,7 +506,7 @@ func TestAccComputeResourcePolicy_resourcePolicyPlacementPolicyGpuTopologyExampl
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
 		CheckDestroy:             testAccCheckComputeResourcePolicyDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -522,6 +525,7 @@ func TestAccComputeResourcePolicy_resourcePolicyPlacementPolicyGpuTopologyExampl
 func testAccComputeResourcePolicy_resourcePolicyPlacementPolicyGpuTopologyExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_resource_policy" "baz" {
+  provider = google-beta
   name   = "tf-test-gce-policy%{random_suffix}"
   region = "europe-west9"
   group_placement_policy {

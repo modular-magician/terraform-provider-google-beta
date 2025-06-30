@@ -264,10 +264,7 @@ func resourceDialogflowCXWebhookCreate(d *schema.ResourceData, meta interface{})
 		)
 	}
 
-	// only insert location into url if the base_url in products/dialogflowcx/product.yaml is used
-	if strings.HasPrefix(url, "https://-dialogflow.googleapis.com/v3/") {
-		url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
-	}
+	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -333,10 +330,7 @@ func resourceDialogflowCXWebhookRead(d *schema.ResourceData, meta interface{}) e
 		)
 	}
 
-	// only insert location into url if the base_url in products/dialogflowcx/product.yaml is used
-	if strings.HasPrefix(url, "https://-dialogflow.googleapis.com/v3/") {
-		url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
-	}
+	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "GET",
@@ -501,10 +495,7 @@ func resourceDialogflowCXWebhookUpdate(d *schema.ResourceData, meta interface{})
 		)
 	}
 
-	// only insert location into url if the base_url in products/dialogflowcx/product.yaml is used
-	if strings.HasPrefix(url, "https://-dialogflow.googleapis.com/v3/") {
-		url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
-	}
+	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
 
 	// err == nil indicates that the billing_project value was found
 	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
@@ -570,10 +561,7 @@ func resourceDialogflowCXWebhookDelete(d *schema.ResourceData, meta interface{})
 		)
 	}
 
-	// only insert location into url if the base_url in products/dialogflowcx/product.yaml is used
-	if strings.HasPrefix(url, "https://-dialogflow.googleapis.com/v3/") {
-		url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
-	}
+	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
 
 	log.Printf("[DEBUG] Deleting Webhook %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
@@ -619,7 +607,7 @@ func flattenDialogflowCXWebhookName(v interface{}, d *schema.ResourceData, confi
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenDialogflowCXWebhookDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

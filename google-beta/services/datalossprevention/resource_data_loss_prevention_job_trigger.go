@@ -1772,7 +1772,7 @@ func flattenDataLossPreventionJobTriggerName(v interface{}, d *schema.ResourceDa
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenDataLossPreventionJobTriggerCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

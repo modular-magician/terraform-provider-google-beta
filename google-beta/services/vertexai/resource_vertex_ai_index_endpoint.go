@@ -541,7 +541,7 @@ func flattenVertexAIIndexEndpointName(v interface{}, d *schema.ResourceData, con
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenVertexAIIndexEndpointDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

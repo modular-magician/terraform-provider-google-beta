@@ -184,6 +184,7 @@ resource "google_developer_connect_git_repository_link" "my-repository" {
 resource "google_project_service_identity" "devconnect-p4sa" {
   provider = google-beta
 
+  provider = google-beta
   project  = "my-project-name"
   service  = "developerconnect.googleapis.com"
 }

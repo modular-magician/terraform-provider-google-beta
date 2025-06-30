@@ -563,7 +563,7 @@ func flattenComputeInstantSnapshotZone(v interface{}, d *schema.ResourceData, co
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func expandComputeInstantSnapshotName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

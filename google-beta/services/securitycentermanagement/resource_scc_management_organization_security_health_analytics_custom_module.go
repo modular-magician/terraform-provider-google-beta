@@ -545,7 +545,7 @@ func flattenSecurityCenterManagementOrganizationSecurityHealthAnalyticsCustomMod
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenSecurityCenterManagementOrganizationSecurityHealthAnalyticsCustomModuleDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

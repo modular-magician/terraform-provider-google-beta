@@ -37,40 +37,6 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-func setEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) error {
-	name := d.Get("name").(string)
-	if name == "" {
-		return nil
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{SecretManagerRegionalBasePath}}{{name}}")
-	if err != nil {
-		return err
-	}
-	if v == true {
-		url = fmt.Sprintf("%s:enable", url)
-	} else {
-		url = fmt.Sprintf("%s:disable", url)
-	}
-
-	parts := strings.Split(name, "/")
-	project := parts[1]
-
-	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
-	if err != nil {
-		return err
-	}
-
-	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   project,
-		RawURL:    url,
-		UserAgent: userAgent,
-	})
-	return err
-}
-
 func ResourceSecretManagerRegionalRegionalSecretVersion() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceSecretManagerRegionalRegionalSecretVersionCreate,
@@ -262,7 +228,7 @@ func resourceSecretManagerRegionalRegionalSecretVersionCreate(d *schema.Resource
 	}
 	d.SetId(name.(string))
 
-	err = setEnabled(d.Get("enabled"), d, config)
+	_, err = expandSecretManagerRegionalRegionalSecretVersionEnabled(d.Get("enabled"), d, config)
 	if err != nil {
 		return err
 	}
@@ -386,7 +352,7 @@ func resourceSecretManagerRegionalRegionalSecretVersionRead(d *schema.ResourceDa
 
 func resourceSecretManagerRegionalRegionalSecretVersionUpdate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
-	err := setEnabled(d.Get("enabled"), d, config)
+	_, err := expandSecretManagerRegionalRegionalSecretVersionEnabled(d.Get("enabled"), d, config)
 	if err != nil {
 		return err
 	}
@@ -578,7 +544,42 @@ func flattenSecretManagerRegionalRegionalSecretVersionPayload(v interface{}, d *
 	return []interface{}{transformed}
 }
 
-func expandSecretManagerRegionalRegionalSecretVersionEnabled(_ interface{}, _ tpgresource.TerraformResourceData, _ *transport_tpg.Config) (interface{}, error) {
+func expandSecretManagerRegionalRegionalSecretVersionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	name := d.Get("name").(string)
+	if name == "" {
+		return "", nil
+	}
+
+	url, err := tpgresource.ReplaceVars(d, config, "{{SecretManagerRegionalBasePath}}{{name}}")
+	if err != nil {
+		return nil, err
+	}
+
+	if v == true {
+		url = fmt.Sprintf("%s:enable", url)
+	} else {
+		url = fmt.Sprintf("%s:disable", url)
+	}
+
+	parts := strings.Split(name, "/")
+	project := parts[1]
+
+	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "POST",
+		Project:   project,
+		RawURL:    url,
+		UserAgent: userAgent,
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	return nil, nil
 }
 

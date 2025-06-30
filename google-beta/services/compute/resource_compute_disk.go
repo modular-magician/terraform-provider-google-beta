@@ -78,20 +78,6 @@ func IsDiskShrinkage(_ context.Context, old, new, _ interface{}) bool {
 	return new.(int) < old.(int)
 }
 
-func matchImageLink(old string) (string, string, bool) {
-	// 'old' is read from the API.
-	// In GCP It has the format 'https://www.googleapis.com/compute/v1/projects/(%s)/global/images/(%s)'
-	matches := resolveImageLink.FindStringSubmatch(old)
-	if matches == nil {
-		// In alternate universes, it has the format https://compute.%s/compute/[a-z0-9]+/projects/(%s)/global/images/(%s)
-		matches = resolveImageUniverseLink.FindStringSubmatch(old)
-		if matches == nil {
-			return "", "", false
-		}
-	}
-	return matches[1], matches[2], true
-}
-
 // We cannot suppress the diff for the case when family name is not part of the image name since we can't
 // make a network call in a DiffSuppressFunc.
 func DiskImageDiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
@@ -102,10 +88,15 @@ func DiskImageDiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
 	// In order to keep this maintainable, we need to ensure that the positive and negative examples
 	// in resource_compute_disk_test.go are as complete as possible.
 
-	oldProject, oldName, matched := matchImageLink(old)
-	if matched == false {
+	// 'old' is read from the API.
+	// It always has the format 'https://www.googleapis.com/compute/v1/projects/(%s)/global/images/(%s)'
+	matches := resolveImageLink.FindStringSubmatch(old)
+	if matches == nil {
+		// Image read from the API doesn't have the expected format. In practice, it should never happen
 		return false
 	}
+	oldProject := matches[1]
+	oldName := matches[2]
 
 	// Partial or full self link family
 	if resolveImageProjectFamily.MatchString(new) {
@@ -400,7 +391,7 @@ For example:
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: `The architecture of the disk. Values include 'X86_64', 'ARM64'.`,
+				Description: ``,
 			},
 			"async_primary_disk": {
 				Type:             schema.TypeList,
@@ -2081,7 +2072,7 @@ func flattenComputeDiskType(v interface{}, d *schema.ResourceData, config *trans
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenComputeDiskImage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2187,7 +2178,7 @@ func flattenComputeDiskStoragePool(v interface{}, d *schema.ResourceData, config
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenComputeDiskAccessMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -2217,7 +2208,7 @@ func flattenComputeDiskZone(v interface{}, d *schema.ResourceData, config *trans
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenComputeDiskSnapshot(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

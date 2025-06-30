@@ -339,7 +339,7 @@ func flattenNestedBigqueryReservationReservationAssignmentName(v interface{}, d 
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenNestedBigqueryReservationReservationAssignmentAssignee(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

@@ -130,7 +130,7 @@ data "google_project" "project" {}
 
 ```hcl
 resource "google_edgecontainer_cluster" "default" {
-  name = "default"
+  name = ""
   location = "us-central1"
 
   authorization {

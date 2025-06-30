@@ -1232,7 +1232,7 @@ resource "google_datastream_stream" "default" {
 resource "google_datastream_stream" "default" {
     display_name = "Salesforce to BigQuery"
     location     = "us-central1"
-    stream_id    = "sf-stream"
+    stream_id    = ""
 
     source_config {
         source_connection_profile = "source-profile"

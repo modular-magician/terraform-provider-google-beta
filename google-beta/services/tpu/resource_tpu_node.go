@@ -109,8 +109,6 @@ func ResourceTPUNode() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
-		DeprecationMessage: "`google_tpu_node` is deprecated and will be removed in a future major release. Use `google_tpu_v2_vm` instead. For moving from TPU Node to TPU VM architecture, see https://cloud.google.com/tpu/docs/system-architecture-tpu-vm#from-tpu-node-to-tpu-vm.",
-
 		Schema: map[string]*schema.Schema{
 			"accelerator_type": {
 				Type:        schema.TypeString,
@@ -366,15 +364,29 @@ func resourceTPUNodeCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.SetId(id)
 
-	err = TPUOperationWaitTime(
-		config, res, project, "Creating Node", userAgent,
+	// Use the resource in the operation response to populate
+	// identity fields and d.Id() before read
+	var opRes map[string]interface{}
+	err = TPUOperationWaitTimeWithResponse(
+		config, res, &opRes, project, "Creating Node", userAgent,
 		d.Timeout(schema.TimeoutCreate))
-
 	if err != nil {
 		// The resource didn't actually create
 		d.SetId("")
+
 		return fmt.Errorf("Error waiting to create Node: %s", err)
 	}
+
+	if err := d.Set("name", flattenTPUNodeName(opRes["name"], d, config)); err != nil {
+		return err
+	}
+
+	// This may have caused the ID to update - update it if so.
+	id, err = tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{zone}}/nodes/{{name}}")
+	if err != nil {
+		return fmt.Errorf("Error constructing id: %s", err)
+	}
+	d.SetId(id)
 
 	log.Printf("[DEBUG] Finished creating Node %q: %#v", d.Id(), res)
 
@@ -615,7 +627,7 @@ func flattenTPUNodeName(v interface{}, d *schema.ResourceData, config *transport
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenTPUNodeDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {

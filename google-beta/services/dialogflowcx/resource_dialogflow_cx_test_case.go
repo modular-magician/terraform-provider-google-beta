@@ -643,10 +643,7 @@ func resourceDialogflowCXTestCaseCreate(d *schema.ResourceData, meta interface{}
 		)
 	}
 
-	// only insert location into url if the base_url in products/dialogflowcx/product.yaml is used
-	if strings.HasPrefix(url, "https://-dialogflow.googleapis.com/v3/") {
-		url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
-	}
+	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -712,10 +709,7 @@ func resourceDialogflowCXTestCaseRead(d *schema.ResourceData, meta interface{}) 
 		)
 	}
 
-	// only insert location into url if the base_url in products/dialogflowcx/product.yaml is used
-	if strings.HasPrefix(url, "https://-dialogflow.googleapis.com/v3/") {
-		url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
-	}
+	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "GET",
@@ -844,10 +838,7 @@ func resourceDialogflowCXTestCaseUpdate(d *schema.ResourceData, meta interface{}
 		)
 	}
 
-	// only insert location into url if the base_url in products/dialogflowcx/product.yaml is used
-	if strings.HasPrefix(url, "https://-dialogflow.googleapis.com/v3/") {
-		url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
-	}
+	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
 
 	// err == nil indicates that the billing_project value was found
 	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
@@ -913,10 +904,7 @@ func resourceDialogflowCXTestCaseDelete(d *schema.ResourceData, meta interface{}
 		)
 	}
 
-	// only insert location into url if the base_url in products/dialogflowcx/product.yaml is used
-	if strings.HasPrefix(url, "https://-dialogflow.googleapis.com/v3/") {
-		url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
-	}
+	url = strings.Replace(url, "-dialogflow", fmt.Sprintf("%s-dialogflow", location), 1)
 
 	log.Printf("[DEBUG] Deleting TestCase %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
@@ -959,7 +947,7 @@ func flattenDialogflowCXTestCaseName(v interface{}, d *schema.ResourceData, conf
 	if v == nil {
 		return v
 	}
-	return tpgresource.GetResourceNameFromSelfLink(v.(string))
+	return tpgresource.NameFromSelfLinkStateFunc(v)
 }
 
 func flattenDialogflowCXTestCaseTags(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
