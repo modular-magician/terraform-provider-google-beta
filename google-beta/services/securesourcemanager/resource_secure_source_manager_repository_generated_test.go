@@ -34,8 +34,9 @@ func TestAccSecureSourceManagerRepository_secureSourceManagerRepositoryBasicExam
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"prevent_destroy": false,
-		"random_suffix":   acctest.RandString(t, 10),
+		"deletion_protection": false,
+		"prevent_destroy":     false,
+		"random_suffix":       acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -73,10 +74,7 @@ resource "google_secure_source_manager_repository" "default" {
     repository_id = "tf-test-my-repository%{random_suffix}"
     instance = google_secure_source_manager_instance.instance.name
 
-    # Prevent accidental deletions.
-    lifecycle {
-      prevent_destroy = "%{prevent_destroy}"
-    }
+    deletion_protection = "%{deletion_protection}"
 }
 `, context)
 }
@@ -85,8 +83,9 @@ func TestAccSecureSourceManagerRepository_secureSourceManagerRepositoryInitialCo
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"prevent_destroy": false,
-		"random_suffix":   acctest.RandString(t, 10),
+		"deletion_protection": false,
+		"prevent_destroy":     false,
+		"random_suffix":       acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -132,10 +131,7 @@ resource "google_secure_source_manager_repository" "default" {
       readme = "default"
     }
 
-    # Prevent accidental deletions.
-    lifecycle {
-      prevent_destroy = "%{prevent_destroy}"
-    }
+    deletion_protection = "%{deletion_protection}"
 }
 `, context)
 }

@@ -54,10 +54,7 @@ resource "google_secure_source_manager_repository" "default" {
     repository_id = "my-repository"
     instance = google_secure_source_manager_instance.instance.name
 
-    # Prevent accidental deletions.
-    lifecycle {
-      prevent_destroy = "true"
-    }
+    deletion_protection = "true"
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
@@ -92,10 +89,7 @@ resource "google_secure_source_manager_repository" "default" {
       readme = "default"
     }
 
-    # Prevent accidental deletions.
-    lifecycle {
-      prevent_destroy = "true"
-    }
+    deletion_protection = "true"
 }
 ```
 
@@ -128,6 +122,11 @@ The following arguments are supported:
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
+
+* `deletion_protection` - (Optional) Whether Terraform will be prevented from destroying the Repository.
+When the field is set to true or unset in Terraform state, a `terraform apply`
+or `terraform destroy` that would delete the Repository will fail.
+When the field is set to false, deleting the Repository is allowed.
 
 
 
