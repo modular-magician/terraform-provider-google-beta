@@ -52,7 +52,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseExample(t *testing.T) {
 				ResourceName:            "google_firestore_database.database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project"},
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
 			},
 		},
 	})
@@ -70,6 +70,61 @@ resource "google_firestore_database" "database" {
   point_in_time_recovery_enablement = "POINT_IN_TIME_RECOVERY_ENABLED"
   delete_protection_state           = "%{delete_protection_state}"
   deletion_policy                   = "DELETE"
+}
+`, context)
+}
+
+func TestAccFirestoreDatabase_firestoreDatabaseWithTagsExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"project_id":              envvar.GetTestProjectFromEnv(),
+		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
+		"key_short_name":          "tf-test-key-" + acctest.RandString(t, 10),
+		"value_short_name":        "tf-test-value-" + acctest.RandString(t, 10),
+		"random_suffix":           acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckFirestoreDatabaseDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFirestoreDatabase_firestoreDatabaseWithTagsExample(context),
+			},
+			{
+				ResourceName:            "google_firestore_database.database",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
+			},
+		},
+	})
+}
+
+func testAccFirestoreDatabase_firestoreDatabaseWithTagsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_tags_tag_key" "key" {
+  parent      = "projects/%{project_id}"
+  short_name  = "%{key_short_name}"
+  description = "For %{key_short_name} resources."
+}
+
+resource "google_tags_tag_value" "value" {
+  parent      = google_tags_tag_key.key.id
+  short_name  = "%{value_short_name}"
+  description = "For %{value_short_name} resources."
+}
+
+resource "google_firestore_database" "database" {
+  project                           = "%{project_id}"
+  name                              = "tf-test-database-id%{random_suffix}"
+  location_id                       = "nam5"
+  type                              = "FIRESTORE_NATIVE"
+  delete_protection_state           = "%{delete_protection_state}"
+  deletion_policy                   = "DELETE"
+  tags                              = google_tags_tag_key.key.id: google_tags_tag_value.value.id
 }
 `, context)
 }
@@ -95,7 +150,7 @@ func TestAccFirestoreDatabase_firestoreCmekDatabaseExample(t *testing.T) {
 				ResourceName:            "google_firestore_database.database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project"},
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
 			},
 		},
 	})
@@ -168,7 +223,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseInDatastoreModeExample(t *testing
 				ResourceName:            "google_firestore_database.datastore_mode_database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project"},
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
 			},
 		},
 	})
@@ -211,7 +266,7 @@ func TestAccFirestoreDatabase_firestoreCmekDatabaseInDatastoreModeExample(t *tes
 				ResourceName:            "google_firestore_database.database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project"},
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
 			},
 		},
 	})
@@ -283,7 +338,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseEnterpriseExample(t *testing.T) {
 				ResourceName:            "google_firestore_database.enterprise-db",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project"},
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
 			},
 		},
 	})
