@@ -823,6 +823,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
+			"saas_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
 			"secret_manager_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -1305,6 +1310,7 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.ResourceManagerBasePath = d.Get("resource_manager_custom_endpoint").(string)
 	config.ResourceManager3BasePath = d.Get("resource_manager3_custom_endpoint").(string)
 	config.RuntimeConfigBasePath = d.Get("runtime_config_custom_endpoint").(string)
+	config.SaasBasePath = d.Get("saas_custom_endpoint").(string)
 	config.SecretManagerBasePath = d.Get("secret_manager_custom_endpoint").(string)
 	config.SecretManagerRegionalBasePath = d.Get("secret_manager_regional_custom_endpoint").(string)
 	config.SecureSourceManagerBasePath = d.Get("secure_source_manager_custom_endpoint").(string)

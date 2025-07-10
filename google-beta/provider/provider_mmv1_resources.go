@@ -145,6 +145,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager3"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/runtimeconfig"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/saas"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/secretmanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/secretmanagerregional"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/securesourcemanager"
@@ -593,9 +594,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 683
+// Generated resources: 685
 // Generated IAM resources: 339
-// Total generated resources: 1022
+// Total generated resources: 1024
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1452,6 +1453,8 @@ var generatedResources = map[string]*schema.Resource{
 	"google_runtimeconfig_config_iam_binding":                                    tpgiamresource.ResourceIamBinding(runtimeconfig.RuntimeConfigConfigIamSchema, runtimeconfig.RuntimeConfigConfigIamUpdaterProducer, runtimeconfig.RuntimeConfigConfigIdParseFunc),
 	"google_runtimeconfig_config_iam_member":                                     tpgiamresource.ResourceIamMember(runtimeconfig.RuntimeConfigConfigIamSchema, runtimeconfig.RuntimeConfigConfigIamUpdaterProducer, runtimeconfig.RuntimeConfigConfigIdParseFunc),
 	"google_runtimeconfig_config_iam_policy":                                     tpgiamresource.ResourceIamPolicy(runtimeconfig.RuntimeConfigConfigIamSchema, runtimeconfig.RuntimeConfigConfigIamUpdaterProducer, runtimeconfig.RuntimeConfigConfigIdParseFunc),
+	"google_saas_saas":                                                           saas.ResourceSaasSaas(),
+	"google_saas_unit_kind":                                                      saas.ResourceSaasUnitKind(),
 	"google_secret_manager_secret":                                               secretmanager.ResourceSecretManagerSecret(),
 	"google_secret_manager_secret_iam_binding":                                   tpgiamresource.ResourceIamBinding(secretmanager.SecretManagerSecretIamSchema, secretmanager.SecretManagerSecretIamUpdaterProducer, secretmanager.SecretManagerSecretIdParseFunc),
 	"google_secret_manager_secret_iam_member":                                    tpgiamresource.ResourceIamMember(secretmanager.SecretManagerSecretIamSchema, secretmanager.SecretManagerSecretIamUpdaterProducer, secretmanager.SecretManagerSecretIdParseFunc),
@@ -1920,6 +1923,7 @@ func UseGeneratedProducts() {
 	var _ = resourcemanager.ProductName
 	var _ = resourcemanager3.ProductName
 	var _ = runtimeconfig.ProductName
+	var _ = saas.ProductName
 	var _ = secretmanager.ProductName
 	var _ = secretmanagerregional.ProductName
 	var _ = securesourcemanager.ProductName
