@@ -52,7 +52,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseExample(t *testing.T) {
 				ResourceName:            "google_firestore_database.database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project"},
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
 			},
 		},
 	})
@@ -70,6 +70,51 @@ resource "google_firestore_database" "database" {
   point_in_time_recovery_enablement = "POINT_IN_TIME_RECOVERY_ENABLED"
   delete_protection_state           = "%{delete_protection_state}"
   deletion_policy                   = "DELETE"
+}
+`, context)
+}
+
+func TestAccFirestoreDatabase_firestoreDatabaseWithTagsExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"project_id":              envvar.GetTestProjectFromEnv(),
+		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
+		"tag_key_id":              acctest.BootstrapSharedTestProjectTagKey(t, "firestore-databases-tagkey", map[string]interface{}{}),
+		"tag_value_id":            acctest.BootstrapSharedTestProjectTagValue(t, "firestore-databases-tagvalue", acctest.BootstrapSharedTestProjectTagKey(t, "firestore-databases-tagkey", map[string]interface{}{})),
+		"random_suffix":           acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckFirestoreDatabaseDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccFirestoreDatabase_firestoreDatabaseWithTagsExample(context),
+			},
+			{
+				ResourceName:            "google_firestore_database.database",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
+			},
+		},
+	})
+}
+
+func testAccFirestoreDatabase_firestoreDatabaseWithTagsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_firestore_database" "database" {
+  project                           = "%{project_id}"
+  name                              = "tf-test-database-with-tags-id%{random_suffix}"
+  location_id                       = "nam5"
+  type                              = "FIRESTORE_NATIVE"
+  delete_protection_state           = "%{delete_protection_state}"
+  deletion_policy                   = "DELETE"
+  tags = {
+    "%{project_id}/%{tag_key_id}": "%{tag_value_id}"
+  }
 }
 `, context)
 }
@@ -95,7 +140,7 @@ func TestAccFirestoreDatabase_firestoreCmekDatabaseExample(t *testing.T) {
 				ResourceName:            "google_firestore_database.database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project"},
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
 			},
 		},
 	})
@@ -168,7 +213,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseInDatastoreModeExample(t *testing
 				ResourceName:            "google_firestore_database.datastore_mode_database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project"},
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
 			},
 		},
 	})
@@ -211,7 +256,7 @@ func TestAccFirestoreDatabase_firestoreCmekDatabaseInDatastoreModeExample(t *tes
 				ResourceName:            "google_firestore_database.database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project"},
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
 			},
 		},
 	})
@@ -283,7 +328,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseEnterpriseExample(t *testing.T) {
 				ResourceName:            "google_firestore_database.enterprise-db",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project"},
+				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
 			},
 		},
 	})
