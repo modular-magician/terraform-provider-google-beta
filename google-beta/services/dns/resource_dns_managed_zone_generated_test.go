@@ -663,7 +663,7 @@ func testAccDNSManagedZone_dnsManagedZoneCloudLoggingExample(context map[string]
 	return acctest.Nprintf(`
 resource "google_dns_managed_zone" "cloud-logging-enabled-zone" {
   name        = "tf-test-cloud-logging-enabled-zone%{random_suffix}"
-  dns_name    = "services.example.com."
+  dns_name    = "tf-test-fmt.Sprintf("services.example.com-%s.", contex%{random_suffix}"
   description = "Example cloud logging enabled DNS zone"
   labels = {
     foo = "bar"

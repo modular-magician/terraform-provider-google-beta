@@ -304,7 +304,7 @@ resource "google_compute_network" "network" {
 ```hcl
 resource "google_dns_managed_zone" "cloud-logging-enabled-zone" {
   name        = "cloud-logging-enabled-zone"
-  dns_name    = "services.example.com."
+  dns_name    = "fmt.Sprintf("services.example.com-%s.", context["random_suffix"])"
   description = "Example cloud logging enabled DNS zone"
   labels = {
     foo = "bar"
