@@ -37,6 +37,26 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
+/*
+ * FirestoreDocument: Fixes `fields` attribute always showing a diff when empty.
+ * Empty JSON representations are now canonicalized for accurate comparison,
+ * preventing spurious diffs and unnecessary updates.
+ */
+
+func FirestoreDFieldsDiffSuppressFunc(k, old, new string, d tpgresource.TerraformResourceDataChange) bool {
+	if old == "" && new == "{}" {
+		return true
+	}
+	return false
+
+}
+
+// firestoreDFieldsDiffSuppress is a wrapper for compatibility if needed,
+// otherwise FirestoreDFieldsDiffSuppressFunc should be directly used in the schema.
+func firestoreDFieldsDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
+	return FirestoreDFieldsDiffSuppressFunc(k, old, new, d)
+}
+
 func ResourceFirestoreDocument() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceFirestoreDocumentCreate,
@@ -72,11 +92,12 @@ func ResourceFirestoreDocument() *schema.Resource {
 				Description: `The client-assigned document ID to use for this document during creation.`,
 			},
 			"fields": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validation.StringIsJSON,
-				StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
-				Description:  `The document's [fields](https://cloud.google.com/firestore/docs/reference/rest/v1/projects.databases.documents) formated as a json string.`,
+				Type:             schema.TypeString,
+				Required:         true,
+				ValidateFunc:     validation.StringIsJSON,
+				DiffSuppressFunc: firestoreDFieldsDiffSuppress,
+				StateFunc:        func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+				Description:      `The document's [fields](https://cloud.google.com/firestore/docs/reference/rest/v1/projects.databases.documents) formated as a json string.`,
 			},
 			"database": {
 				Type:        schema.TypeString,
