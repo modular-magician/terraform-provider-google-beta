@@ -75,9 +75,12 @@ and hyphens (-). Cannot begin or end with underscore or hyphen. Must consist of 
 				Default:      "MYSQL",
 			},
 			"deletion_protection": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: `Indicates if the dataproc metastore should be protected against accidental deletions.`,
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `Indicates if the dataproc metastore should be protected against accidental deletions.Defaults to false.
+When the field is set to true in Terraform state, a 'terraform apply'
+or 'terraform destroy' that would delete the service will fail.`,
+				Default: false,
 			},
 			"encryption_config": {
 				Type:     schema.TypeList,
@@ -993,6 +996,9 @@ func resourceDataprocMetastoreServiceDelete(d *schema.ResourceData, meta interfa
 	}
 
 	headers := make(http.Header)
+	if d.Get("deletionProtection").(bool) {
+		return fmt.Errorf("cannot destroy metastore service without setting deletion_protection=false and running `terraform apply`")
+	}
 
 	log.Printf("[DEBUG] Deleting Service %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
