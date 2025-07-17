@@ -142,6 +142,10 @@ func TestAccDataSourceGoogleMonitoringNotificationChannel_ErrorNotUnique(t *test
 
 func testAccDataSourceGoogleMonitoringNotificationChannel_byDisplayName(displayName string) string {
 	return fmt.Sprintf(`
+provider "google" {
+  add_terraform_attribution_label = false
+}
+
 resource "google_monitoring_notification_channel" "default" {
   display_name = "%s"
   type         = "webhook_tokenauth"
@@ -160,6 +164,10 @@ data "google_monitoring_notification_channel" "default" {
 // Include label so we don't fail on dangling resources
 func testAccDataSourceGoogleMonitoringNotificationChannel_byTypeAndLabel(displayName string) string {
 	return fmt.Sprintf(`
+provider "google" {
+  add_terraform_attribution_label = false
+}
+
 resource "google_monitoring_notification_channel" "default" {
   display_name = "%s"
   type         = "email"
@@ -178,6 +186,10 @@ data "google_monitoring_notification_channel" "default" {
 
 func testAccDataSourceGoogleMonitoringNotificationChannel_byTypeAndUserLabel(testName string) string {
 	return fmt.Sprintf(`
+provider "google" {
+  add_terraform_attribution_label = false
+}
+
 resource "google_monitoring_notification_channel" "default" {
   display_name = "%s"
   type         = "email"
@@ -200,6 +212,10 @@ data "google_monitoring_notification_channel" "default" {
 
 func testAccDataSourceGoogleMonitoringNotificationChannel_byDisplayNameAndType(displayName string) string {
 	return fmt.Sprintf(`
+provider "google" {
+  add_terraform_attribution_label = false
+}
+
 resource "google_monitoring_notification_channel" "webhook" {
   display_name = "%s"
   type         = "webhook_tokenauth"
@@ -248,6 +264,10 @@ data "google_monitoring_notification_channel" "default" {
 
 func testAccDataSourceGoogleMonitoringNotificationChannel_NotUnique(displayName string) string {
 	return fmt.Sprintf(`
+provider "google" {
+  add_terraform_attribution_label = false
+}
+
 resource "google_monitoring_notification_channel" "channel-1" {
   display_name = "%[1]s"
   type         = "webhook_tokenauth"

@@ -49,7 +49,7 @@ func TestAccMonitoringNotificationChannel_notificationChannelBasicExample(t *tes
 				ResourceName:            "google_monitoring_notification_channel.basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"sensitive_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "sensitive_labels", "terraform_labels"},
 			},
 		},
 	})
@@ -57,6 +57,10 @@ func TestAccMonitoringNotificationChannel_notificationChannelBasicExample(t *tes
 
 func testAccMonitoringNotificationChannel_notificationChannelBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
+provider "google" {
+  add_terraform_attribution_label = false
+}
+
 resource "google_monitoring_notification_channel" "basic" {
   display_name = "Test Notification Channel%{random_suffix}"
   type         = "email"

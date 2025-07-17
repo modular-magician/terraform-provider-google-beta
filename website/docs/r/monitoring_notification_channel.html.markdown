@@ -60,6 +60,10 @@ values will be stored in the raw state as plain text: `sensitive_labels.auth_tok
 
 
 ```hcl
+provider "google" {
+  add_terraform_attribution_label = false
+}
+
 resource "google_monitoring_notification_channel" "basic" {
   display_name = "Test Notification Channel"
   type         = "email"
@@ -73,6 +77,10 @@ resource "google_monitoring_notification_channel" "basic" {
 
 
 ```hcl
+provider "google" {
+  add_terraform_attribution_label = false
+}
+
 resource "google_monitoring_notification_channel" "default" {
   display_name = "Test Slack Channel"
   type         = "slack"
@@ -103,6 +111,9 @@ The following arguments are supported:
   Labels with sensitive data are obfuscated by the API and therefore Terraform cannot
   determine if there are upstream changes to these fields. They can also be configured via
   the sensitive_labels block, but cannot be configured in both places.
+
+  **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
+  Please refer to the field `effective_labels` for all of the labels present on the resource.
 
 * `sensitive_labels` -
   (Optional)
@@ -171,6 +182,13 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `verification_status` -
   Indicates whether this channel has been verified or not. On a ListNotificationChannels or GetNotificationChannel operation, this field is expected to be populated.If the value is UNVERIFIED, then it indicates that the channel is non-functioning (it both requires verification and lacks verification); otherwise, it is assumed that the channel works.If the channel is neither VERIFIED nor UNVERIFIED, it implies that the channel is of a type that does not require verification or that this specific channel has been exempted from verification because it was created prior to verification being required for channels of this type.This field cannot be modified using a standard UpdateNotificationChannel operation. To change the value of this field, you must call VerifyNotificationChannel.
+
+* `terraform_labels` -
+  The combination of labels configured directly on the resource
+   and default labels configured on the provider.
+
+* `effective_labels` -
+  All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.
 
 
 ## Timeouts

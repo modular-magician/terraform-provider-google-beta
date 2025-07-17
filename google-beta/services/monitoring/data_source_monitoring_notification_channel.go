@@ -60,12 +60,12 @@ func dataSourceMonitoringNotificationChannelRead(d *schema.ResourceData, meta in
 		return fmt.Errorf("At least one of display_name or type must be provided")
 	}
 
-	labels, err := expandMonitoringNotificationChannelLabels(d.Get("labels"), d, config)
+	labels, err := expandMonitoringNotificationChannelEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
 	}
 
-	userLabels, err := expandMonitoringNotificationChannelLabels(d.Get("user_labels"), d, config)
+	userLabels, err := expandMonitoringNotificationChannelUserLabels(d.Get("user_labels"), d, config)
 	if err != nil {
 		return err
 	}
@@ -131,5 +131,14 @@ func dataSourceMonitoringNotificationChannelRead(d *schema.ResourceData, meta in
 	}
 	d.SetId(name)
 
-	return resourceMonitoringNotificationChannelRead(d, meta)
+	err = resourceMonitoringNotificationChannelRead(d, meta)
+	if err != nil {
+		return err
+	}
+
+	if err = tpgresource.SetDataSourceLabels(d); err != nil {
+		return err
+	}
+
+	return nil
 }
