@@ -1,0 +1,25 @@
+resource: 'google_bigquery_analytics_hub_query_template'
+generation_type: 'mmv1'
+source_file: 'products/bigqueryanalyticshub/QueryTemplate.yaml'
+api_service_name: 'analyticshub.googleapis.com'
+api_version: 'v1'
+api_resource_type_kind: 'QueryTemplate'
+fields:
+  - field: 'create_time'
+  - field: 'data_exchange_id'
+    provider_only: true
+  - field: 'description'
+  - field: 'display_name'
+  - field: 'documentation'
+  - field: 'location'
+    provider_only: true
+  - field: 'name'
+  - field: 'primary_contact'
+  - field: 'query_template_id'
+    provider_only: true
+  - field: 'routine.definition_body'
+  - field: 'routine.routine_type'
+  - field: 'state'
+  - field: 'submit'
+    provider_only: true
+  - field: 'update_time'

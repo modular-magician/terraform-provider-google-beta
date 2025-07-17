@@ -595,9 +595,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 688
+// Generated resources: 689
 // Generated IAM resources: 339
-// Total generated resources: 1027
+// Total generated resources: 1028
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -728,6 +728,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_bigquery_analytics_hub_listing_iam_member":                           tpgiamresource.ResourceIamMember(bigqueryanalyticshub.BigqueryAnalyticsHubListingIamSchema, bigqueryanalyticshub.BigqueryAnalyticsHubListingIamUpdaterProducer, bigqueryanalyticshub.BigqueryAnalyticsHubListingIdParseFunc),
 	"google_bigquery_analytics_hub_listing_iam_policy":                           tpgiamresource.ResourceIamPolicy(bigqueryanalyticshub.BigqueryAnalyticsHubListingIamSchema, bigqueryanalyticshub.BigqueryAnalyticsHubListingIamUpdaterProducer, bigqueryanalyticshub.BigqueryAnalyticsHubListingIdParseFunc),
 	"google_bigquery_analytics_hub_listing_subscription":                         bigqueryanalyticshub.ResourceBigqueryAnalyticsHubListingSubscription(),
+	"google_bigquery_analytics_hub_query_template":                               bigqueryanalyticshub.ResourceBigqueryAnalyticsHubQueryTemplate(),
 	"google_bigquery_connection":                                                 bigqueryconnection.ResourceBigqueryConnectionConnection(),
 	"google_bigquery_connection_iam_binding":                                     tpgiamresource.ResourceIamBinding(bigqueryconnection.BigqueryConnectionConnectionIamSchema, bigqueryconnection.BigqueryConnectionConnectionIamUpdaterProducer, bigqueryconnection.BigqueryConnectionConnectionIdParseFunc),
 	"google_bigquery_connection_iam_member":                                      tpgiamresource.ResourceIamMember(bigqueryconnection.BigqueryConnectionConnectionIamSchema, bigqueryconnection.BigqueryConnectionConnectionIamUpdaterProducer, bigqueryconnection.BigqueryConnectionConnectionIdParseFunc),
