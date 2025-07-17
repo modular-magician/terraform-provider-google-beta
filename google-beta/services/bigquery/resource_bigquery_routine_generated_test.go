@@ -171,6 +171,58 @@ resource "google_bigquery_routine" "sproc" {
 `, context)
 }
 
+func TestAccBigQueryRoutine_bigqueryRoutineTableTypeExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckBigQueryRoutineDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBigQueryRoutine_bigqueryRoutineTableTypeExample(context),
+			},
+			{
+				ResourceName:      "google_bigquery_routine.sproc",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccBigQueryRoutine_bigqueryRoutineTableTypeExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_bigquery_dataset" "test" {
+  dataset_id = "tf_test_dataset_id%{random_suffix}"
+}
+
+resource "google_bigquery_routine" "sproc" {
+  dataset_id      = google_bigquery_dataset.test.dataset_id
+  routine_id      = "tf_test_routine_id%{random_suffix}"
+  routine_type    = "TABLE_VALUED_FUNCTION"
+  language        = "SQL"
+  description     = "Gets every row from a table."
+  definition_body = "SELECT * FROM t1"
+
+  arguments {
+    name          = "t1"
+    argument_kind = "FIXED_TABLE"
+    table_type {
+      columns {
+        name = "year"
+        type = jsonencode({ "typeKind" : "INT64" })
+      }
+    }
+  }
+}
+`, context)
+}
+
 func TestAccBigQueryRoutine_bigqueryRoutinePysparkExample(t *testing.T) {
 	t.Parallel()
 
