@@ -596,6 +596,11 @@ this field is set to false, the revision name will still autogenerate.)
   succeeds. Container will not be added to service endpoints if the probe fails.
   Structure is [documented below](#nested_spec_template_spec_containers_containers_startup_probe).
 
+* `readiness_probe` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Readiness probe to be used for health checks. Currently, only HTTP and GRPC probes are supported.
+  Structure is [documented below](#nested_spec_template_spec_containers_containers_readiness_probe).
+
 * `liveness_probe` -
   (Optional)
   Periodic probe of container liveness. Container will be restarted if the probe fails.
@@ -811,6 +816,75 @@ this field is set to false, the revision name will still autogenerate.)
   The header field value.
 
 <a name="nested_spec_template_spec_containers_containers_startup_probe_grpc"></a>The `grpc` block supports:
+
+* `port` -
+  (Optional)
+  Port number to access on the container. Number must be in the range 1 to 65535.
+  If not specified, defaults to the same value as container.ports[0].containerPort.
+
+* `service` -
+  (Optional)
+  The name of the service to place in the gRPC HealthCheckRequest
+  (see https://github.com/grpc/grpc/blob/master/doc/health-checking.md).
+  If this is not specified, the default behavior is defined by gRPC.
+
+<a name="nested_spec_template_spec_containers_containers_readiness_probe"></a>The `readiness_probe` block supports:
+
+* `timeout_seconds` -
+  (Optional)
+  Number of seconds after which the probe times out.
+  Defaults to 1 second. Minimum value is 1. Maximum value is 300.
+  Must be smaller than periodSeconds.
+
+* `period_seconds` -
+  (Optional)
+  How often (in seconds) to perform the probe.
+  Default to 10 seconds. Minimum value is 1. Maximum value is 300.
+
+* `failure_threshold` -
+  (Optional)
+  Minimum consecutive failures for the probe to be considered failed after
+  having succeeded. Defaults to 3. Minimum value is 1.
+
+* `http_get` -
+  (Optional)
+  HttpGet specifies the http request to perform.
+  Structure is [documented below](#nested_spec_template_spec_containers_containers_readiness_probe_http_get).
+
+* `grpc` -
+  (Optional)
+  GRPC specifies an action involving a GRPC port.
+  Structure is [documented below](#nested_spec_template_spec_containers_containers_readiness_probe_grpc).
+
+
+<a name="nested_spec_template_spec_containers_containers_readiness_probe_http_get"></a>The `http_get` block supports:
+
+* `path` -
+  (Optional)
+  Path to access on the HTTP server. If set, it should not be empty string.
+
+* `port` -
+  (Optional)
+  Port number to access on the container. Number must be in the range 1 to 65535.
+  If not specified, defaults to the same value as container.ports[0].containerPort.
+
+* `http_headers` -
+  (Optional)
+  Custom headers to set in the request. HTTP allows repeated headers.
+  Structure is [documented below](#nested_spec_template_spec_containers_containers_readiness_probe_http_get_http_headers).
+
+
+<a name="nested_spec_template_spec_containers_containers_readiness_probe_http_get_http_headers"></a>The `http_headers` block supports:
+
+* `name` -
+  (Required)
+  The header field name.
+
+* `value` -
+  (Optional)
+  The header field value.
+
+<a name="nested_spec_template_spec_containers_containers_readiness_probe_grpc"></a>The `grpc` block supports:
 
 * `port` -
   (Optional)
