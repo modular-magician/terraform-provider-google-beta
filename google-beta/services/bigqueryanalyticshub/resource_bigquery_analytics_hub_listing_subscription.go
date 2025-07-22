@@ -120,6 +120,16 @@ See https://cloud.google.com/bigquery/docs/locations for supported locations.`,
 organize and group your datasets.`,
 							Elem: &schema.Schema{Type: schema.TypeString},
 						},
+						"replica_locations": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `List of regions where the subscriber wants dataset replicas.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Set: schema.HashString,
+						},
 					},
 				},
 			},
@@ -657,6 +667,13 @@ func expandBigqueryAnalyticsHubListingSubscriptionDestinationDataset(v interface
 		transformed["labels"] = transformedLabels
 	}
 
+	transformedReplicaLocations, err := expandBigqueryAnalyticsHubListingSubscriptionDestinationDatasetReplicaLocations(original["replica_locations"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedReplicaLocations); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["replicaLocations"] = transformedReplicaLocations
+	}
+
 	return transformed, nil
 }
 
@@ -715,6 +732,11 @@ func expandBigqueryAnalyticsHubListingSubscriptionDestinationDatasetLabels(v int
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandBigqueryAnalyticsHubListingSubscriptionDestinationDatasetReplicaLocations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	v = v.(*schema.Set).List()
+	return v, nil
 }
 
 func resourceBigqueryAnalyticsHubListingSubscriptionDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {

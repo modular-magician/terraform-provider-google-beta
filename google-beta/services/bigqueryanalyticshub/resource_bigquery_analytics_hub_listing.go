@@ -82,7 +82,6 @@ func ResourceBigqueryAnalyticsHubListing() *schema.Resource {
 			"bigquery_dataset": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
 				Description: `Shared dataset i.e. BigQuery dataset source.`,
 				MaxItems:    1,
 				Elem: &schema.Resource{
@@ -93,6 +92,15 @@ func ResourceBigqueryAnalyticsHubListing() *schema.Resource {
 							ForceNew:         true,
 							DiffSuppressFunc: tpgresource.ProjectNumberDiffSuppress,
 							Description:      `Resource name of the dataset source for this listing. e.g. projects/myproject/datasets/123`,
+						},
+						"replica_locations": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: `A list of regions where the publisher has created shared dataset replicas.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Set: schema.HashString,
 						},
 						"selected_resources": {
 							Type:        schema.TypeList,
@@ -116,6 +124,33 @@ func ResourceBigqueryAnalyticsHubListing() *schema.Resource {
 										DiffSuppressFunc: tpgresource.ProjectNumberDiffSuppress,
 										Description:      `Format: For table: projects/{projectId}/datasets/{datasetId}/tables/{tableId} Example:"projects/test_project/datasets/test_dataset/tables/test_table"`,
 										ExactlyOneOf:     []string{},
+									},
+								},
+							},
+						},
+						"effective_replicas": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Description: `Server owned effective state of replicas. Contains both primary and secondary replicas.
+Each replica includes a system-computed (output-only) state and primary designation.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"location": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: `The geographic location where the replica resides.`,
+									},
+									"primary_state": {
+										Type:     schema.TypeString,
+										Computed: true,
+										Description: `Output-only. Indicates that this replica is the primary replica.
+Possible values: PRIMARY_STATE_UNSPECIFIED, PRIMARY_REPLICA`,
+									},
+									"replica_state": {
+										Type:     schema.TypeString,
+										Computed: true,
+										Description: `Output-only. Assigned by Analytics Hub based on real BigQuery replication state.
+Possible values: REPLICA_STATE_UNSPECIFIED, READY_TO_USE, UNAVAILABLE`,
 									},
 								},
 							},
@@ -562,6 +597,12 @@ func resourceBigqueryAnalyticsHubListingUpdate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("categories"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, categoriesProp)) {
 		obj["categories"] = categoriesProp
 	}
+	bigqueryDatasetProp, err := expandBigqueryAnalyticsHubListingBigqueryDataset(d.Get("bigquery_dataset"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("bigquery_dataset"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, bigqueryDatasetProp)) {
+		obj["bigqueryDataset"] = bigqueryDatasetProp
+	}
 	pubsubTopicProp, err := expandBigqueryAnalyticsHubListingPubsubTopic(d.Get("pubsub_topic"), d, config)
 	if err != nil {
 		return err
@@ -626,6 +667,10 @@ func resourceBigqueryAnalyticsHubListingUpdate(d *schema.ResourceData, meta inte
 		updateMask = append(updateMask, "categories")
 	}
 
+	if d.HasChange("bigquery_dataset") {
+		updateMask = append(updateMask, "bigqueryDataset")
+	}
+
 	if d.HasChange("pubsub_topic") {
 		updateMask = append(updateMask, "pubsubTopic")
 	}
@@ -655,6 +700,26 @@ func resourceBigqueryAnalyticsHubListingUpdate(d *schema.ResourceData, meta inte
 
 			// Replace "pubsubTopic" with "pubsubTopic.dataAffinityRegions"
 			query = strings.ReplaceAll(query, "pubsubTopic", "pubsubTopic.dataAffinityRegions")
+
+			// Re-encode commas back
+			query = strings.ReplaceAll(query, ",", "%2C")
+
+			url = base + "?" + query
+		}
+	}
+
+	if d.HasChange("bigquery_dataset.0.replica_locations") {
+		// Split URL into base and query parts
+		parts := strings.SplitN(url, "?", 2)
+		if len(parts) == 2 {
+			base := parts[0]
+			query := parts[1]
+
+			query = strings.ReplaceAll(query, "%2C", ",")
+			query = strings.ReplaceAll(query, "%2c", ",")
+
+			// Replace "bigqueryDataset" with "bigqueryDataset.replicaLocations"
+			query = strings.ReplaceAll(query, "bigqueryDataset", "bigqueryDataset.replicaLocations")
 
 			// Re-encode commas back
 			query = strings.ReplaceAll(query, ",", "%2C")
@@ -851,6 +916,10 @@ func flattenBigqueryAnalyticsHubListingBigqueryDataset(v interface{}, d *schema.
 		flattenBigqueryAnalyticsHubListingBigqueryDatasetDataset(original["dataset"], d, config)
 	transformed["selected_resources"] =
 		flattenBigqueryAnalyticsHubListingBigqueryDatasetSelectedResources(original["selectedResources"], d, config)
+	transformed["replica_locations"] =
+		flattenBigqueryAnalyticsHubListingBigqueryDatasetReplicaLocations(original["replicaLocations"], d, config)
+	transformed["effective_replicas"] =
+		flattenBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicas(original["effectiveReplicas"], d, config)
 	return []interface{}{transformed}
 }
 func flattenBigqueryAnalyticsHubListingBigqueryDatasetDataset(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -881,6 +950,45 @@ func flattenBigqueryAnalyticsHubListingBigqueryDatasetSelectedResourcesTable(v i
 }
 
 func flattenBigqueryAnalyticsHubListingBigqueryDatasetSelectedResourcesRoutine(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryAnalyticsHubListingBigqueryDatasetReplicaLocations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	return schema.NewSet(schema.HashString, v.([]interface{}))
+}
+
+func flattenBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicas(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"location":      flattenBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasLocation(original["location"], d, config),
+			"replica_state": flattenBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasReplicaState(original["replicaState"], d, config),
+			"primary_state": flattenBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasPrimaryState(original["primaryState"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasLocation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasReplicaState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasPrimaryState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1062,6 +1170,20 @@ func expandBigqueryAnalyticsHubListingBigqueryDataset(v interface{}, d tpgresour
 		transformed["selectedResources"] = transformedSelectedResources
 	}
 
+	transformedReplicaLocations, err := expandBigqueryAnalyticsHubListingBigqueryDatasetReplicaLocations(original["replica_locations"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedReplicaLocations); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["replicaLocations"] = transformedReplicaLocations
+	}
+
+	transformedEffectiveReplicas, err := expandBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicas(original["effective_replicas"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEffectiveReplicas); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["effectiveReplicas"] = transformedEffectiveReplicas
+	}
+
 	return transformed, nil
 }
 
@@ -1103,6 +1225,59 @@ func expandBigqueryAnalyticsHubListingBigqueryDatasetSelectedResourcesTable(v in
 }
 
 func expandBigqueryAnalyticsHubListingBigqueryDatasetSelectedResourcesRoutine(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigqueryAnalyticsHubListingBigqueryDatasetReplicaLocations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	v = v.(*schema.Set).List()
+	return v, nil
+}
+
+func expandBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicas(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedLocation, err := expandBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasLocation(original["location"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["location"] = transformedLocation
+		}
+
+		transformedReplicaState, err := expandBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasReplicaState(original["replica_state"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedReplicaState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["replicaState"] = transformedReplicaState
+		}
+
+		transformedPrimaryState, err := expandBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasPrimaryState(original["primary_state"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPrimaryState); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["primaryState"] = transformedPrimaryState
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasReplicaState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigqueryAnalyticsHubListingBigqueryDatasetEffectiveReplicasPrimaryState(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
