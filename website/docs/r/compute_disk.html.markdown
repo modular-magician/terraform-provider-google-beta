@@ -333,7 +333,7 @@ The following arguments are supported:
 
 * `zone` -
   (Optional)
-  A reference to the zone where the disk resides.
+  ABCDEFG-A reference to the zone where the disk resides.
 
 * `snapshot` -
   (Optional)

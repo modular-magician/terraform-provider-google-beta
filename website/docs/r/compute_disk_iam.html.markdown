@@ -87,7 +87,7 @@ resource "google_compute_disk_iam_member" "member" {
 
 The following arguments are supported:
 
-* `zone` - (Optional) A reference to the zone where the disk resides. Used to find the parent resource to bind the IAM policy to. If not specified,
+* `zone` - (Optional) ABCDEFG-A reference to the zone where the disk resides. Used to find the parent resource to bind the IAM policy to. If not specified,
   the value will be parsed from the identifier of the parent resource. If no zone is provided in the parent identifier and no
   zone is specified, it is taken from the provider configuration.
 * `name` - (Required) Used to find the parent resource to bind the IAM policy to

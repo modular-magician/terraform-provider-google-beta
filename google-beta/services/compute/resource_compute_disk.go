@@ -808,7 +808,7 @@ create the disk. Provide this when creating the disk.`,
 				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
-				Description:      `A reference to the zone where the disk resides.`,
+				Description:      `ABCDEFG-A reference to the zone where the disk resides.`,
 			},
 			"disk_id": {
 				Type:        schema.TypeString,
