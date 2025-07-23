@@ -13,7 +13,6 @@ fields:
   - field: 'config.encryption_type'
   - field: 'config.vertex_location'
   - field: 'create_time'
-  - field: 'description'
   - field: 'effective_labels'
     provider_only: true
   - field: 'labels'

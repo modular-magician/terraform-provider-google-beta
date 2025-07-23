@@ -120,12 +120,6 @@ system generated id will be used.
 This value should be 4-40 characters, and valid characters
 are '/a-z[0-9]-_/'.`,
 			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `Optional. Description of the ApiHub instance.`,
-			},
 			"labels": {
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -205,12 +199,6 @@ func resourceApihubApiHubInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	obj := make(map[string]interface{})
-	descriptionProp, err := expandApihubApiHubInstanceDescription(d.Get("description"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
-		obj["description"] = descriptionProp
-	}
 	configProp, err := expandApihubApiHubInstanceConfig(d.Get("config"), d, config)
 	if err != nil {
 		return err
@@ -336,9 +324,6 @@ func resourceApihubApiHubInstanceRead(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}
 
-	if err := d.Set("description", flattenApihubApiHubInstanceDescription(res["description"], d, config)); err != nil {
-		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
-	}
 	if err := d.Set("name", flattenApihubApiHubInstanceName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ApiHubInstance: %s", err)
 	}
@@ -407,10 +392,6 @@ func resourceApihubApiHubInstanceImport(d *schema.ResourceData, meta interface{}
 	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
-}
-
-func flattenApihubApiHubInstanceDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
 }
 
 func flattenApihubApiHubInstanceName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -500,10 +481,6 @@ func flattenApihubApiHubInstanceTerraformLabels(v interface{}, d *schema.Resourc
 
 func flattenApihubApiHubInstanceEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandApihubApiHubInstanceDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandApihubApiHubInstanceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

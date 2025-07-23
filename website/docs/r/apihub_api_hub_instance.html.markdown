@@ -74,10 +74,6 @@ The following arguments are supported:
   Resource ID segment making up resource `name`. It identifies the resource within its parent collection as described in https://google.aip.dev/122.
 
 
-* `description` -
-  (Optional)
-  Optional. Description of the ApiHub instance.
-
 * `labels` -
   (Optional)
   Optional. Instance labels to represent user-provided metadata.
