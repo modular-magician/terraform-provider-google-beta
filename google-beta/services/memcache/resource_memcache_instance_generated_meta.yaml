@@ -43,6 +43,7 @@ fields:
   - field: 'region'
     provider_only: true
   - field: 'reserved_ip_range_id'
+  - field: 'tags'
   - field: 'terraform_labels'
     provider_only: true
   - field: 'zones'
