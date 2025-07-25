@@ -1329,6 +1329,36 @@ func TestAccSqlDatabaseInstance_createFromBackup(t *testing.T) {
 	})
 }
 
+// this test cannot be ran locally without seeding your environment with a backup vault and scheduling the backup of a compute instance
+// to generate a unique datasourceId, that this test would need to be modified to use. the values in this test correspond to those used
+// in our testing processes.
+func TestAccSqlDatabaseInstance_restoreFromBackupdrBackup(t *testing.T) {
+	t.Parallel()
+
+	project := envvar.GetTestProjectFromEnv()
+	location := "us-central1"
+	backupVaultId := "bv-test"
+	dataSourceId := "ds-test"
+
+	name := fmt.Sprintf("projects/%s/locations/%s/backupVaults/%s/dataSources/%s/backups", project, location, backupVaultId, dataSourceId)
+
+	context := map[string]interface{}{
+		"backup_vault_id": backupVaultId,
+		"data_source_id":  dataSourceId,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSqlDatabaseInstance_restoreFromBackupdrBackup(context),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttr("data.google_backup_dr_backup.foo", "name", name)),
+			},
+		},
+	})
+}
+
 func TestAccSqlDatabaseInstance_backupUpdate(t *testing.T) {
 	// Sqladmin client
 	acctest.SkipIfVcr(t)
@@ -5865,6 +5895,21 @@ data "google_sql_backup_run" "backup" {
 	instance = "%{original_db_name}"
 	most_recent = true
 }
+`, context)
+}
+
+func testAccSqlDatabaseInstance_restoreFromBackupdrBackup(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_project" "project" {
+}
+
+data "google_backup_dr_backup" "foo" {
+  project = data.google_project.project.project_id
+  location      = "us-central1"
+  backup_vault_id = "%{backup_vault_id}"
+  data_source_id = "%{data_source_id}"
+}
+
 `, context)
 }
 
