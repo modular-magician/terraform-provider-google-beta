@@ -42,6 +42,7 @@ fields:
   - field: 'retention_policy.locked'
   - field: 'state'
   - field: 'state_reason'
+  - field: 'tags'
   - field: 'terraform_labels'
     provider_only: true
   - field: 'uid'

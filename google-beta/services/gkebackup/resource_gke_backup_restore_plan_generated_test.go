@@ -54,7 +54,7 @@ func TestAccGKEBackupRestorePlan_gkebackupRestoreplanAllNamespacesExample(t *tes
 				ResourceName:            "google_gke_backup_restore_plan.all_ns",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "tags", "terraform_labels"},
 			},
 		},
 	})
@@ -131,7 +131,7 @@ func TestAccGKEBackupRestorePlan_gkebackupRestoreplanRollbackNamespaceExample(t 
 				ResourceName:            "google_gke_backup_restore_plan.rollback_ns",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "tags", "terraform_labels"},
 			},
 		},
 	})
@@ -217,7 +217,7 @@ func TestAccGKEBackupRestorePlan_gkebackupRestoreplanProtectedApplicationExample
 				ResourceName:            "google_gke_backup_restore_plan.rollback_app",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "tags", "terraform_labels"},
 			},
 		},
 	})
@@ -298,7 +298,7 @@ func TestAccGKEBackupRestorePlan_gkebackupRestoreplanAllClusterResourcesExample(
 				ResourceName:            "google_gke_backup_restore_plan.all_cluster_resources",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "tags", "terraform_labels"},
 			},
 		},
 	})
@@ -374,7 +374,7 @@ func TestAccGKEBackupRestorePlan_gkebackupRestoreplanRenameNamespaceExample(t *t
 				ResourceName:            "google_gke_backup_restore_plan.rename_ns",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "tags", "terraform_labels"},
 			},
 		},
 	})
@@ -477,7 +477,7 @@ func TestAccGKEBackupRestorePlan_gkebackupRestoreplanSecondTransformationExample
 				ResourceName:            "google_gke_backup_restore_plan.transform_rule",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "tags", "terraform_labels"},
 			},
 		},
 	})
@@ -578,7 +578,7 @@ func TestAccGKEBackupRestorePlan_gkebackupRestoreplanGitopsModeExample(t *testin
 				ResourceName:            "google_gke_backup_restore_plan.gitops_mode",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "tags", "terraform_labels"},
 			},
 		},
 	})
@@ -655,7 +655,7 @@ func TestAccGKEBackupRestorePlan_gkebackupRestoreplanRestoreOrderExample(t *test
 				ResourceName:            "google_gke_backup_restore_plan.restore_order",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "tags", "terraform_labels"},
 			},
 		},
 	})
@@ -754,7 +754,7 @@ func TestAccGKEBackupRestorePlan_gkebackupRestoreplanVolumeResExample(t *testing
 				ResourceName:            "google_gke_backup_restore_plan.volume_res",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "tags", "terraform_labels"},
 			},
 		},
 	})

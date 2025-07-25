@@ -46,6 +46,7 @@ fields:
   - field: 'restore_config.volume_data_restore_policy_bindings.volume_type'
   - field: 'state'
   - field: 'state_reason'
+  - field: 'tags'
   - field: 'terraform_labels'
     provider_only: true
   - field: 'uid'

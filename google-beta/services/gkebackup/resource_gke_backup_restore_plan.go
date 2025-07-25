@@ -515,6 +515,15 @@ Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Description: `A map of resource manager tags.
+Resource manager tag keys and values have the same definition as resource manager tags.
+Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/{tag_value_id}.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
+			},
 			"effective_labels": {
 				Type:        schema.TypeMap,
 				Computed:    true,
@@ -591,6 +600,12 @@ func resourceGKEBackupRestorePlanCreate(d *schema.ResourceData, meta interface{}
 		return err
 	} else if v, ok := d.GetOkExists("restore_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(restoreConfigProp)) && (ok || !reflect.DeepEqual(v, restoreConfigProp)) {
 		obj["restoreConfig"] = restoreConfigProp
+	}
+	tagsProp, err := expandGKEBackupRestorePlanTags(d.Get("tags"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tags"); !tpgresource.IsEmptyValue(reflect.ValueOf(tagsProp)) && (ok || !reflect.DeepEqual(v, tagsProp)) {
+		obj["tags"] = tagsProp
 	}
 	labelsProp, err := expandGKEBackupRestorePlanEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -2085,6 +2100,17 @@ func expandGKEBackupRestorePlanRestoreConfigRestoreOrderGroupKindDependenciesReq
 
 func expandGKEBackupRestorePlanRestoreConfigRestoreOrderGroupKindDependenciesRequiringResourceKind(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandGKEBackupRestorePlanTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }
 
 func expandGKEBackupRestorePlanEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
