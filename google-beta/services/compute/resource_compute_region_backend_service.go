@@ -25,6 +25,7 @@ import (
 	"log"
 	"net/http"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
@@ -3710,7 +3711,28 @@ func expandComputeRegionBackendServiceBackendFailover(v interface{}, d tpgresour
 }
 
 func expandComputeRegionBackendServiceBackendGroup(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
+	if v == nil {
+		return nil, nil
+	}
+	val := v.(string)
+	if strings.HasPrefix(val, "https://") || strings.HasPrefix(val, "projects/") {
+		return val, nil
+	}
+	regionRaw, ok := d.GetOk("region")
+	if !ok || regionRaw.(string) == "" {
+		return nil, fmt.Errorf("region must be set")
+	}
+	region := regionRaw.(string)
+	var project string
+	if pRaw, ok := d.GetOk("project"); ok && pRaw.(string) != "" {
+		project = pRaw.(string)
+	} else {
+		project = config.Project
+	}
+	if strings.Contains(val, "/networkEndpointGroups/") {
+		return fmt.Sprintf("projects/%s/%s", project, val), nil
+	}
+	return fmt.Sprintf("projects/%s/regions/%s/instanceGroups/%s", project, region, val), nil
 }
 
 func expandComputeRegionBackendServiceBackendMaxConnections(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
