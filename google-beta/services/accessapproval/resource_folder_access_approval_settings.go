@@ -107,7 +107,7 @@ This property will be ignored if set by an ancestor of the resource, and new non
 				Optional: true,
 				Description: `A list of email addresses to which notifications relating to approval requests should be sent.
 Notifications relating to a resource will be sent to all emails in the settings of ancestor
-resources of that resource. A maximum of 50 email addresses are allowed.`,
+resources of that resource. A maximum of 50 email addresses are allowed. TEST CHANGE`,
 				MaxItems: 50,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,

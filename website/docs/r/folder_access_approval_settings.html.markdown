@@ -128,7 +128,7 @@ The following arguments are supported:
   (Optional)
   A list of email addresses to which notifications relating to approval requests should be sent.
   Notifications relating to a resource will be sent to all emails in the settings of ancestor
-  resources of that resource. A maximum of 50 email addresses are allowed.
+  resources of that resource. A maximum of 50 email addresses are allowed. TEST CHANGE
 
 * `active_key_version` -
   (Optional)
