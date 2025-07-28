@@ -78,6 +78,17 @@ resource "google_memorystore_instance" "instance-basic" {
       }
     }
   }
+  automated_backup_config {
+    retention = "3024000s"  # 35 days
+    fixed_frequency_schedule {
+      start_time {
+        hours = 20  # UTC
+      }
+    }
+  }
+  managed_backup_source {
+    backup = "projects/{project}/locations/{location}/backupCollections/{collection}/backups/{backup}"
+  }
   depends_on = [
     google_network_connectivity_service_connection_policy.default
   ]
@@ -190,6 +201,17 @@ resource "google_memorystore_instance" "instance-full" {
       rdb_snapshot_period     = "ONE_HOUR"
       rdb_snapshot_start_time = "2024-10-02T15:01:23Z"
     }
+  }
+  automated_backup_config {
+    retention = "3024000s"  # 35 days
+    fixed_frequency_schedule {
+      start_time {
+        hours = 20  # UTC
+      }
+    }
+  }
+  gcs_source {
+    uris = ["gs://bucket/dump1.rdb", "gs://bucket/dump2.rdb"]
   }
   labels = {
     "abc" : "xyz"

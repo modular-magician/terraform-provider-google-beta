@@ -88,6 +88,17 @@ resource "google_redis_cluster" "cluster-ha" {
       }
     }
   }
+  automated_backup_config {
+    retention = "3024000s"  # 35 days
+    fixed_frequency_schedule {
+      start_time {
+        hours = 20  # UTC
+      }
+    }
+  }
+  gcs_source {
+    uris = ["gs://bucket/dump1.rdb", "gs://bucket/dump2.rdb"]
+  }
   depends_on = [
     google_network_connectivity_service_connection_policy.default
   ]
@@ -167,6 +178,9 @@ resource "google_redis_cluster" "cluster-ha-single-zone" {
         nanos = 0
       }
     }
+  }
+  managed_backup_source {
+    backup = "projects/{project}/regions/{region}/backupCollections/{collection}/backups/{backup}"
   }
   deletion_protection_enabled = %{deletion_protection_enabled}
   depends_on = [
