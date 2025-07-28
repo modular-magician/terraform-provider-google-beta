@@ -313,8 +313,9 @@ The following arguments are supported:
 
 * `routing_mode` -
   (Optional)
-  The routing mode of the Gateway. This field is configurable only for gateways of type SECURE_WEB_GATEWAY. This field is required for gateways of type SECURE_WEB_GATEWAY.
-  Possible values are: `NEXT_HOP_ROUTING_MODE`.
+  The routing mode of the Gateway. This field is configurable only for gateways of type SECURE_WEB_GATEWAY.
+  This field is required for gateways of type SECURE_WEB_GATEWAY.
+  Possible values are: `EXPLICIT_ROUTING_MODE`, `NEXT_HOP_ROUTING_MODE`.
 
 * `location` -
   (Optional)

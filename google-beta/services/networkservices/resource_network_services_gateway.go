@@ -279,8 +279,9 @@ Currently, this field is specific to gateways of type 'SECURE_WEB_GATEWAY'.`,
 			"routing_mode": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"NEXT_HOP_ROUTING_MODE", ""}),
-				Description:  `The routing mode of the Gateway. This field is configurable only for gateways of type SECURE_WEB_GATEWAY. This field is required for gateways of type SECURE_WEB_GATEWAY. Possible values: ["NEXT_HOP_ROUTING_MODE"]`,
+				ValidateFunc: verify.ValidateEnum([]string{"EXPLICIT_ROUTING_MODE", "NEXT_HOP_ROUTING_MODE", ""}),
+				Description: `The routing mode of the Gateway. This field is configurable only for gateways of type SECURE_WEB_GATEWAY.
+This field is required for gateways of type SECURE_WEB_GATEWAY. Possible values: ["EXPLICIT_ROUTING_MODE", "NEXT_HOP_ROUTING_MODE"]`,
 			},
 			"scope": {
 				Type:     schema.TypeString,
@@ -536,6 +537,10 @@ func resourceNetworkServicesGatewayRead(d *schema.ResourceData, meta interface{}
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("NetworkServicesGateway %q", d.Id()))
+	}
+	if res["type"] == "SECURE_WEB_GATEWAY" && res["routingMode"] == nil {
+		log.Printf("[DEBUG] SECURE_WEB_GATEWAY with empty routingMode. Setting up default value to EXPLICIT_ROUTING_MODE")
+		res["routingMode"] = "EXPLICIT_ROUTING_MODE"
 	}
 
 	// Explicitly set virtual fields to default values if unset
@@ -944,6 +949,9 @@ func flattenNetworkServicesGatewayEnvoyHeaders(v interface{}, d *schema.Resource
 }
 
 func flattenNetworkServicesGatewayRoutingMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if d.Get("type") == "SECURE_WEB_GATEWAY" && (v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v))) {
+		return "EXPLICIT_ROUTING_MODE"
+	}
 	return v
 }
 
@@ -1015,6 +1023,9 @@ func expandNetworkServicesGatewayEnvoyHeaders(v interface{}, d tpgresource.Terra
 }
 
 func expandNetworkServicesGatewayRoutingMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if d.Get("type") == "SECURE_WEB_GATEWAY" && (v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v))) {
+		return "EXPLICIT_ROUTING_MODE", nil
+	}
 	return v, nil
 }
 
