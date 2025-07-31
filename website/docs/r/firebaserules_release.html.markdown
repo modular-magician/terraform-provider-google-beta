@@ -30,7 +30,7 @@ Creates a Firebase Rules Release to the default Cloud Firestore instance
 resource "google_firebaserules_release" "primary" {
   name         = "cloud.firestore"
   project      = "my-project-name"
-  ruleset_name = "projects/my-project-name/rulesets/${google_firebaserules_ruleset.firestore.name}"
+  ruleset_name = google_firebaserules_ruleset.firestore.name
 }
 
 resource "google_firebaserules_ruleset" "firestore" {
@@ -51,7 +51,7 @@ Creates a Firebase Rules Release to an additional Cloud Firestore instance
 resource "google_firebaserules_release" "primary" {
   name         = "cloud.firestore/database"
   project      = "my-project-name"
-  ruleset_name = "projects/my-project-name/rulesets/${google_firebaserules_ruleset.firestore.name}"
+  ruleset_name = google_firebaserules_ruleset.firestore.name
 }
 
 resource "google_firebaserules_ruleset" "firestore" {

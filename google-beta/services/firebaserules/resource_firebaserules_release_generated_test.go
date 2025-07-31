@@ -89,7 +89,7 @@ func testAccFirebaserulesRelease_FirestoreReleaseAdditionalHandWritten(context m
 resource "google_firebaserules_release" "primary" {
   name         = "cloud.firestore/tf-test-database%{random_suffix}"
   project      = "%{project_name}"
-  ruleset_name = "projects/%{project_name}/rulesets/${google_firebaserules_ruleset.firestore.name}"
+  ruleset_name = google_firebaserules_ruleset.firestore.name
 }
 
 resource "google_firebaserules_ruleset" "firestore" {
