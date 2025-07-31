@@ -29,5 +29,6 @@ fields:
     api_field: 'node_count'
   - field: 'processing_units'
   - field: 'state'
+  - field: 'tags'
   - field: 'terraform_labels'
     provider_only: true
