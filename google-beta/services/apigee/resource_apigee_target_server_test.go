@@ -111,11 +111,16 @@ resource "google_compute_global_address" "apigee_range" {
   project       = google_project.project.project_id
 }
 
+resource "time_sleep" "wait_60_seconds_1" {
+  create_duration = "60s"
+  depends_on = [google_compute_global_address.apigee_range]
+}
+
 resource "google_service_networking_connection" "apigee_vpc_connection" {
   network                 = google_compute_network.apigee_network.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.apigee_range.name]
-  depends_on              = [google_project_service.servicenetworking]
+  depends_on              = [time_sleep.wait_60_seconds_1]
 }
 
 resource "google_apigee_organization" "apigee_org" {
@@ -193,11 +198,16 @@ resource "google_compute_global_address" "apigee_range" {
   project       = google_project.project.project_id
 }
 
+resource "time_sleep" "wait_60_seconds_1" {
+  create_duration = "60s"
+  depends_on = [google_compute_global_address.apigee_range]
+}
+
 resource "google_service_networking_connection" "apigee_vpc_connection" {
   network                 = google_compute_network.apigee_network.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.apigee_range.name]
-  depends_on              = [google_project_service.servicenetworking]
+  depends_on              = [time_sleep.wait_60_seconds_1]
 }
 
 resource "google_apigee_organization" "apigee_org" {
@@ -314,11 +324,16 @@ resource "google_compute_global_address" "apigee_range" {
   project       = google_project.project.project_id
 }
 
+resource "time_sleep" "wait_60_seconds_1" {
+  create_duration = "60s"
+  depends_on = [google_compute_global_address.apigee_range]
+}
+
 resource "google_service_networking_connection" "apigee_vpc_connection" {
   network                 = google_compute_network.apigee_network.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.apigee_range.name]
-  depends_on              = [google_project_service.servicenetworking]
+  depends_on              = [time_sleep.wait_60_seconds_1]
 }
 
 resource "google_apigee_organization" "apigee_org" {
@@ -430,11 +445,16 @@ resource "google_compute_global_address" "apigee_range" {
   project       = google_project.project.project_id
 }
 
+resource "time_sleep" "wait_60_seconds_1" {
+  create_duration = "60s"
+  depends_on = [google_compute_global_address.apigee_range]
+}
+
 resource "google_service_networking_connection" "apigee_vpc_connection" {
   network                 = google_compute_network.apigee_network.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.apigee_range.name]
-  depends_on              = [google_project_service.servicenetworking]
+  depends_on              = [time_sleep.wait_60_seconds_1]
 }
 
 resource "google_apigee_organization" "apigee_org" {
