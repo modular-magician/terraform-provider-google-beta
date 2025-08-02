@@ -1375,6 +1375,10 @@ When the field is set to false, deleting the service is allowed.
   (Optional)
   Minimum number of instances for the service, to be divided among all revisions receiving traffic.
 
+* `max_instance_count` -
+  (Optional)
+  Combined maximum number of instances for all revisions receiving traffic.
+
 * `scaling_mode` -
   (Optional)
   The [scaling mode](https://cloud.google.com/run/docs/reference/rest/v2/projects.locations.services#scalingmode) for the service.
