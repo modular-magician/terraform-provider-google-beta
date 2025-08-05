@@ -32,7 +32,6 @@ fields:
   - field: 'host_state'
   - field: 'issues.code'
   - field: 'issues.details'
-    json: true
   - field: 'issues.message'
   - field: 'name'
   - field: 'ownership_state'

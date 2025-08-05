@@ -70,10 +70,6 @@ resource "google_iam_workforce_pool" "example" {
 The following arguments are supported:
 
 
-* `parent` -
-  (Required)
-  Immutable. The resource name of the parent. Format: `organizations/{org-id}`.
-
 * `location` -
   (Required)
   The location for the resource.
@@ -83,6 +79,10 @@ The following arguments are supported:
   The name of the pool. The ID must be a globally unique string of 6 to 63 lowercase letters,
   digits, or hyphens. It must start with a letter, and cannot have a trailing hyphen.
   The prefix `gcp-` is reserved for use by Google, and may not be specified.
+
+* `parent` -
+  (Required)
+  Immutable. The resource name of the parent. Format: `organizations/{org-id}`.
 
 
 * `display_name` -

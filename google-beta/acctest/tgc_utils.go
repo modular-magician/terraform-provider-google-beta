@@ -24,7 +24,6 @@ import (
 	"regexp"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
@@ -44,14 +43,11 @@ type ImportMetadata struct {
 	IgnoredFields []string `json:"ignored_fields,omitempty"`
 }
 
-// The metadata for each step in one test
 type TgcMetadataPayload struct {
 	TestName         string                      `json:"test_name"`
-	StepNumber       int                         `json:"step_number"`
 	RawConfig        string                      `json:"raw_config"`
 	ResourceMetadata map[string]ResourceMetadata `json:"resource_metadata"`
 	PrimaryResource  string                      `json:"primary_resource"`
-	CaiReadTime      time.Time                   `json:"cai_read_time"`
 }
 
 // PROJECT_NUMBER instead of PROJECT_ID is in the CAI asset names for the resources in those services
@@ -92,8 +88,6 @@ func encodeToBase64JSON(data interface{}) (string, error) {
 // CollectAllTgcMetadata collects metadata for all resources in a test step
 func CollectAllTgcMetadata(tgcPayload TgcMetadataPayload) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		tgcPayload.CaiReadTime = time.Now()
-
 		projectId := envvar.GetTestProjectFromEnv()
 		projectNumber := envvar.GetTestProjectNumberFromEnv()
 
@@ -140,14 +134,12 @@ func CollectAllTgcMetadata(tgcPayload TgcMetadataPayload) resource.TestCheckFunc
 			tgcPayload.ResourceMetadata[address] = metadata
 		}
 
-		log.Printf("[DEBUG] tgcPayload caireadtime %s", tgcPayload.CaiReadTime)
-
 		// Encode the entire payload to base64 JSON
 		encodedData, err := encodeToBase64JSON(tgcPayload)
 		if err != nil {
-			log.Printf("[DEBUG]test_step_number=%d TGC Terraform error: %v", tgcPayload.StepNumber, err)
+			log.Printf("[DEBUG]TGC Terraform error: %v", err)
 		} else {
-			log.Printf("[DEBUG]test_step_number=%d TGC Terraform metadata: %s", tgcPayload.StepNumber, encodedData)
+			log.Printf("[DEBUG]TGC Terraform metadata: %s", encodedData)
 		}
 
 		return nil
@@ -217,10 +209,20 @@ func determineImportMetadata(steps []resource.TestStep, currentStepIndex int, re
 func extendWithTGCData(t *testing.T, c resource.TestCase) resource.TestCase {
 	var updatedSteps []resource.TestStep
 
+	// Find the last non-plan config step
+	lastNonPlanConfigStep := -1
+	for i := len(c.Steps) - 1; i >= 0; i-- {
+		step := c.Steps[i]
+		if step.Config != "" && !step.PlanOnly {
+			lastNonPlanConfigStep = i
+			break
+		}
+	}
+
 	// Process all steps
 	for i, step := range c.Steps {
-		// If this is a non-plan config step, add our TGC check
-		if step.Config != "" && !step.PlanOnly {
+		// If this is the last non-plan config step, add our TGC check
+		if i == lastNonPlanConfigStep {
 			// Parse resources from the config
 			resources := parseResources(step.Config)
 
@@ -244,7 +246,6 @@ func extendWithTGCData(t *testing.T, c resource.TestCase) resource.TestCase {
 			// Create the consolidated TGC payload
 			tgcPayload := TgcMetadataPayload{
 				TestName:         t.Name(),
-				StepNumber:       i + 1, // Step number starts from 1
 				RawConfig:        step.Config,
 				ResourceMetadata: resourceMetadata,
 			}

@@ -56,5 +56,4 @@ fields:
   - field: 'terraform_labels'
     provider_only: true
   - field: 'traffic_split'
-    json: true
   - field: 'update_time'

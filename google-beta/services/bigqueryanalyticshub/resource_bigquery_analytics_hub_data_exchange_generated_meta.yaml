@@ -8,7 +8,6 @@ fields:
   - field: 'data_exchange_id'
     provider_only: true
   - field: 'description'
-  - field: 'discovery_type'
   - field: 'display_name'
   - field: 'documentation'
   - field: 'icon'
