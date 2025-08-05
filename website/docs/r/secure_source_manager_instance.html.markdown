@@ -82,6 +82,24 @@ resource "google_secure_source_manager_instance" "default" {
 data "google_project" "project" {}
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=secure_source_manager_instance_private_trusted_cert&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Secure Source Manager Instance Private Trusted Cert
+
+
+```hcl
+resource "google_secure_source_manager_instance" "default" {
+  instance_id = "my-instance"
+  location    = "us-central1"
+
+  private_config {
+    is_private = true
+  }
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=secure_source_manager_instance_private&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
@@ -601,7 +619,7 @@ Default is `DELETE`.  Possible values are:
   'Indicate if it's private instance.'
 
 * `ca_pool` -
-  (Required)
+  (Optional)
   CA pool resource, resource must in the format of `projects/{project}/locations/{location}/caPools/{ca_pool}`.
 
 * `http_service_attachment` -
