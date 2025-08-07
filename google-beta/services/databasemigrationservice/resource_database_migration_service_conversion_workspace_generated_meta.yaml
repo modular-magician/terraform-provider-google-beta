@@ -1,0 +1,23 @@
+resource: 'google_database_migration_service_conversion_workspace'
+generation_type: 'mmv1'
+source_file: 'products/databasemigrationservice/ConversionWorkspace.yaml'
+api_service_name: 'datamigration.googleapis.com'
+api_version: 'v1'
+api_resource_type_kind: 'ConversionWorkspace'
+fields:
+  - field: 'conversion_workspace_id'
+    provider_only: true
+  - field: 'create_time'
+  - field: 'destination.engine'
+  - field: 'destination.version'
+  - field: 'display_name'
+  - field: 'global_settings'
+  - field: 'has_uncommitted_changes'
+  - field: 'latest_commit_id'
+  - field: 'latest_commit_time'
+  - field: 'location'
+    provider_only: true
+  - field: 'name'
+  - field: 'source.engine'
+  - field: 'source.version'
+  - field: 'update_time'
