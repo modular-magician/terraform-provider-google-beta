@@ -31,7 +31,7 @@ To get more information about ConnectionProfile, see:
     * [Database Migration](https://cloud.google.com/database-migration/docs/)
 
 ~> **Warning:** All arguments including the following potentially sensitive
-values will be stored in the raw state as plain text: `mysql.password`, `mysql.ssl.client_key`, `mysql.ssl.client_certificate`, `mysql.ssl.ca_certificate`, `postgresql.password`, `postgresql.ssl.client_key`, `postgresql.ssl.client_certificate`, `postgresql.ssl.ca_certificate`, `oracle.password`, `oracle.ssl.client_key`, `oracle.ssl.client_certificate`, `oracle.ssl.ca_certificate`, `oracle.forward_ssh_connectivity.password`, `oracle.forward_ssh_connectivity.private_key`, `cloudsql.settings.root_password`, `alloydb.settings.initial_user.password`.
+values will be stored in the raw state as plain text: `mysql.password`, `mysql.ssl.client_key`, `mysql.ssl.client_certificate`, `mysql.ssl.ca_certificate`, `postgresql.password`, `postgresql.ssl.client_key`, `postgresql.ssl.client_certificate`, `postgresql.ssl.ca_certificate`, `oracle.password`, `oracle.ssl.client_key`, `oracle.ssl.client_certificate`, `oracle.ssl.ca_certificate`, `oracle.forward_ssh_connectivity.password`, `oracle.forward_ssh_connectivity.private_key`, `cloudsql.settings.root_password`, `alloydb.settings.initial_user.password`, `sqlserver.password`, `sqlserver.ssl.client_key`, `sqlserver.ssl.client_certificate`, `sqlserver.ssl.ca_certificate`, `sqlserver.forward_ssh_connectivity.password`, `sqlserver.forward_ssh_connectivity.private_key`.
 [Read more about sensitive data in state](https://www.terraform.io/language/state/sensitive-data).
 
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
@@ -512,6 +512,37 @@ resource "google_database_migration_service_connection_profile" "existing-alloyd
   depends_on = [google_alloydb_cluster.destination_alloydb, google_alloydb_instance.destination_alloydb_primary]
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=database_migration_service_connection_profile_sqlserver&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Database Migration Service Connection Profile Sqlserver
+
+
+```hcl
+resource "google_database_migration_service_connection_profile" "<%= ctx[:primary_resource_id] %>" {
+  location              = "us-central1"
+  connection_profile_id = "<%= ctx[:vars]['profile'] %>"
+  display_name          = "<%= ctx[:vars]['profile'] %>"
+  labels = {
+    foo = "bar"
+  }
+  sqlserver {
+    host     = "10.1.0.100"
+    port     = 1433
+    username = "<%= ctx[:vars]['sqldb_user'] %>"
+    password = "<%= ctx[:vars]['sqldb_pass'] %>"
+
+    ssl {
+      type = "SERVER_ONLY"
+      ca_certificate = file("<%= ctx[:vars]['sqldb_cert'] %>.pem")
+    }
+
+    static_service_ip_connectivity {}
+  }
+}
+```
 
 ## Argument Reference
 
@@ -558,6 +589,11 @@ The following arguments are supported:
   (Optional)
   Specifies required connection parameters, and the parameters required to create an AlloyDB destination cluster.
   Structure is [documented below](#nested_alloydb).
+
+* `sqlserver` -
+  (Optional)
+  Specifies connection parameters required specifically for SQL Server databases.
+  Structure is [documented below](#nested_sqlserver).
 
 * `location` -
   (Optional)
@@ -1013,6 +1049,140 @@ The following arguments are supported:
 * `cpu_count` -
   (Required)
   The number of CPU's in the VM instance.
+
+<a name="nested_sqlserver"></a>The `sqlserver` block supports:
+
+* `host` -
+  (Required)
+  Required. The IP or hostname of the source SQL Server database.
+
+* `port` -
+  (Required)
+  Required. The network port of the source SQL Server database.
+
+* `username` -
+  (Required)
+  Required. The username that Database Migration Service will use to connect to the database. The value is encrypted when stored in Database Migration Service.
+
+* `database` -
+  (Optional)
+  The database name for the SQL Server connection.
+
+* `password` -
+  (Required)
+  Required. Input only. The password for the user that Database Migration Service will be using to connect to the database.
+  This field is not returned on request, and the value is encrypted when stored in Database Migration Service.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `password_set` -
+  (Output)
+  Output only. Indicates If this connection profile password is stored.
+
+* `ssl` -
+  (Optional)
+  SSL configuration for the destination to connect to the source database.
+  Structure is [documented below](#nested_sqlserver_ssl).
+
+* `cloud_sql_id` -
+  (Optional)
+  If the source is a Cloud SQL database, use this field to provide the Cloud SQL instance ID of the source.
+
+* `backups` -
+  (Optional)
+  Backup details for SQL Server databases in Cloud Storage for migration to Cloud SQL.
+  Structure is [documented below](#nested_sqlserver_backups).
+
+* `static_ip_connectivity` -
+  (Optional)
+  This object has no nested fields.
+  Static IP address connectivity configured on service project.
+
+* `forward_ssh_connectivity` -
+  (Optional)
+  Forward SSH tunnel connectivity for the destination to connect to the source database.
+  Structure is [documented below](#nested_sqlserver_forward_ssh_connectivity).
+
+* `private_connectivity` -
+  (Optional)
+  Configuration for using a private network to communicate with the source database
+  Structure is [documented below](#nested_sqlserver_private_connectivity).
+
+* `private_service_connect_connectivity` -
+  (Optional)
+  Configuration for using Private Service Connect to communicate with the source database
+  Structure is [documented below](#nested_sqlserver_private_service_connect_connectivity).
+
+
+<a name="nested_sqlserver_ssl"></a>The `ssl` block supports:
+
+* `type` -
+  (Optional)
+  The SSL connection type.
+  Possible values are: `SERVER_ONLY`, `SERVER_CLIENT`.
+
+* `client_key` -
+  (Optional)
+  Input only. The unencrypted PKCS#1 or PKCS#8 PEM-encoded private key associated with the Client Certificate.
+  If this field is used then the 'clientCertificate' field is mandatory.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `client_certificate` -
+  (Optional)
+  Input only. The x509 PEM-encoded certificate that will be used by the replica to authenticate against the source database server.
+  If this field is used then the 'clientKey' field is mandatory.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `ca_certificate` -
+  (Optional)
+  Input only. The x509 PEM-encoded certificate of the CA that signed the source database server's certificate.
+  The replica will use this certificate to verify it's connecting to the right host.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+<a name="nested_sqlserver_backups"></a>The `backups` block supports:
+
+* `gcs_bucket` -
+  (Required)
+  Cloud Storage bucket name where the SQL Server backup files are stored.
+
+* `gcs_prefix` -
+  (Optional)
+  Cloud Storage path prefix for the SQL Server backup files.
+
+<a name="nested_sqlserver_forward_ssh_connectivity"></a>The `forward_ssh_connectivity` block supports:
+
+* `hostname` -
+  (Required)
+  Required. Hostname for the SSH tunnel.
+
+* `username` -
+  (Required)
+  Required. Username for the SSH tunnel.
+
+* `port` -
+  (Required)
+  Port for the SSH tunnel, default value is 22.
+
+* `password` -
+  (Optional)
+  Input only. SSH password. Only one of `password` and `private_key` can be configured.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `private_key` -
+  (Optional)
+  Input only. SSH private key. Only one of `password` and `private_key` can be configured.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
+<a name="nested_sqlserver_private_connectivity"></a>The `private_connectivity` block supports:
+
+* `private_connection` -
+  (Required)
+  Required. The resource name (URI) of the private connection.
+
+<a name="nested_sqlserver_private_service_connect_connectivity"></a>The `private_service_connect_connectivity` block supports:
+
+* `service_attachment` -
+  (Required)
+  Required. The resource name (URI) of the service attachment.
 
 ## Attributes Reference
 

@@ -176,7 +176,7 @@ It is specified in the form: 'projects/{project_number}/global/networks/{network
 						},
 					},
 				},
-				ExactlyOneOf: []string{"mysql", "postgresql", "oracle", "cloudsql", "alloydb"},
+				ExactlyOneOf: []string{"mysql", "postgresql", "oracle", "cloudsql", "alloydb", "sqlserver"},
 			},
 			"cloudsql": {
 				Type:        schema.TypeList,
@@ -360,7 +360,7 @@ For more information, see https://cloud.google.com/sql/docs/mysql/instance-setti
 						},
 					},
 				},
-				ExactlyOneOf: []string{"mysql", "postgresql", "oracle", "cloudsql", "alloydb"},
+				ExactlyOneOf: []string{"mysql", "postgresql", "oracle", "cloudsql", "alloydb", "sqlserver"},
 			},
 			"display_name": {
 				Type:        schema.TypeString,
@@ -468,7 +468,7 @@ If this field is used then the 'clientCertificate' field is mandatory.`,
 						},
 					},
 				},
-				ExactlyOneOf: []string{"mysql", "postgresql", "oracle", "cloudsql", "alloydb"},
+				ExactlyOneOf: []string{"mysql", "postgresql", "oracle", "cloudsql", "alloydb", "sqlserver"},
 			},
 			"oracle": {
 				Type:        schema.TypeList,
@@ -623,7 +623,7 @@ Static IP address connectivity configured on service project.`,
 						},
 					},
 				},
-				ExactlyOneOf: []string{"mysql", "postgresql", "oracle", "cloudsql", "alloydb"},
+				ExactlyOneOf: []string{"mysql", "postgresql", "oracle", "cloudsql", "alloydb", "sqlserver"},
 			},
 			"postgresql": {
 				Type:        schema.TypeList,
@@ -723,7 +723,204 @@ If this field is used then the 'clientCertificate' field is mandatory.`,
 						},
 					},
 				},
-				ExactlyOneOf: []string{"mysql", "postgresql", "oracle", "cloudsql", "alloydb"},
+				ExactlyOneOf: []string{"mysql", "postgresql", "oracle", "cloudsql", "alloydb", "sqlserver"},
+			},
+			"sqlserver": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Specifies connection parameters required specifically for SQL Server databases.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"host": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `Required. The IP or hostname of the source SQL Server database.`,
+						},
+						"password": {
+							Type:     schema.TypeString,
+							Required: true,
+							ForceNew: true,
+							Description: `Required. Input only. The password for the user that Database Migration Service will be using to connect to the database.
+This field is not returned on request, and the value is encrypted when stored in Database Migration Service.`,
+							Sensitive: true,
+						},
+						"port": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: `Required. The network port of the source SQL Server database.`,
+						},
+						"username": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `Required. The username that Database Migration Service will use to connect to the database. The value is encrypted when stored in Database Migration Service.`,
+						},
+						"backups": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Backup details for SQL Server databases in Cloud Storage for migration to Cloud SQL.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"gcs_bucket": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Cloud Storage bucket name where the SQL Server backup files are stored.`,
+									},
+									"gcs_prefix": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Cloud Storage path prefix for the SQL Server backup files.`,
+									},
+								},
+							},
+						},
+						"cloud_sql_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `If the source is a Cloud SQL database, use this field to provide the Cloud SQL instance ID of the source.`,
+						},
+						"database": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `The database name for the SQL Server connection.`,
+						},
+						"forward_ssh_connectivity": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Forward SSH tunnel connectivity for the destination to connect to the source database.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"hostname": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Required. Hostname for the SSH tunnel.`,
+									},
+									"port": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: `Port for the SSH tunnel, default value is 22.`,
+									},
+									"username": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Required. Username for the SSH tunnel.`,
+									},
+									"password": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ForceNew:     true,
+										Description:  `Input only. SSH password. Only one of 'password' and 'private_key' can be configured.`,
+										Sensitive:    true,
+										ExactlyOneOf: []string{"sqlserver.0.forward_ssh_connectivity.0.password", "sqlserver.0.forward_ssh_connectivity.0.private_key"},
+									},
+									"private_key": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ForceNew:     true,
+										Description:  `Input only. SSH private key. Only one of 'password' and 'private_key' can be configured.`,
+										Sensitive:    true,
+										ExactlyOneOf: []string{"sqlserver.0.forward_ssh_connectivity.0.password", "sqlserver.0.forward_ssh_connectivity.0.private_key"},
+									},
+								},
+							},
+							ExactlyOneOf: []string{"sqlserver.0.static_ip_connectivity", "sqlserver.0.forward_ssh_connectivity", "sqlserver.0.private_connectivity", "sqlserver.0.private_service_connect_connectivity"},
+						},
+						"private_connectivity": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration for using a private network to communicate with the source database`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"private_connection": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Required. The resource name (URI) of the private connection.`,
+									},
+								},
+							},
+							ExactlyOneOf: []string{"sqlserver.0.static_ip_connectivity", "sqlserver.0.forward_ssh_connectivity", "sqlserver.0.private_connectivity", "sqlserver.0.private_service_connect_connectivity"},
+						},
+						"private_service_connect_connectivity": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration for using Private Service Connect to communicate with the source database`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"service_attachment": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Required. The resource name (URI) of the service attachment.`,
+									},
+								},
+							},
+							ExactlyOneOf: []string{"sqlserver.0.static_ip_connectivity", "sqlserver.0.forward_ssh_connectivity", "sqlserver.0.private_connectivity", "sqlserver.0.private_service_connect_connectivity"},
+						},
+						"ssl": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `SSL configuration for the destination to connect to the source database.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"ca_certificate": {
+										Type:     schema.TypeString,
+										Optional: true,
+										ForceNew: true,
+										Description: `Input only. The x509 PEM-encoded certificate of the CA that signed the source database server's certificate.
+The replica will use this certificate to verify it's connecting to the right host.`,
+										Sensitive: true,
+									},
+									"client_certificate": {
+										Type:     schema.TypeString,
+										Optional: true,
+										ForceNew: true,
+										Description: `Input only. The x509 PEM-encoded certificate that will be used by the replica to authenticate against the source database server.
+If this field is used then the 'clientKey' field is mandatory.`,
+										Sensitive:    true,
+										RequiredWith: []string{"sqlserver.0.ssl.0.client_key"},
+									},
+									"client_key": {
+										Type:     schema.TypeString,
+										Optional: true,
+										ForceNew: true,
+										Description: `Input only. The unencrypted PKCS#1 or PKCS#8 PEM-encoded private key associated with the Client Certificate.
+If this field is used then the 'clientCertificate' field is mandatory.`,
+										Sensitive:    true,
+										RequiredWith: []string{"sqlserver.0.ssl.0.client_certificate"},
+									},
+									"type": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"SERVER_ONLY", "SERVER_CLIENT", ""}),
+										Description:  `The SSL connection type. Possible values: ["SERVER_ONLY", "SERVER_CLIENT"]`,
+									},
+								},
+							},
+						},
+						"static_ip_connectivity": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `This object has no nested fields.
+
+Static IP address connectivity configured on service project.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{},
+							},
+							ExactlyOneOf: []string{"sqlserver.0.static_ip_connectivity", "sqlserver.0.forward_ssh_connectivity", "sqlserver.0.private_connectivity", "sqlserver.0.private_service_connect_connectivity"},
+						},
+						"password_set": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: `Output only. Indicates If this connection profile password is stored.`,
+						},
+					},
+				},
+				ExactlyOneOf: []string{"mysql", "postgresql", "oracle", "cloudsql", "alloydb", "sqlserver"},
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -839,6 +1036,12 @@ func resourceDatabaseMigrationServiceConnectionProfileCreate(d *schema.ResourceD
 		return err
 	} else if v, ok := d.GetOkExists("alloydb"); !tpgresource.IsEmptyValue(reflect.ValueOf(alloydbProp)) && (ok || !reflect.DeepEqual(v, alloydbProp)) {
 		obj["alloydb"] = alloydbProp
+	}
+	sqlserverProp, err := expandDatabaseMigrationServiceConnectionProfileSqlserver(d.Get("sqlserver"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("sqlserver"); !tpgresource.IsEmptyValue(reflect.ValueOf(sqlserverProp)) && (ok || !reflect.DeepEqual(v, sqlserverProp)) {
+		obj["sqlserver"] = sqlserverProp
 	}
 	labelsProp, err := expandDatabaseMigrationServiceConnectionProfileEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -981,6 +1184,9 @@ func resourceDatabaseMigrationServiceConnectionProfileRead(d *schema.ResourceDat
 	if err := d.Set("alloydb", flattenDatabaseMigrationServiceConnectionProfileAlloydb(res["alloydb"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+	if err := d.Set("sqlserver", flattenDatabaseMigrationServiceConnectionProfileSqlserver(res["sqlserver"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
+	}
 	if err := d.Set("terraform_labels", flattenDatabaseMigrationServiceConnectionProfileTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
@@ -1043,6 +1249,12 @@ func resourceDatabaseMigrationServiceConnectionProfileUpdate(d *schema.ResourceD
 	} else if v, ok := d.GetOkExists("alloydb"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, alloydbProp)) {
 		obj["alloydb"] = alloydbProp
 	}
+	sqlserverProp, err := expandDatabaseMigrationServiceConnectionProfileSqlserver(d.Get("sqlserver"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("sqlserver"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, sqlserverProp)) {
+		obj["sqlserver"] = sqlserverProp
+	}
 	labelsProp, err := expandDatabaseMigrationServiceConnectionProfileEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -1081,6 +1293,10 @@ func resourceDatabaseMigrationServiceConnectionProfileUpdate(d *schema.ResourceD
 
 	if d.HasChange("alloydb") {
 		updateMask = append(updateMask, "alloydb")
+	}
+
+	if d.HasChange("sqlserver") {
+		updateMask = append(updateMask, "sqlserver")
 	}
 
 	if d.HasChange("effective_labels") {
@@ -2017,6 +2233,238 @@ func flattenDatabaseMigrationServiceConnectionProfileAlloydbSettingsPrimaryInsta
 }
 
 func flattenDatabaseMigrationServiceConnectionProfileAlloydbSettingsPrimaryInstanceSettingsPrivateIp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserver(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["host"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverHost(original["host"], d, config)
+	transformed["port"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverPort(original["port"], d, config)
+	transformed["username"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverUsername(original["username"], d, config)
+	transformed["database"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverDatabase(original["database"], d, config)
+	transformed["password"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverPassword(original["password"], d, config)
+	transformed["password_set"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverPasswordSet(original["passwordSet"], d, config)
+	transformed["ssl"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverSsl(original["ssl"], d, config)
+	transformed["cloud_sql_id"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverCloudSqlId(original["cloudSqlId"], d, config)
+	transformed["backups"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverBackups(original["backups"], d, config)
+	transformed["static_ip_connectivity"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverStaticIpConnectivity(original["staticIpConnectivity"], d, config)
+	transformed["forward_ssh_connectivity"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivity(original["forwardSshConnectivity"], d, config)
+	transformed["private_connectivity"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverPrivateConnectivity(original["privateConnectivity"], d, config)
+	transformed["private_service_connect_connectivity"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverPrivateServiceConnectConnectivity(original["privateServiceConnectConnectivity"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverHost(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverPort(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverUsername(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverDatabase(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("sqlserver.0.password")
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverPasswordSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverSsl(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["type"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverSslType(original["type"], d, config)
+	transformed["client_key"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverSslClientKey(original["clientKey"], d, config)
+	transformed["client_certificate"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverSslClientCertificate(original["clientCertificate"], d, config)
+	transformed["ca_certificate"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverSslCaCertificate(original["caCertificate"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverSslType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverSslClientKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("sqlserver.0.ssl.0.client_key")
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverSslClientCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("sqlserver.0.ssl.0.client_certificate")
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverSslCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("sqlserver.0.ssl.0.ca_certificate")
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverCloudSqlId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverBackups(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["gcs_bucket"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverBackupsGcsBucket(original["gcsBucket"], d, config)
+	transformed["gcs_prefix"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverBackupsGcsPrefix(original["gcsPrefix"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverBackupsGcsBucket(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverBackupsGcsPrefix(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverStaticIpConnectivity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	return []interface{}{transformed}
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["hostname"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityHostname(original["hostname"], d, config)
+	transformed["username"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityUsername(original["username"], d, config)
+	transformed["port"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPort(original["port"], d, config)
+	transformed["password"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPassword(original["password"], d, config)
+	transformed["private_key"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPrivateKey(original["privateKey"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityUsername(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPort(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("sqlserver.0.forward_ssh_connectivity.0.password")
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("sqlserver.0.forward_ssh_connectivity.0.private_key")
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverPrivateConnectivity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["private_connection"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverPrivateConnectivityPrivateConnection(original["privateConnection"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverPrivateConnectivityPrivateConnection(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverPrivateServiceConnectConnectivity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["service_attachment"] =
+		flattenDatabaseMigrationServiceConnectionProfileSqlserverPrivateServiceConnectConnectivityServiceAttachment(original["serviceAttachment"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatabaseMigrationServiceConnectionProfileSqlserverPrivateServiceConnectConnectivityServiceAttachment(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -3213,6 +3661,355 @@ func expandDatabaseMigrationServiceConnectionProfileAlloydbSettingsPrimaryInstan
 }
 
 func expandDatabaseMigrationServiceConnectionProfileAlloydbSettingsPrimaryInstanceSettingsPrivateIp(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserver(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedHost, err := expandDatabaseMigrationServiceConnectionProfileSqlserverHost(original["host"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedHost); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["host"] = transformedHost
+	}
+
+	transformedPort, err := expandDatabaseMigrationServiceConnectionProfileSqlserverPort(original["port"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["port"] = transformedPort
+	}
+
+	transformedUsername, err := expandDatabaseMigrationServiceConnectionProfileSqlserverUsername(original["username"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["username"] = transformedUsername
+	}
+
+	transformedDatabase, err := expandDatabaseMigrationServiceConnectionProfileSqlserverDatabase(original["database"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDatabase); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["database"] = transformedDatabase
+	}
+
+	transformedPassword, err := expandDatabaseMigrationServiceConnectionProfileSqlserverPassword(original["password"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["password"] = transformedPassword
+	}
+
+	transformedPasswordSet, err := expandDatabaseMigrationServiceConnectionProfileSqlserverPasswordSet(original["password_set"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPasswordSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["passwordSet"] = transformedPasswordSet
+	}
+
+	transformedSsl, err := expandDatabaseMigrationServiceConnectionProfileSqlserverSsl(original["ssl"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSsl); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["ssl"] = transformedSsl
+	}
+
+	transformedCloudSqlId, err := expandDatabaseMigrationServiceConnectionProfileSqlserverCloudSqlId(original["cloud_sql_id"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCloudSqlId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["cloudSqlId"] = transformedCloudSqlId
+	}
+
+	transformedBackups, err := expandDatabaseMigrationServiceConnectionProfileSqlserverBackups(original["backups"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedBackups); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["backups"] = transformedBackups
+	}
+
+	transformedStaticIpConnectivity, err := expandDatabaseMigrationServiceConnectionProfileSqlserverStaticIpConnectivity(original["static_ip_connectivity"], d, config)
+	if err != nil {
+		return nil, err
+	} else {
+		transformed["staticIpConnectivity"] = transformedStaticIpConnectivity
+	}
+
+	transformedForwardSshConnectivity, err := expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivity(original["forward_ssh_connectivity"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedForwardSshConnectivity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["forwardSshConnectivity"] = transformedForwardSshConnectivity
+	}
+
+	transformedPrivateConnectivity, err := expandDatabaseMigrationServiceConnectionProfileSqlserverPrivateConnectivity(original["private_connectivity"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPrivateConnectivity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["privateConnectivity"] = transformedPrivateConnectivity
+	}
+
+	transformedPrivateServiceConnectConnectivity, err := expandDatabaseMigrationServiceConnectionProfileSqlserverPrivateServiceConnectConnectivity(original["private_service_connect_connectivity"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPrivateServiceConnectConnectivity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["privateServiceConnectConnectivity"] = transformedPrivateServiceConnectConnectivity
+	}
+
+	return transformed, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverHost(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverDatabase(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverPasswordSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverSsl(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedType, err := expandDatabaseMigrationServiceConnectionProfileSqlserverSslType(original["type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["type"] = transformedType
+	}
+
+	transformedClientKey, err := expandDatabaseMigrationServiceConnectionProfileSqlserverSslClientKey(original["client_key"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientKey"] = transformedClientKey
+	}
+
+	transformedClientCertificate, err := expandDatabaseMigrationServiceConnectionProfileSqlserverSslClientCertificate(original["client_certificate"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientCertificate"] = transformedClientCertificate
+	}
+
+	transformedCaCertificate, err := expandDatabaseMigrationServiceConnectionProfileSqlserverSslCaCertificate(original["ca_certificate"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCaCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["caCertificate"] = transformedCaCertificate
+	}
+
+	return transformed, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverSslType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverSslClientKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverSslClientCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverSslCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverCloudSqlId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverBackups(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedGcsBucket, err := expandDatabaseMigrationServiceConnectionProfileSqlserverBackupsGcsBucket(original["gcs_bucket"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedGcsBucket); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["gcsBucket"] = transformedGcsBucket
+	}
+
+	transformedGcsPrefix, err := expandDatabaseMigrationServiceConnectionProfileSqlserverBackupsGcsPrefix(original["gcs_prefix"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedGcsPrefix); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["gcsPrefix"] = transformedGcsPrefix
+	}
+
+	return transformed, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverBackupsGcsBucket(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverBackupsGcsPrefix(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverStaticIpConnectivity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 {
+		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
+	}
+	transformed := make(map[string]interface{})
+
+	return transformed, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedHostname, err := expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityHostname(original["hostname"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedHostname); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["hostname"] = transformedHostname
+	}
+
+	transformedUsername, err := expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityUsername(original["username"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["username"] = transformedUsername
+	}
+
+	transformedPort, err := expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPort(original["port"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["port"] = transformedPort
+	}
+
+	transformedPassword, err := expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPassword(original["password"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["password"] = transformedPassword
+	}
+
+	transformedPrivateKey, err := expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPrivateKey(original["private_key"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPrivateKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["privateKey"] = transformedPrivateKey
+	}
+
+	return transformed, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityHostname(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverForwardSshConnectivityPrivateKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverPrivateConnectivity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPrivateConnection, err := expandDatabaseMigrationServiceConnectionProfileSqlserverPrivateConnectivityPrivateConnection(original["private_connection"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPrivateConnection); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["privateConnection"] = transformedPrivateConnection
+	}
+
+	return transformed, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverPrivateConnectivityPrivateConnection(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverPrivateServiceConnectConnectivity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedServiceAttachment, err := expandDatabaseMigrationServiceConnectionProfileSqlserverPrivateServiceConnectConnectivityServiceAttachment(original["service_attachment"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedServiceAttachment); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["serviceAttachment"] = transformedServiceAttachment
+	}
+
+	return transformed, nil
+}
+
+func expandDatabaseMigrationServiceConnectionProfileSqlserverPrivateServiceConnectConnectivityServiceAttachment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

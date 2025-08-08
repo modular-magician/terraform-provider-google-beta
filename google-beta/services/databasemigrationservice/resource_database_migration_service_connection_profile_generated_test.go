@@ -566,6 +566,57 @@ resource "google_database_migration_service_connection_profile" "existing-alloyd
 `, context)
 }
 
+func TestAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceConnectionProfileSqlserverExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDatabaseMigrationServiceConnectionProfileDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceConnectionProfileSqlserverExample(context),
+			},
+			{
+				ResourceName:            "google_database_migration_service_connection_profile.sqlserverprofile",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"connection_profile_id", "labels", "location", "sqlserver.0.password", "sqlserver.0.ssl.0.ca_certificate", "sqlserver.0.ssl.0.client_certificate", "sqlserver.0.ssl.0.client_key", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDatabaseMigrationServiceConnectionProfile_databaseMigrationServiceConnectionProfileSqlserverExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_database_migration_service_connection_profile" "<%= ctx[:primary_resource_id] %>" {
+  location              = "us-central1"
+  connection_profile_id = "<%= ctx[:vars]['profile'] %>"
+  display_name          = "<%= ctx[:vars]['profile'] %>"
+  labels = {
+    foo = "bar"
+  }
+  sqlserver {
+    host     = "10.1.0.100"
+    port     = 1433
+    username = "<%= ctx[:vars]['sqldb_user'] %>"
+    password = "<%= ctx[:vars]['sqldb_pass'] %>"
+
+    ssl {
+      type = "SERVER_ONLY"
+      ca_certificate = file("<%= ctx[:vars]['sqldb_cert'] %>.pem")
+    }
+
+    static_service_ip_connectivity {}
+  }
+}
+`, context)
+}
+
 func testAccCheckDatabaseMigrationServiceConnectionProfileDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
