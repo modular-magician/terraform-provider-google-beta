@@ -210,6 +210,50 @@ resource "google_compute_region_security_policy" "region-sec-policy-with-rules" 
 `, context)
 }
 
+func TestAccComputeRegionSecurityPolicy_regionSecurityPolicyWithAdvancedOptionsExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeRegionSecurityPolicyDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeRegionSecurityPolicy_regionSecurityPolicyWithAdvancedOptionsExample(context),
+			},
+			{
+				ResourceName:            "google_compute_region_security_policy.region-sec-policy-with-rules",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region"},
+			},
+		},
+	})
+}
+
+func testAccComputeRegionSecurityPolicy_regionSecurityPolicyWithAdvancedOptionsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_region_security_policy" "region-sec-policy-with-rules" {
+  name        = "tf-test-my-sec-policy-with-rules%{random_suffix}"
+  description = "with advanced config"
+  type        = "CLOUD_ARMOR"
+
+  advanced_options_config {
+    json_parsing = "STANDARD_WITH_GRAPHQL"
+    json_custom_config {
+      content_types = ["application/json"]
+    }
+    log_level               = "VERBOSE"
+    user_ip_request_headers = ["x-forwarded-for"]
+  }
+}
+`, context)
+}
+
 func testAccCheckComputeRegionSecurityPolicyDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

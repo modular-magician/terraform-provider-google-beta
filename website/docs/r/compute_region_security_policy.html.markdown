@@ -130,6 +130,30 @@ resource "google_compute_region_security_policy" "region-sec-policy-with-rules" 
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=region_security_policy_with_advanced_options&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Region Security Policy With Advanced Options
+
+
+```hcl
+resource "google_compute_region_security_policy" "region-sec-policy-with-rules" {
+  name        = "my-sec-policy-with-rules"
+  description = "with advanced config"
+  type        = "CLOUD_ARMOR"
+
+  advanced_options_config {
+    json_parsing = "STANDARD_WITH_GRAPHQL"
+    json_custom_config {
+      content_types = ["application/json"]
+    }
+    log_level               = "VERBOSE"
+    user_ip_request_headers = ["x-forwarded-for"]
+  }
+}
+```
 
 ## Argument Reference
 
