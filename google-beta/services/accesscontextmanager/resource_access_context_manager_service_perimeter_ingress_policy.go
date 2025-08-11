@@ -328,6 +328,13 @@ are allowed to perform.`,
 	}
 }
 
+func resourceAccessContextManagerServicePerimeterIngressPolicyGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceAccessContextManagerServicePerimeterIngressPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

@@ -118,6 +118,13 @@ You can set this to a value up to 14 weeks.`,
 	}
 }
 
+func resourceFirestoreBackupScheduleGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceFirestoreBackupScheduleCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

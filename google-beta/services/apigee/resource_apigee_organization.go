@@ -202,6 +202,13 @@ Valid values include trial (free, limited, and for evaluation purposes only) or 
 	}
 }
 
+func resourceApigeeOrganizationGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceApigeeOrganizationCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

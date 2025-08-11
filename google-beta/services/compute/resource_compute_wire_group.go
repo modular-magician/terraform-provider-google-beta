@@ -265,6 +265,13 @@ DISABLE_PORT: set the port line protocol down when inline probes detect a fault.
 	}
 }
 
+func resourceComputeWireGroupGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceComputeWireGroupCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

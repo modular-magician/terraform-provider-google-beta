@@ -128,6 +128,13 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 	}
 }
 
+func resourceVertexAIFeaturestoreEntitytypeFeatureGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceVertexAIFeaturestoreEntitytypeFeatureCreate(d *schema.ResourceData, meta interface{}) error {
 	var project string
 	config := meta.(*transport_tpg.Config)

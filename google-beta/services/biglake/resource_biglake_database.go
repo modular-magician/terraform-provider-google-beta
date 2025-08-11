@@ -128,6 +128,13 @@ fractional digits. Examples: "2014-10-02T15:01:23Z" and
 	}
 }
 
+func resourceBiglakeDatabaseGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceBiglakeDatabaseCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

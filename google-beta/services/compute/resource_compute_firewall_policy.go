@@ -115,6 +115,13 @@ Specifically, the name must be 1-63 characters long and match the regular expres
 	}
 }
 
+func resourceComputeFirewallPolicyGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceComputeFirewallPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

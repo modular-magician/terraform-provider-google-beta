@@ -143,6 +143,13 @@ Validation with these roots is only considered when the TlsSettings.sni field in
 	}
 }
 
+func resourceNetworkSecurityBackendAuthenticationConfigGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceNetworkSecurityBackendAuthenticationConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

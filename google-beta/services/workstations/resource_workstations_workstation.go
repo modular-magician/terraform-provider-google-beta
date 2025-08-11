@@ -175,6 +175,13 @@ To send traffic to a different port, clients may prefix the host with the destin
 	}
 }
 
+func resourceWorkstationsWorkstationGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceWorkstationsWorkstationCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

@@ -168,6 +168,13 @@ projects/{project_number}/locations/{location}/vmwareEngineNetworks/{vmwareEngin
 	}
 }
 
+func resourceVmwareengineNetworkPolicyGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceVmwareengineNetworkPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

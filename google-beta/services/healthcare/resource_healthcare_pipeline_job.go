@@ -291,6 +291,13 @@ in the format of: project/{projectID}/locations/{locationID}/datasets/{datasetNa
 	}
 }
 
+func resourceHealthcarePipelineJobGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceHealthcarePipelineJobCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

@@ -665,6 +665,13 @@ May be sent on update and delete requests to ensure that the client has an up-to
 	}
 }
 
+func resourceWorkstationsWorkstationConfigGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceWorkstationsWorkstationConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

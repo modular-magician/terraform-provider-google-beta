@@ -88,6 +88,13 @@ A duration in seconds with up to nine fractional digits, ending with 's'. Exampl
 	}
 }
 
+func resourceFirebaseAppCheckAppAttestConfigGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceFirebaseAppCheckAppAttestConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

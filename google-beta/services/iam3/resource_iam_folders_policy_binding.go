@@ -215,6 +215,13 @@ to the policy kind) - The input policy kind   Possible values:  POLICY_KIND_UNSP
 	}
 }
 
+func resourceIAM3FoldersPolicyBindingGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceIAM3FoldersPolicyBindingCreate(d *schema.ResourceData, meta interface{}) error {
 	var project string
 	config := meta.(*transport_tpg.Config)

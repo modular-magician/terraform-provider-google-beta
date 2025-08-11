@@ -263,6 +263,13 @@ e.g. projects/123/locations/US/dataExchanges/456/listings/789 -> projects/123/da
 	}
 }
 
+func resourceBigqueryAnalyticsHubListingSubscriptionGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceBigqueryAnalyticsHubListingSubscriptionCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

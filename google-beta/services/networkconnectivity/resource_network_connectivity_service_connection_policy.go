@@ -290,6 +290,13 @@ facing or system internal. Possible values: ["CONNECTION_ERROR_TYPE_UNSPECIFIED"
 	}
 }
 
+func resourceNetworkConnectivityServiceConnectionPolicyGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceNetworkConnectivityServiceConnectionPolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

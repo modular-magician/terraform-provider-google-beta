@@ -1058,6 +1058,13 @@ If not set, the EdgeCacheService has no SSL policy configured, and will default 
 	}
 }
 
+func resourceNetworkServicesEdgeCacheServiceGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceNetworkServicesEdgeCacheServiceCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

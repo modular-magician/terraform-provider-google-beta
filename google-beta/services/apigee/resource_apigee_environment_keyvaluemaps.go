@@ -66,6 +66,13 @@ in the format 'organizations/{{org_name}}/environments/{{env_name}}'.`,
 	}
 }
 
+func resourceApigeeEnvironmentKeyvaluemapsGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceApigeeEnvironmentKeyvaluemapsCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

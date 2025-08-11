@@ -271,6 +271,13 @@ func networksecuritySecurityProfileThreatPreventionProfileAntivirusOverridesSche
 	}
 }
 
+func resourceNetworkSecuritySecurityProfileGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceNetworkSecuritySecurityProfileCreate(d *schema.ResourceData, meta interface{}) error {
 	var project string
 	config := meta.(*transport_tpg.Config)

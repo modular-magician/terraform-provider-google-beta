@@ -327,6 +327,13 @@ so users must set this field to false to unlink the dataset and destroy the data
 	}
 }
 
+func resourceStorageInsightsDatasetConfigGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceStorageInsightsDatasetConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

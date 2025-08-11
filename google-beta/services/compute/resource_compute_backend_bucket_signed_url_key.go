@@ -83,6 +83,13 @@ valid RFC 4648 Section 5 base64url encoded string.`,
 	}
 }
 
+func resourceComputeBackendBucketSignedUrlKeyGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceComputeBackendBucketSignedUrlKeyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

@@ -511,6 +511,13 @@ There must be at least one IP address available in the subnet's primary range. T
 	}
 }
 
+func resourceDataprocMetastoreServiceGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceDataprocMetastoreServiceCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

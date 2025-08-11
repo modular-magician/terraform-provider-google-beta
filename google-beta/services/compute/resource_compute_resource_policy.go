@@ -439,6 +439,13 @@ It must be in format "HH:MM", where HH : [00-23] and MM : [00-00] GMT.`,
 	}
 }
 
+func resourceComputeResourcePolicyGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceComputeResourcePolicyCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

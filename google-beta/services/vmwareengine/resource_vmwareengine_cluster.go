@@ -239,6 +239,13 @@ There can only be one management cluster in a private cloud and it has to be the
 	}
 }
 
+func resourceVmwareengineClusterGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceVmwareengineClusterCreate(d *schema.ResourceData, meta interface{}) error {
 	var project string
 	config := meta.(*transport_tpg.Config)

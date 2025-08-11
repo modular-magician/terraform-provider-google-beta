@@ -35,6 +35,9 @@ To get more information about VpnTunnel, see:
 values will be stored in the raw state as plain text: `shared_secret`.
 [Read more about sensitive data in state](https://www.terraform.io/language/state/sensitive-data).
 
+~> **Note:**  All arguments marked as write-only values will not be stored in the state: `shared_secret_wo`.
+[Read more about Write-only Attributes](https://developer.hashicorp.com/terraform/plugin/sdkv2/resources/write-only-arguments).
+
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=vpn_tunnel_basic&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
@@ -217,12 +220,6 @@ The following arguments are supported:
   be a dash, lowercase letter, or digit,
   except the last character, which cannot be a dash.
 
-* `shared_secret` -
-  (Required)
-  Shared secret used to set the secure session between the Cloud VPN
-  gateway and the peer VPN gateway.
-  **Note**: This property is sensitive and will not be displayed in the plan.
-
 
 * `description` -
   (Optional)
@@ -266,6 +263,12 @@ The following arguments are supported:
   (Optional)
   IP address of the peer VPN gateway. Only IPv4 is supported.
 
+* `shared_secret` -
+  (Optional)
+  Shared secret used to set the secure session between the Cloud VPN
+  gateway and the peer VPN gateway.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
 * `ike_version` -
   (Optional)
   IKE protocol version to use when establishing the VPN tunnel with
@@ -296,6 +299,10 @@ The following arguments are supported:
   (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   User specified list of ciphers to use for the phase 1 and phase 2 of the IKE protocol.
   Structure is [documented below](#nested_cipher_suite).
+
+* `shared_secret_wo_version` -
+  (Optional)
+  Triggers update of shared_secret_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)
 
 * `region` -
   (Optional)
@@ -350,6 +357,18 @@ The following arguments are supported:
 * `pfs` -
   (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Perfect forward secrecy groups.
+
+## Ephemeral Attributes Reference
+
+The following write-only attributes are supported:
+
+* `shared_secret_wo` -
+  (Optional)
+  Shared secret used to set the secure session between the Cloud VPN
+  gateway and the peer VPN gateway.
+   Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)
+  **Note**: This property is write-only and will not be read from the API.
+
 
 ## Attributes Reference
 

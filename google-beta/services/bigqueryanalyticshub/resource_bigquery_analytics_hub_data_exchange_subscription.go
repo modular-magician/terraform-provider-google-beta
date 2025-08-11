@@ -277,6 +277,13 @@ For Data Exchange subscriptions, this map may contain multiple entries if the Da
 	}
 }
 
+func resourceBigqueryAnalyticsHubDataExchangeSubscriptionGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceBigqueryAnalyticsHubDataExchangeSubscriptionCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

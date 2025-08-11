@@ -333,6 +333,13 @@ custom access levels - https://cloud.google.com/access-context-manager/docs/cust
 	}
 }
 
+func resourceAccessContextManagerAccessLevelsGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceAccessContextManagerAccessLevelsCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

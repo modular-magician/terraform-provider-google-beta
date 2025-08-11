@@ -109,6 +109,13 @@ fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045
 	}
 }
 
+func resourceVmwareengineExternalAddressGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceVmwareengineExternalAddressCreate(d *schema.ResourceData, meta interface{}) error {
 	var project string
 	config := meta.(*transport_tpg.Config)

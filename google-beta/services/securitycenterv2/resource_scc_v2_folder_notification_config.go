@@ -139,6 +139,13 @@ publish to the Pub/Sub topic.`,
 	}
 }
 
+func resourceSecurityCenterV2FolderNotificationConfigGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceSecurityCenterV2FolderNotificationConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

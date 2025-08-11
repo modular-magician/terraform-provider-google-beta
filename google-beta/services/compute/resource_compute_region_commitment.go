@@ -234,6 +234,13 @@ The type could be one of the following value: 'MEMORY_OPTIMIZED', 'ACCELERATOR_O
 	}
 }
 
+func resourceComputeRegionCommitmentGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceComputeRegionCommitmentCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

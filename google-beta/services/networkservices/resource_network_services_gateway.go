@@ -351,6 +351,13 @@ If there is no other gateway of type 'SECURE_WEB_GATEWAY' remaining for that reg
 	}
 }
 
+func resourceNetworkServicesGatewayGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceNetworkServicesGatewayCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

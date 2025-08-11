@@ -126,6 +126,13 @@ sites/SITE_ID/channels/CHANNEL_ID`,
 	}
 }
 
+func resourceFirebaseHostingChannelGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceFirebaseHostingChannelCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

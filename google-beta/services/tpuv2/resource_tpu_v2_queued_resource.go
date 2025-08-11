@@ -189,6 +189,13 @@ Engine subnetwork. If none is provided, "default" will be used.`,
 	}
 }
 
+func resourceTpuV2QueuedResourceGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceTpuV2QueuedResourceCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

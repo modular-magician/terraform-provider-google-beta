@@ -174,6 +174,13 @@ This can be used e.g. in UIs which allow to enter the expression.`,
 	}
 }
 
+func resourceCloudAssetOrganizationFeedGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceCloudAssetOrganizationFeedCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

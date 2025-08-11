@@ -139,6 +139,13 @@ restoreChannels.delete to ensure that their change will be applied to the same v
 	}
 }
 
+func resourceGKEBackupRestoreChannelGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceGKEBackupRestoreChannelCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

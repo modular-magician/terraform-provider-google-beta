@@ -197,6 +197,13 @@ https://compute.googleapis.com/compute/v1/projects/{project}/regions/{region}/su
 	}
 }
 
+func resourceVPCAccessConnectorGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceVPCAccessConnectorCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

@@ -219,6 +219,13 @@ to the policy kind) - The input policy kind   Possible values:  POLICY_KIND_UNSP
 	}
 }
 
+func resourceIAM3ProjectsPolicyBindingGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceIAM3ProjectsPolicyBindingCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

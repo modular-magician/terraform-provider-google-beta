@@ -188,6 +188,13 @@ documented in more detail in [AIP-160](https://google.aip.dev/160).`,
 	}
 }
 
+func resourceEdgecontainerNodePoolGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceEdgecontainerNodePoolCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

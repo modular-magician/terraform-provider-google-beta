@@ -249,6 +249,13 @@ Flag is set to Yes if the certificate is valid, No if expired, or Not yet if not
 	}
 }
 
+func resourceApigeeKeystoresAliasesSelfSignedCertGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceApigeeKeystoresAliasesSelfSignedCertCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

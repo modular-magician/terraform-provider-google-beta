@@ -296,6 +296,13 @@ A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to n
 	}
 }
 
+func resourceVertexAIIndexEndpointDeployedIndexGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceVertexAIIndexEndpointDeployedIndexCreate(d *schema.ResourceData, meta interface{}) error {
 	var project string
 	config := meta.(*transport_tpg.Config)

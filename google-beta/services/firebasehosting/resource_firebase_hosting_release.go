@@ -109,6 +109,13 @@ sites/SITE_ID/channels/CHANNEL_ID/releases/RELEASE_ID`,
 	}
 }
 
+func resourceFirebaseHostingReleaseGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceFirebaseHostingReleaseCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

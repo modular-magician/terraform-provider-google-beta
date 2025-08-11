@@ -192,6 +192,13 @@ A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to n
 	}
 }
 
+func resourceKMSEkmConnectionGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceKMSEkmConnectionCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

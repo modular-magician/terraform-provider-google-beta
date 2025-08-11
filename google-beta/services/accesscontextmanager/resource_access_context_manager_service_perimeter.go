@@ -1043,6 +1043,13 @@ bet set to True if any of the fields in the spec are set to non-default values.`
 	}
 }
 
+func resourceAccessContextManagerServicePerimeterGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceAccessContextManagerServicePerimeterCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

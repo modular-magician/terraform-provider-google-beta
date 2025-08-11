@@ -132,6 +132,13 @@ The score values range from 0.0 (completely uncertain) to 1.0 (completely certai
 	}
 }
 
+func resourceDialogflowCXVersionGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceDialogflowCXVersionCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

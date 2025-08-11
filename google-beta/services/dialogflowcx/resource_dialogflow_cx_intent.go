@@ -228,6 +228,13 @@ The Default Negative Intent cannot be deleted; deleting the 'google_dialogflow_c
 	}
 }
 
+func resourceDialogflowCXIntentGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceDialogflowCXIntentCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

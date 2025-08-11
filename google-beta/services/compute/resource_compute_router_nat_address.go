@@ -192,6 +192,13 @@ valid static external IPs that have been assigned to the NAT.`,
 	}
 }
 
+func resourceComputeRouterNatAddressGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceComputeRouterNatAddressCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	// A custom_create function similar to the generated code when using a nested_query, but replaces the encoder with a custom one instead of just injecting it;

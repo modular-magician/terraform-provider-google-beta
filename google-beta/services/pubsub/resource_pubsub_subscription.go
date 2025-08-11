@@ -620,6 +620,13 @@ A duration in seconds with up to nine fractional digits, terminated by 's'. Exam
 	}
 }
 
+func resourcePubsubSubscriptionGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourcePubsubSubscriptionCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

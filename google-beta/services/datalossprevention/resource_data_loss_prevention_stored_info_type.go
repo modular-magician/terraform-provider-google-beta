@@ -289,6 +289,13 @@ characters. Can be empty to allow the system to generate one.`,
 	}
 }
 
+func resourceDataLossPreventionStoredInfoTypeGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceDataLossPreventionStoredInfoTypeCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

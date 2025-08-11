@@ -183,6 +183,13 @@ user is the name of the user as seen by the kubernetes cluster, example
 	}
 }
 
+func resourceGKEHub2ScopeRBACRoleBindingGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceGKEHub2ScopeRBACRoleBindingCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

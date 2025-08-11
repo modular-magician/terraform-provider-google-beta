@@ -1265,6 +1265,13 @@ The alias definitions must be set on the run.googleapis.com/secrets annotation.`
 	}
 }
 
+func resourceCloudRunServiceGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceCloudRunServiceCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

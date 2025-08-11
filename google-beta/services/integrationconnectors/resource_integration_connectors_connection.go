@@ -1133,6 +1133,13 @@ e.g. "projects/cloud-connectors-e2e-testing/locations/us-central1/namespaces/ist
 	}
 }
 
+func resourceIntegrationConnectorsConnectionGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceIntegrationConnectorsConnectionCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

@@ -240,6 +240,13 @@ For more information, refer to [Choosing a load balancer](https://cloud.google.c
 	}
 }
 
+func resourceNetworkServicesLbTrafficExtensionGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceNetworkServicesLbTrafficExtensionCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

@@ -142,6 +142,13 @@ value before proceeding.`,
 	}
 }
 
+func resourceNetworkSecuritySecurityProfileGroupGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceNetworkSecuritySecurityProfileGroupCreate(d *schema.ResourceData, meta interface{}) error {
 	var project string
 	config := meta.(*transport_tpg.Config)

@@ -310,6 +310,13 @@ Offsets other than "Z" are also accepted. Examples: "2014-10-02T15:01:23Z", "201
 	}
 }
 
+func resourceApigeeSecurityActionGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceApigeeSecurityActionCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

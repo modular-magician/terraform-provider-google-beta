@@ -4211,6 +4211,13 @@ that is, it must match the regular expression: [a-zA-Z\d-_]+. The maximum length
 	}
 }
 
+func resourceDataLossPreventionDeidentifyTemplateGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceDataLossPreventionDeidentifyTemplateCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

@@ -628,6 +628,13 @@ This field is only used for INTERNAL load balancing.`,
 	}
 }
 
+func resourceComputeForwardingRuleGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceComputeForwardingRuleCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
@@ -845,7 +852,7 @@ func resourceComputeForwardingRuleCreate(d *schema.ResourceData, meta interface{
 	}
 
 	if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		labels := d.Get("labels")
+		userLabels := d.Get("labels")
 		terraformLables := d.Get("terraform_labels")
 
 		// Labels cannot be set in a create.  We'll have to set them here.
@@ -889,7 +896,7 @@ func resourceComputeForwardingRuleCreate(d *schema.ResourceData, meta interface{
 		}
 
 		// Set back the labels field, as it is needed to decide the value of "labels" in the state in the read function.
-		if err := d.Set("labels", labels); err != nil {
+		if err := d.Set("labels", userLabels); err != nil {
 			return fmt.Errorf("Error setting back labels: %s", err)
 		}
 

@@ -364,6 +364,13 @@ The only allowed value for now is "ALL_IPV4_RANGES".`,
 	}
 }
 
+func resourceNetworkConnectivitySpokeGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceNetworkConnectivitySpokeCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

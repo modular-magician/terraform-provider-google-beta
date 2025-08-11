@@ -116,6 +116,13 @@ An up-to-date fingerprint must be provided in order to update the NetworkEdgeSec
 	}
 }
 
+func resourceComputeNetworkEdgeSecurityServiceGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceComputeNetworkEdgeSecurityServiceCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

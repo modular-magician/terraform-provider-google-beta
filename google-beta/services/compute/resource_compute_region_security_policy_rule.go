@@ -532,6 +532,13 @@ Valid options are deny(STATUS), where valid values for STATUS are 403, 404, 429,
 	}
 }
 
+func resourceComputeRegionSecurityPolicyRuleGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceComputeRegionSecurityPolicyRuleCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)

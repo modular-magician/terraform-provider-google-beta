@@ -152,6 +152,13 @@ Format: projects/{project_id}.`,
 	}
 }
 
+func resourceNetworkSecurityFirewallEndpointAssociationGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceNetworkSecurityFirewallEndpointAssociationCreate(d *schema.ResourceData, meta interface{}) error {
 	var project string
 	config := meta.(*transport_tpg.Config)

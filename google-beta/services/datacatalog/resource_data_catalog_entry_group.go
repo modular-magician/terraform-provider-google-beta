@@ -102,6 +102,13 @@ contain only English letters, numbers and underscores, and be at most 64 charact
 	}
 }
 
+func resourceDataCatalogEntryGroupGetRawConfigAttributeAsString(d *schema.ResourceData, key string) string {
+	if v := d.GetRawConfig().GetAttr(key); !v.IsNull() {
+		return v.AsString()
+	}
+	return ""
+}
+
 func resourceDataCatalogEntryGroupCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*transport_tpg.Config)
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
