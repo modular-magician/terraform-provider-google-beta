@@ -16,6 +16,7 @@ fields:
   - field: 'labels'
   - field: 'name'
     provider_only: true
+  - field: 'tags'
   - field: 'terraform_labels'
     provider_only: true
   - field: 'update_time'

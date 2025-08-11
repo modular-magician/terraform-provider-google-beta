@@ -29,5 +29,6 @@ fields:
   - field: 'self_managed.pem_certificate'
   - field: 'self_managed.pem_private_key'
   - field: 'self_managed.private_key_pem'
+  - field: 'tags'
   - field: 'terraform_labels'
     provider_only: true

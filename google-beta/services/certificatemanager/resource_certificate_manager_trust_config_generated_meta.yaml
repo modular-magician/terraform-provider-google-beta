@@ -15,6 +15,7 @@ fields:
     provider_only: true
   - field: 'name'
     provider_only: true
+  - field: 'tags'
   - field: 'terraform_labels'
     provider_only: true
   - field: 'trust_stores.intermediate_cas.pem_certificate'
