@@ -48,6 +48,21 @@ func sensitiveLabelCustomizeDiff(_ context.Context, diff *schema.ResourceDiff, v
 	return nil
 }
 
+func NotificationChannelLabelDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
+	// Suppress diffs for the label provided by Google
+	if strings.Contains(k, "resolve_delivery_enabled") && new == "" {
+		return true
+	}
+
+	// Let diff be determined by labels (above)
+	if strings.Contains(k, "labels.%") {
+		return true
+	}
+
+	// For other keys, don't suppress diff.
+	return false
+}
+
 func ResourceMonitoringNotificationChannel() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceMonitoringNotificationChannelCreate,
@@ -93,8 +108,10 @@ func ResourceMonitoringNotificationChannel() *schema.Resource {
 				Default:     true,
 			},
 			"labels": {
-				Type:     schema.TypeMap,
-				Optional: true,
+				Type:             schema.TypeMap,
+				Computed:         true,
+				Optional:         true,
+				DiffSuppressFunc: NotificationChannelLabelDiffSuppress,
 				Description: `Configuration fields that define the channel and its behavior. The
 permissible and required labels are specified in the
 NotificationChannelDescriptor corresponding to the type field.
