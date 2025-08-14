@@ -28,6 +28,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
@@ -35,14 +36,21 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 )
 
-var sensitiveLabels = []string{"auth_token", "service_key", "password"}
+var sensitiveLabels = []string{"auth_token", "service_key", "password", "auth_token_wo", "service_key_wo", "password_wo"}
 
 func sensitiveLabelCustomizeDiff(_ context.Context, diff *schema.ResourceDiff, v interface{}) error {
-	for _, sl := range sensitiveLabels {
-		mapLabel := diff.Get("labels." + sl).(string)
-		authLabel := diff.Get("sensitive_labels.0." + sl).(string)
+	for _, sp := range sensitiveLabels {
+		mapLabel := diff.Get("labels." + sp).(string)
+		authLabel := diff.Get("sensitive_labels.0." + sp).(string)
 		if mapLabel != "" && authLabel != "" {
-			return fmt.Errorf("Sensitive label [%s] cannot be set in both `labels` and the `sensitive_labels` block.", sl)
+			return fmt.Errorf("Sensitive label [%s] cannot be set in both `labels` and the `sensitive_labels` block.", sp)
+		}
+	}
+	for _, sp := range sensitiveLabels {
+		mapLabel := diff.Get("labels." + sp[:len(sp)-3]).(string)
+		authLabel, _ := diff.GetRawConfigAt(cty.GetAttrPath("sensitive_labels").IndexInt(0).GetAttr(sp))
+		if mapLabel != "" && (!authLabel.IsNull() && authLabel.Type() == cty.String) {
+			return fmt.Errorf("Sensitive label [%s] cannot be set in both `labels` and the `sensitive_labels_wo` block.", sp)
 		}
 	}
 	return nil
@@ -118,25 +126,70 @@ to a different credential configuration in the config will require an apply to u
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"auth_token": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `An authorization token for a notification channel. Channel types that support this field include: slack`,
+							Sensitive:     true,
+							ConflictsWith: []string{"sensitive_labels.0.password", "sensitive_labels.0.service_key"},
+						},
+						"auth_token_wo": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `An authorization token for a notification channel. Channel types that support this field include: slack
+ Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+							WriteOnly:     true,
+							ConflictsWith: []string{"sensitive_labels.0.password", "sensitive_labels.0.service_key", "sensitive_labels.0.auth_token"},
+							RequiredWith:  []string{"sensitive_labels.0.auth_token_wo_version"},
+						},
+						"auth_token_wo_version": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  `An authorization token for a notification channel. Channel types that support this field include: slack`,
-							Sensitive:    true,
-							ExactlyOneOf: []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.password", "sensitive_labels.0.service_key"},
+							Description:  `Triggers update of auth_token_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+							RequiredWith: []string{"sensitive_labels.0.auth_token_wo"},
 						},
 						"password": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `An password for a notification channel. Channel types that support this field include: webhook_basicauth`,
+							Sensitive:     true,
+							ConflictsWith: []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.service_key"},
+						},
+						"password_wo": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `An password for a notification channel. Channel types that support this field include: webhook_basicauth
+ Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+							WriteOnly:     true,
+							ConflictsWith: []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.service_key", "sensitive_labels.0.password"},
+							RequiredWith:  []string{"sensitive_labels.0.password_wo_version"},
+						},
+						"password_wo_version": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  `An password for a notification channel. Channel types that support this field include: webhook_basicauth`,
-							Sensitive:    true,
-							ExactlyOneOf: []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.password", "sensitive_labels.0.service_key"},
+							Description:  `Triggers update of password_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+							RequiredWith: []string{"sensitive_labels.0.password_wo"},
 						},
 						"service_key": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `An servicekey token for a notification channel. Channel types that support this field include: pagerduty`,
+							Sensitive:     true,
+							ConflictsWith: []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.password"},
+						},
+						"service_key_wo": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `An servicekey token for a notification channel. Channel types that support this field include: pagerduty
+ Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+							WriteOnly:     true,
+							ConflictsWith: []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.password", "sensitive_labels.0.service_key"},
+							RequiredWith:  []string{"sensitive_labels.0.service_key_wo_version"},
+						},
+						"service_key_wo_version": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  `An servicekey token for a notification channel. Channel types that support this field include: pagerduty`,
-							Sensitive:    true,
-							ExactlyOneOf: []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.password", "sensitive_labels.0.service_key"},
+							Description:  `Triggers update of service_key_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+							RequiredWith: []string{"sensitive_labels.0.service_key_wo"},
 						},
 					},
 				},
@@ -639,6 +692,8 @@ func resourceMonitoringNotificationChannelEncoder(d *schema.ResourceData, meta i
 	for _, sl := range sensitiveLabels {
 		if auth, _ := d.GetOkExists("sensitive_labels.0." + sl); auth != "" {
 			labels[sl] = auth.(string)
+		} else if authCty, diags := d.GetRawConfigAt(cty.GetAttrPath("sensitive_labels").IndexInt(0).GetAttr(sl)); len(diags) == 0 && !authCty.IsNull() && authCty.Type() == cty.String {
+			labels[sl[:len(sl)-3]] = authCty.AsString()
 		}
 	}
 
@@ -650,9 +705,12 @@ func resourceMonitoringNotificationChannelEncoder(d *schema.ResourceData, meta i
 func resourceMonitoringNotificationChannelDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
 	if labelmap, ok := res["labels"]; ok {
 		labels := labelmap.(map[string]interface{})
+
 		for _, sl := range sensitiveLabels {
 			if _, apiOk := labels[sl]; apiOk {
 				if _, exists := d.GetOkExists("sensitive_labels.0." + sl); exists {
+					delete(labels, sl)
+				} else if _, exists := d.GetOkExists("sensitive_labels.0." + sl + "_wo_version"); exists {
 					delete(labels, sl)
 				} else {
 					labels[sl] = d.Get("labels." + sl)

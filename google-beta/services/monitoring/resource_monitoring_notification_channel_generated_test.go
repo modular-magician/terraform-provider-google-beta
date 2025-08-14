@@ -49,7 +49,7 @@ func TestAccMonitoringNotificationChannel_notificationChannelBasicExample(t *tes
 				ResourceName:            "google_monitoring_notification_channel.basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"sensitive_labels"},
+				ImportStateVerifyIgnore: []string{"sensitive_labels", "sensitive_labels.0.auth_token_wo", "sensitive_labels.0.password_wo", "sensitive_labels.0.service_key_wo"},
 			},
 		},
 	})
