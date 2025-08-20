@@ -35,8 +35,9 @@ func TestAccFirestoreDocument_firestoreDocumentBasicExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"random_suffix": acctest.RandString(t, 10),
+		"org_id":                  envvar.GetTestOrgFromEnv(t),
+		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
+		"random_suffix":           acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -90,6 +91,8 @@ resource "google_firestore_database" "database" {
   location_id = "nam5"
   type        = "FIRESTORE_NATIVE"
 
+  delete_protection_state  = "%{delete_protection_state}"
+
   depends_on = [google_project_service.firestore]
 }
 
@@ -107,8 +110,9 @@ func TestAccFirestoreDocument_firestoreDocumentNestedDocumentExample(t *testing.
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"random_suffix": acctest.RandString(t, 10),
+		"org_id":                  envvar.GetTestOrgFromEnv(t),
+		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
+		"random_suffix":           acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -161,6 +165,8 @@ resource "google_firestore_database" "database" {
   name        = "(default)"
   location_id = "nam5"
   type        = "FIRESTORE_NATIVE"
+
+  delete_protection_state  = "%{delete_protection_state}"
 
   depends_on = [google_project_service.firestore]
 }

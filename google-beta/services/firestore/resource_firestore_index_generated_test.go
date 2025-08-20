@@ -70,7 +70,6 @@ resource "google_firestore_database" "database" {
   type        = "FIRESTORE_NATIVE"
 
   delete_protection_state = "DELETE_PROTECTION_DISABLED"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
@@ -126,7 +125,6 @@ resource "google_firestore_database" "database" {
   type        = "DATASTORE_MODE"
 
   delete_protection_state = "DELETE_PROTECTION_DISABLED"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
@@ -186,11 +184,10 @@ resource "google_firestore_database" "database" {
   type        = "FIRESTORE_NATIVE"
 
   delete_protection_state = "DELETE_PROTECTION_DISABLED"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
-  project     = "%{project_id}"
+  project    = "%{project_id}"
   database   = google_firestore_database.database.name
   collection = "atestcollection"
 
@@ -250,11 +247,10 @@ resource "google_firestore_database" "database" {
   type        = "FIRESTORE_NATIVE"
 
   delete_protection_state = "DELETE_PROTECTION_DISABLED"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
-  project     = "%{project_id}"
+  project    = "%{project_id}"
   database   = google_firestore_database.database.name
   collection = "atestcollection"
 
@@ -295,18 +291,17 @@ func TestAccFirestoreIndex_firestoreIndexMongodbCompatibleScopeExample(t *testin
 func testAccFirestoreIndex_firestoreIndexMongodbCompatibleScopeExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_firestore_database" "database" {
-	project                  = "%{project_id}"
-	name                     = "tf-test-database-id-mongodb-compatible%{random_suffix}"
-	location_id              = "nam5"
-	type                     = "FIRESTORE_NATIVE"
-	database_edition         = "ENTERPRISE"
+	project                 = "%{project_id}"
+	name                    = "tf-test-database-id-mongodb-compatible%{random_suffix}"
+	location_id             = "nam5"
+	type                    = "FIRESTORE_NATIVE"
+	database_edition        = "ENTERPRISE"
 
 	delete_protection_state = "DELETE_PROTECTION_DISABLED"
-	deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
-	project     = "%{project_id}"
+	project    = "%{project_id}"
 	database   = google_firestore_database.database.name
 	collection = "atestcollection"
 
@@ -357,18 +352,17 @@ func TestAccFirestoreIndex_firestoreIndexSparseAnyExample(t *testing.T) {
 func testAccFirestoreIndex_firestoreIndexSparseAnyExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_firestore_database" "database" {
-	project                  = "%{project_id}"
-	name                     = "tf-test-database-id-sparse-any%{random_suffix}"
-	location_id              = "nam5"
-	type                     = "FIRESTORE_NATIVE"
-	database_edition         = "ENTERPRISE"
+	project                 = "%{project_id}"
+	name                    = "tf-test-database-id-sparse-any%{random_suffix}"
+	location_id             = "nam5"
+	type                    = "FIRESTORE_NATIVE"
+	database_edition        = "ENTERPRISE"
 
 	delete_protection_state = "DELETE_PROTECTION_DISABLED"
-	deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
-	project     = "%{project_id}"
+	project    = "%{project_id}"
 	database   = google_firestore_database.database.name
 	collection = "atestcollection"
 

@@ -71,6 +71,8 @@ resource "google_firestore_database" "database" {
   location_id = "nam5"
   type        = "FIRESTORE_NATIVE"
 
+  delete_protection_state  = "DELETE_PROTECTION_ENABLED"
+
   depends_on = [google_project_service.firestore]
 }
 
@@ -112,6 +114,8 @@ resource "google_firestore_database" "database" {
   name        = "(default)"
   location_id = "nam5"
   type        = "FIRESTORE_NATIVE"
+
+  delete_protection_state  = "DELETE_PROTECTION_ENABLED"
 
   depends_on = [google_project_service.firestore]
 }

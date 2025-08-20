@@ -12,8 +12,6 @@ fields:
   - field: 'create_time'
   - field: 'database_edition'
   - field: 'delete_protection_state'
-  - field: 'deletion_policy'
-    provider_only: true
   - field: 'earliest_version_time'
   - field: 'etag'
   - field: 'key_prefix'

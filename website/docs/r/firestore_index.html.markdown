@@ -51,7 +51,6 @@ resource "google_firestore_database" "database" {
   type        = "FIRESTORE_NATIVE"
 
   delete_protection_state = "DELETE_PROTECTION_DISABLED"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
@@ -81,7 +80,6 @@ resource "google_firestore_database" "database" {
   type        = "DATASTORE_MODE"
 
   delete_protection_state = "DELETE_PROTECTION_DISABLED"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
@@ -115,11 +113,10 @@ resource "google_firestore_database" "database" {
   type        = "FIRESTORE_NATIVE"
 
   delete_protection_state = "DELETE_PROTECTION_DISABLED"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
-  project     = "my-project-name"
+  project    = "my-project-name"
   database   = google_firestore_database.database.name
   collection = "atestcollection"
 
@@ -153,11 +150,10 @@ resource "google_firestore_database" "database" {
   type        = "FIRESTORE_NATIVE"
 
   delete_protection_state = "DELETE_PROTECTION_DISABLED"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
-  project     = "my-project-name"
+  project    = "my-project-name"
   database   = google_firestore_database.database.name
   collection = "atestcollection"
 
@@ -172,18 +168,17 @@ resource "google_firestore_index" "my-index" {
 
 ```hcl
 resource "google_firestore_database" "database" {
-	project                  = "my-project-name"
-	name                     = "database-id-mongodb-compatible"
-	location_id              = "nam5"
-	type                     = "FIRESTORE_NATIVE"
-	database_edition         = "ENTERPRISE"
+	project                 = "my-project-name"
+	name                    = "database-id-mongodb-compatible"
+	location_id             = "nam5"
+	type                    = "FIRESTORE_NATIVE"
+	database_edition        = "ENTERPRISE"
 
 	delete_protection_state = "DELETE_PROTECTION_DISABLED"
-	deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
-	project     = "my-project-name"
+	project    = "my-project-name"
 	database   = google_firestore_database.database.name
 	collection = "atestcollection"
 
@@ -208,18 +203,17 @@ resource "google_firestore_index" "my-index" {
 
 ```hcl
 resource "google_firestore_database" "database" {
-	project                  = "my-project-name"
-	name                     = "database-id-sparse-any"
-	location_id              = "nam5"
-	type                     = "FIRESTORE_NATIVE"
-	database_edition         = "ENTERPRISE"
+	project                 = "my-project-name"
+	name                    = "database-id-sparse-any"
+	location_id             = "nam5"
+	type                    = "FIRESTORE_NATIVE"
+	database_edition        = "ENTERPRISE"
 
 	delete_protection_state = "DELETE_PROTECTION_DISABLED"
-	deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_index" "my-index" {
-	project     = "my-project-name"
+	project    = "my-project-name"
 	database   = google_firestore_database.database.name
 	collection = "atestcollection"
 

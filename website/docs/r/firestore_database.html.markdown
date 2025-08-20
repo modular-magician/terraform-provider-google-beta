@@ -45,6 +45,8 @@ resource "google_firestore_database" "database" {
   name        = "(default)"
   location_id = "nam5"
   type        = "FIRESTORE_NATIVE"
+
+  delete_protection_state = "DELETE_PROTECTION_ENABLED"
 }
 ```
 ## Example Usage - Firestore Database
@@ -60,7 +62,6 @@ resource "google_firestore_database" "database" {
   app_engine_integration_mode       = "DISABLED"
   point_in_time_recovery_enablement = "POINT_IN_TIME_RECOVERY_ENABLED"
   delete_protection_state           = "DELETE_PROTECTION_ENABLED"
-  deletion_policy                   = "DELETE"
 }
 ```
 ## Example Usage - Firestore Database With Tags
@@ -73,7 +74,6 @@ resource "google_firestore_database" "database" {
   location_id                       = "nam5"
   type                              = "FIRESTORE_NATIVE"
   delete_protection_state           = "DELETE_PROTECTION_ENABLED"
-  deletion_policy                   = "DELETE"
   tags = {
     "keyname" = "valuename"
   }
@@ -95,7 +95,6 @@ resource "google_firestore_database" "database" {
   app_engine_integration_mode       = "DISABLED"
   point_in_time_recovery_enablement = "POINT_IN_TIME_RECOVERY_ENABLED"
   delete_protection_state           = "DELETE_PROTECTION_ENABLED"
-  deletion_policy                   = "DELETE"
   cmek_config {
     kms_key_name                    = google_kms_crypto_key.crypto_key.id
   }
@@ -134,6 +133,8 @@ resource "google_firestore_database" "datastore_mode_database" {
   name        = "(default)"
   location_id = "nam5"
   type        = "DATASTORE_MODE"
+
+  delete_protection_state = "DELETE_PROTECTION_ENABLED"
 }
 ```
 ## Example Usage - Firestore Database In Datastore Mode
@@ -149,7 +150,6 @@ resource "google_firestore_database" "datastore_mode_database" {
   app_engine_integration_mode       = "DISABLED"
   point_in_time_recovery_enablement = "POINT_IN_TIME_RECOVERY_ENABLED"
   delete_protection_state           = "DELETE_PROTECTION_ENABLED"
-  deletion_policy                   = "DELETE"
 }
 ```
 ## Example Usage - Firestore Cmek Database In Datastore Mode
@@ -168,7 +168,6 @@ resource "google_firestore_database" "database" {
   app_engine_integration_mode       = "DISABLED"
   point_in_time_recovery_enablement = "POINT_IN_TIME_RECOVERY_ENABLED"
   delete_protection_state           = "DELETE_PROTECTION_ENABLED"
-  deletion_policy                   = "DELETE"
   cmek_config {
     kms_key_name                    = google_kms_crypto_key.crypto_key.id
   }
@@ -208,7 +207,7 @@ resource "google_firestore_database" "enterprise-db" {
 	location_id              = "nam5"
 	type                     = "FIRESTORE_NATIVE"
 	database_edition         = "ENTERPRISE"
-	deletion_policy          = "DELETE"
+	delete_protection_state  = "DELETE_PROTECTION_ENABLED"
 }
 ```
 
@@ -268,9 +267,9 @@ The following arguments are supported:
   (Optional)
   State of delete protection for the database.
   When delete protection is enabled, this database cannot be deleted.
-  The default value is `DELETE_PROTECTION_STATE_UNSPECIFIED`, which is currently equivalent to `DELETE_PROTECTION_DISABLED`.
-  **Note:** Additionally, to delete this database using `terraform destroy`, `deletion_policy` must be set to `DELETE`.
-  Possible values are: `DELETE_PROTECTION_STATE_UNSPECIFIED`, `DELETE_PROTECTION_ENABLED`, `DELETE_PROTECTION_DISABLED`.
+  The default value is `DELETE_PROTECTION_ENABLED'.
+  Default value is `DELETE_PROTECTION_ENABLED`.
+  Possible values are: `DELETE_PROTECTION_ENABLED`, `DELETE_PROTECTION_DISABLED`.
 
 * `cmek_config` -
   (Optional)
@@ -290,12 +289,6 @@ The following arguments are supported:
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
-
-* `deletion_policy` - (Optional) Deletion behavior for this database.
-If the deletion policy is `ABANDON`, the database will be removed from Terraform state but not deleted from Google Cloud upon destruction.
-If the deletion policy is `DELETE`, the database will both be removed from Terraform state and deleted from Google Cloud upon destruction.
-The default value is `ABANDON`.
-See also `delete_protection`.
 
 
 

@@ -151,13 +151,12 @@ The expected format is
 			},
 			"delete_protection_state": {
 				Type:         schema.TypeString,
-				Computed:     true,
 				Optional:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"DELETE_PROTECTION_STATE_UNSPECIFIED", "DELETE_PROTECTION_ENABLED", "DELETE_PROTECTION_DISABLED", ""}),
+				ValidateFunc: verify.ValidateEnum([]string{"DELETE_PROTECTION_ENABLED", "DELETE_PROTECTION_DISABLED", ""}),
 				Description: `State of delete protection for the database.
 When delete protection is enabled, this database cannot be deleted.
-The default value is 'DELETE_PROTECTION_STATE_UNSPECIFIED', which is currently equivalent to 'DELETE_PROTECTION_DISABLED'.
-**Note:** Additionally, to delete this database using 'terraform destroy', 'deletion_policy' must be set to 'DELETE'. Possible values: ["DELETE_PROTECTION_STATE_UNSPECIFIED", "DELETE_PROTECTION_ENABLED", "DELETE_PROTECTION_DISABLED"]`,
+The default value is 'DELETE_PROTECTION_ENABLED'. Default value: "DELETE_PROTECTION_ENABLED" Possible values: ["DELETE_PROTECTION_ENABLED", "DELETE_PROTECTION_DISABLED"]`,
+				Default: "DELETE_PROTECTION_ENABLED",
 			},
 			"point_in_time_recovery_enablement": {
 				Type:         schema.TypeString,
@@ -226,16 +225,6 @@ This value may be empty in which case the appid to use for URL-encoded keys is t
 Any read or query can specify a readTime within this window, and will read the state of the database at that time.
 If the PITR feature is enabled, the retention period is 7 days. Otherwise, the retention period is 1 hour.
 A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.5s".`,
-			},
-			"deletion_policy": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Description: `Deletion behavior for this database.
-If the deletion policy is 'ABANDON', the database will be removed from Terraform state but not deleted from Google Cloud upon destruction.
-If the deletion policy is 'DELETE', the database will both be removed from Terraform state and deleted from Google Cloud upon destruction.
-The default value is 'ABANDON'.
-See also 'delete_protection'.`,
-				Default: "ABANDON",
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -417,12 +406,6 @@ func resourceFirestoreDatabaseRead(d *schema.ResourceData, meta interface{}) err
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("FirestoreDatabase %q", d.Id()))
 	}
 
-	// Explicitly set virtual fields to default values if unset
-	if _, ok := d.GetOkExists("deletion_policy"); !ok {
-		if err := d.Set("deletion_policy", "ABANDON"); err != nil {
-			return fmt.Errorf("Error setting deletion_policy: %s", err)
-		}
-	}
 	if err := d.Set("project", project); err != nil {
 		return fmt.Errorf("Error reading Database: %s", err)
 	}
@@ -635,10 +618,6 @@ func resourceFirestoreDatabaseDelete(d *schema.ResourceData, meta interface{}) e
 	}
 
 	headers := make(http.Header)
-	if deletionPolicy := d.Get("deletion_policy"); deletionPolicy != "DELETE" {
-		log.Printf("[WARN] Firestore database %q deletion_policy is not set to 'DELETE', skipping deletion", d.Get("name").(string))
-		return nil
-	}
 	if deleteProtection := d.Get("delete_protection_state"); deleteProtection == "DELETE_PROTECTION_ENABLED" {
 		return fmt.Errorf("Cannot delete Firestore database %s: Delete Protection is enabled. Set delete_protection_state to DELETE_PROTECTION_DISABLED for this resource and run \"terraform apply\" before attempting to delete it.", d.Get("name").(string))
 	}
@@ -678,11 +657,6 @@ func resourceFirestoreDatabaseImport(d *schema.ResourceData, meta interface{}) (
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
-
-	// Explicitly set virtual fields to default values on import
-	if err := d.Set("deletion_policy", "ABANDON"); err != nil {
-		return nil, fmt.Errorf("Error setting deletion_policy: %s", err)
-	}
 
 	return []*schema.ResourceData{d}, nil
 }

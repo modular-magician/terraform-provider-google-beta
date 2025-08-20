@@ -67,7 +67,6 @@ resource "google_firestore_database" "database" {
   type        = "FIRESTORE_NATIVE"
 
   delete_protection_state = "%{delete_protection_state}"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_backup_schedule" "daily-backup" {
@@ -117,7 +116,6 @@ resource "google_firestore_database" "database" {
   type        = "FIRESTORE_NATIVE"
 
   delete_protection_state = "%{delete_protection_state}"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_backup_schedule" "weekly-backup" {

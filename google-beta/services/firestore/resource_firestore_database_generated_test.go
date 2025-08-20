@@ -52,7 +52,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseExample(t *testing.T) {
 				ResourceName:            "google_firestore_database.database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
+				ImportStateVerifyIgnore: []string{"etag", "project", "tags"},
 			},
 		},
 	})
@@ -69,7 +69,6 @@ resource "google_firestore_database" "database" {
   app_engine_integration_mode       = "DISABLED"
   point_in_time_recovery_enablement = "POINT_IN_TIME_RECOVERY_ENABLED"
   delete_protection_state           = "%{delete_protection_state}"
-  deletion_policy                   = "DELETE"
 }
 `, context)
 }
@@ -95,7 +94,7 @@ func TestAccFirestoreDatabase_firestoreCmekDatabaseExample(t *testing.T) {
 				ResourceName:            "google_firestore_database.database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
+				ImportStateVerifyIgnore: []string{"etag", "project", "tags"},
 			},
 		},
 	})
@@ -115,7 +114,6 @@ resource "google_firestore_database" "database" {
   app_engine_integration_mode       = "DISABLED"
   point_in_time_recovery_enablement = "POINT_IN_TIME_RECOVERY_ENABLED"
   delete_protection_state           = "%{delete_protection_state}"
-  deletion_policy                   = "DELETE"
   cmek_config {
     kms_key_name                    = google_kms_crypto_key.crypto_key.id
   }
@@ -168,7 +166,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseInDatastoreModeExample(t *testing
 				ResourceName:            "google_firestore_database.datastore_mode_database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
+				ImportStateVerifyIgnore: []string{"etag", "project", "tags"},
 			},
 		},
 	})
@@ -185,7 +183,6 @@ resource "google_firestore_database" "datastore_mode_database" {
   app_engine_integration_mode       = "DISABLED"
   point_in_time_recovery_enablement = "POINT_IN_TIME_RECOVERY_ENABLED"
   delete_protection_state           = "%{delete_protection_state}"
-  deletion_policy                   = "DELETE"
 }
 `, context)
 }
@@ -211,7 +208,7 @@ func TestAccFirestoreDatabase_firestoreCmekDatabaseInDatastoreModeExample(t *tes
 				ResourceName:            "google_firestore_database.database",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
+				ImportStateVerifyIgnore: []string{"etag", "project", "tags"},
 			},
 		},
 	})
@@ -231,7 +228,6 @@ resource "google_firestore_database" "database" {
   app_engine_integration_mode       = "DISABLED"
   point_in_time_recovery_enablement = "POINT_IN_TIME_RECOVERY_ENABLED"
   delete_protection_state           = "%{delete_protection_state}"
-  deletion_policy                   = "DELETE"
   cmek_config {
     kms_key_name                    = google_kms_crypto_key.crypto_key.id
   }
@@ -267,8 +263,9 @@ func TestAccFirestoreDatabase_firestoreDatabaseEnterpriseExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+		"project_id":              envvar.GetTestProjectFromEnv(),
+		"delete_protection_state": "DELETE_PROTECTION_DISABLED",
+		"random_suffix":           acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -283,7 +280,7 @@ func TestAccFirestoreDatabase_firestoreDatabaseEnterpriseExample(t *testing.T) {
 				ResourceName:            "google_firestore_database.enterprise-db",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_policy", "etag", "project", "tags"},
+				ImportStateVerifyIgnore: []string{"etag", "project", "tags"},
 			},
 		},
 	})
@@ -297,7 +294,7 @@ resource "google_firestore_database" "enterprise-db" {
 	location_id              = "nam5"
 	type                     = "FIRESTORE_NATIVE"
 	database_edition         = "ENTERPRISE"
-	deletion_policy          = "DELETE"
+	delete_protection_state  = "%{delete_protection_state}"
 }
 `, context)
 }

@@ -48,7 +48,6 @@ resource "google_firestore_database" "database" {
   type        = "FIRESTORE_NATIVE"
 
   delete_protection_state = "DELETE_PROTECTION_ENABLED"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_field" "basic" {
@@ -79,7 +78,6 @@ resource "google_firestore_database" "database" {
   type        = "FIRESTORE_NATIVE"
 
   delete_protection_state = "DELETE_PROTECTION_ENABLED"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_field" "timestamp" {
@@ -106,7 +104,6 @@ resource "google_firestore_database" "database" {
   type        = "FIRESTORE_NATIVE"
 
   delete_protection_state = "DELETE_PROTECTION_ENABLED"
-  deletion_policy         = "DELETE"
 }
 
 resource "google_firestore_field" "match_override" {
@@ -139,7 +136,6 @@ resource "google_firestore_database" "database" {
 	type        = "FIRESTORE_NATIVE"
 
 	delete_protection_state = "DELETE_PROTECTION_ENABLED"
-	deletion_policy         = "DELETE"
   }
 
   resource "google_firestore_field" "wildcard" {
