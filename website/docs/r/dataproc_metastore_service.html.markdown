@@ -44,6 +44,7 @@ resource "google_dataproc_metastore_service" "default" {
   location   = "us-central1"
   port       = 9080
   tier       = "DEVELOPER"
+  deletion_protection = false
 
   maintenance_window {
     hour_of_day = 2
@@ -449,7 +450,9 @@ The following arguments are supported:
 
 * `deletion_protection` -
   (Optional)
-  Indicates if the dataproc metastore should be protected against accidental deletions.
+  Indicates if the dataproc metastore should be protected against accidental deletions.Defaults to false.
+  When the field is set to true in Terraform state, a `terraform apply`
+  or `terraform destroy` that would delete the service will fail.
 
 * `maintenance_window` -
   (Optional)

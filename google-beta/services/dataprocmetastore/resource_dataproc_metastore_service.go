@@ -75,9 +75,12 @@ and hyphens (-). Cannot begin or end with underscore or hyphen. Must consist of 
 				Default:      "MYSQL",
 			},
 			"deletion_protection": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: `Indicates if the dataproc metastore should be protected against accidental deletions.`,
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `Indicates if the dataproc metastore should be protected against accidental deletions.Defaults to false.
+When the field is set to true in Terraform state, a 'terraform apply'
+or 'terraform destroy' that would delete the service will fail.`,
+				Default: false,
 			},
 			"encryption_config": {
 				Type:     schema.TypeList,
@@ -549,11 +552,11 @@ func resourceDataprocMetastoreServiceCreate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("scheduled_backup"); !tpgresource.IsEmptyValue(reflect.ValueOf(scheduledBackupProp)) && (ok || !reflect.DeepEqual(v, scheduledBackupProp)) {
 		obj["scheduledBackup"] = scheduledBackupProp
 	}
-	deletionProtectionProp, err := expandDataprocMetastoreServiceDeletionProtection(d.Get("deletion_protection"), d, config)
+	deletion_protectionProp, err := expandDataprocMetastoreServiceDeletionProtection(d.Get("deletion_protection"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("deletion_protection"); !tpgresource.IsEmptyValue(reflect.ValueOf(deletionProtectionProp)) && (ok || !reflect.DeepEqual(v, deletionProtectionProp)) {
-		obj["deletionProtection"] = deletionProtectionProp
+	} else if v, ok := d.GetOkExists("deletion_protection"); !tpgresource.IsEmptyValue(reflect.ValueOf(deletion_protectionProp)) && (ok || !reflect.DeepEqual(v, deletion_protectionProp)) {
+		obj["deletion_protection"] = deletion_protectionProp
 	}
 	maintenanceWindowProp, err := expandDataprocMetastoreServiceMaintenanceWindow(d.Get("maintenance_window"), d, config)
 	if err != nil {
@@ -747,7 +750,7 @@ func resourceDataprocMetastoreServiceRead(d *schema.ResourceData, meta interface
 	if err := d.Set("scheduled_backup", flattenDataprocMetastoreServiceScheduledBackup(res["scheduledBackup"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
-	if err := d.Set("deletion_protection", flattenDataprocMetastoreServiceDeletionProtection(res["deletionProtection"], d, config)); err != nil {
+	if err := d.Set("deletion_protection", flattenDataprocMetastoreServiceDeletionProtection(res["deletion_protection"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Service: %s", err)
 	}
 	if err := d.Set("maintenance_window", flattenDataprocMetastoreServiceMaintenanceWindow(res["maintenanceWindow"], d, config)); err != nil {
@@ -827,11 +830,11 @@ func resourceDataprocMetastoreServiceUpdate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("scheduled_backup"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, scheduledBackupProp)) {
 		obj["scheduledBackup"] = scheduledBackupProp
 	}
-	deletionProtectionProp, err := expandDataprocMetastoreServiceDeletionProtection(d.Get("deletion_protection"), d, config)
+	deletion_protectionProp, err := expandDataprocMetastoreServiceDeletionProtection(d.Get("deletion_protection"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("deletion_protection"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, deletionProtectionProp)) {
-		obj["deletionProtection"] = deletionProtectionProp
+	} else if v, ok := d.GetOkExists("deletion_protection"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, deletion_protectionProp)) {
+		obj["deletion_protection"] = deletion_protectionProp
 	}
 	maintenanceWindowProp, err := expandDataprocMetastoreServiceMaintenanceWindow(d.Get("maintenance_window"), d, config)
 	if err != nil {
@@ -896,7 +899,7 @@ func resourceDataprocMetastoreServiceUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	if d.HasChange("deletion_protection") {
-		updateMask = append(updateMask, "deletionProtection")
+		updateMask = append(updateMask, "deletion_protection")
 	}
 
 	if d.HasChange("maintenance_window") {
@@ -993,6 +996,9 @@ func resourceDataprocMetastoreServiceDelete(d *schema.ResourceData, meta interfa
 	}
 
 	headers := make(http.Header)
+	if d.Get("deletion_protection").(bool) {
+		return fmt.Errorf("cannot destroy metastore service without setting deletion_protection=false and running `terraform apply`")
+	}
 
 	log.Printf("[DEBUG] Deleting Service %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
