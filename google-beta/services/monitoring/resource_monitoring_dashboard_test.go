@@ -41,14 +41,14 @@ func TestAccMonitoringDashboard_basic(t *testing.T) {
 				Config: testAccMonitoringDashboard_basic(),
 			},
 			{
-				ResourceName:      "google_monitoring_dashboard.dashboard",
+				ResourceName:      "google_fw_monitoring_dashboard.dashboard",
 				ImportState:       true,
 				ImportStateVerify: true,
 				// Default import format uses the ID, which contains the project #
 				// Testing import formats with the project name don't work because we set
 				// the ID on import to what the user specified, which won't match the ID
 				// from the apply
-				ImportStateVerifyIgnore: []string{"project"},
+				ImportStateVerifyIgnore: []string{"project", "dashboard_json"},
 			},
 		},
 	})
@@ -68,10 +68,10 @@ func TestAccMonitoringDashboard_gridLayout(t *testing.T) {
 				Config: testAccMonitoringDashboard_gridLayout(),
 			},
 			{
-				ResourceName:            "google_monitoring_dashboard.dashboard",
+				ResourceName:            "google_fw_monitoring_dashboard.dashboard",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"project"},
+				ImportStateVerifyIgnore: []string{"project", "dashboard_json"},
 			},
 		},
 	})
@@ -89,10 +89,10 @@ func TestAccMonitoringDashboard_rowLayout(t *testing.T) {
 				Config: testAccMonitoringDashboard_rowLayout(),
 			},
 			{
-				ResourceName:            "google_monitoring_dashboard.dashboard",
+				ResourceName:            "google_fw_monitoring_dashboard.dashboard",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"project"},
+				ImportStateVerifyIgnore: []string{"project", "dashboard_json"},
 			},
 		},
 	})
@@ -110,37 +110,37 @@ func TestAccMonitoringDashboard_update(t *testing.T) {
 				Config: testAccMonitoringDashboard_rowLayout(),
 			},
 			{
-				ResourceName:            "google_monitoring_dashboard.dashboard",
+				ResourceName:            "google_fw_monitoring_dashboard.dashboard",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"project"},
+				ImportStateVerifyIgnore: []string{"project", "dashboard_json"},
 			},
 			{
 				Config: testAccMonitoringDashboard_basic(),
 			},
 			{
-				ResourceName:            "google_monitoring_dashboard.dashboard",
+				ResourceName:            "google_fw_monitoring_dashboard.dashboard",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"project"},
+				ImportStateVerifyIgnore: []string{"project", "dashboard_json"},
 			},
 			{
 				Config: testAccMonitoringDashboard_gridLayout(),
 			},
 			{
-				ResourceName:            "google_monitoring_dashboard.dashboard",
+				ResourceName:            "google_fw_monitoring_dashboard.dashboard",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"project"},
+				ImportStateVerifyIgnore: []string{"project", "dashboard_json"},
 			},
 			{
 				Config: testAccMonitoringDashboard_gridLayoutUpdate(),
 			},
 			{
-				ResourceName:            "google_monitoring_dashboard.dashboard",
+				ResourceName:            "google_fw_monitoring_dashboard.dashboard",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"project"},
+				ImportStateVerifyIgnore: []string{"project", "dashboard_json"},
 			},
 		},
 	})
@@ -149,7 +149,7 @@ func TestAccMonitoringDashboard_update(t *testing.T) {
 func testAccCheckMonitoringDashboardDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
-			if rs.Type != "google_monitoring_dashboard" {
+			if rs.Type != "google_fw_monitoring_dashboard" {
 				continue
 			}
 			if strings.HasPrefix(name, "data.") {
@@ -181,7 +181,7 @@ func testAccCheckMonitoringDashboardDestroyProducer(t *testing.T) func(s *terraf
 
 func testAccMonitoringDashboard_basic() string {
 	return fmt.Sprintf(`
-resource "google_monitoring_dashboard" "dashboard" {
+resource "google_fw_monitoring_dashboard" "dashboard" {
   dashboard_json = <<EOF
 {
   "displayName": "Demo Dashboard",
@@ -201,7 +201,7 @@ EOF
 
 func testAccMonitoringDashboard_gridLayout() string {
 	return fmt.Sprintf(`
-resource "google_monitoring_dashboard" "dashboard" {
+resource "google_fw_monitoring_dashboard" "dashboard" {
   dashboard_json = <<EOF
 {
   "displayName": "Grid Layout Example",
@@ -269,7 +269,7 @@ EOF
 
 func testAccMonitoringDashboard_gridLayoutUpdate() string {
 	return fmt.Sprintf(`
-resource "google_monitoring_dashboard" "dashboard" {
+resource "google_fw_monitoring_dashboard" "dashboard" {
   dashboard_json = <<EOF
 {
   "displayName": "Grid Layout Example",
@@ -315,7 +315,7 @@ EOF
 
 func testAccMonitoringDashboard_rowLayout() string {
 	return fmt.Sprintf(`
-resource "google_monitoring_dashboard" "dashboard" {
+resource "google_fw_monitoring_dashboard" "dashboard" {
   dashboard_json = <<EOF
 {
   "displayName": "Row Layout Example",
