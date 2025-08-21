@@ -44,6 +44,7 @@ resource "google_dataproc_metastore_service" "default" {
   location   = "us-central1"
   port       = 9080
   tier       = "DEVELOPER"
+  deletion_protection = false
 
   maintenance_window {
     hour_of_day = 2
@@ -447,10 +448,6 @@ The following arguments are supported:
   The configuration of scheduled backup for the metastore service.
   Structure is [documented below](#nested_scheduled_backup).
 
-* `deletion_protection` -
-  (Optional)
-  Indicates if the dataproc metastore should be protected against accidental deletions.
-
 * `maintenance_window` -
   (Optional)
   The one hour maintenance window of the metastore service.
@@ -503,6 +500,10 @@ The following arguments are supported:
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
+
+* `deletion_protection` - (Optional) Whether Terraform will be prevented from destroying the service. Defaults to true.
+When a `terraform destroy` or `terraform apply` would delete the service, the command will fail if this field is not set to false in Terraform state.
+When the field is set to true or unset in Terraform state, a `terraform apply` or `terraform destroy` that would delete the instance will fail. When the field is set to false, deleting the instance is allowed.
 
 
 

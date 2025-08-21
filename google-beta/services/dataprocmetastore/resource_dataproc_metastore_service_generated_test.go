@@ -49,7 +49,7 @@ func TestAccDataprocMetastoreService_dataprocMetastoreServiceBasicExample(t *tes
 				ResourceName:            "google_dataproc_metastore_service.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "service_id", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"deletion_protection", "labels", "location", "service_id", "terraform_labels"},
 			},
 		},
 	})
@@ -62,6 +62,7 @@ resource "google_dataproc_metastore_service" "default" {
   location   = "us-central1"
   port       = 9080
   tier       = "DEVELOPER"
+  deletion_protection = false
 
   maintenance_window {
     hour_of_day = 2
