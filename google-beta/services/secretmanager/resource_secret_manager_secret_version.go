@@ -29,7 +29,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
@@ -190,6 +189,11 @@ func resourceSecretManagerSecretVersionCreate(d *schema.ResourceData, meta inter
 		return err
 	} else if !tpgresource.IsEmptyValue(reflect.ValueOf(payloadProp)) {
 		obj["payload"] = payloadProp
+	}
+
+	obj, err = resourceSecretManagerSecretVersionEncoder(d, meta, obj)
+	if err != nil {
+		return err
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{SecretManagerBasePath}}{{secret}}:addVersion")
@@ -533,35 +537,47 @@ func expandSecretManagerSecretVersionPayload(v interface{}, d tpgresource.Terraf
 	} else if val := reflect.ValueOf(transformedSecretData); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["data"] = transformedSecretData
 	}
-	transformedSecretDataWo, err := expandSecretManagerSecretVersionPayloadSecretDataWo(d.Get("secret_data_wo"), d.(*schema.ResourceData), config)
+
+	transformedSecretDataWo, err := expandSecretManagerSecretVersionPayloadSecretDataWo(d.Get("secret_data_wo"), d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedSecretDataWo); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["data"] = transformedSecretDataWo
 	}
+
+	transformedSecretDataWoVersion, err := expandSecretManagerSecretVersionPayloadSecretDataWoVersion(d.Get("secret_data_wo_version"), d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSecretDataWoVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["SecretDataWoVersion"] = transformedSecretDataWoVersion
+	}
+
 	return transformed, nil
 }
 
 func expandSecretManagerSecretVersionPayloadSecretData(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
+	return v, nil
+}
+
+func expandSecretManagerSecretVersionPayloadSecretDataWo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSecretManagerSecretVersionPayloadSecretDataWoVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func resourceSecretManagerSecretVersionEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	if d.Get("is_secret_data_base64").(bool) == false {
+		payload := obj["payload"].(map[string]interface{})
+		data := payload["data"].(string)
+
+		data = base64.StdEncoding.EncodeToString([]byte(data))
+		payload["data"] = data
+		obj["payload"] = payload
 	}
 
-	if d.Get("is_secret_data_base64").(bool) {
-		return v, nil
-	}
-	return base64.StdEncoding.EncodeToString([]byte(v.(string))), nil
-}
-func expandSecretManagerSecretVersionPayloadSecretDataWo(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) (interface{}, error) {
-	path := cty.GetAttrPath("secret_data_wo")
-	woVal, _ := d.GetRawConfigAt(path)
-	if !woVal.Type().Equals(cty.String) || woVal.IsNull() {
-		return nil, nil
-	}
-	if d.Get("is_secret_data_base64").(bool) {
-		return woVal.AsString(), nil
-	}
-	return base64.StdEncoding.EncodeToString([]byte(woVal.AsString())), nil
+	return obj, nil
 }
 
 func resourceSecretManagerSecretVersionDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
