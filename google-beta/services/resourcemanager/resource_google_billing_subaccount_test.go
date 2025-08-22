@@ -32,7 +32,25 @@ func TestAccBillingSubaccount_renameOnDestroy(t *testing.T) {
 	t.Parallel()
 
 	masterBilling := envvar.GetTestMasterBillingAccountFromEnv(t)
-	resource.Test(t, resource.TestCase{
+	acctest.VcrTest(t, resource.TestCase{
+
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckGoogleBillingSubaccountRenameOnDestroy(t),
+		Steps: []resource.TestStep{
+			{
+				// Test Billing Subaccount creation
+				Config: testAccBillingSubccount_renameOnDestroy(masterBilling),
+				Check:  testAccCheckGoogleBillingSubaccountExists(t, "subaccount_with_rename_on_destroy"),
+			},
+		},
+	})
+}
+func TestAccBillingSubaccount_renameOnDestroy2(t *testing.T) {
+	t.Parallel()
+
+	masterBilling := envvar.GetTestMasterBillingAccountFromEnv(t)
+	acctest.VcrTest(t, resource.TestCase{
 
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
@@ -51,7 +69,7 @@ func TestAccBillingSubaccount_basic(t *testing.T) {
 	t.Parallel()
 
 	masterBilling := envvar.GetTestMasterBillingAccountFromEnv(t)
-	resource.Test(t, resource.TestCase{
+	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		Steps: []resource.TestStep{
@@ -102,7 +120,7 @@ resource "google_billing_subaccount" "subaccount" {
 func testAccBillingSubccount_renameOnDestroy(masterBillingAccountId string) string {
 	return fmt.Sprintf(`
 resource "google_billing_subaccount" "subaccount_with_rename_on_destroy" {
-  display_name = "Test Billing Subaccount (Rename on Destroy)"
+  display_name = "Test Billing Subaccount (Rename on Destroy) trigger"
   master_billing_account  = "%s"
   deletion_policy = "RENAME_ON_DESTROY"
 }
