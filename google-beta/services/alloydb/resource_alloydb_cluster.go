@@ -685,15 +685,6 @@ Deleting a Secondary cluster with a secondary instance REQUIRES setting deletion
 Possible values: DEFAULT, FORCE`,
 				Default: "DEFAULT",
 			},
-			"deletion_protection": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Description: `Whether Terraform will be prevented from destroying the cluster.
-When the field is set to true or unset in Terraform state, a 'terraform apply'
-or 'terraform destroy' that would delete the cluster will fail.
-When the field is set to false, deleting the cluster is allowed.`,
-				Default: true,
-			},
 			"skip_await_major_version_upgrade": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -993,11 +984,6 @@ func resourceAlloydbClusterRead(d *schema.ResourceData, meta interface{}) error 
 	if _, ok := d.GetOkExists("deletion_policy"); !ok {
 		if err := d.Set("deletion_policy", "DEFAULT"); err != nil {
 			return fmt.Errorf("Error setting deletion_policy: %s", err)
-		}
-	}
-	if _, ok := d.GetOkExists("deletion_protection"); !ok {
-		if err := d.Set("deletion_protection", true); err != nil {
-			return fmt.Errorf("Error setting deletion_protection: %s", err)
 		}
 	}
 	if _, ok := d.GetOkExists("skip_await_major_version_upgrade"); !ok {
@@ -1473,10 +1459,6 @@ func resourceAlloydbClusterDelete(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	headers := make(http.Header)
-	if d.Get("deletion_protection").(bool) {
-		return fmt.Errorf("cannot destroy cluster without setting deletion_protection=false and running `terraform apply`")
-	}
-
 	// Forcefully delete the secondary cluster and the dependent instances because deletion of secondary instance is not supported.
 	if deletionPolicy := d.Get("deletion_policy"); deletionPolicy == "FORCE" {
 		url = url + "?force=true"
@@ -1530,9 +1512,6 @@ func resourceAlloydbClusterImport(d *schema.ResourceData, meta interface{}) ([]*
 	// Explicitly set virtual fields to default values on import
 	if err := d.Set("deletion_policy", "DEFAULT"); err != nil {
 		return nil, fmt.Errorf("Error setting deletion_policy: %s", err)
-	}
-	if err := d.Set("deletion_protection", true); err != nil {
-		return nil, fmt.Errorf("Error setting deletion_protection: %s", err)
 	}
 	if err := d.Set("skip_await_major_version_upgrade", true); err != nil {
 		return nil, fmt.Errorf("Error setting skip_await_major_version_upgrade: %s", err)

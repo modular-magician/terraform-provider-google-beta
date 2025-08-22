@@ -67,8 +67,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -98,8 +96,6 @@ resource "google_alloydb_cluster" "secondary" {
   }
 
   deletion_policy = "FORCE"
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -130,8 +126,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -161,8 +155,6 @@ resource "google_alloydb_cluster" "secondary" {
   }
 
   deletion_policy = "FORCE"
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -220,8 +212,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -251,8 +241,6 @@ resource "google_alloydb_cluster" "secondary" {
   }
 
   deletion_policy = "FORCE"
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -322,8 +310,6 @@ resource "google_alloydb_cluster" "primary" {
     network    = data.google_compute_network.default.id
     allocated_ip_range = data.google_compute_global_address.private_ip_alloc.name
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -354,8 +340,6 @@ resource "google_alloydb_cluster" "secondary" {
   }
 
   deletion_policy = "FORCE"
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -426,8 +410,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -457,8 +439,6 @@ resource "google_alloydb_cluster" "secondary" {
   }
 
   deletion_policy = "FORCE"
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -529,8 +509,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -560,8 +538,6 @@ resource "google_alloydb_cluster" "secondary" {
   }
 
   deletion_policy = "FORCE"
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -626,8 +602,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -657,8 +631,6 @@ resource "google_alloydb_cluster" "secondary" {
   }
 
   deletion_policy = "FORCE"
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }

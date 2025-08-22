@@ -60,8 +60,6 @@ resource "google_alloydb_cluster" "default" {
   initial_user {
     password = "alloydb-cluster"
   }
-
-  deletion_protection = false
 }
 
 data "google_project" "project" {}
@@ -94,8 +92,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -135,7 +131,6 @@ resource "google_alloydb_cluster" "secondary" {
     ignore_changes = [instance_type]
   }
 
-  deletion_protection = false
   depends_on = [google_alloydb_instance.primary]
 }
 

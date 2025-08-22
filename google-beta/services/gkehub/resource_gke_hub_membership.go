@@ -102,6 +102,12 @@ with length <2000 characters. For example: 'https://container.googleapis.com/v1/
 					},
 				},
 			},
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Deprecated:  "`description` is deprecated and will be removed in a future major release.",
+				Description: `The name of this entity type to be displayed on the console. This field is unavailable in v1 of the API.`,
+			},
 			"endpoint": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -190,6 +196,12 @@ func resourceGKEHubMembershipCreate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	obj := make(map[string]interface{})
+	descriptionProp, err := expandGKEHubMembershipDescription(d.Get("description"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+		obj["description"] = descriptionProp
+	}
 	endpointProp, err := expandGKEHubMembershipEndpoint(d.Get("endpoint"), d, config)
 	if err != nil {
 		return err
@@ -310,6 +322,9 @@ func resourceGKEHubMembershipRead(d *schema.ResourceData, meta interface{}) erro
 	if err := d.Set("name", flattenGKEHubMembershipName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Membership: %s", err)
 	}
+	if err := d.Set("description", flattenGKEHubMembershipDescription(res["description"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Membership: %s", err)
+	}
 	if err := d.Set("labels", flattenGKEHubMembershipLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Membership: %s", err)
 	}
@@ -345,6 +360,12 @@ func resourceGKEHubMembershipUpdate(d *schema.ResourceData, meta interface{}) er
 	billingProject = project
 
 	obj := make(map[string]interface{})
+	descriptionProp, err := expandGKEHubMembershipDescription(d.Get("description"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+		obj["description"] = descriptionProp
+	}
 	authorityProp, err := expandGKEHubMembershipAuthority(d.Get("authority"), d, config)
 	if err != nil {
 		return err
@@ -366,6 +387,10 @@ func resourceGKEHubMembershipUpdate(d *schema.ResourceData, meta interface{}) er
 	log.Printf("[DEBUG] Updating Membership %q: %#v", d.Id(), obj)
 	headers := make(http.Header)
 	updateMask := []string{}
+
+	if d.HasChange("description") {
+		updateMask = append(updateMask, "description")
+	}
 
 	if d.HasChange("authority") {
 		updateMask = append(updateMask, "authority")
@@ -497,6 +522,10 @@ func flattenGKEHubMembershipName(v interface{}, d *schema.ResourceData, config *
 	return v
 }
 
+func flattenGKEHubMembershipDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenGKEHubMembershipLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -576,6 +605,10 @@ func flattenGKEHubMembershipTerraformLabels(v interface{}, d *schema.ResourceDat
 
 func flattenGKEHubMembershipEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func expandGKEHubMembershipDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandGKEHubMembershipEndpoint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

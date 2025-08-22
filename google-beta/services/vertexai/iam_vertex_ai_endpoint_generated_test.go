@@ -141,6 +141,7 @@ resource "google_vertex_ai_endpoint" "endpoint" {
     project_allowlist = [
       "${data.google_project.project.project_id}"
     ]
+    enable_secure_private_service_connect = false
   }
 }
 
@@ -172,6 +173,7 @@ resource "google_vertex_ai_endpoint" "endpoint" {
     project_allowlist = [
       "${data.google_project.project.project_id}"
     ]
+    enable_secure_private_service_connect = false
   }
 }
 
@@ -218,6 +220,7 @@ resource "google_vertex_ai_endpoint" "endpoint" {
     project_allowlist = [
       "${data.google_project.project.project_id}"
     ]
+    enable_secure_private_service_connect = false
   }
 }
 
@@ -251,6 +254,7 @@ resource "google_vertex_ai_endpoint" "endpoint" {
     project_allowlist = [
       "${data.google_project.project.project_id}"
     ]
+    enable_secure_private_service_connect = false
   }
 }
 
@@ -282,6 +286,7 @@ resource "google_vertex_ai_endpoint" "endpoint" {
     project_allowlist = [
       "${data.google_project.project.project_id}"
     ]
+    enable_secure_private_service_connect = false
   }
 }
 

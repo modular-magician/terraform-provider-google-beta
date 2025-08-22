@@ -30,7 +30,6 @@ import (
 
 	"golang.org/x/exp/slices"
 
-	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/structure"
@@ -1068,13 +1067,13 @@ func ResourceBigQueryTable() *schema.Resource {
 						},
 
 						// UseLegacySQL: [Optional] Specifies whether to use BigQuery's
-						// legacy SQL for this view. If set to false, the view will use
-						// BigQuery's standard SQL:
+						// legacy SQL for this view. The default value is true. If set to
+						// false, the view will use BigQuery's standard SQL:
 						"use_legacy_sql": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
-							Description: `Specifies whether to use BigQuery's legacy SQL for this view. If set to false, the view will use BigQuery's standard SQL`,
+							Default:     true,
+							Description: `Specifies whether to use BigQuery's legacy SQL for this view. The default value is true. If set to false, the view will use BigQuery's standard SQL`,
 						},
 					},
 				},
@@ -1685,8 +1684,8 @@ func resourceTable(d *schema.ResourceData, meta interface{}) (*bigquery.Table, e
 		},
 	}
 
-	if _, ok := d.GetOk("view"); ok {
-		table.View = expandView(d)
+	if v, ok := d.GetOk("view"); ok {
+		table.View = expandView(v)
 	}
 
 	if v, ok := d.GetOk("materialized_view"); ok {
@@ -3068,15 +3067,12 @@ func flattenRangePartitioning(rp *bigquery.RangePartitioning) []map[string]inter
 	return []map[string]interface{}{result}
 }
 
-func expandView(d *schema.ResourceData) *bigquery.ViewDefinition {
-	v, _ := d.GetOk("view")
-	raw := v.([]interface{})[0].(map[string]interface{})
+func expandView(configured interface{}) *bigquery.ViewDefinition {
+	raw := configured.([]interface{})[0].(map[string]interface{})
 	vd := &bigquery.ViewDefinition{Query: raw["query"].(string)}
 
-	configValue := d.GetRawConfig().GetAttr("view").Index(cty.NumberIntVal(0)).AsValueMap()
-	useLegacySQLValue := configValue["use_legacy_sql"]
-	if !useLegacySQLValue.IsNull() {
-		vd.UseLegacySql = useLegacySQLValue.RawEquals(cty.True)
+	if v, ok := raw["use_legacy_sql"]; ok {
+		vd.UseLegacySql = v.(bool)
 		vd.ForceSendFields = append(vd.ForceSendFields, "UseLegacySql")
 	}
 
@@ -3521,9 +3517,9 @@ func flattenSerDeInfo(si *bigquery.SerDeInfo) []map[string]interface{} {
 func resourceBigQueryTableImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	config := meta.(*transport_tpg.Config)
 	if err := tpgresource.ParseImportId([]string{
-		"^projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)/tables/(?P<table_id>[^/]+)$",
-		"^(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/(?P<table_id>[^/]+)$",
-		"^(?P<dataset_id>[^/]+)/(?P<table_id>[^/]+)$",
+		"projects/(?P<project>[^/]+)/datasets/(?P<dataset_id>[^/]+)/tables/(?P<table_id>[^/]+)",
+		"(?P<project>[^/]+)/(?P<dataset_id>[^/]+)/(?P<table_id>[^/]+)",
+		"(?P<dataset_id>[^/]+)/(?P<table_id>[^/]+)",
 	}, d, config); err != nil {
 		return nil, err
 	}

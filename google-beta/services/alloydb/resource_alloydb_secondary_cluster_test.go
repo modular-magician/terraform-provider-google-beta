@@ -44,7 +44,7 @@ func TestAccAlloydbCluster_secondaryClusterMandatoryFields(t *testing.T) {
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -58,8 +58,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -87,8 +85,6 @@ resource "google_alloydb_cluster" "secondary" {
   secondary_config {
     primary_cluster_name = google_alloydb_cluster.primary.name
   }
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -131,8 +127,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -156,8 +150,6 @@ resource "google_alloydb_cluster" "secondary" {
   continuous_backup_config {
     enabled = false
   }
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -200,8 +192,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -228,8 +218,6 @@ resource "google_alloydb_cluster" "secondary" {
   secondary_config {
     primary_cluster_name = google_alloydb_cluster.primary.name
   }
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -272,8 +260,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -301,8 +287,6 @@ resource "google_alloydb_cluster" "secondary" {
   secondary_config {
     primary_cluster_name = google_alloydb_cluster.primary.name
   }
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -336,7 +320,7 @@ func TestAccAlloydbCluster_secondaryClusterUpdate(t *testing.T) {
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterUpdate(context),
@@ -345,7 +329,7 @@ func TestAccAlloydbCluster_secondaryClusterUpdate(t *testing.T) {
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -359,8 +343,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -392,8 +374,6 @@ resource "google_alloydb_cluster" "secondary" {
   labels = {
     foo = "bar"
   }
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -427,7 +407,7 @@ func TestAccAlloydbCluster_secondaryClusterUsingCMEK(t *testing.T) {
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -441,8 +421,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -474,8 +452,6 @@ resource "google_alloydb_cluster" "secondary" {
   encryption_config {
     kms_key_name = "%{kms_key_name}"
   }
-
-  deletion_protection = false
 
   depends_on = [
     google_alloydb_instance.primary,
@@ -518,7 +494,7 @@ func TestAccAlloydbCluster_secondaryClusterWithNetworkConfig(t *testing.T) {
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -532,8 +508,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
 		network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -561,8 +535,6 @@ resource "google_alloydb_cluster" "secondary" {
   secondary_config {
     primary_cluster_name = google_alloydb_cluster.primary.name
   }
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -597,7 +569,7 @@ func TestAccAlloydbCluster_secondaryClusterWithNetworkConfigAndAllocatedIPRange(
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -612,8 +584,6 @@ resource "google_alloydb_cluster" "primary" {
 		network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
 		allocated_ip_range = data.google_compute_global_address.private_ip_alloc.name
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -642,8 +612,6 @@ resource "google_alloydb_cluster" "secondary" {
   secondary_config {
     primary_cluster_name = google_alloydb_cluster.primary.name
   }
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -682,7 +650,7 @@ func TestAccAlloydbCluster_secondaryClusterPromote(t *testing.T) {
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromote(context),
@@ -691,7 +659,7 @@ func TestAccAlloydbCluster_secondaryClusterPromote(t *testing.T) {
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -705,8 +673,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -736,8 +702,6 @@ resource "google_alloydb_cluster" "secondary" {
   }
 
   deletion_policy = "FORCE"
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -772,8 +736,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -797,8 +759,6 @@ resource "google_alloydb_cluster" "secondary" {
   continuous_backup_config {
     enabled = false
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "secondary" {
@@ -845,7 +805,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndSimultaneousUpdate(t *testi
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromoteAndSimultaneousUpdate(context),
@@ -854,7 +814,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndSimultaneousUpdate(t *testi
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -868,8 +828,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -897,8 +855,6 @@ resource "google_alloydb_cluster" "secondary" {
   labels = {
     foo = "bar" 
   }  
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "secondary" {
@@ -945,7 +901,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndDeleteOriginalPrimary(t *te
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromote(context),
@@ -954,7 +910,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndDeleteOriginalPrimary(t *te
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromoteAndDeleteOriginalPrimary(context),
@@ -963,7 +919,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndDeleteOriginalPrimary(t *te
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -982,8 +938,6 @@ resource "google_alloydb_cluster" "secondary" {
   continuous_backup_config {
     enabled = false
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "secondary" {
@@ -1030,7 +984,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndUpdate(t *testing.T) {
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromote(context),
@@ -1039,7 +993,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndUpdate(t *testing.T) {
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromoteAndUpdate(context),
@@ -1048,7 +1002,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndUpdate(t *testing.T) {
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -1062,8 +1016,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1092,7 +1044,6 @@ resource "google_alloydb_cluster" "secondary" {
     foo = "bar"
   }
 
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "secondary" {
@@ -1139,7 +1090,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteWithNetworkConfigAndAllocatedI
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromoteWithNetworkConfigAndAllocatedIPRange(context),
@@ -1148,7 +1099,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteWithNetworkConfigAndAllocatedI
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -1163,8 +1114,6 @@ resource "google_alloydb_cluster" "primary" {
     network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
     allocated_ip_range = data.google_compute_global_address.private_ip_alloc.name
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1195,8 +1144,6 @@ resource "google_alloydb_cluster" "secondary" {
   }
 
   deletion_policy = "FORCE"
-
-  deletion_protection = false
 
   depends_on = [google_alloydb_instance.primary]
 }
@@ -1236,8 +1183,6 @@ resource "google_alloydb_cluster" "primary" {
     network    = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.default.name}"
     allocated_ip_range = data.google_compute_global_address.private_ip_alloc.name
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1262,8 +1207,6 @@ resource "google_alloydb_cluster" "secondary" {
   continuous_backup_config {
     enabled = false
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "secondary" {
@@ -1315,7 +1258,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndAddAndDeleteAutomatedBackup
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromote(context),
@@ -1324,7 +1267,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndAddAndDeleteAutomatedBackup
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromoteAndAddAutomatedBackupPolicyAndInitialUser(context),
@@ -1333,7 +1276,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndAddAndDeleteAutomatedBackup
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromote(context),
@@ -1342,7 +1285,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndAddAndDeleteAutomatedBackup
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -1356,8 +1299,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1411,8 +1352,6 @@ resource "google_alloydb_cluster" "secondary" {
       test = "tf-test-alloydb-secondary-cluster%{random_suffix}"
     }
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "secondary" {
@@ -1459,7 +1398,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndDeleteTimeBasedRetentionPol
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromote(context),
@@ -1468,7 +1407,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndDeleteTimeBasedRetentionPol
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromoteWithTimeBasedRetentionPolicy(context),
@@ -1477,7 +1416,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndDeleteTimeBasedRetentionPol
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromoteWithoutTimeBasedRetentionPolicy(context),
@@ -1486,7 +1425,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndDeleteTimeBasedRetentionPol
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -1500,8 +1439,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1550,9 +1487,6 @@ resource "google_alloydb_cluster" "secondary" {
       retention_period = "4.5s"
     }
   }
-
-  deletion_protection = false
-
   lifecycle {
     ignore_changes = [
       automated_backup_policy[0].time_based_retention
@@ -1590,8 +1524,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1637,9 +1569,6 @@ resource "google_alloydb_cluster" "secondary" {
       }
     }
   }
-
-  deletion_protection = false
-
   lifecycle {
     ignore_changes = [
       automated_backup_policy[0].time_based_retention
@@ -1691,7 +1620,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndAddContinuousBackupConfig(t
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromote(context),
@@ -1700,7 +1629,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndAddContinuousBackupConfig(t
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 			{
 				Config: testAccAlloydbCluster_secondaryClusterPromoteAndAddContinuousBackupConfig(context),
@@ -1709,7 +1638,7 @@ func TestAccAlloydbCluster_secondaryClusterPromoteAndAddContinuousBackupConfig(t
 				ResourceName:            "google_alloydb_cluster.secondary",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"deletion_protection", "initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
+				ImportStateVerifyIgnore: []string{"initial_user", "restore_backup_source", "restore_continuous_backup_source", "cluster_id", "location", "deletion_policy", "labels", "annotations", "terraform_labels", "reconciling"},
 			},
 		},
 	})
@@ -1723,8 +1652,6 @@ resource "google_alloydb_cluster" "primary" {
   network_config {
     network = data.google_compute_network.default.id
   }
-
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "primary" {
@@ -1750,7 +1677,6 @@ resource "google_alloydb_cluster" "secondary" {
     recovery_window_days = 14
   }
 
-  deletion_protection = false
 }
 
 resource "google_alloydb_instance" "secondary" {

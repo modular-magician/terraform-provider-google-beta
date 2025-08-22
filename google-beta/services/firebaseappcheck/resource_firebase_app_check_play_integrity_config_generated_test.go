@@ -63,6 +63,9 @@ resource "google_project_service" "play_integrity" {
 
   project = "%{project_id}"
   service = "playintegrity.googleapis.com"
+
+  # Don't disable the service if the resource block is removed by accident.
+  disable_on_destroy = false
 }
 
 resource "google_firebase_android_app" "default" {
@@ -140,6 +143,7 @@ resource "google_project_service" "play_integrity" {
   service = "playintegrity.googleapis.com"
 
   # Don't disable the service if the resource block is removed by accident.
+  disable_on_destroy = false
 }
 
 resource "google_firebase_android_app" "default" {

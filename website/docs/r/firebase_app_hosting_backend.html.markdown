@@ -65,6 +65,8 @@ resource "google_project_iam_member" "app_hosting_sa_runner" {
 resource "google_project_service" "fah" {
   project = "my-project-name"
   service = "firebaseapphosting.googleapis.com"
+
+  disable_on_destroy = false
 }
 ###
 ```
@@ -134,6 +136,8 @@ resource "google_project_iam_member" "app_hosting_sa_runner" {
 resource "google_project_service" "fah" {
   project = "my-project-name"
   service = "firebaseapphosting.googleapis.com"
+
+  disable_on_destroy = false
 }
 ###
 ```

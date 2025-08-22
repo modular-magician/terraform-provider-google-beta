@@ -153,6 +153,7 @@ resource "google_project_service" "mcsd" {
 resource "google_project_service" "gkehub" {
   project = google_project.project.project_id
   service = "gkehub.googleapis.com"
+  disable_on_destroy = false
 }
 resource "google_gke_hub_feature" "feature" {
   name = "multiclusterservicediscovery"
@@ -189,6 +190,7 @@ resource "google_project_service" "mcsd" {
 resource "google_project_service" "gkehub" {
   project = google_project.project.project_id
   service = "gkehub.googleapis.com"
+  disable_on_destroy = false
 }
 resource "google_gke_hub_feature" "feature" {
   name = "multiclusterservicediscovery"
@@ -238,6 +240,7 @@ resource "google_project_service" "mcsd" {
 resource "google_project_service" "gkehub" {
   project = google_project.project.project_id
   service = "gkehub.googleapis.com"
+  disable_on_destroy = false
 }
 resource "google_gke_hub_feature" "feature" {
   name = "multiclusterservicediscovery"
@@ -275,6 +278,7 @@ resource "google_project_service" "mcsd" {
 resource "google_project_service" "gkehub" {
   project = google_project.project.project_id
   service = "gkehub.googleapis.com"
+  disable_on_destroy = false
 }
 resource "google_gke_hub_feature" "feature" {
   name = "multiclusterservicediscovery"
@@ -311,6 +315,7 @@ resource "google_project_service" "mcsd" {
 resource "google_project_service" "gkehub" {
   project = google_project.project.project_id
   service = "gkehub.googleapis.com"
+  disable_on_destroy = false
 }
 resource "google_gke_hub_feature" "feature" {
   name = "multiclusterservicediscovery"

@@ -83,19 +83,35 @@ set to true.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instances": {
-							Type:         schema.TypeSet,
-							Optional:     true,
-							Description:  `All the listed instances will be mirrored.  Specify at most 50.`,
-							Elem:         computePacketMirroringMirroredResourcesInstancesSchema(),
-							Set:          tpgresource.NestedUrlSetHashFunc,
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `All the listed instances will be mirrored.  Specify at most 50.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"url": {
+										Type:             schema.TypeString,
+										Required:         true,
+										DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+										Description:      `The URL of the instances where this rule should be active.`,
+									},
+								},
+							},
 							AtLeastOneOf: []string{"mirrored_resources.0.subnetworks", "mirrored_resources.0.instances", "mirrored_resources.0.tags"},
 						},
 						"subnetworks": {
-							Type:         schema.TypeSet,
-							Optional:     true,
-							Description:  `All instances in one of these subnetworks will be mirrored.`,
-							Elem:         computePacketMirroringMirroredResourcesSubnetworksSchema(),
-							Set:          tpgresource.NestedUrlSetHashFunc,
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `All instances in one of these subnetworks will be mirrored.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"url": {
+										Type:             schema.TypeString,
+										Required:         true,
+										DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+										Description:      `The URL of the subnetwork where this rule should be active.`,
+									},
+								},
+							},
 							AtLeastOneOf: []string{"mirrored_resources.0.subnetworks", "mirrored_resources.0.instances", "mirrored_resources.0.tags"},
 						},
 						"tags": {
@@ -199,32 +215,6 @@ If it is not provided, the provider region is used.`,
 			},
 		},
 		UseJSONNumber: true,
-	}
-}
-
-func computePacketMirroringMirroredResourcesSubnetworksSchema() *schema.Resource {
-	return &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"url": {
-				Type:             schema.TypeString,
-				Required:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkRelativePaths,
-				Description:      `The URL of the subnetwork where this rule should be active.`,
-			},
-		},
-	}
-}
-
-func computePacketMirroringMirroredResourcesInstancesSchema() *schema.Resource {
-	return &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"url": {
-				Type:             schema.TypeString,
-				Required:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkRelativePaths,
-				Description:      `The URL of the instances where this rule should be active.`,
-			},
-		},
 	}
 }
 
@@ -705,14 +695,14 @@ func flattenComputePacketMirroringMirroredResourcesSubnetworks(v interface{}, d 
 		return v
 	}
 	l := v.([]interface{})
-	transformed := schema.NewSet(tpgresource.NestedUrlSetHashFunc, []interface{}{})
+	transformed := make([]interface{}, 0, len(l))
 	for _, raw := range l {
 		original := raw.(map[string]interface{})
 		if len(original) < 1 {
 			// Do not include empty json objects coming back from the api
 			continue
 		}
-		transformed.Add(map[string]interface{}{
+		transformed = append(transformed, map[string]interface{}{
 			"url": flattenComputePacketMirroringMirroredResourcesSubnetworksUrl(original["url"], d, config),
 		})
 	}
@@ -730,14 +720,14 @@ func flattenComputePacketMirroringMirroredResourcesInstances(v interface{}, d *s
 		return v
 	}
 	l := v.([]interface{})
-	transformed := schema.NewSet(tpgresource.NestedUrlSetHashFunc, []interface{}{})
+	transformed := make([]interface{}, 0, len(l))
 	for _, raw := range l {
 		original := raw.(map[string]interface{})
 		if len(original) < 1 {
 			// Do not include empty json objects coming back from the api
 			continue
 		}
-		transformed.Add(map[string]interface{}{
+		transformed = append(transformed, map[string]interface{}{
 			"url": flattenComputePacketMirroringMirroredResourcesInstancesUrl(original["url"], d, config),
 		})
 	}
@@ -903,7 +893,6 @@ func expandComputePacketMirroringMirroredResources(v interface{}, d tpgresource.
 }
 
 func expandComputePacketMirroringMirroredResourcesSubnetworks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	v = v.(*schema.Set).List()
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -934,7 +923,6 @@ func expandComputePacketMirroringMirroredResourcesSubnetworksUrl(v interface{}, 
 }
 
 func expandComputePacketMirroringMirroredResourcesInstances(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	v = v.(*schema.Set).List()
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {

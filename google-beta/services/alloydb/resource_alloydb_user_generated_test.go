@@ -73,8 +73,6 @@ resource "google_alloydb_cluster" "default" {
   initial_user {
     password = "tf_test_cluster_secret%{random_suffix}"
   }
-
-  deletion_protection = false
 }
 
 data "google_project" "project" {}
@@ -139,8 +137,6 @@ resource "google_alloydb_cluster" "default" {
   initial_user {
     password = "tf_test_cluster_secret%{random_suffix}"
   }
-
-  deletion_protection = false
 }
 
 data "google_project" "project" {}

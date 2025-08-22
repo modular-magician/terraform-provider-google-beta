@@ -62,9 +62,32 @@ func ResourceVertexAIIndex() *schema.Resource {
 				Required:    true,
 				Description: `The display name of the Index. The name can be up to 128 characters long and can consist of any UTF-8 characters.`,
 			},
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `The description of the Index.`,
+			},
+			"index_update_method": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `The update method to use with this Index. The value must be the followings. If not set, BATCH_UPDATE will be used by default.
+* BATCH_UPDATE: user can call indexes.patch with files on Cloud Storage of datapoints to update.
+* STREAM_UPDATE: user can call indexes.upsertDatapoints/DeleteDatapoints to update the Index and the updates will be applied in corresponding DeployedIndexes in nearly real-time.`,
+				Default: "BATCH_UPDATE",
+			},
+			"labels": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				Description: `The labels with user-defined metadata to organize your Indexes.
+
+**Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
+Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
+			},
 			"metadata": {
 				Type:     schema.TypeList,
-				Required: true,
+				Optional: true,
 				Description: `Additional information about the Index.
 Although this field is not marked as required in the API specification, it is currently required when creating an Index and must be provided.
 Attempts to create an Index without this field will result in an API error.`,
@@ -73,7 +96,7 @@ Attempts to create an Index without this field will result in an API error.`,
 					Schema: map[string]*schema.Schema{
 						"config": {
 							Type:        schema.TypeList,
-							Required:    true,
+							Optional:    true,
 							ForceNew:    true,
 							Description: `The configuration of the Matching Engine Index.`,
 							MaxItems:    1,
@@ -87,7 +110,7 @@ Attempts to create an Index without this field will result in an API error.`,
 									"algorithm_config": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: `The configuration with regard to the algorithms used for efficient search. This field may be required based on your configuration.`,
+										Description: `The configuration with regard to the algorithms used for efficient search.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -189,29 +212,6 @@ then existing content of the Index will be replaced by the data from the content
 						},
 					},
 				},
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `The description of the Index.`,
-			},
-			"index_update_method": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Description: `The update method to use with this Index. The value must be the followings. If not set, BATCH_UPDATE will be used by default.
-* BATCH_UPDATE: user can call indexes.patch with files on Cloud Storage of datapoints to update.
-* STREAM_UPDATE: user can call indexes.upsertDatapoints/DeleteDatapoints to update the Index and the updates will be applied in corresponding DeployedIndexes in nearly real-time.`,
-				Default: "BATCH_UPDATE",
-			},
-			"labels": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				Description: `The labels with user-defined metadata to organize your Indexes.
-
-**Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
-Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
-				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 			"region": {
 				Type:        schema.TypeString,

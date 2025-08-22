@@ -455,7 +455,6 @@ resource "google_sql_user" "user1" {
   instance = google_sql_database_instance.instance.name
   host     = "gmail.com"
   password_wo = "%s"
-  password_wo_version = 1
 }
 `, instance, password)
 }
@@ -477,7 +476,7 @@ resource "google_sql_user" "user1" {
   instance = google_sql_database_instance.instance.name
   host     = "gmail.com"
   password_wo = "%s"
-  password_wo_version = 2
+  password_wo_version = 1
 }
 `, instance, password)
 }

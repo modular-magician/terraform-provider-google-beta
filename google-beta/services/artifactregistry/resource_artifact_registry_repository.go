@@ -525,7 +525,8 @@ not be validated.`,
 										Optional:      true,
 										ForceNew:      true,
 										ValidateFunc:  verify.ValidateEnum([]string{"DOCKER_HUB", ""}),
-										Description:   `Address of the remote repository. Possible values: ["DOCKER_HUB"]`,
+										Description:   `Address of the remote repository. Default value: "DOCKER_HUB" Possible values: ["DOCKER_HUB"]`,
+										Default:       "DOCKER_HUB",
 										ConflictsWith: []string{"remote_repository_config.0.docker_repository.0.custom_repository"},
 									},
 								},
@@ -563,7 +564,8 @@ not be validated.`,
 										Optional:      true,
 										ForceNew:      true,
 										ValidateFunc:  verify.ValidateEnum([]string{"MAVEN_CENTRAL", ""}),
-										Description:   `Address of the remote repository. Possible values: ["MAVEN_CENTRAL"]`,
+										Description:   `Address of the remote repository. Default value: "MAVEN_CENTRAL" Possible values: ["MAVEN_CENTRAL"]`,
+										Default:       "MAVEN_CENTRAL",
 										ConflictsWith: []string{"remote_repository_config.0.maven_repository.0.custom_repository"},
 									},
 								},
@@ -601,7 +603,8 @@ not be validated.`,
 										Optional:      true,
 										ForceNew:      true,
 										ValidateFunc:  verify.ValidateEnum([]string{"NPMJS", ""}),
-										Description:   `Address of the remote repository. Possible values: ["NPMJS"]`,
+										Description:   `Address of the remote repository. Default value: "NPMJS" Possible values: ["NPMJS"]`,
+										Default:       "NPMJS",
 										ConflictsWith: []string{"remote_repository_config.0.npm_repository.0.custom_repository"},
 									},
 								},
@@ -639,7 +642,8 @@ not be validated.`,
 										Optional:      true,
 										ForceNew:      true,
 										ValidateFunc:  verify.ValidateEnum([]string{"PYPI", ""}),
-										Description:   `Address of the remote repository. Possible values: ["PYPI"]`,
+										Description:   `Address of the remote repository. Default value: "PYPI" Possible values: ["PYPI"]`,
+										Default:       "PYPI",
 										ConflictsWith: []string{"remote_repository_config.0.python_repository.0.custom_repository"},
 									},
 								},
@@ -933,6 +937,24 @@ func resourceArtifactRegistryRepositoryCreate(d *schema.ResourceData, meta inter
 	}
 
 	headers := make(http.Header)
+	// This file should be deleted in the next major terraform release, alongside
+	// the default values for 'publicRepository'.
+
+	// deletePublicRepoIfCustom deletes the publicRepository key for a given
+	// pkg type from the remote repository config if customRepository is set.
+	deletePublicRepoIfCustom := func(pkgType string) {
+		if _, ok := d.GetOk(fmt.Sprintf("remote_repository_config.0.%s_repository.0.custom_repository", pkgType)); ok {
+			rrcfg := obj["remoteRepositoryConfig"].(map[string]interface{})
+			repo := rrcfg[fmt.Sprintf("%sRepository", pkgType)].(map[string]interface{})
+			delete(repo, "publicRepository")
+		}
+	}
+
+	// Call above func for all pkg types that support custom remote repos.
+	deletePublicRepoIfCustom("docker")
+	deletePublicRepoIfCustom("maven")
+	deletePublicRepoIfCustom("npm")
+	deletePublicRepoIfCustom("python")
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "POST",
@@ -1621,6 +1643,10 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepository(v i
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigDockerRepositoryPublicRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
+		return "DOCKER_HUB"
+	}
+
 	return v
 }
 
@@ -1657,6 +1683,10 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepository(v in
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigMavenRepositoryPublicRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
+		return "MAVEN_CENTRAL"
+	}
+
 	return v
 }
 
@@ -1693,6 +1723,10 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepository(v inte
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigNpmRepositoryPublicRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
+		return "NPMJS"
+	}
+
 	return v
 }
 
@@ -1729,6 +1763,10 @@ func flattenArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepository(v i
 	return []interface{}{transformed}
 }
 func flattenArtifactRegistryRepositoryRemoteRepositoryConfigPythonRepositoryPublicRepository(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil || tpgresource.IsEmptyValue(reflect.ValueOf(v)) {
+		return "PYPI"
+	}
+
 	return v
 }
 

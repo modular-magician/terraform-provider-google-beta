@@ -38,6 +38,7 @@ To get more information about Service, see:
 resource "google_project_service" "fdc" {
   project = "my-project-name"
   service = "firebasedataconnect.googleapis.com"
+  disable_on_destroy = false
 }
 
 # Create a Firebase Data Connect service
@@ -67,6 +68,7 @@ resource "google_firebase_data_connect_service" "default" {
 resource "google_project_service" "fdc" {
   project = "my-project-name"
   service = "firebasedataconnect.googleapis.com"
+  disable_on_destroy = false
 }
 
 # Create a Firebase Data Connect service
