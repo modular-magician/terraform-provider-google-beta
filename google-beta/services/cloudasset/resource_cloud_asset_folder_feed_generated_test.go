@@ -122,7 +122,7 @@ func testAccCheckCloudAssetFolderFeedDestroyProducer(t *testing.T) func(s *terra
 
 			config := acctest.GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{CloudAssetBasePath}}{{name}}")
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{CloudAssetBasePath}}folders/{{folder_id}}/feeds/{{feed_id}}")
 			if err != nil {
 				return err
 			}

@@ -288,7 +288,7 @@ func resourceCloudAssetFolderFeedRead(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CloudAssetBasePath}}{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{CloudAssetBasePath}}folders/{{folder_id}}/feeds/{{feed_id}}")
 	if err != nil {
 		return err
 	}
@@ -464,7 +464,7 @@ func resourceCloudAssetFolderFeedDelete(d *schema.ResourceData, meta interface{}
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{CloudAssetBasePath}}{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{CloudAssetBasePath}}folders/{{folder_id}}/feeds/{{feed_id}}")
 	if err != nil {
 		return err
 	}
@@ -717,6 +717,9 @@ func resourceCloudAssetFolderFeedEncoder(d *schema.ResourceData, meta interface{
 
 func resourceCloudAssetFolderFeedPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
+	if err := d.Set("folder_id", flattenCloudAssetFolderFeedFolderId(res["folder_id"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "folder_id": %s`, err)
+	}
 	if err := d.Set("name", flattenCloudAssetFolderFeedName(res["name"], d, config)); err != nil {
 		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
 	}
