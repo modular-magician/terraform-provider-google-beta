@@ -60,6 +60,21 @@ func ResourceDNSManagedZone() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"name": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"dns_name": {
 				Type:        schema.TypeString,
@@ -485,11 +500,11 @@ func resourceDNSManagedZoneCreate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("peering_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(peeringConfigProp)) && (ok || !reflect.DeepEqual(v, peeringConfigProp)) {
 		obj["peeringConfig"] = peeringConfigProp
 	}
-	reverseLookupConfigProp, err := expandDNSManagedZoneReverseLookup(d.Get("reverse_lookup"), d, config)
+	reverseLookupProp, err := expandDNSManagedZoneReverseLookup(d.Get("reverse_lookup"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("reverse_lookup"); !tpgresource.IsEmptyValue(reflect.ValueOf(reverseLookupConfigProp)) && (ok || !reflect.DeepEqual(v, reverseLookupConfigProp)) {
-		obj["reverseLookupConfig"] = reverseLookupConfigProp
+	} else if v, ok := d.GetOkExists("reverse_lookup"); !tpgresource.IsEmptyValue(reflect.ValueOf(reverseLookupProp)) && (ok || !reflect.DeepEqual(v, reverseLookupProp)) {
+		obj["reverseLookupConfig"] = reverseLookupProp
 	}
 	serviceDirectoryConfigProp, err := expandDNSManagedZoneServiceDirectoryConfig(d.Get("service_directory_config"), d, config)
 	if err != nil {
@@ -503,11 +518,11 @@ func resourceDNSManagedZoneCreate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("cloud_logging_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(cloudLoggingConfigProp)) && (ok || !reflect.DeepEqual(v, cloudLoggingConfigProp)) {
 		obj["cloudLoggingConfig"] = cloudLoggingConfigProp
 	}
-	labelsProp, err := expandDNSManagedZoneEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandDNSManagedZoneEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{DNSBasePath}}projects/{{project}}/managedZones")
@@ -656,6 +671,22 @@ func resourceDNSManagedZoneRead(d *schema.ResourceData, meta interface{}) error 
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil {
+		return fmt.Errorf("Error getting identity: %s", err)
+	}
+	if v, ok := identity.GetOk("name"); ok && v != "" {
+		err = identity.Set("name", d.Get("name").(string))
+		if err != nil {
+			return fmt.Errorf("Error setting name: %s", err)
+		}
+	}
+	if v, ok := identity.GetOk("project"); ok && v != "" {
+		err = identity.Set("project", d.Get("project").(string))
+		if err != nil {
+			return fmt.Errorf("Error setting project: %s", err)
+		}
+	}
 	return nil
 }
 
@@ -723,11 +754,11 @@ func resourceDNSManagedZoneUpdate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("peering_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, peeringConfigProp)) {
 		obj["peeringConfig"] = peeringConfigProp
 	}
-	reverseLookupConfigProp, err := expandDNSManagedZoneReverseLookup(d.Get("reverse_lookup"), d, config)
+	reverseLookupProp, err := expandDNSManagedZoneReverseLookup(d.Get("reverse_lookup"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("reverse_lookup"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, reverseLookupConfigProp)) {
-		obj["reverseLookupConfig"] = reverseLookupConfigProp
+	} else if v, ok := d.GetOkExists("reverse_lookup"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, reverseLookupProp)) {
+		obj["reverseLookupConfig"] = reverseLookupProp
 	}
 	serviceDirectoryConfigProp, err := expandDNSManagedZoneServiceDirectoryConfig(d.Get("service_directory_config"), d, config)
 	if err != nil {
@@ -741,11 +772,11 @@ func resourceDNSManagedZoneUpdate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("cloud_logging_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, cloudLoggingConfigProp)) {
 		obj["cloudLoggingConfig"] = cloudLoggingConfigProp
 	}
-	labelsProp, err := expandDNSManagedZoneEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandDNSManagedZoneEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	obj, err = resourceDNSManagedZoneUpdateEncoder(d, meta, obj)

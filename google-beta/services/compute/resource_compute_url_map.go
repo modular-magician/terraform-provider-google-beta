@@ -57,6 +57,21 @@ func ResourceComputeUrlMap() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"name": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
@@ -3348,11 +3363,11 @@ func resourceComputeUrlMapCreate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("header_action"); !tpgresource.IsEmptyValue(reflect.ValueOf(headerActionProp)) && (ok || !reflect.DeepEqual(v, headerActionProp)) {
 		obj["headerAction"] = headerActionProp
 	}
-	hostRulesProp, err := expandComputeUrlMapHostRule(d.Get("host_rule"), d, config)
+	hostRuleProp, err := expandComputeUrlMapHostRule(d.Get("host_rule"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("host_rule"); !tpgresource.IsEmptyValue(reflect.ValueOf(hostRulesProp)) && (ok || !reflect.DeepEqual(v, hostRulesProp)) {
-		obj["hostRules"] = hostRulesProp
+	} else if v, ok := d.GetOkExists("host_rule"); !tpgresource.IsEmptyValue(reflect.ValueOf(hostRuleProp)) && (ok || !reflect.DeepEqual(v, hostRuleProp)) {
+		obj["hostRules"] = hostRuleProp
 	}
 	nameProp, err := expandComputeUrlMapName(d.Get("name"), d, config)
 	if err != nil {
@@ -3360,11 +3375,11 @@ func resourceComputeUrlMapCreate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
-	pathMatchersProp, err := expandComputeUrlMapPathMatcher(d.Get("path_matcher"), d, config)
+	pathMatcherProp, err := expandComputeUrlMapPathMatcher(d.Get("path_matcher"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("path_matcher"); !tpgresource.IsEmptyValue(reflect.ValueOf(pathMatchersProp)) && (ok || !reflect.DeepEqual(v, pathMatchersProp)) {
-		obj["pathMatchers"] = pathMatchersProp
+	} else if v, ok := d.GetOkExists("path_matcher"); !tpgresource.IsEmptyValue(reflect.ValueOf(pathMatcherProp)) && (ok || !reflect.DeepEqual(v, pathMatcherProp)) {
+		obj["pathMatchers"] = pathMatcherProp
 	}
 	defaultCustomErrorResponsePolicyProp, err := expandComputeUrlMapDefaultCustomErrorResponsePolicy(d.Get("default_custom_error_response_policy"), d, config)
 	if err != nil {
@@ -3372,11 +3387,11 @@ func resourceComputeUrlMapCreate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("default_custom_error_response_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(defaultCustomErrorResponsePolicyProp)) && (ok || !reflect.DeepEqual(v, defaultCustomErrorResponsePolicyProp)) {
 		obj["defaultCustomErrorResponsePolicy"] = defaultCustomErrorResponsePolicyProp
 	}
-	testsProp, err := expandComputeUrlMapTest(d.Get("test"), d, config)
+	testProp, err := expandComputeUrlMapTest(d.Get("test"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("test"); !tpgresource.IsEmptyValue(reflect.ValueOf(testsProp)) && (ok || !reflect.DeepEqual(v, testsProp)) {
-		obj["tests"] = testsProp
+	} else if v, ok := d.GetOkExists("test"); !tpgresource.IsEmptyValue(reflect.ValueOf(testProp)) && (ok || !reflect.DeepEqual(v, testProp)) {
+		obj["tests"] = testProp
 	}
 	defaultUrlRedirectProp, err := expandComputeUrlMapDefaultUrlRedirect(d.Get("default_url_redirect"), d, config)
 	if err != nil {
@@ -3531,7 +3546,22 @@ func resourceComputeUrlMapRead(d *schema.ResourceData, meta interface{}) error {
 	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
 		return fmt.Errorf("Error reading UrlMap: %s", err)
 	}
-
+	identity, err := d.Identity()
+	if err != nil {
+		return fmt.Errorf("Error getting identity: %s", err)
+	}
+	if v, ok := identity.GetOk("name"); ok && v != "" {
+		err = identity.Set("name", d.Get("name").(string))
+		if err != nil {
+			return fmt.Errorf("Error setting name: %s", err)
+		}
+	}
+	if v, ok := identity.GetOk("project"); ok && v != "" {
+		err = identity.Set("project", d.Get("project").(string))
+		if err != nil {
+			return fmt.Errorf("Error setting project: %s", err)
+		}
+	}
 	return nil
 }
 
@@ -3575,11 +3605,11 @@ func resourceComputeUrlMapUpdate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("header_action"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, headerActionProp)) {
 		obj["headerAction"] = headerActionProp
 	}
-	hostRulesProp, err := expandComputeUrlMapHostRule(d.Get("host_rule"), d, config)
+	hostRuleProp, err := expandComputeUrlMapHostRule(d.Get("host_rule"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("host_rule"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, hostRulesProp)) {
-		obj["hostRules"] = hostRulesProp
+	} else if v, ok := d.GetOkExists("host_rule"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, hostRuleProp)) {
+		obj["hostRules"] = hostRuleProp
 	}
 	nameProp, err := expandComputeUrlMapName(d.Get("name"), d, config)
 	if err != nil {
@@ -3587,11 +3617,11 @@ func resourceComputeUrlMapUpdate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
-	pathMatchersProp, err := expandComputeUrlMapPathMatcher(d.Get("path_matcher"), d, config)
+	pathMatcherProp, err := expandComputeUrlMapPathMatcher(d.Get("path_matcher"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("path_matcher"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, pathMatchersProp)) {
-		obj["pathMatchers"] = pathMatchersProp
+	} else if v, ok := d.GetOkExists("path_matcher"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, pathMatcherProp)) {
+		obj["pathMatchers"] = pathMatcherProp
 	}
 	defaultCustomErrorResponsePolicyProp, err := expandComputeUrlMapDefaultCustomErrorResponsePolicy(d.Get("default_custom_error_response_policy"), d, config)
 	if err != nil {
@@ -3599,11 +3629,11 @@ func resourceComputeUrlMapUpdate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("default_custom_error_response_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, defaultCustomErrorResponsePolicyProp)) {
 		obj["defaultCustomErrorResponsePolicy"] = defaultCustomErrorResponsePolicyProp
 	}
-	testsProp, err := expandComputeUrlMapTest(d.Get("test"), d, config)
+	testProp, err := expandComputeUrlMapTest(d.Get("test"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("test"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, testsProp)) {
-		obj["tests"] = testsProp
+	} else if v, ok := d.GetOkExists("test"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, testProp)) {
+		obj["tests"] = testProp
 	}
 	defaultUrlRedirectProp, err := expandComputeUrlMapDefaultUrlRedirect(d.Get("default_url_redirect"), d, config)
 	if err != nil {

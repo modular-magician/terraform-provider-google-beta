@@ -58,6 +58,25 @@ func ResourceApiGatewayApiConfig() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"api": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"api_config_id": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"api": {
 				Type:        schema.TypeString,
@@ -313,11 +332,11 @@ func resourceApiGatewayApiConfigCreate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("managed_service_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(managedServiceConfigsProp)) && (ok || !reflect.DeepEqual(v, managedServiceConfigsProp)) {
 		obj["managedServiceConfigs"] = managedServiceConfigsProp
 	}
-	labelsProp, err := expandApiGatewayApiConfigEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandApiGatewayApiConfigEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	obj, err = resourceApiGatewayApiConfigEncoder(d, meta, obj)
@@ -448,6 +467,28 @@ func resourceApiGatewayApiConfigRead(d *schema.ResourceData, meta interface{}) e
 		return fmt.Errorf("Error reading ApiConfig: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil {
+		return fmt.Errorf("Error getting identity: %s", err)
+	}
+	if v, ok := identity.GetOk("api"); ok && v != "" {
+		err = identity.Set("api", d.Get("api").(string))
+		if err != nil {
+			return fmt.Errorf("Error setting api: %s", err)
+		}
+	}
+	if v, ok := identity.GetOk("api_config_id"); ok && v != "" {
+		err = identity.Set("api_config_id", d.Get("api_config_id").(string))
+		if err != nil {
+			return fmt.Errorf("Error setting api_config_id: %s", err)
+		}
+	}
+	if v, ok := identity.GetOk("project"); ok && v != "" {
+		err = identity.Set("project", d.Get("project").(string))
+		if err != nil {
+			return fmt.Errorf("Error setting project: %s", err)
+		}
+	}
 	return nil
 }
 
@@ -491,11 +532,11 @@ func resourceApiGatewayApiConfigUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("managed_service_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, managedServiceConfigsProp)) {
 		obj["managedServiceConfigs"] = managedServiceConfigsProp
 	}
-	labelsProp, err := expandApiGatewayApiConfigEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandApiGatewayApiConfigEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	obj, err = resourceApiGatewayApiConfigEncoder(d, meta, obj)

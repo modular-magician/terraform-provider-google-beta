@@ -55,6 +55,21 @@ func ResourceFirebaseHostingChannel() *schema.Resource {
 			tpgresource.SetLabelsDiff,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"site_id": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"channel_id": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"channel_id": {
 				Type:        schema.TypeString,
@@ -152,11 +167,11 @@ func resourceFirebaseHostingChannelCreate(d *schema.ResourceData, meta interface
 	} else if v, ok := d.GetOkExists("ttl"); !tpgresource.IsEmptyValue(reflect.ValueOf(ttlProp)) && (ok || !reflect.DeepEqual(v, ttlProp)) {
 		obj["ttl"] = ttlProp
 	}
-	labelsProp, err := expandFirebaseHostingChannelEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandFirebaseHostingChannelEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{FirebaseHostingBasePath}}sites/{{site_id}}/channels?channelId={{channel_id}}")
@@ -250,6 +265,22 @@ func resourceFirebaseHostingChannelRead(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("Error reading Channel: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil {
+		return fmt.Errorf("Error getting identity: %s", err)
+	}
+	if v, ok := identity.GetOk("site_id"); ok && v != "" {
+		err = identity.Set("site_id", d.Get("site_id").(string))
+		if err != nil {
+			return fmt.Errorf("Error setting site_id: %s", err)
+		}
+	}
+	if v, ok := identity.GetOk("channel_id"); ok && v != "" {
+		err = identity.Set("channel_id", d.Get("channel_id").(string))
+		if err != nil {
+			return fmt.Errorf("Error setting channel_id: %s", err)
+		}
+	}
 	return nil
 }
 
@@ -275,11 +306,11 @@ func resourceFirebaseHostingChannelUpdate(d *schema.ResourceData, meta interface
 	} else if v, ok := d.GetOkExists("expire_time"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, expireTimeProp)) {
 		obj["expireTime"] = expireTimeProp
 	}
-	labelsProp, err := expandFirebaseHostingChannelEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandFirebaseHostingChannelEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{FirebaseHostingBasePath}}sites/{{site_id}}/channels/{{channel_id}}")
