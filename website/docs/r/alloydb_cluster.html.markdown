@@ -368,6 +368,14 @@ resource "google_service_networking_connection" "vpc_connection" {
 The following arguments are supported:
 
 
+* `annotations` -
+  (Required)
+  Annotations to allow client tools to store small amount of arbitrary data. This is distinct from labels. https://google.aip.dev/128
+  An object containing a list of "key": value pairs. Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.
+
+  **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration.
+  Please refer to the field `effective_annotations` for all of the annotations present on the resource.
+
 * `cluster_id` -
   (Required)
   The ID of the alloydb cluster.
@@ -400,14 +408,6 @@ The following arguments are supported:
 * `etag` -
   (Optional)
   For Resource freshness validation (https://google.aip.dev/154)
-
-* `annotations` -
-  (Optional)
-  Annotations to allow client tools to store small amount of arbitrary data. This is distinct from labels. https://google.aip.dev/128
-  An object containing a list of "key": value pairs. Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.
-
-  **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration.
-  Please refer to the field `effective_annotations` for all of the annotations present on the resource.
 
 * `database_version` -
   (Optional)
