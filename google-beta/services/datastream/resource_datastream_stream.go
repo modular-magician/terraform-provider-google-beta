@@ -347,11 +347,6 @@ A duration in seconds with up to nine fractional digits, terminated by 's'. Exam
 					},
 				},
 			},
-			"display_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: `Display name.`,
-			},
 			"location": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -1870,12 +1865,6 @@ func resourceDatastreamStreamCreate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	obj := make(map[string]interface{})
-	displayNameProp, err := expandDatastreamStreamDisplayName(d.Get("display_name"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
-		obj["displayName"] = displayNameProp
-	}
 	sourceConfigProp, err := expandDatastreamStreamSourceConfig(d.Get("source_config"), d, config)
 	if err != nil {
 		return err
@@ -2039,9 +2028,6 @@ func resourceDatastreamStreamRead(d *schema.ResourceData, meta interface{}) erro
 	if err := d.Set("labels", flattenDatastreamStreamLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
-	if err := d.Set("display_name", flattenDatastreamStreamDisplayName(res["displayName"], d, config)); err != nil {
-		return fmt.Errorf("Error reading Stream: %s", err)
-	}
 	if err := d.Set("source_config", flattenDatastreamStreamSourceConfig(res["sourceConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Stream: %s", err)
 	}
@@ -2086,12 +2072,6 @@ func resourceDatastreamStreamUpdate(d *schema.ResourceData, meta interface{}) er
 	billingProject = project
 
 	obj := make(map[string]interface{})
-	displayNameProp, err := expandDatastreamStreamDisplayName(d.Get("display_name"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
-		obj["displayName"] = displayNameProp
-	}
 	sourceConfigProp, err := expandDatastreamStreamSourceConfig(d.Get("source_config"), d, config)
 	if err != nil {
 		return err
@@ -2136,10 +2116,6 @@ func resourceDatastreamStreamUpdate(d *schema.ResourceData, meta interface{}) er
 	log.Printf("[DEBUG] Updating Stream %q: %#v", d.Id(), obj)
 	headers := make(http.Header)
 	updateMask := []string{}
-
-	if d.HasChange("display_name") {
-		updateMask = append(updateMask, "displayName")
-	}
 
 	if d.HasChange("source_config") {
 		updateMask = append(updateMask, "sourceConfig")
@@ -2334,10 +2310,6 @@ func flattenDatastreamStreamLabels(v interface{}, d *schema.ResourceData, config
 	}
 
 	return transformed
-}
-
-func flattenDatastreamStreamDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
 }
 
 func flattenDatastreamStreamSourceConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5042,10 +5014,6 @@ func flattenDatastreamStreamTerraformLabels(v interface{}, d *schema.ResourceDat
 
 func flattenDatastreamStreamEffectiveLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
-}
-
-func expandDatastreamStreamDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
 }
 
 func expandDatastreamStreamSourceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

@@ -111,18 +111,6 @@ resource "google_folder_access_approval_settings" "folder_access_approval" {
 The following arguments are supported:
 
 
-* `enrolled_services` -
-  (Required)
-  A list of Google Cloud Services for which the given resource has Access Approval enrolled.
-  Access requests for the resource given by name against any of these services contained here will be required
-  to have explicit approval. Enrollment can only be done on an all or nothing basis.
-  A maximum of 10 enrolled services will be enforced, to be expanded as the set of supported services is expanded.
-  Structure is [documented below](#nested_enrolled_services).
-
-* `folder_id` -
-  (Required)
-  ID of the folder of the access approval settings.
-
 
 * `notification_emails` -
   (Optional)
@@ -130,11 +118,23 @@ The following arguments are supported:
   Notifications relating to a resource will be sent to all emails in the settings of ancestor
   resources of that resource. A maximum of 50 email addresses are allowed.
 
+* `enrolled_services` -
+  (Optional)
+  A list of Google Cloud Services for which the given resource has Access Approval enrolled.
+  Access requests for the resource given by name against any of these services contained here will be required
+  to have explicit approval. Enrollment can only be done on an all or nothing basis.
+  A maximum of 10 enrolled services will be enforced, to be expanded as the set of supported services is expanded.
+  Structure is [documented below](#nested_enrolled_services).
+
 * `active_key_version` -
   (Optional)
   The asymmetric crypto key version to use for signing approval requests.
   Empty active_key_version indicates that a Google-managed key should be used for signing.
   This property will be ignored if set by an ancestor of the resource, and new non-empty values may not be set.
+
+* `folder_id` -
+  (Optional)
+  ID of the folder of the access approval settings.
 
 
 

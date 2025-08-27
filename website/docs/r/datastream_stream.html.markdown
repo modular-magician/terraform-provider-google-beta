@@ -1266,10 +1266,6 @@ resource "google_datastream_stream" "default" {
 The following arguments are supported:
 
 
-* `display_name` -
-  (Required)
-  Display name.
-
 * `source_config` -
   (Required)
   Source connection profile configuration.

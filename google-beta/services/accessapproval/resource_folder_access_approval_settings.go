@@ -77,9 +77,16 @@ func ResourceAccessApprovalFolderSettings() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"active_key_version": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `The asymmetric crypto key version to use for signing approval requests.
+Empty active_key_version indicates that a Google-managed key should be used for signing.
+This property will be ignored if set by an ancestor of the resource, and new non-empty values may not be set.`,
+			},
 			"enrolled_services": {
 				Type:     schema.TypeSet,
-				Required: true,
+				Optional: true,
 				Description: `A list of Google Cloud Services for which the given resource has Access Approval enrolled.
 Access requests for the resource given by name against any of these services contained here will be required
 to have explicit approval. Enrollment can only be done on an all or nothing basis.
@@ -90,16 +97,9 @@ A maximum of 10 enrolled services will be enforced, to be expanded as the set of
 			},
 			"folder_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
 				Description: `ID of the folder of the access approval settings.`,
-			},
-			"active_key_version": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Description: `The asymmetric crypto key version to use for signing approval requests.
-Empty active_key_version indicates that a Google-managed key should be used for signing.
-This property will be ignored if set by an ancestor of the resource, and new non-empty values may not be set.`,
 			},
 			"notification_emails": {
 				Type:     schema.TypeSet,

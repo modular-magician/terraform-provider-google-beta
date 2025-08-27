@@ -72,7 +72,6 @@ fields:
   - field: 'destination_config.gcs_destination_config.json_file_format.compression'
   - field: 'destination_config.gcs_destination_config.json_file_format.schema_file_format'
   - field: 'destination_config.gcs_destination_config.path'
-  - field: 'display_name'
   - field: 'effective_labels'
     provider_only: true
   - field: 'labels'
