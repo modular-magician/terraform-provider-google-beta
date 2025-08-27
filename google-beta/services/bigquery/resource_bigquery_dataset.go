@@ -126,6 +126,12 @@ must contain only letters (a-z, A-Z), numbers (0-9), or
 underscores (_). The maximum length is 1,024 characters.`,
 			},
 
+			"max_time_travel_hours": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				Description: `Defines the time travel window in hours. The value can be from 48 to 168 hours (2 to 7 days).`,
+			},
 			"access": {
 				Type:        schema.TypeSet,
 				Computed:    true,
@@ -292,12 +298,6 @@ contains at least two geographic places.
 The default value is multi-regional location 'US'.
 Changing this forces a new resource to be created.`,
 				Default: "US",
-			},
-			"max_time_travel_hours": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				Description: `Defines the time travel window in hours. The value can be from 48 to 168 hours (2 to 7 days).`,
 			},
 			"resource_tags": {
 				Type:     schema.TypeMap,

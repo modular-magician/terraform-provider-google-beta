@@ -308,9 +308,9 @@ A duration in seconds with up to nine fractional digits, terminated by 's'. Exam
 									},
 									"file_rotation_mb": {
 										Type:        schema.TypeInt,
-										Computed:    true,
 										Optional:    true,
 										Description: `The maximum file size to be saved in the bucket.`,
+										Default:     50,
 									},
 									"json_file_format": {
 										Type:        schema.TypeList,

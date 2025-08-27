@@ -250,16 +250,16 @@ resource "google_bigquery_dataset" "dataset" {
 The following arguments are supported:
 
 
+* `max_time_travel_hours` -
+  (Required)
+  Defines the time travel window in hours. The value can be from 48 to 168 hours (2 to 7 days).
+
 * `dataset_id` -
   (Required)
   A unique ID for this dataset, without the project name. The ID
   must contain only letters (a-z, A-Z), numbers (0-9), or
   underscores (_). The maximum length is 1,024 characters.
 
-
-* `max_time_travel_hours` -
-  (Optional)
-  Defines the time travel window in hours. The value can be from 48 to 168 hours (2 to 7 days).
 
 * `access` -
   (Optional)

@@ -126,10 +126,9 @@ with varying MTUs.`,
 				Default:      "AFTER_CLASSIC_FIREWALL",
 			},
 			"network_profile": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				ForceNew:         true,
-				DiffSuppressFunc: tpgresource.CompareSelfLinkRelativePaths,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
 				Description: `A full or partial URL of the network profile to apply to this network.
 This field can be set only at resource creation time. For example, the
 following are valid URLs:
