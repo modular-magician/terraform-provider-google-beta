@@ -1,0 +1,12 @@
+resource: 'google_random_random_name'
+generation_type: 'mmv1'
+source_file: 'products/randomtest/Random.yaml'
+api_service_name: 'random.googleapis.com'
+api_version: 'v1'
+api_resource_type_kind: 'RandomName'
+fields:
+  - field: 'auth_enabled'
+  - field: 'location'
+    provider_only: true
+  - field: 'name'
+    provider_only: true

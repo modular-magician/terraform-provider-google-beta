@@ -142,6 +142,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/publicca"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/pubsub"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/pubsublite"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/random"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/redis"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager3"
@@ -605,9 +606,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 697
+// Generated resources: 698
 // Generated IAM resources: 345
-// Total generated resources: 1042
+// Total generated resources: 1043
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1473,6 +1474,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_pubsub_lite_reservation":                                             pubsublite.ResourcePubsubLiteReservation(),
 	"google_pubsub_lite_subscription":                                            pubsublite.ResourcePubsubLiteSubscription(),
 	"google_pubsub_lite_topic":                                                   pubsublite.ResourcePubsubLiteTopic(),
+	"google_random_random_name":                                                  random.ResourceRandomRandomName(),
 	"google_redis_cluster":                                                       redis.ResourceRedisCluster(),
 	"google_redis_cluster_user_created_connections":                              redis.ResourceRedisClusterUserCreatedConnections(),
 	"google_redis_instance":                                                      redis.ResourceRedisInstance(),
@@ -1947,6 +1949,7 @@ func UseGeneratedProducts() {
 	var _ = publicca.ProductName
 	var _ = pubsub.ProductName
 	var _ = pubsublite.ProductName
+	var _ = random.ProductName
 	var _ = redis.ProductName
 	var _ = resourcemanager.ProductName
 	var _ = resourcemanager3.ProductName

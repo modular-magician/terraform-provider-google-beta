@@ -141,6 +141,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/publicca"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/pubsub"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/pubsublite"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/random"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/redis"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager3"
