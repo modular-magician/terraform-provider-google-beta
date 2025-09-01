@@ -1,0 +1,16 @@
+resource: 'google_backup_dr_data_source_reference'
+generation_type: 'mmv1'
+source_file: 'products/backupdr/DataSourceReference.yaml'
+api_service_name: 'backupdr.googleapis.com'
+api_version: 'v1'
+api_resource_type_kind: 'DataSourceReference'
+fields:
+  - field: 'backup_vault'
+  - field: 'create_time'
+  - field: 'data_source'
+  - field: 'data_source_reference_id'
+    provider_only: true
+  - field: 'location'
+    provider_only: true
+  - field: 'name'
+  - field: 'update_time'

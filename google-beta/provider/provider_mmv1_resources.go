@@ -217,6 +217,7 @@ var handwrittenDatasources = map[string]*schema.Resource{
 	"google_backup_dr_backup":                                    backupdr.DataSourceGoogleCloudBackupDRBackup(),
 	"google_backup_dr_data_source":                               backupdr.DataSourceGoogleCloudBackupDRDataSource(),
 	"google_backup_dr_backup_vault":                              backupdr.DataSourceGoogleCloudBackupDRBackupVault(),
+	"google_backup_dr_data_source_reference":                     backupdr.DataSourceGoogleCloudBackupDRDataSourceReferences(),
 	"google_beyondcorp_app_connection":                           beyondcorp.DataSourceGoogleBeyondcorpAppConnection(),
 	"google_beyondcorp_app_connector":                            beyondcorp.DataSourceGoogleBeyondcorpAppConnector(),
 	"google_beyondcorp_app_gateway":                              beyondcorp.DataSourceGoogleBeyondcorpAppGateway(),
@@ -605,9 +606,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 697
+// Generated resources: 698
 // Generated IAM resources: 345
-// Total generated resources: 1042
+// Total generated resources: 1043
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -702,6 +703,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_backup_dr_backup_plan":                                               backupdr.ResourceBackupDRBackupPlan(),
 	"google_backup_dr_backup_plan_association":                                   backupdr.ResourceBackupDRBackupPlanAssociation(),
 	"google_backup_dr_backup_vault":                                              backupdr.ResourceBackupDRBackupVault(),
+	"google_backup_dr_data_source_reference":                                     backupdr.ResourceBackupDRDataSourceReference(),
 	"google_backup_dr_management_server":                                         backupdr.ResourceBackupDRManagementServer(),
 	"google_backup_dr_service_config":                                            backupdr.ResourceBackupDRServiceConfig(),
 	"google_beyondcorp_app_connection":                                           beyondcorp.ResourceBeyondcorpAppConnection(),
