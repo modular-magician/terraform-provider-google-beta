@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/netip"
 	"reflect"
 	"sort"
 	"strings"
@@ -104,7 +105,7 @@ func resourceComputeFirewallSourceFieldsCustomizeDiff(_ context.Context, diff *s
 	return nil
 }
 
-func diffSuppressSourceRanges(k, old, new string, d *schema.ResourceData) bool {
+func DiffSuppressSourceRanges(k, old, new string, d *schema.ResourceData) bool {
 	if k == "source_ranges.#" {
 		if old == "1" && new == "0" {
 			// Allow diffing on the individual element if we are going from 1 -> 0
@@ -136,8 +137,30 @@ func diffSuppressSourceRanges(k, old, new string, d *schema.ResourceData) bool {
 			return true
 		}
 	}
-	// For any other source_ranges value diff, don't suppress
-	return false
+
+	o, n := d.GetChange("source_ranges")
+	return CompareCIDRlist(o.(*schema.Set).List(), n.(*schema.Set).List())
+}
+
+func DiffSuppressDestinationRanges(k, old, new string, d *schema.ResourceData) bool {
+	o, n := d.GetChange("destination_ranges")
+	return CompareCIDRlist(o.(*schema.Set).List(), n.(*schema.Set).List())
+}
+
+func CompareCIDRlist(oldRanges, newRanges []any) bool {
+	if len(oldRanges) != len(newRanges) {
+		return false
+	}
+
+	for i := 0; i < len(oldRanges); i++ {
+		oldCIDR := netip.MustParsePrefix(oldRanges[i].(string))
+		newCIDR := netip.MustParsePrefix(newRanges[i].(string))
+
+		if oldCIDR != newCIDR {
+			return false
+		}
+	}
+	return true
 }
 
 func ResourceComputeFirewall() *schema.Resource {
@@ -211,9 +234,10 @@ a protocol and port-range tuple that describes a denied connection.`,
 you create the resource.`,
 			},
 			"destination_ranges": {
-				Type:     schema.TypeSet,
-				Computed: true,
-				Optional: true,
+				Type:             schema.TypeSet,
+				Computed:         true,
+				Optional:         true,
+				DiffSuppressFunc: DiffSuppressDestinationRanges,
 				Description: `If destination ranges are specified, the firewall will apply only to
 traffic that has destination IP address in these ranges. These ranges
 must be expressed in CIDR format. IPv4 or IPv6 ranges are supported.`,
@@ -295,7 +319,7 @@ precedence over ALLOW rules having equal priority.`,
 			"source_ranges": {
 				Type:             schema.TypeSet,
 				Optional:         true,
-				DiffSuppressFunc: diffSuppressSourceRanges,
+				DiffSuppressFunc: DiffSuppressSourceRanges,
 				Description: `If source ranges are specified, the firewall will apply only to
 traffic that has source IP address in these ranges. These ranges must
 be expressed in CIDR format. One or both of sourceRanges and
