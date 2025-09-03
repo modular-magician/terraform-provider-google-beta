@@ -66,20 +66,20 @@ func ResourceContainerAwsNodePool() *schema.Resource {
 						RequiredForImport: true,
 						Description:       "The awsCluster for the resource",
 					},
-					"project": {
+					"location": {
 						Type:              schema.TypeString,
-						OptionalForImport: true,
-						Description:       "The project for the resource",
+						RequiredForImport: true,
+						Description:       "The location for the resource",
 					},
 					"name": {
 						Type:              schema.TypeString,
 						RequiredForImport: true,
 						Description:       "The name of this resource.",
 					},
-					"location": {
+					"project": {
 						Type:              schema.TypeString,
-						RequiredForImport: true,
-						Description:       "The location for the resource",
+						OptionalForImport: true,
+						Description:       "The project for the resource",
 					},
 				}
 			},
