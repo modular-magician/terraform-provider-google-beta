@@ -33,9 +33,20 @@ import (
 func TestAccNetappStoragePool_storagePoolCreateExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "gcnv-network-config-3", acctest.ServiceNetworkWithParentService("netapp.servicenetworking.goog")),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"network_name": acctest.BootstrapSharedServiceNetworkingConnection(t, "gcnv-network-config-3", acctest.ServiceNetworkWithParentService("netapp.servicenetworking.goog")),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,6 +62,12 @@ func TestAccNetappStoragePool_storagePoolCreateExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"enable_hot_tier_auto_resize", "labels", "location", "name", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_netapp_storage_pool.test_pool",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

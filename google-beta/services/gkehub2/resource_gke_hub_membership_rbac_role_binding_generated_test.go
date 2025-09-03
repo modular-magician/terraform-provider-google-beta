@@ -34,12 +34,24 @@ import (
 func TestAccGKEHub2MembershipRBACRoleBinding_gkehubMembershipRbacRoleBindingBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project":             envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_protection": false,
 		"network_name":        acctest.BootstrapSharedTestNetwork(t, "gke-cluster"),
 		"subnetwork_name":     acctest.BootstrapSubnet(t, "gke-cluster", acctest.BootstrapSharedTestNetwork(t, "gke-cluster")),
-		"random_suffix":       acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -55,6 +67,12 @@ func TestAccGKEHub2MembershipRBACRoleBinding_gkehubMembershipRbacRoleBindingBasi
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"location", "membership_id", "membership_rbac_role_binding_id"},
+			},
+			{
+				ResourceName:       "google_gke_hub_membership_rbac_role_binding.membership_rbac_role_binding",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

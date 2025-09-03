@@ -35,10 +35,21 @@ func TestAccApigeeSecurityProfileV2_apigeeSecurityProfileV2BasicTestExample(t *t
 	acctest.SkipIfVcr(t)
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
 		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -57,6 +68,12 @@ func TestAccApigeeSecurityProfileV2_apigeeSecurityProfileV2BasicTestExample(t *t
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"org_id", "profile_id"},
+			},
+			{
+				ResourceName:       "google_apigee_security_profile_v2.security_profile_v2",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

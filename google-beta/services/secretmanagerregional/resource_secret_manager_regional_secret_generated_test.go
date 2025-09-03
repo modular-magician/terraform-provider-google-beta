@@ -33,8 +33,18 @@ import (
 func TestAccSecretManagerRegionalRegionalSecret_regionalSecretConfigBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -50,6 +60,12 @@ func TestAccSecretManagerRegionalRegionalSecret_regionalSecretConfigBasicExample
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"annotations", "deletion_protection", "labels", "location", "secret_id", "tags", "terraform_labels", "ttl"},
+			},
+			{
+				ResourceName:       "google_secret_manager_regional_secret.regional-secret-basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -78,9 +94,20 @@ resource "google_secret_manager_regional_secret" "regional-secret-basic" {
 func TestAccSecretManagerRegionalRegionalSecret_regionalSecretWithCmekExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"kms_key_name":  acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"kms_key_name": acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -127,9 +154,20 @@ resource "google_secret_manager_regional_secret" "regional-secret-with-cmek" {
 func TestAccSecretManagerRegionalRegionalSecret_regionalSecretWithRotationExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"timestamp":     "2122-11-30T00:00:00Z",
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"timestamp": "2122-11-30T00:00:00Z",
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -187,8 +225,18 @@ resource "google_secret_manager_regional_secret" "regional-secret-with-rotation"
 func TestAccSecretManagerRegionalRegionalSecret_regionalSecretWithTtlExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -233,9 +281,20 @@ resource "google_secret_manager_regional_secret" "regional-secret-with-ttl" {
 func TestAccSecretManagerRegionalRegionalSecret_regionalSecretWithExpireTimeExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"timestamp":     "2122-11-30T00:00:00Z",
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"timestamp": "2122-11-30T00:00:00Z",
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -280,8 +339,18 @@ resource "google_secret_manager_regional_secret" "regional-secret-with-expire-ti
 func TestAccSecretManagerRegionalRegionalSecret_regionalSecretWithVersionDestroyTtlExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

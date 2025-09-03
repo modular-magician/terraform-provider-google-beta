@@ -34,11 +34,23 @@ import (
 func TestAccDataprocSessionTemplate_dataprocSessionTemplatesJupyterExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_name":    envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_name": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"prevent_destroy": false,
 		"subnetwork_name": acctest.BootstrapSubnetWithFirewallForDataprocBatches(t, "jupyer-session-test-network", "jupyter-session-test-subnetwork"),
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -54,6 +66,12 @@ func TestAccDataprocSessionTemplate_dataprocSessionTemplatesJupyterExample(t *te
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"labels", "location", "runtime_config.0.properties", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_dataproc_session_template.example_session_templates_jupyter",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -92,12 +110,24 @@ resource "google_dataproc_session_template" "example_session_templates_jupyter" 
 func TestAccDataprocSessionTemplate_dataprocSessionTemplatesJupyterFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_name":    envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_name": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"kms_key_name":    acctest.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us-central1", "tf-bootstrap-dataproc-session-template-key1").CryptoKey.Name,
 		"prevent_destroy": false,
 		"subnetwork_name": acctest.BootstrapSubnetWithFirewallForDataprocBatches(t, "jupyer-session-test-network", "jupyter-session-test-subnetwork"),
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -242,11 +272,23 @@ resource "google_dataproc_metastore_service" "ms" {
 func TestAccDataprocSessionTemplate_dataprocSessionTemplatesSparkConnectExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_name":    envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_name": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"prevent_destroy": false,
 		"subnetwork_name": acctest.BootstrapSubnetWithFirewallForDataprocBatches(t, "spark-connect-session-test-network", "spark-connect-session-test-subnetwork"),
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

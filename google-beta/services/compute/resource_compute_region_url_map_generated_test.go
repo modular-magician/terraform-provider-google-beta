@@ -33,8 +33,18 @@ import (
 func TestAccComputeRegionUrlMap_regionUrlMapBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -50,6 +60,12 @@ func TestAccComputeRegionUrlMap_regionUrlMapBasicExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"default_service", "region"},
+			},
+			{
+				ResourceName:       "google_compute_region_url_map.regionurlmap",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -131,8 +147,18 @@ resource "google_compute_region_health_check" "default" {
 func TestAccComputeRegionUrlMap_regionUrlMapDefaultRouteActionExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -330,8 +356,18 @@ resource "google_compute_region_health_check" "default" {
 func TestAccComputeRegionUrlMap_regionUrlMapL7IlbPathExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -461,8 +497,18 @@ resource "google_compute_region_health_check" "default" {
 func TestAccComputeRegionUrlMap_regionUrlMapL7IlbPathPartialExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -560,8 +606,18 @@ resource "google_compute_region_health_check" "default" {
 func TestAccComputeRegionUrlMap_regionUrlMapL7IlbRouteExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -672,8 +728,18 @@ resource "google_compute_region_health_check" "default" {
 func TestAccComputeRegionUrlMap_regionUrlMapL7IlbRoutePartialExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -759,8 +825,18 @@ resource "google_compute_region_health_check" "default" {
 func TestAccComputeRegionUrlMap_regionUrlMapPathTemplateMatchExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -876,8 +952,18 @@ resource "google_compute_region_health_check" "default" {
 func TestAccComputeRegionUrlMap_regionUrlMapPathMatcherDefaultRouteActionExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -1084,8 +1170,18 @@ resource "google_compute_region_health_check" "default" {
 func TestAccComputeRegionUrlMap_regionUrlMapDefaultMirrorPercentExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -1172,8 +1268,18 @@ resource "google_compute_region_health_check" "default" {
 func TestAccComputeRegionUrlMap_regionUrlMapPathMatcherDefaultMirrorPercentExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -1260,8 +1366,18 @@ resource "google_compute_region_health_check" "default" {
 func TestAccComputeRegionUrlMap_regionUrlMapPathRuleMirrorPercentExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -1348,8 +1464,18 @@ resource "google_compute_region_health_check" "default" {
 func TestAccComputeRegionUrlMap_regionUrlMapRouteRuleMirrorPercentExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

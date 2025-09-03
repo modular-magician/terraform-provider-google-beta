@@ -29,10 +29,22 @@ import (
 func TestAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficTargetExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":     envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"service_act_id": "tf-test-traffic-tg",
-		"random_suffix":  acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -47,6 +59,12 @@ func TestAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficTargetExample(t *
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"backend", "location"},
+			},
+			{
+				ResourceName:       "google_firebase_app_hosting_traffic.example",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -126,10 +144,22 @@ resource "google_project_service" "fah" {
 func TestAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficRolloutPolicyExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":     envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"service_act_id": "tf-test-traffic-rp",
-		"random_suffix":  acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -207,10 +237,22 @@ resource "google_project_service" "fah" {
 func TestAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficRolloutPolicyDisabledExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":     envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"service_act_id": "tf-test-traffic-rpd",
-		"random_suffix":  acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

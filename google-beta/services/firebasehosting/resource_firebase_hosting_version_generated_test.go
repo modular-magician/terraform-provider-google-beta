@@ -29,9 +29,20 @@ import (
 func TestAccFirebaseHostingVersion_firebasehostingVersionRedirectExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -46,6 +57,12 @@ func TestAccFirebaseHostingVersion_firebasehostingVersionRedirectExample(t *test
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"site_id"},
+			},
+			{
+				ResourceName:       "google_firebase_hosting_version.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -83,9 +100,20 @@ resource "google_firebase_hosting_release" "default" {
 func TestAccFirebaseHostingVersion_firebasehostingVersionHeadersExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -139,9 +167,20 @@ resource "google_firebase_hosting_release" "default" {
 func TestAccFirebaseHostingVersion_firebasehostingVersionHeadersRegexExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -195,9 +234,20 @@ resource "google_firebase_hosting_release" "default" {
 func TestAccFirebaseHostingVersion_firebasehostingVersionPathExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -248,10 +298,22 @@ resource "google_firebase_hosting_release" "default" {
 func TestAccFirebaseHostingVersion_firebasehostingVersionCloudRunExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":          envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_protection": false,
-		"random_suffix":       acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -323,10 +385,22 @@ resource "google_firebase_hosting_release" "default" {
 func TestAccFirebaseHostingVersion_firebasehostingVersionCloudFunctionsExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
-		"zip_path":      "./test-fixtures/function-source.zip",
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"zip_path": "./test-fixtures/function-source.zip",
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

@@ -33,8 +33,18 @@ import (
 func TestAccComputeForwardingRule_internalHttpLbWithMigBackendExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -50,6 +60,12 @@ func TestAccComputeForwardingRule_internalHttpLbWithMigBackendExample(t *testing
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"backend_service", "labels", "network", "no_automate_dns_zone", "port_range", "region", "subnetwork", "target", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_compute_forwarding_rule.google_compute_forwarding_rule",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -252,8 +268,18 @@ resource "google_compute_instance" "vm-test" {
 func TestAccComputeForwardingRule_internalTcpUdpLbWithMigBackendExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -460,8 +486,18 @@ resource "google_compute_instance" "vm_test" {
 func TestAccComputeForwardingRule_forwardingRuleExternallbExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -516,10 +552,21 @@ resource "google_compute_region_health_check" "hc" {
 func TestAccComputeForwardingRule_forwardingRuleExternallbByoipv6Example(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"ip_address":        fmt.Sprintf("2600:1901:4457:1:%d:%d::/96", acctest.RandIntRange(t, 0, 9999), acctest.RandIntRange(t, 0, 9999)),
 		"ip_collection_url": "projects/tf-static-byoip/regions/us-central1/publicDelegatedPrefixes/tf-test-forwarding-rule-mode-pdp",
-		"random_suffix":     acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -580,8 +627,18 @@ resource "google_compute_region_health_check" "hc" {
 func TestAccComputeForwardingRule_forwardingRuleGlobalInternallbExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -644,8 +701,18 @@ resource "google_compute_subnetwork" "default" {
 func TestAccComputeForwardingRule_forwardingRuleBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -683,8 +750,18 @@ resource "google_compute_target_pool" "default" {
 func TestAccComputeForwardingRule_forwardingRuleL3DefaultExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -739,8 +816,18 @@ resource "google_compute_region_health_check" "health_check" {
 func TestAccComputeForwardingRule_forwardingRuleInternallbExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -809,8 +896,18 @@ resource "google_compute_subnetwork" "default" {
 func TestAccComputeForwardingRule_forwardingRuleHttpLbExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -1028,8 +1125,18 @@ resource "google_compute_subnetwork" "proxy" {
 func TestAccComputeForwardingRule_forwardingRuleRegionalHttpXlbExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -1254,8 +1361,18 @@ resource "google_compute_subnetwork" "proxy" {
 func TestAccComputeForwardingRule_forwardingRuleVpcPscExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -1378,8 +1495,18 @@ resource "google_compute_health_check" "producer_service_health_check" {
 func TestAccComputeForwardingRule_forwardingRuleVpcPscNoAutomateDnsExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -1498,8 +1625,18 @@ resource "google_compute_health_check" "producer_service_health_check" {
 func TestAccComputeForwardingRule_forwardingRuleRegionalSteeringExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -1556,8 +1693,18 @@ resource "google_compute_forwarding_rule" "external" {
 func TestAccComputeForwardingRule_forwardingRuleInternallbIpv6Example(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

@@ -34,8 +34,18 @@ func TestAccTpuV2Vm_tpuV2VmBasicExample(t *testing.T) {
 	acctest.SkipIfVcr(t)
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,6 +61,12 @@ func TestAccTpuV2Vm_tpuV2VmBasicExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "zone"},
+			},
+			{
+				ResourceName:       "google_tpu_v2_vm.tpu",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -77,8 +93,18 @@ func TestAccTpuV2Vm_tpuV2VmFullExample(t *testing.T) {
 	acctest.SkipIfVcr(t)
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

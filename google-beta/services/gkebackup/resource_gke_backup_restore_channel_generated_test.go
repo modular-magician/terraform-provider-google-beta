@@ -34,10 +34,22 @@ import (
 func TestAccGKEBackupRestoreChannel_gkebackupRestorechannelBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project":             envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"destination_project": "projects/24240755850",
-		"random_suffix":       acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -53,6 +65,12 @@ func TestAccGKEBackupRestoreChannel_gkebackupRestorechannelBasicExample(t *testi
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_gke_backup_restore_channel.basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

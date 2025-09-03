@@ -34,9 +34,20 @@ import (
 func TestAccEventarcPipeline_eventarcPipelineWithTopicDestinationExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -52,6 +63,12 @@ func TestAccEventarcPipeline_eventarcPipelineWithTopicDestinationExample(t *test
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"annotations", "labels", "location", "pipeline_id", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_eventarc_pipeline.primary",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -83,10 +100,22 @@ resource "google_eventarc_pipeline" "primary" {
 func TestAccEventarcPipeline_eventarcPipelineWithHttpDestinationExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":              envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"network_attachment_name": acctest.BootstrapNetworkAttachment(t, "tf-bootstrap-eventarc-pipeline-na", acctest.BootstrapSubnet(t, "tf-bootstrap-eventarc-pipeline-subnet", acctest.BootstrapSharedTestNetwork(t, "tf-bootstrap-eventarc-pipeline-network"))),
-		"random_suffix":           acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -127,9 +156,20 @@ resource "google_eventarc_pipeline" "primary" {
 func TestAccEventarcPipeline_eventarcPipelineWithWorkflowDestinationExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -198,11 +238,23 @@ resource "google_eventarc_pipeline" "primary" {
 func TestAccEventarcPipeline_eventarcPipelineWithOidcAndJsonFormatExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":              envvar.GetTestProjectFromEnv(),
-		"service_account":         envvar.GetTestServiceAccountFromEnv(t),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id":      envvar.GetTestProjectFromEnv(),
+		"service_account": envvar.GetTestServiceAccountFromEnv(t),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"network_attachment_name": acctest.BootstrapNetworkAttachment(t, "tf-bootstrap-eventarc-pipeline-na", acctest.BootstrapSubnet(t, "tf-bootstrap-eventarc-pipeline-subnet", acctest.BootstrapSharedTestNetwork(t, "tf-bootstrap-eventarc-pipeline-network"))),
-		"random_suffix":           acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -275,11 +327,23 @@ EOF
 func TestAccEventarcPipeline_eventarcPipelineWithOauthAndProtobufFormatExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":              envvar.GetTestProjectFromEnv(),
-		"service_account":         envvar.GetTestServiceAccountFromEnv(t),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id":      envvar.GetTestProjectFromEnv(),
+		"service_account": envvar.GetTestServiceAccountFromEnv(t),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"network_attachment_name": acctest.BootstrapNetworkAttachment(t, "tf-bootstrap-eventarc-pipeline-na", acctest.BootstrapSubnet(t, "tf-bootstrap-eventarc-pipeline-subnet", acctest.BootstrapSharedTestNetwork(t, "tf-bootstrap-eventarc-pipeline-network"))),
-		"random_suffix":           acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -374,11 +438,23 @@ func TestAccEventarcPipeline_eventarcPipelineWithCmekAndAvroFormatExample(t *tes
 		},
 	})
 
-	context := map[string]interface{}{
-		"project_id":              envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"key_name":                acctest.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us-central1", "tf-bootstrap-eventarc-pipeline-key").CryptoKey.Name,
 		"network_attachment_name": acctest.BootstrapNetworkAttachment(t, "tf-bootstrap-eventarc-pipeline-na", acctest.BootstrapSubnet(t, "tf-bootstrap-eventarc-pipeline-subnet", acctest.BootstrapSharedTestNetwork(t, "tf-bootstrap-eventarc-pipeline-network"))),
-		"random_suffix":           acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

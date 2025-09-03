@@ -33,9 +33,20 @@ import (
 func TestAccDiscoveryEngineCmekConfig_discoveryengineCmekconfigDefaultExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"kms_key_name":  acctest.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us", "tftest-shared-key-5").CryptoKey.Name,
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"kms_key_name": acctest.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us", "tftest-shared-key-5").CryptoKey.Name,
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,6 +62,12 @@ func TestAccDiscoveryEngineCmekConfig_discoveryengineCmekconfigDefaultExample(t 
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"cmek_config_id", "location", "project", "set_default"},
+			},
+			{
+				ResourceName:       "google_discovery_engine_cmek_config.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

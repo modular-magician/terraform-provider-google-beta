@@ -34,11 +34,23 @@ import (
 func TestAccFirebaseAndroidApp_firebaseAndroidAppBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
-		"display_name":  "tf-test Display Name Basic",
-		"package_name":  "android.package.app" + acctest.RandString(t, 4),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"display_name": "tf-test Display Name Basic",
+		"package_name": "android.package.app" + acctest.RandString(t, 4),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -54,6 +66,12 @@ func TestAccFirebaseAndroidApp_firebaseAndroidAppBasicExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"deletion_policy", "project"},
+			},
+			{
+				ResourceName:       "google_firebase_android_app.basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -75,11 +93,23 @@ resource "google_firebase_android_app" "basic" {
 func TestAccFirebaseAndroidApp_firebaseAndroidAppCustomApiKeyExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
-		"display_name":  "tf-test Display Name",
-		"package_name":  "android.package.app" + acctest.RandString(t, 4),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"display_name": "tf-test Display Name",
+		"package_name": "android.package.app" + acctest.RandString(t, 4),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

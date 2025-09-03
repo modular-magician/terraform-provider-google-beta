@@ -34,9 +34,20 @@ func TestAccBigtableLogicalView_bigtableLogicalViewExample(t *testing.T) {
 	acctest.SkipIfVcr(t)
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_protection": false,
-		"random_suffix":       acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -52,6 +63,12 @@ func TestAccBigtableLogicalView_bigtableLogicalViewExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"instance", "logical_view_id"},
+			},
+			{
+				ResourceName:       "google_bigtable_logical_view.logical_view",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

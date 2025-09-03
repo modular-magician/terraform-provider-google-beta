@@ -33,11 +33,22 @@ import (
 func TestAccOracleDatabaseOdbNetwork_oracledatabaseOdbnetworkExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_protection": false,
 		"odb_network_id":      fmt.Sprintf("tf-test-odbnetwork-%s", acctest.RandString(t, 10)),
 		"project":             "oci-terraform-testing-prod",
-		"random_suffix":       acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -53,6 +64,12 @@ func TestAccOracleDatabaseOdbNetwork_oracledatabaseOdbnetworkExample(t *testing.
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"deletion_protection", "labels", "location", "odb_network_id", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_oracle_database_odb_network.my-odbnetwork",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

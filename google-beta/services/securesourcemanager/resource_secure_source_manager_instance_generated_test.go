@@ -33,9 +33,20 @@ import (
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstanceBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,6 +62,12 @@ func TestAccSecureSourceManagerInstance_secureSourceManagerInstanceBasicExample(
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"instance_id", "labels", "location", "terraform_labels", "update_time"},
+			},
+			{
+				ResourceName:       "google_secure_source_manager_instance.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -74,10 +91,21 @@ resource "google_secure_source_manager_instance" "default" {
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstanceCmekExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_policy": "DELETE",
 		"kms_key_name":    acctest.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us-central1", "tf-bootstrap-secure-source-manager-key1").CryptoKey.Name,
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -127,8 +155,18 @@ data "google_project" "project" {}
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstancePrivateTrustedCertExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -165,9 +203,20 @@ resource "google_secure_source_manager_instance" "default" {
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstancePrivateExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -279,9 +328,20 @@ data "google_project" "project" {}
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstancePrivatePscBackendExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -495,9 +555,20 @@ resource "google_dns_record_set" "ssm_instance_git_record" {
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstancePrivatePscEndpointExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -678,9 +749,20 @@ resource "google_dns_record_set" "ssm_instance_git_record" {
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstanceWorkforceIdentityFederationExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

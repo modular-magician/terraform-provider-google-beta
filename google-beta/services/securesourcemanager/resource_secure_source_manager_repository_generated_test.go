@@ -33,9 +33,20 @@ import (
 func TestAccSecureSourceManagerRepository_secureSourceManagerRepositoryBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,6 +62,12 @@ func TestAccSecureSourceManagerRepository_secureSourceManagerRepositoryBasicExam
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"initial_config", "location", "repository_id"},
+			},
+			{
+				ResourceName:       "google_secure_source_manager_repository.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -80,9 +97,20 @@ resource "google_secure_source_manager_repository" "default" {
 func TestAccSecureSourceManagerRepository_secureSourceManagerRepositoryInitialConfigExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

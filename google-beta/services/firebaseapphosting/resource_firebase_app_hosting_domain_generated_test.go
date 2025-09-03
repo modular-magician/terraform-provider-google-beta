@@ -34,11 +34,23 @@ import (
 func TestAccFirebaseAppHostingDomain_firebaseAppHostingDomainMinimalExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":     envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"domain_id":      "my-domain-m.com",
 		"service_act_id": "tf-test-domain-m",
-		"random_suffix":  acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -54,6 +66,12 @@ func TestAccFirebaseAppHostingDomain_firebaseAppHostingDomainMinimalExample(t *t
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"backend", "domain_id", "location"},
+			},
+			{
+				ResourceName:       "google_firebase_app_hosting_domain.example",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -95,11 +113,23 @@ resource "google_service_account" "service_account" {
 func TestAccFirebaseAppHostingDomain_firebaseAppHostingDomainFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":     envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"domain_id":      "my-domain.com",
 		"service_act_id": "tf-test-domain",
-		"random_suffix":  acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

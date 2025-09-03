@@ -33,9 +33,20 @@ import (
 func TestAccRedisInstance_redisInstanceBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"prevent_destroy": false,
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,6 +62,12 @@ func TestAccRedisInstance_redisInstanceBasicExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"labels", "region", "reserved_ip_range", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_redis_instance.cache",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -72,10 +89,21 @@ resource "google_redis_instance" "cache" {
 func TestAccRedisInstance_redisInstanceFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"network_name":    acctest.BootstrapSharedTestNetwork(t, "redis-full"),
 		"prevent_destroy": false,
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -151,10 +179,21 @@ data "google_compute_network" "redis-network" {
 func TestAccRedisInstance_redisInstanceFullWithPersistenceConfigExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"network_name":    acctest.BootstrapSharedTestNetwork(t, "redis-full-persis"),
 		"prevent_destroy": false,
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -199,10 +238,21 @@ resource "google_redis_instance" "cache-persis" {
 func TestAccRedisInstance_redisInstancePrivateServiceTestExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"network_name":    acctest.BootstrapSharedServiceNetworkingConnection(t, "vpc-network-1"),
 		"prevent_destroy": false,
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -261,10 +311,21 @@ resource "google_redis_instance" "cache" {
 func TestAccRedisInstance_redisInstanceMrrExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"network_name":    acctest.BootstrapSharedTestNetwork(t, "redis-mrr"),
 		"prevent_destroy": false,
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

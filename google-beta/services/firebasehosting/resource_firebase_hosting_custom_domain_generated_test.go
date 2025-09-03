@@ -34,11 +34,23 @@ import (
 func TestAccFirebaseHostingCustomDomain_firebasehostingCustomdomainBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"custom_domain": "basic.custom.domain.com",
 		"site_id":       envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -54,6 +66,12 @@ func TestAccFirebaseHostingCustomDomain_firebasehostingCustomdomainBasicExample(
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"custom_domain", "site_id"},
+			},
+			{
+				ResourceName:       "google_firebase_hosting_custom_domain.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -74,11 +92,23 @@ resource "google_firebase_hosting_custom_domain" "default" {
 func TestAccFirebaseHostingCustomDomain_firebasehostingCustomdomainFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":      envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"custom_domain":   "full.source.domain.com",
 		"redirect_target": "destination.domain.com",
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -125,11 +155,23 @@ resource "google_firebase_hosting_custom_domain" "default" {
 func TestAccFirebaseHostingCustomDomain_firebasehostingCustomdomainCloudRunExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":          envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"custom_domain":       "run.custom.domain.com",
 		"deletion_protection": false,
-		"random_suffix":       acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

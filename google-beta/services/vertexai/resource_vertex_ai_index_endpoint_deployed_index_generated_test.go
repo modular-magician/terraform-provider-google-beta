@@ -33,10 +33,21 @@ import (
 func TestAccVertexAIIndexEndpointDeployedIndex_vertexAiIndexEndpointDeployedIndexBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"address_name":  acctest.BootstrapSharedTestGlobalAddress(t, "vpc-network-1", acctest.AddressWithPrefixLength(8)),
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "vpc-network-1"),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"address_name": acctest.BootstrapSharedTestGlobalAddress(t, "vpc-network-1", acctest.AddressWithPrefixLength(8)),
+		"network_name": acctest.BootstrapSharedServiceNetworkingConnection(t, "vpc-network-1"),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -52,6 +63,12 @@ func TestAccVertexAIIndexEndpointDeployedIndex_vertexAiIndexEndpointDeployedInde
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"index_endpoint", "region"},
+			},
+			{
+				ResourceName:       "google_vertex_ai_index_endpoint_deployed_index.basic_deployed_index",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -148,10 +165,21 @@ data "google_project" "project" {}
 func TestAccVertexAIIndexEndpointDeployedIndex_vertexAiIndexEndpointDeployedIndexBasicTwoExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"address_name":  acctest.BootstrapSharedTestGlobalAddress(t, "vpc-network-1", acctest.AddressWithPrefixLength(8)),
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "vpc-network-1"),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"address_name": acctest.BootstrapSharedTestGlobalAddress(t, "vpc-network-1", acctest.AddressWithPrefixLength(8)),
+		"network_name": acctest.BootstrapSharedServiceNetworkingConnection(t, "vpc-network-1"),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -267,8 +295,18 @@ data "google_project" "project" {}
 func TestAccVertexAIIndexEndpointDeployedIndex_vertexAiIndexEndpointDeployedIndexDedicatedResourcesExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -372,8 +410,18 @@ data "google_project" "project" {}
 func TestAccVertexAIIndexEndpointDeployedIndex_vertexAiIndexEndpointDeployedIndexAutomaticResourcesExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

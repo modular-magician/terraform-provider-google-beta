@@ -34,10 +34,22 @@ import (
 func TestAccFirebaseExtensionsInstance_firebaseExtentionsInstanceResizeImageExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":    envvar.GetTestProjectFromEnv(),
-		"location":      "us-central1",
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"location": "us-central1",
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -53,6 +65,12 @@ func TestAccFirebaseExtensionsInstance_firebaseExtentionsInstanceResizeImageExam
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"instance_id"},
+			},
+			{
+				ResourceName:       "google_firebase_extensions_instance.resize_image",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

@@ -33,8 +33,18 @@ import (
 func TestAccBigqueryAnalyticsHubDataExchangeSubscription_bigqueryAnalyticshubDataexchangeSubscriptionBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -50,6 +60,12 @@ func TestAccBigqueryAnalyticsHubDataExchangeSubscription_bigqueryAnalyticshubDat
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"data_exchange_id", "data_exchange_location", "data_exchange_project", "destination_dataset", "last_modify_time", "linked_dataset_map", "linked_resources", "location", "state"},
+			},
+			{
+				ResourceName:       "google_bigquery_analytics_hub_data_exchange_subscription.subscription",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

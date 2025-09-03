@@ -34,11 +34,22 @@ import (
 func TestAccDataLossPreventionDiscoveryConfig_dlpDiscoveryConfigOrgFolderPausedExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"location":      envvar.GetTestRegionFromEnv(),
-		"organization":  envvar.GetTestOrgFromEnv(t),
-		"project":       envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"location":     envvar.GetTestRegionFromEnv(),
+		"organization": envvar.GetTestOrgFromEnv(t),
+		"project":      envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -54,6 +65,12 @@ func TestAccDataLossPreventionDiscoveryConfig_dlpDiscoveryConfigOrgFolderPausedE
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"location", "parent"},
+			},
+			{
+				ResourceName:       "google_data_loss_prevention_discovery_config.org_folder_paused",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

@@ -33,9 +33,20 @@ import (
 func TestAccMemorystoreInstance_memorystoreInstanceBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"prevent_destroy": false,
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,6 +62,12 @@ func TestAccMemorystoreInstance_memorystoreInstanceBasicExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"gcs_source", "instance_id", "labels", "location", "managed_backup_source", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_memorystore_instance.instance-basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -124,10 +141,21 @@ func TestAccMemorystoreInstance_memorystoreInstanceFullExample(t *testing.T) {
 		},
 	})
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"kms_key_name":    acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
 		"prevent_destroy": false,
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -235,9 +263,20 @@ data "google_project" "project" {
 func TestAccMemorystoreInstance_memorystoreInstancePersistenceAofExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"prevent_destroy": false,
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -314,12 +353,23 @@ data "google_project" "project" {
 func TestAccMemorystoreInstance_memorystoreInstanceSecondaryInstanceExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"primary_instance_deletion_protection_enabled":   false,
 		"primary_instance_prevent_destroy":               false,
 		"secondary_instance_deletion_protection_enabled": false,
 		"secondary_instance_prevent_destroy":             false,
-		"random_suffix":                                  acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

@@ -35,11 +35,22 @@ import (
 func TestAccColabSchedule_colabScheduleBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
 		"location":        envvar.GetTestRegionFromEnv(),
 		"project_id":      envvar.GetTestProjectFromEnv(),
 		"service_account": envvar.GetTestServiceAccountFromEnv(t),
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -55,6 +66,12 @@ func TestAccColabSchedule_colabScheduleBasicExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"location"},
+			},
+			{
+				ResourceName:       "google_colab_schedule.schedule",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -155,11 +172,22 @@ resource "google_colab_schedule" "schedule" {
 func TestAccColabSchedule_colabSchedulePausedExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
 		"location":        envvar.GetTestRegionFromEnv(),
 		"project_id":      envvar.GetTestProjectFromEnv(),
 		"service_account": envvar.GetTestServiceAccountFromEnv(t),
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -283,14 +311,26 @@ func TestAccColabSchedule_colabScheduleFullExample(t *testing.T) {
 		},
 	})
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
 		"location":        envvar.GetTestRegionFromEnv(),
 		"project_id":      envvar.GetTestProjectFromEnv(),
 		"service_account": envvar.GetTestServiceAccountFromEnv(t),
-		"end_time":        time.Date(time.Now().Year(), 12, 31, 0, 0, 0, 0, time.Now().Location()).AddDate(0, 0, 10).Format(time.RFC3339),
-		"key_name":        acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
-		"start_time":      time.Date(time.Now().Year(), 12, 31, 0, 0, 0, 0, time.Now().Location()).AddDate(0, 0, 1).Format(time.RFC3339),
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"end_time":   time.Date(time.Now().Year(), 12, 31, 0, 0, 0, 0, time.Now().Location()).AddDate(0, 0, 10).Format(time.RFC3339),
+		"key_name":   acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
+		"start_time": time.Date(time.Now().Year(), 12, 31, 0, 0, 0, 0, time.Now().Location()).AddDate(0, 0, 1).Format(time.RFC3339),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

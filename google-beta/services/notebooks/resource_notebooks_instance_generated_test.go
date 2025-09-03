@@ -34,8 +34,18 @@ import (
 func TestAccNotebooksInstance_notebookInstanceBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,6 +61,12 @@ func TestAccNotebooksInstance_notebookInstanceBasicExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"boot_disk_size_gb", "boot_disk_type", "container_image", "data_disk_size_gb", "data_disk_type", "instance_owners", "labels", "location", "metadata", "name", "no_remove_data_disk", "terraform_labels", "update_time", "vm_image"},
+			},
+			{
+				ResourceName:       "google_notebooks_instance.instance",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -74,8 +90,18 @@ func TestAccNotebooksInstance_notebookInstanceBasicStoppedExample(t *testing.T) 
 	t.Skip("https://github.com/hashicorp/terraform-provider-google/issues/17593#issuecomment-2888583933")
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -114,8 +140,18 @@ resource "google_notebooks_instance" "instance" {
 func TestAccNotebooksInstance_notebookInstanceBasicContainerExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -157,8 +193,18 @@ resource "google_notebooks_instance" "instance" {
 func TestAccNotebooksInstance_notebookInstanceBasicGpuExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -202,10 +248,22 @@ resource "google_notebooks_instance" "instance" {
 func TestAccNotebooksInstance_notebookInstanceFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
 		"service_account": envvar.GetTestServiceAccountFromEnv(t),
-		"key_name":        acctest.BootstrapKMSKeyInLocation(t, "global").CryptoKey.Name,
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"key_name": acctest.BootstrapKMSKeyInLocation(t, "global").CryptoKey.Name,
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

@@ -33,8 +33,18 @@ import (
 func TestAccParameterManagerParameterVersion_parameterVersionBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -50,6 +60,12 @@ func TestAccParameterManagerParameterVersion_parameterVersionBasicExample(t *tes
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"parameter", "parameter_version_id"},
+			},
+			{
+				ResourceName:       "google_parameter_manager_parameter_version.parameter-version-basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -72,8 +88,18 @@ resource "google_parameter_manager_parameter_version" "parameter-version-basic" 
 func TestAccParameterManagerParameterVersion_parameterVersionWithJsonFormatExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -121,9 +147,20 @@ func TestAccParameterManagerParameterVersion_parameterVersionWithKmsKeyExample(t
 		},
 	})
 
-	context := map[string]interface{}{
-		"kms_key":       acctest.BootstrapKMSKey(t).CryptoKey.Name,
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"kms_key": acctest.BootstrapKMSKey(t).CryptoKey.Name,
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -164,8 +201,18 @@ resource "google_parameter_manager_parameter_version" "parameter-version-with-km
 func TestAccParameterManagerParameterVersion_parameterVersionWithYamlFormatExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -207,9 +254,20 @@ resource "google_parameter_manager_parameter_version" "parameter-version-with-ya
 func TestAccParameterManagerParameterVersion_parameterVersionWithJsonFormatWithFileExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"data":          "./test-fixtures/parameter_data_json_format.json",
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"data": "./test-fixtures/parameter_data_json_format.json",
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -248,9 +306,20 @@ resource "google_parameter_manager_parameter_version" "parameter-version-with-js
 func TestAccParameterManagerParameterVersion_parameterVersionWithYamlFormatWithFileExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"data":          "./test-fixtures/parameter_data_yaml_format.yaml",
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"data": "./test-fixtures/parameter_data_yaml_format.yaml",
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

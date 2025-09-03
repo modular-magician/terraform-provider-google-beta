@@ -29,12 +29,24 @@ import (
 func TestAccFirebaseAppCheckDeviceCheckConfig_firebaseAppCheckDeviceCheckConfigFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_id":       envvar.GetTestProjectFromEnv(),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_id": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"private_key_path": "test-fixtures/private-key-2.p8",
 		"team_id":          "9987654321",
 		"token_ttl":        "7200s",
-		"random_suffix":    acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -53,6 +65,12 @@ func TestAccFirebaseAppCheckDeviceCheckConfig_firebaseAppCheckDeviceCheckConfigF
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"app_id", "private_key"},
+			},
+			{
+				ResourceName:       "google_firebase_app_check_device_check_config.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

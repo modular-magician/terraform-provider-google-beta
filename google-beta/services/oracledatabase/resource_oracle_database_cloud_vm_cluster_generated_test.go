@@ -33,12 +33,23 @@ import (
 func TestAccOracleDatabaseCloudVmCluster_oracledatabaseCloudVmclusterBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"cloud_exadata_infrastructure_id": fmt.Sprintf("ofake-tf-test-exadata-for-vmcluster-basic-%s", acctest.RandString(t, 10)),
 		"cloud_vm_cluster_id":             fmt.Sprintf("ofake-tf-test-vmcluster-basic-%s", acctest.RandString(t, 10)),
 		"deletion_protection":             false,
 		"project":                         "oci-terraform-testing-prod",
-		"random_suffix":                   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -54,6 +65,12 @@ func TestAccOracleDatabaseCloudVmCluster_oracledatabaseCloudVmclusterBasicExampl
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"cloud_vm_cluster_id", "deletion_protection", "labels", "location", "properties.0.gi_version", "properties.0.hostname_prefix", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_oracle_database_cloud_vm_cluster.my_vmcluster",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -105,7 +122,16 @@ data "google_compute_network" "default" {
 func TestAccOracleDatabaseCloudVmCluster_oracledatabaseCloudVmclusterOdbnetworkExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"backup_odb_subnet":               "projects/oci-terraform-testing-prod/locations/europe-west2/odbNetworks/tf-test-permanent-odbnetwork/odbSubnets/tf-test-permanent-backup-odbsubnet",
 		"cloud_exadata_infrastructure_id": fmt.Sprintf("ofake-tf-test-exadata-for-vmcluster-odbnetwork-%s", acctest.RandString(t, 10)),
 		"cloud_vm_cluster_id":             fmt.Sprintf("ofake-tf-test-vmcluster-odbnetwork-%s", acctest.RandString(t, 10)),
@@ -113,7 +139,9 @@ func TestAccOracleDatabaseCloudVmCluster_oracledatabaseCloudVmclusterOdbnetworkE
 		"odb_network":                     "projects/oci-terraform-testing-prod/locations/europe-west2/odbNetworks/tf-test-permanent-odbnetwork",
 		"odb_subnet":                      "projects/oci-terraform-testing-prod/locations/europe-west2/odbNetworks/tf-test-permanent-odbnetwork/odbSubnets/tf-test-permanent-client-odbsubnet",
 		"project":                         "oci-terraform-testing-prod",
-		"random_suffix":                   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -175,12 +203,23 @@ resource "google_oracle_database_cloud_exadata_infrastructure" "cloudExadataInfr
 func TestAccOracleDatabaseCloudVmCluster_oracledatabaseCloudVmclusterFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"cloud_exadata_infrastructure_id": fmt.Sprintf("ofake-tf-test-exadata-for-vmcluster-full-%s", acctest.RandString(t, 10)),
 		"cloud_vm_cluster_id":             fmt.Sprintf("ofake-tf-test-vmcluster-full-%s", acctest.RandString(t, 10)),
 		"deletion_protection":             false,
 		"project":                         "oci-terraform-testing-prod",
-		"random_suffix":                   acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

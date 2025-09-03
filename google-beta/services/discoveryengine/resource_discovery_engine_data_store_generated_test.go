@@ -33,8 +33,18 @@ import (
 func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -50,6 +60,12 @@ func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreBasicExample(t *tes
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "kms_key_name", "location", "skip_default_schema_creation"},
+			},
+			{
+				ResourceName:       "google_discovery_engine_data_store.basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -73,9 +89,20 @@ resource "google_discovery_engine_data_store" "basic" {
 func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreKmsKeyNameExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"kms_key_name":  acctest.BootstrapKMSKeyInLocation(t, "us").CryptoKey.Name,
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"kms_key_name": acctest.BootstrapKMSKeyInLocation(t, "us").CryptoKey.Name,
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -115,8 +142,18 @@ resource "google_discovery_engine_data_store" "kms_key_name" {
 func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreDocumentProcessingConfigExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -165,8 +202,18 @@ resource "google_discovery_engine_data_store" "document_processing_config" {
 func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreDocumentProcessingConfigOcrExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -211,8 +258,18 @@ resource "google_discovery_engine_data_store" "document_processing_config_ocr" {
 func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreDocumentProcessingConfigLayoutExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -261,8 +318,18 @@ resource "google_discovery_engine_data_store" "document_processing_config_layout
 func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreDocumentProcessingConfigLayoutFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -318,8 +385,18 @@ resource "google_discovery_engine_data_store" "document_processing_config_layout
 func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreAdvancedSiteSearchConfigExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

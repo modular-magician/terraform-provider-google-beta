@@ -34,9 +34,20 @@ import (
 func TestAccDataplexDatascan_dataplexDatascanBasicProfileExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_name":  envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_name": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -52,6 +63,12 @@ func TestAccDataplexDatascan_dataplexDatascanBasicProfileExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"data_scan_id", "labels", "location", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_dataplex_datascan.basic_profile",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -83,9 +100,20 @@ data_profile_spec {}
 func TestAccDataplexDatascan_dataplexDatascanFullProfileExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_name":  envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_name": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -165,9 +193,20 @@ resource "google_bigquery_dataset" "source" {
 func TestAccDataplexDatascan_dataplexDatascanBasicQualityExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_name":  envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_name": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -223,9 +262,20 @@ resource "google_dataplex_datascan" "basic_quality" {
 func TestAccDataplexDatascan_dataplexDatascanFullQualityTestExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"project_name":  envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"project_name": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -436,10 +486,21 @@ resource "google_dataplex_datascan" "full_quality_test" {
 func TestAccDataplexDatascan_dataplexDatascanBasicDiscoveryExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"location":      envvar.GetTestRegionFromEnv(),
-		"project_name":  envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"location":     envvar.GetTestRegionFromEnv(),
+		"project_name": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -492,10 +553,21 @@ resource "google_storage_bucket" "tf_test_bucket" {
 func TestAccDataplexDatascan_dataplexDatascanFullDiscoveryExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"location":      envvar.GetTestRegionFromEnv(),
-		"project_name":  envvar.GetTestProjectFromEnv(),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
+		"location":     envvar.GetTestRegionFromEnv(),
+		"project_name": envvar.GetTestProjectFromEnv(),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

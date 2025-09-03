@@ -33,9 +33,20 @@ import (
 func TestAccAlloydbBackup_alloydbBackupBasicTestExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-1"),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"network_name": acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-1"),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,6 +62,12 @@ func TestAccAlloydbBackup_alloydbBackupBasicTestExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"annotations", "backup_id", "labels", "location", "reconciling", "terraform_labels", "update_time"},
+			},
+			{
+				ResourceName:       "google_alloydb_backup.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -90,9 +107,20 @@ func TestAccAlloydbBackup_alloydbBackupFullTestExample(t *testing.T) {
 	acctest.SkipIfVcr(t)
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-1"),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"network_name": acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-1"),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

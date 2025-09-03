@@ -33,8 +33,18 @@ import (
 func TestAccAlloydbCluster_alloydbClusterBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -50,6 +60,12 @@ func TestAccAlloydbCluster_alloydbClusterBasicExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"annotations", "cluster_id", "initial_user", "labels", "location", "restore_backup_source", "restore_continuous_backup_source", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_alloydb_cluster.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -76,9 +92,20 @@ resource "google_compute_network" "default" {
 func TestAccAlloydbCluster_alloydbClusterBeforeUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"network_name":  acctest.BootstrapSharedTestNetwork(t, "alloydb-1"),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"network_name": acctest.BootstrapSharedTestNetwork(t, "alloydb-1"),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -134,9 +161,20 @@ data "google_compute_network" "default" {
 func TestAccAlloydbCluster_alloydbClusterAfterUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"network_name":  acctest.BootstrapSharedTestNetwork(t, "alloydb-1"),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"network_name": acctest.BootstrapSharedTestNetwork(t, "alloydb-1"),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -192,8 +230,18 @@ data "google_compute_network" "default" {
 func TestAccAlloydbCluster_alloydbClusterFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -275,9 +323,20 @@ resource "google_compute_network" "default" {
 func TestAccAlloydbCluster_alloydbSecondaryClusterBasicTestExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-1"),
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
+		"network_name": acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-1"),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

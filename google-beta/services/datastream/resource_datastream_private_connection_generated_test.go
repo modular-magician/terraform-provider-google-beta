@@ -34,8 +34,18 @@ import (
 func TestAccDatastreamPrivateConnection_datastreamPrivateConnectionFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,6 +61,12 @@ func TestAccDatastreamPrivateConnection_datastreamPrivateConnectionFullExample(t
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"create_without_validation", "labels", "location", "private_connection_id", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_datastream_private_connection.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -82,12 +98,23 @@ resource "google_compute_network" "default" {
 func TestAccDatastreamPrivateConnection_datastreamPrivateConnectionPscInterfaceExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
 		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 		"project":         envvar.GetTestProjectFromEnv(),
 		"project_number":  envvar.GetTestProjectNumberFromEnv(),
-		"random_suffix":   acctest.RandString(t, 10),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

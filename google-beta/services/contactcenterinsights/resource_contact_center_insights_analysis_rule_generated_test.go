@@ -34,8 +34,18 @@ import (
 func TestAccContactCenterInsightsAnalysisRule_contactCenterInsightsAnalysisRuleBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -51,6 +61,12 @@ func TestAccContactCenterInsightsAnalysisRule_contactCenterInsightsAnalysisRuleB
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"location"},
+			},
+			{
+				ResourceName:       "google_contact_center_insights_analysis_rule.analysis_rule_basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -68,9 +84,20 @@ resource "google_contact_center_insights_analysis_rule" "analysis_rule_basic" {
 func TestAccContactCenterInsightsAnalysisRule_contactCenterInsightsAnalysisRuleFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
 		"project_number": envvar.GetTestProjectNumberFromEnv(),
-		"random_suffix":  acctest.RandString(t, 10),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -127,9 +154,20 @@ resource "google_contact_center_insights_analysis_rule" "analysis_rule_full" {
 func TestAccContactCenterInsightsAnalysisRule_contactCenterInsightsAnalysisRuleProfileExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{
 		"project_number": envvar.GetTestProjectNumberFromEnv(),
-		"random_suffix":  acctest.RandString(t, 10),
+	}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

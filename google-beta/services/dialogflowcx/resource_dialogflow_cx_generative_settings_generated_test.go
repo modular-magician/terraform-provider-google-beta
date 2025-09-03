@@ -28,8 +28,18 @@ import (
 func TestAccDialogflowCXGenerativeSettings_dialogflowcxGenerativeSettingsFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -44,6 +54,12 @@ func TestAccDialogflowCXGenerativeSettings_dialogflowcxGenerativeSettingsFullExa
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"fallback_settings.0.prompt_templates", "parent"},
+			},
+			{
+				ResourceName:       "google_dialogflow_cx_generative_settings.full_generative_settings",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

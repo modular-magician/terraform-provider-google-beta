@@ -33,11 +33,22 @@ import (
 func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseBasicExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"database_name":       fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
 		"deletion_protection": false,
 		"project":             "oci-terraform-testing-prod",
-		"random_suffix":       acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -53,6 +64,12 @@ func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseBas
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"admin_password", "autonomous_database_id", "deletion_protection", "labels", "location", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_oracle_database_autonomous_database.myADB",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -88,12 +105,23 @@ data "google_compute_network" "default" {
 func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseFullExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"database_name":       fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
 		"deletion_protection": false,
 		"endpoint_name":       fmt.Sprintf("tftestendpoint%s", acctest.RandString(t, 10)),
 		"project":             "oci-terraform-testing-prod",
-		"random_suffix":       acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -162,13 +190,24 @@ data "google_compute_network" "default" {
 func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseOdbnetworkExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"database_name":       fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
 		"deletion_protection": false,
 		"odb_network":         "projects/oci-terraform-testing-prod/locations/europe-west2/odbNetworks/tf-test-permanent-odbnetwork",
 		"odb_subnet":          "projects/oci-terraform-testing-prod/locations/europe-west2/odbNetworks/tf-test-permanent-odbnetwork/odbSubnets/tf-test-permanent-client-odbsubnet",
 		"project":             "oci-terraform-testing-prod",
-		"random_suffix":       acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -214,11 +253,22 @@ resource "google_oracle_database_autonomous_database" "myADB"{
 func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabasePublicipExample(t *testing.T) {
 	t.Parallel()
 
-	context := map[string]interface{}{
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{
 		"database_name":       fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
 		"deletion_protection": false,
 		"project":             "oci-terraform-testing-prod",
-		"random_suffix":       acctest.RandString(t, 10),
+	}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

@@ -39,8 +39,18 @@ func TestAccSaasRuntimeSaas_saasRuntimeSaasBasicExample(t *testing.T) {
 		},
 	})
 
-	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+	randomSuffix := acctest.RandString(t, 10)
+	context := make(map[string]interface{})
+	context["random_suffix"] = randomSuffix
+
+	envVars := map[string]interface{}{}
+	for k, v := range envVars {
+		context[k] = v
+	}
+
+	overrides := map[string]interface{}{}
+	for k, v := range overrides {
+		context[k] = v
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -56,6 +66,12 @@ func TestAccSaasRuntimeSaas_saasRuntimeSaasBasicExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"annotations", "labels", "location", "saas_id", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_saas_runtime_saas.example",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
