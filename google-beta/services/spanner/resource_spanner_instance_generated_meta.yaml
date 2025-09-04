@@ -14,6 +14,7 @@ fields:
   - field: 'autoscaling_config.autoscaling_limits.min_processing_units'
   - field: 'autoscaling_config.autoscaling_targets.high_priority_cpu_utilization_percent'
   - field: 'autoscaling_config.autoscaling_targets.storage_utilization_percent'
+  - field: 'autoscaling_config.autoscaling_targets.total_cpu_utilization_percent'
   - field: 'config'
   - field: 'default_backup_schedule_type'
   - field: 'display_name'
