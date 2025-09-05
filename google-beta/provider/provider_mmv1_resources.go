@@ -607,9 +607,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 700
+// Generated resources: 701
 // Generated IAM resources: 345
-// Total generated resources: 1045
+// Total generated resources: 1046
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1498,6 +1498,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_secret_manager_regional_secret_iam_policy":                           tpgiamresource.ResourceIamPolicy(secretmanagerregional.SecretManagerRegionalRegionalSecretIamSchema, secretmanagerregional.SecretManagerRegionalRegionalSecretIamUpdaterProducer, secretmanagerregional.SecretManagerRegionalRegionalSecretIdParseFunc),
 	"google_secret_manager_regional_secret_version":                              secretmanagerregional.ResourceSecretManagerRegionalRegionalSecretVersion(),
 	"google_secure_source_manager_branch_rule":                                   securesourcemanager.ResourceSecureSourceManagerBranchRule(),
+	"google_secure_source_manager_hook":                                          securesourcemanager.ResourceSecureSourceManagerHook(),
 	"google_secure_source_manager_instance":                                      securesourcemanager.ResourceSecureSourceManagerInstance(),
 	"google_secure_source_manager_instance_iam_binding":                          tpgiamresource.ResourceIamBinding(securesourcemanager.SecureSourceManagerInstanceIamSchema, securesourcemanager.SecureSourceManagerInstanceIamUpdaterProducer, securesourcemanager.SecureSourceManagerInstanceIdParseFunc),
 	"google_secure_source_manager_instance_iam_member":                           tpgiamresource.ResourceIamMember(securesourcemanager.SecureSourceManagerInstanceIamSchema, securesourcemanager.SecureSourceManagerInstanceIamUpdaterProducer, securesourcemanager.SecureSourceManagerInstanceIdParseFunc),
