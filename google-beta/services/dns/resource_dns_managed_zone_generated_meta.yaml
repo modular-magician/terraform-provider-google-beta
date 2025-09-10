@@ -27,6 +27,7 @@ fields:
   - field: 'managed_zone_id'
     api_field: 'id'
   - field: 'name'
+  - field: 'name_server_set'
   - field: 'name_servers'
   - field: 'peering_config.target_network.network_url'
   - field: 'private_visibility_config.gke_clusters.gke_cluster_name'

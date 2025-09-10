@@ -677,6 +677,54 @@ resource "google_dns_managed_zone" "cloud-logging-enabled-zone" {
 `, context)
 }
 
+func TestAccDNSManagedZone_dnsManagedZoneCustomNameServerSetExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"random": {},
+			"time":   {},
+		},
+		CheckDestroy: testAccCheckDNSManagedZoneDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDNSManagedZone_dnsManagedZoneCustomNameServerSetExample(context),
+			},
+			{
+				ResourceName:            "google_dns_managed_zone.custom-name-server-set-zone",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccDNSManagedZone_dnsManagedZoneCustomNameServerSetExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_dns_managed_zone" "custom-name-server-set-zone" {
+  name        = "custom-name-server-set-zone"
+  dns_name    = "example-${random_id.rnd.hex}.com."
+  description = "Example DNS zone"
+  labels = {
+    foo = "bar"
+  }
+  name_server_set = "ns-cloud-d" 
+
+}
+
+resource "random_id" "rnd" {
+  byte_length = 4
+}
+`, context)
+}
+
 func testAccCheckDNSManagedZoneDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

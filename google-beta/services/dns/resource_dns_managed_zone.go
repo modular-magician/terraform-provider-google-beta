@@ -212,6 +212,12 @@ one target is given.`,
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"name_server_set": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.StringIsNotEmpty,
+				Description:  `Optionally specifies the NameServerSet for this ManagedZone. A NameServerSet is a set of DNS name servers that all host the same ManagedZones. Most users leave this field unset. If you need to use this field, contact your account team.`,
+			},
 			"peering_config": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -503,6 +509,12 @@ func resourceDNSManagedZoneCreate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("cloud_logging_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(cloudLoggingConfigProp)) && (ok || !reflect.DeepEqual(v, cloudLoggingConfigProp)) {
 		obj["cloudLoggingConfig"] = cloudLoggingConfigProp
 	}
+	nameServerSetProp, err := expandDNSManagedZoneNameServerSet(d.Get("name_server_set"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("name_server_set"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameServerSetProp)) && (ok || !reflect.DeepEqual(v, nameServerSetProp)) {
+		obj["nameServerSet"] = nameServerSetProp
+	}
 	effectiveLabelsProp, err := expandDNSManagedZoneEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -649,6 +661,9 @@ func resourceDNSManagedZoneRead(d *schema.ResourceData, meta interface{}) error 
 	if err := d.Set("cloud_logging_config", flattenDNSManagedZoneCloudLoggingConfig(res["cloudLoggingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
+	if err := d.Set("name_server_set", flattenDNSManagedZoneNameServerSet(res["nameServerSet"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ManagedZone: %s", err)
+	}
 	if err := d.Set("terraform_labels", flattenDNSManagedZoneTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ManagedZone: %s", err)
 	}
@@ -740,6 +755,12 @@ func resourceDNSManagedZoneUpdate(d *schema.ResourceData, meta interface{}) erro
 		return err
 	} else if v, ok := d.GetOkExists("cloud_logging_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, cloudLoggingConfigProp)) {
 		obj["cloudLoggingConfig"] = cloudLoggingConfigProp
+	}
+	nameServerSetProp, err := expandDNSManagedZoneNameServerSet(d.Get("name_server_set"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("name_server_set"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, nameServerSetProp)) {
+		obj["nameServerSet"] = nameServerSetProp
 	}
 	effectiveLabelsProp, err := expandDNSManagedZoneEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -1281,6 +1302,10 @@ func flattenDNSManagedZoneCloudLoggingConfigEnableLogging(v interface{}, d *sche
 	return v
 }
 
+func flattenDNSManagedZoneNameServerSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenDNSManagedZoneTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1719,6 +1744,10 @@ func expandDNSManagedZoneCloudLoggingConfig(v interface{}, d tpgresource.Terrafo
 }
 
 func expandDNSManagedZoneCloudLoggingConfigEnableLogging(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDNSManagedZoneNameServerSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
