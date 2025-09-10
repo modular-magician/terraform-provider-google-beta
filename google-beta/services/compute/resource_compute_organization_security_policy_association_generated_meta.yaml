@@ -10,3 +10,4 @@ fields:
   - field: 'name'
   - field: 'policy_id'
     provider_only: true
+  - field: 'short_name'

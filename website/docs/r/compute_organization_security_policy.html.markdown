@@ -37,9 +37,9 @@ To get more information about OrganizationSecurityPolicy, see:
 
 ```hcl
 resource "google_compute_organization_security_policy" "policy" {
-  provider = google-beta
-  display_name = "tf-test%{random_suffix}"
-  parent       = "organizations/123456789"
+  provider   = google-beta
+  short_name = "tf-test%{random_suffix}"
+  parent     = "organizations/123456789"
 }
 ```
 
@@ -55,8 +55,10 @@ The following arguments are supported:
 
 
 * `display_name` -
-  (Optional)
+  (Optional, Deprecated)
   User-provided name of the organization security policy. The name should be unique in the organization in which the security policy is created. This should only be used when SecurityPolicyType is FIREWALL.
+
+  ~> **Warning:** `display_name` is deprecated and will be removed in a future release, use `short_name` instead.
 
 * `description` -
   (Optional)
@@ -68,9 +70,13 @@ The following arguments are supported:
 
 * `type` -
   (Optional)
-  The type indicates the intended use of the security policy. This field can be set only at resource creation time.
-  Default value is `FIREWALL`.
-  Possible values are: `FIREWALL`, `CLOUD_ARMOR`, `CLOUD_ARMOR_EDGE`, `CLOUD_ARMOR_INTERNAL_SERVICE`, `CLOUD_ARMOR_NETWORK`.
+  The type indicates the intended use of the security policy.
+  - CLOUD_ARMOR: Cloud Armor backend security policies can be configured to filter incoming HTTP requests targeting backend services. They filter requests before they hit the origin servers.
+  - CLOUD_ARMOR_EDGE: Cloud Armor edge security policies can be configured to filter incoming HTTP requests targeting backend services (including Cloud CDN-enabled) as well as backend buckets (Cloud Storage). They filter requests before the request is served from Google's cache.
+  - CLOUD_ARMOR_INTERNAL_SERVICE: Cloud Armor internal service policies can be configured to filter HTTP requests targeting services managed by Traffic Director in a service mesh. They filter requests before the request is served from the application.
+  - CLOUD_ARMOR_NETWORK: Cloud Armor network policies can be configured to filter packets targeting network load balancing resources such as backend services, target pools, target instances, and instances with external IPs. They filter requests before the request is served from the application.
+  This field can be set only at resource creation time.
+  Possible values are: `CLOUD_ARMOR`, `CLOUD_ARMOR_EDGE`, `CLOUD_ARMOR_INTERNAL_SERVICE`, `CLOUD_ARMOR_NETWORK`, `FIREWALL`.
 
 
 

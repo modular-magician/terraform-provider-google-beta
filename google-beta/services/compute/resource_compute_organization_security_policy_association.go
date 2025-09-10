@@ -69,7 +69,15 @@ func ResourceComputeOrganizationSecurityPolicyAssociation() *schema.Resource {
 			"display_name": {
 				Type:        schema.TypeString,
 				Computed:    true,
+				Optional:    true,
+				Deprecated:  "`display_name` is deprecated and will be removed in a future release, use `short_name` instead.",
+				ForceNew:    true,
 				Description: `The display name of the security policy of the association.`,
+			},
+			"short_name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The short name of the security policy of the association.`,
 			},
 		},
 		UseJSONNumber: true,
@@ -95,6 +103,12 @@ func resourceComputeOrganizationSecurityPolicyAssociationCreate(d *schema.Resour
 		return err
 	} else if v, ok := d.GetOkExists("attachment_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(attachmentIdProp)) && (ok || !reflect.DeepEqual(v, attachmentIdProp)) {
 		obj["attachmentId"] = attachmentIdProp
+	}
+	displayNameProp, err := expandComputeOrganizationSecurityPolicyAssociationDisplayName(d.Get("display_name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(displayNameProp)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
+		obj["displayName"] = displayNameProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}{{policy_id}}/addAssociation")
@@ -208,6 +222,9 @@ func resourceComputeOrganizationSecurityPolicyAssociationRead(d *schema.Resource
 	if err := d.Set("display_name", flattenComputeOrganizationSecurityPolicyAssociationDisplayName(res["displayName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OrganizationSecurityPolicyAssociation: %s", err)
 	}
+	if err := d.Set("short_name", flattenComputeOrganizationSecurityPolicyAssociationShortName(res["shortName"], d, config)); err != nil {
+		return fmt.Errorf("Error reading OrganizationSecurityPolicyAssociation: %s", err)
+	}
 
 	return nil
 }
@@ -314,10 +331,18 @@ func flattenComputeOrganizationSecurityPolicyAssociationDisplayName(v interface{
 	return v
 }
 
+func flattenComputeOrganizationSecurityPolicyAssociationShortName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandComputeOrganizationSecurityPolicyAssociationName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func expandComputeOrganizationSecurityPolicyAssociationAttachmentId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeOrganizationSecurityPolicyAssociationDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

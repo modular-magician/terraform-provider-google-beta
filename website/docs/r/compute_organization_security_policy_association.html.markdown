@@ -44,9 +44,9 @@ resource "google_folder" "security_policy_target" {
 }
 
 resource "google_compute_organization_security_policy" "policy" {
-  provider = google-beta
-  display_name = "tf-test%{random_suffix}"
-  parent       = google_folder.security_policy_target.name
+  provider   = google-beta
+  short_name = "tf-test%{random_suffix}"
+  parent     = google_folder.security_policy_target.name
 }
 
 resource "google_compute_organization_security_policy_rule" "policy" {
@@ -54,21 +54,17 @@ resource "google_compute_organization_security_policy_rule" "policy" {
   policy_id = google_compute_organization_security_policy.policy.id
   action = "allow"
 
-  direction = "INGRESS"
-  enable_logging = true
   match {
     config {
-      src_ip_ranges = ["192.168.0.0/16", "10.0.0.0/8"]
-      layer4_config {
-        ip_protocol = "tcp"
-        ports = ["22"]
-      }
-      layer4_config {
-        ip_protocol = "icmp"
-      }
+      src_ip_ranges = ["192.168.0.0/16", "10.0.0.0/16"]
     }
   }
   priority = 100
+}
+
+resource "time_sleep" "wait_120_seconds_for_apply" {
+  create_duration = "120s"
+  depends_on = [google_compute_organization_security_policy.policy]
 }
 
 resource "google_compute_organization_security_policy_association" "policy" {
@@ -76,6 +72,12 @@ resource "google_compute_organization_security_policy_association" "policy" {
   name          = "tf-test%{random_suffix}"
   attachment_id = google_compute_organization_security_policy.policy.parent
   policy_id     = google_compute_organization_security_policy.policy.id
+  depends_on = [time_sleep.wait_120_seconds_for_apply]
+}
+
+resource "time_sleep" "wait_120_seconds_for_post_destroy" {
+  create_duration = "120s"
+  depends_on = [google_compute_organization_security_policy_association.policy]
 }
 ```
 
@@ -97,6 +99,12 @@ The following arguments are supported:
   The security policy ID of the association.
 
 
+* `display_name` -
+  (Optional, Deprecated)
+  The display name of the security policy of the association.
+
+  ~> **Warning:** `display_name` is deprecated and will be removed in a future release, use `short_name` instead.
+
 
 
 ## Attributes Reference
@@ -105,8 +113,8 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `id` - an identifier for the resource with format `{{policy_id}}/association/{{name}}`
 
-* `display_name` -
-  The display name of the security policy of the association.
+* `short_name` -
+  The short name of the security policy of the association.
 
 
 ## Timeouts

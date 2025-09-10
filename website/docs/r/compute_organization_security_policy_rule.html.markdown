@@ -37,8 +37,8 @@ To get more information about OrganizationSecurityPolicyRule, see:
 
 ```hcl
 resource "google_compute_organization_security_policy" "policy" {
-  provider = google-beta
-  display_name = "tf-test%{random_suffix}"
+  provider     = google-beta
+  short_name   = "tf-test%{random_suffix}"
   parent       = "organizations/123456789"
 }
 
@@ -48,18 +48,9 @@ resource "google_compute_organization_security_policy_rule" "policy" {
   policy_id = google_compute_organization_security_policy.policy.id
   action = "allow"
 
-  direction = "INGRESS"
-  enable_logging = true
   match {
     config {
-      src_ip_ranges = ["192.168.0.0/16", "10.0.0.0/8"]
-      layer4_config {
-        ip_protocol = "tcp"
-        ports = ["22"]
-      }
-      layer4_config {
-        ip_protocol = "icmp"
-      }
+      src_ip_ranges = ["192.168.0.0/16", "10.0.0.0/24"]
     }
   }
   priority = 100
@@ -84,8 +75,12 @@ The following arguments are supported:
 
 * `action` -
   (Required)
-  The Action to perform when the client connection triggers the rule. Can currently be either
-  "allow", "deny" or "goto_next".
+  The Action to perform when the rule is matched. The following are the valid actions:
+  allow: allow access to target.
+  deny(STATUS): deny access to target, returns the HTTP response code specified. Valid values for STATUS are 403, 404, and 502 e.g. "deny(403)".
+  rate_based_ban: limit client traffic to the configured threshold and ban the client if the traffic exceeds the threshold. Configure parameters for this action in RateLimitOptions. Requires rateLimitOptions to be set.
+  redirect: redirect to a different target. This can either be an internal reCAPTCHA redirect, or an external URL-based redirect via a 302 response. Parameters for this action can be configured via redirectOptions. This action is only supported in Global Security Policies of type CLOUD_ARMOR.
+  throttle: limit client traffic to the configured threshold. Configure parameters for this action in rateLimitOptions. Requires rateLimitOptions to be set for this.
 
 * `policy_id` -
   (Required)
@@ -101,27 +96,35 @@ The following arguments are supported:
   If set to true, the specified action is not enforced.
 
 * `direction` -
-  (Optional)
+  (Optional, Deprecated)
   The direction in which this rule applies. If unspecified an INGRESS rule is created.
   Possible values are: `INGRESS`, `EGRESS`.
 
+  ~> **Warning:** `direction` is deprecated and will be removed in a future major release.
+
 * `target_resources` -
-  (Optional)
+  (Optional, Deprecated)
   A list of network resource URLs to which this rule applies.
   This field allows you to control which network's VMs get
   this rule. If this field is left blank, all VMs
   within the organization will receive the rule.
 
+  ~> **Warning:** `target_resources` is deprecated and will be removed in a future major release.
+
 * `enable_logging` -
-  (Optional)
+  (Optional, Deprecated)
   Denotes whether to enable logging for a particular rule.
   If logging is enabled, logs will be exported to the
   configured export destination in Stackdriver.
 
+  ~> **Warning:** `enable_logging` is deprecated and will be removed in a future major release.
+
 * `target_service_accounts` -
-  (Optional)
+  (Optional, Deprecated)
   A list of service accounts indicating the sets of
   instances that are applied with this rule.
+
+  ~> **Warning:** `target_service_accounts` is deprecated and will be removed in a future major release.
 
 
 
@@ -133,10 +136,10 @@ The following arguments are supported:
 
 * `versioned_expr` -
   (Optional)
-  Preconfigured versioned expression. For organization security policy rules,
-  the only supported type is "FIREWALL".
-  Default value is `FIREWALL`.
-  Possible values are: `FIREWALL`.
+  Preconfigured versioned expression. If this field is specified, config must also be specified.
+  Available preconfigured expressions along with their requirements are: SRC_IPS_V1
+  - must specify the corresponding srcIpRange field in config.
+  Possible values are: `SRC_IPS_V1`, `FIREWALL`.
 
 * `config` -
   (Required)
@@ -152,34 +155,42 @@ The following arguments are supported:
   INGRESS rules.
 
 * `dest_ip_ranges` -
-  (Optional)
+  (Optional, Deprecated)
   Destination IP address range in CIDR format. Required for
   EGRESS rules.
 
+  ~> **Warning:** `dest_ip_ranges` is deprecated and will be removed in a future major release.
+
 * `layer4_config` -
-  (Required)
+  (Optional, Deprecated)
   Pairs of IP protocols and ports that the rule should match.
   Structure is [documented below](#nested_match_config_layer4_config).
+
+  ~> **Warning:** `layer4_config` is deprecated and will be removed in a future major release.
 
 
 <a name="nested_match_config_layer4_config"></a>The `layer4_config` block supports:
 
 * `ip_protocol` -
-  (Required)
+  (Required, Deprecated)
   The IP protocol to which this rule applies. The protocol
   type is required when creating a firewall rule.
   This value can either be one of the following well
   known protocol strings (tcp, udp, icmp, esp, ah, ipip, sctp),
   or the IP protocol number.
 
+  ~> **Warning:** `ip_protocol` is deprecated and will be removed in a future major release.
+
 * `ports` -
-  (Optional)
+  (Optional, Deprecated)
   An optional list of ports to which this rule applies. This field
   is only applicable for UDP or TCP protocol. Each entry must be
   either an integer or a range. If not specified, this rule
   applies to connections through any port.
-  Example inputs include: ["22"], ["80","443"], and
-  ["12345-12349"].
+  Example inputs include: ['22'], ['80','443'], and
+  ['12345-12349'].
+
+  ~> **Warning:** `ports` is deprecated and will be removed in a future major release.
 
 ## Attributes Reference
 

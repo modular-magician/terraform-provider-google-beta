@@ -58,8 +58,8 @@ func TestAccComputeOrganizationSecurityPolicyRule_organizationSecurityPolicyRule
 func testAccComputeOrganizationSecurityPolicyRule_organizationSecurityPolicyRuleBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_organization_security_policy" "policy" {
-  provider = google-beta
-  display_name = "tf-test%{random_suffix}"
+  provider     = google-beta
+  short_name   = "tf-test%{random_suffix}"
   parent       = "organizations/%{org_id}"
 }
 
@@ -69,18 +69,9 @@ resource "google_compute_organization_security_policy_rule" "policy" {
   policy_id = google_compute_organization_security_policy.policy.id
   action = "allow"
 
-  direction = "INGRESS"
-  enable_logging = true
   match {
     config {
-      src_ip_ranges = ["192.168.0.0/16", "10.0.0.0/8"]
-      layer4_config {
-        ip_protocol = "tcp"
-        ports = ["22"]
-      }
-      layer4_config {
-        ip_protocol = "icmp"
-      }
+      src_ip_ranges = ["192.168.0.0/16", "10.0.0.0/24"]
     }
   }
   priority = 100

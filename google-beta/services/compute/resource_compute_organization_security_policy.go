@@ -66,6 +66,7 @@ Format: organizations/{organization_id} or folders/{folder_id}`,
 			"display_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Deprecated:  "`display_name` is deprecated and will be removed in a future release, use `short_name` instead.",
 				ForceNew:    true,
 				Description: `User-provided name of the organization security policy. The name should be unique in the organization in which the security policy is created. This should only be used when SecurityPolicyType is FIREWALL.`,
 			},
@@ -77,11 +78,18 @@ Format: organizations/{organization_id} or folders/{folder_id}`,
 			},
 			"type": {
 				Type:         schema.TypeString,
+				Computed:     true,
 				Optional:     true,
 				ForceNew:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"FIREWALL", "CLOUD_ARMOR", "CLOUD_ARMOR_EDGE", "CLOUD_ARMOR_INTERNAL_SERVICE", "CLOUD_ARMOR_NETWORK", ""}),
-				Description:  `The type indicates the intended use of the security policy. This field can be set only at resource creation time. Default value: "FIREWALL" Possible values: ["FIREWALL", "CLOUD_ARMOR", "CLOUD_ARMOR_EDGE", "CLOUD_ARMOR_INTERNAL_SERVICE", "CLOUD_ARMOR_NETWORK"]`,
-				Default:      "FIREWALL",
+				ValidateFunc: verify.ValidateEnum([]string{"CLOUD_ARMOR", "CLOUD_ARMOR_EDGE", "CLOUD_ARMOR_INTERNAL_SERVICE", "CLOUD_ARMOR_NETWORK", "FIREWALL", ""}),
+				Description: `The type indicates the intended use of the security policy.
+
+- CLOUD_ARMOR: Cloud Armor backend security policies can be configured to filter incoming HTTP requests targeting backend services. They filter requests before they hit the origin servers.
+- CLOUD_ARMOR_EDGE: Cloud Armor edge security policies can be configured to filter incoming HTTP requests targeting backend services (including Cloud CDN-enabled) as well as backend buckets (Cloud Storage). They filter requests before the request is served from Google's cache.
+- CLOUD_ARMOR_INTERNAL_SERVICE: Cloud Armor internal service policies can be configured to filter HTTP requests targeting services managed by Traffic Director in a service mesh. They filter requests before the request is served from the application.
+- CLOUD_ARMOR_NETWORK: Cloud Armor network policies can be configured to filter packets targeting network load balancing resources such as backend services, target pools, target instances, and instances with external IPs. They filter requests before the request is served from the application.
+
+This field can be set only at resource creation time. Possible values: ["CLOUD_ARMOR", "CLOUD_ARMOR_EDGE", "CLOUD_ARMOR_INTERNAL_SERVICE", "CLOUD_ARMOR_NETWORK", "FIREWALL"]`,
 			},
 			"fingerprint": {
 				Type:     schema.TypeString,
