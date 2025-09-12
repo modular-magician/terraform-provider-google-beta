@@ -723,7 +723,7 @@ var DefaultBasePaths = map[string]string{
 	ModelArmorBasePathKey:               "https://modelarmor.{{location}}.rep.googleapis.com/v1beta/",
 	ModelArmorGlobalBasePathKey:         "https://modelarmor.googleapis.com/v1beta/",
 	MonitoringBasePathKey:               "https://monitoring.googleapis.com/",
-	NetappBasePathKey:                   "https://netapp.googleapis.com/v1beta1/",
+	NetappBasePathKey:                   "https://staging-netapp.sandbox.googleapis.com/v1beta1/",
 	NetworkConnectivityBasePathKey:      "https://networkconnectivity.googleapis.com/v1/",
 	NetworkManagementBasePathKey:        "https://networkmanagement.googleapis.com/v1beta1/",
 	NetworkSecurityBasePathKey:          "https://networksecurity.googleapis.com/v1beta1/",
