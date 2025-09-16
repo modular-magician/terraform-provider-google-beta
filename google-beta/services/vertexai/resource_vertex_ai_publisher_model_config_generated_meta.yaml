@@ -1,0 +1,18 @@
+resource: 'google_vertex_ai_publisher_model_config'
+generation_type: 'mmv1'
+source_file: 'products/vertexai/PublisherModelConfig.yaml'
+api_service_name: 'aiplatform.googleapis.com'
+api_version: 'v1beta1'
+api_resource_type_kind: 'PublisherModelConfig'
+fields:
+  - field: 'location'
+    provider_only: true
+  - field: 'model'
+    provider_only: true
+  - field: 'publisher'
+    provider_only: true
+  - field: 'publisher_model_config.logging_config.bigquery_destination.output_uri'
+  - field: 'publisher_model_config.logging_config.enable_otel_logging'
+  - field: 'publisher_model_config.logging_config.enabled'
+  - field: 'publisher_model_config.logging_config.request_response_logging_schema_version'
+  - field: 'publisher_model_config.logging_config.sampling_rate'
