@@ -138,6 +138,25 @@ The supported values: 'APP_TYPE_UNSPECIFIED', 'APP_TYPE_INTRANET'.`,
 					},
 				},
 			},
+			"features": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: `A map of the feature config for the engine to opt in or opt out of features.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"features": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"feature": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"FEATURE_STATE_UNSPECIFIED", "FEATURE_STATE_ON", "FEATURE_STATE_OFF", ""}),
+							Description:  `The state of the feature for the engine. Possible values: ["FEATURE_STATE_UNSPECIFIED", "FEATURE_STATE_ON", "FEATURE_STATE_OFF"]`,
+						},
+					},
+				},
+			},
 			"industry_vertical": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -218,6 +237,12 @@ func resourceDiscoveryEngineSearchEngineCreate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("app_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(appTypeProp)) && (ok || !reflect.DeepEqual(v, appTypeProp)) {
 		obj["appType"] = appTypeProp
+	}
+	featuresProp, err := expandDiscoveryEngineSearchEngineFeatures(d.Get("features"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("features"); !tpgresource.IsEmptyValue(reflect.ValueOf(featuresProp)) && (ok || !reflect.DeepEqual(v, featuresProp)) {
+		obj["features"] = featuresProp
 	}
 
 	obj, err = resourceDiscoveryEngineSearchEngineEncoder(d, meta, obj)
@@ -350,6 +375,9 @@ func resourceDiscoveryEngineSearchEngineRead(d *schema.ResourceData, meta interf
 	if err := d.Set("app_type", flattenDiscoveryEngineSearchEngineAppType(res["appType"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+	if err := d.Set("features", flattenDiscoveryEngineSearchEngineFeatures(res["features"], d, config)); err != nil {
+		return fmt.Errorf("Error reading SearchEngine: %s", err)
+	}
 
 	return nil
 }
@@ -388,6 +416,12 @@ func resourceDiscoveryEngineSearchEngineUpdate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("search_engine_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, searchEngineConfigProp)) {
 		obj["searchEngineConfig"] = searchEngineConfigProp
 	}
+	featuresProp, err := expandDiscoveryEngineSearchEngineFeatures(d.Get("features"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("features"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, featuresProp)) {
+		obj["features"] = featuresProp
+	}
 
 	obj, err = resourceDiscoveryEngineSearchEngineEncoder(d, meta, obj)
 	if err != nil {
@@ -413,6 +447,10 @@ func resourceDiscoveryEngineSearchEngineUpdate(d *schema.ResourceData, meta inte
 
 	if d.HasChange("search_engine_config") {
 		updateMask = append(updateMask, "searchEngineConfig")
+	}
+
+	if d.HasChange("features") {
+		updateMask = append(updateMask, "features")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -594,6 +632,25 @@ func flattenDiscoveryEngineSearchEngineAppType(v interface{}, d *schema.Resource
 	return v
 }
 
+func flattenDiscoveryEngineSearchEngineFeatures(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.(map[string]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for k, raw := range l {
+		original := raw.(map[string]interface{})
+		transformed = append(transformed, map[string]interface{}{
+			"features": k,
+			"feature":  flattenDiscoveryEngineSearchEngineFeaturesFeature(original["feature"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDiscoveryEngineSearchEngineFeaturesFeature(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandDiscoveryEngineSearchEngineIndustryVertical(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -664,6 +721,35 @@ func expandDiscoveryEngineSearchEngineCommonConfigCompanyName(v interface{}, d t
 }
 
 func expandDiscoveryEngineSearchEngineAppType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineSearchEngineFeatures(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]interface{}, error) {
+	if v == nil {
+		return map[string]interface{}{}, nil
+	}
+	m := make(map[string]interface{})
+	for _, raw := range v.(*schema.Set).List() {
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedFeature, err := expandDiscoveryEngineSearchEngineFeaturesFeature(original["feature"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedFeature); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["feature"] = transformedFeature
+		}
+
+		transformedFeatures, err := tpgresource.ExpandString(original["features"], d, config)
+		if err != nil {
+			return nil, err
+		}
+		m[transformedFeatures] = transformed
+	}
+	return m, nil
+}
+
+func expandDiscoveryEngineSearchEngineFeaturesFeature(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

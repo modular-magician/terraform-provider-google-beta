@@ -135,6 +135,11 @@ The following arguments are supported:
   This is the application type this engine resource represents.
   The supported values: 'APP_TYPE_UNSPECIFIED', 'APP_TYPE_INTRANET'.
 
+* `features` -
+  (Optional)
+  A map of the feature config for the engine to opt in or opt out of features.
+  Structure is [documented below](#nested_features).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -158,6 +163,15 @@ The following arguments are supported:
 * `company_name` -
   (Optional)
   The name of the company, business or entity that is associated with the engine. Setting this may help improve LLM related features.cd
+
+<a name="nested_features"></a>The `features` block supports:
+
+* `features` - (Required) The identifier for this object. Format specified above.
+
+* `feature` -
+  (Optional)
+  The state of the feature for the engine.
+  Possible values are: `FEATURE_STATE_UNSPECIFIED`, `FEATURE_STATE_ON`, `FEATURE_STATE_OFF`.
 
 ## Attributes Reference
 
