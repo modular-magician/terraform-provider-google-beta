@@ -50,7 +50,7 @@ func TestAccPubsubTopic_pubsubTopicBasicExample(t *testing.T) {
 				ResourceName:            "google_pubsub_topic.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"deletion_protection", "labels", "terraform_labels"},
 			},
 		},
 	})
@@ -66,6 +66,8 @@ resource "google_pubsub_topic" "example" {
   }
 
   message_retention_duration = "86600s"
+
+  deletion_protection = false
 }
 `, context)
 }

@@ -25,6 +25,8 @@ fields:
   - field: 'cloud_storage_config.state'
   - field: 'dead_letter_policy.dead_letter_topic'
   - field: 'dead_letter_policy.max_delivery_attempts'
+  - field: 'deletion_protection'
+    provider_only: true
   - field: 'effective_labels'
     provider_only: true
   - field: 'enable_exactly_once_delivery'

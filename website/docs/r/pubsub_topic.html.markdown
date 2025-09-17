@@ -50,6 +50,8 @@ resource "google_pubsub_topic" "example" {
   }
 
   message_retention_duration = "86600s"
+
+  deletion_protection = false
 }
 ```
 ## Example Usage - Pubsub Topic Cmek
@@ -368,6 +370,10 @@ The following arguments are supported:
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
+
+* `deletion_protection` - (Optional) Whether Terraform will be prevented from destroying the topic. Defaults to false.
+When the field is set to true in Terraform state, a `terraform apply`
+or `terraform destroy` that would delete the topic will fail.
 
 
 

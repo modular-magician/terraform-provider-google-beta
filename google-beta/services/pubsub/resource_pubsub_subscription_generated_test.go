@@ -49,7 +49,7 @@ func TestAccPubsubSubscription_pubsubSubscriptionPushExample(t *testing.T) {
 				ResourceName:            "google_pubsub_subscription.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "terraform_labels", "topic"},
+				ImportStateVerifyIgnore: []string{"deletion_protection", "labels", "terraform_labels", "topic"},
 			},
 		},
 	})
@@ -78,6 +78,8 @@ resource "google_pubsub_subscription" "example" {
       x-goog-version = "v1"
     }
   }
+
+  deletion_protection = false
 }
 `, context)
 }

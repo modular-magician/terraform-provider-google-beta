@@ -135,6 +135,8 @@ resource "google_pubsub_topic" "example" {
   }
 
   message_retention_duration = "86600s"
+
+  deletion_protection = false
 }
 
 resource "google_pubsub_topic_iam_member" "foo" {
@@ -156,6 +158,8 @@ resource "google_pubsub_topic" "example" {
   }
 
   message_retention_duration = "86600s"
+
+  deletion_protection = false
 }
 
 data "google_iam_policy" "foo" {
@@ -191,6 +195,8 @@ resource "google_pubsub_topic" "example" {
   }
 
   message_retention_duration = "86600s"
+
+  deletion_protection = false
 }
 
 data "google_iam_policy" "foo" {
@@ -214,6 +220,8 @@ resource "google_pubsub_topic" "example" {
   }
 
   message_retention_duration = "86600s"
+
+  deletion_protection = false
 }
 
 resource "google_pubsub_topic_iam_binding" "foo" {
@@ -235,6 +243,8 @@ resource "google_pubsub_topic" "example" {
   }
 
   message_retention_duration = "86600s"
+
+  deletion_protection = false
 }
 
 resource "google_pubsub_topic_iam_binding" "foo" {
