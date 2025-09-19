@@ -80,6 +80,13 @@ fields:
   - field: 'location'
     provider_only: true
   - field: 'name'
+  - field: 'source_config.mongodb_source_config.exclude_objects.databases.collections.collection'
+  - field: 'source_config.mongodb_source_config.exclude_objects.databases.collections.fields.field'
+  - field: 'source_config.mongodb_source_config.exclude_objects.databases.database'
+  - field: 'source_config.mongodb_source_config.include_objects.databases.collections.collection'
+  - field: 'source_config.mongodb_source_config.include_objects.databases.collections.fields.field'
+  - field: 'source_config.mongodb_source_config.include_objects.databases.database'
+  - field: 'source_config.mongodb_source_config.max_concurrent_backfill_tasks'
   - field: 'source_config.mysql_source_config.binary_log_position'
   - field: 'source_config.mysql_source_config.exclude_objects.mysql_databases.database'
   - field: 'source_config.mysql_source_config.exclude_objects.mysql_databases.mysql_tables.mysql_columns.collation'
