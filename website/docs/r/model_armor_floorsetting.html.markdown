@@ -139,6 +139,11 @@ The following arguments are supported:
   Metadata to enable multi language detection via floor setting.
   Structure is [documented below](#nested_floor_setting_metadata).
 
+* `deletion_policy` - (Optional) Policy to determine if the configuration should be deleted forcefully.
+If setting deletion_policy = "FORCE", the armor floorsetting  configuration will be deleted regardless
+of its nested resources. If set to "DEFAULT", armor floorsetting  configuration  that still have
+nested resources will return an error. Possible values: DEFAULT, FORCE
+
 
 
 <a name="nested_filter_config"></a>The `filter_config` block supports:

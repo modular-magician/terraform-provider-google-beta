@@ -308,6 +308,15 @@ will be taken on the request.`,
 				Computed:    true,
 				Description: `[Output only] Update timestamp`,
 			},
+			"deletion_policy": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `Policy to determine if the configuration should be deleted forcefully.
+If setting deletion_policy = "FORCE", the armor floorsetting  configuration will be deleted regardless
+of its nested resources. If set to "DEFAULT", armor floorsetting  configuration  that still have
+nested resources will return an error. Possible values: DEFAULT, FORCE`,
+				Default: "DEFAULT",
+			},
 		},
 		UseJSONNumber: true,
 	}
@@ -427,6 +436,13 @@ func resourceModelArmorGlobalFloorsettingRead(d *schema.ResourceData, meta inter
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ModelArmorGlobalFloorsetting %q", d.Id()))
+	}
+
+	// Explicitly set virtual fields to default values if unset
+	if _, ok := d.GetOkExists("deletion_policy"); !ok {
+		if err := d.Set("deletion_policy", "DEFAULT"); err != nil {
+			return fmt.Errorf("Error setting deletion_policy: %s", err)
+		}
 	}
 
 	if err := d.Set("name", flattenModelArmorGlobalFloorsettingName(res["name"], d, config)); err != nil {

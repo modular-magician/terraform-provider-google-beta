@@ -9,6 +9,8 @@ fields:
   - field: 'ai_platform_floor_setting.inspect_and_block'
   - field: 'ai_platform_floor_setting.inspect_only'
   - field: 'create_time'
+  - field: 'deletion_policy'
+    provider_only: true
   - field: 'enable_floor_setting_enforcement'
   - field: 'filter_config.malicious_uri_filter_settings.filter_enforcement'
   - field: 'filter_config.pi_and_jailbreak_filter_settings.confidence_level'
