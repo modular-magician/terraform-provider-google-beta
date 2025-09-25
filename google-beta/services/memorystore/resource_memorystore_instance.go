@@ -27,6 +27,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -35,6 +36,57 @@ import (
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/verify"
 )
+
+func desiredPscAndEndpointCustomizeDiff(_, old, new string, d *schema.ResourceData) bool {
+	// Use GetRawConfig to check if desired_psc_auto_connections field is set in the configuration
+	configRawPsc, _ := d.GetRawConfigAt(cty.GetAttrPath("desired_psc_auto_connections"))
+	configRawEndpoint, _ := d.GetRawConfigAt(cty.GetAttrPath("desired_auto_created_endpoints"))
+
+	// Check if the field is set (not null and known)
+	if !configRawPsc.IsNull() && configRawPsc.IsKnown() {
+		// Field is explicitly set in configuration
+		configSlice := configRawPsc.AsValueSlice()
+		if len(configSlice) > 0 {
+			// Field is set with values - perform any necessary diff logic here
+			// For example, you might want to force new resource creation or set computed values
+			log.Printf("[DEBUG] configRawPsc value in rawconfig is %#v", configRawPsc)
+
+			/*
+				// Example: Set a computed field based on the presence of desired_psc_auto_connections
+				if d.HasChange("desired_psc_auto_connections") {
+					// Handle changes to the field when it's explicitly configured
+					// This could include validation, setting other computed fields, etc.
+				}
+			*/
+		}
+	} else {
+		log.Printf("[DEBUG] set to nothing for configRawPsc")
+		d.Set("desired_psc_auto_connections", []interface{}{})
+
+	}
+	// Check if the field is set (not null and known)
+	if !configRawEndpoint.IsNull() && configRawEndpoint.IsKnown() {
+		// Field is explicitly set in configuration
+		configSlice := configRawEndpoint.AsValueSlice()
+		if len(configSlice) > 0 {
+			// Field is set with values - perform any necessary diff logic here
+			// For example, you might want to force new resource creation or set computed values
+			log.Printf("[DEBUG] configRawEndpoint value in rawconfig is %#v", configRawEndpoint)
+			/* // Example: Set a computed field based on the presence of desired_psc_auto_connections
+			if d.HasChange("desired_auto_created_endpoints") {
+				// Handle changes to the field when it's explicitly configured
+				// This could include validation, setting other computed fields, etc.
+			}
+			*/
+		}
+	} else {
+		log.Printf("[DEBUG] set to nothing for configRawEndpoint")
+		d.Set("desired_auto_created_endpoints", []interface{}{})
+
+	}
+
+	return false
+}
 
 func ResourceMemorystoreInstance() *schema.Resource {
 	return &schema.Resource{
@@ -906,11 +958,12 @@ DELETING`,
 				Description: `Output only. Latest update timestamp of the instance.`,
 			},
 			"desired_psc_auto_connections": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Deprecated:  "`desired_psc_auto_connections` is deprecated. Use `desired_auto_created_endpoints` instead. `terraform import` will only work with desired_auto_created_endpoints`.",
-				ForceNew:    true,
-				Description: `'desired_psc_auto_connections' is deprecated  Use 'desired_auto_created_endpoints' instead 'terraform import' will only work with desired_auto_created_endpoints'.`,
+				Type:             schema.TypeList,
+				Optional:         true,
+				Deprecated:       "`desired_psc_auto_connections` is deprecated. Use `desired_auto_created_endpoints` instead. `terraform import` will only work with desired_auto_created_endpoints`.",
+				ForceNew:         true,
+				DiffSuppressFunc: desiredPscAndEndpointCustomizeDiff,
+				Description:      `'desired_psc_auto_connections' is deprecated  Use 'desired_auto_created_endpoints' instead 'terraform import' will only work with desired_auto_created_endpoints'.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"network": {
@@ -3421,22 +3474,24 @@ func resourceMemorystoreInstanceDecoder(d *schema.ResourceData, meta interface{}
 			if len(transformed) > 0 {
 				_, okEndpoint := d.GetOk("desired_auto_created_endpoints")
 				_, okPsc := d.GetOk("desired_psc_auto_connections")
+
 				if okEndpoint {
 					d.Set("desired_auto_created_endpoints", transformed)
 					log.Printf("[DEBUG] Setting desired_auto_created_endpoints in decoder within endpoints for %#v", transformed)
+					// log.Printf("[DEBUG] Value of EndpointRawValue %#v", EndpointRawValue)
 				} else if okPsc {
 					d.Set("desired_auto_created_endpoints", []interface{}{})
 				}
 				if okPsc {
 					d.Set("desired_psc_auto_connections", transformed)
 					log.Printf("[DEBUG] Setting desired_psc_auto_connections in decoder within endpoints for %#v", transformed)
+					// log.Printf("[DEBUG] Value of PscRawValue %#v", PscRawValue)
 				} else if okEndpoint {
 					d.Set("desired_psc_auto_connections", []interface{}{})
 				}
 				// Set preferred field on import
 				if !okPsc && !okEndpoint {
 					d.Set("desired_auto_created_endpoints", transformed)
-					log.Printf("[DEBUG] Setting desired_auto_created_endpoints in decoder within endpoints for %#v", transformed)
 				}
 			}
 		}
