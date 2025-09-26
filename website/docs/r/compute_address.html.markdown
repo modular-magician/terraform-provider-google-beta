@@ -213,7 +213,7 @@ The following arguments are supported:
   The networking tier used for configuring this address. If this field is not
   specified, it is assumed to be PREMIUM.
   This argument should not be used when configuring Internal addresses, because [network tier cannot be set for internal traffic; it's always Premium](https://cloud.google.com/network-tiers/docs/overview).
-  Possible values are: `PREMIUM`, `STANDARD`.
+  Possible values are: `PREMIUM`, `STANDARD`, `FOOBAR`.
 
 * `subnetwork` -
   (Optional)

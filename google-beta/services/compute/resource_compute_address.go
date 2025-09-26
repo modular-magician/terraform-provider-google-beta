@@ -134,10 +134,10 @@ IPSEC_INTERCONNECT purposes.`,
 				Computed:     true,
 				Optional:     true,
 				ForceNew:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"PREMIUM", "STANDARD", ""}),
+				ValidateFunc: verify.ValidateEnum([]string{"PREMIUM", "STANDARD", "FOOBAR", ""}),
 				Description: `The networking tier used for configuring this address. If this field is not
 specified, it is assumed to be PREMIUM.
-This argument should not be used when configuring Internal addresses, because [network tier cannot be set for internal traffic; it's always Premium](https://cloud.google.com/network-tiers/docs/overview). Possible values: ["PREMIUM", "STANDARD"]`,
+This argument should not be used when configuring Internal addresses, because [network tier cannot be set for internal traffic; it's always Premium](https://cloud.google.com/network-tiers/docs/overview). Possible values: ["PREMIUM", "STANDARD", "FOOBAR"]`,
 			},
 			"prefix_length": {
 				Type:        schema.TypeInt,
