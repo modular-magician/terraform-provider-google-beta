@@ -229,7 +229,7 @@ resource "google_compute_future_reservation" "gce_future_reservation" {
 
 
   depends_on = [
-    google_org_policy_policy.shared_future_reservation_org_policy,
+    google_org_policy_policy.shared_reservation_org_policy,
     google_project_service.compute
   ]
 }
