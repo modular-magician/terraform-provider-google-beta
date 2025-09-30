@@ -7097,6 +7097,9 @@ resource "google_container_cluster" "primary" {
     lustre_csi_driver_config {
       enabled = false
     }
+    pod_snapshot_config {
+      enabled = false
+    }
     istio_config {
       disabled = true
       auth     = "AUTH_MUTUAL_TLS"
@@ -7176,6 +7179,9 @@ resource "google_container_cluster" "primary" {
     lustre_csi_driver_config {
       enabled = true
       enable_legacy_lustre_port=true
+    }
+    pod_snapshot_config {
+      enabled = true
     }
     istio_config {
       disabled = false
