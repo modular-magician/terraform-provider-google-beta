@@ -31,8 +31,9 @@ func DataSourceGoogleGkeHubMembership() *schema.Resource {
 	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
 
 	return &schema.Resource{
-		Read:   dataSourceGoogleGkeHubMembershipRead,
-		Schema: dsSchema,
+		Read:     dataSourceGoogleGkeHubMembershipRead,
+		Schema:   dsSchema,
+		Identity: ResourceGKEHubMembership().Identity,
 	}
 }
 

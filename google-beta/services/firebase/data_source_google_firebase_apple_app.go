@@ -35,8 +35,9 @@ func DataSourceGoogleFirebaseAppleApp() *schema.Resource {
 	tpgresource.AddOptionalFieldsToSchema(dsSchema, "project")
 
 	return &schema.Resource{
-		Read:   dataSourceGoogleFirebaseAppleAppRead,
-		Schema: dsSchema,
+		Read:     dataSourceGoogleFirebaseAppleAppRead,
+		Schema:   dsSchema,
+		Identity: ResourceFirebaseAppleApp().Identity,
 	}
 }
 

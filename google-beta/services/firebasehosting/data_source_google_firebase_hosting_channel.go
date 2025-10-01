@@ -32,8 +32,9 @@ func DataSourceGoogleFirebaseHostingChannel() *schema.Resource {
 	tpgresource.AddRequiredFieldsToSchema(dsSchema, "site_id", "channel_id")
 
 	return &schema.Resource{
-		Read:   dataSourceGoogleFirebaseHostingChannelRead,
-		Schema: dsSchema,
+		Read:     dataSourceGoogleFirebaseHostingChannelRead,
+		Schema:   dsSchema,
+		Identity: ResourceFirebaseHostingChannel().Identity,
 	}
 }
 
