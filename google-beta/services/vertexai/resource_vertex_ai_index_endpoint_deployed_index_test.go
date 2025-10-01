@@ -118,7 +118,7 @@ resource "google_vertex_ai_index" "index" {
 
 
 resource "google_vertex_ai_index_endpoint" "vertex_endpoint" {
-  display_name = "sample-endpoint"
+  display_name = "tf-test-sample-endpoint-%{random_suffix}"
   description  = "A sample vertex endpoint"
   region       = "us-central1"
   labels       = {
@@ -192,7 +192,7 @@ resource "google_vertex_ai_index" "index" {
 
 
 resource "google_vertex_ai_index_endpoint" "vertex_endpoint" {
-  display_name = "sample-endpoint"
+  display_name = "tf-test-sample-endpoint-%{random_suffix}"
   description  = "A sample vertex endpoint"
   region       = "us-central1"
   labels       = {
@@ -296,7 +296,7 @@ resource "google_vertex_ai_index" "index" {
 
 
 resource "google_vertex_ai_index_endpoint" "vertex_endpoint" {
-  display_name = "sample-endpoint"
+  display_name = "tf-test-sample-endpoint-%{random_suffix}"
   description  = "A sample vertex endpoint"
   region       = "us-central1"
   labels       = {
@@ -367,7 +367,7 @@ resource "google_vertex_ai_index" "index" {
 
 
 resource "google_vertex_ai_index_endpoint" "vertex_endpoint" {
-  display_name = "sample-endpoint"
+  display_name = "tf-test-sample-endpoint-%{random_suffix}"
   description  = "A sample vertex endpoint"
   region       = "us-central1"
   labels       = {

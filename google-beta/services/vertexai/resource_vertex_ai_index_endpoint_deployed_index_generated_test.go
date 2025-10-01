@@ -107,7 +107,7 @@ resource "google_vertex_ai_index" "index" {
 }
 
 resource "google_vertex_ai_index_endpoint" "vertex_index_endpoint_deployed" {
-  display_name = "sample-endpoint"
+  display_name = "tf-test-endpoint-name%{random_suffix}"
   description  = "A sample vertex endpoint"
   region       = "us-central1"
   network      = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.vertex_network.name}"
@@ -230,7 +230,7 @@ resource "google_vertex_ai_index" "index" {
 }
 
 resource "google_vertex_ai_index_endpoint" "vertex_index_endpoint_deployed" {
-  display_name = "sample-endpoint"
+  display_name = "tf-test-endpoint-name%{random_suffix}"
   description  = "A sample vertex endpoint"
   region       = "us-central1"
   network      = "projects/${data.google_project.project.number}/global/networks/${data.google_compute_network.vertex_network.name}"
@@ -339,7 +339,7 @@ resource "google_vertex_ai_index" "index" {
 
 
 resource "google_vertex_ai_index_endpoint" "vertex_endpoint" {
-  display_name            = "sample-endpoint"
+  display_name            = "tf-test-sample-endpoint%{random_suffix}"
   description             = "A sample vertex endpoint"
   region                  = "us-central1"
   public_endpoint_enabled = true
@@ -440,7 +440,7 @@ resource "google_vertex_ai_index" "index" {
 }
 
 resource "google_vertex_ai_index_endpoint" "vertex_endpoint" {
-  display_name            = "sample-endpoint"
+  display_name            = "tf-test-sample-endpoint%{random_suffix}"
   description             = "A sample vertex endpoint"
   region                  = "us-central1"
   public_endpoint_enabled = true

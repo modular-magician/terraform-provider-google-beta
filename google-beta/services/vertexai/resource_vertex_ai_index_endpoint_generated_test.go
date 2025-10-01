@@ -70,7 +70,7 @@ resource "google_kms_crypto_key_iam_member" "vertexai_encrypterdecrypter" {
 }
 
 resource "google_vertex_ai_index_endpoint" "index_endpoint" {
-  display_name = "sample-endpoint"
+  display_name = "tf-test-sample-endpoint%{random_suffix}"
   description  = "A sample vertex endpoint"
   region       = "us-central1"
   labels       = {
@@ -123,7 +123,7 @@ func TestAccVertexAIIndexEndpoint_vertexAiIndexEndpointWithPscExample(t *testing
 func testAccVertexAIIndexEndpoint_vertexAiIndexEndpointWithPscExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_vertex_ai_index_endpoint" "index_endpoint" {
-  display_name = "sample-endpoint"
+  display_name = "tf-test-sample-endpoint%{random_suffix}"
   description  = "A sample vertex endpoint"
   region       = "us-central1"
   labels       = {
@@ -164,7 +164,7 @@ func TestAccVertexAIIndexEndpoint_vertexAiIndexEndpointWithFalsePscExample(t *te
 func testAccVertexAIIndexEndpoint_vertexAiIndexEndpointWithFalsePscExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_vertex_ai_index_endpoint" "index_endpoint" {
-  display_name = "sample-endpoint"
+  display_name = "tf-test-sample-endpoint%{random_suffix}"
   description  = "A sample vertex endpoint"
   region       = "us-central1"
   labels       = {
@@ -207,7 +207,7 @@ func TestAccVertexAIIndexEndpoint_vertexAiIndexEndpointWithPublicEndpointExample
 func testAccVertexAIIndexEndpoint_vertexAiIndexEndpointWithPublicEndpointExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_vertex_ai_index_endpoint" "index_endpoint" {
-  display_name = "sample-endpoint"
+  display_name = "tf-test-sample-endpoint%{random_suffix}"
   description  = "A sample vertex endpoint with an public endpoint"
   region       = "us-central1"
   labels       = {
