@@ -66,15 +66,15 @@ func ResourceClouddeployDeliveryPipeline() *schema.Resource {
 						OptionalForImport: true,
 						Description:       "The project for the resource",
 					},
-					"location": {
-						Type:              schema.TypeString,
-						RequiredForImport: true,
-						Description:       "The location for the resource",
-					},
 					"name": {
 						Type:              schema.TypeString,
 						RequiredForImport: true,
 						Description:       "Name of the `DeliveryPipeline`. Format is `[a-z]([a-z0-9-]{0,61}[a-z0-9])?`.",
+					},
+					"location": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+						Description:       "The location for the resource",
 					},
 				}
 			},
