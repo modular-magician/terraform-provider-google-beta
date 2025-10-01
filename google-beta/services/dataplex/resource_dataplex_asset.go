@@ -65,25 +65,25 @@ func ResourceDataplexAsset() *schema.Resource {
 						RequiredForImport: true,
 						Description:       "The zone for the resource",
 					},
+					"location": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+						Description:       "The location for the resource",
+					},
 					"name": {
 						Type:              schema.TypeString,
 						RequiredForImport: true,
 						Description:       "The name of the asset.",
-					},
-					"project": {
-						Type:              schema.TypeString,
-						OptionalForImport: true,
-						Description:       "The project for the resource",
 					},
 					"lake": {
 						Type:              schema.TypeString,
 						RequiredForImport: true,
 						Description:       "The lake for the resource",
 					},
-					"location": {
+					"project": {
 						Type:              schema.TypeString,
-						RequiredForImport: true,
-						Description:       "The location for the resource",
+						OptionalForImport: true,
+						Description:       "The project for the resource",
 					},
 				}
 			},
