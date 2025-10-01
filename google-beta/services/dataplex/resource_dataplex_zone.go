@@ -70,15 +70,15 @@ func ResourceDataplexZone() *schema.Resource {
 						RequiredForImport: true,
 						Description:       "The name of the zone.",
 					},
-					"lake": {
-						Type:              schema.TypeString,
-						RequiredForImport: true,
-						Description:       "The lake for the resource",
-					},
 					"project": {
 						Type:              schema.TypeString,
 						OptionalForImport: true,
 						Description:       "The project for the resource",
+					},
+					"lake": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+						Description:       "The lake for the resource",
 					},
 				}
 			},
