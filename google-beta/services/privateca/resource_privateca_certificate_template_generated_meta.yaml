@@ -59,6 +59,7 @@ fields:
   - field: 'predefined_values.name_constraints.permitted_ip_ranges'
   - field: 'predefined_values.name_constraints.permitted_uris'
   - field: 'predefined_values.policy_ids.object_id_path'
+  - field: 'tags'
   - field: 'terraform_labels'
     provider_only: true
   - field: 'update_time'

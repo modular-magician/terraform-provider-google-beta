@@ -65,6 +65,7 @@ fields:
   - field: 'publishing_options.encoding_format'
   - field: 'publishing_options.publish_ca_cert'
   - field: 'publishing_options.publish_crl'
+  - field: 'tags'
   - field: 'terraform_labels'
     provider_only: true
   - field: 'tier'

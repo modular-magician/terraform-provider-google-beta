@@ -522,6 +522,15 @@ leading period (like '.example.com')`,
 					},
 				},
 			},
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Description: `A map of resource manager tags.
+Resource manager tag keys and values have the same definition as resource manager tags.
+Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/{tag_value_id}.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -593,6 +602,12 @@ func resourcePrivatecaCertificateTemplateCreate(d *schema.ResourceData, meta int
 		return err
 	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
 		obj["description"] = descriptionProp
+	}
+	tagsProp, err := expandPrivatecaCertificateTemplateTags(d.Get("tags"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tags"); !tpgresource.IsEmptyValue(reflect.ValueOf(tagsProp)) && (ok || !reflect.DeepEqual(v, tagsProp)) {
+		obj["tags"] = tagsProp
 	}
 	effectiveLabelsProp, err := expandPrivatecaCertificateTemplateEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -1332,6 +1347,17 @@ func expandPrivatecaCertificateTemplateMaximumLifetime(v interface{}, d tpgresou
 
 func expandPrivatecaCertificateTemplateDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandPrivatecaCertificateTemplateTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }
 
 func expandPrivatecaCertificateTemplateEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
