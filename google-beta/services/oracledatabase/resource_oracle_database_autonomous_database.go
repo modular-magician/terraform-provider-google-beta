@@ -232,13 +232,6 @@ NOT_ENABLED
 FAILED_ENABLING
 FAILED_DISABLING`,
 						},
-						"private_endpoint_ip": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Optional:    true,
-							ForceNew:    true,
-							Description: `The private endpoint IP address for the Autonomous Database.`,
-						},
 						"private_endpoint_label": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -690,6 +683,12 @@ UNRESTRICTED`,
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: `The private endpoint for the Autonomous Database.`,
+						},
+						"private_endpoint_ip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Optional:    true,
+							Description: `The private endpoint IP address for the Autonomous Database.`,
 						},
 						"refreshable_mode": {
 							Type:     schema.TypeString,

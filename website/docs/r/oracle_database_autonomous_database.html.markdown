@@ -284,7 +284,7 @@ The following arguments are supported:
   AL16UTF16.
 
 * `private_endpoint_ip` -
-  (Optional)
+  (Output)
   The private endpoint IP address for the Autonomous Database.
 
 * `private_endpoint_label` -
