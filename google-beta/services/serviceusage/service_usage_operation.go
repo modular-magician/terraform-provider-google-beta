@@ -21,13 +21,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
-	"google.golang.org/api/googleapi"
 )
 
 type ServiceUsageOperationWaiter struct {
