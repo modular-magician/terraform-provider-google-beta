@@ -25,6 +25,7 @@ fields:
   - field: 'effective_labels'
     provider_only: true
   - field: 'enable_confidential_compute'
+  - field: 'go_version'
   - field: 'guest_os_features.type'
   - field: 'image'
     api_field: 'source_image'

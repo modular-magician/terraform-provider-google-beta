@@ -217,6 +217,9 @@ The following arguments are supported:
   You can add `lifecycle.prevent_destroy` in the config to prevent destroying
   and recreating.
 
+* `go_version` -
+  (Optional)
+
 * `physical_block_size_bytes` -
   (Optional)
   Physical block size of the persistent disk, in bytes. If not present

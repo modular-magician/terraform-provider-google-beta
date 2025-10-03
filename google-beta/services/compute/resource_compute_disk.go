@@ -499,6 +499,12 @@ encryption key that protects this resource.`,
 				Description: `Whether this disk is using confidential compute mode.
 Note: Only supported on hyperdisk skus, disk_encryption_key is required when setting to true`,
 			},
+			"go_version": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: ``,
+			},
 			"guest_os_features": {
 				Type:     schema.TypeSet,
 				Computed: true,
@@ -996,6 +1002,12 @@ func resourceComputeDiskCreate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("size"); !tpgresource.IsEmptyValue(reflect.ValueOf(sizeProp)) && (ok || !reflect.DeepEqual(v, sizeProp)) {
 		obj["sizeGb"] = sizeProp
 	}
+	goVersionProp, err := expandComputeDiskGoVersion(d.Get("go_version"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("go_version"); ok || !reflect.DeepEqual(v, goVersionProp) {
+		obj["goVersion"] = goVersionProp
+	}
 	physicalBlockSizeBytesProp, err := expandComputeDiskPhysicalBlockSizeBytes(d.Get("physical_block_size_bytes"), d, config)
 	if err != nil {
 		return err
@@ -1275,6 +1287,9 @@ func resourceComputeDiskRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
 	if err := d.Set("size", flattenComputeDiskSize(res["sizeGb"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Disk: %s", err)
+	}
+	if err := d.Set("go_version", flattenComputeDiskGoVersion(res["goVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Disk: %s", err)
 	}
 	if err := d.Set("users", flattenComputeDiskUsers(res["users"], d, config)); err != nil {
@@ -2042,6 +2057,10 @@ func flattenComputeDiskSize(v interface{}, d *schema.ResourceData, config *trans
 	return v // let terraform core handle it otherwise
 }
 
+func flattenComputeDiskGoVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeDiskUsers(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -2437,6 +2456,10 @@ func expandComputeDiskName(v interface{}, d tpgresource.TerraformResourceData, c
 }
 
 func expandComputeDiskSize(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeDiskGoVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
