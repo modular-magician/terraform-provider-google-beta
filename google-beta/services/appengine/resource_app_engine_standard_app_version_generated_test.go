@@ -149,6 +149,133 @@ resource "google_storage_bucket_object" "object" {
   bucket = google_storage_bucket.bucket.name
   source = "./test-fixtures/hello-world.zip"
 }
+
+resource "google_app_engine_standard_app_version" "bundled_service_example" {
+  project    = "tf-test-ae-project%{random_suffix}"
+  service    = "tf-test-ae-service%{random_suffix}"
+  version_id = "v1"
+  runtime    = "python38"
+
+  entrypoint {
+    shell = "gunicorn -b :$PORT main:app"
+  }
+
+  deployment {
+    zip {
+      source_url = "https://storage.googleapis.com/${google_storage_bucket.bucket.name}/${google_storage_bucket_object.object.name}"
+    }
+  }
+
+  env_variables = {
+    port = "8080"
+  }
+
+  basic_scaling {
+    max_instances = 5
+  }
+  
+  app_engine_bundled_services = [
+    "BUNDLED_SERVICE_TYPE_APP_IDENTITY_SERVICE",
+    "BUNDLED_SERVICE_TYPE_BLOBSTORE",
+    "BUNDLED_SERVICE_TYPE_CAPABILITY_SERVICE",
+    "BUNDLED_SERVICE_TYPE_DATASTORE_V3",
+    "BUNDLED_SERVICE_TYPE_IMAGES",
+    "BUNDLED_SERVICE_TYPE_MAIL",
+    "BUNDLED_SERVICE_TYPE_MEMCACHE",
+    "BUNDLED_SERVICE_TYPE_MODULES",
+    "BUNDLED_SERVICE_TYPE_SEARCH",
+    "BUNDLED_SERVICE_TYPE_TASKQUEUES",
+    "BUNDLED_SERVICE_TYPE_URLFETCH",
+    "BUNDLED_SERVICE_TYPE_USERS"
+  ]
+}
+`, context)
+}
+
+func TestAccAppEngineStandardAppVersion_appEngineStandardAppVersionBundledServicesExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckAppEngineStandardAppVersionDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAppEngineStandardAppVersion_appEngineStandardAppVersionBundledServicesExample(context),
+			},
+			{
+				ResourceName:            "google_app_engine_standard_app_version.gae-std-app-ver-bundled",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deployment", "entrypoint", "env_variables", "service", "threadsafe"},
+			},
+		},
+	})
+}
+
+func testAccAppEngineStandardAppVersion_appEngineStandardAppVersionBundledServicesExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_app_engine_application" "app" {
+  project     = "tf-test-tf-test-project%{random_suffix}"
+  location_id = "us-central"
+}
+
+resource "google_storage_bucket" "bucket" {
+  project  = "tf-test-tf-test-project%{random_suffix}"
+  name     = "tf-test-tf-test-gae-bkt-bundled%{random_suffix}-${random_id.id.hex}"
+  location = "US"
+  uniform_bucket_level_access = true
+}
+
+resource "random_id" "id" {
+  byte_length = 8
+}
+
+# Assume the object is made available by other means.
+# resource "google_storage_bucket_object" "object" {
+#   name   = "tf-test-hello-world.zip%{random_suffix}"
+#   bucket = google_storage_bucket.bucket.name
+#   source = "./test-fixtures/hello-world.zip"
+# }
+
+resource "google_service_account" "service_account" {
+  project      = "tf-test-tf-test-project%{random_suffix}"
+  account_id   = "tf-test-gae-sa-bundled%{random_suffix}-${random_id.id.hex}"
+  display_name = "Test Service Account for GAE"
+}
+
+resource "google_app_engine_standard_app_version" "gae-std-app-ver-bundled" {
+  project      = google_app_engine_application.app.project
+  version_id   = "v1"
+  service      = "tf-test-bundled-service%{random_suffix}-${random_id.id.hex}"
+  runtime      = "python39"
+
+  deployment {
+    zip {
+      # source_url = "gs://${google_storage_bucket.bucket.name}/${google_storage_bucket_object.object.name}"
+      source_url = "gs://${google_storage_bucket.bucket.name}/tf-test-hello-world.zip%{random_suffix}"
+    }
+  }
+
+  entrypoint {
+    shell = "gunicorn -b :$PORT main:app"
+  }
+
+  env_variables = {
+    port = "8080"
+  }
+
+  service_account = google_service_account.service_account.email
+
+# Testing the app_engine_bundled_services field
+  app_engine_bundled_services = ["BUNDLED_SERVICE_TYPE_MAIL", "BUNDLED_SERVICE_TYPE_DATASTORE_V3"]
+
+  depends_on = [google_app_engine_application.app]
+}
 `, context)
 }
 
