@@ -152,6 +152,57 @@ resource "google_bigquery_data_transfer_config" "salesforce_config" {
   }
 }
 ```
+## Example Usage - Bigquerydatatransfer Config Pub Sub
+
+
+```hcl
+data "google_project" "project" {
+}
+
+resource "google_project_iam_member" "permissions" {
+  project = data.google_project.project.project_id
+  role   = "roles/iam.serviceAccountTokenCreator"
+  member = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-bigquerydatatransfer.iam.gserviceaccount.com"
+}
+
+resource "google_bigquery_data_transfer_config" "event_driven_config" {
+  depends_on = [google_project_iam_member.permissions]
+
+  display_name           = "my-event-driven-query"
+  location               = "asia-northeast1"
+  data_source_id         = "scheduled_query"
+  schedule               = "first sunday of quarter 00:00"
+  schedule_options {
+    event_driven_schedule {
+      pubsub_subscription = google_pubsub_subscription.event_driven_config.id
+    }
+  }
+  destination_dataset_id = google_bigquery_dataset.my_dataset.dataset_id
+  params = {
+    destination_table_name_template = "my_table"
+    write_disposition               = "WRITE_APPEND"
+    query                           = "SELECT name FROM tabl WHERE x = 'y'"
+  }
+}
+
+resource "google_bigquery_dataset" "my_dataset" {
+  depends_on = [google_project_iam_member.permissions]
+
+  dataset_id    = "my_dataset"
+  friendly_name = "foo"
+  description   = "bar"
+  location      = "asia-northeast1"
+}
+
+resource "google_pubsub_topic" "event_driven_config" {
+  name = "my_dataset_topic"
+}
+
+resource "google_pubsub_subscription" "event_driven_config" {
+  name  = "my_dataset_topic_subscription"
+  topic = google_pubsub_topic.event_driven_config.id
+}
+```
 
 ## Argument Reference
 
@@ -273,6 +324,18 @@ The following arguments are supported:
   scheduled at or after the end time. The end time can be changed at any
   moment. The time when a data transfer can be triggered manually is not
   limited by this option.
+
+* `event_driven_schedule` -
+  (Optional)
+  Event driven transfer schedule options. If set, the transfer will be scheduled upon events arrial.
+  Structure is [documented below](#nested_schedule_options_event_driven_schedule).
+
+
+<a name="nested_schedule_options_event_driven_schedule"></a>The `event_driven_schedule` block supports:
+
+* `pubsub_subscription` -
+  (Optional)
+  Pub/Sub subscription name used to receive events. Only Google Cloud Storage data source support this option. Format: projects/{project}/subscriptions/{subscription}.
 
 <a name="nested_email_preferences"></a>The `email_preferences` block supports:
 

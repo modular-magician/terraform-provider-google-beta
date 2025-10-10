@@ -249,7 +249,7 @@ configuration will be disabled. The runs can be started on ad-hoc
 basis using transferConfigs.startManualRuns API. When automatic
 scheduling is disabled, the TransferConfig.schedule field will
 be ignored.`,
-							AtLeastOneOf: []string{"schedule_options.0.disable_auto_scheduling", "schedule_options.0.start_time", "schedule_options.0.end_time"},
+							AtLeastOneOf: []string{"schedule_options.0.disable_auto_scheduling", "schedule_options.0.start_time", "schedule_options.0.end_time", "schedule_options.0.event_driven_schedule"},
 						},
 						"end_time": {
 							Type:     schema.TypeString,
@@ -258,7 +258,23 @@ be ignored.`,
 scheduled at or after the end time. The end time can be changed at any
 moment. The time when a data transfer can be triggered manually is not
 limited by this option.`,
-							AtLeastOneOf: []string{"schedule_options.0.disable_auto_scheduling", "schedule_options.0.start_time", "schedule_options.0.end_time"},
+							AtLeastOneOf: []string{"schedule_options.0.disable_auto_scheduling", "schedule_options.0.start_time", "schedule_options.0.end_time", "schedule_options.0.event_driven_schedule"},
+						},
+						"event_driven_schedule": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Event driven transfer schedule options. If set, the transfer will be scheduled upon events arrial.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"pubsub_subscription": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Pub/Sub subscription name used to receive events. Only Google Cloud Storage data source support this option. Format: projects/{project}/subscriptions/{subscription}.`,
+									},
+								},
+							},
+							AtLeastOneOf: []string{"schedule_options.0.disable_auto_scheduling", "schedule_options.0.start_time", "schedule_options.0.end_time", "schedule_options.0.event_driven_schedule"},
 						},
 						"start_time": {
 							Type:     schema.TypeString,
@@ -268,7 +284,7 @@ scheduled at or after the start time according to a recurrence pattern
 defined in the schedule string. The start time can be changed at any
 moment. The time when a data transfer can be triggered manually is not
 limited by this option.`,
-							AtLeastOneOf: []string{"schedule_options.0.disable_auto_scheduling", "schedule_options.0.start_time", "schedule_options.0.end_time"},
+							AtLeastOneOf: []string{"schedule_options.0.disable_auto_scheduling", "schedule_options.0.start_time", "schedule_options.0.end_time", "schedule_options.0.event_driven_schedule"},
 						},
 					},
 				},
@@ -839,6 +855,8 @@ func flattenBigqueryDataTransferConfigScheduleOptions(v interface{}, d *schema.R
 		flattenBigqueryDataTransferConfigScheduleOptionsStartTime(original["startTime"], d, config)
 	transformed["end_time"] =
 		flattenBigqueryDataTransferConfigScheduleOptionsEndTime(original["endTime"], d, config)
+	transformed["event_driven_schedule"] =
+		flattenBigqueryDataTransferConfigScheduleOptionsEventDrivenSchedule(original["eventDrivenSchedule"], d, config)
 	return []interface{}{transformed}
 }
 func flattenBigqueryDataTransferConfigScheduleOptionsDisableAutoScheduling(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -850,6 +868,23 @@ func flattenBigqueryDataTransferConfigScheduleOptionsStartTime(v interface{}, d 
 }
 
 func flattenBigqueryDataTransferConfigScheduleOptionsEndTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenBigqueryDataTransferConfigScheduleOptionsEventDrivenSchedule(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["pubsub_subscription"] =
+		flattenBigqueryDataTransferConfigScheduleOptionsEventDrivenSchedulePubsubSubscription(original["pubsubSubscription"], d, config)
+	return []interface{}{transformed}
+}
+func flattenBigqueryDataTransferConfigScheduleOptionsEventDrivenSchedulePubsubSubscription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -975,6 +1010,13 @@ func expandBigqueryDataTransferConfigScheduleOptions(v interface{}, d tpgresourc
 		transformed["endTime"] = transformedEndTime
 	}
 
+	transformedEventDrivenSchedule, err := expandBigqueryDataTransferConfigScheduleOptionsEventDrivenSchedule(original["event_driven_schedule"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEventDrivenSchedule); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["eventDrivenSchedule"] = transformedEventDrivenSchedule
+	}
+
 	return transformed, nil
 }
 
@@ -987,6 +1029,32 @@ func expandBigqueryDataTransferConfigScheduleOptionsStartTime(v interface{}, d t
 }
 
 func expandBigqueryDataTransferConfigScheduleOptionsEndTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigqueryDataTransferConfigScheduleOptionsEventDrivenSchedule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPubsubSubscription, err := expandBigqueryDataTransferConfigScheduleOptionsEventDrivenSchedulePubsubSubscription(original["pubsub_subscription"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPubsubSubscription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["pubsubSubscription"] = transformedPubsubSubscription
+	}
+
+	return transformed, nil
+}
+
+func expandBigqueryDataTransferConfigScheduleOptionsEventDrivenSchedulePubsubSubscription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

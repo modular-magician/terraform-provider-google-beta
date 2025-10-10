@@ -20,6 +20,7 @@ fields:
   - field: 'schedule'
   - field: 'schedule_options.disable_auto_scheduling'
   - field: 'schedule_options.end_time'
+  - field: 'schedule_options.event_driven_schedule.pubsub_subscription'
   - field: 'schedule_options.start_time'
   - field: 'sensitive_params.secret_access_key'
     provider_only: true
