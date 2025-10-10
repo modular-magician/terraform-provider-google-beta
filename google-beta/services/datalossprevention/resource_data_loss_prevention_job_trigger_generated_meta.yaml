@@ -19,6 +19,7 @@ fields:
   - field: 'inspect_job.actions.job_notification_emails'
   - field: 'inspect_job.actions.pub_sub.topic'
   - field: 'inspect_job.actions.publish_findings_to_cloud_data_catalog'
+  - field: 'inspect_job.actions.publish_findings_to_dataplex_catalog'
   - field: 'inspect_job.actions.publish_summary_to_cscc'
   - field: 'inspect_job.actions.publish_to_stackdriver'
   - field: 'inspect_job.actions.save_findings.output_config.output_schema'
