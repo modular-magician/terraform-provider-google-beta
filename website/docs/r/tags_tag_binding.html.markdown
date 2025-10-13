@@ -59,6 +59,35 @@ resource "google_tags_tag_binding" "binding" {
   tag_value = google_tags_tag_value.value.id
 }
 ```
+## Example Usage - Tag Binding Namespaced
+
+
+```hcl
+resource "google_project" "project" {
+  project_id = "project_id"
+  name       = "project_id"
+  org_id     = "123456789"
+
+  deletion_policy = "DELETE"
+}
+
+resource "google_tags_tag_key" "key" {
+  parent      = "organizations/123456789"
+  short_name  = "keyname"
+  description = "For keyname resources."
+}
+
+resource "google_tags_tag_value" "value" {
+  parent      = google_tags_tag_key.key.id
+  short_name  = "valuename"
+  description = "For valuename resources."
+}
+
+resource "google_tags_tag_binding" "binding_namespaced" {
+  parent    = "//cloudresourcemanager.googleapis.com/projects/${google_project.project.number}"
+  tag_value_namespaced_name = "${google_tags_tag_key.key.parent}/${google_tags_tag_key.key.short_name}/${google_tags_tag_value.value.short_name}"
+}
+```
 
 ## Argument Reference
 
@@ -69,10 +98,15 @@ The following arguments are supported:
   (Required)
   The full resource name of the resource the TagValue is bound to. E.g. //cloudresourcemanager.googleapis.com/projects/123
 
+
 * `tag_value` -
-  (Required)
+  (Optional)
   The TagValue of the TagBinding. Must be of the form tagValues/456.
 
+* `tag_value_namespaced_name` -
+  (Optional)
+  The namespaced name for the TagValue of the TagBinding. Must be in the format {parent_id}/{tag_key_short_name}/{shortName}.
+  For methods that support TagValue namespaced name, only one of tagValueNamespacedName or tagValue may be filled. Requests with both fields will be rejected.
 
 
 

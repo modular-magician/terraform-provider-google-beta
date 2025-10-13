@@ -8,3 +8,4 @@ fields:
   - field: 'name'
   - field: 'parent'
   - field: 'tag_value'
+  - field: 'tag_value_namespaced_name'
