@@ -93,7 +93,7 @@ func ResourceDatastreamConnectionProfile() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{},
 				},
-				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile"},
+				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile", "mongodb_profile"},
 			},
 			"create_without_validation": {
 				Type:             schema.TypeBool,
@@ -164,7 +164,7 @@ func ResourceDatastreamConnectionProfile() *schema.Resource {
 						},
 					},
 				},
-				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile"},
+				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile", "mongodb_profile"},
 			},
 			"labels": {
 				Type:     schema.TypeMap,
@@ -174,6 +174,141 @@ func ResourceDatastreamConnectionProfile() *schema.Resource {
 **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
+			},
+			"mongodb_profile": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `MongoDB profile.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"host_addresses": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: `List of host addresses for a MongoDB cluster. For SRV connection format, this list must contain exactly one DNS host without a port. For Standard connection format, this list must contain all the required hosts in the cluster with their respective ports.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"hostname": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Hostname for the connection.`,
+									},
+									"port": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `Port for the connection.`,
+									},
+								},
+							},
+						},
+						"username": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `Username for the MongoDB connection.`,
+						},
+						"password": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  `Password for the MongoDB connection. Mutually exclusive with the secretManagerStoredPassword field.`,
+							Sensitive:    true,
+							ExactlyOneOf: []string{"mongodb_profile.0.password", "mongodb_profile.0.secret_manager_stored_password"},
+						},
+						"replica_set": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Name of the replica set. Only needed for self hosted replica set type MongoDB cluster. For SRV connection format, this field must be empty. For Standard connection format, this field must be specified.`,
+						},
+						"secret_manager_stored_password": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  `A reference to a Secret Manager resource name storing the MongoDB connection password. Mutually exclusive with the password field.`,
+							ExactlyOneOf: []string{"mongodb_profile.0.password", "mongodb_profile.0.secret_manager_stored_password"},
+						},
+						"srv_connection_format": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Srv connection format.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{},
+							},
+						},
+						"ssl_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `SSL configuration for the MongoDB connection.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"ca_certificate": {
+										Type:     schema.TypeString,
+										Optional: true,
+										ForceNew: true,
+										Description: `PEM-encoded certificate of the CA that signed the source database
+server's certificate.`,
+										Sensitive: true,
+									},
+									"client_certificate": {
+										Type:     schema.TypeString,
+										Optional: true,
+										ForceNew: true,
+										Description: `PEM-encoded certificate that will be used by the replica to
+authenticate against the source database server. If this field
+is used then the 'clientKey' and the 'caCertificate' fields are
+mandatory.`,
+										Sensitive: true,
+									},
+									"client_key": {
+										Type:     schema.TypeString,
+										Optional: true,
+										ForceNew: true,
+										Description: `PEM-encoded private key associated with the Client Certificate.
+If this field is used then the 'client_certificate' and the
+'ca_certificate' fields are mandatory.`,
+										Sensitive:    true,
+										ExactlyOneOf: []string{"mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key"},
+									},
+									"secret_manager_stored_client_key": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										Description:  `A reference to a Secret Manager resource name storing the PEM-encoded private key associated with the Client Certificate. If this field is used then the 'clientCertificate' and the 'caCertificate' fields are mandatory. Mutually exclusive with the 'clientKey' field.`,
+										ExactlyOneOf: []string{"mongodb_profile.0.ssl_config.0.client_key", "mongodb_profile.0.ssl_config.0.secret_manager_stored_client_key"},
+									},
+									"ca_certificate_set": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: `Indicates whether the clientKey field is set.`,
+									},
+									"client_certificate_set": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: `Indicates whether the clientCertificate field is set.`,
+									},
+									"client_key_set": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: `Indicates whether the clientKey field is set.`,
+									},
+								},
+							},
+						},
+						"standard_connection_format": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Standard connection format.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"direct_connection": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `Specifies whether the client connects directly to the host[:port] in the connection URI.`,
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 			"mysql_profile": {
 				Type:        schema.TypeList,
@@ -263,7 +398,7 @@ If this field is used then the 'client_certificate' and the
 						},
 					},
 				},
-				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile"},
+				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile", "mongodb_profile"},
 			},
 			"oracle_profile": {
 				Type:        schema.TypeList,
@@ -312,7 +447,7 @@ If this field is used then the 'client_certificate' and the
 						},
 					},
 				},
-				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile"},
+				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile", "mongodb_profile"},
 			},
 			"postgresql_profile": {
 				Type:        schema.TypeList,
@@ -355,7 +490,7 @@ If this field is used then the 'client_certificate' and the
 						},
 					},
 				},
-				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile"},
+				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile", "mongodb_profile"},
 			},
 			"private_connectivity": {
 				Type:        schema.TypeList,
@@ -449,7 +584,7 @@ If this field is used then the 'client_certificate' and the
 						},
 					},
 				},
-				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile"},
+				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile", "mongodb_profile"},
 			},
 			"sql_server_profile": {
 				Type:        schema.TypeList,
@@ -492,7 +627,7 @@ If this field is used then the 'client_certificate' and the
 						},
 					},
 				},
-				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile"},
+				ExactlyOneOf: []string{"oracle_profile", "gcs_profile", "mysql_profile", "bigquery_profile", "postgresql_profile", "sql_server_profile", "salesforce_profile", "mongodb_profile"},
 			},
 			"effective_labels": {
 				Type:        schema.TypeMap,
@@ -579,6 +714,12 @@ func resourceDatastreamConnectionProfileCreate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("sql_server_profile"); !tpgresource.IsEmptyValue(reflect.ValueOf(sqlServerProfileProp)) && (ok || !reflect.DeepEqual(v, sqlServerProfileProp)) {
 		obj["sqlServerProfile"] = sqlServerProfileProp
 	}
+	mongodbProfileProp, err := expandDatastreamConnectionProfileMongodbProfile(d.Get("mongodb_profile"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("mongodb_profile"); !tpgresource.IsEmptyValue(reflect.ValueOf(mongodbProfileProp)) && (ok || !reflect.DeepEqual(v, mongodbProfileProp)) {
+		obj["mongodbProfile"] = mongodbProfileProp
+	}
 	forwardSshConnectivityProp, err := expandDatastreamConnectionProfileForwardSshConnectivity(d.Get("forward_ssh_connectivity"), d, config)
 	if err != nil {
 		return err
@@ -596,6 +737,11 @@ func resourceDatastreamConnectionProfileCreate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
 		obj["labels"] = effectiveLabelsProp
+	}
+
+	obj, err = resourceDatastreamConnectionProfileEncoder(d, meta, obj)
+	if err != nil {
+		return err
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{DatastreamBasePath}}projects/{{project}}/locations/{{location}}/connectionProfiles?connectionProfileId={{connection_profile_id}}")
@@ -731,6 +877,9 @@ func resourceDatastreamConnectionProfileRead(d *schema.ResourceData, meta interf
 	if err := d.Set("sql_server_profile", flattenDatastreamConnectionProfileSqlServerProfile(res["sqlServerProfile"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
+	if err := d.Set("mongodb_profile", flattenDatastreamConnectionProfileMongodbProfile(res["mongodbProfile"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
+	}
 	if err := d.Set("forward_ssh_connectivity", flattenDatastreamConnectionProfileForwardSshConnectivity(res["forwardSshConnectivity"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConnectionProfile: %s", err)
 	}
@@ -811,6 +960,12 @@ func resourceDatastreamConnectionProfileUpdate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("sql_server_profile"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, sqlServerProfileProp)) {
 		obj["sqlServerProfile"] = sqlServerProfileProp
 	}
+	mongodbProfileProp, err := expandDatastreamConnectionProfileMongodbProfile(d.Get("mongodb_profile"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("mongodb_profile"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, mongodbProfileProp)) {
+		obj["mongodbProfile"] = mongodbProfileProp
+	}
 	forwardSshConnectivityProp, err := expandDatastreamConnectionProfileForwardSshConnectivity(d.Get("forward_ssh_connectivity"), d, config)
 	if err != nil {
 		return err
@@ -828,6 +983,11 @@ func resourceDatastreamConnectionProfileUpdate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
 		obj["labels"] = effectiveLabelsProp
+	}
+
+	obj, err = resourceDatastreamConnectionProfileEncoder(d, meta, obj)
+	if err != nil {
+		return err
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{DatastreamBasePath}}projects/{{project}}/locations/{{location}}/connectionProfiles/{{connection_profile_id}}")
@@ -869,6 +1029,10 @@ func resourceDatastreamConnectionProfileUpdate(d *schema.ResourceData, meta inte
 
 	if d.HasChange("sql_server_profile") {
 		updateMask = append(updateMask, "sqlServerProfile")
+	}
+
+	if d.HasChange("mongodb_profile") {
+		updateMask = append(updateMask, "mongodbProfile")
 	}
 
 	if d.HasChange("forward_ssh_connectivity") {
@@ -1433,6 +1597,164 @@ func flattenDatastreamConnectionProfileSqlServerProfileSecretManagerStoredPasswo
 }
 
 func flattenDatastreamConnectionProfileSqlServerProfileDatabase(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileMongodbProfile(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["host_addresses"] =
+		flattenDatastreamConnectionProfileMongodbProfileHostAddresses(original["hostAddresses"], d, config)
+	transformed["replica_set"] =
+		flattenDatastreamConnectionProfileMongodbProfileReplicaSet(original["replicaSet"], d, config)
+	transformed["username"] =
+		flattenDatastreamConnectionProfileMongodbProfileUsername(original["username"], d, config)
+	transformed["password"] =
+		flattenDatastreamConnectionProfileMongodbProfilePassword(original["password"], d, config)
+	transformed["secret_manager_stored_password"] =
+		flattenDatastreamConnectionProfileMongodbProfileSecretManagerStoredPassword(original["secretManagerStoredPassword"], d, config)
+	transformed["ssl_config"] =
+		flattenDatastreamConnectionProfileMongodbProfileSslConfig(original["sslConfig"], d, config)
+	transformed["srv_connection_format"] =
+		flattenDatastreamConnectionProfileMongodbProfileSrvConnectionFormat(original["srvConnectionFormat"], d, config)
+	transformed["standard_connection_format"] =
+		flattenDatastreamConnectionProfileMongodbProfileStandardConnectionFormat(original["standardConnectionFormat"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatastreamConnectionProfileMongodbProfileHostAddresses(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"hostname": flattenDatastreamConnectionProfileMongodbProfileHostAddressesHostname(original["hostname"], d, config),
+			"port":     flattenDatastreamConnectionProfileMongodbProfileHostAddressesPort(original["port"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDatastreamConnectionProfileMongodbProfileHostAddressesHostname(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileHostAddressesPort(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileReplicaSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileUsername(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileMongodbProfilePassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("mongodb_profile.0.password")
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileSecretManagerStoredPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileSslConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["client_key"] =
+		flattenDatastreamConnectionProfileMongodbProfileSslConfigClientKey(original["clientKey"], d, config)
+	transformed["client_key_set"] =
+		flattenDatastreamConnectionProfileMongodbProfileSslConfigClientKeySet(original["clientKeySet"], d, config)
+	transformed["client_certificate"] =
+		flattenDatastreamConnectionProfileMongodbProfileSslConfigClientCertificate(original["clientCertificate"], d, config)
+	transformed["client_certificate_set"] =
+		flattenDatastreamConnectionProfileMongodbProfileSslConfigClientCertificateSet(original["clientCertificateSet"], d, config)
+	transformed["ca_certificate"] =
+		flattenDatastreamConnectionProfileMongodbProfileSslConfigCaCertificate(original["caCertificate"], d, config)
+	transformed["ca_certificate_set"] =
+		flattenDatastreamConnectionProfileMongodbProfileSslConfigCaCertificateSet(original["caCertificateSet"], d, config)
+	transformed["secret_manager_stored_client_key"] =
+		flattenDatastreamConnectionProfileMongodbProfileSslConfigSecretManagerStoredClientKey(original["secretManagerStoredClientKey"], d, config)
+	return []interface{}{transformed}
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileSslConfigClientKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("mongodb_profile.0.ssl_config.0.client_key")
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileSslConfigClientKeySet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileSslConfigClientCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("mongodb_profile.0.ssl_config.0.client_certificate")
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileSslConfigClientCertificateSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileSslConfigCaCertificate(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("mongodb_profile.0.ssl_config.0.ca_certificate")
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileSslConfigCaCertificateSet(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileSslConfigSecretManagerStoredClientKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileSrvConnectionFormat(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("mongodb_profile.0.srv_connection_format")
+}
+
+func flattenDatastreamConnectionProfileMongodbProfileStandardConnectionFormat(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["direct_connection"] =
+		flattenDatastreamConnectionProfileMongodbProfileStandardConnectionFormatDirectConnection(original["directConnection"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDatastreamConnectionProfileMongodbProfileStandardConnectionFormatDirectConnection(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2162,6 +2484,255 @@ func expandDatastreamConnectionProfileSqlServerProfileDatabase(v interface{}, d 
 	return v, nil
 }
 
+func expandDatastreamConnectionProfileMongodbProfile(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedHostAddresses, err := expandDatastreamConnectionProfileMongodbProfileHostAddresses(original["host_addresses"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedHostAddresses); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["hostAddresses"] = transformedHostAddresses
+	}
+
+	transformedReplicaSet, err := expandDatastreamConnectionProfileMongodbProfileReplicaSet(original["replica_set"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedReplicaSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["replicaSet"] = transformedReplicaSet
+	}
+
+	transformedUsername, err := expandDatastreamConnectionProfileMongodbProfileUsername(original["username"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["username"] = transformedUsername
+	}
+
+	transformedPassword, err := expandDatastreamConnectionProfileMongodbProfilePassword(original["password"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["password"] = transformedPassword
+	}
+
+	transformedSecretManagerStoredPassword, err := expandDatastreamConnectionProfileMongodbProfileSecretManagerStoredPassword(original["secret_manager_stored_password"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSecretManagerStoredPassword); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["secretManagerStoredPassword"] = transformedSecretManagerStoredPassword
+	}
+
+	transformedSslConfig, err := expandDatastreamConnectionProfileMongodbProfileSslConfig(original["ssl_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSslConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["sslConfig"] = transformedSslConfig
+	}
+
+	transformedSrvConnectionFormat, err := expandDatastreamConnectionProfileMongodbProfileSrvConnectionFormat(original["srv_connection_format"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSrvConnectionFormat); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["srvConnectionFormat"] = transformedSrvConnectionFormat
+	}
+
+	transformedStandardConnectionFormat, err := expandDatastreamConnectionProfileMongodbProfileStandardConnectionFormat(original["standard_connection_format"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedStandardConnectionFormat); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["standardConnectionFormat"] = transformedStandardConnectionFormat
+	}
+
+	return transformed, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileHostAddresses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedHostname, err := expandDatastreamConnectionProfileMongodbProfileHostAddressesHostname(original["hostname"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedHostname); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["hostname"] = transformedHostname
+		}
+
+		transformedPort, err := expandDatastreamConnectionProfileMongodbProfileHostAddressesPort(original["port"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPort); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["port"] = transformedPort
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileHostAddressesHostname(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileHostAddressesPort(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileReplicaSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfilePassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileSecretManagerStoredPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileSslConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedClientKey, err := expandDatastreamConnectionProfileMongodbProfileSslConfigClientKey(original["client_key"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientKey"] = transformedClientKey
+	}
+
+	transformedClientKeySet, err := expandDatastreamConnectionProfileMongodbProfileSslConfigClientKeySet(original["client_key_set"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientKeySet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientKeySet"] = transformedClientKeySet
+	}
+
+	transformedClientCertificate, err := expandDatastreamConnectionProfileMongodbProfileSslConfigClientCertificate(original["client_certificate"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientCertificate"] = transformedClientCertificate
+	}
+
+	transformedClientCertificateSet, err := expandDatastreamConnectionProfileMongodbProfileSslConfigClientCertificateSet(original["client_certificate_set"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedClientCertificateSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["clientCertificateSet"] = transformedClientCertificateSet
+	}
+
+	transformedCaCertificate, err := expandDatastreamConnectionProfileMongodbProfileSslConfigCaCertificate(original["ca_certificate"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCaCertificate); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["caCertificate"] = transformedCaCertificate
+	}
+
+	transformedCaCertificateSet, err := expandDatastreamConnectionProfileMongodbProfileSslConfigCaCertificateSet(original["ca_certificate_set"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCaCertificateSet); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["caCertificateSet"] = transformedCaCertificateSet
+	}
+
+	transformedSecretManagerStoredClientKey, err := expandDatastreamConnectionProfileMongodbProfileSslConfigSecretManagerStoredClientKey(original["secret_manager_stored_client_key"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSecretManagerStoredClientKey); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["secretManagerStoredClientKey"] = transformedSecretManagerStoredClientKey
+	}
+
+	return transformed, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileSslConfigClientKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileSslConfigClientKeySet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileSslConfigClientCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileSslConfigClientCertificateSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileSslConfigCaCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileSslConfigCaCertificateSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileSslConfigSecretManagerStoredClientKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileSrvConnectionFormat(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileStandardConnectionFormat(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedDirectConnection, err := expandDatastreamConnectionProfileMongodbProfileStandardConnectionFormatDirectConnection(original["direct_connection"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDirectConnection); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["directConnection"] = transformedDirectConnection
+	}
+
+	return transformed, nil
+}
+
+func expandDatastreamConnectionProfileMongodbProfileStandardConnectionFormatDirectConnection(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandDatastreamConnectionProfileForwardSshConnectivity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -2267,4 +2838,20 @@ func expandDatastreamConnectionProfileEffectiveLabels(v interface{}, d tpgresour
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func resourceDatastreamConnectionProfileEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	// Custom encoder require because of:
+	// Due to a bug, NestedObject fields will currently be sent as null if unset (rather than being omitted.)
+	// See: https://github.com/hashicorp/terraform-provider-google/issues/13201
+
+	mongodbProfile := obj["mongodbProfile"].(map[string]interface{})
+	if mongodbProfile != nil {
+		srvConnectionFormat := mongodbProfile["srvConnectionFormat"]
+		if srvConnectionFormat != nil {
+			mongodbProfile["srvConnectionFormat"] = map[string]interface{}{}
+		}
+	}
+
+	return obj, nil
 }
