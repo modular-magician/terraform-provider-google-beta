@@ -57,6 +57,29 @@ func ResourceGeminiLoggingSettingBinding() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"location": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+					"logging_setting_id": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"setting_binding_id": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"logging_setting_id": {
 				Type:        schema.TypeString,
@@ -157,11 +180,11 @@ func resourceGeminiLoggingSettingBindingCreate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("product"); !tpgresource.IsEmptyValue(reflect.ValueOf(productProp)) && (ok || !reflect.DeepEqual(v, productProp)) {
 		obj["product"] = productProp
 	}
-	labelsProp, err := expandGeminiLoggingSettingBindingEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandGeminiLoggingSettingBindingEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	lockName, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/loggingSettings/{{logging_setting_id}}")
@@ -294,6 +317,35 @@ func resourceGeminiLoggingSettingBindingRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading LoggingSettingBinding: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil && identity != nil {
+		if v, ok := identity.GetOk("location"); ok && v != "" {
+			err = identity.Set("location", d.Get("location").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("logging_setting_id"); ok && v != "" {
+			err = identity.Set("logging_setting_id", d.Get("logging_setting_id").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting logging_setting_id: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("setting_binding_id"); ok && v != "" {
+			err = identity.Set("setting_binding_id", d.Get("setting_binding_id").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting setting_binding_id: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("project"); ok && v != "" {
+			err = identity.Set("project", d.Get("project").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] identity not set: %s", err)
+	}
 	return nil
 }
 
@@ -325,11 +377,11 @@ func resourceGeminiLoggingSettingBindingUpdate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("product"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, productProp)) {
 		obj["product"] = productProp
 	}
-	labelsProp, err := expandGeminiLoggingSettingBindingEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandGeminiLoggingSettingBindingEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	lockName, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/loggingSettings/{{logging_setting_id}}")

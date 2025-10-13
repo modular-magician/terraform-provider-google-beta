@@ -56,6 +56,21 @@ func ResourceAppEngineDomainMapping() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"domain_name": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"domain_name": {
 				Type:        schema.TypeString,
@@ -165,11 +180,11 @@ func resourceAppEngineDomainMappingCreate(d *schema.ResourceData, meta interface
 	} else if v, ok := d.GetOkExists("ssl_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(sslSettingsProp)) && (ok || !reflect.DeepEqual(v, sslSettingsProp)) {
 		obj["sslSettings"] = sslSettingsProp
 	}
-	idProp, err := expandAppEngineDomainMappingDomainName(d.Get("domain_name"), d, config)
+	domainNameProp, err := expandAppEngineDomainMappingDomainName(d.Get("domain_name"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("domain_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(idProp)) && (ok || !reflect.DeepEqual(v, idProp)) {
-		obj["id"] = idProp
+	} else if v, ok := d.GetOkExists("domain_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(domainNameProp)) && (ok || !reflect.DeepEqual(v, domainNameProp)) {
+		obj["id"] = domainNameProp
 	}
 
 	lockName, err := tpgresource.ReplaceVars(d, config, "apps/{{project}}")
@@ -302,6 +317,23 @@ func resourceAppEngineDomainMappingRead(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("Error reading DomainMapping: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil && identity != nil {
+		if v, ok := identity.GetOk("domain_name"); ok && v != "" {
+			err = identity.Set("domain_name", d.Get("domain_name").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting domain_name: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("project"); ok && v != "" {
+			err = identity.Set("project", d.Get("project").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] identity not set: %s", err)
+	}
 	return nil
 }
 

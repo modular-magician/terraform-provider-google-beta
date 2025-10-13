@@ -165,6 +165,21 @@ func ResourceComputeFirewall() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"name": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:         schema.TypeString,
@@ -475,17 +490,17 @@ func resourceComputeFirewallCreate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	obj := make(map[string]interface{})
-	allowedProp, err := expandComputeFirewallAllow(d.Get("allow"), d, config)
+	allowProp, err := expandComputeFirewallAllow(d.Get("allow"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("allow"); !tpgresource.IsEmptyValue(reflect.ValueOf(allowedProp)) && (ok || !reflect.DeepEqual(v, allowedProp)) {
-		obj["allowed"] = allowedProp
+	} else if v, ok := d.GetOkExists("allow"); !tpgresource.IsEmptyValue(reflect.ValueOf(allowProp)) && (ok || !reflect.DeepEqual(v, allowProp)) {
+		obj["allowed"] = allowProp
 	}
-	deniedProp, err := expandComputeFirewallDeny(d.Get("deny"), d, config)
+	denyProp, err := expandComputeFirewallDeny(d.Get("deny"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("deny"); !tpgresource.IsEmptyValue(reflect.ValueOf(deniedProp)) && (ok || !reflect.DeepEqual(v, deniedProp)) {
-		obj["denied"] = deniedProp
+	} else if v, ok := d.GetOkExists("deny"); !tpgresource.IsEmptyValue(reflect.ValueOf(denyProp)) && (ok || !reflect.DeepEqual(v, denyProp)) {
+		obj["denied"] = denyProp
 	}
 	descriptionProp, err := expandComputeFirewallDescription(d.Get("description"), d, config)
 	if err != nil {
@@ -721,7 +736,23 @@ func resourceComputeFirewallRead(d *schema.ResourceData, meta interface{}) error
 	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
 		return fmt.Errorf("Error reading Firewall: %s", err)
 	}
-
+	identity, err := d.Identity()
+	if err != nil && identity != nil {
+		if v, ok := identity.GetOk("name"); ok && v != "" {
+			err = identity.Set("name", d.Get("name").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("project"); ok && v != "" {
+			err = identity.Set("project", d.Get("project").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] identity not set: %s", err)
+	}
 	return nil
 }
 
@@ -741,17 +772,17 @@ func resourceComputeFirewallUpdate(d *schema.ResourceData, meta interface{}) err
 	billingProject = project
 
 	obj := make(map[string]interface{})
-	allowedProp, err := expandComputeFirewallAllow(d.Get("allow"), d, config)
+	allowProp, err := expandComputeFirewallAllow(d.Get("allow"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("allow"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, allowedProp)) {
-		obj["allowed"] = allowedProp
+	} else if v, ok := d.GetOkExists("allow"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, allowProp)) {
+		obj["allowed"] = allowProp
 	}
-	deniedProp, err := expandComputeFirewallDeny(d.Get("deny"), d, config)
+	denyProp, err := expandComputeFirewallDeny(d.Get("deny"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("deny"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, deniedProp)) {
-		obj["denied"] = deniedProp
+	} else if v, ok := d.GetOkExists("deny"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, denyProp)) {
+		obj["denied"] = denyProp
 	}
 	descriptionProp, err := expandComputeFirewallDescription(d.Get("description"), d, config)
 	if err != nil {

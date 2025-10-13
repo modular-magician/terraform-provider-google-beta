@@ -89,28 +89,44 @@ func ResourceSecretManagerSecretVersion() *schema.Resource {
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"version": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
-			"secret_data": {
-				Type:        schema.TypeString,
+			"secret_data_wo_version": {
+				Type:        schema.TypeInt,
 				Optional:    true,
 				ForceNew:    true,
-				Description: `The secret data. Must be no larger than 64KiB.`,
-				Sensitive:   true,
+				Description: `Triggers update of secret data write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+				Default:     0,
+			},
+			"secret_data": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				ForceNew:      true,
+				Description:   `The secret data. Must be no larger than 64KiB.`,
+				Sensitive:     true,
+				ConflictsWith: []string{},
 			},
 			"secret_data_wo": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				Description:   `The secret data. Must be no larger than 64KiB. Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+				Description:   `The secret data. Must be no larger than 64KiB. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
 				WriteOnly:     true,
 				ConflictsWith: []string{"secret_data"},
-				RequiredWith:  []string{"secret_data_wo_version"},
-			},
-			"secret_data_wo_version": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				Description:  `Triggers update of secret_data_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
-				RequiredWith: []string{"secret_data_wo"},
+				RequiredWith:  []string{},
 			},
 
 			"secret": {
@@ -178,11 +194,11 @@ func resourceSecretManagerSecretVersionCreate(d *schema.ResourceData, meta inter
 	}
 
 	obj := make(map[string]interface{})
-	stateProp, err := expandSecretManagerSecretVersionEnabled(d.Get("enabled"), d, config)
+	enabledProp, err := expandSecretManagerSecretVersionEnabled(d.Get("enabled"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(stateProp)) && (ok || !reflect.DeepEqual(v, stateProp)) {
-		obj["state"] = stateProp
+	} else if v, ok := d.GetOkExists("enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(enabledProp)) && (ok || !reflect.DeepEqual(v, enabledProp)) {
+		obj["state"] = enabledProp
 	}
 	payloadProp, err := expandSecretManagerSecretVersionPayload(nil, d, config)
 	if err != nil {
@@ -340,6 +356,23 @@ func resourceSecretManagerSecretVersionRead(d *schema.ResourceData, meta interfa
 		}
 	}
 
+	identity, err := d.Identity()
+	if err != nil && identity != nil {
+		if v, ok := identity.GetOk("version"); ok && v != "" {
+			err = identity.Set("version", d.Get("version").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting version: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("project"); ok && v != "" {
+			err = identity.Set("project", d.Get("project").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] identity not set: %s", err)
+	}
 	return nil
 }
 

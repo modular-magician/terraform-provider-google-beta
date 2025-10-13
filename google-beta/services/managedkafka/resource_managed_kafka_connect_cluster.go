@@ -56,6 +56,25 @@ func ResourceManagedKafkaConnectCluster() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"location": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"connect_cluster_id": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"capacity_config": {
 				Type:        schema.TypeList,
@@ -224,11 +243,11 @@ func resourceManagedKafkaConnectClusterCreate(d *schema.ResourceData, meta inter
 	} else if v, ok := d.GetOkExists("gcp_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(gcpConfigProp)) && (ok || !reflect.DeepEqual(v, gcpConfigProp)) {
 		obj["gcpConfig"] = gcpConfigProp
 	}
-	labelsProp, err := expandManagedKafkaConnectClusterEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandManagedKafkaConnectClusterEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ManagedKafkaBasePath}}projects/{{project}}/locations/{{location}}/connectClusters?connectClusterId={{connect_cluster_id}}")
@@ -360,6 +379,29 @@ func resourceManagedKafkaConnectClusterRead(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("Error reading ConnectCluster: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil && identity != nil {
+		if v, ok := identity.GetOk("location"); ok && v != "" {
+			err = identity.Set("location", d.Get("location").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("connect_cluster_id"); ok && v != "" {
+			err = identity.Set("connect_cluster_id", d.Get("connect_cluster_id").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting connect_cluster_id: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("project"); ok && v != "" {
+			err = identity.Set("project", d.Get("project").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] identity not set: %s", err)
+	}
 	return nil
 }
 
@@ -397,11 +439,11 @@ func resourceManagedKafkaConnectClusterUpdate(d *schema.ResourceData, meta inter
 	} else if v, ok := d.GetOkExists("gcp_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, gcpConfigProp)) {
 		obj["gcpConfig"] = gcpConfigProp
 	}
-	labelsProp, err := expandManagedKafkaConnectClusterEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandManagedKafkaConnectClusterEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ManagedKafkaBasePath}}projects/{{project}}/locations/{{location}}/connectClusters/{{connect_cluster_id}}")

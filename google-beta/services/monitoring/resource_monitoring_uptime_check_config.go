@@ -70,6 +70,21 @@ func ResourceMonitoringUptimeCheckConfig() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"name": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"display_name": {
 				Type:        schema.TypeString,
@@ -172,23 +187,25 @@ func ResourceMonitoringUptimeCheckConfig() *schema.Resource {
 										Description: `The username to authenticate.`,
 									},
 									"password": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: `The password to authenticate.`,
-										Sensitive:   true,
+										Type:         schema.TypeString,
+										Optional:     true,
+										Description:  `The password to authenticate.`,
+										Sensitive:    true,
+										ExactlyOneOf: []string{},
 									},
 									"password_wo": {
 										Type:         schema.TypeString,
 										Optional:     true,
-										Description:  `The password to authenticate. Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+										Description:  `The password to authenticate.`,
 										WriteOnly:    true,
-										ExactlyOneOf: []string{"http_check.0.auth_info.0.password", "http_check.0.auth_info.0.password_wo"},
+										ExactlyOneOf: []string{},
 										RequiredWith: []string{"http_check.0.auth_info.0.password_wo_version"},
 									},
 									"password_wo_version": {
 										Type:         schema.TypeString,
 										Optional:     true,
-										Description:  `Triggers update of password_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+										ForceNew:     true,
+										Description:  `The password write-only version.`,
 										RequiredWith: []string{"http_check.0.auth_info.0.password_wo"},
 									},
 								},
@@ -704,6 +721,23 @@ func resourceMonitoringUptimeCheckConfigRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error reading UptimeCheckConfig: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil && identity != nil {
+		if v, ok := identity.GetOk("name"); ok && v != "" {
+			err = identity.Set("name", d.Get("name").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("project"); ok && v != "" {
+			err = identity.Set("project", d.Get("project").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] identity not set: %s", err)
+	}
 	return nil
 }
 
@@ -1091,22 +1125,22 @@ func flattenMonitoringUptimeCheckConfigHttpCheckAuthInfo(v interface{}, d *schem
 	transformed := make(map[string]interface{})
 	transformed["password"] =
 		flattenMonitoringUptimeCheckConfigHttpCheckAuthInfoPassword(original["password"], d, config)
-	transformed["username"] =
-		flattenMonitoringUptimeCheckConfigHttpCheckAuthInfoUsername(original["username"], d, config)
 	transformed["password_wo_version"] =
 		flattenMonitoringUptimeCheckConfigHttpCheckAuthInfoPasswordWoVersion(original["passwordWoVersion"], d, config)
+	transformed["username"] =
+		flattenMonitoringUptimeCheckConfigHttpCheckAuthInfoUsername(original["username"], d, config)
 	return []interface{}{transformed}
 }
 func flattenMonitoringUptimeCheckConfigHttpCheckAuthInfoPassword(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("http_check.0.auth_info.0.password")
 }
 
-func flattenMonitoringUptimeCheckConfigHttpCheckAuthInfoUsername(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
 func flattenMonitoringUptimeCheckConfigHttpCheckAuthInfoPasswordWoVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("http_check.0.auth_info.0.password_wo_version")
+}
+
+func flattenMonitoringUptimeCheckConfigHttpCheckAuthInfoUsername(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenMonitoringUptimeCheckConfigHttpCheckServiceAgentAuthentication(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1627,18 +1661,11 @@ func expandMonitoringUptimeCheckConfigHttpCheckAuthInfo(v interface{}, d tpgreso
 		transformed["password"] = transformedPassword
 	}
 
-	transformedUsername, err := expandMonitoringUptimeCheckConfigHttpCheckAuthInfoUsername(original["username"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["username"] = transformedUsername
-	}
-
 	transformedPasswordWo, err := expandMonitoringUptimeCheckConfigHttpCheckAuthInfoPasswordWo(original["password_wo"], d, config)
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedPasswordWo); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["password"] = transformedPasswordWo
+		transformed["passwordWo"] = transformedPasswordWo
 	}
 
 	transformedPasswordWoVersion, err := expandMonitoringUptimeCheckConfigHttpCheckAuthInfoPasswordWoVersion(original["password_wo_version"], d, config)
@@ -1648,14 +1675,17 @@ func expandMonitoringUptimeCheckConfigHttpCheckAuthInfo(v interface{}, d tpgreso
 		transformed["passwordWoVersion"] = transformedPasswordWoVersion
 	}
 
+	transformedUsername, err := expandMonitoringUptimeCheckConfigHttpCheckAuthInfoUsername(original["username"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUsername); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["username"] = transformedUsername
+	}
+
 	return transformed, nil
 }
 
 func expandMonitoringUptimeCheckConfigHttpCheckAuthInfoPassword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandMonitoringUptimeCheckConfigHttpCheckAuthInfoUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1664,6 +1694,10 @@ func expandMonitoringUptimeCheckConfigHttpCheckAuthInfoPasswordWo(v interface{},
 }
 
 func expandMonitoringUptimeCheckConfigHttpCheckAuthInfoPasswordWoVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandMonitoringUptimeCheckConfigHttpCheckAuthInfoUsername(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -55,6 +55,25 @@ func ResourceIAM3PrincipalAccessBoundaryPolicy() *schema.Resource {
 			tpgresource.SetAnnotationsDiff,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"organization": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"location": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"principal_access_boundary_policy_id": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"location": {
 				Type:        schema.TypeString,
@@ -204,11 +223,11 @@ func resourceIAM3PrincipalAccessBoundaryPolicyCreate(d *schema.ResourceData, met
 	} else if v, ok := d.GetOkExists("details"); !tpgresource.IsEmptyValue(reflect.ValueOf(detailsProp)) && (ok || !reflect.DeepEqual(v, detailsProp)) {
 		obj["details"] = detailsProp
 	}
-	annotationsProp, err := expandIAM3PrincipalAccessBoundaryPolicyEffectiveAnnotations(d.Get("effective_annotations"), d, config)
+	effectiveAnnotationsProp, err := expandIAM3PrincipalAccessBoundaryPolicyEffectiveAnnotations(d.Get("effective_annotations"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(annotationsProp)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
-		obj["annotations"] = annotationsProp
+	} else if v, ok := d.GetOkExists("effective_annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveAnnotationsProp)) && (ok || !reflect.DeepEqual(v, effectiveAnnotationsProp)) {
+		obj["annotations"] = effectiveAnnotationsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{IAM3BasePath}}organizations/{{organization}}/locations/{{location}}/principalAccessBoundaryPolicies?principalAccessBoundaryPolicyId={{principal_access_boundary_policy_id}}")
@@ -321,6 +340,29 @@ func resourceIAM3PrincipalAccessBoundaryPolicyRead(d *schema.ResourceData, meta 
 		return fmt.Errorf("Error reading PrincipalAccessBoundaryPolicy: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil && identity != nil {
+		if v, ok := identity.GetOk("organization"); ok && v != "" {
+			err = identity.Set("organization", d.Get("organization").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting organization: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("location"); ok && v != "" {
+			err = identity.Set("location", d.Get("location").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("principal_access_boundary_policy_id"); ok && v != "" {
+			err = identity.Set("principal_access_boundary_policy_id", d.Get("principal_access_boundary_policy_id").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting principal_access_boundary_policy_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] identity not set: %s", err)
+	}
 	return nil
 }
 
@@ -347,11 +389,11 @@ func resourceIAM3PrincipalAccessBoundaryPolicyUpdate(d *schema.ResourceData, met
 	} else if v, ok := d.GetOkExists("details"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, detailsProp)) {
 		obj["details"] = detailsProp
 	}
-	annotationsProp, err := expandIAM3PrincipalAccessBoundaryPolicyEffectiveAnnotations(d.Get("effective_annotations"), d, config)
+	effectiveAnnotationsProp, err := expandIAM3PrincipalAccessBoundaryPolicyEffectiveAnnotations(d.Get("effective_annotations"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
-		obj["annotations"] = annotationsProp
+	} else if v, ok := d.GetOkExists("effective_annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveAnnotationsProp)) {
+		obj["annotations"] = effectiveAnnotationsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{IAM3BasePath}}organizations/{{organization}}/locations/{{location}}/principalAccessBoundaryPolicies/{{principal_access_boundary_policy_id}}")

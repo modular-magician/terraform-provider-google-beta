@@ -135,6 +135,21 @@ func ResourceBigqueryDataTransferConfig() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"name": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"data_source_id": {
 				Type:        schema.TypeString,
@@ -287,24 +302,25 @@ to a different credential configuration in the config will require an apply to u
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"secret_access_key": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: `The Secret Access Key of the AWS account transferring data from.`,
-							Sensitive:   true,
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `The Secret Access Key of the AWS account transferring data from.`,
+							Sensitive:     true,
+							ConflictsWith: []string{"sensitive_params.0.secret_access_key_wo"},
+							AtLeastOneOf:  []string{"sensitive_params.0.secret_access_key", "sensitive_params.0.secret_access_key_wo"},
 						},
 						"secret_access_key_wo": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Description: `The Secret Access Key of the AWS account transferring data from.
- Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
-							WriteOnly:    true,
-							ExactlyOneOf: []string{"sensitive_params.0.secret_access_key", "sensitive_params.0.secret_access_key_wo"},
-							RequiredWith: []string{"sensitive_params.0.secret_access_key_wo_version"},
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `The Secret Access Key of the AWS account transferring data from.`,
+							WriteOnly:     true,
+							ConflictsWith: []string{"sensitive_params.0.secret_access_key"},
+							AtLeastOneOf:  []string{"sensitive_params.0.secret_access_key_wo", "sensitive_params.0.secret_access_key"},
 						},
 						"secret_access_key_wo_version": {
-							Type:         schema.TypeString,
+							Type:         schema.TypeInt,
 							Optional:     true,
-							Description:  `Triggers update of secret_access_key_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+							Description:  `The version of the sensitive params - used to trigger updates of the write-only params. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
 							RequiredWith: []string{"sensitive_params.0.secret_access_key_wo"},
 						},
 					},
@@ -563,6 +579,23 @@ func resourceBigqueryDataTransferConfigRead(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil && identity != nil {
+		if v, ok := identity.GetOk("name"); ok && v != "" {
+			err = identity.Set("name", d.Get("name").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("project"); ok && v != "" {
+			err = identity.Set("project", d.Get("project").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] identity not set: %s", err)
+	}
 	return nil
 }
 

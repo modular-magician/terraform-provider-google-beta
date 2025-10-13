@@ -55,6 +55,21 @@ func ResourceOSConfigV2PolicyOrchestratorForOrganization() *schema.Resource {
 			tpgresource.SetLabelsDiff,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"organization_id": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"policy_orchestrator_id": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"action": {
 				Type:     schema.TypeString,
@@ -1742,11 +1757,11 @@ func resourceOSConfigV2PolicyOrchestratorForOrganizationCreate(d *schema.Resourc
 	} else if v, ok := d.GetOkExists("orchestrated_resource"); !tpgresource.IsEmptyValue(reflect.ValueOf(orchestratedResourceProp)) && (ok || !reflect.DeepEqual(v, orchestratedResourceProp)) {
 		obj["orchestratedResource"] = orchestratedResourceProp
 	}
-	labelsProp, err := expandOSConfigV2PolicyOrchestratorForOrganizationEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandOSConfigV2PolicyOrchestratorForOrganizationEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{OSConfigV2BasePath}}organizations/{{organization_id}}/locations/global/policyOrchestrators?policyOrchestratorId={{policy_orchestrator_id}}")
@@ -1874,6 +1889,23 @@ func resourceOSConfigV2PolicyOrchestratorForOrganizationRead(d *schema.ResourceD
 		return fmt.Errorf("Error reading PolicyOrchestratorForOrganization: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil && identity != nil {
+		if v, ok := identity.GetOk("organization_id"); ok && v != "" {
+			err = identity.Set("organization_id", d.Get("organization_id").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting organization_id: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("policy_orchestrator_id"); ok && v != "" {
+			err = identity.Set("policy_orchestrator_id", d.Get("policy_orchestrator_id").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting policy_orchestrator_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] identity not set: %s", err)
+	}
 	return nil
 }
 
@@ -1918,11 +1950,11 @@ func resourceOSConfigV2PolicyOrchestratorForOrganizationUpdate(d *schema.Resourc
 	} else if v, ok := d.GetOkExists("orchestrated_resource"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, orchestratedResourceProp)) {
 		obj["orchestratedResource"] = orchestratedResourceProp
 	}
-	labelsProp, err := expandOSConfigV2PolicyOrchestratorForOrganizationEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandOSConfigV2PolicyOrchestratorForOrganizationEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{OSConfigV2BasePath}}organizations/{{organization_id}}/locations/global/policyOrchestrators/{{policy_orchestrator_id}}")

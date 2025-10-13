@@ -58,6 +58,25 @@ func ResourceRedisCluster() *schema.Resource {
 			tpgresource.DefaultProviderRegion,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"name": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"region": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
@@ -73,9 +92,10 @@ projects/{projectId}/locations/{locationId}/clusters/{clusterId}`,
 				Description: `Required. Number of shards for the Redis cluster.`,
 			},
 			"allow_fewer_zones_deployment": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				ForceNew: true,
+				Type:       schema.TypeBool,
+				Optional:   true,
+				Deprecated: "allow_fewer_zone_deployment flag will no longer be a user settable field, default behaviour will be as if set to true",
+				ForceNew:   true,
 				Description: `Allows customers to specify if they are okay with deploying a multi-zone
 cluster in less than 3 zones. Once set, if there is a zonal outage during
 the cluster creation, the cluster will only be deployed in 2 zones, and
@@ -1086,6 +1106,29 @@ func resourceRedisClusterRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Cluster: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil && identity != nil {
+		if v, ok := identity.GetOk("name"); ok && v != "" {
+			err = identity.Set("name", d.Get("name").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("region"); ok && v != "" {
+			err = identity.Set("region", d.Get("region").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting region: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("project"); ok && v != "" {
+			err = identity.Set("project", d.Get("project").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] identity not set: %s", err)
+	}
 	return nil
 }
 

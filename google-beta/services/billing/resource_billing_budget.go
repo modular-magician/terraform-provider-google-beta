@@ -74,6 +74,21 @@ func ResourceBillingBudget() *schema.Resource {
 			},
 		},
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"name": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"billing_account": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"amount": {
 				Type:        schema.TypeList,
@@ -464,11 +479,11 @@ func resourceBillingBudgetCreate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("threshold_rules"); !tpgresource.IsEmptyValue(reflect.ValueOf(thresholdRulesProp)) && (ok || !reflect.DeepEqual(v, thresholdRulesProp)) {
 		obj["thresholdRules"] = thresholdRulesProp
 	}
-	notificationsRuleProp, err := expandBillingBudgetAllUpdatesRule(d.Get("all_updates_rule"), d, config)
+	allUpdatesRuleProp, err := expandBillingBudgetAllUpdatesRule(d.Get("all_updates_rule"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("all_updates_rule"); !tpgresource.IsEmptyValue(reflect.ValueOf(notificationsRuleProp)) && (ok || !reflect.DeepEqual(v, notificationsRuleProp)) {
-		obj["notificationsRule"] = notificationsRuleProp
+	} else if v, ok := d.GetOkExists("all_updates_rule"); !tpgresource.IsEmptyValue(reflect.ValueOf(allUpdatesRuleProp)) && (ok || !reflect.DeepEqual(v, allUpdatesRuleProp)) {
+		obj["notificationsRule"] = allUpdatesRuleProp
 	}
 	ownershipScopeProp, err := expandBillingBudgetOwnershipScope(d.Get("ownership_scope"), d, config)
 	if err != nil {
@@ -577,6 +592,23 @@ func resourceBillingBudgetRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Budget: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err != nil && identity != nil {
+		if v, ok := identity.GetOk("name"); ok && v != "" {
+			err = identity.Set("name", d.Get("name").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("billing_account"); ok && v != "" {
+			err = identity.Set("billing_account", d.Get("billing_account").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting billing_account: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] identity not set: %s", err)
+	}
 	return nil
 }
 
@@ -614,11 +646,11 @@ func resourceBillingBudgetUpdate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("threshold_rules"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, thresholdRulesProp)) {
 		obj["thresholdRules"] = thresholdRulesProp
 	}
-	notificationsRuleProp, err := expandBillingBudgetAllUpdatesRule(d.Get("all_updates_rule"), d, config)
+	allUpdatesRuleProp, err := expandBillingBudgetAllUpdatesRule(d.Get("all_updates_rule"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("all_updates_rule"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, notificationsRuleProp)) {
-		obj["notificationsRule"] = notificationsRuleProp
+	} else if v, ok := d.GetOkExists("all_updates_rule"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, allUpdatesRuleProp)) {
+		obj["notificationsRule"] = allUpdatesRuleProp
 	}
 	ownershipScopeProp, err := expandBillingBudgetOwnershipScope(d.Get("ownership_scope"), d, config)
 	if err != nil {
