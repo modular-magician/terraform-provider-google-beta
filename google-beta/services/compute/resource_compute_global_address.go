@@ -96,6 +96,19 @@ address or omitted to allow GCP to choose a valid one for you.`,
 				ForceNew:    true,
 				Description: `An optional description of this resource.`,
 			},
+			"ip_collection": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `Reference to the source of external IPv4 addresses, like a PublicDelegatedPrefix (PDP) for BYOIP.
+The PDP must support enhanced IPv4 allocations.
+
+Use one of the following formats to specify a PDP when reserving an external IPv4 address using BYOIP:
+* Full resource URL, as in 'https://www.googleapis.com/compute/v1/projects/{{projectId}}/regions/{{region}}/publicDelegatedPrefixes/{{pdp-name}}'
+* Partial URL, as in:
+  * 'projects/{{projectId}}/regions/{{region}}/publicDelegatedPrefixes/{{pdp-name}}'
+  * 'regions/{{region}}/publicDelegatedPrefixes/{{pdp-name}}'`,
+			},
 			"ip_version": {
 				Type:             schema.TypeString,
 				Optional:         true,
@@ -103,6 +116,15 @@ address or omitted to allow GCP to choose a valid one for you.`,
 				ValidateFunc:     verify.ValidateEnum([]string{"IPV4", "IPV6", ""}),
 				DiffSuppressFunc: tpgresource.EmptyOrDefaultStringSuppress("IPV4"),
 				Description:      `The IP Version that will be used by this address. The default value is 'IPV4'. Possible values: ["IPV4", "IPV6"]`,
+			},
+			"ipv6_endpoint_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"VM", "NETLB", ""}),
+				Description: `The endpoint type of this address, which should be VM or NETLB. This is
+used for deciding which type of endpoint this address can be used after
+the external IPv6 address reservation. Possible values: ["VM", "NETLB"]`,
 			},
 			"labels": {
 				Type:     schema.TypeMap,
@@ -125,6 +147,16 @@ any reserved IP ranges referring to it.
 
 This should only be set when using an Internal address.`,
 			},
+			"network_tier": {
+				Type:         schema.TypeString,
+				Computed:     true,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"PREMIUM", "STANDARD", ""}),
+				Description: `The networking tier used for configuring this address. If this field is not
+specified, it is assumed to be PREMIUM.
+This argument should not be used when configuring Internal addresses, because [network tier cannot be set for internal traffic; it's always Premium](https://cloud.google.com/network-tiers/docs/overview). Possible values: ["PREMIUM", "STANDARD"]`,
+			},
 			"prefix_length": {
 				Type:     schema.TypeInt,
 				Computed: true,
@@ -145,6 +177,17 @@ when purpose=PRIVATE_SERVICE_CONNECT`,
 * VPC_PEERING - for peer networks
 
 * PRIVATE_SERVICE_CONNECT - for ([Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html) only) Private Service Connect networks`,
+			},
+			"subnetwork": {
+				Type:             schema.TypeString,
+				Computed:         true,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				Description: `The URL of the subnetwork in which to reserve the address. If an IP
+address is specified, it must be within the subnetwork's IP range.
+This field can only be used with INTERNAL type with
+GCE_ENDPOINT/DNS_RESOLVER purposes.`,
 			},
 			"creation_timestamp": {
 				Type:        schema.TypeString,
@@ -223,6 +266,18 @@ func resourceComputeGlobalAddressCreate(d *schema.ResourceData, meta interface{}
 	} else if v, ok := d.GetOkExists("ip_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipVersionProp)) && (ok || !reflect.DeepEqual(v, ipVersionProp)) {
 		obj["ipVersion"] = ipVersionProp
 	}
+	ipv6EndpointTypeProp, err := expandComputeGlobalAddressIpv6EndpointType(d.Get("ipv6_endpoint_type"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("ipv6_endpoint_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipv6EndpointTypeProp)) && (ok || !reflect.DeepEqual(v, ipv6EndpointTypeProp)) {
+		obj["ipv6EndpointType"] = ipv6EndpointTypeProp
+	}
+	networkTierProp, err := expandComputeGlobalAddressNetworkTier(d.Get("network_tier"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("network_tier"); !tpgresource.IsEmptyValue(reflect.ValueOf(networkTierProp)) && (ok || !reflect.DeepEqual(v, networkTierProp)) {
+		obj["networkTier"] = networkTierProp
+	}
 	prefixLengthProp, err := expandComputeGlobalAddressPrefixLength(d.Get("prefix_length"), d, config)
 	if err != nil {
 		return err
@@ -241,11 +296,23 @@ func resourceComputeGlobalAddressCreate(d *schema.ResourceData, meta interface{}
 	} else if v, ok := d.GetOkExists("purpose"); !tpgresource.IsEmptyValue(reflect.ValueOf(purposeProp)) && (ok || !reflect.DeepEqual(v, purposeProp)) {
 		obj["purpose"] = purposeProp
 	}
+	subnetworkProp, err := expandComputeGlobalAddressSubnetwork(d.Get("subnetwork"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("subnetwork"); !tpgresource.IsEmptyValue(reflect.ValueOf(subnetworkProp)) && (ok || !reflect.DeepEqual(v, subnetworkProp)) {
+		obj["subnetwork"] = subnetworkProp
+	}
 	networkProp, err := expandComputeGlobalAddressNetwork(d.Get("network"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("network"); !tpgresource.IsEmptyValue(reflect.ValueOf(networkProp)) && (ok || !reflect.DeepEqual(v, networkProp)) {
 		obj["network"] = networkProp
+	}
+	ipCollectionProp, err := expandComputeGlobalAddressIpCollection(d.Get("ip_collection"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("ip_collection"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipCollectionProp)) && (ok || !reflect.DeepEqual(v, ipCollectionProp)) {
+		obj["ipCollection"] = ipCollectionProp
 	}
 	effectiveLabelsProp, err := expandComputeGlobalAddressEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -438,6 +505,9 @@ func resourceComputeGlobalAddressRead(d *schema.ResourceData, meta interface{}) 
 	if err := d.Set("ip_version", flattenComputeGlobalAddressIpVersion(res["ipVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalAddress: %s", err)
 	}
+	if err := d.Set("network_tier", flattenComputeGlobalAddressNetworkTier(res["networkTier"], d, config)); err != nil {
+		return fmt.Errorf("Error reading GlobalAddress: %s", err)
+	}
 	if err := d.Set("prefix_length", flattenComputeGlobalAddressPrefixLength(res["prefixLength"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalAddress: %s", err)
 	}
@@ -447,7 +517,13 @@ func resourceComputeGlobalAddressRead(d *schema.ResourceData, meta interface{}) 
 	if err := d.Set("purpose", flattenComputeGlobalAddressPurpose(res["purpose"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalAddress: %s", err)
 	}
+	if err := d.Set("subnetwork", flattenComputeGlobalAddressSubnetwork(res["subnetwork"], d, config)); err != nil {
+		return fmt.Errorf("Error reading GlobalAddress: %s", err)
+	}
 	if err := d.Set("network", flattenComputeGlobalAddressNetwork(res["network"], d, config)); err != nil {
+		return fmt.Errorf("Error reading GlobalAddress: %s", err)
+	}
+	if err := d.Set("ip_collection", flattenComputeGlobalAddressIpCollection(res["ipCollection"], d, config)); err != nil {
 		return fmt.Errorf("Error reading GlobalAddress: %s", err)
 	}
 	if err := d.Set("terraform_labels", flattenComputeGlobalAddressTerraformLabels(res["labels"], d, config)); err != nil {
@@ -652,6 +728,10 @@ func flattenComputeGlobalAddressIpVersion(v interface{}, d *schema.ResourceData,
 	return v
 }
 
+func flattenComputeGlobalAddressNetworkTier(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeGlobalAddressPrefixLength(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
@@ -677,11 +757,22 @@ func flattenComputeGlobalAddressPurpose(v interface{}, d *schema.ResourceData, c
 	return v
 }
 
+func flattenComputeGlobalAddressSubnetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	return tpgresource.ConvertSelfLinkToV1(v.(string))
+}
+
 func flattenComputeGlobalAddressNetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
 	}
 	return tpgresource.ConvertSelfLinkToV1(v.(string))
+}
+
+func flattenComputeGlobalAddressIpCollection(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func flattenComputeGlobalAddressTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -723,6 +814,14 @@ func expandComputeGlobalAddressIpVersion(v interface{}, d tpgresource.TerraformR
 	return v, nil
 }
 
+func expandComputeGlobalAddressIpv6EndpointType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeGlobalAddressNetworkTier(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandComputeGlobalAddressPrefixLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -735,12 +834,24 @@ func expandComputeGlobalAddressPurpose(v interface{}, d tpgresource.TerraformRes
 	return v, nil
 }
 
+func expandComputeGlobalAddressSubnetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	f, err := tpgresource.ParseRegionalFieldValue("subnetworks", v.(string), "project", "region", "zone", d, config, true)
+	if err != nil {
+		return nil, fmt.Errorf("Invalid value for subnetwork: %s", err)
+	}
+	return f.RelativeLink(), nil
+}
+
 func expandComputeGlobalAddressNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	f, err := tpgresource.ParseGlobalFieldValue("networks", v.(string), "project", d, config, true)
 	if err != nil {
 		return nil, fmt.Errorf("Invalid value for network: %s", err)
 	}
 	return f.RelativeLink(), nil
+}
+
+func expandComputeGlobalAddressIpCollection(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandComputeGlobalAddressEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {

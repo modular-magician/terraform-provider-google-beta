@@ -49,7 +49,7 @@ func TestAccComputeGlobalAddress_globalAddressBasicExample(t *testing.T) {
 				ResourceName:            "google_compute_global_address.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "network", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"ipv6_endpoint_type", "labels", "network", "subnetwork", "terraform_labels"},
 			},
 		},
 	})
@@ -82,7 +82,7 @@ func TestAccComputeGlobalAddress_globalAddressPrivateServicesConnectExample(t *t
 				ResourceName:            "google_compute_global_address.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "network", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"ipv6_endpoint_type", "labels", "network", "subnetwork", "terraform_labels"},
 			},
 		},
 	})
@@ -103,6 +103,77 @@ resource "google_compute_network" "network" {
   provider      = google-beta
   name          = "tf-test-my-network-name%{random_suffix}"
   auto_create_subnetworks = false
+}
+`, context)
+}
+
+func TestAccComputeGlobalAddress_globalAddressWithNetworkTierExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeGlobalAddressDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeGlobalAddress_globalAddressWithNetworkTierExample(context),
+			},
+			{
+				ResourceName:            "google_compute_global_address.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"ipv6_endpoint_type", "labels", "network", "subnetwork", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccComputeGlobalAddress_globalAddressWithNetworkTierExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_global_address" "default" {
+  name         = "tf-test-global-address-premium%{random_suffix}"
+  address_type = "EXTERNAL"
+  network_tier = "PREMIUM"
+}
+`, context)
+}
+
+func TestAccComputeGlobalAddress_globalAddressIpv6EndpointTypeExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeGlobalAddressDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeGlobalAddress_globalAddressIpv6EndpointTypeExample(context),
+			},
+			{
+				ResourceName:            "google_compute_global_address.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"ipv6_endpoint_type", "labels", "network", "subnetwork", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccComputeGlobalAddress_globalAddressIpv6EndpointTypeExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_global_address" "default" {
+  name               = "tf-test-global-ipv6-address%{random_suffix}"
+  address_type       = "EXTERNAL"
+  ip_version         = "IPV6"
+  ipv6_endpoint_type = "NETLB"
 }
 `, context)
 }
