@@ -51,7 +51,7 @@ func TestAccVmwareengineNetworkPeering_vmwareEngineNetworkPeeringVenExample(t *t
 				ResourceName:            "google_vmwareengine_network_peering.vmw-engine-network-peering",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name"},
+				ImportStateVerifyIgnore: []string{"name", "tags"},
 			},
 		},
 	})
@@ -103,7 +103,7 @@ func TestAccVmwareengineNetworkPeering_vmwareEngineNetworkPeeringStandardExample
 				ResourceName:            "google_vmwareengine_network_peering.vmw-engine-network-peering",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name"},
+				ImportStateVerifyIgnore: []string{"name", "tags"},
 			},
 		},
 	})

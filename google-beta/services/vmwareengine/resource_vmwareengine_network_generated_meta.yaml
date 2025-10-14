@@ -13,6 +13,7 @@ fields:
   - field: 'name'
     provider_only: true
   - field: 'state'
+  - field: 'tags'
   - field: 'type'
   - field: 'uid'
   - field: 'update_time'

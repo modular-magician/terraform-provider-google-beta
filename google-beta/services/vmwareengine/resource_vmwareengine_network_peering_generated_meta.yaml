@@ -17,6 +17,7 @@ fields:
   - field: 'peer_network_type'
   - field: 'state'
   - field: 'state_details'
+  - field: 'tags'
   - field: 'uid'
   - field: 'update_time'
   - field: 'vmware_engine_network'

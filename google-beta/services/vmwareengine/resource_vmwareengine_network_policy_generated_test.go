@@ -52,7 +52,7 @@ func TestAccVmwareengineNetworkPolicy_vmwareEngineNetworkPolicyBasicExample(t *t
 				ResourceName:            "google_vmwareengine_network_policy.vmw-engine-network-policy",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "name"},
+				ImportStateVerifyIgnore: []string{"location", "name", "tags"},
 			},
 		},
 	})
@@ -97,7 +97,7 @@ func TestAccVmwareengineNetworkPolicy_vmwareEngineNetworkPolicyFullExample(t *te
 				ResourceName:            "google_vmwareengine_network_policy.vmw-engine-network-policy",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "name"},
+				ImportStateVerifyIgnore: []string{"location", "name", "tags"},
 			},
 		},
 	})

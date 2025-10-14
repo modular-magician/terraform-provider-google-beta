@@ -47,6 +47,7 @@ fields:
   - field: 'send_deletion_delay_hours_if_zero'
     provider_only: true
   - field: 'state'
+  - field: 'tags'
   - field: 'type'
   - field: 'uid'
   - field: 'update_time'
