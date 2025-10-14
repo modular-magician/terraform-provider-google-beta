@@ -262,11 +262,11 @@ func resourceDataprocAutoscalingPolicyCreate(d *schema.ResourceData, meta interf
 	}
 
 	obj := make(map[string]interface{})
-	idProp, err := expandDataprocAutoscalingPolicyPolicyId(d.Get("policy_id"), d, config)
+	policyIdProp, err := expandDataprocAutoscalingPolicyPolicyId(d.Get("policy_id"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("policy_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(idProp)) && (ok || !reflect.DeepEqual(v, idProp)) {
-		obj["id"] = idProp
+	} else if v, ok := d.GetOkExists("policy_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(policyIdProp)) && (ok || !reflect.DeepEqual(v, policyIdProp)) {
+		obj["id"] = policyIdProp
 	}
 	workerConfigProp, err := expandDataprocAutoscalingPolicyWorkerConfig(d.Get("worker_config"), d, config)
 	if err != nil {
@@ -410,11 +410,11 @@ func resourceDataprocAutoscalingPolicyUpdate(d *schema.ResourceData, meta interf
 	billingProject = project
 
 	obj := make(map[string]interface{})
-	idProp, err := expandDataprocAutoscalingPolicyPolicyId(d.Get("policy_id"), d, config)
+	policyIdProp, err := expandDataprocAutoscalingPolicyPolicyId(d.Get("policy_id"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("policy_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, idProp)) {
-		obj["id"] = idProp
+	} else if v, ok := d.GetOkExists("policy_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, policyIdProp)) {
+		obj["id"] = policyIdProp
 	}
 	workerConfigProp, err := expandDataprocAutoscalingPolicyWorkerConfig(d.Get("worker_config"), d, config)
 	if err != nil {
@@ -745,6 +745,9 @@ func expandDataprocAutoscalingPolicyPolicyId(v interface{}, d tpgresource.Terraf
 }
 
 func expandDataprocAutoscalingPolicyWorkerConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -790,6 +793,9 @@ func expandDataprocAutoscalingPolicyWorkerConfigWeight(v interface{}, d tpgresou
 }
 
 func expandDataprocAutoscalingPolicySecondaryWorkerConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -835,6 +841,9 @@ func expandDataprocAutoscalingPolicySecondaryWorkerConfigWeight(v interface{}, d
 }
 
 func expandDataprocAutoscalingPolicyBasicAlgorithm(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -865,6 +874,9 @@ func expandDataprocAutoscalingPolicyBasicAlgorithmCooldownPeriod(v interface{}, 
 }
 
 func expandDataprocAutoscalingPolicyBasicAlgorithmYarnConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

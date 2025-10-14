@@ -272,11 +272,11 @@ func resourceManagedKafkaClusterCreate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("tls_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(tlsConfigProp)) && (ok || !reflect.DeepEqual(v, tlsConfigProp)) {
 		obj["tlsConfig"] = tlsConfigProp
 	}
-	labelsProp, err := expandManagedKafkaClusterEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandManagedKafkaClusterEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ManagedKafkaBasePath}}projects/{{project}}/locations/{{location}}/clusters?clusterId={{cluster_id}}")
@@ -454,11 +454,11 @@ func resourceManagedKafkaClusterUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("tls_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, tlsConfigProp)) {
 		obj["tlsConfig"] = tlsConfigProp
 	}
-	labelsProp, err := expandManagedKafkaClusterEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandManagedKafkaClusterEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ManagedKafkaBasePath}}projects/{{project}}/locations/{{location}}/clusters/{{cluster_id}}")
@@ -804,6 +804,9 @@ func flattenManagedKafkaClusterEffectiveLabels(v interface{}, d *schema.Resource
 }
 
 func expandManagedKafkaClusterGcpConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -830,6 +833,9 @@ func expandManagedKafkaClusterGcpConfig(v interface{}, d tpgresource.TerraformRe
 }
 
 func expandManagedKafkaClusterGcpConfigAccessConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -849,6 +855,9 @@ func expandManagedKafkaClusterGcpConfigAccessConfig(v interface{}, d tpgresource
 }
 
 func expandManagedKafkaClusterGcpConfigAccessConfigNetworkConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -879,6 +888,9 @@ func expandManagedKafkaClusterGcpConfigKmsKey(v interface{}, d tpgresource.Terra
 }
 
 func expandManagedKafkaClusterCapacityConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -913,6 +925,9 @@ func expandManagedKafkaClusterCapacityConfigMemoryBytes(v interface{}, d tpgreso
 }
 
 func expandManagedKafkaClusterRebalanceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -936,6 +951,9 @@ func expandManagedKafkaClusterRebalanceConfigMode(v interface{}, d tpgresource.T
 }
 
 func expandManagedKafkaClusterTlsConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -962,6 +980,9 @@ func expandManagedKafkaClusterTlsConfig(v interface{}, d tpgresource.TerraformRe
 }
 
 func expandManagedKafkaClusterTlsConfigTrustConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -986,6 +1007,9 @@ func expandManagedKafkaClusterTlsConfigTrustConfig(v interface{}, d tpgresource.
 }
 
 func expandManagedKafkaClusterTlsConfigTrustConfigCasConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {

@@ -509,17 +509,17 @@ func resourceDataprocGdcSparkApplicationCreate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("dependency_images"); !tpgresource.IsEmptyValue(reflect.ValueOf(dependencyImagesProp)) && (ok || !reflect.DeepEqual(v, dependencyImagesProp)) {
 		obj["dependencyImages"] = dependencyImagesProp
 	}
-	labelsProp, err := expandDataprocGdcSparkApplicationEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandDataprocGdcSparkApplicationEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
-	annotationsProp, err := expandDataprocGdcSparkApplicationEffectiveAnnotations(d.Get("effective_annotations"), d, config)
+	effectiveAnnotationsProp, err := expandDataprocGdcSparkApplicationEffectiveAnnotations(d.Get("effective_annotations"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(annotationsProp)) && (ok || !reflect.DeepEqual(v, annotationsProp)) {
-		obj["annotations"] = annotationsProp
+	} else if v, ok := d.GetOkExists("effective_annotations"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveAnnotationsProp)) && (ok || !reflect.DeepEqual(v, effectiveAnnotationsProp)) {
+		obj["annotations"] = effectiveAnnotationsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{DataprocGdcBasePath}}projects/{{project}}/locations/{{location}}/serviceInstances/{{serviceinstance}}/sparkApplications?sparkApplicationId={{spark_application_id}}")
@@ -1068,6 +1068,9 @@ func flattenDataprocGdcSparkApplicationEffectiveAnnotations(v interface{}, d *sc
 }
 
 func expandDataprocGdcSparkApplicationPysparkApplicationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1146,6 +1149,9 @@ func expandDataprocGdcSparkApplicationPysparkApplicationConfigArchiveUris(v inte
 }
 
 func expandDataprocGdcSparkApplicationSparkApplicationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1224,6 +1230,9 @@ func expandDataprocGdcSparkApplicationSparkApplicationConfigArchiveUris(v interf
 }
 
 func expandDataprocGdcSparkApplicationSparkRApplicationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1280,6 +1289,9 @@ func expandDataprocGdcSparkApplicationSparkRApplicationConfigArchiveUris(v inter
 }
 
 func expandDataprocGdcSparkApplicationSparkSqlApplicationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1324,6 +1336,9 @@ func expandDataprocGdcSparkApplicationSparkSqlApplicationConfigQueryFileUri(v in
 }
 
 func expandDataprocGdcSparkApplicationSparkSqlApplicationConfigQueryList(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

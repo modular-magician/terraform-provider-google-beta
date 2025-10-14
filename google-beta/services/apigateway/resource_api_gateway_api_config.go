@@ -313,11 +313,11 @@ func resourceApiGatewayApiConfigCreate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("managed_service_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(managedServiceConfigsProp)) && (ok || !reflect.DeepEqual(v, managedServiceConfigsProp)) {
 		obj["managedServiceConfigs"] = managedServiceConfigsProp
 	}
-	labelsProp, err := expandApiGatewayApiConfigEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandApiGatewayApiConfigEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	obj, err = resourceApiGatewayApiConfigEncoder(d, meta, obj)
@@ -491,11 +491,11 @@ func resourceApiGatewayApiConfigUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("managed_service_configs"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, managedServiceConfigsProp)) {
 		obj["managedServiceConfigs"] = managedServiceConfigsProp
 	}
-	labelsProp, err := expandApiGatewayApiConfigEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandApiGatewayApiConfigEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	obj, err = resourceApiGatewayApiConfigEncoder(d, meta, obj)
@@ -769,6 +769,9 @@ func expandApiGatewayApiConfigDisplayName(v interface{}, d tpgresource.Terraform
 }
 
 func expandApiGatewayApiConfigGatewayConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -788,6 +791,9 @@ func expandApiGatewayApiConfigGatewayConfig(v interface{}, d tpgresource.Terrafo
 }
 
 func expandApiGatewayApiConfigGatewayConfigBackendConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -811,6 +817,9 @@ func expandApiGatewayApiConfigGatewayConfigBackendConfigGoogleServiceAccount(v i
 }
 
 func expandApiGatewayApiConfigOpenapiDocuments(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -833,6 +842,9 @@ func expandApiGatewayApiConfigOpenapiDocuments(v interface{}, d tpgresource.Terr
 }
 
 func expandApiGatewayApiConfigOpenapiDocumentsDocument(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -867,6 +879,9 @@ func expandApiGatewayApiConfigOpenapiDocumentsDocumentContents(v interface{}, d 
 }
 
 func expandApiGatewayApiConfigGrpcServices(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -896,6 +911,9 @@ func expandApiGatewayApiConfigGrpcServices(v interface{}, d tpgresource.Terrafor
 }
 
 func expandApiGatewayApiConfigGrpcServicesFileDescriptorSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -930,6 +948,9 @@ func expandApiGatewayApiConfigGrpcServicesFileDescriptorSetContents(v interface{
 }
 
 func expandApiGatewayApiConfigGrpcServicesSource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -967,6 +988,9 @@ func expandApiGatewayApiConfigGrpcServicesSourceContents(v interface{}, d tpgres
 }
 
 func expandApiGatewayApiConfigManagedServiceConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {

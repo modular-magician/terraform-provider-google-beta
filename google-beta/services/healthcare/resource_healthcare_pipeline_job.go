@@ -329,11 +329,11 @@ func resourceHealthcarePipelineJobCreate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("backfill_pipeline_job"); !tpgresource.IsEmptyValue(reflect.ValueOf(backfillPipelineJobProp)) && (ok || !reflect.DeepEqual(v, backfillPipelineJobProp)) {
 		obj["backfillPipelineJob"] = backfillPipelineJobProp
 	}
-	labelsProp, err := expandHealthcarePipelineJobEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandHealthcarePipelineJobEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{HealthcareBasePath}}{{dataset}}/pipelineJobs?pipelineJobId={{name}}")
@@ -498,11 +498,11 @@ func resourceHealthcarePipelineJobUpdate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("backfill_pipeline_job"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, backfillPipelineJobProp)) {
 		obj["backfillPipelineJob"] = backfillPipelineJobProp
 	}
-	labelsProp, err := expandHealthcarePipelineJobEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandHealthcarePipelineJobEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{HealthcareBasePath}}{{dataset}}/pipelineJobs/{{name}}")
@@ -869,6 +869,9 @@ func expandHealthcarePipelineJobDisableLineage(v interface{}, d tpgresource.Terr
 }
 
 func expandHealthcarePipelineJobMappingPipelineJob(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -909,6 +912,9 @@ func expandHealthcarePipelineJobMappingPipelineJob(v interface{}, d tpgresource.
 }
 
 func expandHealthcarePipelineJobMappingPipelineJobMappingConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -939,6 +945,9 @@ func expandHealthcarePipelineJobMappingPipelineJobMappingConfigDescription(v int
 }
 
 func expandHealthcarePipelineJobMappingPipelineJobMappingConfigWhistleConfigSource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -973,6 +982,9 @@ func expandHealthcarePipelineJobMappingPipelineJobMappingConfigWhistleConfigSour
 }
 
 func expandHealthcarePipelineJobMappingPipelineJobFhirStreamingSource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1015,6 +1027,9 @@ func expandHealthcarePipelineJobMappingPipelineJobReconciliationDestination(v in
 }
 
 func expandHealthcarePipelineJobReconciliationPipelineJob(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1048,6 +1063,9 @@ func expandHealthcarePipelineJobReconciliationPipelineJob(v interface{}, d tpgre
 }
 
 func expandHealthcarePipelineJobReconciliationPipelineJobMergeConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1078,6 +1096,9 @@ func expandHealthcarePipelineJobReconciliationPipelineJobMergeConfigDescription(
 }
 
 func expandHealthcarePipelineJobReconciliationPipelineJobMergeConfigWhistleConfigSource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1120,6 +1141,9 @@ func expandHealthcarePipelineJobReconciliationPipelineJobFhirStoreDestination(v 
 }
 
 func expandHealthcarePipelineJobBackfillPipelineJob(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

@@ -302,11 +302,11 @@ func resourceVertexAIFeatureOnlineStoreFeatureviewCreate(d *schema.ResourceData,
 	} else if v, ok := d.GetOkExists("vector_search_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(vectorSearchConfigProp)) && (ok || !reflect.DeepEqual(v, vectorSearchConfigProp)) {
 		obj["vectorSearchConfig"] = vectorSearchConfigProp
 	}
-	labelsProp, err := expandVertexAIFeatureOnlineStoreFeatureviewEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandVertexAIFeatureOnlineStoreFeatureviewEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/featureOnlineStores/{{feature_online_store}}/featureViews?featureViewId={{name}}")
@@ -472,11 +472,11 @@ func resourceVertexAIFeatureOnlineStoreFeatureviewUpdate(d *schema.ResourceData,
 	} else if v, ok := d.GetOkExists("feature_registry_source"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, featureRegistrySourceProp)) {
 		obj["featureRegistrySource"] = featureRegistrySourceProp
 	}
-	labelsProp, err := expandVertexAIFeatureOnlineStoreFeatureviewEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandVertexAIFeatureOnlineStoreFeatureviewEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/featureOnlineStores/{{feature_online_store}}/featureViews/{{name}}")
@@ -828,6 +828,9 @@ func flattenVertexAIFeatureOnlineStoreFeatureviewEffectiveLabels(v interface{}, 
 }
 
 func expandVertexAIFeatureOnlineStoreFeatureviewSyncConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -851,6 +854,9 @@ func expandVertexAIFeatureOnlineStoreFeatureviewSyncConfigCron(v interface{}, d 
 }
 
 func expandVertexAIFeatureOnlineStoreFeatureviewBigQuerySource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -885,6 +891,9 @@ func expandVertexAIFeatureOnlineStoreFeatureviewBigQuerySourceEntityIdColumns(v 
 }
 
 func expandVertexAIFeatureOnlineStoreFeatureviewFeatureRegistrySource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -911,6 +920,9 @@ func expandVertexAIFeatureOnlineStoreFeatureviewFeatureRegistrySource(v interfac
 }
 
 func expandVertexAIFeatureOnlineStoreFeatureviewFeatureRegistrySourceFeatureGroups(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -952,6 +964,9 @@ func expandVertexAIFeatureOnlineStoreFeatureviewFeatureRegistrySourceProjectNumb
 }
 
 func expandVertexAIFeatureOnlineStoreFeatureviewVectorSearchConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1029,6 +1044,9 @@ func expandVertexAIFeatureOnlineStoreFeatureviewVectorSearchConfigDistanceMeasur
 }
 
 func expandVertexAIFeatureOnlineStoreFeatureviewVectorSearchConfigTreeAhConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1052,6 +1070,9 @@ func expandVertexAIFeatureOnlineStoreFeatureviewVectorSearchConfigTreeAhConfigLe
 }
 
 func expandVertexAIFeatureOnlineStoreFeatureviewVectorSearchConfigBruteForceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil

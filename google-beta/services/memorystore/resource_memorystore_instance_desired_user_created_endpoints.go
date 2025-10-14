@@ -166,11 +166,11 @@ func resourceMemorystoreInstanceDesiredUserCreatedEndpointsCreate(d *schema.Reso
 	}
 
 	obj := make(map[string]interface{})
-	endpointsProp, err := expandMemorystoreInstanceDesiredUserCreatedEndpointsDesiredUserCreatedEndpoints(d.Get("desired_user_created_endpoints"), d, config)
+	desiredUserCreatedEndpointsProp, err := expandMemorystoreInstanceDesiredUserCreatedEndpointsDesiredUserCreatedEndpoints(d.Get("desired_user_created_endpoints"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("desired_user_created_endpoints"); !tpgresource.IsEmptyValue(reflect.ValueOf(endpointsProp)) && (ok || !reflect.DeepEqual(v, endpointsProp)) {
-		obj["endpoints"] = endpointsProp
+	} else if v, ok := d.GetOkExists("desired_user_created_endpoints"); !tpgresource.IsEmptyValue(reflect.ValueOf(desiredUserCreatedEndpointsProp)) && (ok || !reflect.DeepEqual(v, desiredUserCreatedEndpointsProp)) {
+		obj["endpoints"] = desiredUserCreatedEndpointsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{MemorystoreBasePath}}projects/{{project}}/locations/{{region}}/instances/{{name}}?updateMask=endpoints")
@@ -294,11 +294,11 @@ func resourceMemorystoreInstanceDesiredUserCreatedEndpointsUpdate(d *schema.Reso
 	billingProject = project
 
 	obj := make(map[string]interface{})
-	endpointsProp, err := expandMemorystoreInstanceDesiredUserCreatedEndpointsDesiredUserCreatedEndpoints(d.Get("desired_user_created_endpoints"), d, config)
+	desiredUserCreatedEndpointsProp, err := expandMemorystoreInstanceDesiredUserCreatedEndpointsDesiredUserCreatedEndpoints(d.Get("desired_user_created_endpoints"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("desired_user_created_endpoints"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, endpointsProp)) {
-		obj["endpoints"] = endpointsProp
+	} else if v, ok := d.GetOkExists("desired_user_created_endpoints"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, desiredUserCreatedEndpointsProp)) {
+		obj["endpoints"] = desiredUserCreatedEndpointsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{MemorystoreBasePath}}projects/{{project}}/locations/{{region}}/instances/{{name}}?updateMask=endpoints")
@@ -555,6 +555,9 @@ func flattenMemorystoreInstanceDesiredUserCreatedEndpointsDesiredUserCreatedEndp
 }
 
 func expandMemorystoreInstanceDesiredUserCreatedEndpointsDesiredUserCreatedEndpoints(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -577,6 +580,9 @@ func expandMemorystoreInstanceDesiredUserCreatedEndpointsDesiredUserCreatedEndpo
 }
 
 func expandMemorystoreInstanceDesiredUserCreatedEndpointsDesiredUserCreatedEndpointsConnections(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -599,6 +605,9 @@ func expandMemorystoreInstanceDesiredUserCreatedEndpointsDesiredUserCreatedEndpo
 }
 
 func expandMemorystoreInstanceDesiredUserCreatedEndpointsDesiredUserCreatedEndpointsConnectionsPscConnection(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

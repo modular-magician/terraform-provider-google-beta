@@ -607,11 +607,11 @@ func resourceTpuV2VmCreate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("tags"); !tpgresource.IsEmptyValue(reflect.ValueOf(tagsProp)) && (ok || !reflect.DeepEqual(v, tagsProp)) {
 		obj["tags"] = tagsProp
 	}
-	labelsProp, err := expandTpuV2VmEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandTpuV2VmEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{TpuV2BasePath}}projects/{{project}}/locations/{{zone}}/nodes?nodeId={{name}}")
@@ -831,11 +831,11 @@ func resourceTpuV2VmUpdate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("tags"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, tagsProp)) {
 		obj["tags"] = tagsProp
 	}
-	labelsProp, err := expandTpuV2VmEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandTpuV2VmEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{TpuV2BasePath}}projects/{{project}}/locations/{{zone}}/nodes/{{name}}")
@@ -1419,6 +1419,9 @@ func expandTpuV2VmCidrBlock(v interface{}, d tpgresource.TerraformResourceData, 
 }
 
 func expandTpuV2VmNetworkConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1486,6 +1489,9 @@ func expandTpuV2VmNetworkConfigQueueCount(v interface{}, d tpgresource.Terraform
 }
 
 func expandTpuV2VmNetworkConfigs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -1556,6 +1562,9 @@ func expandTpuV2VmNetworkConfigsQueueCount(v interface{}, d tpgresource.Terrafor
 }
 
 func expandTpuV2VmServiceAccount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1590,6 +1599,9 @@ func expandTpuV2VmServiceAccountScope(v interface{}, d tpgresource.TerraformReso
 }
 
 func expandTpuV2VmSchedulingConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1635,6 +1647,9 @@ func expandTpuV2VmSchedulingConfigSpot(v interface{}, d tpgresource.TerraformRes
 }
 
 func expandTpuV2VmDataDisks(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -1672,6 +1687,9 @@ func expandTpuV2VmDataDisksMode(v interface{}, d tpgresource.TerraformResourceDa
 }
 
 func expandTpuV2VmShieldedInstanceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1695,6 +1713,9 @@ func expandTpuV2VmShieldedInstanceConfigEnableSecureBoot(v interface{}, d tpgres
 }
 
 func expandTpuV2VmAcceleratorConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

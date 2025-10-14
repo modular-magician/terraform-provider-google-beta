@@ -670,9 +670,43 @@ is 1,024 characters.`,
 													MaxItems:    1,
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
+															"output_schema": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																ValidateFunc: verify.ValidateEnum([]string{"BASIC_COLUMNS", "GCS_COLUMNS", "DATASTORE_COLUMNS", "BIG_QUERY_COLUMNS", "ALL_COLUMNS", ""}),
+																Description: `Schema used for writing the findings for Inspect jobs. This field is only used for
+Inspect and must be unspecified for Risk jobs. Columns are derived from the Finding
+object. If appending to an existing table, any columns from the predefined schema
+that are missing will be added. No columns in the existing table will be deleted.
+
+If unspecified, then all available columns will be used for a new table or an (existing)
+table with no schema, and no changes will be made to an existing table that has a schema.
+Only for use with external storage. Possible values: ["BASIC_COLUMNS", "GCS_COLUMNS", "DATASTORE_COLUMNS", "BIG_QUERY_COLUMNS", "ALL_COLUMNS"]`,
+															},
+															"storage_path": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `Store findings in an existing Cloud Storage bucket. Files will be generated with the job ID and file part number
+as the filename, and will contain findings in textproto format as SaveToGcsFindingsOutput. The file name will use
+the naming convention <job_id>-<shard_number>, for example: my-job-id-2.
+
+Supported for InspectJobs. The bucket must not be the same as the bucket being inspected. If storing findings to
+Cloud Storage, the output schema field should not be set. If set, it will be ignored.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"path": {
+																			Type:     schema.TypeString,
+																			Required: true,
+																			Description: `A URL representing a file or path (no wildcards) in Cloud Storage.
+Example: 'gs://[BUCKET_NAME]/dictionary.txt'`,
+																		},
+																	},
+																},
+															},
 															"table": {
 																Type:        schema.TypeList,
-																Required:    true,
+																Optional:    true,
 																Description: `Information on the location of the target BigQuery Table.`,
 																MaxItems:    1,
 																Elem: &schema.Resource{
@@ -695,19 +729,6 @@ is 1,024 characters.`,
 																		},
 																	},
 																},
-															},
-															"output_schema": {
-																Type:         schema.TypeString,
-																Optional:     true,
-																ValidateFunc: verify.ValidateEnum([]string{"BASIC_COLUMNS", "GCS_COLUMNS", "DATASTORE_COLUMNS", "BIG_QUERY_COLUMNS", "ALL_COLUMNS", ""}),
-																Description: `Schema used for writing the findings for Inspect jobs. This field is only used for
-Inspect and must be unspecified for Risk jobs. Columns are derived from the Finding
-object. If appending to an existing table, any columns from the predefined schema
-that are missing will be added. No columns in the existing table will be deleted.
-
-If unspecified, then all available columns will be used for a new table or an (existing)
-table with no schema, and no changes will be made to an existing table that has a schema.
-Only for use with external storage. Possible values: ["BASIC_COLUMNS", "GCS_COLUMNS", "DATASTORE_COLUMNS", "BIG_QUERY_COLUMNS", "ALL_COLUMNS"]`,
 															},
 														},
 													},
@@ -3245,6 +3266,8 @@ func flattenDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfi
 	transformed := make(map[string]interface{})
 	transformed["table"] =
 		flattenDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTable(original["table"], d, config)
+	transformed["storage_path"] =
+		flattenDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigStoragePath(original["storagePath"], d, config)
 	transformed["output_schema"] =
 		flattenDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigOutputSchema(original["outputSchema"], d, config)
 	return []interface{}{transformed}
@@ -3275,6 +3298,23 @@ func flattenDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfi
 }
 
 func flattenDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTableTableId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigStoragePath(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["path"] =
+		flattenDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigStoragePathPath(original["path"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigStoragePathPath(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -3442,6 +3482,9 @@ func expandDataLossPreventionJobTriggerStatus(v interface{}, d tpgresource.Terra
 }
 
 func expandDataLossPreventionJobTriggerTriggers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3471,6 +3514,9 @@ func expandDataLossPreventionJobTriggerTriggers(v interface{}, d tpgresource.Ter
 }
 
 func expandDataLossPreventionJobTriggerTriggersSchedule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3494,6 +3540,9 @@ func expandDataLossPreventionJobTriggerTriggersScheduleRecurrencePeriodDuration(
 }
 
 func expandDataLossPreventionJobTriggerTriggersManual(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -3509,6 +3558,9 @@ func expandDataLossPreventionJobTriggerTriggersManual(v interface{}, d tpgresour
 }
 
 func expandDataLossPreventionJobTriggerInspectJob(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3553,6 +3605,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectTemplateName(v interface
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3626,6 +3681,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigMinLikelihood(v in
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimits(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3667,6 +3725,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsP
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3696,6 +3757,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsP
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeInfoType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3737,6 +3801,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsP
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsPerInfoTypeInfoTypeSensitivityScore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3764,6 +3831,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigLimitsMaxFindingsP
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3808,6 +3878,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypesVersion(v
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypesSensitivityScore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3831,6 +3904,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigInfoTypesSensitivi
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3860,6 +3936,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSet(v interfac
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3904,6 +3983,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypesVe
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypesSensitivityScore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3927,6 +4009,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetInfoTypesSe
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3956,6 +4041,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRules(v int
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3989,6 +4077,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwor
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleHotwordRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4023,6 +4114,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwor
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleProximity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4057,6 +4151,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwor
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwordRuleLikelihoodAdjustment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4091,6 +4188,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesHotwor
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRule(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4142,6 +4242,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionary(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4168,6 +4271,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryWordList(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4191,6 +4297,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleDictionaryCloudStoragePath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4214,6 +4323,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4248,6 +4360,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4267,6 +4382,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypesInfoTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -4311,6 +4429,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeInfoTypesInfoTypesSensitivityScore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4334,6 +4455,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotword(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4360,6 +4484,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordHotwordRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4394,6 +4521,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclusionRuleExcludeByHotwordProximity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4428,6 +4558,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigRuleSetRulesExclus
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -4499,6 +4632,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypes(v 
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInfoType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4540,6 +4676,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInf
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesInfoTypeSensitivityScore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4571,6 +4710,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesExc
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesSensitivityScore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4594,6 +4736,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesSen
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesRegex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4628,6 +4773,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesReg
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionary(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4654,6 +4802,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDic
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryWordList(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4677,6 +4828,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDic
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDictionaryCloudStoragePath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4700,6 +4854,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesDic
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesStoredType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4734,6 +4891,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesSto
 }
 
 func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesSurrogateType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -4749,6 +4909,9 @@ func expandDataLossPreventionJobTriggerInspectJobInspectConfigCustomInfoTypesSur
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4796,6 +4959,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfig(v interface{}, d 
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4848,6 +5014,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigEnab
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigTimestampField(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4871,6 +5040,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigTimespanConfigTime
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4897,6 +5069,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptions(v
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPartitionId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4931,6 +5106,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsPa
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsKind(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -4954,6 +5132,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigDatastoreOptionsKi
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5008,6 +5189,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOption
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5038,6 +5222,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOption
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOptionsFileSetRegexFileSet(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5103,6 +5290,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigCloudStorageOption
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5164,6 +5354,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptions(v 
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsTableReference(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5221,6 +5414,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsSam
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIdentifyingFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -5247,6 +5443,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIde
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsIncludedFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -5273,6 +5472,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsInc
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsExcludedFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -5299,6 +5501,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigBigQueryOptionsExc
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -5352,6 +5557,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsRequi
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTableOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5371,6 +5579,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTable
 }
 
 func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsTableOptionsIdentifyingFields(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -5408,6 +5619,9 @@ func expandDataLossPreventionJobTriggerInspectJobStorageConfigHybridOptionsLabel
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -5472,6 +5686,9 @@ func expandDataLossPreventionJobTriggerInspectJobActions(v interface{}, d tpgres
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5491,6 +5708,9 @@ func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindings(v interface
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5506,6 +5726,13 @@ func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfig
 		transformed["table"] = transformedTable
 	}
 
+	transformedStoragePath, err := expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigStoragePath(original["storage_path"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedStoragePath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["storagePath"] = transformedStoragePath
+	}
+
 	transformedOutputSchema, err := expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigOutputSchema(original["output_schema"], d, config)
 	if err != nil {
 		return nil, err
@@ -5517,6 +5744,9 @@ func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfig
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigTable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5561,11 +5791,40 @@ func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfig
 	return v, nil
 }
 
+func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigStoragePath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPath, err := expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigStoragePathPath(original["path"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPath); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["path"] = transformedPath
+	}
+
+	return transformed, nil
+}
+
+func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigStoragePathPath(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandDataLossPreventionJobTriggerInspectJobActionsSaveFindingsOutputConfigOutputSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsPubSub(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5589,6 +5848,9 @@ func expandDataLossPreventionJobTriggerInspectJobActionsPubSubTopic(v interface{
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsPublishSummaryToCscc(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -5604,6 +5866,9 @@ func expandDataLossPreventionJobTriggerInspectJobActionsPublishSummaryToCscc(v i
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsPublishFindingsToCloudDataCatalog(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -5619,6 +5884,9 @@ func expandDataLossPreventionJobTriggerInspectJobActionsPublishFindingsToCloudDa
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsJobNotificationEmails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -5634,6 +5902,9 @@ func expandDataLossPreventionJobTriggerInspectJobActionsJobNotificationEmails(v 
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsDeidentify(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5682,6 +5953,9 @@ func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyFileTypesToTra
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5727,6 +6001,9 @@ func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformation
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5746,6 +6023,9 @@ func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformation
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformationDetailsStorageConfigTable(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -5791,6 +6071,9 @@ func expandDataLossPreventionJobTriggerInspectJobActionsDeidentifyTransformation
 }
 
 func expandDataLossPreventionJobTriggerInspectJobActionsPublishToStackdriver(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil

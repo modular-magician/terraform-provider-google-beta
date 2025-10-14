@@ -699,6 +699,10 @@ When the field is set to false, deleting the job is allowed.
   (Required)
   Path within the container at which the volume should be mounted. Must not contain ':'. For Cloud SQL volumes, it can be left empty, or must otherwise be /cloudsql. All instances defined in the Volume will be available as /cloudsql/[instance]. For more information on Cloud SQL volumes, visit https://cloud.google.com/sql/docs/mysql/connect-run
 
+* `sub_path` -
+  (Optional)
+  Path within the volume from which the container's volume should be mounted.
+
 <a name="nested_template_template_containers_containers_startup_probe"></a>The `startup_probe` block supports:
 
 * `initial_delay_seconds` -
@@ -877,7 +881,7 @@ When the field is set to false, deleting the job is allowed.
   If true, mount this volume as read-only in all mounts. If false, mount this volume as read-write.
 
 * `mount_options` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   A list of flags to pass to the gcsfuse command for configuring this volume.
   Flags should be passed without leading dashes.
 

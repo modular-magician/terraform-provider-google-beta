@@ -72,6 +72,7 @@ resource "google_cloud_run_v2_service" "default" {
   ingress = "INGRESS_TRAFFIC_ALL"
 
   template {
+    health_check_disabled = true
     containers {
       image = "us-docker.pkg.dev/cloudrun/container/hello"
       resources {
@@ -769,7 +770,7 @@ The following arguments are supported:
   Structure is [documented below](#nested_scaling).
 
 * `default_uri_disabled` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Disables public resolution of the default URI of this service.
 
 * `traffic` -
@@ -785,6 +786,11 @@ The following arguments are supported:
   (Optional)
   Configuration for building a Cloud Run function.
   Structure is [documented below](#nested_build_config).
+
+* `multi_region_settings` -
+  (Optional)
+  Settings for creating a Multi-Region Service. Make sure to use region = 'global' when using them. For more information, visit https://cloud.google.com/run/docs/multiple-regions#deploy
+  Structure is [documented below](#nested_multi_region_settings).
 
 * `iap_enabled` -
   (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
@@ -882,6 +888,10 @@ When the field is set to false, deleting the service is allowed.
 * `gpu_zonal_redundancy_disabled` -
   (Optional)
   True if GPU zonal redundancy is disabled on this revision.
+
+* `health_check_disabled` -
+  (Optional)
+  Disables health checking containers during deployment.
 
 
 <a name="nested_template_scaling"></a>The `scaling` block supports:
@@ -1035,7 +1045,7 @@ When the field is set to false, deleting the service is allowed.
 
 * `limits` -
   (Optional)
-  Only memory, CPU, and nvidia.com/gpu are supported. Use key `cpu` for CPU limit, `memory` for memory limit, `nvidia.com/gpu` for gpu limit. Note: The only supported values for CPU are '1', '2', '4', and '8'. Setting 4 CPU requires at least 2Gi of memory. The values of the map is string form of the 'quantity' k8s type: https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/apimachinery/pkg/api/resource/quantity.go
+  Only memory, CPU, and nvidia.com/gpu are supported. Use key `cpu` for CPU limit, `memory` for memory limit, `nvidia.com/gpu` for gpu limit. Note: The only supported values for CPU are '1', '2', '4', '6' and '8'. Setting 4 CPU requires at least 2Gi of memory. The values of the map is string form of the 'quantity' k8s type: https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/apimachinery/pkg/api/resource/quantity.go
 
 * `cpu_idle` -
   (Optional)
@@ -1065,6 +1075,10 @@ When the field is set to false, deleting the service is allowed.
 * `mount_path` -
   (Required)
   Path within the container at which the volume should be mounted. Must not contain ':'. For Cloud SQL volumes, it can be left empty, or must otherwise be /cloudsql. All instances defined in the Volume will be available as /cloudsql/[instance]. For more information on Cloud SQL volumes, visit https://cloud.google.com/sql/docs/mysql/connect-run
+
+* `sub_path` -
+  (Optional)
+  Path within the volume from which the container's volume should be mounted.
 
 <a name="nested_template_containers_containers_liveness_probe"></a>The `liveness_probe` block supports:
 
@@ -1330,7 +1344,7 @@ When the field is set to false, deleting the service is allowed.
   If true, mount the GCS bucket as read-only
 
 * `mount_options` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   A list of flags to pass to the gcsfuse command for configuring this volume.
   Flags should be passed without leading dashes.
 
@@ -1449,6 +1463,16 @@ When the field is set to false, deleting the service is allowed.
 * `service_account` -
   (Optional)
   Service account to be used for building the container. The format of this field is `projects/{projectId}/serviceAccounts/{serviceAccountEmail}`.
+
+<a name="nested_multi_region_settings"></a>The `multi_region_settings` block supports:
+
+* `regions` -
+  (Optional)
+  The list of regions to deploy the multi-region Service.
+
+* `multi_region_id` -
+  (Output)
+  System-generated unique id for the multi-region Service.
 
 ## Attributes Reference
 

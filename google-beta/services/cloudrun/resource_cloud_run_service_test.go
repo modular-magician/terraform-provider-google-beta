@@ -1240,6 +1240,11 @@ resource "google_cloud_run_service" "default" {
   location = "us-central1"
 
   template {
+    metadata {
+      annotations = {
+        "run.googleapis.com/health-check-disabled": "true"
+      }
+    }
     spec {
       containers {
         image = "us-docker.pkg.dev/cloudrun/container/hello"
@@ -1415,6 +1420,7 @@ resource "google_cloud_run_service" "default" {
         volume_mounts {
           name = "vol1"
           mount_path = "/mnt/vol1"
+          sub_path = "/LM01"
         }
       }
       volumes {

@@ -62,32 +62,9 @@ func ResourceVertexAIIndex() *schema.Resource {
 				Required:    true,
 				Description: `The display name of the Index. The name can be up to 128 characters long and can consist of any UTF-8 characters.`,
 			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `The description of the Index.`,
-			},
-			"index_update_method": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Description: `The update method to use with this Index. The value must be the followings. If not set, BATCH_UPDATE will be used by default.
-* BATCH_UPDATE: user can call indexes.patch with files on Cloud Storage of datapoints to update.
-* STREAM_UPDATE: user can call indexes.upsertDatapoints/DeleteDatapoints to update the Index and the updates will be applied in corresponding DeployedIndexes in nearly real-time.`,
-				Default: "BATCH_UPDATE",
-			},
-			"labels": {
-				Type:     schema.TypeMap,
-				Optional: true,
-				Description: `The labels with user-defined metadata to organize your Indexes.
-
-**Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
-Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
-				Elem: &schema.Schema{Type: schema.TypeString},
-			},
 			"metadata": {
 				Type:     schema.TypeList,
-				Optional: true,
+				Required: true,
 				Description: `Additional information about the Index.
 Although this field is not marked as required in the API specification, it is currently required when creating an Index and must be provided.
 Attempts to create an Index without this field will result in an API error.`,
@@ -96,7 +73,7 @@ Attempts to create an Index without this field will result in an API error.`,
 					Schema: map[string]*schema.Schema{
 						"config": {
 							Type:        schema.TypeList,
-							Optional:    true,
+							Required:    true,
 							ForceNew:    true,
 							Description: `The configuration of the Matching Engine Index.`,
 							MaxItems:    1,
@@ -110,7 +87,7 @@ Attempts to create an Index without this field will result in an API error.`,
 									"algorithm_config": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: `The configuration with regard to the algorithms used for efficient search.`,
+										Description: `The configuration with regard to the algorithms used for efficient search. This field may be required based on your configuration.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -212,6 +189,46 @@ then existing content of the Index will be replaced by the data from the content
 						},
 					},
 				},
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `The description of the Index.`,
+			},
+			"encryption_spec": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Customer-managed encryption key spec for an Index. If set, this Index and all sub-resources of this Index will be secured by this key.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"kms_key_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+							Description: `Required. The Cloud KMS resource identifier of the customer managed encryption key used to protect a resource. Has the form: 'projects/my-project/locations/my-region/keyRings/my-kr/cryptoKeys/my-key'. The key needs to be in the same region as where the compute resource is created.`,
+						},
+					},
+				},
+			},
+			"index_update_method": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `The update method to use with this Index. The value must be the followings. If not set, BATCH_UPDATE will be used by default.
+* BATCH_UPDATE: user can call indexes.patch with files on Cloud Storage of datapoints to update.
+* STREAM_UPDATE: user can call indexes.upsertDatapoints/DeleteDatapoints to update the Index and the updates will be applied in corresponding DeployedIndexes in nearly real-time.`,
+				Default: "BATCH_UPDATE",
+			},
+			"labels": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				Description: `The labels with user-defined metadata to organize your Indexes.
+
+**Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
+Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
 			},
 			"region": {
 				Type:        schema.TypeString,
@@ -338,11 +355,17 @@ func resourceVertexAIIndexCreate(d *schema.ResourceData, meta interface{}) error
 	} else if v, ok := d.GetOkExists("index_update_method"); !tpgresource.IsEmptyValue(reflect.ValueOf(indexUpdateMethodProp)) && (ok || !reflect.DeepEqual(v, indexUpdateMethodProp)) {
 		obj["indexUpdateMethod"] = indexUpdateMethodProp
 	}
-	labelsProp, err := expandVertexAIIndexEffectiveLabels(d.Get("effective_labels"), d, config)
+	encryptionSpecProp, err := expandVertexAIIndexEncryptionSpec(d.Get("encryption_spec"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("encryption_spec"); !tpgresource.IsEmptyValue(reflect.ValueOf(encryptionSpecProp)) && (ok || !reflect.DeepEqual(v, encryptionSpecProp)) {
+		obj["encryptionSpec"] = encryptionSpecProp
+	}
+	effectiveLabelsProp, err := expandVertexAIIndexEffectiveLabels(d.Get("effective_labels"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{VertexAIBasePath}}projects/{{project}}/locations/{{region}}/indexes")
@@ -488,6 +511,9 @@ func resourceVertexAIIndexRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
 	if err := d.Set("index_update_method", flattenVertexAIIndexIndexUpdateMethod(res["indexUpdateMethod"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Index: %s", err)
+	}
+	if err := d.Set("encryption_spec", flattenVertexAIIndexEncryptionSpec(res["encryptionSpec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Index: %s", err)
 	}
 	if err := d.Set("terraform_labels", flattenVertexAIIndexTerraformLabels(res["labels"], d, config)); err != nil {
@@ -1001,6 +1027,23 @@ func flattenVertexAIIndexIndexUpdateMethod(v interface{}, d *schema.ResourceData
 	return v
 }
 
+func flattenVertexAIIndexEncryptionSpec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["kms_key_name"] =
+		flattenVertexAIIndexEncryptionSpecKmsKeyName(original["kmsKeyName"], d, config)
+	return []interface{}{transformed}
+}
+func flattenVertexAIIndexEncryptionSpecKmsKeyName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenVertexAIIndexTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1029,6 +1072,9 @@ func expandVertexAIIndexDescription(v interface{}, d tpgresource.TerraformResour
 }
 
 func expandVertexAIIndexMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1070,6 +1116,9 @@ func expandVertexAIIndexMetadataIsCompleteOverwrite(v interface{}, d tpgresource
 }
 
 func expandVertexAIIndexMetadataConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1144,6 +1193,9 @@ func expandVertexAIIndexMetadataConfigFeatureNormType(v interface{}, d tpgresour
 }
 
 func expandVertexAIIndexMetadataConfigAlgorithmConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1170,6 +1222,9 @@ func expandVertexAIIndexMetadataConfigAlgorithmConfig(v interface{}, d tpgresour
 }
 
 func expandVertexAIIndexMetadataConfigAlgorithmConfigTreeAhConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1204,6 +1259,9 @@ func expandVertexAIIndexMetadataConfigAlgorithmConfigTreeAhConfigLeafNodesToSear
 }
 
 func expandVertexAIIndexMetadataConfigAlgorithmConfigBruteForceConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 {
 		return nil, nil
@@ -1219,6 +1277,32 @@ func expandVertexAIIndexMetadataConfigAlgorithmConfigBruteForceConfig(v interfac
 }
 
 func expandVertexAIIndexIndexUpdateMethod(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVertexAIIndexEncryptionSpec(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedKmsKeyName, err := expandVertexAIIndexEncryptionSpecKmsKeyName(original["kms_key_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedKmsKeyName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["kmsKeyName"] = transformedKmsKeyName
+	}
+
+	return transformed, nil
+}
+
+func expandVertexAIIndexEncryptionSpecKmsKeyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

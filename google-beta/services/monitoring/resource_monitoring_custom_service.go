@@ -142,11 +142,11 @@ func resourceMonitoringServiceCreate(d *schema.ResourceData, meta interface{}) e
 	} else if v, ok := d.GetOkExists("telemetry"); !tpgresource.IsEmptyValue(reflect.ValueOf(telemetryProp)) && (ok || !reflect.DeepEqual(v, telemetryProp)) {
 		obj["telemetry"] = telemetryProp
 	}
-	nameProp, err := expandMonitoringServiceServiceId(d.Get("service_id"), d, config)
+	serviceIdProp, err := expandMonitoringServiceServiceId(d.Get("service_id"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("service_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
-		obj["name"] = nameProp
+	} else if v, ok := d.GetOkExists("service_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(serviceIdProp)) && (ok || !reflect.DeepEqual(v, serviceIdProp)) {
+		obj["name"] = serviceIdProp
 	}
 
 	obj, err = resourceMonitoringServiceEncoder(d, meta, obj)
@@ -479,6 +479,9 @@ func expandMonitoringServiceUserLabels(v interface{}, d tpgresource.TerraformRes
 }
 
 func expandMonitoringServiceTelemetry(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

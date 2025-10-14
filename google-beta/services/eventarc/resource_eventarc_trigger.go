@@ -343,11 +343,11 @@ func resourceEventarcTriggerCreate(d *schema.ResourceData, meta interface{}) err
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
 	}
-	eventFiltersProp, err := expandEventarcTriggerMatchingCriteria(d.Get("matching_criteria"), d, config)
+	matchingCriteriaProp, err := expandEventarcTriggerMatchingCriteria(d.Get("matching_criteria"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("matching_criteria"); !tpgresource.IsEmptyValue(reflect.ValueOf(eventFiltersProp)) && (ok || !reflect.DeepEqual(v, eventFiltersProp)) {
-		obj["eventFilters"] = eventFiltersProp
+	} else if v, ok := d.GetOkExists("matching_criteria"); !tpgresource.IsEmptyValue(reflect.ValueOf(matchingCriteriaProp)) && (ok || !reflect.DeepEqual(v, matchingCriteriaProp)) {
+		obj["eventFilters"] = matchingCriteriaProp
 	}
 	serviceAccountProp, err := expandEventarcTriggerServiceAccount(d.Get("service_account"), d, config)
 	if err != nil {
@@ -379,11 +379,11 @@ func resourceEventarcTriggerCreate(d *schema.ResourceData, meta interface{}) err
 	} else if v, ok := d.GetOkExists("event_data_content_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(eventDataContentTypeProp)) && (ok || !reflect.DeepEqual(v, eventDataContentTypeProp)) {
 		obj["eventDataContentType"] = eventDataContentTypeProp
 	}
-	labelsProp, err := expandEventarcTriggerEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandEventarcTriggerEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVarsForId(d, config, "{{EventarcBasePath}}projects/{{project}}/locations/{{location}}/triggers?triggerId={{name}}")
@@ -549,11 +549,11 @@ func resourceEventarcTriggerUpdate(d *schema.ResourceData, meta interface{}) err
 	billingProject = strings.TrimPrefix(project, "projects/")
 
 	obj := make(map[string]interface{})
-	eventFiltersProp, err := expandEventarcTriggerMatchingCriteria(d.Get("matching_criteria"), d, config)
+	matchingCriteriaProp, err := expandEventarcTriggerMatchingCriteria(d.Get("matching_criteria"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("matching_criteria"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, eventFiltersProp)) {
-		obj["eventFilters"] = eventFiltersProp
+	} else if v, ok := d.GetOkExists("matching_criteria"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, matchingCriteriaProp)) {
+		obj["eventFilters"] = matchingCriteriaProp
 	}
 	serviceAccountProp, err := expandEventarcTriggerServiceAccount(d.Get("service_account"), d, config)
 	if err != nil {
@@ -573,11 +573,11 @@ func resourceEventarcTriggerUpdate(d *schema.ResourceData, meta interface{}) err
 	} else if v, ok := d.GetOkExists("event_data_content_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, eventDataContentTypeProp)) {
 		obj["eventDataContentType"] = eventDataContentTypeProp
 	}
-	labelsProp, err := expandEventarcTriggerEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandEventarcTriggerEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVarsForId(d, config, "{{EventarcBasePath}}projects/{{project}}/locations/{{location}}/triggers/{{name}}")
@@ -1006,6 +1006,9 @@ func expandEventarcTriggerName(v interface{}, d tpgresource.TerraformResourceDat
 
 func expandEventarcTriggerMatchingCriteria(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -1058,6 +1061,9 @@ func expandEventarcTriggerServiceAccount(v interface{}, d tpgresource.TerraformR
 }
 
 func expandEventarcTriggerDestination(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1112,6 +1118,9 @@ func expandEventarcTriggerDestination(v interface{}, d tpgresource.TerraformReso
 }
 
 func expandEventarcTriggerDestinationCloudRunService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1161,6 +1170,9 @@ func expandEventarcTriggerDestinationCloudFunction(v interface{}, d tpgresource.
 }
 
 func expandEventarcTriggerDestinationGke(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1232,6 +1244,9 @@ func expandEventarcTriggerDestinationWorkflow(v interface{}, d tpgresource.Terra
 }
 
 func expandEventarcTriggerDestinationHttpEndpoint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1255,6 +1270,9 @@ func expandEventarcTriggerDestinationHttpEndpointUri(v interface{}, d tpgresourc
 }
 
 func expandEventarcTriggerDestinationNetworkConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1278,6 +1296,9 @@ func expandEventarcTriggerDestinationNetworkConfigNetworkAttachment(v interface{
 }
 
 func expandEventarcTriggerTransport(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1297,6 +1318,9 @@ func expandEventarcTriggerTransport(v interface{}, d tpgresource.TerraformResour
 }
 
 func expandEventarcTriggerTransportPubsub(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

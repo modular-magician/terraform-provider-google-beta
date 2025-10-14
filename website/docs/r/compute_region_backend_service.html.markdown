@@ -851,7 +851,7 @@ The following arguments are supported:
   Possible values are: `HTTP`, `HTTPS`, `HTTP2`, `TCP`, `SSL`, `UDP`, `GRPC`, `UNSPECIFIED`, `H2C`.
 
 * `security_policy` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   The security policy associated with this backend service.
 
 * `session_affinity` -
@@ -888,7 +888,9 @@ The following arguments are supported:
 * `network` -
   (Optional)
   The URL of the network to which this backend service belongs.
-  This field can only be specified when the load balancing scheme is set to INTERNAL.
+  This field must be set for Internal Passthrough Network Load Balancers when the haPolicy is enabled, and for External Passthrough Network Load Balancers when the haPolicy fastIpMove is enabled.
+  This field can only be specified when the load balancing scheme is set to INTERNAL, or when the load balancing scheme is set to EXTERNAL and haPolicy fastIpMove is enabled.
+  Changes to this field force recreation of the resource.
 
 * `subsetting` -
   (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
@@ -912,6 +914,11 @@ The following arguments are supported:
   haPolicy can only be specified for External Passthrough Network Load Balancers and Internal
   Passthrough Network Load Balancers.
   Structure is [documented below](#nested_ha_policy).
+
+* `params` -
+  (Optional)
+  Additional params passed with the request, but not persisted as part of resource payload
+  Structure is [documented below](#nested_params).
 
 * `region` -
   (Optional)
@@ -1032,6 +1039,30 @@ The following arguments are supported:
   Used when balancingMode is UTILIZATION. This ratio defines the
   CPU utilization target for the group. Valid range is [0.0, 1.0].
   Cannot be set for INTERNAL backend services.
+
+* `max_in_flight_requests` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Defines a maximum number of in-flight requests for the whole NEG
+  or instance group. Not available if backend's balancingMode is RATE
+  or CONNECTION.
+
+* `max_in_flight_requests_per_instance` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Defines a maximum number of in-flight requests for a single VM.
+  Not available if backend's balancingMode is RATE or CONNECTION.
+
+* `max_in_flight_requests_per_endpoint` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  Defines a maximum number of in-flight requests for a single endpoint.
+  Not available if backend's balancingMode is RATE or CONNECTION.
+
+* `traffic_duration` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  This field specifies how long a connection should be kept alive for:
+  - LONG: Most of the requests are expected to take more than multiple
+    seconds to finish.
+  - SHORT: Most requests are expected to finish with a sub-second latency.
+  Possible values are: `LONG`, `SHORT`.
 
 * `custom_metrics` -
   (Optional)
@@ -1610,6 +1641,14 @@ The following arguments are supported:
   (Optional)
   The name of the VM instance of the leader network endpoint. The instance must
   already be attached to the NEG specified in the haPolicy.leader.backendGroup.
+
+<a name="nested_params"></a>The `params` block supports:
+
+* `resource_manager_tags` -
+  (Optional)
+  Resource manager tags to be bound to the region backend service. Tag keys and values have the
+  same definition as resource manager tags. Keys must be in the format tagKeys/{tag_key_id},
+  and values are in the format tagValues/456.
 
 ## Attributes Reference
 

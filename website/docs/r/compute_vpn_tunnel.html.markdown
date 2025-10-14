@@ -35,6 +35,9 @@ To get more information about VpnTunnel, see:
 values will be stored in the raw state as plain text: `shared_secret`.
 [Read more about sensitive data in state](https://www.terraform.io/language/state/sensitive-data).
 
+~> **Note:**  All arguments marked as write-only values will not be stored in the state: `shared_secret_wo`.
+[Read more about Write-only Attributes](https://developer.hashicorp.com/terraform/plugin/sdkv2/resources/write-only-arguments).
+
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=vpn_tunnel_basic&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
@@ -117,7 +120,6 @@ resource "google_compute_route" "route1" {
 
 ```hcl
 resource "google_compute_vpn_tunnel" "tunnel1" {
-  provider = google-beta
   name          = "tunnel-cipher"
   peer_ip       = "15.0.0.120"
   shared_secret = "a secret message"
@@ -150,23 +152,19 @@ resource "google_compute_vpn_tunnel" "tunnel1" {
 }
 
 resource "google_compute_vpn_gateway" "target_gateway" {
-  provider = google-beta
   name    = "vpn-1"
   network = google_compute_network.network1.id
 }
 
 resource "google_compute_network" "network1" {
-  provider = google-beta
   name = "network-1"
 }
 
 resource "google_compute_address" "vpn_static_ip" {
-  provider = google-beta
   name = "vpn-static-ip"
 }
 
 resource "google_compute_forwarding_rule" "fr_esp" {
-  provider = google-beta
   name        = "fr-esp"
   ip_protocol = "ESP"
   ip_address  = google_compute_address.vpn_static_ip.address
@@ -174,7 +172,6 @@ resource "google_compute_forwarding_rule" "fr_esp" {
 }
 
 resource "google_compute_forwarding_rule" "fr_udp500" {
-  provider = google-beta
   name        = "fr-udp500"
   ip_protocol = "UDP"
   port_range  = "500"
@@ -183,7 +180,6 @@ resource "google_compute_forwarding_rule" "fr_udp500" {
 }
 
 resource "google_compute_forwarding_rule" "fr_udp4500" {
-  provider = google-beta
   name        = "fr-udp4500"
   ip_protocol = "UDP"
   port_range  = "4500"
@@ -192,7 +188,6 @@ resource "google_compute_forwarding_rule" "fr_udp4500" {
 }
 
 resource "google_compute_route" "route1" {
-  provider = google-beta
   name       = "route1"
   network    = google_compute_network.network1.name
   dest_range = "15.0.0.0/24"
@@ -216,12 +211,6 @@ The following arguments are supported:
   must be a lowercase letter, and all following characters must
   be a dash, lowercase letter, or digit,
   except the last character, which cannot be a dash.
-
-* `shared_secret` -
-  (Required)
-  Shared secret used to set the secure session between the Cloud VPN
-  gateway and the peer VPN gateway.
-  **Note**: This property is sensitive and will not be displayed in the plan.
 
 
 * `description` -
@@ -266,6 +255,12 @@ The following arguments are supported:
   (Optional)
   IP address of the peer VPN gateway. Only IPv4 is supported.
 
+* `shared_secret` -
+  (Optional)
+  Shared secret used to set the secure session between the Cloud VPN
+  gateway and the peer VPN gateway.
+  **Note**: This property is sensitive and will not be displayed in the plan.
+
 * `ike_version` -
   (Optional)
   IKE protocol version to use when establishing the VPN tunnel with
@@ -293,9 +288,13 @@ The following arguments are supported:
   Please refer to the field `effective_labels` for all of the labels present on the resource.
 
 * `cipher_suite` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   User specified list of ciphers to use for the phase 1 and phase 2 of the IKE protocol.
   Structure is [documented below](#nested_cipher_suite).
+
+* `shared_secret_wo_version` -
+  (Optional)
+  Triggers update of shared_secret_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)
 
 * `region` -
   (Optional)
@@ -309,12 +308,12 @@ The following arguments are supported:
 <a name="nested_cipher_suite"></a>The `cipher_suite` block supports:
 
 * `phase1` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Cipher configuration for phase 1 of the IKE protocol.
   Structure is [documented below](#nested_cipher_suite_phase1).
 
 * `phase2` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Cipher configuration for phase 2 of the IKE protocol.
   Structure is [documented below](#nested_cipher_suite_phase2).
 
@@ -322,34 +321,46 @@ The following arguments are supported:
 <a name="nested_cipher_suite_phase1"></a>The `phase1` block supports:
 
 * `encryption` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Encryption algorithms.
 
 * `integrity` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Integrity algorithms.
 
 * `prf` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Pseudo-random functions.
 
 * `dh` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Diffie-Hellman groups.
 
 <a name="nested_cipher_suite_phase2"></a>The `phase2` block supports:
 
 * `encryption` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Encryption algorithms.
 
 * `integrity` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Integrity algorithms.
 
 * `pfs` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Perfect forward secrecy groups.
+
+## Ephemeral Attributes Reference
+
+The following write-only attributes are supported:
+
+* `shared_secret_wo` -
+  (Optional)
+  Shared secret used to set the secure session between the Cloud VPN
+  gateway and the peer VPN gateway.
+   Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)
+  **Note**: This property is write-only and will not be read from the API.
+
 
 ## Attributes Reference
 

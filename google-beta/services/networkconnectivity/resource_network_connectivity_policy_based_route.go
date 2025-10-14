@@ -306,11 +306,11 @@ func resourceNetworkConnectivityPolicyBasedRouteCreate(d *schema.ResourceData, m
 	} else if v, ok := d.GetOkExists("interconnect_attachment"); !tpgresource.IsEmptyValue(reflect.ValueOf(interconnectAttachmentProp)) && (ok || !reflect.DeepEqual(v, interconnectAttachmentProp)) {
 		obj["interconnectAttachment"] = interconnectAttachmentProp
 	}
-	labelsProp, err := expandNetworkConnectivityPolicyBasedRouteEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandNetworkConnectivityPolicyBasedRouteEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkConnectivityBasePath}}projects/{{project}}/locations/global/policyBasedRoutes?policyBasedRouteId={{name}}")
@@ -730,6 +730,9 @@ func expandNetworkConnectivityPolicyBasedRouteNetwork(v interface{}, d tpgresour
 }
 
 func expandNetworkConnectivityPolicyBasedRouteFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -798,6 +801,9 @@ func expandNetworkConnectivityPolicyBasedRoutePriority(v interface{}, d tpgresou
 }
 
 func expandNetworkConnectivityPolicyBasedRouteVirtualMachine(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -821,6 +827,9 @@ func expandNetworkConnectivityPolicyBasedRouteVirtualMachineTags(v interface{}, 
 }
 
 func expandNetworkConnectivityPolicyBasedRouteInterconnectAttachment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

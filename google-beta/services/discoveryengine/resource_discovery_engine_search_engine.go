@@ -114,6 +114,13 @@ func ResourceDiscoveryEngineSearchEngine() *schema.Resource {
 					},
 				},
 			},
+			"app_type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `This is the application type this engine resource represents.
+The supported values: 'APP_TYPE_UNSPECIFIED', 'APP_TYPE_INTRANET'.`,
+			},
 			"common_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -131,6 +138,12 @@ func ResourceDiscoveryEngineSearchEngine() *schema.Resource {
 					},
 				},
 			},
+			"features": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: `A map of the feature config for the engine to opt in or opt out of features.`,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 			"industry_vertical": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -138,6 +151,17 @@ func ResourceDiscoveryEngineSearchEngine() *schema.Resource {
 				ValidateFunc: verify.ValidateEnum([]string{"GENERIC", "MEDIA", "HEALTHCARE_FHIR", ""}),
 				Description:  `The industry vertical that the engine registers. The restriction of the Engine industry vertical is based on DataStore: If unspecified, default to GENERIC. Vertical on Engine has to match vertical of the DataStore liniked to the engine. Default value: "GENERIC" Possible values: ["GENERIC", "MEDIA", "HEALTHCARE_FHIR"]`,
 				Default:      "GENERIC",
+			},
+			"kms_key_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `The KMS key to be used to protect this Engine at creation time.
+
+Must be set for requests that need to comply with CMEK Org Policy
+protections.
+
+If this field is set and processed successfully, the Engine will be
+protected by the KMS key, as indicated in the cmek_config field.`,
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -205,6 +229,24 @@ func resourceDiscoveryEngineSearchEngineCreate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("common_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(commonConfigProp)) && (ok || !reflect.DeepEqual(v, commonConfigProp)) {
 		obj["commonConfig"] = commonConfigProp
+	}
+	appTypeProp, err := expandDiscoveryEngineSearchEngineAppType(d.Get("app_type"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("app_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(appTypeProp)) && (ok || !reflect.DeepEqual(v, appTypeProp)) {
+		obj["appType"] = appTypeProp
+	}
+	featuresProp, err := expandDiscoveryEngineSearchEngineFeatures(d.Get("features"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("features"); !tpgresource.IsEmptyValue(reflect.ValueOf(featuresProp)) && (ok || !reflect.DeepEqual(v, featuresProp)) {
+		obj["features"] = featuresProp
+	}
+	kmsKeyNameProp, err := expandDiscoveryEngineSearchEngineKmsKeyName(d.Get("kms_key_name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("kms_key_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(kmsKeyNameProp)) && (ok || !reflect.DeepEqual(v, kmsKeyNameProp)) {
+		obj["kmsKeyName"] = kmsKeyNameProp
 	}
 
 	obj, err = resourceDiscoveryEngineSearchEngineEncoder(d, meta, obj)
@@ -334,6 +376,12 @@ func resourceDiscoveryEngineSearchEngineRead(d *schema.ResourceData, meta interf
 	if err := d.Set("common_config", flattenDiscoveryEngineSearchEngineCommonConfig(res["commonConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SearchEngine: %s", err)
 	}
+	if err := d.Set("app_type", flattenDiscoveryEngineSearchEngineAppType(res["appType"], d, config)); err != nil {
+		return fmt.Errorf("Error reading SearchEngine: %s", err)
+	}
+	if err := d.Set("features", flattenDiscoveryEngineSearchEngineFeatures(res["features"], d, config)); err != nil {
+		return fmt.Errorf("Error reading SearchEngine: %s", err)
+	}
 
 	return nil
 }
@@ -372,6 +420,18 @@ func resourceDiscoveryEngineSearchEngineUpdate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("search_engine_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, searchEngineConfigProp)) {
 		obj["searchEngineConfig"] = searchEngineConfigProp
 	}
+	featuresProp, err := expandDiscoveryEngineSearchEngineFeatures(d.Get("features"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("features"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, featuresProp)) {
+		obj["features"] = featuresProp
+	}
+	kmsKeyNameProp, err := expandDiscoveryEngineSearchEngineKmsKeyName(d.Get("kms_key_name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("kms_key_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, kmsKeyNameProp)) {
+		obj["kmsKeyName"] = kmsKeyNameProp
+	}
 
 	obj, err = resourceDiscoveryEngineSearchEngineEncoder(d, meta, obj)
 	if err != nil {
@@ -397,6 +457,14 @@ func resourceDiscoveryEngineSearchEngineUpdate(d *schema.ResourceData, meta inte
 
 	if d.HasChange("search_engine_config") {
 		updateMask = append(updateMask, "searchEngineConfig")
+	}
+
+	if d.HasChange("features") {
+		updateMask = append(updateMask, "features")
+	}
+
+	if d.HasChange("kms_key_name") {
+		updateMask = append(updateMask, "kmsKeyName")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -574,6 +642,14 @@ func flattenDiscoveryEngineSearchEngineCommonConfigCompanyName(v interface{}, d 
 	return v
 }
 
+func flattenDiscoveryEngineSearchEngineAppType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineSearchEngineFeatures(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandDiscoveryEngineSearchEngineIndustryVertical(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -587,6 +663,9 @@ func expandDiscoveryEngineSearchEngineDataStoreIds(v interface{}, d tpgresource.
 }
 
 func expandDiscoveryEngineSearchEngineSearchEngineConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -621,6 +700,9 @@ func expandDiscoveryEngineSearchEngineSearchEngineConfigSearchAddOns(v interface
 }
 
 func expandDiscoveryEngineSearchEngineCommonConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -640,6 +722,25 @@ func expandDiscoveryEngineSearchEngineCommonConfig(v interface{}, d tpgresource.
 }
 
 func expandDiscoveryEngineSearchEngineCommonConfigCompanyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineSearchEngineAppType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineSearchEngineFeatures(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
+func expandDiscoveryEngineSearchEngineKmsKeyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

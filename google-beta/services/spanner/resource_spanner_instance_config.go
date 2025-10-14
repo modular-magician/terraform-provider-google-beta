@@ -236,11 +236,11 @@ func resourceSpannerInstanceConfigCreate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("replicas"); !tpgresource.IsEmptyValue(reflect.ValueOf(replicasProp)) && (ok || !reflect.DeepEqual(v, replicasProp)) {
 		obj["replicas"] = replicasProp
 	}
-	labelsProp, err := expandSpannerInstanceConfigEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandSpannerInstanceConfigEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	obj, err = resourceSpannerInstanceConfigEncoder(d, meta, obj)
@@ -433,11 +433,11 @@ func resourceSpannerInstanceConfigUpdate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("display_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, displayNameProp)) {
 		obj["displayName"] = displayNameProp
 	}
-	labelsProp, err := expandSpannerInstanceConfigEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandSpannerInstanceConfigEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	obj, err = resourceSpannerInstanceConfigUpdateEncoder(d, meta, obj)
@@ -681,6 +681,9 @@ func expandSpannerInstanceConfigBaseConfig(v interface{}, d tpgresource.Terrafor
 
 func expandSpannerInstanceConfigReplicas(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {

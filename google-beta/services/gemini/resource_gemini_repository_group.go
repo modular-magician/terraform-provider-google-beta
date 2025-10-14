@@ -158,11 +158,11 @@ func resourceGeminiRepositoryGroupCreate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("repositories"); !tpgresource.IsEmptyValue(reflect.ValueOf(repositoriesProp)) && (ok || !reflect.DeepEqual(v, repositoriesProp)) {
 		obj["repositories"] = repositoriesProp
 	}
-	labelsProp, err := expandGeminiRepositoryGroupEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandGeminiRepositoryGroupEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	lockName, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/codeRepositoryIndexes/{{code_repository_index}}")
@@ -319,11 +319,11 @@ func resourceGeminiRepositoryGroupUpdate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("repositories"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, repositoriesProp)) {
 		obj["repositories"] = repositoriesProp
 	}
-	labelsProp, err := expandGeminiRepositoryGroupEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandGeminiRepositoryGroupEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	lockName, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/codeRepositoryIndexes/{{code_repository_index}}")
@@ -551,6 +551,9 @@ func flattenGeminiRepositoryGroupEffectiveLabels(v interface{}, d *schema.Resour
 }
 
 func expandGeminiRepositoryGroupRepositories(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {

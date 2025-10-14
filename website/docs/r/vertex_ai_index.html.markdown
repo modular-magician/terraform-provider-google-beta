@@ -32,6 +32,10 @@ To get more information about Index, see:
 
 
 ```hcl
+resource "google_project_service_identity" "vertexai_sa" {
+  service = "aiplatform.googleapis.com"
+}
+
 resource "google_storage_bucket" "bucket" {
   name     = "vertex-ai-index-test"
   location = "us-central1"
@@ -47,6 +51,12 @@ resource "google_storage_bucket_object" "data" {
 {"id": "42", "embedding": [0.5, 1.0], "restricts": [{"namespace": "class", "allow": ["cat", "pet"]},{"namespace": "category", "allow": ["feline"]}]}
 {"id": "43", "embedding": [0.6, 1.0], "restricts": [{"namespace": "class", "allow": ["dog", "pet"]},{"namespace": "category", "allow": ["canine"]}]}
 EOF
+}
+
+resource "google_kms_crypto_key_iam_member" "vertexai_encrypterdecrypter" {
+  crypto_key_id = "kms-name"
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  member        =  google_project_service_identity.vertexai_sa.member
 }
 
 resource "google_vertex_ai_index" "index" {
@@ -71,7 +81,14 @@ resource "google_vertex_ai_index" "index" {
       }
     }
   }
+  encryption_spec {
+  kms_key_name = "kms-name"
+  }
   index_update_method = "BATCH_UPDATE"
+
+  depends_on = [
+  google_kms_crypto_key_iam_member.vertexai_encrypterdecrypter,
+  ]
 }
 ```
 ## Example Usage - Vertex Ai Index Streaming
@@ -127,17 +144,17 @@ The following arguments are supported:
   (Required)
   The display name of the Index. The name can be up to 128 characters long and can consist of any UTF-8 characters.
 
-
-* `description` -
-  (Optional)
-  The description of the Index.
-
 * `metadata` -
-  (Optional)
+  (Required)
   Additional information about the Index.
   Although this field is not marked as required in the API specification, it is currently required when creating an Index and must be provided.
   Attempts to create an Index without this field will result in an API error.
   Structure is [documented below](#nested_metadata).
+
+
+* `description` -
+  (Optional)
+  The description of the Index.
 
 * `labels` -
   (Optional)
@@ -150,6 +167,11 @@ The following arguments are supported:
   The update method to use with this Index. The value must be the followings. If not set, BATCH_UPDATE will be used by default.
   * BATCH_UPDATE: user can call indexes.patch with files on Cloud Storage of datapoints to update.
   * STREAM_UPDATE: user can call indexes.upsertDatapoints/DeleteDatapoints to update the Index and the updates will be applied in corresponding DeployedIndexes in nearly real-time.
+
+* `encryption_spec` -
+  (Optional)
+  Customer-managed encryption key spec for an Index. If set, this Index and all sub-resources of this Index will be secured by this key.
+  Structure is [documented below](#nested_encryption_spec).
 
 * `region` -
   (Optional)
@@ -177,7 +199,7 @@ The following arguments are supported:
   then existing content of the Index will be replaced by the data from the contentsDeltaUri.
 
 * `config` -
-  (Optional)
+  (Required)
   The configuration of the Matching Engine Index.
   Structure is [documented below](#nested_metadata_config).
 
@@ -219,7 +241,7 @@ The following arguments are supported:
 
 * `algorithm_config` -
   (Optional)
-  The configuration with regard to the algorithms used for efficient search.
+  The configuration with regard to the algorithms used for efficient search. This field may be required based on your configuration.
   Structure is [documented below](#nested_metadata_config_algorithm_config).
 
 
@@ -247,6 +269,12 @@ The following arguments are supported:
   (Optional)
   The default percentage of leaf nodes that any query may be searched. Must be in
   range 1-100, inclusive. The default value is 10 (means 10%) if not set.
+
+<a name="nested_encryption_spec"></a>The `encryption_spec` block supports:
+
+* `kms_key_name` -
+  (Required)
+  Required. The Cloud KMS resource identifier of the customer managed encryption key used to protect a resource. Has the form: `projects/my-project/locations/my-region/keyRings/my-kr/cryptoKeys/my-key`. The key needs to be in the same region as where the compute resource is created.
 
 ## Attributes Reference
 

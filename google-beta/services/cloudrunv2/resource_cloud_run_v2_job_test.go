@@ -396,6 +396,7 @@ func testAccCloudRunV2Job_cloudrunv2JobWithGcsVolume(context map[string]interfac
           volume_mounts {
             name = "gcs"
             mount_path = "/mnt/gcs"
+            sub_path = "/LM01"
           }
         }
         volumes {
@@ -403,8 +404,7 @@ func testAccCloudRunV2Job_cloudrunv2JobWithGcsVolume(context map[string]interfac
           gcs {
             bucket = "gcp-public-data-landsat"
             read_only = true
-mount_options = ["log-severity=info"]
-
+            mount_options = ["log-severity=info"]
           }
         }
       }

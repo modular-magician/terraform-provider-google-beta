@@ -78,6 +78,15 @@ to (^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$) and must be a maximum of 63
 characters in length. The value must start with a letter and end with
 a letter or a number.`,
 			},
+			"gcp_oracle_zone": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional: true,
+				ForceNew: true,
+				Description: `The GCP Oracle zone where OdbNetwork is hosted.
+Example: us-east4-b-r2.
+If not specified, the system will pick a zone based on availability.`,
+			},
 			"labels": {
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -158,11 +167,17 @@ func resourceOracleDatabaseOdbNetworkCreate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("network"); !tpgresource.IsEmptyValue(reflect.ValueOf(networkProp)) && (ok || !reflect.DeepEqual(v, networkProp)) {
 		obj["network"] = networkProp
 	}
-	labelsProp, err := expandOracleDatabaseOdbNetworkEffectiveLabels(d.Get("effective_labels"), d, config)
+	gcpOracleZoneProp, err := expandOracleDatabaseOdbNetworkGcpOracleZone(d.Get("gcp_oracle_zone"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("gcp_oracle_zone"); !tpgresource.IsEmptyValue(reflect.ValueOf(gcpOracleZoneProp)) && (ok || !reflect.DeepEqual(v, gcpOracleZoneProp)) {
+		obj["gcpOracleZone"] = gcpOracleZoneProp
+	}
+	effectiveLabelsProp, err := expandOracleDatabaseOdbNetworkEffectiveLabels(d.Get("effective_labels"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{OracleDatabaseBasePath}}projects/{{project}}/locations/{{location}}/odbNetworks?odbNetworkId={{odb_network_id}}")
@@ -282,6 +297,9 @@ func resourceOracleDatabaseOdbNetworkRead(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error reading OdbNetwork: %s", err)
 	}
 	if err := d.Set("network", flattenOracleDatabaseOdbNetworkNetwork(res["network"], d, config)); err != nil {
+		return fmt.Errorf("Error reading OdbNetwork: %s", err)
+	}
+	if err := d.Set("gcp_oracle_zone", flattenOracleDatabaseOdbNetworkGcpOracleZone(res["gcpOracleZone"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OdbNetwork: %s", err)
 	}
 	if err := d.Set("state", flattenOracleDatabaseOdbNetworkState(res["state"], d, config)); err != nil {
@@ -417,6 +435,10 @@ func flattenOracleDatabaseOdbNetworkNetwork(v interface{}, d *schema.ResourceDat
 	return v
 }
 
+func flattenOracleDatabaseOdbNetworkGcpOracleZone(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenOracleDatabaseOdbNetworkState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -441,6 +463,10 @@ func flattenOracleDatabaseOdbNetworkEffectiveLabels(v interface{}, d *schema.Res
 }
 
 func expandOracleDatabaseOdbNetworkNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandOracleDatabaseOdbNetworkGcpOracleZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

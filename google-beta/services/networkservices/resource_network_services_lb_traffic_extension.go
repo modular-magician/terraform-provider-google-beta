@@ -89,7 +89,10 @@ and the last a letter or a number.`,
 										Type:             schema.TypeString,
 										Required:         true,
 										DiffSuppressFunc: tpgresource.ProjectNumberDiffSuppress,
-										Description:      `The reference to the service that runs the extension. Must be a reference to a backend service`,
+										Description: `The reference to the service that runs the extension.
+
+* To configure a callout extension, service must be a fully-qualified reference to a backend service.
+* To configure a plugin extension, service must be a reference to a WasmPlugin resource.`,
 									},
 									"authority": {
 										Type:        schema.TypeString,
@@ -181,6 +184,15 @@ At least one forwarding rule is required. There can be only one LBTrafficExtensi
 					Type: schema.TypeString,
 				},
 			},
+			"load_balancing_scheme": {
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"INTERNAL_MANAGED", "EXTERNAL_MANAGED"}),
+				Description: `All backend services and forwarding rules referenced by this extension must share the same load balancing scheme.
+For more information, refer to [Choosing a load balancer](https://cloud.google.com/load-balancing/docs/backend-service) and
+[Supported application load balancers](https://cloud.google.com/service-extensions/docs/callouts-overview#supported-lbs). Possible values: ["INTERNAL_MANAGED", "EXTERNAL_MANAGED"]`,
+			},
 			"location": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -206,15 +218,6 @@ At least one forwarding rule is required. There can be only one LBTrafficExtensi
 **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
-			},
-			"load_balancing_scheme": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"INTERNAL_MANAGED", "EXTERNAL_MANAGED", ""}),
-				Description: `All backend services and forwarding rules referenced by this extension must share the same load balancing scheme.
-For more information, refer to [Choosing a load balancer](https://cloud.google.com/load-balancing/docs/backend-service) and
-[Supported application load balancers](https://cloud.google.com/service-extensions/docs/callouts-overview#supported-lbs). Possible values: ["INTERNAL_MANAGED", "EXTERNAL_MANAGED"]`,
 			},
 			"effective_labels": {
 				Type:        schema.TypeMap,
@@ -272,11 +275,11 @@ func resourceNetworkServicesLbTrafficExtensionCreate(d *schema.ResourceData, met
 	} else if v, ok := d.GetOkExists("load_balancing_scheme"); !tpgresource.IsEmptyValue(reflect.ValueOf(loadBalancingSchemeProp)) && (ok || !reflect.DeepEqual(v, loadBalancingSchemeProp)) {
 		obj["loadBalancingScheme"] = loadBalancingSchemeProp
 	}
-	labelsProp, err := expandNetworkServicesLbTrafficExtensionEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandNetworkServicesLbTrafficExtensionEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/lbTrafficExtensions?lbTrafficExtensionId={{name}}")
@@ -436,11 +439,11 @@ func resourceNetworkServicesLbTrafficExtensionUpdate(d *schema.ResourceData, met
 	} else if v, ok := d.GetOkExists("extension_chains"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, extensionChainsProp)) {
 		obj["extensionChains"] = extensionChainsProp
 	}
-	labelsProp, err := expandNetworkServicesLbTrafficExtensionEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandNetworkServicesLbTrafficExtensionEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkServicesBasePath}}projects/{{project}}/locations/{{location}}/lbTrafficExtensions/{{name}}")
@@ -739,6 +742,9 @@ func expandNetworkServicesLbTrafficExtensionForwardingRules(v interface{}, d tpg
 }
 
 func expandNetworkServicesLbTrafficExtensionExtensionChains(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -779,6 +785,9 @@ func expandNetworkServicesLbTrafficExtensionExtensionChainsName(v interface{}, d
 }
 
 func expandNetworkServicesLbTrafficExtensionExtensionChainsMatchCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -802,6 +811,9 @@ func expandNetworkServicesLbTrafficExtensionExtensionChainsMatchConditionCelExpr
 }
 
 func expandNetworkServicesLbTrafficExtensionExtensionChainsExtensions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {

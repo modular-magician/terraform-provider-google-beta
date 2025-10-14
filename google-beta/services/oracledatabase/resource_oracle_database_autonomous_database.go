@@ -903,6 +903,7 @@ Format: projects/{project}/global/networks/{network}`,
 			},
 			"odb_network": {
 				Type:     schema.TypeString,
+				Computed: true,
 				Optional: true,
 				ForceNew: true,
 				Description: `The name of the OdbNetwork associated with the Autonomous Database.
@@ -913,6 +914,7 @@ the odb_subnet and backup_odb_subnet.`,
 			},
 			"odb_subnet": {
 				Type:     schema.TypeString,
+				Computed: true,
 				Optional: true,
 				ForceNew: true,
 				Description: `The name of the OdbSubnet associated with the Autonomous Database for
@@ -1023,11 +1025,11 @@ func resourceOracleDatabaseAutonomousDatabaseCreate(d *schema.ResourceData, meta
 	} else if v, ok := d.GetOkExists("odb_subnet"); !tpgresource.IsEmptyValue(reflect.ValueOf(odbSubnetProp)) && (ok || !reflect.DeepEqual(v, odbSubnetProp)) {
 		obj["odbSubnet"] = odbSubnetProp
 	}
-	labelsProp, err := expandOracleDatabaseAutonomousDatabaseEffectiveLabels(d.Get("effective_labels"), d, config)
+	effectiveLabelsProp, err := expandOracleDatabaseAutonomousDatabaseEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(labelsProp)) && (ok || !reflect.DeepEqual(v, labelsProp)) {
-		obj["labels"] = labelsProp
+	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
+		obj["labels"] = effectiveLabelsProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{OracleDatabaseBasePath}}projects/{{project}}/locations/{{location}}/autonomousDatabases?autonomousDatabaseId={{autonomous_database_id}}")
@@ -2224,6 +2226,9 @@ func expandOracleDatabaseAutonomousDatabaseAdminPassword(v interface{}, d tpgres
 }
 
 func expandOracleDatabaseAutonomousDatabaseProperties(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2670,6 +2675,9 @@ func expandOracleDatabaseAutonomousDatabasePropertiesLicenseType(v interface{}, 
 }
 
 func expandOracleDatabaseAutonomousDatabasePropertiesCustomerContacts(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -2716,6 +2724,9 @@ func expandOracleDatabaseAutonomousDatabasePropertiesAllocatedStorageSizeTb(v in
 }
 
 func expandOracleDatabaseAutonomousDatabasePropertiesApexDetails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2770,6 +2781,9 @@ func expandOracleDatabaseAutonomousDatabasePropertiesAvailableUpgradeVersions(v 
 }
 
 func expandOracleDatabaseAutonomousDatabasePropertiesConnectionStrings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2824,6 +2838,9 @@ func expandOracleDatabaseAutonomousDatabasePropertiesConnectionStrings(v interfa
 }
 
 func expandOracleDatabaseAutonomousDatabasePropertiesConnectionStringsAllConnectionStrings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -2885,6 +2902,9 @@ func expandOracleDatabaseAutonomousDatabasePropertiesConnectionStringsMedium(v i
 }
 
 func expandOracleDatabaseAutonomousDatabasePropertiesConnectionStringsProfiles(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -2999,6 +3019,9 @@ func expandOracleDatabaseAutonomousDatabasePropertiesConnectionStringsProfilesVa
 }
 
 func expandOracleDatabaseAutonomousDatabasePropertiesConnectionUrls(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3115,6 +3138,9 @@ func expandOracleDatabaseAutonomousDatabasePropertiesLocalAdgAutoFailoverMaxData
 }
 
 func expandOracleDatabaseAutonomousDatabasePropertiesLocalStandbyDb(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3230,6 +3256,9 @@ func expandOracleDatabaseAutonomousDatabasePropertiesRole(v interface{}, d tpgre
 }
 
 func expandOracleDatabaseAutonomousDatabasePropertiesScheduledOperationDetails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -3270,6 +3299,9 @@ func expandOracleDatabaseAutonomousDatabasePropertiesScheduledOperationDetailsDa
 }
 
 func expandOracleDatabaseAutonomousDatabasePropertiesScheduledOperationDetailsStartTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -3326,6 +3358,9 @@ func expandOracleDatabaseAutonomousDatabasePropertiesScheduledOperationDetailsSt
 }
 
 func expandOracleDatabaseAutonomousDatabasePropertiesScheduledOperationDetailsStopTime(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

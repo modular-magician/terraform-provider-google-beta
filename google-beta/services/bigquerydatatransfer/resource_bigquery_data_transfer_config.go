@@ -287,24 +287,25 @@ to a different credential configuration in the config will require an apply to u
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"secret_access_key": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: `The Secret Access Key of the AWS account transferring data from.`,
-							Sensitive:   true,
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `The Secret Access Key of the AWS account transferring data from.`,
+							Sensitive:     true,
+							ConflictsWith: []string{"sensitive_params.0.secret_access_key_wo"},
+							AtLeastOneOf:  []string{"sensitive_params.0.secret_access_key", "sensitive_params.0.secret_access_key_wo"},
 						},
 						"secret_access_key_wo": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Description: `The Secret Access Key of the AWS account transferring data from.
- Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
-							WriteOnly:    true,
-							ExactlyOneOf: []string{"sensitive_params.0.secret_access_key", "sensitive_params.0.secret_access_key_wo"},
-							RequiredWith: []string{"sensitive_params.0.secret_access_key_wo_version"},
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `The Secret Access Key of the AWS account transferring data from.`,
+							WriteOnly:     true,
+							ConflictsWith: []string{"sensitive_params.0.secret_access_key"},
+							AtLeastOneOf:  []string{"sensitive_params.0.secret_access_key_wo", "sensitive_params.0.secret_access_key"},
 						},
 						"secret_access_key_wo_version": {
-							Type:         schema.TypeString,
+							Type:         schema.TypeInt,
 							Optional:     true,
-							Description:  `Triggers update of secret_access_key_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+							Description:  `The version of the sensitive params - used to trigger updates of the write-only params. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
 							RequiredWith: []string{"sensitive_params.0.secret_access_key_wo"},
 						},
 					},
@@ -942,6 +943,9 @@ func expandBigqueryDataTransferConfigSchedule(v interface{}, d tpgresource.Terra
 }
 
 func expandBigqueryDataTransferConfigScheduleOptions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -987,6 +991,9 @@ func expandBigqueryDataTransferConfigScheduleOptionsEndTime(v interface{}, d tpg
 }
 
 func expandBigqueryDataTransferConfigEmailPreferences(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1018,6 +1025,9 @@ func expandBigqueryDataTransferConfigDataRefreshWindowDays(v interface{}, d tpgr
 }
 
 func expandBigqueryDataTransferConfigEncryptionConfiguration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

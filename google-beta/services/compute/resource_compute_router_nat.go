@@ -654,11 +654,11 @@ func resourceComputeRouterNatCreate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("source_subnetwork_ip_ranges_to_nat"); !tpgresource.IsEmptyValue(reflect.ValueOf(sourceSubnetworkIpRangesToNatProp)) && (ok || !reflect.DeepEqual(v, sourceSubnetworkIpRangesToNatProp)) {
 		obj["sourceSubnetworkIpRangesToNat"] = sourceSubnetworkIpRangesToNatProp
 	}
-	subnetworksProp, err := expandNestedComputeRouterNatSubnetwork(d.Get("subnetwork"), d, config)
+	subnetworkProp, err := expandNestedComputeRouterNatSubnetwork(d.Get("subnetwork"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("subnetwork"); ok || !reflect.DeepEqual(v, subnetworksProp) {
-		obj["subnetworks"] = subnetworksProp
+	} else if v, ok := d.GetOkExists("subnetwork"); ok || !reflect.DeepEqual(v, subnetworkProp) {
+		obj["subnetworks"] = subnetworkProp
 	}
 	sourceSubnetworkIpRangesToNat64Prop, err := expandNestedComputeRouterNatSourceSubnetworkIpRangesToNat64(d.Get("source_subnetwork_ip_ranges_to_nat64"), d, config)
 	if err != nil {
@@ -666,11 +666,11 @@ func resourceComputeRouterNatCreate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("source_subnetwork_ip_ranges_to_nat64"); !tpgresource.IsEmptyValue(reflect.ValueOf(sourceSubnetworkIpRangesToNat64Prop)) && (ok || !reflect.DeepEqual(v, sourceSubnetworkIpRangesToNat64Prop)) {
 		obj["sourceSubnetworkIpRangesToNat64"] = sourceSubnetworkIpRangesToNat64Prop
 	}
-	nat64SubnetworksProp, err := expandNestedComputeRouterNatNat64Subnetwork(d.Get("nat64_subnetwork"), d, config)
+	nat64SubnetworkProp, err := expandNestedComputeRouterNatNat64Subnetwork(d.Get("nat64_subnetwork"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("nat64_subnetwork"); ok || !reflect.DeepEqual(v, nat64SubnetworksProp) {
-		obj["nat64Subnetworks"] = nat64SubnetworksProp
+	} else if v, ok := d.GetOkExists("nat64_subnetwork"); ok || !reflect.DeepEqual(v, nat64SubnetworkProp) {
+		obj["nat64Subnetworks"] = nat64SubnetworkProp
 	}
 	minPortsPerVmProp, err := expandNestedComputeRouterNatMinPortsPerVm(d.Get("min_ports_per_vm"), d, config)
 	if err != nil {
@@ -1017,11 +1017,11 @@ func resourceComputeRouterNatUpdate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("source_subnetwork_ip_ranges_to_nat"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, sourceSubnetworkIpRangesToNatProp)) {
 		obj["sourceSubnetworkIpRangesToNat"] = sourceSubnetworkIpRangesToNatProp
 	}
-	subnetworksProp, err := expandNestedComputeRouterNatSubnetwork(d.Get("subnetwork"), d, config)
+	subnetworkProp, err := expandNestedComputeRouterNatSubnetwork(d.Get("subnetwork"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("subnetwork"); ok || !reflect.DeepEqual(v, subnetworksProp) {
-		obj["subnetworks"] = subnetworksProp
+	} else if v, ok := d.GetOkExists("subnetwork"); ok || !reflect.DeepEqual(v, subnetworkProp) {
+		obj["subnetworks"] = subnetworkProp
 	}
 	sourceSubnetworkIpRangesToNat64Prop, err := expandNestedComputeRouterNatSourceSubnetworkIpRangesToNat64(d.Get("source_subnetwork_ip_ranges_to_nat64"), d, config)
 	if err != nil {
@@ -1029,11 +1029,11 @@ func resourceComputeRouterNatUpdate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("source_subnetwork_ip_ranges_to_nat64"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, sourceSubnetworkIpRangesToNat64Prop)) {
 		obj["sourceSubnetworkIpRangesToNat64"] = sourceSubnetworkIpRangesToNat64Prop
 	}
-	nat64SubnetworksProp, err := expandNestedComputeRouterNatNat64Subnetwork(d.Get("nat64_subnetwork"), d, config)
+	nat64SubnetworkProp, err := expandNestedComputeRouterNatNat64Subnetwork(d.Get("nat64_subnetwork"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("nat64_subnetwork"); ok || !reflect.DeepEqual(v, nat64SubnetworksProp) {
-		obj["nat64Subnetworks"] = nat64SubnetworksProp
+	} else if v, ok := d.GetOkExists("nat64_subnetwork"); ok || !reflect.DeepEqual(v, nat64SubnetworkProp) {
+		obj["nat64Subnetworks"] = nat64SubnetworkProp
 	}
 	minPortsPerVmProp, err := expandNestedComputeRouterNatMinPortsPerVm(d.Get("min_ports_per_vm"), d, config)
 	if err != nil {
@@ -1678,6 +1678,9 @@ func expandNestedComputeRouterNatSourceSubnetworkIpRangesToNat(v interface{}, d 
 
 func expandNestedComputeRouterNatSubnetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -1737,6 +1740,9 @@ func expandNestedComputeRouterNatSourceSubnetworkIpRangesToNat64(v interface{}, 
 
 func expandNestedComputeRouterNatNat64Subnetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -1799,6 +1805,9 @@ func expandNestedComputeRouterNatTcpTimeWaitTimeoutSec(v interface{}, d tpgresou
 }
 
 func expandNestedComputeRouterNatLogConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil
@@ -1838,6 +1847,9 @@ func expandNestedComputeRouterNatEndpointTypes(v interface{}, d tpgresource.Terr
 
 func expandNestedComputeRouterNatRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	v = v.(*schema.Set).List()
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	req := make([]interface{}, 0, len(l))
 	for _, raw := range l {
@@ -1893,6 +1905,9 @@ func expandNestedComputeRouterNatRulesMatch(v interface{}, d tpgresource.Terrafo
 }
 
 func expandNestedComputeRouterNatRulesAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
 	l := v.([]interface{})
 	if len(l) == 0 || l[0] == nil {
 		return nil, nil

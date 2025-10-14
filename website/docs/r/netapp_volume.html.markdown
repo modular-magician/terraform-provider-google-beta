@@ -177,6 +177,10 @@ The following arguments are supported:
   The Hybrid Replication parameters for the volume.
   Structure is [documented below](#nested_hybrid_replication_parameters).
 
+* `throughput_mibps` -
+  (Optional)
+  Optional. Custom Performance Total Throughput of the pool (in MiB/s).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -241,6 +245,15 @@ Possible values: DEFAULT, FORCE.
 * `kerberos5p_read_write` -
   (Optional)
   If enabled (true) the rule defines read and write access for clients matching the 'allowedClients' specification. It enables nfs clients to mount using 'privacy' kerberos security mode. The 'kerberos5pReadOnly' value is ignored if this is enabled.
+
+* `squash_mode` -
+  (Optional)
+  SquashMode defines how remote user privileges are restricted when accessing an NFS export. It controls how the user identities (like root) are mapped to anonymous users to limit access and enforce security.
+  Possible values are: `NO_ROOT_SQUASH`, `ROOT_SQUASH`, `ALL_SQUASH`.
+
+* `anon_uid` -
+  (Optional)
+  An integer representing the anonymous user ID. Range is 0 to 4294967295. Required when `squash_mode` is `ROOT_SQUASH` or `ALL_SQUASH`.
 
 <a name="nested_restore_parameters"></a>The `restore_parameters` block supports:
 
@@ -373,7 +386,7 @@ Possible values: DEFAULT, FORCE.
   Possible values are: `ENABLED`, `PAUSED`.
 
 * `hot_tier_bypass_mode_enabled` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Optional. Flag indicating that the hot tier bypass mode is enabled. Default is false.
   Only applicable to Flex service level.
 
@@ -411,6 +424,20 @@ Possible values: DEFAULT, FORCE.
   (Optional)
   Optional. Labels to be added to the replication as the key value pairs.
   An object containing a list of "key": value pairs. Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.
+
+* `replication_schedule` -
+  (Optional)
+  Optional. Replication Schedule for the replication created.
+  Possible values are: `EVERY_10_MINUTES`, `HOURLY`, `DAILY`.
+
+* `hybrid_replication_type` -
+  (Optional)
+  Optional. Type of the volume's hybrid replication.
+  Possible values are: `MIGRATION`, `CONTINUOUS_REPLICATION`, `ONPREM_REPLICATION`, `REVERSE_ONPREM_REPLICATION`.
+
+* `large_volume_constituent_count` -
+  (Optional)
+  Optional. Constituent volume count for large volume.
 
 ## Attributes Reference
 
@@ -467,6 +494,9 @@ In addition to the arguments listed above, the following computed attributes are
 * `cold_tier_size_gib` -
   Output only. Size of the volume cold tier data in GiB.
 
+* `hot_tier_size_used_gib` -
+  Total hot tier data rounded down to the nearest GiB used by the volume. This field is only used for flex Service Level
+
 * `terraform_labels` -
   The combination of labels configured directly on the resource
    and default labels configured on the provider.
@@ -494,6 +524,10 @@ In addition to the arguments listed above, the following computed attributes are
 * `protocol` -
   (Output)
   Protocol to mount with.
+
+* `ip_address` -
+  (Output)
+  IP Address.
 
 ## Timeouts
 
