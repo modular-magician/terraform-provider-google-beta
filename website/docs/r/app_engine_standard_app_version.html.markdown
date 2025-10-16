@@ -170,6 +170,7 @@ The following arguments are supported:
 * `app_engine_apis` -
   (Optional)
   Allows App Engine second generation runtimes to access the legacy bundled services.
+  Cannot specify both `app_engine_apis` and 'app_engine_bundled_services` together.
 
 * `runtime_api_version` -
   (Optional)
@@ -223,6 +224,12 @@ The following arguments are supported:
   (Optional)
   A service with manual scaling runs continuously, allowing you to perform complex initialization and rely on the state of its memory over time.
   Structure is [documented below](#nested_manual_scaling).
+
+* `app_engine_bundled_services` -
+  (Optional)
+  A list of legacy bundled services to enable for this version on an App Engine second-generation runtime.
+  Cannot specify both `app_engine_apis` and 'app_engine_bundled_services` together.
+  Each value may be one of: `BUNDLED_SERVICE_TYPE_APP_IDENTITY_SERVICE`, `BUNDLED_SERVICE_TYPE_BLOBSTORE`, `BUNDLED_SERVICE_TYPE_CAPABILITY_SERVICE`, `BUNDLED_SERVICE_TYPE_DATASTORE_V3`, `BUNDLED_SERVICE_TYPE_IMAGES`, `BUNDLED_SERVICE_TYPE_MAIL`, `BUNDLED_SERVICE_TYPE_MEMCACHE`, `BUNDLED_SERVICE_TYPE_MODULES`, `BUNDLED_SERVICE_TYPE_SEARCH`, `BUNDLED_SERVICE_TYPE_TASKQUEUES`, `BUNDLED_SERVICE_TYPE_URLFETCH`, `BUNDLED_SERVICE_TYPE_USERS`.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
