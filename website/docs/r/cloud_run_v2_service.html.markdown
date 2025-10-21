@@ -769,7 +769,7 @@ The following arguments are supported:
   Structure is [documented below](#nested_scaling).
 
 * `default_uri_disabled` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   Disables public resolution of the default URI of this service.
 
 * `traffic` -
@@ -1339,7 +1339,7 @@ When the field is set to false, deleting the service is allowed.
   If true, mount the GCS bucket as read-only
 
 * `mount_options` -
-  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  (Optional)
   A list of flags to pass to the gcsfuse command for configuring this volume.
   Flags should be passed without leading dashes.
 
