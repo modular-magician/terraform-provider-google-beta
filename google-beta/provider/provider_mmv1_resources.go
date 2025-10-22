@@ -621,9 +621,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 725
+// Generated resources: 726
 // Generated IAM resources: 348
-// Total generated resources: 1073
+// Total generated resources: 1074
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1433,6 +1433,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_network_security_intercept_endpoint_group_association":               networksecurity.ResourceNetworkSecurityInterceptEndpointGroupAssociation(),
 	"google_network_security_mirroring_deployment":                               networksecurity.ResourceNetworkSecurityMirroringDeployment(),
 	"google_network_security_mirroring_deployment_group":                         networksecurity.ResourceNetworkSecurityMirroringDeploymentGroup(),
+	"google_network_security_mirroring_endpoint":                                 networksecurity.ResourceNetworkSecurityMirroringEndpoint(),
 	"google_network_security_mirroring_endpoint_group":                           networksecurity.ResourceNetworkSecurityMirroringEndpointGroup(),
 	"google_network_security_mirroring_endpoint_group_association":               networksecurity.ResourceNetworkSecurityMirroringEndpointGroupAssociation(),
 	"google_network_security_address_group_iam_binding":                          tpgiamresource.ResourceIamBinding(networksecurity.NetworkSecurityProjectAddressGroupIamSchema, networksecurity.NetworkSecurityProjectAddressGroupIamUpdaterProducer, networksecurity.NetworkSecurityProjectAddressGroupIdParseFunc),
