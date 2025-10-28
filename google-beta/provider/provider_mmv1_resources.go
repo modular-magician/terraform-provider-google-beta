@@ -621,9 +621,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 727
+// Generated resources: 728
 // Generated IAM resources: 348
-// Total generated resources: 1075
+// Total generated resources: 1076
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1010,6 +1010,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_compute_vpn_tunnel":                                                  compute.ResourceComputeVpnTunnel(),
 	"google_compute_wire_group":                                                  compute.ResourceComputeWireGroup(),
 	"google_contact_center_insights_analysis_rule":                               contactcenterinsights.ResourceContactCenterInsightsAnalysisRule(),
+	"google_contact_center_insights_assessment_rule":                             contactcenterinsights.ResourceContactCenterInsightsAssessmentRule(),
 	"google_contact_center_insights_view":                                        contactcenterinsights.ResourceContactCenterInsightsView(),
 	"google_container_analysis_note":                                             containeranalysis.ResourceContainerAnalysisNote(),
 	"google_container_analysis_note_iam_binding":                                 tpgiamresource.ResourceIamBinding(containeranalysis.ContainerAnalysisNoteIamSchema, containeranalysis.ContainerAnalysisNoteIamUpdaterProducer, containeranalysis.ContainerAnalysisNoteIdParseFunc),
