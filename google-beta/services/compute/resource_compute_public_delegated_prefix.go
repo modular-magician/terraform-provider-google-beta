@@ -38,6 +38,7 @@ func ResourceComputePublicDelegatedPrefix() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceComputePublicDelegatedPrefixCreate,
 		Read:   resourceComputePublicDelegatedPrefixRead,
+		Update: resourceComputePublicDelegatedPrefixUpdate,
 		Delete: resourceComputePublicDelegatedPrefixDelete,
 
 		Importer: &schema.ResourceImporter{
@@ -46,6 +47,7 @@ func ResourceComputePublicDelegatedPrefix() *schema.Resource {
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(20 * time.Minute),
+			Update: schema.DefaultTimeout(20 * time.Minute),
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 
@@ -88,7 +90,6 @@ except the last character, which cannot be a dash.`,
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Optional:    true,
-				ForceNew:    true,
 				Description: `The allocatable prefix length supported by this public delegated prefix. This field is optional and cannot be set for prefixes in DELEGATION mode. It cannot be set for IPv4 prefixes either, and it always defaults to 32.`,
 			},
 			"description": {
@@ -97,26 +98,20 @@ except the last character, which cannot be a dash.`,
 				ForceNew:    true,
 				Description: `An optional description of this resource.`,
 			},
-			"is_live_migration": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				ForceNew:    true,
-				Description: `If true, the prefix will be live migrated.`,
-			},
 			"mode": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: verify.ValidateEnum([]string{"DELEGATION", "EXTERNAL_IPV6_FORWARDING_RULE_CREATION", "EXTERNAL_IPV6_SUBNETWORK_CREATION", ""}),
 				Description: `Specifies the mode of this IPv6 PDP. MODE must be one of: DELEGATION,
-EXTERNAL_IPV6_FORWARDING_RULE_CREATION and EXTERNAL_IPV6_SUBNETWORK_CREATION. Possible values: ["DELEGATION", "EXTERNAL_IPV6_FORWARDING_RULE_CREATION", "EXTERNAL_IPV6_SUBNETWORK_CREATION"]`,
+EXTERNAL_IPV6_FORWARDING_RULE_CREATION
+and EXTERNAL_IPV6_SUBNETWORK_CREATION. Possible values: ["DELEGATION", "EXTERNAL_IPV6_FORWARDING_RULE_CREATION", "EXTERNAL_IPV6_SUBNETWORK_CREATION"]`,
 			},
 			"public_delegated_sub_prefixs": {
 				Type:     schema.TypeList,
-				Computed: true,
-				Description: `List of sub public delegated fixes for BYO IP functionality.
-Each item in this array represents a sub prefix that can be
-used to create addresses or further allocations.`,
+				Optional: true,
+				Description: `The list of sub public delegated prefixes that exist for this public
+delegated prefix.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"allocatable_prefix_length": {
@@ -135,9 +130,10 @@ used to create addresses or further allocations.`,
 							Description: `An optional description of this sub public delegated prefix.`,
 						},
 						"ip_cidr_range": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: `The IP address range in the CIDR format represented by this sub prefix.`,
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `The IP address range in the CIDR format represented by this
+sub prefix.`,
 						},
 						"is_address": {
 							Type:        schema.TypeBool,
@@ -156,18 +152,34 @@ used to create addresses or further allocations.`,
 							Description: `The name of the sub public delegated prefix.`,
 						},
 						"region": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: `Output-only. The region of the sub public delegated prefix if it is regional. If absent, the sub prefix is global.`,
+							Type:     schema.TypeString,
+							Computed: true,
+							Description: `The region of the sub public delegated prefix if it is regional.
+If absent, the sub prefix is global.`,
 						},
 						"status": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							ValidateFunc: verify.ValidateEnum([]string{"INITIALIZING", "READY_TO_ANNOUNCE", "ANNOUNCED", "DELETING", ""}),
-							Description:  `The status of the sub public delegated prefix. Possible values: ["INITIALIZING", "READY_TO_ANNOUNCE", "ANNOUNCED", "DELETING"]`,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `The status of the sub public delegated prefix.`,
 						},
 					},
 				},
+			},
+			"fingerprint": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `Fingerprint of this resource. A hash of the contents stored in this
+object. This field is used in optimistic locking. This field will be
+ignored when inserting a new PublicDelegatedPrefix. An up-to-date
+fingerprint must be provided in order to update the PublicDelegatedPrefix,
+otherwise the request will fail with error 412 conditionNotMet.
+A base64-encoded string.`,
+			},
+			"is_live_migration": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Deprecated:  "`isLiveMigration` is deprecated and will be removed in a future major release.",
+				Description: `If true, the prefix will be live migrated.`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -192,23 +204,17 @@ func resourceComputePublicDelegatedPrefixCreate(d *schema.ResourceData, meta int
 	}
 
 	obj := make(map[string]interface{})
-	descriptionProp, err := expandComputePublicDelegatedPrefixDescription(d.Get("description"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
-		obj["description"] = descriptionProp
-	}
-	isLiveMigrationProp, err := expandComputePublicDelegatedPrefixIsLiveMigration(d.Get("is_live_migration"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("is_live_migration"); !tpgresource.IsEmptyValue(reflect.ValueOf(isLiveMigrationProp)) && (ok || !reflect.DeepEqual(v, isLiveMigrationProp)) {
-		obj["isLiveMigration"] = isLiveMigrationProp
-	}
 	nameProp, err := expandComputePublicDelegatedPrefixName(d.Get("name"), d, config)
 	if err != nil {
 		return err
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
+	}
+	descriptionProp, err := expandComputePublicDelegatedPrefixDescription(d.Get("description"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("description"); !tpgresource.IsEmptyValue(reflect.ValueOf(descriptionProp)) && (ok || !reflect.DeepEqual(v, descriptionProp)) {
+		obj["description"] = descriptionProp
 	}
 	parentPrefixProp, err := expandComputePublicDelegatedPrefixParentPrefix(d.Get("parent_prefix"), d, config)
 	if err != nil {
@@ -233,6 +239,18 @@ func resourceComputePublicDelegatedPrefixCreate(d *schema.ResourceData, meta int
 		return err
 	} else if v, ok := d.GetOkExists("ip_cidr_range"); !tpgresource.IsEmptyValue(reflect.ValueOf(ipCidrRangeProp)) && (ok || !reflect.DeepEqual(v, ipCidrRangeProp)) {
 		obj["ipCidrRange"] = ipCidrRangeProp
+	}
+	publicDelegatedSubPrefixsProp, err := expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixs(d.Get("public_delegated_sub_prefixs"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("public_delegated_sub_prefixs"); !tpgresource.IsEmptyValue(reflect.ValueOf(publicDelegatedSubPrefixsProp)) && (ok || !reflect.DeepEqual(v, publicDelegatedSubPrefixsProp)) {
+		obj["publicDelegatedSubPrefixs"] = publicDelegatedSubPrefixsProp
+	}
+	fingerprintProp, err := expandComputePublicDelegatedPrefixFingerprint(d.Get("fingerprint"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("fingerprint"); !tpgresource.IsEmptyValue(reflect.ValueOf(fingerprintProp)) && (ok || !reflect.DeepEqual(v, fingerprintProp)) {
+		obj["fingerprint"] = fingerprintProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/publicDelegatedPrefixes")
@@ -333,13 +351,10 @@ func resourceComputePublicDelegatedPrefixRead(d *schema.ResourceData, meta inter
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
 
-	if err := d.Set("description", flattenComputePublicDelegatedPrefixDescription(res["description"], d, config)); err != nil {
-		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
-	}
-	if err := d.Set("is_live_migration", flattenComputePublicDelegatedPrefixIsLiveMigration(res["isLiveMigration"], d, config)); err != nil {
-		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
-	}
 	if err := d.Set("name", flattenComputePublicDelegatedPrefixName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
+	}
+	if err := d.Set("description", flattenComputePublicDelegatedPrefixDescription(res["description"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
 	if err := d.Set("parent_prefix", flattenComputePublicDelegatedPrefixParentPrefix(res["parentPrefix"], d, config)); err != nil {
@@ -357,11 +372,93 @@ func resourceComputePublicDelegatedPrefixRead(d *schema.ResourceData, meta inter
 	if err := d.Set("public_delegated_sub_prefixs", flattenComputePublicDelegatedPrefixPublicDelegatedSubPrefixs(res["publicDelegatedSubPrefixs"], d, config)); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
+	if err := d.Set("fingerprint", flattenComputePublicDelegatedPrefixFingerprint(res["fingerprint"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
+	}
+	if err := d.Set("is_live_migration", flattenComputePublicDelegatedPrefixIsLiveMigration(res["isLiveMigration"], d, config)); err != nil {
+		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
+	}
 	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
 		return fmt.Errorf("Error reading PublicDelegatedPrefix: %s", err)
 	}
 
 	return nil
+}
+
+func resourceComputePublicDelegatedPrefixUpdate(d *schema.ResourceData, meta interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
+	if err != nil {
+		return err
+	}
+
+	billingProject := ""
+
+	project, err := tpgresource.GetProject(d, config)
+	if err != nil {
+		return fmt.Errorf("Error fetching project for PublicDelegatedPrefix: %s", err)
+	}
+	billingProject = project
+
+	obj := make(map[string]interface{})
+	allocatablePrefixLengthProp, err := expandComputePublicDelegatedPrefixAllocatablePrefixLength(d.Get("allocatable_prefix_length"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("allocatable_prefix_length"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, allocatablePrefixLengthProp)) {
+		obj["allocatablePrefixLength"] = allocatablePrefixLengthProp
+	}
+	publicDelegatedSubPrefixsProp, err := expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixs(d.Get("public_delegated_sub_prefixs"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("public_delegated_sub_prefixs"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, publicDelegatedSubPrefixsProp)) {
+		obj["publicDelegatedSubPrefixs"] = publicDelegatedSubPrefixsProp
+	}
+	fingerprintProp, err := expandComputePublicDelegatedPrefixFingerprint(d.Get("fingerprint"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("fingerprint"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, fingerprintProp)) {
+		obj["fingerprint"] = fingerprintProp
+	}
+
+	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/publicDelegatedPrefixes/{{name}}")
+	if err != nil {
+		return err
+	}
+
+	log.Printf("[DEBUG] Updating PublicDelegatedPrefix %q: %#v", d.Id(), obj)
+	headers := make(http.Header)
+
+	// err == nil indicates that the billing_project value was found
+	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+		billingProject = bp
+	}
+
+	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "PATCH",
+		Project:   billingProject,
+		RawURL:    url,
+		UserAgent: userAgent,
+		Body:      obj,
+		Timeout:   d.Timeout(schema.TimeoutUpdate),
+		Headers:   headers,
+	})
+
+	if err != nil {
+		return fmt.Errorf("Error updating PublicDelegatedPrefix %q: %s", d.Id(), err)
+	} else {
+		log.Printf("[DEBUG] Finished updating PublicDelegatedPrefix %q: %#v", d.Id(), res)
+	}
+
+	err = ComputeOperationWaitTime(
+		config, res, project, "Updating PublicDelegatedPrefix", userAgent,
+		d.Timeout(schema.TimeoutUpdate))
+
+	if err != nil {
+		return err
+	}
+
+	return resourceComputePublicDelegatedPrefixRead(d, meta)
 }
 
 func resourceComputePublicDelegatedPrefixDelete(d *schema.ResourceData, meta interface{}) error {
@@ -441,15 +538,11 @@ func resourceComputePublicDelegatedPrefixImport(d *schema.ResourceData, meta int
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenComputePublicDelegatedPrefixDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenComputePublicDelegatedPrefixIsLiveMigration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
 func flattenComputePublicDelegatedPrefixName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputePublicDelegatedPrefixDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -557,15 +650,19 @@ func flattenComputePublicDelegatedPrefixPublicDelegatedSubPrefixsDelegateeProjec
 	return v
 }
 
-func expandComputePublicDelegatedPrefixDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
+func flattenComputePublicDelegatedPrefixFingerprint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
-func expandComputePublicDelegatedPrefixIsLiveMigration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
+func flattenComputePublicDelegatedPrefixIsLiveMigration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
 }
 
 func expandComputePublicDelegatedPrefixName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -582,5 +679,126 @@ func expandComputePublicDelegatedPrefixAllocatablePrefixLength(v interface{}, d 
 }
 
 func expandComputePublicDelegatedPrefixIpCidrRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedName, err := expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsName(original["name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["name"] = transformedName
+		}
+
+		transformedDescription, err := expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsDescription(original["description"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["description"] = transformedDescription
+		}
+
+		transformedRegion, err := expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsRegion(original["region"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedRegion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["region"] = transformedRegion
+		}
+
+		transformedStatus, err := expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsStatus(original["status"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedStatus); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["status"] = transformedStatus
+		}
+
+		transformedIpCidrRange, err := expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsIpCidrRange(original["ip_cidr_range"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedIpCidrRange); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["ipCidrRange"] = transformedIpCidrRange
+		}
+
+		transformedIsAddress, err := expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsIsAddress(original["is_address"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedIsAddress); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["isAddress"] = transformedIsAddress
+		}
+
+		transformedMode, err := expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsMode(original["mode"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["mode"] = transformedMode
+		}
+
+		transformedAllocatablePrefixLength, err := expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsAllocatablePrefixLength(original["allocatable_prefix_length"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAllocatablePrefixLength); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["allocatablePrefixLength"] = transformedAllocatablePrefixLength
+		}
+
+		transformedDelegateeProject, err := expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsDelegateeProject(original["delegatee_project"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDelegateeProject); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["delegateeProject"] = transformedDelegateeProject
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsRegion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsStatus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsIpCidrRange(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsIsAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsAllocatablePrefixLength(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixPublicDelegatedSubPrefixsDelegateeProject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputePublicDelegatedPrefixFingerprint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

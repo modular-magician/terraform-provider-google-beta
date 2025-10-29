@@ -30,27 +30,27 @@ To get more information about PublicAdvertisedPrefix, see:
 * How-to Guides
     * [Using bring your own IP](https://cloud.google.com/vpc/docs/using-bring-your-own-ip)
 
-## Example Usage - Public Advertised Prefixes Basic
+## Example Usage - Compute Public Advertised Prefixes Basic
 
 
 ```hcl
 resource "google_compute_public_advertised_prefix" "prefixes" {
-  name = "my-prefix"
-  description = "description"
+  name                = "my-prefix"
+  description         = "description"
   dns_verification_ip = "127.127.0.0"
-  ip_cidr_range = "127.127.0.0/16"
+  ip_cidr_range       = "127.127.0.0/16"
 }
 ```
-## Example Usage - Public Advertised Prefixes Pdp Scope
+## Example Usage - Compute Public Advertised Prefixes Pdp Scope
 
 
 ```hcl
 resource "google_compute_public_advertised_prefix" "prefixes" {
-  name = "my-pap"
-  description = "description"
+  name                = "my-pap"
+  description         = "description"
   dns_verification_ip = "127.127.0.0"
-  ip_cidr_range = "127.127.0.0/16"
-  pdp_scope = "REGIONAL"
+  ip_cidr_range       = "127.127.0.0/16"
+  pdp_scope           = "REGIONAL"
 }
 ```
 

@@ -30,84 +30,123 @@ To get more information about PublicDelegatedPrefix, see:
 * How-to Guides
     * [Using bring your own IP](https://cloud.google.com/vpc/docs/using-bring-your-own-ip)
 
-## Example Usage - Public Delegated Prefixes Basic
+## Example Usage - Compute Public Delegated Prefixes Basic
 
 
 ```hcl
 resource "google_compute_public_advertised_prefix" "advertised" {
-  name = "my-prefix"
-  description = "description"
+  name                = "my-prefix"
+  description         = "description"
   dns_verification_ip = "127.127.0.0"
-  ip_cidr_range = "127.127.0.0/16"
+  ip_cidr_range       = "127.127.0.0/16"
 }
 
 resource "google_compute_public_delegated_prefix" "prefixes" {
-  name = "my-prefix"
-  region = "us-central1"
-  description = "my description"
+  name          = "my-prefix"
+  region        = "us-central1"
+  description   = "my description"
   ip_cidr_range = "127.127.0.0/24"
   parent_prefix = google_compute_public_advertised_prefix.advertised.id
 }
 ```
-## Example Usage - Public Delegated Prefixes Ipv6
+## Example Usage - Compute Public Delegated Prefixes Sub
 
 
 ```hcl
+# public_delegated_sub_prefixes blocks can only be defined
+# after the base google_compute_public_delegated_prefix has been created.
+
 resource "google_compute_public_advertised_prefix" "advertised" {
-  name = "ipv6-pap"
-  description = "description"
-  dns_verification_ip = "2001:db8::"
-  ip_cidr_range = "2001:db8::/32"
-  pdp_scope = "REGIONAL"
+  name                = "my-prefix"
+  description         = "description"
+  dns_verification_ip = "127.127.0.0"
+  ip_cidr_range       = "127.127.0.0/16"
 }
 
-resource "google_compute_public_delegated_prefix" "prefix" {
-  name = "ipv6-root-pdp"
-  description = "test-delegation-mode-pdp"
-  region = "us-west1"
-  ip_cidr_range = "2001:db8::/40"
+resource "google_compute_public_delegated_prefix" "prefixes" {
+  name          = "my-prefix"
+  region        = "us-central1"
+  description   = "my description"
+  ip_cidr_range = "127.127.0.0/24"
   parent_prefix = google_compute_public_advertised_prefix.advertised.id
-  mode = "DELEGATION"
-}
 
-resource "google_compute_public_delegated_prefix" "subprefix" {
-  name = "ipv6-sub-pdp"
-  description = "test-forwarding-rule-mode-pdp"
-  region = "us-west1"
-  ip_cidr_range = "2001:db8::/48"
-  parent_prefix = google_compute_public_delegated_prefix.prefix.id
-  allocatable_prefix_length = 64
-  mode = "EXTERNAL_IPV6_FORWARDING_RULE_CREATION"
+  # Delegated sub prefixes cannot be defined at creation time
+  # but can be defined during updates.
+
+  public_delegated_sub_prefixes {
+    name              = "my-sub-prefix-1"
+    description       = "My delegated sub-prefix 1"
+    ip_cidr_range     = "127.127.0.0/25"
+    delegatee_project = "my-addresses-project"
+  }
+
+  public_delegated_sub_prefixes {
+    name              = "my-sub-prefix-2"
+    description       = "My delegated sub-prefix 2"
+    ip_cidr_range     = "127.127.0.128/25"
+    delegatee_project = "my-addresses-project"
+  }
 }
 ```
-## Example Usage - Public Delegated Prefix Ipv6 Subnet Mode
+## Example Usage - Compute Public Delegated Prefixes Ipv6
 
 
 ```hcl
 resource "google_compute_public_advertised_prefix" "advertised" {
-  name = "ipv6-pap"
-  description = "description"
+  name                = "ipv6-pap"
+  description         = "description"
   dns_verification_ip = "2001:db8::"
-  ip_cidr_range = "2001:db8::/32"
-  pdp_scope = "REGIONAL"
+  ip_cidr_range       = "2001:db8::/32"
+  pdp_scope           = "REGIONAL"
 }
 
 resource "google_compute_public_delegated_prefix" "prefix" {
-  name = "ipv6-root-pdp"
-  description = "test-delegation-mode-pdp"
-  region = "us-east1"
+  name          = "ipv6-root-pdp"
+  description   = "test-delegation-mode-pdp"
+  region        = "us-west1"
   ip_cidr_range = "2001:db8::/40"
   parent_prefix = google_compute_public_advertised_prefix.advertised.id
-  mode = "DELEGATION"
+  mode          = "DELEGATION"
 }
 
 resource "google_compute_public_delegated_prefix" "subprefix" {
-  name = "ipv6-sub-pdp"
-  description = "test-subnet-mode-pdp"
-  region = "us-east1"
+  name                      = "ipv6-sub-pdp"
+  description               = "test-forwarding-rule-mode-pdp"
+  region                    = "us-west1"
+  ip_cidr_range             = "2001:db8::/48"
+  parent_prefix             = google_compute_public_delegated_prefix.prefix.id
+  allocatable_prefix_length = 64
+  mode                      = "EXTERNAL_IPV6_FORWARDING_RULE_CREATION"
+}
+```
+## Example Usage - Compute Public Delegated Prefix Ipv6 Subnet Mode
+
+
+```hcl
+resource "google_compute_public_advertised_prefix" "advertised" {
+  name                = "ipv6-pap"
+  description         = "description"
+  dns_verification_ip = "2001:db8::"
+  ip_cidr_range       = "2001:db8::/32"
+  pdp_scope           = "REGIONAL"
+}
+
+resource "google_compute_public_delegated_prefix" "prefix" {
+  name          = "ipv6-root-pdp"
+  description   = "test-delegation-mode-pdp"
+  region        = "us-east1"
+  ip_cidr_range = "2001:db8::/40"
+  parent_prefix = google_compute_public_advertised_prefix.advertised.id
+  mode          = "DELEGATION"
+}
+
+resource "google_compute_public_delegated_prefix" "subprefix" {
+  name          = "ipv6-sub-pdp"
+  description   = "test-subnet-mode-pdp"
+  region        = "us-east1"
   ip_cidr_range = "2001:db8::/48"
   parent_prefix = google_compute_public_delegated_prefix.prefix.id
-  mode = "EXTERNAL_IPV6_SUBNETWORK_CREATION"
+  mode          = "EXTERNAL_IPV6_SUBNETWORK_CREATION"
 }
 ```
 
@@ -115,10 +154,6 @@ resource "google_compute_public_delegated_prefix" "subprefix" {
 
 The following arguments are supported:
 
-
-* `region` -
-  (Required)
-  A region where the prefix will reside.
 
 * `name` -
   (Required)
@@ -128,6 +163,10 @@ The following arguments are supported:
   which means the first character must be a lowercase letter, and all
   following characters must be a dash, lowercase letter, or digit,
   except the last character, which cannot be a dash.
+
+* `region` -
+  (Required)
+  A region where the prefix will reside.
 
 * `parent_prefix` -
   (Required)
@@ -142,40 +181,29 @@ The following arguments are supported:
   (Optional)
   An optional description of this resource.
 
-* `is_live_migration` -
-  (Optional)
-  If true, the prefix will be live migrated.
-
 * `mode` -
   (Optional)
   Specifies the mode of this IPv6 PDP. MODE must be one of: DELEGATION,
-  EXTERNAL_IPV6_FORWARDING_RULE_CREATION and EXTERNAL_IPV6_SUBNETWORK_CREATION.
+  EXTERNAL_IPV6_FORWARDING_RULE_CREATION
+  and EXTERNAL_IPV6_SUBNETWORK_CREATION.
   Possible values are: `DELEGATION`, `EXTERNAL_IPV6_FORWARDING_RULE_CREATION`, `EXTERNAL_IPV6_SUBNETWORK_CREATION`.
 
 * `allocatable_prefix_length` -
   (Optional)
   The allocatable prefix length supported by this public delegated prefix. This field is optional and cannot be set for prefixes in DELEGATION mode. It cannot be set for IPv4 prefixes either, and it always defaults to 32.
 
+* `public_delegated_sub_prefixs` -
+  (Optional)
+  The list of sub public delegated prefixes that exist for this public
+  delegated prefix.
+  Structure is [documented below](#nested_public_delegated_sub_prefixs).
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
 
 
-## Attributes Reference
-
-In addition to the arguments listed above, the following computed attributes are exported:
-
-* `id` - an identifier for the resource with format `projects/{{project}}/regions/{{region}}/publicDelegatedPrefixes/{{name}}`
-
-* `public_delegated_sub_prefixs` -
-  List of sub public delegated fixes for BYO IP functionality.
-  Each item in this array represents a sub prefix that can be
-  used to create addresses or further allocations.
-  Structure is [documented below](#nested_public_delegated_sub_prefixs).
-* `self_link` - The URI of the created resource.
-
-
-<a name="nested_public_delegated_sub_prefixs"></a>The `public_delegated_sub_prefixs` block contains:
+<a name="nested_public_delegated_sub_prefixs"></a>The `public_delegated_sub_prefixs` block supports:
 
 * `name` -
   (Optional)
@@ -186,17 +214,18 @@ In addition to the arguments listed above, the following computed attributes are
   An optional description of this sub public delegated prefix.
 
 * `region` -
-  (Optional)
-  Output-only. The region of the sub public delegated prefix if it is regional. If absent, the sub prefix is global.
+  (Output)
+  The region of the sub public delegated prefix if it is regional.
+  If absent, the sub prefix is global.
 
 * `status` -
-  (Optional)
+  (Output)
   The status of the sub public delegated prefix.
-  Possible values are: `INITIALIZING`, `READY_TO_ANNOUNCE`, `ANNOUNCED`, `DELETING`.
 
 * `ip_cidr_range` -
   (Optional)
-  The IP address range in the CIDR format represented by this sub prefix.
+  The IP address range in the CIDR format represented by this
+  sub prefix.
 
 * `is_address` -
   (Optional)
@@ -215,12 +244,35 @@ In addition to the arguments listed above, the following computed attributes are
   (Optional)
   Name of the project scoping this PublicDelegatedSubPrefix.
 
+## Attributes Reference
+
+In addition to the arguments listed above, the following computed attributes are exported:
+
+* `id` - an identifier for the resource with format `projects/{{project}}/regions/{{region}}/publicDelegatedPrefixes/{{name}}`
+
+* `fingerprint` -
+  Fingerprint of this resource. A hash of the contents stored in this
+  object. This field is used in optimistic locking. This field will be
+  ignored when inserting a new PublicDelegatedPrefix. An up-to-date
+  fingerprint must be provided in order to update the PublicDelegatedPrefix,
+  otherwise the request will fail with error 412 conditionNotMet.
+  A base64-encoded string.
+
+* `is_live_migration` -
+  (Deprecated)
+  If true, the prefix will be live migrated.
+
+  ~> **Warning:** `isLiveMigration` is deprecated and will be removed in a future major release.
+* `self_link` - The URI of the created resource.
+
+
 ## Timeouts
 
 This resource provides the following
 [Timeouts](https://developer.hashicorp.com/terraform/plugin/sdkv2/resources/retries-and-customizable-timeouts) configuration options:
 
 - `create` - Default is 20 minutes.
+- `update` - Default is 20 minutes.
 - `delete` - Default is 20 minutes.
 
 ## Import

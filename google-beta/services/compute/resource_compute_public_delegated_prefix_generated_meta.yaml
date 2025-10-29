@@ -7,6 +7,7 @@ api_resource_type_kind: 'PublicDelegatedPrefix'
 fields:
   - api_field: 'allocatablePrefixLength'
   - api_field: 'description'
+  - api_field: 'fingerprint'
   - api_field: 'ipCidrRange'
   - api_field: 'isLiveMigration'
   - api_field: 'mode'
