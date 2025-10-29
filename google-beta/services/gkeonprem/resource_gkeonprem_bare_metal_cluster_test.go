@@ -137,6 +137,10 @@ func testAccGkeonpremBareMetalCluster_bareMetalClusterUpdateMetalLbStart(context
         service_address_cidr_blocks = ["172.26.0.0/16"]
         pod_address_cidr_blocks = ["10.240.0.0/13"]
       }
+      advanced_networking = true
+      multiple_network_interfaces_config {
+      	enabled = true
+      }
     }
     control_plane {
       control_plane_node_pool_config {
@@ -172,6 +176,33 @@ func testAccGkeonpremBareMetalCluster_bareMetalClusterUpdateMetalLbStart(context
             "fd00:1::11/128",
             "fd00:1::12/128"
           ]
+        }
+      }
+      bgp_lb_config {
+        asn = 64513
+        bgp_peer_configs = [
+	  {
+	    asn = 65001
+            ip_address = "10.200.0.1"
+	    control_panel_nodes = ["10.200.0.4", "10.200.0.5", "10.200.0.6"]
+	  }
+        ]
+        address_pools = [
+	  {
+	    pool = "loadBalancerAddressPool-1"
+	    addresses = ["10.200.0.1/24", "10.200.0.2/24"]
+	    manual_assign = true
+	  }
+        ]
+        load_balancer_node_pool_config {
+          node_pool_config {
+            labels = {}
+            operating_system = "LINUX"
+            node_configs {
+              labels = {}
+              node_ip = "10.200.0.9"
+            }
+          }
         }
       }
     }
@@ -215,6 +246,10 @@ func testAccGkeonpremBareMetalCluster_bareMetalClusterUpdateMetalLb(context map[
         service_address_cidr_blocks = ["172.26.0.0/20"]
         pod_address_cidr_blocks = ["10.240.0.0/14"]
       }
+      advanced_networking = true
+      multiple_network_interfaces_config {
+      	enabled = true
+      }
     }
     control_plane {
       control_plane_node_pool_config {
@@ -248,6 +283,33 @@ func testAccGkeonpremBareMetalCluster_bareMetalClusterUpdateMetalLb(context map[
             "fd00:1::10/128",
             "fd00:1::11/128"
           ]
+        }
+      }
+      bgp_lb_config {
+        asn = 64513
+        bgp_peer_configs = [
+	  {
+	    asn = 65001
+            ip_address = "10.200.0.1"
+	    control_panel_nodes = ["10.200.0.4", "10.200.0.5", "10.200.0.6"]
+	  }
+        ]
+        address_pools = [
+	  {
+	    pool = "loadBalancerAddressPool-1"
+	    addresses = ["10.200.0.1/24", "10.200.0.2/24"]
+	    manual_assign = true
+	  }
+        ]
+        load_balancer_node_pool_config {
+          node_pool_config {
+            labels = {}
+            operating_system = "LINUX"
+            node_configs {
+              labels = {}
+              node_ip = "10.200.0.9"
+            }
+          }
         }
       }
     }
@@ -288,6 +350,10 @@ func testAccGkeonpremBareMetalCluster_bareMetalClusterUpdateManualLbStart(contex
         service_address_cidr_blocks = ["172.26.0.0/20"]
         pod_address_cidr_blocks = ["10.240.0.0/14"]
       }
+      advanced_networking = true
+      multiple_network_interfaces_config {
+      	enabled = true
+      }
     }
     control_plane {
       control_plane_node_pool_config {
@@ -321,6 +387,33 @@ func testAccGkeonpremBareMetalCluster_bareMetalClusterUpdateManualLbStart(contex
             "fd00:1::10/128",
             "fd00:1::11/128"
           ]
+        }
+      }
+      bgp_lb_config {
+        asn = 64513
+        bgp_peer_configs = [
+	  {
+	    asn = 65001
+            ip_address = "10.200.0.1"
+	    control_panel_nodes = ["10.200.0.4", "10.200.0.5", "10.200.0.6"]
+	  }
+        ]
+        address_pools = [
+	  {
+	    pool = "loadBalancerAddressPool-1"
+	    addresses = ["10.200.0.1/24", "10.200.0.2/24"]
+	    manual_assign = true
+	  }
+        ]
+        load_balancer_node_pool_config {
+          node_pool_config {
+            labels = {}
+            operating_system = "LINUX"
+            node_configs {
+              labels = {}
+              node_ip = "10.200.0.9"
+            }
+          }
         }
       }
     }
@@ -366,6 +459,10 @@ func testAccGkeonpremBareMetalCluster_bareMetalClusterUpdateManualLb(context map
       island_mode_cidr {
         service_address_cidr_blocks = ["172.26.0.0/20"]
         pod_address_cidr_blocks = ["10.240.0.0/14"]
+      }
+      advanced_networking = true
+      multiple_network_interfaces_config {
+      	enabled = true
       }
     }
     control_plane {
@@ -434,6 +531,10 @@ func testAccGkeonpremBareMetalCluster_bareMetalClusterUpdateBgpLbStart(context m
       island_mode_cidr {
         service_address_cidr_blocks = ["172.26.0.0/20"]
         pod_address_cidr_blocks = ["10.240.0.0/14"]
+      }
+      advanced_networking = true
+      multiple_network_interfaces_config {
+      	enabled = true
       }
     }
     control_plane {
@@ -519,6 +620,10 @@ func testAccGkeonpremBareMetalCluster_bareMetalClusterUpdateBgpLb(context map[st
       island_mode_cidr {
         service_address_cidr_blocks = ["172.26.0.0/20"]
         pod_address_cidr_blocks = ["10.240.0.0/14"]
+      }
+      advanced_networking = true
+      multiple_network_interfaces_config {
+      	enabled = true
       }
     }
     control_plane {
