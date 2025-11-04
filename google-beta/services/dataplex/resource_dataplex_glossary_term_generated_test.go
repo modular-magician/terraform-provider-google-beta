@@ -54,7 +54,8 @@ func TestAccDataplexGlossaryTerm_dataplexGlossaryTermBasicExample(t *testing.T) 
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"project_number": envvar.GetTestProjectNumberFromEnv(),
+		"random_suffix":  acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -95,7 +96,8 @@ func TestAccDataplexGlossaryTerm_dataplexGlossaryTermFullExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"project_number": envvar.GetTestProjectNumberFromEnv(),
+		"random_suffix":  acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -132,6 +134,53 @@ resource "google_dataplex_glossary_term" "term_test_id_full" {
   labels = { "tag": "test-tf" }
   display_name = "terraform term"
   description = "term created by Terraform"
+}
+
+resource "google_dataplex_aspect_type" "aspect-type-full" {
+  aspect_type_id         = "tf-test-aspect-type-full%{random_suffix}"
+  location     = "us-central1"
+
+  metadata_template = <<EOF
+{
+  "name": "tf-test-template",
+  "type": "record",
+  "recordFields": [
+    {
+      "name": "type",
+      "type": "enum",
+      "annotations": {
+        "displayName": "Type",
+        "description": "Specifies the type of view represented by the entry."
+      },
+      "index": 1,
+      "constraints": {
+        "required": true
+      },
+      "enumValues": [
+        {
+          "name": "VIEW",
+          "index": 1
+        }
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource "google_dataplex_entry" "glossary-term-system-generated-entry" {
+  location      = "us-central1"
+  entry_group_id   = "@dataplex"
+  entry_id      = "${google_dataplex_glossary_term.term_test_id_full.name}"
+  entry_type    = "projects/655216118709/locations/global/entryTypes/glossary-term" # System type project number used for glossary terms
+  aspects {
+    aspect_key = "%{project_number}.us-central1.${google_dataplex_aspect_type.aspect-type-full.aspect_type_id}"
+    aspect {
+      data = <<EOF
+          {"type": "VIEW"    }
+        EOF
+    }
+  }
 }
 `, context)
 }

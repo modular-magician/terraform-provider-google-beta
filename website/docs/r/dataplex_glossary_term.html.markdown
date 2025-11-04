@@ -25,11 +25,6 @@ Represents a collection of terms within a Glossary that are related to each othe
 
 
 
-<div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=dataplex_glossary_term_basic&open_in_editor=main.tf" target="_blank">
-    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
-  </a>
-</div>
 ## Example Usage - Dataplex Glossary Term Basic
 
 
@@ -46,11 +41,6 @@ resource "google_dataplex_glossary_term" "term_test_id" {
   term_id = "tf-test-term-basic%{random_suffix}"
 }
 ```
-<div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=dataplex_glossary_term_full&open_in_editor=main.tf" target="_blank">
-    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
-  </a>
-</div>
 ## Example Usage - Dataplex Glossary Term Full
 
 
@@ -69,6 +59,53 @@ resource "google_dataplex_glossary_term" "term_test_id_full" {
   labels = { "tag": "test-tf" }
   display_name = "terraform term"
   description = "term created by Terraform"
+}
+
+resource "google_dataplex_aspect_type" "aspect-type-full" {
+  aspect_type_id         = "tf-test-aspect-type-full%{random_suffix}"
+  location     = "us-central1"
+
+  metadata_template = <<EOF
+{
+  "name": "tf-test-template",
+  "type": "record",
+  "recordFields": [
+    {
+      "name": "type",
+      "type": "enum",
+      "annotations": {
+        "displayName": "Type",
+        "description": "Specifies the type of view represented by the entry."
+      },
+      "index": 1,
+      "constraints": {
+        "required": true
+      },
+      "enumValues": [
+        {
+          "name": "VIEW",
+          "index": 1
+        }
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource "google_dataplex_entry" "glossary-term-system-generated-entry" {
+  location      = "us-central1"
+  entry_group_id   = "@dataplex"
+  entry_id      = "${google_dataplex_glossary_term.term_test_id_full.name}"
+  entry_type    = "projects/655216118709/locations/global/entryTypes/glossary-term" # System type project number used for glossary terms
+  aspects {
+    aspect_key = "1111111111111.us-central1.${google_dataplex_aspect_type.aspect-type-full.aspect_type_id}"
+    aspect {
+      data = <<EOF
+          {"type": "VIEW"    }
+        EOF
+    }
+  }
 }
 ```
 
