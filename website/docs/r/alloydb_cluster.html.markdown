@@ -429,7 +429,7 @@ The following arguments are supported:
 
 * `initial_user` -
   (Optional)
-  Initial user to setup during cluster creation. This must be set for all new Clusters.
+  Initial user to setup during cluster creation.
   Structure is [documented below](#nested_initial_user).
 
 * `restore_backup_source` -
