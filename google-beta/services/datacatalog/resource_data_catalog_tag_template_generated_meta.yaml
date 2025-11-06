@@ -4,6 +4,7 @@ source_file: 'products/datacatalog/TagTemplate.yaml'
 api_service_name: 'datacatalog.googleapis.com'
 api_version: 'v1beta1'
 api_resource_type_kind: 'TagTemplate'
+cai_asset_name_format: '//datacatalog.googleapis.com/projects/{{project}}/locations/{{region}}/tagTemplates/{{tag_template_id}}'
 fields:
   - api_field: 'displayName'
   - api_field: 'fields.field.description'
