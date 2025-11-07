@@ -69,7 +69,7 @@ func TestAccGkeonpremBareMetalCluster_gkeonpremBareMetalClusterBasicExample(t *t
 				ResourceName:            "google_gkeonprem_bare_metal_cluster.cluster-basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"annotations", "location", "name"},
+				ImportStateVerifyIgnore: []string{"annotations", "location", "name", "tags"},
 			},
 		},
 	})
@@ -170,7 +170,7 @@ func TestAccGkeonpremBareMetalCluster_gkeonpremBareMetalClusterManuallbExample(t
 				ResourceName:            "google_gkeonprem_bare_metal_cluster.cluster-manuallb",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"annotations", "location", "name"},
+				ImportStateVerifyIgnore: []string{"annotations", "location", "name", "tags"},
 			},
 		},
 	})
@@ -262,7 +262,7 @@ func TestAccGkeonpremBareMetalCluster_gkeonpremBareMetalClusterBgplbExample(t *t
 				ResourceName:            "google_gkeonprem_bare_metal_cluster.cluster-bgplb",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"annotations", "location", "name"},
+				ImportStateVerifyIgnore: []string{"annotations", "location", "name", "tags"},
 			},
 		},
 	})

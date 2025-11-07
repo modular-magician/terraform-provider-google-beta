@@ -680,6 +680,15 @@ Enabled by default.`,
 					},
 				},
 			},
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Description: `A map of resource manager tags.
+Resource manager tag keys and values have the same definition as resource manager tags.
+Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/{tag_value_id}.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
+			},
 			"upgrade_policy": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -1076,6 +1085,12 @@ func resourceGkeonpremVmwareClusterCreate(d *schema.ResourceData, meta interface
 		return err
 	} else if v, ok := d.GetOkExists("vcenter"); !tpgresource.IsEmptyValue(reflect.ValueOf(vcenterProp)) && (ok || !reflect.DeepEqual(v, vcenterProp)) {
 		obj["vcenter"] = vcenterProp
+	}
+	tagsProp, err := expandGkeonpremVmwareClusterTags(d.Get("tags"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tags"); !tpgresource.IsEmptyValue(reflect.ValueOf(tagsProp)) && (ok || !reflect.DeepEqual(v, tagsProp)) {
+		obj["tags"] = tagsProp
 	}
 	effectiveAnnotationsProp, err := expandGkeonpremVmwareClusterEffectiveAnnotations(d.Get("effective_annotations"), d, config)
 	if err != nil {
@@ -3653,6 +3668,17 @@ func expandGkeonpremVmwareClusterVcenterAddress(v interface{}, d tpgresource.Ter
 
 func expandGkeonpremVmwareClusterVcenterStoragePolicyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandGkeonpremVmwareClusterTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }
 
 func expandGkeonpremVmwareClusterEffectiveAnnotations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {

@@ -91,6 +91,7 @@ fields:
   - api_field: 'storage.lvpShareConfig.lvpConfig.path'
   - api_field: 'storage.lvpShareConfig.lvpConfig.storageClass'
   - api_field: 'storage.lvpShareConfig.sharedPathPvCount'
+  - api_field: 'tags'
   - api_field: 'uid'
   - api_field: 'updateTime'
   - api_field: 'upgradePolicy.policy'

@@ -73,6 +73,7 @@ fields:
   - api_field: 'status.conditions.type'
   - api_field: 'status.errorMessage'
   - api_field: 'storage.vsphereCsiDisabled'
+  - api_field: 'tags'
   - api_field: 'uid'
   - api_field: 'updateTime'
   - api_field: 'upgradePolicy.controlPlaneOnly'
