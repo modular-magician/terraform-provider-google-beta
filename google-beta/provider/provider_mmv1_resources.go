@@ -625,9 +625,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 735
+// Generated resources: 736
 // Generated IAM resources: 348
-// Total generated resources: 1083
+// Total generated resources: 1084
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1450,6 +1450,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_network_security_address_group_iam_binding":                          tpgiamresource.ResourceIamBinding(networksecurity.NetworkSecurityProjectAddressGroupIamSchema, networksecurity.NetworkSecurityProjectAddressGroupIamUpdaterProducer, networksecurity.NetworkSecurityProjectAddressGroupIdParseFunc),
 	"google_network_security_address_group_iam_member":                           tpgiamresource.ResourceIamMember(networksecurity.NetworkSecurityProjectAddressGroupIamSchema, networksecurity.NetworkSecurityProjectAddressGroupIamUpdaterProducer, networksecurity.NetworkSecurityProjectAddressGroupIdParseFunc),
 	"google_network_security_address_group_iam_policy":                           tpgiamresource.ResourceIamPolicy(networksecurity.NetworkSecurityProjectAddressGroupIamSchema, networksecurity.NetworkSecurityProjectAddressGroupIamUpdaterProducer, networksecurity.NetworkSecurityProjectAddressGroupIdParseFunc),
+	"google_network_security_sac_realm":                                          networksecurity.ResourceNetworkSecuritySacRealm(),
 	"google_network_security_security_profile":                                   networksecurity.ResourceNetworkSecuritySecurityProfile(),
 	"google_network_security_security_profile_group":                             networksecurity.ResourceNetworkSecuritySecurityProfileGroup(),
 	"google_network_security_server_tls_policy":                                  networksecurity.ResourceNetworkSecurityServerTlsPolicy(),
