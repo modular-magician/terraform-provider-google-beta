@@ -307,6 +307,10 @@ The following arguments are supported:
   (Optional)
   Current version of the Data Fusion.
 
+* `patch_revision` -
+  (Optional)
+  Current patch revision of the Data Fusion.
+
 * `private_instance` -
   (Optional)
   Specifies whether the Data Fusion instance should be private. If set to
