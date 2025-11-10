@@ -33,8 +33,7 @@ fields:
   - api_field: 'sharedSecretHash'
   - api_field: 'sharedSecret'
     field: 'shared_secret_wo'
-  - field: 'shared_secret_wo_version'
-    provider_only: true
+  - api_field: 'sharedSecretWoVersion'
   - api_field: 'targetVpnGateway'
   - field: 'terraform_labels'
     provider_only: true

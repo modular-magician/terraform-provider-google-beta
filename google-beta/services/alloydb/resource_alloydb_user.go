@@ -139,6 +139,21 @@ func ResourceAlloydbUser() *schema.Resource {
 				Description: `Password for this database user.`,
 				Sensitive:   true,
 			},
+			"password_wo": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `Password for this database user.
+ Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+				WriteOnly:     true,
+				ConflictsWith: []string{"password"},
+				RequiredWith:  []string{"password_wo_version"},
+			},
+			"password_wo_version": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Description:  `Triggers update of password_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+				RequiredWith: []string{"password_wo"},
+			},
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -168,6 +183,12 @@ func resourceAlloydbUserCreate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	} else if v, ok := d.GetOkExists("database_roles"); !tpgresource.IsEmptyValue(reflect.ValueOf(databaseRolesProp)) && (ok || !reflect.DeepEqual(v, databaseRolesProp)) {
 		obj["databaseRoles"] = databaseRolesProp
+	}
+	passwordWoProp, err := expandAlloydbUserPasswordWo(tpgresource.GetRawConfigAttributeAsString(d, "password_wo"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("password_wo"); !tpgresource.IsEmptyValue(reflect.ValueOf(passwordWoProp)) && (ok || !reflect.DeepEqual(v, passwordWoProp)) {
+		obj["password"] = passwordWoProp
 	}
 	userTypeProp, err := expandAlloydbUserUserType(d.Get("user_type"), d, config)
 	if err != nil {
@@ -282,6 +303,12 @@ func resourceAlloydbUserUpdate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	} else if v, ok := d.GetOkExists("database_roles"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, databaseRolesProp)) {
 		obj["databaseRoles"] = databaseRolesProp
+	}
+	passwordWoProp, err := expandAlloydbUserPasswordWo(tpgresource.GetRawConfigAttributeAsString(d, "password_wo"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("password_wo"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, passwordWoProp)) {
+		obj["password"] = passwordWoProp
 	}
 	userTypeProp, err := expandAlloydbUserUserType(d.Get("user_type"), d, config)
 	if err != nil {
@@ -402,6 +429,10 @@ func expandAlloydbUserPassword(v interface{}, d tpgresource.TerraformResourceDat
 }
 
 func expandAlloydbUserDatabaseRoles(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbUserPasswordWo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

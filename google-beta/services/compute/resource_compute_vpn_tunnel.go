@@ -640,12 +640,6 @@ func resourceComputeVpnTunnelCreate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("shared_secret_wo"); !tpgresource.IsEmptyValue(reflect.ValueOf(sharedSecretWoProp)) && (ok || !reflect.DeepEqual(v, sharedSecretWoProp)) {
 		obj["sharedSecret"] = sharedSecretWoProp
 	}
-	sharedSecretWoVersionProp, err := expandComputeVpnTunnelSharedSecretWoVersion(d.Get("shared_secret_wo_version"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("shared_secret_wo_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(sharedSecretWoVersionProp)) && (ok || !reflect.DeepEqual(v, sharedSecretWoVersionProp)) {
-		obj["sharedSecretWoVersion"] = sharedSecretWoVersionProp
-	}
 	effectiveLabelsProp, err := expandComputeVpnTunnelEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -880,9 +874,6 @@ func resourceComputeVpnTunnelRead(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
 	if err := d.Set("cipher_suite", flattenComputeVpnTunnelCipherSuite(res["cipherSuite"], d, config)); err != nil {
-		return fmt.Errorf("Error reading VpnTunnel: %s", err)
-	}
-	if err := d.Set("shared_secret_wo_version", flattenComputeVpnTunnelSharedSecretWoVersion(res["sharedSecretWoVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
 	if err := d.Set("terraform_labels", flattenComputeVpnTunnelTerraformLabels(res["labels"], d, config)); err != nil {
@@ -1299,10 +1290,6 @@ func flattenComputeVpnTunnelCipherSuitePhase2Pfs(v interface{}, d *schema.Resour
 	return schema.NewSet(schema.HashString, v.([]interface{}))
 }
 
-func flattenComputeVpnTunnelSharedSecretWoVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return d.Get("shared_secret_wo_version")
-}
-
 func flattenComputeVpnTunnelTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1564,10 +1551,6 @@ func expandComputeVpnTunnelCipherSuitePhase2Pfs(v interface{}, d tpgresource.Ter
 }
 
 func expandComputeVpnTunnelSharedSecretWo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandComputeVpnTunnelSharedSecretWoVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

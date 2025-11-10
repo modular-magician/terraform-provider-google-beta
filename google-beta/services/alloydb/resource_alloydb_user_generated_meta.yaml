@@ -10,6 +10,9 @@ fields:
   - api_field: 'databaseRoles'
   - api_field: 'name'
   - api_field: 'password'
+  - api_field: 'password'
+    field: 'password_wo'
+  - api_field: 'passwordWoVersion'
   - field: 'user_id'
     provider_only: true
   - api_field: 'userType'
