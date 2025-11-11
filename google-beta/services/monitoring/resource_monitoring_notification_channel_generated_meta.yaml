@@ -14,9 +14,21 @@ fields:
   - api_field: 'name'
   - field: 'sensitive_labels.auth_token'
     provider_only: true
+  - field: 'sensitive_labels.auth_token_wo'
+    provider_only: true
+  - field: 'sensitive_labels.auth_token_wo_version'
+    provider_only: true
   - field: 'sensitive_labels.password'
     provider_only: true
+  - field: 'sensitive_labels.password_wo'
+    provider_only: true
+  - field: 'sensitive_labels.password_wo_version'
+    provider_only: true
   - field: 'sensitive_labels.service_key'
+    provider_only: true
+  - field: 'sensitive_labels.service_key_wo'
+    provider_only: true
+  - field: 'sensitive_labels.service_key_wo_version'
     provider_only: true
   - api_field: 'type'
   - api_field: 'userLabels'

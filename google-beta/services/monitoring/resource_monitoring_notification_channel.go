@@ -169,25 +169,67 @@ to a different credential configuration in the config will require an apply to u
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"auth_token": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							Description:  `An authorization token for a notification channel. Channel types that support this field include: slack`,
-							Sensitive:    true,
-							ExactlyOneOf: []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.password", "sensitive_labels.0.service_key"},
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `An authorization token for a notification channel. Channel types that support this field include: slack`,
+							Sensitive:     true,
+							ConflictsWith: []string{"sensitive_labels.0.auth_token_wo"},
+							ExactlyOneOf:  []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.password", "sensitive_labels.0.service_key"},
+						},
+						"auth_token_wo": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `An authorization token for a notification channel. Channel types that support this field include: slack. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+							WriteOnly:     true,
+							ConflictsWith: []string{"sensitive_labels.0.auth_token"},
+							RequiredWith:  []string{},
+						},
+						"auth_token_wo_version": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Triggers update of auth_token_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
 						},
 						"password": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							Description:  `An password for a notification channel. Channel types that support this field include: webhook_basicauth`,
-							Sensitive:    true,
-							ExactlyOneOf: []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.password", "sensitive_labels.0.service_key"},
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `An password for a notification channel. Channel types that support this field include: webhook_basicauth`,
+							Sensitive:     true,
+							ConflictsWith: []string{"sensitive_labels.0.password_wo"},
+							ExactlyOneOf:  []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.password", "sensitive_labels.0.service_key"},
+						},
+						"password_wo": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `An password for a notification channel. Channel types that support this field include: webhook_basicauth. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+							WriteOnly:     true,
+							ConflictsWith: []string{"sensitive_labels.0.password"},
+							RequiredWith:  []string{},
+						},
+						"password_wo_version": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Triggers update of password_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
 						},
 						"service_key": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							Description:  `An servicekey token for a notification channel. Channel types that support this field include: pagerduty`,
-							Sensitive:    true,
-							ExactlyOneOf: []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.password", "sensitive_labels.0.service_key"},
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `An servicekey token for a notification channel. Channel types that support this field include: pagerduty`,
+							Sensitive:     true,
+							ConflictsWith: []string{"sensitive_labels.0.service_key_wo"},
+							ExactlyOneOf:  []string{"sensitive_labels.0.auth_token", "sensitive_labels.0.password", "sensitive_labels.0.service_key"},
+						},
+						"service_key_wo": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							Description:   `An servicekey token for a notification channel. Channel types that support this field include: pagerduty. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+							WriteOnly:     true,
+							ConflictsWith: []string{"sensitive_labels.0.service_key"},
+							RequiredWith:  []string{},
+						},
+						"service_key_wo_version": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Triggers update of service_key_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
 						},
 					},
 				},
@@ -691,6 +733,9 @@ func resourceMonitoringNotificationChannelEncoder(d *schema.ResourceData, meta i
 		if auth, _ := d.GetOkExists("sensitive_labels.0." + sl); auth != "" {
 			labels[sl] = auth.(string)
 		}
+		if authWo, _ := d.GetOkExists("sensitive_labels.0." + sl + "_wo"); authWo != "" {
+			labels[sl] = authWo.(string)
+		}
 	}
 
 	obj["labels"] = labels
@@ -704,6 +749,8 @@ func resourceMonitoringNotificationChannelDecoder(d *schema.ResourceData, meta i
 		for _, sl := range sensitiveLabels {
 			if _, apiOk := labels[sl]; apiOk {
 				if _, exists := d.GetOkExists("sensitive_labels.0." + sl); exists {
+					delete(labels, sl)
+				} else if _, existsWo := d.GetOkExists("sensitive_labels.0." + sl + "_wo"); existsWo {
 					delete(labels, sl)
 				} else {
 					labels[sl] = d.Get("labels." + sl)
