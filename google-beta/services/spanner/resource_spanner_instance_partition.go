@@ -139,22 +139,111 @@ Must be unique per project and between 4 and 30 characters in length.`,
 the instance partition is created. The name must be between 2 and 64 characters
 and match the regular expression [a-z][a-z0-9\\-]{0,61}[a-z0-9].`,
 			},
+			"autoscaling_config": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `The autoscaling configuration. Autoscaling is enabled if this field is set.
+Exactly one of either node_count, processing_units or autoscaling_config must be present.
+When autoscaling is enabled, node_count and processing_units are treated as,
+OUTPUT_ONLY fields and reflect the current compute capacity allocated to
+the instance partition.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"autoscaling_limits": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `Defines scale in controls to reduce the risk of response latency
+and outages due to abrupt scale-in events. Users can define the minimum and
+maximum compute capacity allocated to the instance partition, and the autoscaler will
+only scale within that range. Users can either use nodes or processing
+units to specify the limits, but should use the same unit to set both the
+min_limit and max_limit.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"max_nodes": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Description: `Specifies maximum number of nodes allocated to the instance partition. If set, this number
+should be greater than or equal to min_nodes.`,
+										ExactlyOneOf: []string{},
+										RequiredWith: []string{},
+									},
+									"max_processing_units": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Description: `Specifies maximum number of processing units allocated to the instance partition.
+If set, this number should be multiples of 1000 and be greater than or equal to
+min_processing_units.`,
+										ExactlyOneOf: []string{},
+									},
+									"min_nodes": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Description: `Specifies number of nodes allocated to the instance partition. If set, this number
+should be greater than or equal to 1.`,
+										ExactlyOneOf: []string{},
+										RequiredWith: []string{},
+									},
+									"min_processing_units": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Description: `Specifies minimum number of processing units allocated to the instance partition.
+If set, this number should be multiples of 1000.`,
+										ExactlyOneOf: []string{},
+									},
+								},
+							},
+						},
+						"autoscaling_targets": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `Defines scale in controls to reduce the risk of response latency
+and outages due to abrupt scale-in events`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"high_priority_cpu_utilization_percent": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Description: `Specifies the target high priority cpu utilization percentage that the autoscaler
+should be trying to achieve for the instance partition.
+This number is on a scale from 0 (no utilization) to 100 (full utilization)..`,
+									},
+									"storage_utilization_percent": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Description: `Specifies the target storage utilization percentage that the autoscaler
+should be trying to achieve for the instance partition.
+This number is on a scale from 0 (no utilization) to 100 (full utilization).`,
+									},
+								},
+							},
+						},
+					},
+				},
+				ConflictsWith: []string{"node_count", "processing_units"},
+				AtLeastOneOf:  []string{"node_count", "processing_units", "autoscaling_config"},
+			},
 			"node_count": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validation.IntAtLeast(1),
 				Description: `The number of nodes allocated to this instance partition. One node equals
-1000 processing units. Exactly one of either node_count or processing_units
-must be present.`,
-				ExactlyOneOf: []string{"node_count", "processing_units"},
+1000 processing units. Exactly one of either node_count, processing_units, or
+autoscaling_config must be present.`,
+				ConflictsWith: []string{"processing_units", "autoscaling_config"},
+				AtLeastOneOf:  []string{"node_count", "processing_units", "autoscaling_config"},
 			},
 			"processing_units": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validation.IntAtLeast(1000),
 				Description: `The number of processing units allocated to this instance partition.
-Exactly one of either node_count or processing_units must be present.`,
-				ExactlyOneOf: []string{"node_count", "processing_units"},
+Exactly one of either node_count, processing_units, or autoscaling_config must be present.`,
+				ConflictsWith: []string{"node_count", "autoscaling_config"},
+				AtLeastOneOf:  []string{"node_count", "processing_units", "autoscaling_config"},
 			},
 			"state": {
 				Type:     schema.TypeString,
@@ -212,6 +301,12 @@ func resourceSpannerInstancePartitionCreate(d *schema.ResourceData, meta interfa
 		return err
 	} else if v, ok := d.GetOkExists("config"); !tpgresource.IsEmptyValue(reflect.ValueOf(configProp)) && (ok || !reflect.DeepEqual(v, configProp)) {
 		obj["config"] = configProp
+	}
+	autoscalingConfigProp, err := expandSpannerInstancePartitionAutoscalingConfig(d.Get("autoscaling_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("autoscaling_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(autoscalingConfigProp)) && (ok || !reflect.DeepEqual(v, autoscalingConfigProp)) {
+		obj["autoscalingConfig"] = autoscalingConfigProp
 	}
 
 	obj, err = resourceSpannerInstancePartitionEncoder(d, meta, obj)
@@ -335,6 +430,9 @@ func resourceSpannerInstancePartitionRead(d *schema.ResourceData, meta interface
 	if err := d.Set("state", flattenSpannerInstancePartitionState(res["state"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InstancePartition: %s", err)
 	}
+	if err := d.Set("autoscaling_config", flattenSpannerInstancePartitionAutoscalingConfig(res["autoscalingConfig"], d, config)); err != nil {
+		return fmt.Errorf("Error reading InstancePartition: %s", err)
+	}
 
 	return nil
 }
@@ -373,8 +471,14 @@ func resourceSpannerInstancePartitionUpdate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("processing_units"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, processingUnitsProp)) {
 		obj["processingUnits"] = processingUnitsProp
 	}
+	autoscalingConfigProp, err := expandSpannerInstancePartitionAutoscalingConfig(d.Get("autoscaling_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("autoscaling_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, autoscalingConfigProp)) {
+		obj["autoscalingConfig"] = autoscalingConfigProp
+	}
 
-	obj, err = resourceSpannerInstancePartitionEncoder(d, meta, obj)
+	obj, err = resourceSpannerInstancePartitionUpdateEncoder(d, meta, obj)
 	if err != nil {
 		return err
 	}
@@ -568,6 +672,157 @@ func flattenSpannerInstancePartitionState(v interface{}, d *schema.ResourceData,
 	return v
 }
 
+func flattenSpannerInstancePartitionAutoscalingConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["autoscaling_limits"] =
+		flattenSpannerInstancePartitionAutoscalingConfigAutoscalingLimits(original["autoscalingLimits"], d, config)
+	transformed["autoscaling_targets"] =
+		flattenSpannerInstancePartitionAutoscalingConfigAutoscalingTargets(original["autoscalingTargets"], d, config)
+	return []interface{}{transformed}
+}
+func flattenSpannerInstancePartitionAutoscalingConfigAutoscalingLimits(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["min_processing_units"] =
+		flattenSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMinProcessingUnits(original["minProcessingUnits"], d, config)
+	transformed["max_processing_units"] =
+		flattenSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMaxProcessingUnits(original["maxProcessingUnits"], d, config)
+	transformed["min_nodes"] =
+		flattenSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMinNodes(original["minNodes"], d, config)
+	transformed["max_nodes"] =
+		flattenSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMaxNodes(original["maxNodes"], d, config)
+	return []interface{}{transformed}
+}
+func flattenSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMinProcessingUnits(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMaxProcessingUnits(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMinNodes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMaxNodes(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenSpannerInstancePartitionAutoscalingConfigAutoscalingTargets(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["high_priority_cpu_utilization_percent"] =
+		flattenSpannerInstancePartitionAutoscalingConfigAutoscalingTargetsHighPriorityCpuUtilizationPercent(original["highPriorityCpuUtilizationPercent"], d, config)
+	transformed["storage_utilization_percent"] =
+		flattenSpannerInstancePartitionAutoscalingConfigAutoscalingTargetsStorageUtilizationPercent(original["storageUtilizationPercent"], d, config)
+	return []interface{}{transformed}
+}
+func flattenSpannerInstancePartitionAutoscalingConfigAutoscalingTargetsHighPriorityCpuUtilizationPercent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenSpannerInstancePartitionAutoscalingConfigAutoscalingTargetsStorageUtilizationPercent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
 func expandSpannerInstancePartitionName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -598,11 +853,197 @@ func expandSpannerInstancePartitionConfig(v interface{}, d tpgresource.Terraform
 	return fmt.Sprintf("projects/%s/instanceConfigs/%s", project, v.(string)), nil
 }
 
+func expandSpannerInstancePartitionAutoscalingConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAutoscalingLimits, err := expandSpannerInstancePartitionAutoscalingConfigAutoscalingLimits(original["autoscaling_limits"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAutoscalingLimits); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["autoscalingLimits"] = transformedAutoscalingLimits
+	}
+
+	transformedAutoscalingTargets, err := expandSpannerInstancePartitionAutoscalingConfigAutoscalingTargets(original["autoscaling_targets"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAutoscalingTargets); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["autoscalingTargets"] = transformedAutoscalingTargets
+	}
+
+	return transformed, nil
+}
+
+func expandSpannerInstancePartitionAutoscalingConfigAutoscalingLimits(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMinProcessingUnits, err := expandSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMinProcessingUnits(original["min_processing_units"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMinProcessingUnits); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["minProcessingUnits"] = transformedMinProcessingUnits
+	}
+
+	transformedMaxProcessingUnits, err := expandSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMaxProcessingUnits(original["max_processing_units"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxProcessingUnits); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["maxProcessingUnits"] = transformedMaxProcessingUnits
+	}
+
+	transformedMinNodes, err := expandSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMinNodes(original["min_nodes"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMinNodes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["minNodes"] = transformedMinNodes
+	}
+
+	transformedMaxNodes, err := expandSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMaxNodes(original["max_nodes"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxNodes); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["maxNodes"] = transformedMaxNodes
+	}
+
+	return transformed, nil
+}
+
+func expandSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMinProcessingUnits(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMaxProcessingUnits(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMinNodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSpannerInstancePartitionAutoscalingConfigAutoscalingLimitsMaxNodes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSpannerInstancePartitionAutoscalingConfigAutoscalingTargets(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedHighPriorityCpuUtilizationPercent, err := expandSpannerInstancePartitionAutoscalingConfigAutoscalingTargetsHighPriorityCpuUtilizationPercent(original["high_priority_cpu_utilization_percent"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedHighPriorityCpuUtilizationPercent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["highPriorityCpuUtilizationPercent"] = transformedHighPriorityCpuUtilizationPercent
+	}
+
+	transformedStorageUtilizationPercent, err := expandSpannerInstancePartitionAutoscalingConfigAutoscalingTargetsStorageUtilizationPercent(original["storage_utilization_percent"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedStorageUtilizationPercent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["storageUtilizationPercent"] = transformedStorageUtilizationPercent
+	}
+
+	return transformed, nil
+}
+
+func expandSpannerInstancePartitionAutoscalingConfigAutoscalingTargetsHighPriorityCpuUtilizationPercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSpannerInstancePartitionAutoscalingConfigAutoscalingTargetsStorageUtilizationPercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func resourceSpannerInstancePartitionEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	// Temp Logic to accommodate autoscaling_config, processing_units and node_count
+	if obj["processingUnits"] == nil && obj["nodeCount"] == nil && obj["autoscalingConfig"] == nil {
+		obj["nodeCount"] = 1
+	}
+
 	// Wrap the request body in an instancePartition field
 	wrapped := make(map[string]interface{})
 	wrapped["instancePartitionId"] = obj["name"]
 	wrapped["instancePartition"] = obj
 	delete(obj, "name")
 	return wrapped, nil
+}
+
+func resourceSpannerInstancePartitionUpdateEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	project, err := tpgresource.GetProject(d, meta.(*transport_tpg.Config))
+	if err != nil {
+		return nil, err
+	}
+	instance, err := tpgresource.GetResourceNameFromSelfLink(d.Get("instance").(string))
+	if err != nil {
+		return nil, err
+	}
+	obj["name"] = fmt.Sprintf("projects/%s/instances/%s/instancePartitions/%s", project, instance, obj["name"])
+	newObj := make(map[string]interface{})
+	newObj["instancePartition"] = obj
+	updateMask := make([]string, 0)
+	if d.HasChange("display_name") {
+		updateMask = append(updateMask, "displayName")
+	}
+	if d.HasChange("node_count") {
+		updateMask = append(updateMask, "nodeCount")
+	}
+	if d.HasChange("processing_units") {
+		updateMask = append(updateMask, "processingUnits")
+	}
+	if d.HasChange("autoscaling_config") {
+		old, new := d.GetChange("autoscaling_config")
+		oldSlice := old.([]interface{})
+		newSlice := new.([]interface{})
+		if len(oldSlice) == 0 || len(newSlice) == 0 {
+			updateMask = append(updateMask, "autoscalingConfig")
+			if len(newSlice) == 0 {
+				updateMask = append(updateMask, "processingUnits")
+			}
+		} else {
+			if d.HasChange("autoscaling_config.0.autoscaling_limits.0.max_processing_units") {
+				updateMask = append(updateMask, "autoscalingConfig.autoscalingLimits.maxProcessingUnits")
+			}
+			if d.HasChange("autoscaling_config.0.autoscaling_limits.0.min_processing_units") {
+				updateMask = append(updateMask, "autoscalingConfig.autoscalingLimits.minProcessingUnits")
+			}
+			if d.HasChange("autoscaling_config.0.autoscaling_limits.0.max_nodes") {
+				updateMask = append(updateMask, "autoscalingConfig.autoscalingLimits.maxNodes")
+			}
+			if d.HasChange("autoscaling_config.0.autoscaling_limits.0.min_nodes") {
+				updateMask = append(updateMask, "autoscalingConfig.autoscalingLimits.minNodes")
+			}
+			if d.HasChange("autoscaling_config.0.autoscaling_targets.0.high_priority_cpu_utilization_percent") {
+				updateMask = append(updateMask, "autoscalingConfig.autoscalingTargets.highPriorityCpuUtilizationPercent")
+			}
+			if d.HasChange("autoscaling_config.0.autoscaling_targets.0.storage_utilization_percent") {
+				updateMask = append(updateMask, "autoscalingConfig.autoscalingTargets.storageUtilizationPercent")
+			}
+		}
+	}
+	newObj["fieldMask"] = strings.Join(updateMask, ",")
+	return newObj, nil
 }
