@@ -858,6 +858,11 @@ func resourceComputeVpnTunnelRead(d *schema.ResourceData, meta interface{}) erro
 	if err := d.Set("peer_ip", flattenComputeVpnTunnelPeerIp(res["peerIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
+	if _, ok := d.GetOk("shared_secret_wo_version"); !ok {
+		if err := d.Set("shared_secret", flattenComputeVpnTunnelSharedSecret(res["sharedSecret"], d, config)); err != nil {
+			return fmt.Errorf("Error reading VpnTunnel: %s", err)
+		}
+	}
 	if err := d.Set("shared_secret_hash", flattenComputeVpnTunnelSharedSecretHash(res["sharedSecretHash"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
@@ -1138,6 +1143,10 @@ func flattenComputeVpnTunnelRouter(v interface{}, d *schema.ResourceData, config
 }
 
 func flattenComputeVpnTunnelPeerIp(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeVpnTunnelSharedSecret(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 

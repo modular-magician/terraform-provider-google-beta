@@ -70,7 +70,7 @@ func TestAccComputeRegionSslCertificate_regionSslCertificateBasicExample(t *test
 				ResourceName:            "google_compute_region_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name_prefix", "private_key", "region"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "name_prefix", "private_key", "region"},
 			},
 		},
 	})
@@ -116,7 +116,7 @@ func TestAccComputeRegionSslCertificate_regionSslCertificateRandomProviderExampl
 				ResourceName:            "google_compute_region_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"private_key", "region"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "private_key", "region"},
 			},
 		},
 	})
@@ -172,7 +172,7 @@ func TestAccComputeRegionSslCertificate_regionSslCertificateTargetHttpsProxiesEx
 				ResourceName:            "google_compute_region_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name_prefix", "private_key", "region"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "name_prefix", "private_key", "region"},
 			},
 		},
 	})
