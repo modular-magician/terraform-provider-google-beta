@@ -108,20 +108,31 @@ func ResourceComputeSslCertificate() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"certificate": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
 				Description: `The certificate in PEM format.
 The certificate chain must be no greater than 5 certs long.
 The chain must include at least one intermediate cert.`,
-				Sensitive: true,
+				Sensitive:    true,
+				ExactlyOneOf: []string{"certificate", "certificate_wo"},
 			},
-			"private_key": {
-				Type:             schema.TypeString,
-				Required:         true,
-				ForceNew:         true,
-				DiffSuppressFunc: sha256DiffSuppress,
-				Description:      `The write-only private key in PEM format.`,
-				Sensitive:        true,
+			"certificate_wo": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `The certificate in PEM format.
+The certificate chain must be no greater than 5 certs long.
+The chain must include at least one intermediate cert.
+ Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+				WriteOnly:    true,
+				ExactlyOneOf: []string{"certificate", "certificate_wo"},
+				RequiredWith: []string{"certificate_wo_version"},
+			},
+			"certificate_wo_version": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Description:  `Triggers update of certificate_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+				RequiredWith: []string{"certificate_wo"},
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -144,6 +155,29 @@ characters must be a dash, lowercase letter, or digit, except the last
 character, which cannot be a dash.
 
 These are in the same namespace as the managed SSL certificates.`,
+			},
+			"private_key": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: sha256DiffSuppress,
+				Description:      `The private key in PEM format.`,
+				Sensitive:        true,
+			},
+			"private_key_wo": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				Description:   `The private key in PEM format. Note: This property is write-only and will not be read from the API. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+				WriteOnly:     true,
+				ConflictsWith: []string{"private_key"},
+				RequiredWith:  []string{"private_key_wo_version"},
+			},
+			"private_key_wo_version": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Description:  `Triggers update of private_key_wo write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+				RequiredWith: []string{"private_key_wo"},
 			},
 			"certificate_id": {
 				Type:        schema.TypeInt,
@@ -224,6 +258,30 @@ func resourceComputeSslCertificateCreate(d *schema.ResourceData, meta interface{
 		return err
 	} else if v, ok := d.GetOkExists("private_key"); !tpgresource.IsEmptyValue(reflect.ValueOf(privateKeyProp)) && (ok || !reflect.DeepEqual(v, privateKeyProp)) {
 		obj["privateKey"] = privateKeyProp
+	}
+	certificateWoProp, err := expandComputeSslCertificateCertificateWo(tpgresource.GetRawConfigAttributeAsString(d, "certificate_wo"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("certificate_wo"); !tpgresource.IsEmptyValue(reflect.ValueOf(certificateWoProp)) && (ok || !reflect.DeepEqual(v, certificateWoProp)) {
+		obj["certificate"] = certificateWoProp
+	}
+	certificateWoVersionProp, err := expandComputeSslCertificateCertificateWoVersion(d.Get("certificate_wo_version"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("certificate_wo_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(certificateWoVersionProp)) && (ok || !reflect.DeepEqual(v, certificateWoVersionProp)) {
+		obj["certificateWoVersion"] = certificateWoVersionProp
+	}
+	privateKeyWoProp, err := expandComputeSslCertificatePrivateKeyWo(tpgresource.GetRawConfigAttributeAsString(d, "private_key_wo"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("private_key_wo"); !tpgresource.IsEmptyValue(reflect.ValueOf(privateKeyWoProp)) && (ok || !reflect.DeepEqual(v, privateKeyWoProp)) {
+		obj["privateKey"] = privateKeyWoProp
+	}
+	privateKeyWoVersionProp, err := expandComputeSslCertificatePrivateKeyWoVersion(d.Get("private_key_wo_version"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("private_key_wo_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(privateKeyWoVersionProp)) && (ok || !reflect.DeepEqual(v, privateKeyWoVersionProp)) {
+		obj["privateKeyWoVersion"] = privateKeyWoVersionProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/sslCertificates")
@@ -340,6 +398,15 @@ func resourceComputeSslCertificateRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("Error reading SslCertificate: %s", err)
 	}
 	if err := d.Set("name", flattenComputeSslCertificateName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading SslCertificate: %s", err)
+	}
+	if err := d.Set("private_key", flattenComputeSslCertificatePrivateKey(res["privateKey"], d, config)); err != nil {
+		return fmt.Errorf("Error reading SslCertificate: %s", err)
+	}
+	if err := d.Set("certificate_wo_version", flattenComputeSslCertificateCertificateWoVersion(res["certificateWoVersion"], d, config)); err != nil {
+		return fmt.Errorf("Error reading SslCertificate: %s", err)
+	}
+	if err := d.Set("private_key_wo_version", flattenComputeSslCertificatePrivateKeyWoVersion(res["privateKeyWoVersion"], d, config)); err != nil {
 		return fmt.Errorf("Error reading SslCertificate: %s", err)
 	}
 	if err := d.Set("self_link", tpgresource.ConvertSelfLinkToV1(res["selfLink"].(string))); err != nil {
@@ -462,6 +529,18 @@ func flattenComputeSslCertificateName(v interface{}, d *schema.ResourceData, con
 	return v
 }
 
+func flattenComputeSslCertificatePrivateKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeSslCertificateCertificateWoVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("certificate_wo_version")
+}
+
+func flattenComputeSslCertificatePrivateKeyWoVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return d.Get("private_key_wo_version")
+}
+
 func expandComputeSslCertificateCertificate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -494,5 +573,21 @@ func expandComputeSslCertificateName(v interface{}, d tpgresource.TerraformResou
 }
 
 func expandComputeSslCertificatePrivateKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeSslCertificateCertificateWo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeSslCertificateCertificateWoVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeSslCertificatePrivateKeyWo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeSslCertificatePrivateKeyWoVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }

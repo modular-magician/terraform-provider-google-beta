@@ -70,7 +70,7 @@ func TestAccComputeSslCertificate_sslCertificateBasicExample(t *testing.T) {
 				ResourceName:            "google_compute_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name_prefix", "private_key"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "name_prefix", "private_key_wo"},
 			},
 		},
 	})
@@ -84,6 +84,48 @@ resource "google_compute_ssl_certificate" "default" {
   private_key = file("test-fixtures/test.key")
   certificate = file("test-fixtures/test.crt")
 
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+`, context)
+}
+
+func TestAccComputeSslCertificate_sslCertificateBasicWoExample(t *testing.T) {
+	acctest.SkipIfVcr(t)
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeSslCertificateDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeSslCertificate_sslCertificateBasicWoExample(context),
+			},
+			{
+				ResourceName:            "google_compute_ssl_certificate.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"certificate_wo", "name_prefix", "private_key_wo"},
+			},
+		},
+	})
+}
+
+func testAccComputeSslCertificate_sslCertificateBasicWoExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_ssl_certificate" "default" {
+  name_prefix = "my-certificate-"
+  description = "a description"
+  private_key_wo = file("test-fixtures/test.key")
+  private_key_wo_version = 1
+  certificate_wo = file("test-fixtures/test.crt")
+  certificate_wo_version = 1
   lifecycle {
     create_before_destroy = true
   }
@@ -115,7 +157,7 @@ func TestAccComputeSslCertificate_sslCertificateRandomProviderExample(t *testing
 				ResourceName:            "google_compute_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"private_key"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "private_key_wo"},
 			},
 		},
 	})
@@ -169,7 +211,7 @@ func TestAccComputeSslCertificate_sslCertificateTargetHttpsProxiesExample(t *tes
 				ResourceName:            "google_compute_ssl_certificate.default",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"name_prefix", "private_key"},
+				ImportStateVerifyIgnore: []string{"certificate_wo", "name_prefix", "private_key_wo"},
 			},
 		},
 	})
