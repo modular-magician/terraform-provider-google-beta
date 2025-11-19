@@ -134,10 +134,25 @@ func ResourceAlloydbUser() *schema.Resource {
 				},
 			},
 			"password": {
-				Type:        schema.TypeString,
+				Type:          schema.TypeString,
+				Optional:      true,
+				Description:   `Password for this database user.`,
+				Sensitive:     true,
+				ConflictsWith: []string{"password_wo"},
+			},
+			"password_wo": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				Description:   `Password for this database user. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
+				WriteOnly:     true,
+				ConflictsWith: []string{"password"},
+				RequiredWith:  []string{"password_wo_version"},
+			},
+			"password_wo_version": {
+				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: `Password for this database user.`,
-				Sensitive:   true,
+				ForceNew:    true,
+				Description: `Triggers update of password write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)`,
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -163,6 +178,12 @@ func resourceAlloydbUserCreate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("password"); !tpgresource.IsEmptyValue(reflect.ValueOf(passwordProp)) && (ok || !reflect.DeepEqual(v, passwordProp)) {
 		obj["password"] = passwordProp
 	}
+	passwordWoProp, err := expandAlloydbUserPasswordWo(d.Get("password_wo"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("password_wo"); !tpgresource.IsEmptyValue(reflect.ValueOf(passwordWoProp)) && (ok || !reflect.DeepEqual(v, passwordWoProp)) {
+		obj["password"] = passwordWoProp
+	}
 	databaseRolesProp, err := expandAlloydbUserDatabaseRoles(d.Get("database_roles"), d, config)
 	if err != nil {
 		return err
@@ -174,6 +195,11 @@ func resourceAlloydbUserCreate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	} else if v, ok := d.GetOkExists("user_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(userTypeProp)) && (ok || !reflect.DeepEqual(v, userTypeProp)) {
 		obj["userType"] = userTypeProp
+	}
+
+	obj, err = resourceAlloydbUserEncoder(d, meta, obj)
+	if err != nil {
+		return err
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{AlloydbBasePath}}{{cluster}}/users?userId={{user_id}}")
@@ -277,6 +303,12 @@ func resourceAlloydbUserUpdate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("password"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, passwordProp)) {
 		obj["password"] = passwordProp
 	}
+	passwordWoProp, err := expandAlloydbUserPasswordWo(d.Get("password_wo"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("password_wo"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, passwordWoProp)) {
+		obj["password"] = passwordWoProp
+	}
 	databaseRolesProp, err := expandAlloydbUserDatabaseRoles(d.Get("database_roles"), d, config)
 	if err != nil {
 		return err
@@ -288,6 +320,11 @@ func resourceAlloydbUserUpdate(d *schema.ResourceData, meta interface{}) error {
 		return err
 	} else if v, ok := d.GetOkExists("user_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, userTypeProp)) {
 		obj["userType"] = userTypeProp
+	}
+
+	obj, err = resourceAlloydbUserEncoder(d, meta, obj)
+	if err != nil {
+		return err
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{AlloydbBasePath}}{{cluster}}/users?userId={{user_id}}")
@@ -401,10 +438,20 @@ func expandAlloydbUserPassword(v interface{}, d tpgresource.TerraformResourceDat
 	return v, nil
 }
 
+func expandAlloydbUserPasswordWo(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandAlloydbUserDatabaseRoles(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func expandAlloydbUserUserType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func resourceAlloydbUserEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	// password_wo_version is a trigger field and should not be sent to the API
+	delete(obj, "passwordWoVersion")
+	return obj, nil
 }

@@ -34,6 +34,9 @@ To get more information about User, see:
 values will be stored in the raw state as plain text: `password`.
 [Read more about sensitive data in state](https://www.terraform.io/language/state/sensitive-data).
 
+~> **Note:**  All arguments marked as write-only values will not be stored in the state: `password_wo`.
+[Read more about Write-only Arguments](https://developer.hashicorp.com/terraform/plugin/sdkv2/resources/write-only-arguments).
+
 ## Example Usage - Alloydb User Builtin
 
 
@@ -169,6 +172,17 @@ The following arguments are supported:
   (Optional)
   Password for this database user.
   **Note**: This property is sensitive and will not be displayed in the plan.
+
+* `password_wo` -
+  (Optional, Write-Only)
+  Password for this database user. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)
+  **Note**: This property is write-only and will not be read from the API.
+
+  ~> **Note:** One of `password` or `password_wo` can only be set.
+
+* `password_wo_version` -
+  (Optional)
+  Triggers update of password write-only. For more info see [updating write-only attributes](/docs/providers/google/guides/using_write_only_attributes.html#updating-write-only-attributes)
 
 * `database_roles` -
   (Optional)
