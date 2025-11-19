@@ -259,6 +259,8 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+* `replicaAction` - (Optional) Replicate action can perfrom p[ause and resume on replica
+
 
 
 <a name="nested_file_shares"></a>The `file_shares` block supports:
