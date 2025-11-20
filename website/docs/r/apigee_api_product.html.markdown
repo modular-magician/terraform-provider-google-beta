@@ -132,8 +132,8 @@ resource "google_apigee_api_product" "full_api_product" {
     value = "private"
   }
 
-  environments = ["dev", "hom"]
-  proxies      = ["hello-world"]
+  environments = ["test", "prod"]
+  proxies      = ["default"]
   api_resources = [
     "/",
     "/weather/**"
@@ -205,7 +205,7 @@ resource "google_apigee_api_product" "full_api_product" {
   quota_time_unit     = "day"
   quota_counter_scope = "PROXY"
 
-  environments = ["dev", "hom"]
+  environments = ["test", "prod"]
 
   # Set them in reverse order to test set
   scopes = [
