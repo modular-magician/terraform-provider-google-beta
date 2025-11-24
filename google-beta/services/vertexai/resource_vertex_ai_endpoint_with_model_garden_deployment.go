@@ -358,16 +358,25 @@ These labels are managed by Google and for tracking purposes only.`,
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"dedicated_endpoint_enabled": {
+						"dedicated_endpoint_disabled": {
 							Type:     schema.TypeBool,
 							Optional: true,
 							ForceNew: true,
+							Description: `By default, dedicated endpoint is enabled.
+If dedicated endpoint is enabled and private service connect config is not set, the endpoint will be exposed through a dedicated DNS [Endpoint.dedicated_endpoint_dns]. If private service connect config is set, the endpoint will be exposed through private service connect. Your request to the dedicated DNS will be isolated from other users' traffic and will have better performance and reliability. Note: Once you enabled dedicated endpoint, you won't be able to send request to the shared DNS {region}-aiplatform.googleapis.com. The limitations will be removed soon.
+If this field is set to true, the dedicated endpoint will be disabled and the deployed model will be exposed through the shared DNS {region}-aiplatform.googleapis.com.`,
+						},
+						"dedicated_endpoint_enabled": {
+							Type:       schema.TypeBool,
+							Optional:   true,
+							Deprecated: "This field is deprecated. Please use `dedicated_endpoint_disabled` instead.",
+							ForceNew:   true,
 							Description: `If true, the endpoint will be exposed through a dedicated
 DNS [Endpoint.dedicated_endpoint_dns]. Your request to the dedicated DNS
 will be isolated from other users' traffic and will have better
 performance and reliability. Note: Once you enabled dedicated endpoint,
-you won't be able to send request to the shared DNS
-{region}-aiplatform.googleapis.com. The limitations will be removed soon.`,
+you won't be able to send request to the shared DNS {region}-aiplatform.googleapis.com.
+The limitations will be removed soon.`,
 						},
 						"endpoint_display_name": {
 							Type:     schema.TypeString,
@@ -2835,6 +2844,8 @@ func flattenVertexAIEndpointWithModelGardenDeploymentEndpointConfig(v interface{
 		flattenVertexAIEndpointWithModelGardenDeploymentEndpointConfigEndpointDisplayName(original["endpointDisplayName"], d, config)
 	transformed["dedicated_endpoint_enabled"] =
 		flattenVertexAIEndpointWithModelGardenDeploymentEndpointConfigDedicatedEndpointEnabled(original["dedicatedEndpointEnabled"], d, config)
+	transformed["dedicated_endpoint_disabled"] =
+		flattenVertexAIEndpointWithModelGardenDeploymentEndpointConfigDedicatedEndpointDisabled(original["dedicatedEndpointDisabled"], d, config)
 	transformed["private_service_connect_config"] =
 		flattenVertexAIEndpointWithModelGardenDeploymentEndpointConfigPrivateServiceConnectConfig(original["privateServiceConnectConfig"], d, config)
 	return []interface{}{transformed}
@@ -2844,6 +2855,10 @@ func flattenVertexAIEndpointWithModelGardenDeploymentEndpointConfigEndpointDispl
 }
 
 func flattenVertexAIEndpointWithModelGardenDeploymentEndpointConfigDedicatedEndpointEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenVertexAIEndpointWithModelGardenDeploymentEndpointConfigDedicatedEndpointDisabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -4410,6 +4425,13 @@ func expandVertexAIEndpointWithModelGardenDeploymentEndpointConfig(v interface{}
 		transformed["dedicatedEndpointEnabled"] = transformedDedicatedEndpointEnabled
 	}
 
+	transformedDedicatedEndpointDisabled, err := expandVertexAIEndpointWithModelGardenDeploymentEndpointConfigDedicatedEndpointDisabled(original["dedicated_endpoint_disabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDedicatedEndpointDisabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["dedicatedEndpointDisabled"] = transformedDedicatedEndpointDisabled
+	}
+
 	transformedPrivateServiceConnectConfig, err := expandVertexAIEndpointWithModelGardenDeploymentEndpointConfigPrivateServiceConnectConfig(original["private_service_connect_config"], d, config)
 	if err != nil {
 		return nil, err
@@ -4425,6 +4447,10 @@ func expandVertexAIEndpointWithModelGardenDeploymentEndpointConfigEndpointDispla
 }
 
 func expandVertexAIEndpointWithModelGardenDeploymentEndpointConfigDedicatedEndpointEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandVertexAIEndpointWithModelGardenDeploymentEndpointConfigDedicatedEndpointDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

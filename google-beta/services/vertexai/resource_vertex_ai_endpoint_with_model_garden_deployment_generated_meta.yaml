@@ -26,6 +26,7 @@ fields:
   - api_field: 'deployedModelId'
   - field: 'endpoint'
     provider_only: true
+  - api_field: 'endpointConfig.dedicatedEndpointDisabled'
   - api_field: 'endpointConfig.dedicatedEndpointEnabled'
   - api_field: 'endpointConfig.endpointDisplayName'
   - api_field: 'endpointConfig.privateServiceConnectConfig.enablePrivateServiceConnect'

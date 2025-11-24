@@ -979,13 +979,21 @@ The following arguments are supported:
   default name will be used.
 
 * `dedicated_endpoint_enabled` -
-  (Optional)
+  (Optional, Deprecated)
   If true, the endpoint will be exposed through a dedicated
   DNS [Endpoint.dedicated_endpoint_dns]. Your request to the dedicated DNS
   will be isolated from other users' traffic and will have better
   performance and reliability. Note: Once you enabled dedicated endpoint,
-  you won't be able to send request to the shared DNS
-  {region}-aiplatform.googleapis.com. The limitations will be removed soon.
+  you won't be able to send request to the shared DNS {region}-aiplatform.googleapis.com.
+  The limitations will be removed soon.
+
+  ~> **Warning:** This field is deprecated. Please use `dedicated_endpoint_disabled` instead.
+
+* `dedicated_endpoint_disabled` -
+  (Optional)
+  By default, dedicated endpoint is enabled.
+  If dedicated endpoint is enabled and private service connect config is not set, the endpoint will be exposed through a dedicated DNS [Endpoint.dedicated_endpoint_dns]. If private service connect config is set, the endpoint will be exposed through private service connect. Your request to the dedicated DNS will be isolated from other users' traffic and will have better performance and reliability. Note: Once you enabled dedicated endpoint, you won't be able to send request to the shared DNS {region}-aiplatform.googleapis.com. The limitations will be removed soon.
+  If this field is set to true, the dedicated endpoint will be disabled and the deployed model will be exposed through the shared DNS {region}-aiplatform.googleapis.com.
 
 * `private_service_connect_config` -
   (Optional)
