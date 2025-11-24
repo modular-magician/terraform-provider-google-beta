@@ -317,6 +317,7 @@ character, which cannot be a dash.`,
 			},
 			"share_settings": {
 				Type:        schema.TypeList,
+				Computed:    true,
 				Optional:    true,
 				Description: `Settings for sharing the future reservation`,
 				MaxItems:    1,
@@ -1005,9 +1006,6 @@ func resourceComputeFutureReservationRead(d *schema.ResourceData, meta interface
 	if err := d.Set("time_window", flattenComputeFutureReservationTimeWindow(res["timeWindow"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FutureReservation: %s", err)
 	}
-	if err := d.Set("share_settings", flattenComputeFutureReservationShareSettings(res["shareSettings"], d, config)); err != nil {
-		return fmt.Errorf("Error reading FutureReservation: %s", err)
-	}
 	if err := d.Set("name_prefix", flattenComputeFutureReservationNamePrefix(res["namePrefix"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FutureReservation: %s", err)
 	}
@@ -1429,50 +1427,6 @@ func flattenComputeFutureReservationTimeWindowDurationNanos(v interface{}, d *sc
 	}
 
 	return v // let terraform core handle it otherwise
-}
-
-func flattenComputeFutureReservationShareSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return nil
-	}
-	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
-	transformed := make(map[string]interface{})
-	transformed["share_type"] =
-		flattenComputeFutureReservationShareSettingsShareType(original["shareType"], d, config)
-	transformed["projects"] =
-		flattenComputeFutureReservationShareSettingsProjects(original["projects"], d, config)
-	transformed["project_map"] =
-		flattenComputeFutureReservationShareSettingsProjectMap(original["projectMap"], d, config)
-	return []interface{}{transformed}
-}
-func flattenComputeFutureReservationShareSettingsShareType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenComputeFutureReservationShareSettingsProjects(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
-}
-
-func flattenComputeFutureReservationShareSettingsProjectMap(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	if v == nil {
-		return v
-	}
-	l := v.(map[string]interface{})
-	transformed := make([]interface{}, 0, len(l))
-	for k, raw := range l {
-		original := raw.(map[string]interface{})
-		transformed = append(transformed, map[string]interface{}{
-			"id":         k,
-			"project_id": flattenComputeFutureReservationShareSettingsProjectMapProjectId(original["projectId"], d, config),
-		})
-	}
-	return transformed
-}
-func flattenComputeFutureReservationShareSettingsProjectMapProjectId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
-	return v
 }
 
 func flattenComputeFutureReservationNamePrefix(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
