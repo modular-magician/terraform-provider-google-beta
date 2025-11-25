@@ -176,7 +176,7 @@ resource "google_container_analysis_note" "note" {
   name = "tf-test-%s"
   attestation_authority {
     hint {
-      human_readable_name = "My Attestor"
+      human_readable_name = "My Attestor123"
     }
   }
 }
