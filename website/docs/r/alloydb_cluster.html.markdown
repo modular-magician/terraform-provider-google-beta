@@ -477,7 +477,7 @@ Possible values: DEFAULT, FORCE
 * `deletion_protection` - (Optional) Whether Terraform will be prevented from destroying the cluster.
 When the field is set to true or unset in Terraform state, a `terraform apply`
 or `terraform destroy` that would delete the cluster will fail.
-When the field is set to false, deleting the cluster is allowed.
+When the field is set to false, deleting the cluster is allowed. UPDATE
 
 * `skip_await_major_version_upgrade` - (Optional) Set to true to skip awaiting on the major version upgrade of the cluster.
 Possible values: true, false

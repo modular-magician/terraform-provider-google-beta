@@ -744,7 +744,7 @@ Possible values: DEFAULT, FORCE`,
 				Description: `Whether Terraform will be prevented from destroying the cluster.
 When the field is set to true or unset in Terraform state, a 'terraform apply'
 or 'terraform destroy' that would delete the cluster will fail.
-When the field is set to false, deleting the cluster is allowed.`,
+When the field is set to false, deleting the cluster is allowed. UPDATE`,
 				Default: true,
 			},
 			"skip_await_major_version_upgrade": {
