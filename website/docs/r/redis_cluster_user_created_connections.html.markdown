@@ -89,6 +89,13 @@ resource "google_redis_cluster_user_created_connections" "cluster-user-conn" {
   }
 }
 
+# Add a delay to allow the Service Attachment to propagate
+resource "time_sleep" "wait_for_sa" {
+  create_duration = "60s"
+
+  depends_on      = [google_redis_cluster.cluster-user-conn]
+}
+
 resource "google_compute_forwarding_rule" "forwarding_rule1_network1" {
   name                   = "fwd1-net1"
   region                 = "us-central1"
@@ -96,6 +103,7 @@ resource "google_compute_forwarding_rule" "forwarding_rule1_network1" {
   load_balancing_scheme  = ""
   network                = google_compute_network.network1.id
   target                 = google_redis_cluster.cluster-user-conn.psc_service_attachments[0].service_attachment
+  depends_on             = [time_sleep.wait_for_sa]
 }
 
 resource "google_compute_forwarding_rule" "forwarding_rule2_network1" {
@@ -105,6 +113,7 @@ resource "google_compute_forwarding_rule" "forwarding_rule2_network1" {
   load_balancing_scheme  = ""
   network                = google_compute_network.network1.id
   target                 = google_redis_cluster.cluster-user-conn.psc_service_attachments[1].service_attachment
+  depends_on             = [time_sleep.wait_for_sa]
 }
 
 resource "google_compute_address" "ip1_network1" {
@@ -142,6 +151,7 @@ resource "google_compute_forwarding_rule" "forwarding_rule1_network2" {
   load_balancing_scheme  = ""
   network                = google_compute_network.network2.id
   target                 = google_redis_cluster.cluster-user-conn.psc_service_attachments[0].service_attachment
+  depends_on             = [google_compute_forwarding_rule.forwarding_rule1_network1]
 }
 
 resource "google_compute_forwarding_rule" "forwarding_rule2_network2" {
@@ -151,6 +161,7 @@ resource "google_compute_forwarding_rule" "forwarding_rule2_network2" {
   load_balancing_scheme  = ""
   network                = google_compute_network.network2.id
   target                 = google_redis_cluster.cluster-user-conn.psc_service_attachments[1].service_attachment
+  depends_on             = [google_compute_forwarding_rule.forwarding_rule2_network1]
 }
 
 resource "google_compute_address" "ip1_network2" {
