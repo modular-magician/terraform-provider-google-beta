@@ -1633,13 +1633,8 @@ func resourceNetappVolumeUpdate(d *schema.ResourceData, meta interface{}) error 
 
 					// Only send if the user explicitly added it.
 					// If not added, send as null.
-					if squashModeExists && squashModeVal == "ALL_SQUASH" {
-						// User provided the field, send their value
+					if squashModeExists {
 						newRuleMapItemSet["squashMode"] = squashModeVal
-					} else {
-						// User did NOT provide the field, or provided an empty value.
-						// Explicitly send null to the API.
-						newRuleMapItemSet["squashMode"] = nil
 					}
 
 					// Handle "anon_uid"
