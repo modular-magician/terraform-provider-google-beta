@@ -69,7 +69,7 @@ func TestAccComputeInterconnectAttachment_interconnectAttachmentBasicExample(t *
 				ResourceName:            "google_compute_interconnect_attachment.on_prem",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"candidate_subnets", "labels", "region", "router", "subnet_length", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"candidate_subnets", "labels", "params", "region", "router", "subnet_length", "terraform_labels"},
 			},
 		},
 	})
@@ -120,7 +120,7 @@ func TestAccComputeInterconnectAttachment_interconnectAttachmentDedicatedExample
 				ResourceName:            "google_compute_interconnect_attachment.on_prem",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"candidate_subnets", "labels", "region", "router", "subnet_length", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"candidate_subnets", "labels", "params", "region", "router", "subnet_length", "terraform_labels"},
 			},
 		},
 	})
@@ -187,7 +187,7 @@ func TestAccComputeInterconnectAttachment_computeInterconnectAttachmentIpsecEncr
 				ResourceName:            "google_compute_interconnect_attachment.ipsec-encrypted-interconnect-attachment",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"candidate_subnets", "labels", "region", "router", "subnet_length", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"candidate_subnets", "labels", "params", "region", "router", "subnet_length", "terraform_labels"},
 			},
 		},
 	})
@@ -231,6 +231,60 @@ resource "google_compute_network" "network" {
 `, context)
 }
 
+func TestAccComputeInterconnectAttachment_computeInterconnectAttachmentTagsExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeInterconnectAttachmentDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeInterconnectAttachment_computeInterconnectAttachmentTagsExample(context),
+			},
+			{
+				ResourceName:            "google_compute_interconnect_attachment.interconnect-attachment-with-tags",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"candidate_subnets", "labels", "params", "region", "router", "subnet_length", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccComputeInterconnectAttachment_computeInterconnectAttachmentTagsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_interconnect_attachment" "interconnect-attachment-with-tags" {
+  name                     = "tf-test-interconnect-attachment-with-tags%{random_suffix}"
+  edge_availability_domain = "AVAILABILITY_DOMAIN_1"
+  type                     = "PARTNER"
+  router                   = google_compute_router.foobar.id
+  mtu                      = 1500
+  labels                   = { mykey = "myvalue" }
+  resource_manager_tags = {
+    "tagKeys/123" = "tagValues/456"
+  }
+}
+
+resource "google_compute_router" "foobar" {
+  name    = "tf-test-router-1%{random_suffix}"
+  network = google_compute_network.foobar.name
+  bgp {
+    asn = 16550
+  }
+}
+
+resource "google_compute_network" "foobar" {
+  name                    = "tf-test-network-1%{random_suffix}"
+  auto_create_subnetworks = false
+}
+`, context)
+}
+
 func TestAccComputeInterconnectAttachment_computeInterconnectAttachmentCustomRangesExample(t *testing.T) {
 	t.Parallel()
 
@@ -250,7 +304,7 @@ func TestAccComputeInterconnectAttachment_computeInterconnectAttachmentCustomRan
 				ResourceName:            "google_compute_interconnect_attachment.custom-ranges-interconnect-attachment",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"candidate_subnets", "labels", "region", "router", "subnet_length", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"candidate_subnets", "labels", "params", "region", "router", "subnet_length", "terraform_labels"},
 			},
 		},
 	})

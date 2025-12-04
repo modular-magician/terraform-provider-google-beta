@@ -106,6 +106,40 @@ resource "google_compute_network" "network" {
 }
 ```
 <div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=compute_interconnect_attachment_tags&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Compute Interconnect Attachment Tags
+
+
+```hcl
+resource "google_compute_interconnect_attachment" "interconnect-attachment-with-tags" {
+  name                     = "interconnect-attachment-with-tags"
+  edge_availability_domain = "AVAILABILITY_DOMAIN_1"
+  type                     = "PARTNER"
+  router                   = google_compute_router.foobar.id
+  mtu                      = 1500
+  labels                   = { mykey = "myvalue" }
+  resource_manager_tags = {
+    "tagKeys/123" = "tagValues/456"
+  }
+}
+
+resource "google_compute_router" "foobar" {
+  name    = "router-1"
+  network = google_compute_network.foobar.name
+  bgp {
+    asn = 16550
+  }
+}
+
+resource "google_compute_network" "foobar" {
+  name                    = "network-1"
+  auto_create_subnetworks = false
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
   <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=compute_interconnect_attachment_custom_ranges&open_in_editor=main.tf" target="_blank">
     <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
   </a>
@@ -204,6 +238,11 @@ The following arguments are supported:
   selected availability domain will be provided to the Partner via the
   pairing key so that the provisioned circuit will lie in the specified
   domain. If not specified, the value will default to AVAILABILITY_DOMAIN_ANY.
+
+* `params` -
+  (Optional)
+  Additional params passed with the request, but not persisted as part of resource payload
+  Structure is [documented below](#nested_params).
 
 * `type` -
   (Optional)
@@ -313,6 +352,14 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+
+<a name="nested_params"></a>The `params` block supports:
+
+* `resource_manager_tags` -
+  (Optional)
+  Resource manager tags to be bound to the interconnect attachment. Tag keys and values have the
+  same definition as resource manager tags. Keys must be in the format tagKeys/{tag_key_id},
+  and values are in the format tagValues/456.
 
 ## Attributes Reference
 
