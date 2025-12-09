@@ -197,6 +197,7 @@ resource "google_datastream_stream" "default" {
         source_connection_profile = google_datastream_connection_profile.source_connection_profile.id
         mysql_source_config {
           max_concurrent_backfill_tasks = 15
+          binary_log_position {}
         }
     }
     destination_config {
