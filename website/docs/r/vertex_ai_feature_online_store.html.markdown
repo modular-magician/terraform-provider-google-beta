@@ -155,6 +155,11 @@ The following arguments are supported:
 
   ~> **Warning:** `embedding_management` is deprecated. This field is no longer needed anymore and embedding management is automatically enabled when specifying Optimized storage type
 
+* `encryption_spec` -
+  (Optional)
+  If set, both of the online and offline data storage will be secured by this key.
+  Structure is [documented below](#nested_encryption_spec).
+
 * `region` -
   (Optional)
   The region of feature online store. eg us-central1
@@ -166,6 +171,10 @@ The following arguments are supported:
 
 
 <a name="nested_bigtable"></a>The `bigtable` block supports:
+
+* `enable_direct_bigtable_access` -
+  (Optional)
+  Optional. It true, enable direct access to the Bigtable instance.
 
 * `auto_scaling` -
   (Required)
@@ -186,6 +195,10 @@ The following arguments are supported:
 * `cpu_utilization_target` -
   (Optional)
   A percentage of the cluster's CPU capacity. Can be from 10% to 80%. When a cluster's CPU utilization exceeds the target that you have set, Bigtable immediately adds nodes to the cluster. When CPU utilization is substantially lower than the target, Bigtable removes nodes. If not set will default to 50%.
+
+* `zone` -
+  (Optional)
+  The zone where the Bigtable instance will be created.
 
 <a name="nested_dedicated_serving_endpoint"></a>The `dedicated_serving_endpoint` block supports:
 
@@ -218,6 +231,12 @@ The following arguments are supported:
 * `enabled` -
   (Optional)
   Enable embedding management.
+
+<a name="nested_encryption_spec"></a>The `encryption_spec` block supports:
+
+* `kms_key_name` -
+  (Required)
+  The Cloud KMS resource identifier of the customer managed encryption key used to protect a resource. Has the form: projects/my-project/locations/my-region/keyRings/my-kr/cryptoKeys/my-key. The key needs to be in the same region as where the compute resource is created.
 
 ## Attributes Reference
 
