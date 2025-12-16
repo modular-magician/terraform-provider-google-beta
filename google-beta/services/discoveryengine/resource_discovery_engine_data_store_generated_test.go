@@ -90,6 +90,46 @@ resource "google_discovery_engine_data_store" "basic" {
 `, context)
 }
 
+func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreGoogleWorkspaceExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDiscoveryEngineDataStoreDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDiscoveryEngineDataStore_discoveryengineDatastoreGoogleWorkspaceExample(context),
+			},
+			{
+				ResourceName:            "google_discovery_engine_data_store.google_workspace",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "kms_key_name", "location", "skip_default_schema_creation"},
+			},
+		},
+	})
+}
+
+func testAccDiscoveryEngineDataStore_discoveryengineDatastoreGoogleWorkspaceExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_discovery_engine_data_store" "google_workspace" {
+  location                     = "global"
+  data_store_id                = "tf-test-data-store-id%{random_suffix}"
+  display_name                 = "tf-test-google-workspace-datastore"
+  industry_vertical            = "GENERIC"
+  content_config               = "GOOGLE_WORKSPACE"
+  solution_types               = ["SOLUTION_TYPE_SEARCH"]
+  create_advanced_site_search  = false
+  skip_default_schema_creation = false
+}
+`, context)
+}
+
 func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreKmsKeyNameExample(t *testing.T) {
 	t.Parallel()
 

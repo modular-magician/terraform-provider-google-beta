@@ -112,8 +112,8 @@ func ResourceDiscoveryEngineDataStore() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"NO_CONTENT", "CONTENT_REQUIRED", "PUBLIC_WEBSITE"}),
-				Description:  `The content config of the data store. Possible values: ["NO_CONTENT", "CONTENT_REQUIRED", "PUBLIC_WEBSITE"]`,
+				ValidateFunc: verify.ValidateEnum([]string{"NO_CONTENT", "CONTENT_REQUIRED", "PUBLIC_WEBSITE", "GOOGLE_WORKSPACE"}),
+				Description:  `The content config of the data store. Possible values: ["NO_CONTENT", "CONTENT_REQUIRED", "PUBLIC_WEBSITE", "GOOGLE_WORKSPACE"]`,
 			},
 			"data_store_id": {
 				Type:        schema.TypeString,
