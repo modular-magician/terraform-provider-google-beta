@@ -251,6 +251,27 @@ func resourceAlloydbUserCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if clusterValue := d.GetRawConfig().GetAttr("cluster"); !clusterValue.IsNull() && clusterValue.AsString() != "" {
+			if err = identity.Set("cluster", clusterValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting cluster: %s", err)
+			}
+		}
+		if userIdValue := d.GetRawConfig().GetAttr("user_id"); !userIdValue.IsNull() && userIdValue.AsString() != "" {
+			if err = identity.Set("user_id", userIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting user_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating User %q: %#v", d.Id(), res)
 
 	return resourceAlloydbUserRead(d, meta)
@@ -302,27 +323,27 @@ func resourceAlloydbUserRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("cluster"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("cluster"); !ok && v == "" {
 			err = identity.Set("cluster", d.Get("cluster").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting cluster: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("user_id"); ok && v != "" {
+		if v, ok := identity.GetOk("user_id"); !ok && v == "" {
 			err = identity.Set("user_id", d.Get("user_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting user_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -390,6 +411,27 @@ func resourceAlloydbUserUpdate(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error updating User %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating User %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if clusterValue := d.GetRawConfig().GetAttr("cluster"); !clusterValue.IsNull() && clusterValue.AsString() != "" {
+			if err = identity.Set("cluster", clusterValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting cluster: %s", err)
+			}
+		}
+		if userIdValue := d.GetRawConfig().GetAttr("user_id"); !userIdValue.IsNull() && userIdValue.AsString() != "" {
+			if err = identity.Set("user_id", userIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting user_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceAlloydbUserRead(d, meta)

@@ -732,6 +732,27 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderCreate(d *schema.ResourceData,
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if workforcePoolIdValue := d.GetRawConfig().GetAttr("workforce_pool_id"); !workforcePoolIdValue.IsNull() && workforcePoolIdValue.AsString() != "" {
+			if err = identity.Set("workforce_pool_id", workforcePoolIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting workforce_pool_id: %s", err)
+			}
+		}
+		if providerIdValue := d.GetRawConfig().GetAttr("provider_id"); !providerIdValue.IsNull() && providerIdValue.AsString() != "" {
+			if err = identity.Set("provider_id", providerIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting provider_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = IAMWorkforcePoolOperationWaitTime(
 		config, res, "Creating WorkforcePoolProvider", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -876,27 +897,27 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderRead(d *schema.ResourceData, m
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("workforce_pool_id"); ok && v != "" {
+		if v, ok := identity.GetOk("workforce_pool_id"); !ok && v == "" {
 			err = identity.Set("workforce_pool_id", d.Get("workforce_pool_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting workforce_pool_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("provider_id"); ok && v != "" {
+		if v, ok := identity.GetOk("provider_id"); !ok && v == "" {
 			err = identity.Set("provider_id", d.Get("provider_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting provider_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -1058,6 +1079,27 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderUpdate(d *schema.ResourceData,
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if workforcePoolIdValue := d.GetRawConfig().GetAttr("workforce_pool_id"); !workforcePoolIdValue.IsNull() && workforcePoolIdValue.AsString() != "" {
+			if err = identity.Set("workforce_pool_id", workforcePoolIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting workforce_pool_id: %s", err)
+			}
+		}
+		if providerIdValue := d.GetRawConfig().GetAttr("provider_id"); !providerIdValue.IsNull() && providerIdValue.AsString() != "" {
+			if err = identity.Set("provider_id", providerIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting provider_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	if d.HasChange("oidc") || d.HasChange("extra_attributes_oauth2_client") || d.HasChange("extended_attributes_oauth2_client") {

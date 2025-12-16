@@ -287,6 +287,22 @@ func resourceBiglakeTableCreate(d *schema.ResourceData, meta interface{}) error 
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if databaseValue := d.GetRawConfig().GetAttr("database"); !databaseValue.IsNull() && databaseValue.AsString() != "" {
+			if err = identity.Set("database", databaseValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting database: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating Table %q: %#v", d.Id(), res)
 
 	return resourceBiglakeTableRead(d, meta)
@@ -347,21 +363,21 @@ func resourceBiglakeTableRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("database"); ok && v != "" {
+		if v, ok := identity.GetOk("database"); !ok && v == "" {
 			err = identity.Set("database", d.Get("database").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting database: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -436,6 +452,22 @@ func resourceBiglakeTableUpdate(d *schema.ResourceData, meta interface{}) error 
 			log.Printf("[DEBUG] Finished updating Table %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if databaseValue := d.GetRawConfig().GetAttr("database"); !databaseValue.IsNull() && databaseValue.AsString() != "" {
+			if err = identity.Set("database", databaseValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting database: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceBiglakeTableRead(d, meta)

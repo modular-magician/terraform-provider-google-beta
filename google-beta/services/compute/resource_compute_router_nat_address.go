@@ -429,33 +429,33 @@ func resourceComputeRouterNatAddressRead(d *schema.ResourceData, meta interface{
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("router"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("router"); !ok && v == "" {
 			err = identity.Set("router", d.Get("router").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting router: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("router_nat"); ok && v != "" {
+		if v, ok := identity.GetOk("router_nat"); !ok && v == "" {
 			err = identity.Set("router_nat", d.Get("router_nat").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting router_nat: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("region"); ok && v != "" {
+		if v, ok := identity.GetOk("region"); !ok && v == "" {
 			err = identity.Set("region", d.Get("region").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting region: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -542,6 +542,32 @@ func resourceComputeRouterNatAddressUpdate(d *schema.ResourceData, meta interfac
 
 	if err != nil {
 		return err
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if routerValue := d.GetRawConfig().GetAttr("router"); !routerValue.IsNull() && routerValue.AsString() != "" {
+			if err = identity.Set("router", routerValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting router: %s", err)
+			}
+		}
+		if routerNatValue := d.GetRawConfig().GetAttr("router_nat"); !routerNatValue.IsNull() && routerNatValue.AsString() != "" {
+			if err = identity.Set("router_nat", routerNatValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting router_nat: %s", err)
+			}
+		}
+		if regionValue := d.GetRawConfig().GetAttr("region"); !regionValue.IsNull() && regionValue.AsString() != "" {
+			if err = identity.Set("region", regionValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting region: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceComputeRouterNatAddressRead(d, meta)

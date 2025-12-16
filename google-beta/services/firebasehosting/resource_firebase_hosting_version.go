@@ -339,6 +339,22 @@ func resourceFirebaseHostingVersionCreate(d *schema.ResourceData, meta interface
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if versionIdValue := d.GetRawConfig().GetAttr("version_id"); !versionIdValue.IsNull() && versionIdValue.AsString() != "" {
+			if err = identity.Set("version_id", versionIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting version_id: %s", err)
+			}
+		}
+		if siteIdValue := d.GetRawConfig().GetAttr("site_id"); !siteIdValue.IsNull() && siteIdValue.AsString() != "" {
+			if err = identity.Set("site_id", siteIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting site_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	obj = make(map[string]interface{})
 	obj["status"] = "FINALIZED"
 
@@ -420,21 +436,21 @@ func resourceFirebaseHostingVersionRead(d *schema.ResourceData, meta interface{}
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("version_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("version_id"); !ok && v == "" {
 			err = identity.Set("version_id", d.Get("version_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting version_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("site_id"); ok && v != "" {
+		if v, ok := identity.GetOk("site_id"); !ok && v == "" {
 			err = identity.Set("site_id", d.Get("site_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting site_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

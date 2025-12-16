@@ -267,6 +267,27 @@ func resourceApiGatewayGatewayCreate(d *schema.ResourceData, meta interface{}) e
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if regionValue := d.GetRawConfig().GetAttr("region"); !regionValue.IsNull() && regionValue.AsString() != "" {
+			if err = identity.Set("region", regionValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting region: %s", err)
+			}
+		}
+		if gatewayIdValue := d.GetRawConfig().GetAttr("gateway_id"); !gatewayIdValue.IsNull() && gatewayIdValue.AsString() != "" {
+			if err = identity.Set("gateway_id", gatewayIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting gateway_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = ApiGatewayOperationWaitTime(
 		config, res, project, "Creating Gateway", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -347,27 +368,27 @@ func resourceApiGatewayGatewayRead(d *schema.ResourceData, meta interface{}) err
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("region"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("region"); !ok && v == "" {
 			err = identity.Set("region", d.Get("region").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting region: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("gateway_id"); ok && v != "" {
+		if v, ok := identity.GetOk("gateway_id"); !ok && v == "" {
 			err = identity.Set("gateway_id", d.Get("gateway_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting gateway_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -465,6 +486,27 @@ func resourceApiGatewayGatewayUpdate(d *schema.ResourceData, meta interface{}) e
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if regionValue := d.GetRawConfig().GetAttr("region"); !regionValue.IsNull() && regionValue.AsString() != "" {
+			if err = identity.Set("region", regionValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting region: %s", err)
+			}
+		}
+		if gatewayIdValue := d.GetRawConfig().GetAttr("gateway_id"); !gatewayIdValue.IsNull() && gatewayIdValue.AsString() != "" {
+			if err = identity.Set("gateway_id", gatewayIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting gateway_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceApiGatewayGatewayRead(d, meta)

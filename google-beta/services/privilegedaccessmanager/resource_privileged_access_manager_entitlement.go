@@ -512,6 +512,27 @@ func resourcePrivilegedAccessManagerEntitlementCreate(d *schema.ResourceData, me
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if entitlementIdValue := d.GetRawConfig().GetAttr("entitlement_id"); !entitlementIdValue.IsNull() && entitlementIdValue.AsString() != "" {
+			if err = identity.Set("entitlement_id", entitlementIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entitlement_id: %s", err)
+			}
+		}
+		if parentValue := d.GetRawConfig().GetAttr("parent"); !parentValue.IsNull() && parentValue.AsString() != "" {
+			if err = identity.Set("parent", parentValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parent: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = PrivilegedAccessManagerOperationWaitTime(
 		config, res, "Creating Entitlement", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -594,27 +615,27 @@ func resourcePrivilegedAccessManagerEntitlementRead(d *schema.ResourceData, meta
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("entitlement_id"); ok && v != "" {
+		if v, ok := identity.GetOk("entitlement_id"); !ok && v == "" {
 			err = identity.Set("entitlement_id", d.Get("entitlement_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting entitlement_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("parent"); ok && v != "" {
+		if v, ok := identity.GetOk("parent"); !ok && v == "" {
 			err = identity.Set("parent", d.Get("parent").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting parent: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -749,6 +770,27 @@ func resourcePrivilegedAccessManagerEntitlementUpdate(d *schema.ResourceData, me
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if entitlementIdValue := d.GetRawConfig().GetAttr("entitlement_id"); !entitlementIdValue.IsNull() && entitlementIdValue.AsString() != "" {
+			if err = identity.Set("entitlement_id", entitlementIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entitlement_id: %s", err)
+			}
+		}
+		if parentValue := d.GetRawConfig().GetAttr("parent"); !parentValue.IsNull() && parentValue.AsString() != "" {
+			if err = identity.Set("parent", parentValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parent: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourcePrivilegedAccessManagerEntitlementRead(d, meta)

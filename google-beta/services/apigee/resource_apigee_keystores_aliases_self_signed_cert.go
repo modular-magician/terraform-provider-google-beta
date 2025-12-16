@@ -406,6 +406,32 @@ func resourceApigeeKeystoresAliasesSelfSignedCertCreate(d *schema.ResourceData, 
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if orgIdValue := d.GetRawConfig().GetAttr("org_id"); !orgIdValue.IsNull() && orgIdValue.AsString() != "" {
+			if err = identity.Set("org_id", orgIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting org_id: %s", err)
+			}
+		}
+		if environmentValue := d.GetRawConfig().GetAttr("environment"); !environmentValue.IsNull() && environmentValue.AsString() != "" {
+			if err = identity.Set("environment", environmentValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting environment: %s", err)
+			}
+		}
+		if keystoreValue := d.GetRawConfig().GetAttr("keystore"); !keystoreValue.IsNull() && keystoreValue.AsString() != "" {
+			if err = identity.Set("keystore", keystoreValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting keystore: %s", err)
+			}
+		}
+		if aliasValue := d.GetRawConfig().GetAttr("alias"); !aliasValue.IsNull() && aliasValue.AsString() != "" {
+			if err = identity.Set("alias", aliasValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting alias: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating KeystoresAliasesSelfSignedCert %q: %#v", d.Id(), res)
 
 	return resourceApigeeKeystoresAliasesSelfSignedCertRead(d, meta)
@@ -457,33 +483,33 @@ func resourceApigeeKeystoresAliasesSelfSignedCertRead(d *schema.ResourceData, me
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("org_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("org_id"); !ok && v == "" {
 			err = identity.Set("org_id", d.Get("org_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting org_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("environment"); ok && v != "" {
+		if v, ok := identity.GetOk("environment"); !ok && v == "" {
 			err = identity.Set("environment", d.Get("environment").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting environment: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("keystore"); ok && v != "" {
+		if v, ok := identity.GetOk("keystore"); !ok && v == "" {
 			err = identity.Set("keystore", d.Get("keystore").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting keystore: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("alias"); ok && v != "" {
+		if v, ok := identity.GetOk("alias"); !ok && v == "" {
 			err = identity.Set("alias", d.Get("alias").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting alias: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

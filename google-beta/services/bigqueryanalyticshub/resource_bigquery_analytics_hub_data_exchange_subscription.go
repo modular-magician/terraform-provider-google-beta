@@ -420,6 +420,27 @@ func resourceBigqueryAnalyticsHubDataExchangeSubscriptionCreate(d *schema.Resour
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if subscriptionIdValue := d.GetRawConfig().GetAttr("subscription_id"); !subscriptionIdValue.IsNull() && subscriptionIdValue.AsString() != "" {
+			if err = identity.Set("subscription_id", subscriptionIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting subscription_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating DataExchangeSubscription %q: %#v", d.Id(), res)
 
 	return resourceBigqueryAnalyticsHubDataExchangeSubscriptionRead(d, meta)
@@ -577,27 +598,27 @@ func resourceBigqueryAnalyticsHubDataExchangeSubscriptionRead(d *schema.Resource
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("subscription_id"); ok && v != "" {
+		if v, ok := identity.GetOk("subscription_id"); !ok && v == "" {
 			err = identity.Set("subscription_id", d.Get("subscription_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting subscription_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

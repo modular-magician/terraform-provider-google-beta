@@ -370,6 +370,22 @@ func resourceComputeOrganizationSecurityPolicyRuleCreate(d *schema.ResourceData,
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if priorityValue := d.GetRawConfig().GetAttr("priority"); !priorityValue.IsNull() && priorityValue.AsString() != "" {
+			if err = identity.Set("priority", priorityValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting priority: %s", err)
+			}
+		}
+		if policyIdValue := d.GetRawConfig().GetAttr("policy_id"); !policyIdValue.IsNull() && policyIdValue.AsString() != "" {
+			if err = identity.Set("policy_id", policyIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting policy_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	// `parent` is needed to poll the asynchronous operations but its available only on the policy.
 
 	policyUrl := fmt.Sprintf("{{ComputeBasePath}}%s", d.Get("policy_id"))
@@ -466,21 +482,21 @@ func resourceComputeOrganizationSecurityPolicyRuleRead(d *schema.ResourceData, m
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("priority"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("priority"); !ok && v == "" {
 			err = identity.Set("priority", d.Get("priority").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting priority: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("policy_id"); ok && v != "" {
+		if v, ok := identity.GetOk("policy_id"); !ok && v == "" {
 			err = identity.Set("policy_id", d.Get("policy_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting policy_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -578,6 +594,22 @@ func resourceComputeOrganizationSecurityPolicyRuleUpdate(d *schema.ResourceData,
 		return fmt.Errorf("Error updating OrganizationSecurityPolicyRule %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating OrganizationSecurityPolicyRule %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if priorityValue := d.GetRawConfig().GetAttr("priority"); !priorityValue.IsNull() && priorityValue.AsString() != "" {
+			if err = identity.Set("priority", priorityValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting priority: %s", err)
+			}
+		}
+		if policyIdValue := d.GetRawConfig().GetAttr("policy_id"); !policyIdValue.IsNull() && policyIdValue.AsString() != "" {
+			if err = identity.Set("policy_id", policyIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting policy_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	// `parent` is needed to poll the asynchronous operations but its available only on the policy.

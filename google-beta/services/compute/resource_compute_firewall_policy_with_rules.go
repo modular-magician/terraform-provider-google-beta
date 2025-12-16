@@ -885,6 +885,17 @@ func resourceComputeFirewallPolicyWithRulesCreate(d *schema.ResourceData, meta i
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if policyIdValue := d.GetRawConfig().GetAttr("policy_id"); !policyIdValue.IsNull() && policyIdValue.AsString() != "" {
+			if err = identity.Set("policy_id", policyIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting policy_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	parent := d.Get("parent").(string)
 	var opRes map[string]interface{}
 	err = ComputeOrgOperationWaitTimeWithResponse(
@@ -1026,15 +1037,15 @@ func resourceComputeFirewallPolicyWithRulesRead(d *schema.ResourceData, meta int
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("policy_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("policy_id"); !ok && v == "" {
 			err = identity.Set("policy_id", d.Get("policy_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting policy_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -1101,6 +1112,17 @@ func resourceComputeFirewallPolicyWithRulesUpdate(d *schema.ResourceData, meta i
 		return fmt.Errorf("Error updating FirewallPolicyWithRules %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating FirewallPolicyWithRules %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if policyIdValue := d.GetRawConfig().GetAttr("policy_id"); !policyIdValue.IsNull() && policyIdValue.AsString() != "" {
+			if err = identity.Set("policy_id", policyIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting policy_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	parent := d.Get("parent").(string)

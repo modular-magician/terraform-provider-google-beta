@@ -266,6 +266,27 @@ func resourceMigrationCenterGroupCreate(d *schema.ResourceData, meta interface{}
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if groupIdValue := d.GetRawConfig().GetAttr("group_id"); !groupIdValue.IsNull() && groupIdValue.AsString() != "" {
+			if err = identity.Set("group_id", groupIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting group_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = MigrationCenterOperationWaitTime(
 		config, res, project, "Creating Group", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -349,27 +370,27 @@ func resourceMigrationCenterGroupRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("group_id"); ok && v != "" {
+		if v, ok := identity.GetOk("group_id"); !ok && v == "" {
 			err = identity.Set("group_id", d.Get("group_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting group_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -467,6 +488,27 @@ func resourceMigrationCenterGroupUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if groupIdValue := d.GetRawConfig().GetAttr("group_id"); !groupIdValue.IsNull() && groupIdValue.AsString() != "" {
+			if err = identity.Set("group_id", groupIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting group_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceMigrationCenterGroupRead(d, meta)

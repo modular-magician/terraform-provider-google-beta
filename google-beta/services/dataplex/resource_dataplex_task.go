@@ -739,6 +739,32 @@ func resourceDataplexTaskCreate(d *schema.ResourceData, meta interface{}) error 
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if lakeValue := d.GetRawConfig().GetAttr("lake"); !lakeValue.IsNull() && lakeValue.AsString() != "" {
+			if err = identity.Set("lake", lakeValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting lake: %s", err)
+			}
+		}
+		if taskIdValue := d.GetRawConfig().GetAttr("task_id"); !taskIdValue.IsNull() && taskIdValue.AsString() != "" {
+			if err = identity.Set("task_id", taskIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting task_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = DataplexOperationWaitTime(
 		config, res, project, "Creating Task", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -843,33 +869,33 @@ func resourceDataplexTaskRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("lake"); ok && v != "" {
+		if v, ok := identity.GetOk("lake"); !ok && v == "" {
 			err = identity.Set("lake", d.Get("lake").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting lake: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("task_id"); ok && v != "" {
+		if v, ok := identity.GetOk("task_id"); !ok && v == "" {
 			err = identity.Set("task_id", d.Get("task_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting task_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -1007,6 +1033,32 @@ func resourceDataplexTaskUpdate(d *schema.ResourceData, meta interface{}) error 
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if lakeValue := d.GetRawConfig().GetAttr("lake"); !lakeValue.IsNull() && lakeValue.AsString() != "" {
+			if err = identity.Set("lake", lakeValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting lake: %s", err)
+			}
+		}
+		if taskIdValue := d.GetRawConfig().GetAttr("task_id"); !taskIdValue.IsNull() && taskIdValue.AsString() != "" {
+			if err = identity.Set("task_id", taskIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting task_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceDataplexTaskRead(d, meta)

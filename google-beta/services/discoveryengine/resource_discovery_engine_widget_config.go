@@ -602,6 +602,37 @@ func resourceDiscoveryEngineWidgetConfigCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if collectionIdValue := d.GetRawConfig().GetAttr("collection_id"); !collectionIdValue.IsNull() && collectionIdValue.AsString() != "" {
+			if err = identity.Set("collection_id", collectionIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting collection_id: %s", err)
+			}
+		}
+		if engineIdValue := d.GetRawConfig().GetAttr("engine_id"); !engineIdValue.IsNull() && engineIdValue.AsString() != "" {
+			if err = identity.Set("engine_id", engineIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting engine_id: %s", err)
+			}
+		}
+		if widgetConfigIdValue := d.GetRawConfig().GetAttr("widget_config_id"); !widgetConfigIdValue.IsNull() && widgetConfigIdValue.AsString() != "" {
+			if err = identity.Set("widget_config_id", widgetConfigIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting widget_config_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating WidgetConfig %q: %#v", d.Id(), res)
 
 	return resourceDiscoveryEngineWidgetConfigRead(d, meta)
@@ -666,39 +697,39 @@ func resourceDiscoveryEngineWidgetConfigRead(d *schema.ResourceData, meta interf
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("collection_id"); ok && v != "" {
+		if v, ok := identity.GetOk("collection_id"); !ok && v == "" {
 			err = identity.Set("collection_id", d.Get("collection_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting collection_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("engine_id"); ok && v != "" {
+		if v, ok := identity.GetOk("engine_id"); !ok && v == "" {
 			err = identity.Set("engine_id", d.Get("engine_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting engine_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("widget_config_id"); ok && v != "" {
+		if v, ok := identity.GetOk("widget_config_id"); !ok && v == "" {
 			err = identity.Set("widget_config_id", d.Get("widget_config_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting widget_config_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -799,6 +830,37 @@ func resourceDiscoveryEngineWidgetConfigUpdate(d *schema.ResourceData, meta inte
 			log.Printf("[DEBUG] Finished updating WidgetConfig %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if collectionIdValue := d.GetRawConfig().GetAttr("collection_id"); !collectionIdValue.IsNull() && collectionIdValue.AsString() != "" {
+			if err = identity.Set("collection_id", collectionIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting collection_id: %s", err)
+			}
+		}
+		if engineIdValue := d.GetRawConfig().GetAttr("engine_id"); !engineIdValue.IsNull() && engineIdValue.AsString() != "" {
+			if err = identity.Set("engine_id", engineIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting engine_id: %s", err)
+			}
+		}
+		if widgetConfigIdValue := d.GetRawConfig().GetAttr("widget_config_id"); !widgetConfigIdValue.IsNull() && widgetConfigIdValue.AsString() != "" {
+			if err = identity.Set("widget_config_id", widgetConfigIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting widget_config_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceDiscoveryEngineWidgetConfigRead(d, meta)

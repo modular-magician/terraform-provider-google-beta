@@ -189,6 +189,22 @@ func resourceResourceManager3CapabilityCreate(d *schema.ResourceData, meta inter
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if parentValue := d.GetRawConfig().GetAttr("parent"); !parentValue.IsNull() && parentValue.AsString() != "" {
+			if err = identity.Set("parent", parentValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parent: %s", err)
+			}
+		}
+		if capabilityNameValue := d.GetRawConfig().GetAttr("capability_name"); !capabilityNameValue.IsNull() && capabilityNameValue.AsString() != "" {
+			if err = identity.Set("capability_name", capabilityNameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting capability_name: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = ResourceManager3OperationWaitTime(
 		config, res, "Creating Capability", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -241,21 +257,21 @@ func resourceResourceManager3CapabilityRead(d *schema.ResourceData, meta interfa
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("parent"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("parent"); !ok && v == "" {
 			err = identity.Set("parent", d.Get("parent").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting parent: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("capability_name"); ok && v != "" {
+		if v, ok := identity.GetOk("capability_name"); !ok && v == "" {
 			err = identity.Set("capability_name", d.Get("capability_name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting capability_name: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -327,6 +343,22 @@ func resourceResourceManager3CapabilityUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if parentValue := d.GetRawConfig().GetAttr("parent"); !parentValue.IsNull() && parentValue.AsString() != "" {
+			if err = identity.Set("parent", parentValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parent: %s", err)
+			}
+		}
+		if capabilityNameValue := d.GetRawConfig().GetAttr("capability_name"); !capabilityNameValue.IsNull() && capabilityNameValue.AsString() != "" {
+			if err = identity.Set("capability_name", capabilityNameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting capability_name: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceResourceManager3CapabilityRead(d, meta)

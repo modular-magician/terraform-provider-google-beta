@@ -354,6 +354,27 @@ func resourceNetworkSecurityInterceptEndpointGroupAssociationCreate(d *schema.Re
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if interceptEndpointGroupAssociationIdValue := d.GetRawConfig().GetAttr("intercept_endpoint_group_association_id"); !interceptEndpointGroupAssociationIdValue.IsNull() && interceptEndpointGroupAssociationIdValue.AsString() != "" {
+			if err = identity.Set("intercept_endpoint_group_association_id", interceptEndpointGroupAssociationIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting intercept_endpoint_group_association_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = NetworkSecurityOperationWaitTime(
 		config, res, project, "Creating InterceptEndpointGroupAssociation", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -449,27 +470,27 @@ func resourceNetworkSecurityInterceptEndpointGroupAssociationRead(d *schema.Reso
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("intercept_endpoint_group_association_id"); ok && v != "" {
+		if v, ok := identity.GetOk("intercept_endpoint_group_association_id"); !ok && v == "" {
 			err = identity.Set("intercept_endpoint_group_association_id", d.Get("intercept_endpoint_group_association_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting intercept_endpoint_group_association_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -547,6 +568,27 @@ func resourceNetworkSecurityInterceptEndpointGroupAssociationUpdate(d *schema.Re
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if interceptEndpointGroupAssociationIdValue := d.GetRawConfig().GetAttr("intercept_endpoint_group_association_id"); !interceptEndpointGroupAssociationIdValue.IsNull() && interceptEndpointGroupAssociationIdValue.AsString() != "" {
+			if err = identity.Set("intercept_endpoint_group_association_id", interceptEndpointGroupAssociationIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting intercept_endpoint_group_association_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceNetworkSecurityInterceptEndpointGroupAssociationRead(d, meta)

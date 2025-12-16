@@ -415,6 +415,27 @@ func resourceCloudSecurityComplianceFrameworkCreate(d *schema.ResourceData, meta
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if organizationValue := d.GetRawConfig().GetAttr("organization"); !organizationValue.IsNull() && organizationValue.AsString() != "" {
+			if err = identity.Set("organization", organizationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if frameworkIdValue := d.GetRawConfig().GetAttr("framework_id"); !frameworkIdValue.IsNull() && frameworkIdValue.AsString() != "" {
+			if err = identity.Set("framework_id", frameworkIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting framework_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating Framework %q: %#v", d.Id(), res)
 
 	return resourceCloudSecurityComplianceFrameworkRead(d, meta)
@@ -484,27 +505,27 @@ func resourceCloudSecurityComplianceFrameworkRead(d *schema.ResourceData, meta i
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("organization"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("organization"); !ok && v == "" {
 			err = identity.Set("organization", d.Get("organization").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting organization: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("framework_id"); ok && v != "" {
+		if v, ok := identity.GetOk("framework_id"); !ok && v == "" {
 			err = identity.Set("framework_id", d.Get("framework_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting framework_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -594,6 +615,27 @@ func resourceCloudSecurityComplianceFrameworkUpdate(d *schema.ResourceData, meta
 			log.Printf("[DEBUG] Finished updating Framework %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if organizationValue := d.GetRawConfig().GetAttr("organization"); !organizationValue.IsNull() && organizationValue.AsString() != "" {
+			if err = identity.Set("organization", organizationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if frameworkIdValue := d.GetRawConfig().GetAttr("framework_id"); !frameworkIdValue.IsNull() && frameworkIdValue.AsString() != "" {
+			if err = identity.Set("framework_id", frameworkIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting framework_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceCloudSecurityComplianceFrameworkRead(d, meta)

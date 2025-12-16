@@ -234,6 +234,27 @@ func resourceIapTunnelDestGroupCreate(d *schema.ResourceData, meta interface{}) 
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if regionValue := d.GetRawConfig().GetAttr("region"); !regionValue.IsNull() && regionValue.AsString() != "" {
+			if err = identity.Set("region", regionValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting region: %s", err)
+			}
+		}
+		if groupNameValue := d.GetRawConfig().GetAttr("group_name"); !groupNameValue.IsNull() && groupNameValue.AsString() != "" {
+			if err = identity.Set("group_name", groupNameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting group_name: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating TunnelDestGroup %q: %#v", d.Id(), res)
 
 	return resourceIapTunnelDestGroupRead(d, meta)
@@ -292,27 +313,27 @@ func resourceIapTunnelDestGroupRead(d *schema.ResourceData, meta interface{}) er
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("region"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("region"); !ok && v == "" {
 			err = identity.Set("region", d.Get("region").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting region: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("group_name"); ok && v != "" {
+		if v, ok := identity.GetOk("group_name"); !ok && v == "" {
 			err = identity.Set("group_name", d.Get("group_name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting group_name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -374,6 +395,27 @@ func resourceIapTunnelDestGroupUpdate(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error updating TunnelDestGroup %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating TunnelDestGroup %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if regionValue := d.GetRawConfig().GetAttr("region"); !regionValue.IsNull() && regionValue.AsString() != "" {
+			if err = identity.Set("region", regionValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting region: %s", err)
+			}
+		}
+		if groupNameValue := d.GetRawConfig().GetAttr("group_name"); !groupNameValue.IsNull() && groupNameValue.AsString() != "" {
+			if err = identity.Set("group_name", groupNameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting group_name: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceIapTunnelDestGroupRead(d, meta)

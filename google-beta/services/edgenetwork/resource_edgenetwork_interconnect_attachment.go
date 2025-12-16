@@ -324,6 +324,32 @@ func resourceEdgenetworkInterconnectAttachmentCreate(d *schema.ResourceData, met
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if zoneValue := d.GetRawConfig().GetAttr("zone"); !zoneValue.IsNull() && zoneValue.AsString() != "" {
+			if err = identity.Set("zone", zoneValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting zone: %s", err)
+			}
+		}
+		if interconnectAttachmentIdValue := d.GetRawConfig().GetAttr("interconnect_attachment_id"); !interconnectAttachmentIdValue.IsNull() && interconnectAttachmentIdValue.AsString() != "" {
+			if err = identity.Set("interconnect_attachment_id", interconnectAttachmentIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting interconnect_attachment_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = EdgenetworkOperationWaitTime(
 		config, res, project, "Creating InterconnectAttachment", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -416,33 +442,33 @@ func resourceEdgenetworkInterconnectAttachmentRead(d *schema.ResourceData, meta 
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("zone"); ok && v != "" {
+		if v, ok := identity.GetOk("zone"); !ok && v == "" {
 			err = identity.Set("zone", d.Get("zone").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting zone: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("interconnect_attachment_id"); ok && v != "" {
+		if v, ok := identity.GetOk("interconnect_attachment_id"); !ok && v == "" {
 			err = identity.Set("interconnect_attachment_id", d.Get("interconnect_attachment_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting interconnect_attachment_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

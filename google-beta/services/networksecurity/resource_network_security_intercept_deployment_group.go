@@ -338,6 +338,27 @@ func resourceNetworkSecurityInterceptDeploymentGroupCreate(d *schema.ResourceDat
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if interceptDeploymentGroupIdValue := d.GetRawConfig().GetAttr("intercept_deployment_group_id"); !interceptDeploymentGroupIdValue.IsNull() && interceptDeploymentGroupIdValue.AsString() != "" {
+			if err = identity.Set("intercept_deployment_group_id", interceptDeploymentGroupIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting intercept_deployment_group_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = NetworkSecurityOperationWaitTime(
 		config, res, project, "Creating InterceptDeploymentGroup", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -433,27 +454,27 @@ func resourceNetworkSecurityInterceptDeploymentGroupRead(d *schema.ResourceData,
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("intercept_deployment_group_id"); ok && v != "" {
+		if v, ok := identity.GetOk("intercept_deployment_group_id"); !ok && v == "" {
 			err = identity.Set("intercept_deployment_group_id", d.Get("intercept_deployment_group_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting intercept_deployment_group_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -541,6 +562,27 @@ func resourceNetworkSecurityInterceptDeploymentGroupUpdate(d *schema.ResourceDat
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if interceptDeploymentGroupIdValue := d.GetRawConfig().GetAttr("intercept_deployment_group_id"); !interceptDeploymentGroupIdValue.IsNull() && interceptDeploymentGroupIdValue.AsString() != "" {
+			if err = identity.Set("intercept_deployment_group_id", interceptDeploymentGroupIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting intercept_deployment_group_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceNetworkSecurityInterceptDeploymentGroupRead(d, meta)

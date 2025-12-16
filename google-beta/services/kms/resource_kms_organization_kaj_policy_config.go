@@ -199,6 +199,17 @@ func resourceKMSOrganizationKajPolicyConfigCreate(d *schema.ResourceData, meta i
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if organizationValue := d.GetRawConfig().GetAttr("organization"); !organizationValue.IsNull() && organizationValue.AsString() != "" {
+			if err = identity.Set("organization", organizationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	// This is useful if the resource in question doesn't have a perfectly consistent API
 	// That is, the Operation for Create might return before the Get operation shows the
 	// completed state of the resource.
@@ -246,15 +257,15 @@ func resourceKMSOrganizationKajPolicyConfigRead(d *schema.ResourceData, meta int
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("organization"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("organization"); !ok && v == "" {
 			err = identity.Set("organization", d.Get("organization").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting organization: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -304,6 +315,17 @@ func resourceKMSOrganizationKajPolicyConfigUpdate(d *schema.ResourceData, meta i
 		return fmt.Errorf("Error updating OrganizationKajPolicyConfig %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating OrganizationKajPolicyConfig %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if organizationValue := d.GetRawConfig().GetAttr("organization"); !organizationValue.IsNull() && organizationValue.AsString() != "" {
+			if err = identity.Set("organization", organizationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	// This is useful if the resource in question doesn't have a perfectly consistent API

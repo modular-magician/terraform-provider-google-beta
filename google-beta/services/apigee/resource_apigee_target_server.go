@@ -333,6 +333,22 @@ func resourceApigeeTargetServerCreate(d *schema.ResourceData, meta interface{}) 
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if envIdValue := d.GetRawConfig().GetAttr("env_id"); !envIdValue.IsNull() && envIdValue.AsString() != "" {
+			if err = identity.Set("env_id", envIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting env_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating TargetServer %q: %#v", d.Id(), res)
 
 	return resourceApigeeTargetServerRead(d, meta)
@@ -393,21 +409,21 @@ func resourceApigeeTargetServerRead(d *schema.ResourceData, meta interface{}) er
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("env_id"); ok && v != "" {
+		if v, ok := identity.GetOk("env_id"); !ok && v == "" {
 			err = identity.Set("env_id", d.Get("env_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting env_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -493,6 +509,22 @@ func resourceApigeeTargetServerUpdate(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error updating TargetServer %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating TargetServer %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if envIdValue := d.GetRawConfig().GetAttr("env_id"); !envIdValue.IsNull() && envIdValue.AsString() != "" {
+			if err = identity.Set("env_id", envIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting env_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceApigeeTargetServerRead(d, meta)

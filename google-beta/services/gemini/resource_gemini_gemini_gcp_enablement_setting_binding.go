@@ -285,6 +285,32 @@ func resourceGeminiGeminiGcpEnablementSettingBindingCreate(d *schema.ResourceDat
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if geminiGcpEnablementSettingIdValue := d.GetRawConfig().GetAttr("gemini_gcp_enablement_setting_id"); !geminiGcpEnablementSettingIdValue.IsNull() && geminiGcpEnablementSettingIdValue.AsString() != "" {
+			if err = identity.Set("gemini_gcp_enablement_setting_id", geminiGcpEnablementSettingIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting gemini_gcp_enablement_setting_id: %s", err)
+			}
+		}
+		if settingBindingIdValue := d.GetRawConfig().GetAttr("setting_binding_id"); !settingBindingIdValue.IsNull() && settingBindingIdValue.AsString() != "" {
+			if err = identity.Set("setting_binding_id", settingBindingIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting setting_binding_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = GeminiOperationWaitTime(
 		config, res, project, "Creating GeminiGcpEnablementSettingBinding", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -368,33 +394,33 @@ func resourceGeminiGeminiGcpEnablementSettingBindingRead(d *schema.ResourceData,
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("gemini_gcp_enablement_setting_id"); ok && v != "" {
+		if v, ok := identity.GetOk("gemini_gcp_enablement_setting_id"); !ok && v == "" {
 			err = identity.Set("gemini_gcp_enablement_setting_id", d.Get("gemini_gcp_enablement_setting_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting gemini_gcp_enablement_setting_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("setting_binding_id"); ok && v != "" {
+		if v, ok := identity.GetOk("setting_binding_id"); !ok && v == "" {
 			err = identity.Set("setting_binding_id", d.Get("setting_binding_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting setting_binding_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -499,6 +525,32 @@ func resourceGeminiGeminiGcpEnablementSettingBindingUpdate(d *schema.ResourceDat
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if geminiGcpEnablementSettingIdValue := d.GetRawConfig().GetAttr("gemini_gcp_enablement_setting_id"); !geminiGcpEnablementSettingIdValue.IsNull() && geminiGcpEnablementSettingIdValue.AsString() != "" {
+			if err = identity.Set("gemini_gcp_enablement_setting_id", geminiGcpEnablementSettingIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting gemini_gcp_enablement_setting_id: %s", err)
+			}
+		}
+		if settingBindingIdValue := d.GetRawConfig().GetAttr("setting_binding_id"); !settingBindingIdValue.IsNull() && settingBindingIdValue.AsString() != "" {
+			if err = identity.Set("setting_binding_id", settingBindingIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting setting_binding_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceGeminiGeminiGcpEnablementSettingBindingRead(d, meta)

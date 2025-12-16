@@ -227,6 +227,17 @@ func resourceFirebaseProjectCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = FirebaseOperationWaitTime(
 		config, res, project, "Creating Project", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -292,15 +303,15 @@ func resourceFirebaseProjectRead(d *schema.ResourceData, meta interface{}) error
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

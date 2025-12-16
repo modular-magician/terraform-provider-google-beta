@@ -282,6 +282,22 @@ func resourceSecurityCenterProjectSccBigQueryExportCreate(d *schema.ResourceData
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if bigQueryExportIdValue := d.GetRawConfig().GetAttr("big_query_export_id"); !bigQueryExportIdValue.IsNull() && bigQueryExportIdValue.AsString() != "" {
+			if err = identity.Set("big_query_export_id", bigQueryExportIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting big_query_export_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating ProjectSccBigQueryExport %q: %#v", d.Id(), res)
 
 	return resourceSecurityCenterProjectSccBigQueryExportRead(d, meta)
@@ -355,21 +371,21 @@ func resourceSecurityCenterProjectSccBigQueryExportRead(d *schema.ResourceData, 
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("big_query_export_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("big_query_export_id"); !ok && v == "" {
 			err = identity.Set("big_query_export_id", d.Get("big_query_export_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting big_query_export_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -460,6 +476,22 @@ func resourceSecurityCenterProjectSccBigQueryExportUpdate(d *schema.ResourceData
 			log.Printf("[DEBUG] Finished updating ProjectSccBigQueryExport %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if bigQueryExportIdValue := d.GetRawConfig().GetAttr("big_query_export_id"); !bigQueryExportIdValue.IsNull() && bigQueryExportIdValue.AsString() != "" {
+			if err = identity.Set("big_query_export_id", bigQueryExportIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting big_query_export_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceSecurityCenterProjectSccBigQueryExportRead(d, meta)

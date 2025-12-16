@@ -327,6 +327,27 @@ func resourceGKEHub2ScopeRBACRoleBindingCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if scopeRbacRoleBindingIdValue := d.GetRawConfig().GetAttr("scope_rbac_role_binding_id"); !scopeRbacRoleBindingIdValue.IsNull() && scopeRbacRoleBindingIdValue.AsString() != "" {
+			if err = identity.Set("scope_rbac_role_binding_id", scopeRbacRoleBindingIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting scope_rbac_role_binding_id: %s", err)
+			}
+		}
+		if scopeIdValue := d.GetRawConfig().GetAttr("scope_id"); !scopeIdValue.IsNull() && scopeIdValue.AsString() != "" {
+			if err = identity.Set("scope_id", scopeIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting scope_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = GKEHub2OperationWaitTime(
 		config, res, project, "Creating ScopeRBACRoleBinding", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -422,27 +443,27 @@ func resourceGKEHub2ScopeRBACRoleBindingRead(d *schema.ResourceData, meta interf
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("scope_rbac_role_binding_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("scope_rbac_role_binding_id"); !ok && v == "" {
 			err = identity.Set("scope_rbac_role_binding_id", d.Get("scope_rbac_role_binding_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting scope_rbac_role_binding_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("scope_id"); ok && v != "" {
+		if v, ok := identity.GetOk("scope_id"); !ok && v == "" {
 			err = identity.Set("scope_id", d.Get("scope_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting scope_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -550,6 +571,27 @@ func resourceGKEHub2ScopeRBACRoleBindingUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if scopeRbacRoleBindingIdValue := d.GetRawConfig().GetAttr("scope_rbac_role_binding_id"); !scopeRbacRoleBindingIdValue.IsNull() && scopeRbacRoleBindingIdValue.AsString() != "" {
+			if err = identity.Set("scope_rbac_role_binding_id", scopeRbacRoleBindingIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting scope_rbac_role_binding_id: %s", err)
+			}
+		}
+		if scopeIdValue := d.GetRawConfig().GetAttr("scope_id"); !scopeIdValue.IsNull() && scopeIdValue.AsString() != "" {
+			if err = identity.Set("scope_id", scopeIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting scope_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceGKEHub2ScopeRBACRoleBindingRead(d, meta)

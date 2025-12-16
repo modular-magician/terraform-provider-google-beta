@@ -855,6 +855,22 @@ func resourcePubsubSubscriptionCreate(d *schema.ResourceData, meta interface{}) 
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = transport_tpg.PollingWaitTime(resourcePubsubSubscriptionPollRead(d, meta), transport_tpg.PollCheckForExistence, "Creating Subscription", d.Timeout(schema.TimeoutCreate), 1)
 	if err != nil {
 		log.Printf("[ERROR] Unable to confirm eventually consistent Subscription %q finished updating: %q", d.Id(), err)
@@ -1005,21 +1021,21 @@ func resourcePubsubSubscriptionRead(d *schema.ResourceData, meta interface{}) er
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -1214,6 +1230,22 @@ func resourcePubsubSubscriptionUpdate(d *schema.ResourceData, meta interface{}) 
 			log.Printf("[DEBUG] Finished updating Subscription %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourcePubsubSubscriptionRead(d, meta)

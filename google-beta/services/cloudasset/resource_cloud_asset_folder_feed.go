@@ -339,6 +339,22 @@ func resourceCloudAssetFolderFeedCreate(d *schema.ResourceData, meta interface{}
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if folderIdValue := d.GetRawConfig().GetAttr("folder_id"); !folderIdValue.IsNull() && folderIdValue.AsString() != "" {
+			if err = identity.Set("folder_id", folderIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder_id: %s", err)
+			}
+		}
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	// Restore the original value of user_project_override.
 	config.UserProjectOverride = origUserProjectOverride
 
@@ -406,21 +422,21 @@ func resourceCloudAssetFolderFeedRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("folder_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("folder_id"); !ok && v == "" {
 			err = identity.Set("folder_id", d.Get("folder_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting folder_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -533,6 +549,22 @@ func resourceCloudAssetFolderFeedUpdate(d *schema.ResourceData, meta interface{}
 			log.Printf("[DEBUG] Finished updating FolderFeed %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if folderIdValue := d.GetRawConfig().GetAttr("folder_id"); !folderIdValue.IsNull() && folderIdValue.AsString() != "" {
+			if err = identity.Set("folder_id", folderIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder_id: %s", err)
+			}
+		}
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceCloudAssetFolderFeedRead(d, meta)

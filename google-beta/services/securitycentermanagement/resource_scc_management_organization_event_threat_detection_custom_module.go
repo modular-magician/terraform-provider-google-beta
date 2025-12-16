@@ -266,6 +266,27 @@ func resourceSecurityCenterManagementOrganizationEventThreatDetectionCustomModul
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if organizationValue := d.GetRawConfig().GetAttr("organization"); !organizationValue.IsNull() && organizationValue.AsString() != "" {
+			if err = identity.Set("organization", organizationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating OrganizationEventThreatDetectionCustomModule %q: %#v", d.Id(), res)
 
 	return resourceSecurityCenterManagementOrganizationEventThreatDetectionCustomModuleRead(d, meta)
@@ -326,27 +347,27 @@ func resourceSecurityCenterManagementOrganizationEventThreatDetectionCustomModul
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("organization"); ok && v != "" {
+		if v, ok := identity.GetOk("organization"); !ok && v == "" {
 			err = identity.Set("organization", d.Get("organization").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting organization: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -438,6 +459,27 @@ func resourceSecurityCenterManagementOrganizationEventThreatDetectionCustomModul
 			log.Printf("[DEBUG] Finished updating OrganizationEventThreatDetectionCustomModule %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if organizationValue := d.GetRawConfig().GetAttr("organization"); !organizationValue.IsNull() && organizationValue.AsString() != "" {
+			if err = identity.Set("organization", organizationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceSecurityCenterManagementOrganizationEventThreatDetectionCustomModuleRead(d, meta)

@@ -335,6 +335,32 @@ func resourceEdgenetworkSubnetCreate(d *schema.ResourceData, meta interface{}) e
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if zoneValue := d.GetRawConfig().GetAttr("zone"); !zoneValue.IsNull() && zoneValue.AsString() != "" {
+			if err = identity.Set("zone", zoneValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting zone: %s", err)
+			}
+		}
+		if subnetIdValue := d.GetRawConfig().GetAttr("subnet_id"); !subnetIdValue.IsNull() && subnetIdValue.AsString() != "" {
+			if err = identity.Set("subnet_id", subnetIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting subnet_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = EdgenetworkOperationWaitTime(
 		config, res, project, "Creating Subnet", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -430,33 +456,33 @@ func resourceEdgenetworkSubnetRead(d *schema.ResourceData, meta interface{}) err
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("zone"); ok && v != "" {
+		if v, ok := identity.GetOk("zone"); !ok && v == "" {
 			err = identity.Set("zone", d.Get("zone").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting zone: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("subnet_id"); ok && v != "" {
+		if v, ok := identity.GetOk("subnet_id"); !ok && v == "" {
 			err = identity.Set("subnet_id", d.Get("subnet_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting subnet_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

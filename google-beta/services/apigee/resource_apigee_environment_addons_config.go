@@ -182,6 +182,17 @@ func resourceApigeeEnvironmentAddonsConfigCreate(d *schema.ResourceData, meta in
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if envIdValue := d.GetRawConfig().GetAttr("env_id"); !envIdValue.IsNull() && envIdValue.AsString() != "" {
+			if err = identity.Set("env_id", envIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting env_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = ApigeeOperationWaitTime(
 		config, res, "Creating EnvironmentAddonsConfig", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -246,15 +257,15 @@ func resourceApigeeEnvironmentAddonsConfigRead(d *schema.ResourceData, meta inte
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("env_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("env_id"); !ok && v == "" {
 			err = identity.Set("env_id", d.Get("env_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting env_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -312,6 +323,17 @@ func resourceApigeeEnvironmentAddonsConfigUpdate(d *schema.ResourceData, meta in
 
 	if err != nil {
 		return err
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if envIdValue := d.GetRawConfig().GetAttr("env_id"); !envIdValue.IsNull() && envIdValue.AsString() != "" {
+			if err = identity.Set("env_id", envIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting env_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceApigeeEnvironmentAddonsConfigRead(d, meta)

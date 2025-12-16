@@ -383,6 +383,22 @@ func resourceVertexAIFeaturestoreEntitytypeCreate(d *schema.ResourceData, meta i
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if featurestoreValue := d.GetRawConfig().GetAttr("featurestore"); !featurestoreValue.IsNull() && featurestoreValue.AsString() != "" {
+			if err = identity.Set("featurestore", featurestoreValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting featurestore: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = VertexAIOperationWaitTime(
 		config, res, project, "Creating FeaturestoreEntitytype", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -456,21 +472,21 @@ func resourceVertexAIFeaturestoreEntitytypeRead(d *schema.ResourceData, meta int
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("featurestore"); ok && v != "" {
+		if v, ok := identity.GetOk("featurestore"); !ok && v == "" {
 			err = identity.Set("featurestore", d.Get("featurestore").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting featurestore: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -570,6 +586,22 @@ func resourceVertexAIFeaturestoreEntitytypeUpdate(d *schema.ResourceData, meta i
 			log.Printf("[DEBUG] Finished updating FeaturestoreEntitytype %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if featurestoreValue := d.GetRawConfig().GetAttr("featurestore"); !featurestoreValue.IsNull() && featurestoreValue.AsString() != "" {
+			if err = identity.Set("featurestore", featurestoreValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting featurestore: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceVertexAIFeaturestoreEntitytypeRead(d, meta)

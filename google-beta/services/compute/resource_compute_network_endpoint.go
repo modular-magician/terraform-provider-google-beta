@@ -269,6 +269,42 @@ func resourceComputeNetworkEndpointCreate(d *schema.ResourceData, meta interface
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if instanceValue := d.GetRawConfig().GetAttr("instance"); !instanceValue.IsNull() && instanceValue.AsString() != "" {
+			if err = identity.Set("instance", instanceValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting instance: %s", err)
+			}
+		}
+		if portValue := d.GetRawConfig().GetAttr("port"); !portValue.IsNull() && portValue.AsString() != "" {
+			if err = identity.Set("port", portValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting port: %s", err)
+			}
+		}
+		if ipAddressValue := d.GetRawConfig().GetAttr("ip_address"); !ipAddressValue.IsNull() && ipAddressValue.AsString() != "" {
+			if err = identity.Set("ip_address", ipAddressValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting ip_address: %s", err)
+			}
+		}
+		if zoneValue := d.GetRawConfig().GetAttr("zone"); !zoneValue.IsNull() && zoneValue.AsString() != "" {
+			if err = identity.Set("zone", zoneValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting zone: %s", err)
+			}
+		}
+		if networkEndpointGroupValue := d.GetRawConfig().GetAttr("network_endpoint_group"); !networkEndpointGroupValue.IsNull() && networkEndpointGroupValue.AsString() != "" {
+			if err = identity.Set("network_endpoint_group", networkEndpointGroupValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting network_endpoint_group: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = ComputeOperationWaitTime(
 		config, res, project, "Creating NetworkEndpoint", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -369,45 +405,45 @@ func resourceComputeNetworkEndpointRead(d *schema.ResourceData, meta interface{}
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("instance"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("instance"); !ok && v == "" {
 			err = identity.Set("instance", d.Get("instance").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting instance: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("port"); ok && v != "" {
+		if v, ok := identity.GetOk("port"); !ok && v == "" {
 			err = identity.Set("port", d.Get("port").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting port: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("ip_address"); ok && v != "" {
+		if v, ok := identity.GetOk("ip_address"); !ok && v == "" {
 			err = identity.Set("ip_address", d.Get("ip_address").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting ip_address: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("zone"); ok && v != "" {
+		if v, ok := identity.GetOk("zone"); !ok && v == "" {
 			err = identity.Set("zone", d.Get("zone").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting zone: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("network_endpoint_group"); ok && v != "" {
+		if v, ok := identity.GetOk("network_endpoint_group"); !ok && v == "" {
 			err = identity.Set("network_endpoint_group", d.Get("network_endpoint_group").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting network_endpoint_group: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

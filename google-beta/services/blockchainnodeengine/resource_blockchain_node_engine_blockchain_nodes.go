@@ -405,6 +405,27 @@ func resourceBlockchainNodeEngineBlockchainNodesCreate(d *schema.ResourceData, m
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if blockchainNodeIdValue := d.GetRawConfig().GetAttr("blockchain_node_id"); !blockchainNodeIdValue.IsNull() && blockchainNodeIdValue.AsString() != "" {
+			if err = identity.Set("blockchain_node_id", blockchainNodeIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting blockchain_node_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = BlockchainNodeEngineOperationWaitTime(
 		config, res, project, "Creating BlockchainNodes", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -491,27 +512,27 @@ func resourceBlockchainNodeEngineBlockchainNodesRead(d *schema.ResourceData, met
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("blockchain_node_id"); ok && v != "" {
+		if v, ok := identity.GetOk("blockchain_node_id"); !ok && v == "" {
 			err = identity.Set("blockchain_node_id", d.Get("blockchain_node_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting blockchain_node_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -587,6 +608,27 @@ func resourceBlockchainNodeEngineBlockchainNodesUpdate(d *schema.ResourceData, m
 
 	if err != nil {
 		return err
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if blockchainNodeIdValue := d.GetRawConfig().GetAttr("blockchain_node_id"); !blockchainNodeIdValue.IsNull() && blockchainNodeIdValue.AsString() != "" {
+			if err = identity.Set("blockchain_node_id", blockchainNodeIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting blockchain_node_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceBlockchainNodeEngineBlockchainNodesRead(d, meta)

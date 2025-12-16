@@ -612,6 +612,32 @@ func resourceDataplexEntryCreate(d *schema.ResourceData, meta interface{}) error
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if entryGroupIdValue := d.GetRawConfig().GetAttr("entry_group_id"); !entryGroupIdValue.IsNull() && entryGroupIdValue.AsString() != "" {
+			if err = identity.Set("entry_group_id", entryGroupIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entry_group_id: %s", err)
+			}
+		}
+		if entryIdValue := d.GetRawConfig().GetAttr("entry_id"); !entryIdValue.IsNull() && entryIdValue.AsString() != "" {
+			if err = identity.Set("entry_id", entryIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entry_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating Entry %q: %#v", d.Id(), res)
 
 	return resourceDataplexEntryRead(d, meta)
@@ -701,33 +727,33 @@ func resourceDataplexEntryRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("entry_group_id"); ok && v != "" {
+		if v, ok := identity.GetOk("entry_group_id"); !ok && v == "" {
 			err = identity.Set("entry_group_id", d.Get("entry_group_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting entry_group_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("entry_id"); ok && v != "" {
+		if v, ok := identity.GetOk("entry_id"); !ok && v == "" {
 			err = identity.Set("entry_id", d.Get("entry_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting entry_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -862,6 +888,32 @@ func resourceDataplexEntryUpdate(d *schema.ResourceData, meta interface{}) error
 			log.Printf("[DEBUG] Finished updating Entry %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if entryGroupIdValue := d.GetRawConfig().GetAttr("entry_group_id"); !entryGroupIdValue.IsNull() && entryGroupIdValue.AsString() != "" {
+			if err = identity.Set("entry_group_id", entryGroupIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entry_group_id: %s", err)
+			}
+		}
+		if entryIdValue := d.GetRawConfig().GetAttr("entry_id"); !entryIdValue.IsNull() && entryIdValue.AsString() != "" {
+			if err = identity.Set("entry_id", entryIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entry_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceDataplexEntryRead(d, meta)

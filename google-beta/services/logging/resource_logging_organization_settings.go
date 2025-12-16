@@ -221,6 +221,17 @@ func resourceLoggingOrganizationSettingsCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if organizationValue := d.GetRawConfig().GetAttr("organization"); !organizationValue.IsNull() && organizationValue.AsString() != "" {
+			if err = identity.Set("organization", organizationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating OrganizationSettings %q: %#v", d.Id(), res)
 
 	return resourceLoggingOrganizationSettingsRead(d, meta)
@@ -278,15 +289,15 @@ func resourceLoggingOrganizationSettingsRead(d *schema.ResourceData, meta interf
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("organization"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("organization"); !ok && v == "" {
 			err = identity.Set("organization", d.Get("organization").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting organization: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -348,6 +359,17 @@ func resourceLoggingOrganizationSettingsUpdate(d *schema.ResourceData, meta inte
 		return fmt.Errorf("Error updating OrganizationSettings %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating OrganizationSettings %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if organizationValue := d.GetRawConfig().GetAttr("organization"); !organizationValue.IsNull() && organizationValue.AsString() != "" {
+			if err = identity.Set("organization", organizationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceLoggingOrganizationSettingsRead(d, meta)

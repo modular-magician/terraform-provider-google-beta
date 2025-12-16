@@ -265,6 +265,22 @@ func resourceApigeeDeveloperCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if emailValue := d.GetRawConfig().GetAttr("email"); !emailValue.IsNull() && emailValue.AsString() != "" {
+			if err = identity.Set("email", emailValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting email: %s", err)
+			}
+		}
+		if orgIdValue := d.GetRawConfig().GetAttr("org_id"); !orgIdValue.IsNull() && orgIdValue.AsString() != "" {
+			if err = identity.Set("org_id", orgIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting org_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating Developer %q: %#v", d.Id(), res)
 
 	return resourceApigeeDeveloperRead(d, meta)
@@ -331,21 +347,21 @@ func resourceApigeeDeveloperRead(d *schema.ResourceData, meta interface{}) error
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("email"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("email"); !ok && v == "" {
 			err = identity.Set("email", d.Get("email").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting email: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("org_id"); ok && v != "" {
+		if v, ok := identity.GetOk("org_id"); !ok && v == "" {
 			err = identity.Set("org_id", d.Get("org_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting org_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -419,6 +435,22 @@ func resourceApigeeDeveloperUpdate(d *schema.ResourceData, meta interface{}) err
 		return fmt.Errorf("Error updating Developer %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating Developer %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if emailValue := d.GetRawConfig().GetAttr("email"); !emailValue.IsNull() && emailValue.AsString() != "" {
+			if err = identity.Set("email", emailValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting email: %s", err)
+			}
+		}
+		if orgIdValue := d.GetRawConfig().GetAttr("org_id"); !orgIdValue.IsNull() && orgIdValue.AsString() != "" {
+			if err = identity.Set("org_id", orgIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting org_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceApigeeDeveloperRead(d, meta)

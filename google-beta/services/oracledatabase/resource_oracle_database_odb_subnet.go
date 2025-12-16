@@ -297,6 +297,32 @@ func resourceOracleDatabaseOdbSubnetCreate(d *schema.ResourceData, meta interfac
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if odbnetworkValue := d.GetRawConfig().GetAttr("odbnetwork"); !odbnetworkValue.IsNull() && odbnetworkValue.AsString() != "" {
+			if err = identity.Set("odbnetwork", odbnetworkValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting odbnetwork: %s", err)
+			}
+		}
+		if odbSubnetIdValue := d.GetRawConfig().GetAttr("odb_subnet_id"); !odbSubnetIdValue.IsNull() && odbSubnetIdValue.AsString() != "" {
+			if err = identity.Set("odb_subnet_id", odbSubnetIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting odb_subnet_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = OracleDatabaseOperationWaitTime(
 		config, res, project, "Creating OdbSubnet", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -386,33 +412,33 @@ func resourceOracleDatabaseOdbSubnetRead(d *schema.ResourceData, meta interface{
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("odbnetwork"); ok && v != "" {
+		if v, ok := identity.GetOk("odbnetwork"); !ok && v == "" {
 			err = identity.Set("odbnetwork", d.Get("odbnetwork").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting odbnetwork: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("odb_subnet_id"); ok && v != "" {
+		if v, ok := identity.GetOk("odb_subnet_id"); !ok && v == "" {
 			err = identity.Set("odb_subnet_id", d.Get("odb_subnet_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting odb_subnet_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

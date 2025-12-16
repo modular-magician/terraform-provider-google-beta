@@ -532,6 +532,22 @@ func resourceSecretManagerSecretCreate(d *schema.ResourceData, meta interface{})
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if secretIdValue := d.GetRawConfig().GetAttr("secret_id"); !secretIdValue.IsNull() && secretIdValue.AsString() != "" {
+			if err = identity.Set("secret_id", secretIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting secret_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating Secret %q: %#v", d.Id(), res)
 
 	return resourceSecretManagerSecretRead(d, meta)
@@ -626,21 +642,21 @@ func resourceSecretManagerSecretRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("secret_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("secret_id"); !ok && v == "" {
 			err = identity.Set("secret_id", d.Get("secret_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting secret_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -804,6 +820,22 @@ func resourceSecretManagerSecretUpdate(d *schema.ResourceData, meta interface{})
 			log.Printf("[DEBUG] Finished updating Secret %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if secretIdValue := d.GetRawConfig().GetAttr("secret_id"); !secretIdValue.IsNull() && secretIdValue.AsString() != "" {
+			if err = identity.Set("secret_id", secretIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting secret_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceSecretManagerSecretRead(d, meta)

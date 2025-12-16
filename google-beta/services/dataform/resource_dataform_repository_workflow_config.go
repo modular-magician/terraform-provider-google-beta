@@ -355,6 +355,32 @@ func resourceDataformRepositoryWorkflowConfigCreate(d *schema.ResourceData, meta
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if regionValue := d.GetRawConfig().GetAttr("region"); !regionValue.IsNull() && regionValue.AsString() != "" {
+			if err = identity.Set("region", regionValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting region: %s", err)
+			}
+		}
+		if repositoryValue := d.GetRawConfig().GetAttr("repository"); !repositoryValue.IsNull() && repositoryValue.AsString() != "" {
+			if err = identity.Set("repository", repositoryValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting repository: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating RepositoryWorkflowConfig %q: %#v", d.Id(), res)
 
 	return resourceDataformRepositoryWorkflowConfigRead(d, meta)
@@ -422,33 +448,33 @@ func resourceDataformRepositoryWorkflowConfigRead(d *schema.ResourceData, meta i
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("region"); ok && v != "" {
+		if v, ok := identity.GetOk("region"); !ok && v == "" {
 			err = identity.Set("region", d.Get("region").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting region: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("repository"); ok && v != "" {
+		if v, ok := identity.GetOk("repository"); !ok && v == "" {
 			err = identity.Set("repository", d.Get("repository").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting repository: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -522,6 +548,32 @@ func resourceDataformRepositoryWorkflowConfigUpdate(d *schema.ResourceData, meta
 		return fmt.Errorf("Error updating RepositoryWorkflowConfig %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating RepositoryWorkflowConfig %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if regionValue := d.GetRawConfig().GetAttr("region"); !regionValue.IsNull() && regionValue.AsString() != "" {
+			if err = identity.Set("region", regionValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting region: %s", err)
+			}
+		}
+		if repositoryValue := d.GetRawConfig().GetAttr("repository"); !repositoryValue.IsNull() && repositoryValue.AsString() != "" {
+			if err = identity.Set("repository", repositoryValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting repository: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceDataformRepositoryWorkflowConfigRead(d, meta)

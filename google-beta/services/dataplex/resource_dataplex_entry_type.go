@@ -328,6 +328,27 @@ func resourceDataplexEntryTypeCreate(d *schema.ResourceData, meta interface{}) e
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if entryTypeIdValue := d.GetRawConfig().GetAttr("entry_type_id"); !entryTypeIdValue.IsNull() && entryTypeIdValue.AsString() != "" {
+			if err = identity.Set("entry_type_id", entryTypeIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entry_type_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = DataplexOperationWaitTime(
 		config, res, project, "Creating EntryType", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -426,27 +447,27 @@ func resourceDataplexEntryTypeRead(d *schema.ResourceData, meta interface{}) err
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("entry_type_id"); ok && v != "" {
+		if v, ok := identity.GetOk("entry_type_id"); !ok && v == "" {
 			err = identity.Set("entry_type_id", d.Get("entry_type_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting entry_type_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -584,6 +605,27 @@ func resourceDataplexEntryTypeUpdate(d *schema.ResourceData, meta interface{}) e
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if entryTypeIdValue := d.GetRawConfig().GetAttr("entry_type_id"); !entryTypeIdValue.IsNull() && entryTypeIdValue.AsString() != "" {
+			if err = identity.Set("entry_type_id", entryTypeIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entry_type_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceDataplexEntryTypeRead(d, meta)

@@ -239,6 +239,27 @@ func resourceFirebaseAppCheckDebugTokenCreate(d *schema.ResourceData, meta inter
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if debugTokenIdValue := d.GetRawConfig().GetAttr("debug_token_id"); !debugTokenIdValue.IsNull() && debugTokenIdValue.AsString() != "" {
+			if err = identity.Set("debug_token_id", debugTokenIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting debug_token_id: %s", err)
+			}
+		}
+		if appIdValue := d.GetRawConfig().GetAttr("app_id"); !appIdValue.IsNull() && appIdValue.AsString() != "" {
+			if err = identity.Set("app_id", appIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting app_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating DebugToken %q: %#v", d.Id(), res)
 
 	return resourceFirebaseAppCheckDebugTokenRead(d, meta)
@@ -294,27 +315,27 @@ func resourceFirebaseAppCheckDebugTokenRead(d *schema.ResourceData, meta interfa
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("debug_token_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("debug_token_id"); !ok && v == "" {
 			err = identity.Set("debug_token_id", d.Get("debug_token_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting debug_token_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("app_id"); ok && v != "" {
+		if v, ok := identity.GetOk("app_id"); !ok && v == "" {
 			err = identity.Set("app_id", d.Get("app_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting app_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -385,6 +406,27 @@ func resourceFirebaseAppCheckDebugTokenUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[DEBUG] Finished updating DebugToken %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if debugTokenIdValue := d.GetRawConfig().GetAttr("debug_token_id"); !debugTokenIdValue.IsNull() && debugTokenIdValue.AsString() != "" {
+			if err = identity.Set("debug_token_id", debugTokenIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting debug_token_id: %s", err)
+			}
+		}
+		if appIdValue := d.GetRawConfig().GetAttr("app_id"); !appIdValue.IsNull() && appIdValue.AsString() != "" {
+			if err = identity.Set("app_id", appIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting app_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceFirebaseAppCheckDebugTokenRead(d, meta)

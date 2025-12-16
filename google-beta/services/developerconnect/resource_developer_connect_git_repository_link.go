@@ -324,6 +324,32 @@ func resourceDeveloperConnectGitRepositoryLinkCreate(d *schema.ResourceData, met
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if parentConnectionValue := d.GetRawConfig().GetAttr("parent_connection"); !parentConnectionValue.IsNull() && parentConnectionValue.AsString() != "" {
+			if err = identity.Set("parent_connection", parentConnectionValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parent_connection: %s", err)
+			}
+		}
+		if gitRepositoryLinkIdValue := d.GetRawConfig().GetAttr("git_repository_link_id"); !gitRepositoryLinkIdValue.IsNull() && gitRepositoryLinkIdValue.AsString() != "" {
+			if err = identity.Set("git_repository_link_id", gitRepositoryLinkIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting git_repository_link_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = DeveloperConnectOperationWaitTime(
 		config, res, project, "Creating GitRepositoryLink", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -422,33 +448,33 @@ func resourceDeveloperConnectGitRepositoryLinkRead(d *schema.ResourceData, meta 
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("parent_connection"); ok && v != "" {
+		if v, ok := identity.GetOk("parent_connection"); !ok && v == "" {
 			err = identity.Set("parent_connection", d.Get("parent_connection").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting parent_connection: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("git_repository_link_id"); ok && v != "" {
+		if v, ok := identity.GetOk("git_repository_link_id"); !ok && v == "" {
 			err = identity.Set("git_repository_link_id", d.Get("git_repository_link_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting git_repository_link_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

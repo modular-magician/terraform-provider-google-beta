@@ -406,6 +406,32 @@ func resourceComputeRegionPerInstanceConfigCreate(d *schema.ResourceData, meta i
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if regionValue := d.GetRawConfig().GetAttr("region"); !regionValue.IsNull() && regionValue.AsString() != "" {
+			if err = identity.Set("region", regionValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting region: %s", err)
+			}
+		}
+		if regionInstanceGroupManagerValue := d.GetRawConfig().GetAttr("region_instance_group_manager"); !regionInstanceGroupManagerValue.IsNull() && regionInstanceGroupManagerValue.AsString() != "" {
+			if err = identity.Set("region_instance_group_manager", regionInstanceGroupManagerValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting region_instance_group_manager: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = ComputeOperationWaitTime(
 		config, res, project, "Creating RegionPerInstanceConfig", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -512,33 +538,33 @@ func resourceComputeRegionPerInstanceConfigRead(d *schema.ResourceData, meta int
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("region"); ok && v != "" {
+		if v, ok := identity.GetOk("region"); !ok && v == "" {
 			err = identity.Set("region", d.Get("region").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting region: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("region_instance_group_manager"); ok && v != "" {
+		if v, ok := identity.GetOk("region_instance_group_manager"); !ok && v == "" {
 			err = identity.Set("region_instance_group_manager", d.Get("region_instance_group_manager").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting region_instance_group_manager: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -620,6 +646,32 @@ func resourceComputeRegionPerInstanceConfigUpdate(d *schema.ResourceData, meta i
 
 	if err != nil {
 		return err
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if regionValue := d.GetRawConfig().GetAttr("region"); !regionValue.IsNull() && regionValue.AsString() != "" {
+			if err = identity.Set("region", regionValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting region: %s", err)
+			}
+		}
+		if regionInstanceGroupManagerValue := d.GetRawConfig().GetAttr("region_instance_group_manager"); !regionInstanceGroupManagerValue.IsNull() && regionInstanceGroupManagerValue.AsString() != "" {
+			if err = identity.Set("region_instance_group_manager", regionInstanceGroupManagerValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting region_instance_group_manager: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	// Instance name in applyUpdatesToInstances request must include zone

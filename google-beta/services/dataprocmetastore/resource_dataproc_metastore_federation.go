@@ -331,6 +331,27 @@ func resourceDataprocMetastoreFederationCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if federationIdValue := d.GetRawConfig().GetAttr("federation_id"); !federationIdValue.IsNull() && federationIdValue.AsString() != "" {
+			if err = identity.Set("federation_id", federationIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting federation_id: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = DataprocMetastoreOperationWaitTime(
 		config, res, project, "Creating Federation", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -432,27 +453,27 @@ func resourceDataprocMetastoreFederationRead(d *schema.ResourceData, meta interf
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("federation_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("federation_id"); !ok && v == "" {
 			err = identity.Set("federation_id", d.Get("federation_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting federation_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -540,6 +561,27 @@ func resourceDataprocMetastoreFederationUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if federationIdValue := d.GetRawConfig().GetAttr("federation_id"); !federationIdValue.IsNull() && federationIdValue.AsString() != "" {
+			if err = identity.Set("federation_id", federationIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting federation_id: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceDataprocMetastoreFederationRead(d, meta)

@@ -1074,6 +1074,27 @@ func resourceCloudSecurityComplianceCloudControlCreate(d *schema.ResourceData, m
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if organizationValue := d.GetRawConfig().GetAttr("organization"); !organizationValue.IsNull() && organizationValue.AsString() != "" {
+			if err = identity.Set("organization", organizationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if cloudControlIdValue := d.GetRawConfig().GetAttr("cloud_control_id"); !cloudControlIdValue.IsNull() && cloudControlIdValue.AsString() != "" {
+			if err = identity.Set("cloud_control_id", cloudControlIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting cloud_control_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating CloudControl %q: %#v", d.Id(), res)
 
 	return resourceCloudSecurityComplianceCloudControlRead(d, meta)
@@ -1158,27 +1179,27 @@ func resourceCloudSecurityComplianceCloudControlRead(d *schema.ResourceData, met
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("organization"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("organization"); !ok && v == "" {
 			err = identity.Set("organization", d.Get("organization").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting organization: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("cloud_control_id"); ok && v != "" {
+		if v, ok := identity.GetOk("cloud_control_id"); !ok && v == "" {
 			err = identity.Set("cloud_control_id", d.Get("cloud_control_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting cloud_control_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -1298,6 +1319,27 @@ func resourceCloudSecurityComplianceCloudControlUpdate(d *schema.ResourceData, m
 			log.Printf("[DEBUG] Finished updating CloudControl %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if organizationValue := d.GetRawConfig().GetAttr("organization"); !organizationValue.IsNull() && organizationValue.AsString() != "" {
+			if err = identity.Set("organization", organizationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if cloudControlIdValue := d.GetRawConfig().GetAttr("cloud_control_id"); !cloudControlIdValue.IsNull() && cloudControlIdValue.AsString() != "" {
+			if err = identity.Set("cloud_control_id", cloudControlIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting cloud_control_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceCloudSecurityComplianceCloudControlRead(d, meta)

@@ -258,6 +258,27 @@ func resourceIdentityPlatformTenantDefaultSupportedIdpConfigCreate(d *schema.Res
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if idpIdValue := d.GetRawConfig().GetAttr("idp_id"); !idpIdValue.IsNull() && idpIdValue.AsString() != "" {
+			if err = identity.Set("idp_id", idpIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting idp_id: %s", err)
+			}
+		}
+		if tenantValue := d.GetRawConfig().GetAttr("tenant"); !tenantValue.IsNull() && tenantValue.AsString() != "" {
+			if err = identity.Set("tenant", tenantValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting tenant: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating TenantDefaultSupportedIdpConfig %q: %#v", d.Id(), res)
 
 	return resourceIdentityPlatformTenantDefaultSupportedIdpConfigRead(d, meta)
@@ -319,27 +340,27 @@ func resourceIdentityPlatformTenantDefaultSupportedIdpConfigRead(d *schema.Resou
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("idp_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("idp_id"); !ok && v == "" {
 			err = identity.Set("idp_id", d.Get("idp_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting idp_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("tenant"); ok && v != "" {
+		if v, ok := identity.GetOk("tenant"); !ok && v == "" {
 			err = identity.Set("tenant", d.Get("tenant").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting tenant: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -430,6 +451,27 @@ func resourceIdentityPlatformTenantDefaultSupportedIdpConfigUpdate(d *schema.Res
 			log.Printf("[DEBUG] Finished updating TenantDefaultSupportedIdpConfig %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if idpIdValue := d.GetRawConfig().GetAttr("idp_id"); !idpIdValue.IsNull() && idpIdValue.AsString() != "" {
+			if err = identity.Set("idp_id", idpIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting idp_id: %s", err)
+			}
+		}
+		if tenantValue := d.GetRawConfig().GetAttr("tenant"); !tenantValue.IsNull() && tenantValue.AsString() != "" {
+			if err = identity.Set("tenant", tenantValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting tenant: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceIdentityPlatformTenantDefaultSupportedIdpConfigRead(d, meta)

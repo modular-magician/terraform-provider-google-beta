@@ -597,6 +597,32 @@ func resourceApihubPluginInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if pluginValue := d.GetRawConfig().GetAttr("plugin"); !pluginValue.IsNull() && pluginValue.AsString() != "" {
+			if err = identity.Set("plugin", pluginValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting plugin: %s", err)
+			}
+		}
+		if pluginInstanceIdValue := d.GetRawConfig().GetAttr("plugin_instance_id"); !pluginInstanceIdValue.IsNull() && pluginInstanceIdValue.AsString() != "" {
+			if err = identity.Set("plugin_instance_id", pluginInstanceIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting plugin_instance_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = ApihubOperationWaitTime(
 		config, res, project, "Creating PluginInstance", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -683,33 +709,33 @@ func resourceApihubPluginInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("plugin"); ok && v != "" {
+		if v, ok := identity.GetOk("plugin"); !ok && v == "" {
 			err = identity.Set("plugin", d.Get("plugin").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting plugin: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("plugin_instance_id"); ok && v != "" {
+		if v, ok := identity.GetOk("plugin_instance_id"); !ok && v == "" {
 			err = identity.Set("plugin_instance_id", d.Get("plugin_instance_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting plugin_instance_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -778,6 +804,32 @@ func resourceApihubPluginInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	d.Partial(false)
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if pluginValue := d.GetRawConfig().GetAttr("plugin"); !pluginValue.IsNull() && pluginValue.AsString() != "" {
+			if err = identity.Set("plugin", pluginValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting plugin: %s", err)
+			}
+		}
+		if pluginInstanceIdValue := d.GetRawConfig().GetAttr("plugin_instance_id"); !pluginInstanceIdValue.IsNull() && pluginInstanceIdValue.AsString() != "" {
+			if err = identity.Set("plugin_instance_id", pluginInstanceIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting plugin_instance_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
+	}
 
 	return resourceApihubPluginInstanceRead(d, meta)
 }

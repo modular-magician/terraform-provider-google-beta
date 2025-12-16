@@ -685,6 +685,27 @@ func resourceFirebaseHostingCustomDomainCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if siteIdValue := d.GetRawConfig().GetAttr("site_id"); !siteIdValue.IsNull() && siteIdValue.AsString() != "" {
+			if err = identity.Set("site_id", siteIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting site_id: %s", err)
+			}
+		}
+		if customDomainValue := d.GetRawConfig().GetAttr("custom_domain"); !customDomainValue.IsNull() && customDomainValue.AsString() != "" {
+			if err = identity.Set("custom_domain", customDomainValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting custom_domain: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	if d.Get("wait_dns_verification") == true {
 		// Wait for the creation operation to complete before treating the resource
 		// as created
@@ -797,27 +818,27 @@ func resourceFirebaseHostingCustomDomainRead(d *schema.ResourceData, meta interf
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("site_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("site_id"); !ok && v == "" {
 			err = identity.Set("site_id", d.Get("site_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting site_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("custom_domain"); ok && v != "" {
+		if v, ok := identity.GetOk("custom_domain"); !ok && v == "" {
 			err = identity.Set("custom_domain", d.Get("custom_domain").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting custom_domain: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -915,6 +936,27 @@ func resourceFirebaseHostingCustomDomainUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if siteIdValue := d.GetRawConfig().GetAttr("site_id"); !siteIdValue.IsNull() && siteIdValue.AsString() != "" {
+			if err = identity.Set("site_id", siteIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting site_id: %s", err)
+			}
+		}
+		if customDomainValue := d.GetRawConfig().GetAttr("custom_domain"); !customDomainValue.IsNull() && customDomainValue.AsString() != "" {
+			if err = identity.Set("custom_domain", customDomainValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting custom_domain: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceFirebaseHostingCustomDomainRead(d, meta)

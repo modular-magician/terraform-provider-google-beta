@@ -574,6 +574,27 @@ func resourceOracleDatabaseCloudExadataInfrastructureCreate(d *schema.ResourceDa
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if cloudExadataInfrastructureIdValue := d.GetRawConfig().GetAttr("cloud_exadata_infrastructure_id"); !cloudExadataInfrastructureIdValue.IsNull() && cloudExadataInfrastructureIdValue.AsString() != "" {
+			if err = identity.Set("cloud_exadata_infrastructure_id", cloudExadataInfrastructureIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting cloud_exadata_infrastructure_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = OracleDatabaseOperationWaitTime(
 		config, res, project, "Creating CloudExadataInfrastructure", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -666,27 +687,27 @@ func resourceOracleDatabaseCloudExadataInfrastructureRead(d *schema.ResourceData
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("cloud_exadata_infrastructure_id"); ok && v != "" {
+		if v, ok := identity.GetOk("cloud_exadata_infrastructure_id"); !ok && v == "" {
 			err = identity.Set("cloud_exadata_infrastructure_id", d.Get("cloud_exadata_infrastructure_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting cloud_exadata_infrastructure_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

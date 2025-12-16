@@ -221,6 +221,17 @@ func resourceLoggingFolderSettingsCreate(d *schema.ResourceData, meta interface{
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if folderValue := d.GetRawConfig().GetAttr("folder"); !folderValue.IsNull() && folderValue.AsString() != "" {
+			if err = identity.Set("folder", folderValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating FolderSettings %q: %#v", d.Id(), res)
 
 	return resourceLoggingFolderSettingsRead(d, meta)
@@ -278,15 +289,15 @@ func resourceLoggingFolderSettingsRead(d *schema.ResourceData, meta interface{})
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("folder"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("folder"); !ok && v == "" {
 			err = identity.Set("folder", d.Get("folder").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting folder: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -348,6 +359,17 @@ func resourceLoggingFolderSettingsUpdate(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("Error updating FolderSettings %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating FolderSettings %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if folderValue := d.GetRawConfig().GetAttr("folder"); !folderValue.IsNull() && folderValue.AsString() != "" {
+			if err = identity.Set("folder", folderValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceLoggingFolderSettingsRead(d, meta)

@@ -645,6 +645,67 @@ func resourceBigQueryDatasetAccessCreate(d *schema.ResourceData, meta interface{
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if datasetIdValue := d.GetRawConfig().GetAttr("dataset_id"); !datasetIdValue.IsNull() && datasetIdValue.AsString() != "" {
+			if err = identity.Set("dataset_id", datasetIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting dataset_id: %s", err)
+			}
+		}
+		if roleValue := d.GetRawConfig().GetAttr("role"); !roleValue.IsNull() && roleValue.AsString() != "" {
+			if err = identity.Set("role", roleValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting role: %s", err)
+			}
+		}
+		if userByEmailValue := d.GetRawConfig().GetAttr("user_by_email"); !userByEmailValue.IsNull() && userByEmailValue.AsString() != "" {
+			if err = identity.Set("user_by_email", userByEmailValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting user_by_email: %s", err)
+			}
+		}
+		if groupByEmailValue := d.GetRawConfig().GetAttr("group_by_email"); !groupByEmailValue.IsNull() && groupByEmailValue.AsString() != "" {
+			if err = identity.Set("group_by_email", groupByEmailValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting group_by_email: %s", err)
+			}
+		}
+		if domainValue := d.GetRawConfig().GetAttr("domain"); !domainValue.IsNull() && domainValue.AsString() != "" {
+			if err = identity.Set("domain", domainValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting domain: %s", err)
+			}
+		}
+		if specialGroupValue := d.GetRawConfig().GetAttr("special_group"); !specialGroupValue.IsNull() && specialGroupValue.AsString() != "" {
+			if err = identity.Set("special_group", specialGroupValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting special_group: %s", err)
+			}
+		}
+		if iamMemberValue := d.GetRawConfig().GetAttr("iam_member"); !iamMemberValue.IsNull() && iamMemberValue.AsString() != "" {
+			if err = identity.Set("iam_member", iamMemberValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting iam_member: %s", err)
+			}
+		}
+		if viewValue := d.GetRawConfig().GetAttr("view"); !viewValue.IsNull() && viewValue.AsString() != "" {
+			if err = identity.Set("view", viewValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting view: %s", err)
+			}
+		}
+		if datasetValue := d.GetRawConfig().GetAttr("dataset"); !datasetValue.IsNull() && datasetValue.AsString() != "" {
+			if err = identity.Set("dataset", datasetValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting dataset: %s", err)
+			}
+		}
+		if routineValue := d.GetRawConfig().GetAttr("routine"); !routineValue.IsNull() && routineValue.AsString() != "" {
+			if err = identity.Set("routine", routineValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting routine: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	// by default, we are not updating the member
 	if err := d.Set("api_updated_member", false); err != nil {
 		return fmt.Errorf("Error setting api_updated_member: %s", err)
@@ -765,75 +826,75 @@ func resourceBigQueryDatasetAccessRead(d *schema.ResourceData, meta interface{})
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("dataset_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("dataset_id"); !ok && v == "" {
 			err = identity.Set("dataset_id", d.Get("dataset_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting dataset_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("role"); ok && v != "" {
+		if v, ok := identity.GetOk("role"); !ok && v == "" {
 			err = identity.Set("role", d.Get("role").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting role: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("user_by_email"); ok && v != "" {
+		if v, ok := identity.GetOk("user_by_email"); !ok && v == "" {
 			err = identity.Set("user_by_email", d.Get("user_by_email").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting user_by_email: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("group_by_email"); ok && v != "" {
+		if v, ok := identity.GetOk("group_by_email"); !ok && v == "" {
 			err = identity.Set("group_by_email", d.Get("group_by_email").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting group_by_email: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("domain"); ok && v != "" {
+		if v, ok := identity.GetOk("domain"); !ok && v == "" {
 			err = identity.Set("domain", d.Get("domain").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting domain: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("special_group"); ok && v != "" {
+		if v, ok := identity.GetOk("special_group"); !ok && v == "" {
 			err = identity.Set("special_group", d.Get("special_group").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting special_group: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("iam_member"); ok && v != "" {
+		if v, ok := identity.GetOk("iam_member"); !ok && v == "" {
 			err = identity.Set("iam_member", d.Get("iam_member").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting iam_member: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("view"); ok && v != "" {
+		if v, ok := identity.GetOk("view"); !ok && v == "" {
 			err = identity.Set("view", d.Get("view").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting view: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("dataset"); ok && v != "" {
+		if v, ok := identity.GetOk("dataset"); !ok && v == "" {
 			err = identity.Set("dataset", d.Get("dataset").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting dataset: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("routine"); ok && v != "" {
+		if v, ok := identity.GetOk("routine"); !ok && v == "" {
 			err = identity.Set("routine", d.Get("routine").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting routine: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

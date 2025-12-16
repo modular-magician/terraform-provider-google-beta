@@ -306,6 +306,17 @@ func resourceAccessApprovalProjectSettingsCreate(d *schema.ResourceData, meta in
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if projectIdValue := d.GetRawConfig().GetAttr("project_id"); !projectIdValue.IsNull() && projectIdValue.AsString() != "" {
+			if err = identity.Set("project_id", projectIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	// This is useful if the resource in question doesn't have a perfectly consistent API
 	// That is, the Operation for Create might return before the Get operation shows the
 	// completed state of the resource.
@@ -374,15 +385,15 @@ func resourceAccessApprovalProjectSettingsRead(d *schema.ResourceData, meta inte
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("project_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("project_id"); !ok && v == "" {
 			err = identity.Set("project_id", d.Get("project_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -477,6 +488,17 @@ func resourceAccessApprovalProjectSettingsUpdate(d *schema.ResourceData, meta in
 			log.Printf("[DEBUG] Finished updating ProjectSettings %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if projectIdValue := d.GetRawConfig().GetAttr("project_id"); !projectIdValue.IsNull() && projectIdValue.AsString() != "" {
+			if err = identity.Set("project_id", projectIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	// This is useful if the resource in question doesn't have a perfectly consistent API

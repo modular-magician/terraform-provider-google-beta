@@ -233,6 +233,22 @@ func resourceApigeeSecurityProfileV2Create(d *schema.ResourceData, meta interfac
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if orgIdValue := d.GetRawConfig().GetAttr("org_id"); !orgIdValue.IsNull() && orgIdValue.AsString() != "" {
+			if err = identity.Set("org_id", orgIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting org_id: %s", err)
+			}
+		}
+		if profileIdValue := d.GetRawConfig().GetAttr("profile_id"); !profileIdValue.IsNull() && profileIdValue.AsString() != "" {
+			if err = identity.Set("profile_id", profileIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting profile_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating SecurityProfileV2 %q: %#v", d.Id(), res)
 
 	return resourceApigeeSecurityProfileV2Read(d, meta)
@@ -287,21 +303,21 @@ func resourceApigeeSecurityProfileV2Read(d *schema.ResourceData, meta interface{
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("org_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("org_id"); !ok && v == "" {
 			err = identity.Set("org_id", d.Get("org_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting org_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("profile_id"); ok && v != "" {
+		if v, ok := identity.GetOk("profile_id"); !ok && v == "" {
 			err = identity.Set("profile_id", d.Get("profile_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting profile_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -376,6 +392,22 @@ func resourceApigeeSecurityProfileV2Update(d *schema.ResourceData, meta interfac
 			log.Printf("[DEBUG] Finished updating SecurityProfileV2 %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if orgIdValue := d.GetRawConfig().GetAttr("org_id"); !orgIdValue.IsNull() && orgIdValue.AsString() != "" {
+			if err = identity.Set("org_id", orgIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting org_id: %s", err)
+			}
+		}
+		if profileIdValue := d.GetRawConfig().GetAttr("profile_id"); !profileIdValue.IsNull() && profileIdValue.AsString() != "" {
+			if err = identity.Set("profile_id", profileIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting profile_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceApigeeSecurityProfileV2Read(d, meta)

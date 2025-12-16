@@ -389,6 +389,22 @@ func resourceSecurityCenterFolderCustomModuleCreate(d *schema.ResourceData, meta
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if folderValue := d.GetRawConfig().GetAttr("folder"); !folderValue.IsNull() && folderValue.AsString() != "" {
+			if err = identity.Set("folder", folderValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating FolderCustomModule %q: %#v", d.Id(), res)
 
 	return resourceSecurityCenterFolderCustomModuleRead(d, meta)
@@ -449,21 +465,21 @@ func resourceSecurityCenterFolderCustomModuleRead(d *schema.ResourceData, meta i
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("folder"); ok && v != "" {
+		if v, ok := identity.GetOk("folder"); !ok && v == "" {
 			err = identity.Set("folder", d.Get("folder").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting folder: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -545,6 +561,22 @@ func resourceSecurityCenterFolderCustomModuleUpdate(d *schema.ResourceData, meta
 			log.Printf("[DEBUG] Finished updating FolderCustomModule %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if folderValue := d.GetRawConfig().GetAttr("folder"); !folderValue.IsNull() && folderValue.AsString() != "" {
+			if err = identity.Set("folder", folderValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceSecurityCenterFolderCustomModuleRead(d, meta)

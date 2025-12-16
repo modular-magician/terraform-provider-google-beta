@@ -229,6 +229,32 @@ func resourceComputeInstanceGroupMembershipCreate(d *schema.ResourceData, meta i
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if instanceValue := d.GetRawConfig().GetAttr("instance"); !instanceValue.IsNull() && instanceValue.AsString() != "" {
+			if err = identity.Set("instance", instanceValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting instance: %s", err)
+			}
+		}
+		if zoneValue := d.GetRawConfig().GetAttr("zone"); !zoneValue.IsNull() && zoneValue.AsString() != "" {
+			if err = identity.Set("zone", zoneValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting zone: %s", err)
+			}
+		}
+		if instanceGroupValue := d.GetRawConfig().GetAttr("instance_group"); !instanceGroupValue.IsNull() && instanceGroupValue.AsString() != "" {
+			if err = identity.Set("instance_group", instanceGroupValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting instance_group: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = ComputeOperationWaitTime(
 		config, res, project, "Creating InstanceGroupMembership", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -303,33 +329,33 @@ func resourceComputeInstanceGroupMembershipRead(d *schema.ResourceData, meta int
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("instance"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("instance"); !ok && v == "" {
 			err = identity.Set("instance", d.Get("instance").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting instance: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("zone"); ok && v != "" {
+		if v, ok := identity.GetOk("zone"); !ok && v == "" {
 			err = identity.Set("zone", d.Get("zone").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting zone: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("instance_group"); ok && v != "" {
+		if v, ok := identity.GetOk("instance_group"); !ok && v == "" {
 			err = identity.Set("instance_group", d.Get("instance_group").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting instance_group: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

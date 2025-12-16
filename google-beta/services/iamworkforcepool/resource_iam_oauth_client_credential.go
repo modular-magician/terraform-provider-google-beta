@@ -257,6 +257,32 @@ func resourceIAMWorkforcePoolOauthClientCredentialCreate(d *schema.ResourceData,
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if oauthclientValue := d.GetRawConfig().GetAttr("oauthclient"); !oauthclientValue.IsNull() && oauthclientValue.AsString() != "" {
+			if err = identity.Set("oauthclient", oauthclientValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting oauthclient: %s", err)
+			}
+		}
+		if oauthClientCredentialIdValue := d.GetRawConfig().GetAttr("oauth_client_credential_id"); !oauthClientCredentialIdValue.IsNull() && oauthClientCredentialIdValue.AsString() != "" {
+			if err = identity.Set("oauth_client_credential_id", oauthClientCredentialIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting oauth_client_credential_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	// This is useful if the resource in question doesn't have a perfectly consistent API
 	// That is, the Operation for Create might return before the Get operation shows the
 	// completed state of the resource.
@@ -335,33 +361,33 @@ func resourceIAMWorkforcePoolOauthClientCredentialRead(d *schema.ResourceData, m
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("oauthclient"); ok && v != "" {
+		if v, ok := identity.GetOk("oauthclient"); !ok && v == "" {
 			err = identity.Set("oauthclient", d.Get("oauthclient").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting oauthclient: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("oauth_client_credential_id"); ok && v != "" {
+		if v, ok := identity.GetOk("oauth_client_credential_id"); !ok && v == "" {
 			err = identity.Set("oauth_client_credential_id", d.Get("oauth_client_credential_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting oauth_client_credential_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -442,6 +468,32 @@ func resourceIAMWorkforcePoolOauthClientCredentialUpdate(d *schema.ResourceData,
 			log.Printf("[DEBUG] Finished updating OauthClientCredential %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if oauthclientValue := d.GetRawConfig().GetAttr("oauthclient"); !oauthclientValue.IsNull() && oauthclientValue.AsString() != "" {
+			if err = identity.Set("oauthclient", oauthclientValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting oauthclient: %s", err)
+			}
+		}
+		if oauthClientCredentialIdValue := d.GetRawConfig().GetAttr("oauth_client_credential_id"); !oauthClientCredentialIdValue.IsNull() && oauthClientCredentialIdValue.AsString() != "" {
+			if err = identity.Set("oauth_client_credential_id", oauthClientCredentialIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting oauth_client_credential_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	// This is useful if the resource in question doesn't have a perfectly consistent API

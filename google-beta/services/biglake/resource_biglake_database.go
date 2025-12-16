@@ -252,6 +252,22 @@ func resourceBiglakeDatabaseCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if catalogValue := d.GetRawConfig().GetAttr("catalog"); !catalogValue.IsNull() && catalogValue.AsString() != "" {
+			if err = identity.Set("catalog", catalogValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting catalog: %s", err)
+			}
+		}
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating Database %q: %#v", d.Id(), res)
 
 	return resourceBiglakeDatabaseRead(d, meta)
@@ -309,21 +325,21 @@ func resourceBiglakeDatabaseRead(d *schema.ResourceData, meta interface{}) error
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("catalog"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("catalog"); !ok && v == "" {
 			err = identity.Set("catalog", d.Get("catalog").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting catalog: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -398,6 +414,22 @@ func resourceBiglakeDatabaseUpdate(d *schema.ResourceData, meta interface{}) err
 			log.Printf("[DEBUG] Finished updating Database %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if catalogValue := d.GetRawConfig().GetAttr("catalog"); !catalogValue.IsNull() && catalogValue.AsString() != "" {
+			if err = identity.Set("catalog", catalogValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting catalog: %s", err)
+			}
+		}
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceBiglakeDatabaseRead(d, meta)

@@ -722,6 +722,22 @@ func resourceApigeeApiProductCreate(d *schema.ResourceData, meta interface{}) er
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if orgIdValue := d.GetRawConfig().GetAttr("org_id"); !orgIdValue.IsNull() && orgIdValue.AsString() != "" {
+			if err = identity.Set("org_id", orgIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting org_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating ApiProduct %q: %#v", d.Id(), res)
 
 	return resourceApigeeApiProductRead(d, meta)
@@ -818,21 +834,21 @@ func resourceApigeeApiProductRead(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("org_id"); ok && v != "" {
+		if v, ok := identity.GetOk("org_id"); !ok && v == "" {
 			err = identity.Set("org_id", d.Get("org_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting org_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -978,6 +994,22 @@ func resourceApigeeApiProductUpdate(d *schema.ResourceData, meta interface{}) er
 		return fmt.Errorf("Error updating ApiProduct %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating ApiProduct %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if orgIdValue := d.GetRawConfig().GetAttr("org_id"); !orgIdValue.IsNull() && orgIdValue.AsString() != "" {
+			if err = identity.Set("org_id", orgIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting org_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceApigeeApiProductRead(d, meta)

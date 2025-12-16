@@ -257,6 +257,32 @@ func resourceLoggingLinkedDatasetCreate(d *schema.ResourceData, meta interface{}
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if linkIdValue := d.GetRawConfig().GetAttr("link_id"); !linkIdValue.IsNull() && linkIdValue.AsString() != "" {
+			if err = identity.Set("link_id", linkIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting link_id: %s", err)
+			}
+		}
+		if parentValue := d.GetRawConfig().GetAttr("parent"); !parentValue.IsNull() && parentValue.AsString() != "" {
+			if err = identity.Set("parent", parentValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parent: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if bucketValue := d.GetRawConfig().GetAttr("bucket"); !bucketValue.IsNull() && bucketValue.AsString() != "" {
+			if err = identity.Set("bucket", bucketValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting bucket: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = LoggingOperationWaitTime(
 		config, res, "Creating LinkedDataset", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -321,33 +347,33 @@ func resourceLoggingLinkedDatasetRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("link_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("link_id"); !ok && v == "" {
 			err = identity.Set("link_id", d.Get("link_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting link_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("parent"); ok && v != "" {
+		if v, ok := identity.GetOk("parent"); !ok && v == "" {
 			err = identity.Set("parent", d.Get("parent").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting parent: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("bucket"); ok && v != "" {
+		if v, ok := identity.GetOk("bucket"); !ok && v == "" {
 			err = identity.Set("bucket", d.Get("bucket").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting bucket: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

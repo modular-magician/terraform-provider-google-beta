@@ -228,6 +228,22 @@ func resourceParameterManagerParameterVersionCreate(d *schema.ResourceData, meta
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if parameterVersionIdValue := d.GetRawConfig().GetAttr("parameter_version_id"); !parameterVersionIdValue.IsNull() && parameterVersionIdValue.AsString() != "" {
+			if err = identity.Set("parameter_version_id", parameterVersionIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parameter_version_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating ParameterVersion %q: %#v", d.Id(), res)
 
 	return resourceParameterManagerParameterVersionRead(d, meta)
@@ -297,21 +313,21 @@ func resourceParameterManagerParameterVersionRead(d *schema.ResourceData, meta i
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("parameter_version_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("parameter_version_id"); !ok && v == "" {
 			err = identity.Set("parameter_version_id", d.Get("parameter_version_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting parameter_version_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -376,6 +392,22 @@ func resourceParameterManagerParameterVersionUpdate(d *schema.ResourceData, meta
 			log.Printf("[DEBUG] Finished updating ParameterVersion %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if parameterVersionIdValue := d.GetRawConfig().GetAttr("parameter_version_id"); !parameterVersionIdValue.IsNull() && parameterVersionIdValue.AsString() != "" {
+			if err = identity.Set("parameter_version_id", parameterVersionIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parameter_version_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceParameterManagerParameterVersionRead(d, meta)

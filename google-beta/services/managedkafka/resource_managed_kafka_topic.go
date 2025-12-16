@@ -250,6 +250,32 @@ func resourceManagedKafkaTopicCreate(d *schema.ResourceData, meta interface{}) e
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if clusterValue := d.GetRawConfig().GetAttr("cluster"); !clusterValue.IsNull() && clusterValue.AsString() != "" {
+			if err = identity.Set("cluster", clusterValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting cluster: %s", err)
+			}
+		}
+		if topicIdValue := d.GetRawConfig().GetAttr("topic_id"); !topicIdValue.IsNull() && topicIdValue.AsString() != "" {
+			if err = identity.Set("topic_id", topicIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting topic_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	// This is useful if the resource in question doesn't have a perfectly consistent API
 	// That is, the Operation for Create might return before the Get operation shows the
 	// completed state of the resource.
@@ -316,33 +342,33 @@ func resourceManagedKafkaTopicRead(d *schema.ResourceData, meta interface{}) err
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("cluster"); ok && v != "" {
+		if v, ok := identity.GetOk("cluster"); !ok && v == "" {
 			err = identity.Set("cluster", d.Get("cluster").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting cluster: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("topic_id"); ok && v != "" {
+		if v, ok := identity.GetOk("topic_id"); !ok && v == "" {
 			err = identity.Set("topic_id", d.Get("topic_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting topic_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -423,6 +449,32 @@ func resourceManagedKafkaTopicUpdate(d *schema.ResourceData, meta interface{}) e
 			log.Printf("[DEBUG] Finished updating Topic %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if clusterValue := d.GetRawConfig().GetAttr("cluster"); !clusterValue.IsNull() && clusterValue.AsString() != "" {
+			if err = identity.Set("cluster", clusterValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting cluster: %s", err)
+			}
+		}
+		if topicIdValue := d.GetRawConfig().GetAttr("topic_id"); !topicIdValue.IsNull() && topicIdValue.AsString() != "" {
+			if err = identity.Set("topic_id", topicIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting topic_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	// This is useful if the resource in question doesn't have a perfectly consistent API

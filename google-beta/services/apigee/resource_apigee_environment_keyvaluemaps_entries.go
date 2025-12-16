@@ -197,6 +197,22 @@ func resourceApigeeEnvironmentKeyvaluemapsEntriesCreate(d *schema.ResourceData, 
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if envKeyvaluemapIdValue := d.GetRawConfig().GetAttr("env_keyvaluemap_id"); !envKeyvaluemapIdValue.IsNull() && envKeyvaluemapIdValue.AsString() != "" {
+			if err = identity.Set("env_keyvaluemap_id", envKeyvaluemapIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting env_keyvaluemap_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating EnvironmentKeyvaluemapsEntries %q: %#v", d.Id(), res)
 
 	return resourceApigeeEnvironmentKeyvaluemapsEntriesRead(d, meta)
@@ -242,21 +258,21 @@ func resourceApigeeEnvironmentKeyvaluemapsEntriesRead(d *schema.ResourceData, me
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("env_keyvaluemap_id"); ok && v != "" {
+		if v, ok := identity.GetOk("env_keyvaluemap_id"); !ok && v == "" {
 			err = identity.Set("env_keyvaluemap_id", d.Get("env_keyvaluemap_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting env_keyvaluemap_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

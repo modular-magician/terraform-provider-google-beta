@@ -228,6 +228,27 @@ func resourceBigtableLogicalViewCreate(d *schema.ResourceData, meta interface{})
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if logicalViewIdValue := d.GetRawConfig().GetAttr("logical_view_id"); !logicalViewIdValue.IsNull() && logicalViewIdValue.AsString() != "" {
+			if err = identity.Set("logical_view_id", logicalViewIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting logical_view_id: %s", err)
+			}
+		}
+		if instanceValue := d.GetRawConfig().GetAttr("instance"); !instanceValue.IsNull() && instanceValue.AsString() != "" {
+			if err = identity.Set("instance", instanceValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting instance: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating LogicalView %q: %#v", d.Id(), res)
 
 	return resourceBigtableLogicalViewRead(d, meta)
@@ -286,27 +307,27 @@ func resourceBigtableLogicalViewRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("logical_view_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("logical_view_id"); !ok && v == "" {
 			err = identity.Set("logical_view_id", d.Get("logical_view_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting logical_view_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("instance"); ok && v != "" {
+		if v, ok := identity.GetOk("instance"); !ok && v == "" {
 			err = identity.Set("instance", d.Get("instance").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting instance: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -387,6 +408,27 @@ func resourceBigtableLogicalViewUpdate(d *schema.ResourceData, meta interface{})
 			log.Printf("[DEBUG] Finished updating LogicalView %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if logicalViewIdValue := d.GetRawConfig().GetAttr("logical_view_id"); !logicalViewIdValue.IsNull() && logicalViewIdValue.AsString() != "" {
+			if err = identity.Set("logical_view_id", logicalViewIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting logical_view_id: %s", err)
+			}
+		}
+		if instanceValue := d.GetRawConfig().GetAttr("instance"); !instanceValue.IsNull() && instanceValue.AsString() != "" {
+			if err = identity.Set("instance", instanceValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting instance: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceBigtableLogicalViewRead(d, meta)

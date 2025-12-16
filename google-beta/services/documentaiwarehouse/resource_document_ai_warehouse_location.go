@@ -229,6 +229,22 @@ func resourceDocumentAIWarehouseLocationCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if projectNumberValue := d.GetRawConfig().GetAttr("project_number"); !projectNumberValue.IsNull() && projectNumberValue.AsString() != "" {
+			if err = identity.Set("project_number", projectNumberValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project_number: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = DocumentAIWarehouseOperationWaitTime(
 		config, res, "Creating Location", userAgent,
 		d.Timeout(schema.TimeoutCreate))

@@ -277,6 +277,27 @@ func resourceActiveDirectoryDomainTrustCreate(d *schema.ResourceData, meta inter
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if targetDomainNameValue := d.GetRawConfig().GetAttr("target_domain_name"); !targetDomainNameValue.IsNull() && targetDomainNameValue.AsString() != "" {
+			if err = identity.Set("target_domain_name", targetDomainNameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting target_domain_name: %s", err)
+			}
+		}
+		if domainValue := d.GetRawConfig().GetAttr("domain"); !domainValue.IsNull() && domainValue.AsString() != "" {
+			if err = identity.Set("domain", domainValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting domain: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = ActiveDirectoryOperationWaitTime(
 		config, res, project, "Creating DomainTrust", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -375,27 +396,27 @@ func resourceActiveDirectoryDomainTrustRead(d *schema.ResourceData, meta interfa
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("target_domain_name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("target_domain_name"); !ok && v == "" {
 			err = identity.Set("target_domain_name", d.Get("target_domain_name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting target_domain_name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("domain"); ok && v != "" {
+		if v, ok := identity.GetOk("domain"); !ok && v == "" {
 			err = identity.Set("domain", d.Get("domain").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting domain: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -494,6 +515,27 @@ func resourceActiveDirectoryDomainTrustUpdate(d *schema.ResourceData, meta inter
 
 	if err != nil {
 		return err
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if targetDomainNameValue := d.GetRawConfig().GetAttr("target_domain_name"); !targetDomainNameValue.IsNull() && targetDomainNameValue.AsString() != "" {
+			if err = identity.Set("target_domain_name", targetDomainNameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting target_domain_name: %s", err)
+			}
+		}
+		if domainValue := d.GetRawConfig().GetAttr("domain"); !domainValue.IsNull() && domainValue.AsString() != "" {
+			if err = identity.Set("domain", domainValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting domain: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceActiveDirectoryDomainTrustRead(d, meta)

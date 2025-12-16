@@ -721,6 +721,27 @@ func resourceComputeSecurityPolicyRuleCreate(d *schema.ResourceData, meta interf
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if priorityValue := d.GetRawConfig().GetAttr("priority"); !priorityValue.IsNull() && priorityValue.AsString() != "" {
+			if err = identity.Set("priority", priorityValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting priority: %s", err)
+			}
+		}
+		if securityPolicyValue := d.GetRawConfig().GetAttr("security_policy"); !securityPolicyValue.IsNull() && securityPolicyValue.AsString() != "" {
+			if err = identity.Set("security_policy", securityPolicyValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting security_policy: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = ComputeOperationWaitTime(
 		config, res, project, "Creating SecurityPolicyRule", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -807,27 +828,27 @@ func resourceComputeSecurityPolicyRuleRead(d *schema.ResourceData, meta interfac
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("priority"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("priority"); !ok && v == "" {
 			err = identity.Set("priority", d.Get("priority").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting priority: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("security_policy"); ok && v != "" {
+		if v, ok := identity.GetOk("security_policy"); !ok && v == "" {
 			err = identity.Set("security_policy", d.Get("security_policy").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting security_policy: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -993,6 +1014,27 @@ func resourceComputeSecurityPolicyRuleUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if priorityValue := d.GetRawConfig().GetAttr("priority"); !priorityValue.IsNull() && priorityValue.AsString() != "" {
+			if err = identity.Set("priority", priorityValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting priority: %s", err)
+			}
+		}
+		if securityPolicyValue := d.GetRawConfig().GetAttr("security_policy"); !securityPolicyValue.IsNull() && securityPolicyValue.AsString() != "" {
+			if err = identity.Set("security_policy", securityPolicyValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting security_policy: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceComputeSecurityPolicyRuleRead(d, meta)

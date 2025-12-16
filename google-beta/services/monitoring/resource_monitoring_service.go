@@ -275,6 +275,22 @@ func resourceMonitoringGenericServiceCreate(d *schema.ResourceData, meta interfa
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if serviceIdValue := d.GetRawConfig().GetAttr("service_id"); !serviceIdValue.IsNull() && serviceIdValue.AsString() != "" {
+			if err = identity.Set("service_id", serviceIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting service_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating GenericService %q: %#v", d.Id(), res)
 
 	return resourceMonitoringGenericServiceRead(d, meta)
@@ -340,21 +356,21 @@ func resourceMonitoringGenericServiceRead(d *schema.ResourceData, meta interface
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("service_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("service_id"); !ok && v == "" {
 			err = identity.Set("service_id", d.Get("service_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting service_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -436,6 +452,22 @@ func resourceMonitoringGenericServiceUpdate(d *schema.ResourceData, meta interfa
 			log.Printf("[DEBUG] Finished updating GenericService %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if serviceIdValue := d.GetRawConfig().GetAttr("service_id"); !serviceIdValue.IsNull() && serviceIdValue.AsString() != "" {
+			if err = identity.Set("service_id", serviceIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting service_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceMonitoringGenericServiceRead(d, meta)

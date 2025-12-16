@@ -447,6 +447,32 @@ func resourceChronicleRuleCreate(d *schema.ResourceData, meta interface{}) error
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if ruleIdValue := d.GetRawConfig().GetAttr("rule_id"); !ruleIdValue.IsNull() && ruleIdValue.AsString() != "" {
+			if err = identity.Set("rule_id", ruleIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting rule_id: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if instanceValue := d.GetRawConfig().GetAttr("instance"); !instanceValue.IsNull() && instanceValue.AsString() != "" {
+			if err = identity.Set("instance", instanceValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting instance: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating Rule %q: %#v", d.Id(), res)
 
 	return resourceChronicleRuleRead(d, meta)
@@ -559,33 +585,33 @@ func resourceChronicleRuleRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("rule_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("rule_id"); !ok && v == "" {
 			err = identity.Set("rule_id", d.Get("rule_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting rule_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("instance"); ok && v != "" {
+		if v, ok := identity.GetOk("instance"); !ok && v == "" {
 			err = identity.Set("instance", d.Get("instance").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting instance: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -676,6 +702,32 @@ func resourceChronicleRuleUpdate(d *schema.ResourceData, meta interface{}) error
 			log.Printf("[DEBUG] Finished updating Rule %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if ruleIdValue := d.GetRawConfig().GetAttr("rule_id"); !ruleIdValue.IsNull() && ruleIdValue.AsString() != "" {
+			if err = identity.Set("rule_id", ruleIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting rule_id: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if instanceValue := d.GetRawConfig().GetAttr("instance"); !instanceValue.IsNull() && instanceValue.AsString() != "" {
+			if err = identity.Set("instance", instanceValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting instance: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceChronicleRuleRead(d, meta)

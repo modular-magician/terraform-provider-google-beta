@@ -292,6 +292,27 @@ func resourceBigqueryReservationCapacityCommitmentCreate(d *schema.ResourceData,
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if capacityCommitmentIdValue := d.GetRawConfig().GetAttr("capacity_commitment_id"); !capacityCommitmentIdValue.IsNull() && capacityCommitmentIdValue.AsString() != "" {
+			if err = identity.Set("capacity_commitment_id", capacityCommitmentIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting capacity_commitment_id: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating CapacityCommitment %q: %#v", d.Id(), res)
 
 	return resourceBigqueryReservationCapacityCommitmentRead(d, meta)
@@ -365,27 +386,27 @@ func resourceBigqueryReservationCapacityCommitmentRead(d *schema.ResourceData, m
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("capacity_commitment_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("capacity_commitment_id"); !ok && v == "" {
 			err = identity.Set("capacity_commitment_id", d.Get("capacity_commitment_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting capacity_commitment_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -466,6 +487,27 @@ func resourceBigqueryReservationCapacityCommitmentUpdate(d *schema.ResourceData,
 			log.Printf("[DEBUG] Finished updating CapacityCommitment %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if capacityCommitmentIdValue := d.GetRawConfig().GetAttr("capacity_commitment_id"); !capacityCommitmentIdValue.IsNull() && capacityCommitmentIdValue.AsString() != "" {
+			if err = identity.Set("capacity_commitment_id", capacityCommitmentIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting capacity_commitment_id: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceBigqueryReservationCapacityCommitmentRead(d, meta)

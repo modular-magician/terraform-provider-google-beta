@@ -235,6 +235,22 @@ func resourceVmwareengineExternalAddressCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if parentValue := d.GetRawConfig().GetAttr("parent"); !parentValue.IsNull() && parentValue.AsString() != "" {
+			if err = identity.Set("parent", parentValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parent: %s", err)
+			}
+		}
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = VmwareengineOperationWaitTime(
 		config, res, project, "Creating ExternalAddress", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -306,21 +322,21 @@ func resourceVmwareengineExternalAddressRead(d *schema.ResourceData, meta interf
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("parent"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("parent"); !ok && v == "" {
 			err = identity.Set("parent", d.Get("parent").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting parent: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -404,6 +420,22 @@ func resourceVmwareengineExternalAddressUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if parentValue := d.GetRawConfig().GetAttr("parent"); !parentValue.IsNull() && parentValue.AsString() != "" {
+			if err = identity.Set("parent", parentValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parent: %s", err)
+			}
+		}
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceVmwareengineExternalAddressRead(d, meta)

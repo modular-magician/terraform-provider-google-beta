@@ -346,6 +346,32 @@ func resourceIAMBetaWorkloadIdentityPoolManagedIdentityCreate(d *schema.Resource
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if workloadIdentityPoolIdValue := d.GetRawConfig().GetAttr("workload_identity_pool_id"); !workloadIdentityPoolIdValue.IsNull() && workloadIdentityPoolIdValue.AsString() != "" {
+			if err = identity.Set("workload_identity_pool_id", workloadIdentityPoolIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting workload_identity_pool_id: %s", err)
+			}
+		}
+		if workloadIdentityPoolNamespaceIdValue := d.GetRawConfig().GetAttr("workload_identity_pool_namespace_id"); !workloadIdentityPoolNamespaceIdValue.IsNull() && workloadIdentityPoolNamespaceIdValue.AsString() != "" {
+			if err = identity.Set("workload_identity_pool_namespace_id", workloadIdentityPoolNamespaceIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting workload_identity_pool_namespace_id: %s", err)
+			}
+		}
+		if workloadIdentityPoolManagedIdentityIdValue := d.GetRawConfig().GetAttr("workload_identity_pool_managed_identity_id"); !workloadIdentityPoolManagedIdentityIdValue.IsNull() && workloadIdentityPoolManagedIdentityIdValue.AsString() != "" {
+			if err = identity.Set("workload_identity_pool_managed_identity_id", workloadIdentityPoolManagedIdentityIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting workload_identity_pool_managed_identity_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = IAMBetaOperationWaitTime(
 		config, res, project, "Creating WorkloadIdentityPoolManagedIdentity", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -483,33 +509,33 @@ func resourceIAMBetaWorkloadIdentityPoolManagedIdentityRead(d *schema.ResourceDa
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("workload_identity_pool_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("workload_identity_pool_id"); !ok && v == "" {
 			err = identity.Set("workload_identity_pool_id", d.Get("workload_identity_pool_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting workload_identity_pool_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("workload_identity_pool_namespace_id"); ok && v != "" {
+		if v, ok := identity.GetOk("workload_identity_pool_namespace_id"); !ok && v == "" {
 			err = identity.Set("workload_identity_pool_namespace_id", d.Get("workload_identity_pool_namespace_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting workload_identity_pool_namespace_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("workload_identity_pool_managed_identity_id"); ok && v != "" {
+		if v, ok := identity.GetOk("workload_identity_pool_managed_identity_id"); !ok && v == "" {
 			err = identity.Set("workload_identity_pool_managed_identity_id", d.Get("workload_identity_pool_managed_identity_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting workload_identity_pool_managed_identity_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -647,6 +673,32 @@ func resourceIAMBetaWorkloadIdentityPoolManagedIdentityUpdate(d *schema.Resource
 	}
 
 	d.Partial(false)
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if workloadIdentityPoolIdValue := d.GetRawConfig().GetAttr("workload_identity_pool_id"); !workloadIdentityPoolIdValue.IsNull() && workloadIdentityPoolIdValue.AsString() != "" {
+			if err = identity.Set("workload_identity_pool_id", workloadIdentityPoolIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting workload_identity_pool_id: %s", err)
+			}
+		}
+		if workloadIdentityPoolNamespaceIdValue := d.GetRawConfig().GetAttr("workload_identity_pool_namespace_id"); !workloadIdentityPoolNamespaceIdValue.IsNull() && workloadIdentityPoolNamespaceIdValue.AsString() != "" {
+			if err = identity.Set("workload_identity_pool_namespace_id", workloadIdentityPoolNamespaceIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting workload_identity_pool_namespace_id: %s", err)
+			}
+		}
+		if workloadIdentityPoolManagedIdentityIdValue := d.GetRawConfig().GetAttr("workload_identity_pool_managed_identity_id"); !workloadIdentityPoolManagedIdentityIdValue.IsNull() && workloadIdentityPoolManagedIdentityIdValue.AsString() != "" {
+			if err = identity.Set("workload_identity_pool_managed_identity_id", workloadIdentityPoolManagedIdentityIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting workload_identity_pool_managed_identity_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
+	}
 
 	return resourceIAMBetaWorkloadIdentityPoolManagedIdentityRead(d, meta)
 }

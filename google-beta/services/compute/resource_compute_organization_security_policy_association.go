@@ -201,6 +201,22 @@ func resourceComputeOrganizationSecurityPolicyAssociationCreate(d *schema.Resour
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if nameValue := d.GetRawConfig().GetAttr("name"); !nameValue.IsNull() && nameValue.AsString() != "" {
+			if err = identity.Set("name", nameValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting name: %s", err)
+			}
+		}
+		if policyIdValue := d.GetRawConfig().GetAttr("policy_id"); !policyIdValue.IsNull() && policyIdValue.AsString() != "" {
+			if err = identity.Set("policy_id", policyIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting policy_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	// `parent` is needed to poll the asynchronous operations but its available only on the policy.
 
 	policyUrl := fmt.Sprintf("{{ComputeBasePath}}%s", d.Get("policy_id"))
@@ -279,21 +295,21 @@ func resourceComputeOrganizationSecurityPolicyAssociationRead(d *schema.Resource
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("name"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("name"); !ok && v == "" {
 			err = identity.Set("name", d.Get("name").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting name: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("policy_id"); ok && v != "" {
+		if v, ok := identity.GetOk("policy_id"); !ok && v == "" {
 			err = identity.Set("policy_id", d.Get("policy_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting policy_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

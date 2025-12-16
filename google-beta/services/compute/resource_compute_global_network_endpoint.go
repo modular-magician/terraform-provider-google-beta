@@ -252,6 +252,37 @@ func resourceComputeGlobalNetworkEndpointCreate(d *schema.ResourceData, meta int
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if portValue := d.GetRawConfig().GetAttr("port"); !portValue.IsNull() && portValue.AsString() != "" {
+			if err = identity.Set("port", portValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting port: %s", err)
+			}
+		}
+		if ipAddressValue := d.GetRawConfig().GetAttr("ip_address"); !ipAddressValue.IsNull() && ipAddressValue.AsString() != "" {
+			if err = identity.Set("ip_address", ipAddressValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting ip_address: %s", err)
+			}
+		}
+		if fqdnValue := d.GetRawConfig().GetAttr("fqdn"); !fqdnValue.IsNull() && fqdnValue.AsString() != "" {
+			if err = identity.Set("fqdn", fqdnValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting fqdn: %s", err)
+			}
+		}
+		if globalNetworkEndpointGroupValue := d.GetRawConfig().GetAttr("global_network_endpoint_group"); !globalNetworkEndpointGroupValue.IsNull() && globalNetworkEndpointGroupValue.AsString() != "" {
+			if err = identity.Set("global_network_endpoint_group", globalNetworkEndpointGroupValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting global_network_endpoint_group: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = ComputeOperationWaitTime(
 		config, res, project, "Creating GlobalNetworkEndpoint", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -344,39 +375,39 @@ func resourceComputeGlobalNetworkEndpointRead(d *schema.ResourceData, meta inter
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("port"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("port"); !ok && v == "" {
 			err = identity.Set("port", d.Get("port").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting port: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("ip_address"); ok && v != "" {
+		if v, ok := identity.GetOk("ip_address"); !ok && v == "" {
 			err = identity.Set("ip_address", d.Get("ip_address").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting ip_address: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("fqdn"); ok && v != "" {
+		if v, ok := identity.GetOk("fqdn"); !ok && v == "" {
 			err = identity.Set("fqdn", d.Get("fqdn").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting fqdn: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("global_network_endpoint_group"); ok && v != "" {
+		if v, ok := identity.GetOk("global_network_endpoint_group"); !ok && v == "" {
 			err = identity.Set("global_network_endpoint_group", d.Get("global_network_endpoint_group").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting global_network_endpoint_group: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

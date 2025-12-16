@@ -1851,6 +1851,22 @@ func resourceOSConfigV2PolicyOrchestratorForOrganizationCreate(d *schema.Resourc
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if organizationIdValue := d.GetRawConfig().GetAttr("organization_id"); !organizationIdValue.IsNull() && organizationIdValue.AsString() != "" {
+			if err = identity.Set("organization_id", organizationIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization_id: %s", err)
+			}
+		}
+		if policyOrchestratorIdValue := d.GetRawConfig().GetAttr("policy_orchestrator_id"); !policyOrchestratorIdValue.IsNull() && policyOrchestratorIdValue.AsString() != "" {
+			if err = identity.Set("policy_orchestrator_id", policyOrchestratorIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting policy_orchestrator_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = OSConfigV2OperationWaitTime(
 		config, res, project, "Creating PolicyOrchestratorForOrganization", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -1942,21 +1958,21 @@ func resourceOSConfigV2PolicyOrchestratorForOrganizationRead(d *schema.ResourceD
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("organization_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("organization_id"); !ok && v == "" {
 			err = identity.Set("organization_id", d.Get("organization_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting organization_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("policy_orchestrator_id"); ok && v != "" {
+		if v, ok := identity.GetOk("policy_orchestrator_id"); !ok && v == "" {
 			err = identity.Set("policy_orchestrator_id", d.Get("policy_orchestrator_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting policy_orchestrator_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -2079,6 +2095,22 @@ func resourceOSConfigV2PolicyOrchestratorForOrganizationUpdate(d *schema.Resourc
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if organizationIdValue := d.GetRawConfig().GetAttr("organization_id"); !organizationIdValue.IsNull() && organizationIdValue.AsString() != "" {
+			if err = identity.Set("organization_id", organizationIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting organization_id: %s", err)
+			}
+		}
+		if policyOrchestratorIdValue := d.GetRawConfig().GetAttr("policy_orchestrator_id"); !policyOrchestratorIdValue.IsNull() && policyOrchestratorIdValue.AsString() != "" {
+			if err = identity.Set("policy_orchestrator_id", policyOrchestratorIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting policy_orchestrator_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceOSConfigV2PolicyOrchestratorForOrganizationRead(d, meta)

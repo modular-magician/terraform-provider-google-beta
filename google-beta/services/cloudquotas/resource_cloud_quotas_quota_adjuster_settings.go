@@ -209,6 +209,17 @@ func resourceCloudQuotasQuotaAdjusterSettingsCreate(d *schema.ResourceData, meta
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if parentValue := d.GetRawConfig().GetAttr("parent"); !parentValue.IsNull() && parentValue.AsString() != "" {
+			if err = identity.Set("parent", parentValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parent: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating QuotaAdjusterSettings %q: %#v", d.Id(), res)
 
 	return resourceCloudQuotasQuotaAdjusterSettingsRead(d, meta)
@@ -263,15 +274,15 @@ func resourceCloudQuotasQuotaAdjusterSettingsRead(d *schema.ResourceData, meta i
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("parent"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("parent"); !ok && v == "" {
 			err = identity.Set("parent", d.Get("parent").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting parent: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -321,6 +332,17 @@ func resourceCloudQuotasQuotaAdjusterSettingsUpdate(d *schema.ResourceData, meta
 		return fmt.Errorf("Error updating QuotaAdjusterSettings %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating QuotaAdjusterSettings %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if parentValue := d.GetRawConfig().GetAttr("parent"); !parentValue.IsNull() && parentValue.AsString() != "" {
+			if err = identity.Set("parent", parentValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting parent: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceCloudQuotasQuotaAdjusterSettingsRead(d, meta)

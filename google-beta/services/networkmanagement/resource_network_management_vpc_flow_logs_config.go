@@ -395,6 +395,27 @@ func resourceNetworkManagementVpcFlowLogsConfigCreate(d *schema.ResourceData, me
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if vpcFlowLogsConfigIdValue := d.GetRawConfig().GetAttr("vpc_flow_logs_config_id"); !vpcFlowLogsConfigIdValue.IsNull() && vpcFlowLogsConfigIdValue.AsString() != "" {
+			if err = identity.Set("vpc_flow_logs_config_id", vpcFlowLogsConfigIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting vpc_flow_logs_config_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = NetworkManagementOperationWaitTime(
 		config, res, project, "Creating VpcFlowLogsConfig", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -508,27 +529,27 @@ func resourceNetworkManagementVpcFlowLogsConfigRead(d *schema.ResourceData, meta
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("vpc_flow_logs_config_id"); ok && v != "" {
+		if v, ok := identity.GetOk("vpc_flow_logs_config_id"); !ok && v == "" {
 			err = identity.Set("vpc_flow_logs_config_id", d.Get("vpc_flow_logs_config_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting vpc_flow_logs_config_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -716,6 +737,27 @@ func resourceNetworkManagementVpcFlowLogsConfigUpdate(d *schema.ResourceData, me
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if vpcFlowLogsConfigIdValue := d.GetRawConfig().GetAttr("vpc_flow_logs_config_id"); !vpcFlowLogsConfigIdValue.IsNull() && vpcFlowLogsConfigIdValue.AsString() != "" {
+			if err = identity.Set("vpc_flow_logs_config_id", vpcFlowLogsConfigIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting vpc_flow_logs_config_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceNetworkManagementVpcFlowLogsConfigRead(d, meta)

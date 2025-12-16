@@ -257,6 +257,27 @@ func resourceSecurityCenterV2FolderMuteConfigCreate(d *schema.ResourceData, meta
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if folderValue := d.GetRawConfig().GetAttr("folder"); !folderValue.IsNull() && folderValue.AsString() != "" {
+			if err = identity.Set("folder", folderValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if muteConfigIdValue := d.GetRawConfig().GetAttr("mute_config_id"); !muteConfigIdValue.IsNull() && muteConfigIdValue.AsString() != "" {
+			if err = identity.Set("mute_config_id", muteConfigIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting mute_config_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating FolderMuteConfig %q: %#v", d.Id(), res)
 
 	return resourceSecurityCenterV2FolderMuteConfigRead(d, meta)
@@ -317,27 +338,27 @@ func resourceSecurityCenterV2FolderMuteConfigRead(d *schema.ResourceData, meta i
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("folder"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("folder"); !ok && v == "" {
 			err = identity.Set("folder", d.Get("folder").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting folder: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("mute_config_id"); ok && v != "" {
+		if v, ok := identity.GetOk("mute_config_id"); !ok && v == "" {
 			err = identity.Set("mute_config_id", d.Get("mute_config_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting mute_config_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -422,6 +443,27 @@ func resourceSecurityCenterV2FolderMuteConfigUpdate(d *schema.ResourceData, meta
 			log.Printf("[DEBUG] Finished updating FolderMuteConfig %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if folderValue := d.GetRawConfig().GetAttr("folder"); !folderValue.IsNull() && folderValue.AsString() != "" {
+			if err = identity.Set("folder", folderValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if muteConfigIdValue := d.GetRawConfig().GetAttr("mute_config_id"); !muteConfigIdValue.IsNull() && muteConfigIdValue.AsString() != "" {
+			if err = identity.Set("mute_config_id", muteConfigIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting mute_config_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceSecurityCenterV2FolderMuteConfigRead(d, meta)

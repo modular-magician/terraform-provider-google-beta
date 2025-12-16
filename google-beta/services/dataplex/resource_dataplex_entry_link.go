@@ -274,6 +274,32 @@ func resourceDataplexEntryLinkCreate(d *schema.ResourceData, meta interface{}) e
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if entryGroupIdValue := d.GetRawConfig().GetAttr("entry_group_id"); !entryGroupIdValue.IsNull() && entryGroupIdValue.AsString() != "" {
+			if err = identity.Set("entry_group_id", entryGroupIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entry_group_id: %s", err)
+			}
+		}
+		if entryLinkIdValue := d.GetRawConfig().GetAttr("entry_link_id"); !entryLinkIdValue.IsNull() && entryLinkIdValue.AsString() != "" {
+			if err = identity.Set("entry_link_id", entryLinkIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entry_link_id: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating EntryLink %q: %#v", d.Id(), res)
 
 	return resourceDataplexEntryLinkRead(d, meta)
@@ -338,33 +364,33 @@ func resourceDataplexEntryLinkRead(d *schema.ResourceData, meta interface{}) err
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("entry_group_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("entry_group_id"); !ok && v == "" {
 			err = identity.Set("entry_group_id", d.Get("entry_group_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting entry_group_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("entry_link_id"); ok && v != "" {
+		if v, ok := identity.GetOk("entry_link_id"); !ok && v == "" {
 			err = identity.Set("entry_link_id", d.Get("entry_link_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting entry_link_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }

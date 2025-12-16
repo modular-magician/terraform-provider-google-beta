@@ -400,6 +400,27 @@ func resourceDataprocAutoscalingPolicyCreate(d *schema.ResourceData, meta interf
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if policyIdValue := d.GetRawConfig().GetAttr("policy_id"); !policyIdValue.IsNull() && policyIdValue.AsString() != "" {
+			if err = identity.Set("policy_id", policyIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting policy_id: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating AutoscalingPolicy %q: %#v", d.Id(), res)
 
 	return resourceDataprocAutoscalingPolicyRead(d, meta)
@@ -464,27 +485,27 @@ func resourceDataprocAutoscalingPolicyRead(d *schema.ResourceData, meta interfac
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("policy_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("policy_id"); !ok && v == "" {
 			err = identity.Set("policy_id", d.Get("policy_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting policy_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -558,6 +579,27 @@ func resourceDataprocAutoscalingPolicyUpdate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("Error updating AutoscalingPolicy %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating AutoscalingPolicy %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if policyIdValue := d.GetRawConfig().GetAttr("policy_id"); !policyIdValue.IsNull() && policyIdValue.AsString() != "" {
+			if err = identity.Set("policy_id", policyIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting policy_id: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceDataprocAutoscalingPolicyRead(d, meta)

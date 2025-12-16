@@ -268,6 +268,32 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderScimTenantCreate(d *schema.Res
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if workforcePoolIdValue := d.GetRawConfig().GetAttr("workforce_pool_id"); !workforcePoolIdValue.IsNull() && workforcePoolIdValue.AsString() != "" {
+			if err = identity.Set("workforce_pool_id", workforcePoolIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting workforce_pool_id: %s", err)
+			}
+		}
+		if providerIdValue := d.GetRawConfig().GetAttr("provider_id"); !providerIdValue.IsNull() && providerIdValue.AsString() != "" {
+			if err = identity.Set("provider_id", providerIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting provider_id: %s", err)
+			}
+		}
+		if scimTenantIdValue := d.GetRawConfig().GetAttr("scim_tenant_id"); !scimTenantIdValue.IsNull() && scimTenantIdValue.AsString() != "" {
+			if err = identity.Set("scim_tenant_id", scimTenantIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting scim_tenant_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	// This is useful if the resource in question doesn't have a perfectly consistent API
 	// That is, the Operation for Create might return before the Get operation shows the
 	// completed state of the resource.
@@ -348,33 +374,33 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderScimTenantRead(d *schema.Resou
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("workforce_pool_id"); ok && v != "" {
+		if v, ok := identity.GetOk("workforce_pool_id"); !ok && v == "" {
 			err = identity.Set("workforce_pool_id", d.Get("workforce_pool_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting workforce_pool_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("provider_id"); ok && v != "" {
+		if v, ok := identity.GetOk("provider_id"); !ok && v == "" {
 			err = identity.Set("provider_id", d.Get("provider_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting provider_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("scim_tenant_id"); ok && v != "" {
+		if v, ok := identity.GetOk("scim_tenant_id"); !ok && v == "" {
 			err = identity.Set("scim_tenant_id", d.Get("scim_tenant_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting scim_tenant_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -459,6 +485,32 @@ func resourceIAMWorkforcePoolWorkforcePoolProviderScimTenantUpdate(d *schema.Res
 			log.Printf("[DEBUG] Finished updating WorkforcePoolProviderScimTenant %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if workforcePoolIdValue := d.GetRawConfig().GetAttr("workforce_pool_id"); !workforcePoolIdValue.IsNull() && workforcePoolIdValue.AsString() != "" {
+			if err = identity.Set("workforce_pool_id", workforcePoolIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting workforce_pool_id: %s", err)
+			}
+		}
+		if providerIdValue := d.GetRawConfig().GetAttr("provider_id"); !providerIdValue.IsNull() && providerIdValue.AsString() != "" {
+			if err = identity.Set("provider_id", providerIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting provider_id: %s", err)
+			}
+		}
+		if scimTenantIdValue := d.GetRawConfig().GetAttr("scim_tenant_id"); !scimTenantIdValue.IsNull() && scimTenantIdValue.AsString() != "" {
+			if err = identity.Set("scim_tenant_id", scimTenantIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting scim_tenant_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	// This is useful if the resource in question doesn't have a perfectly consistent API

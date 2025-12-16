@@ -327,6 +327,17 @@ func resourceAccessApprovalFolderSettingsCreate(d *schema.ResourceData, meta int
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if folderIdValue := d.GetRawConfig().GetAttr("folder_id"); !folderIdValue.IsNull() && folderIdValue.AsString() != "" {
+			if err = identity.Set("folder_id", folderIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	// This is useful if the resource in question doesn't have a perfectly consistent API
 	// That is, the Operation for Create might return before the Get operation shows the
 	// completed state of the resource.
@@ -392,15 +403,15 @@ func resourceAccessApprovalFolderSettingsRead(d *schema.ResourceData, meta inter
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("folder_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("folder_id"); !ok && v == "" {
 			err = identity.Set("folder_id", d.Get("folder_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting folder_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -485,6 +496,17 @@ func resourceAccessApprovalFolderSettingsUpdate(d *schema.ResourceData, meta int
 			log.Printf("[DEBUG] Finished updating FolderSettings %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if folderIdValue := d.GetRawConfig().GetAttr("folder_id"); !folderIdValue.IsNull() && folderIdValue.AsString() != "" {
+			if err = identity.Set("folder_id", folderIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	// This is useful if the resource in question doesn't have a perfectly consistent API

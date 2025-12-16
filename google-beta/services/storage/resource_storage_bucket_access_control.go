@@ -236,6 +236,22 @@ func resourceStorageBucketAccessControlCreate(d *schema.ResourceData, meta inter
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if bucketValue := d.GetRawConfig().GetAttr("bucket"); !bucketValue.IsNull() && bucketValue.AsString() != "" {
+			if err = identity.Set("bucket", bucketValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting bucket: %s", err)
+			}
+		}
+		if entityValue := d.GetRawConfig().GetAttr("entity"); !entityValue.IsNull() && entityValue.AsString() != "" {
+			if err = identity.Set("entity", entityValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entity: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating BucketAccessControl %q: %#v", d.Id(), res)
 
 	return resourceStorageBucketAccessControlRead(d, meta)
@@ -290,21 +306,21 @@ func resourceStorageBucketAccessControlRead(d *schema.ResourceData, meta interfa
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("bucket"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("bucket"); !ok && v == "" {
 			err = identity.Set("bucket", d.Get("bucket").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting bucket: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("entity"); ok && v != "" {
+		if v, ok := identity.GetOk("entity"); !ok && v == "" {
 			err = identity.Set("entity", d.Get("entity").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting entity: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -373,6 +389,22 @@ func resourceStorageBucketAccessControlUpdate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("Error updating BucketAccessControl %q: %s", d.Id(), err)
 	} else {
 		log.Printf("[DEBUG] Finished updating BucketAccessControl %q: %#v", d.Id(), res)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if bucketValue := d.GetRawConfig().GetAttr("bucket"); !bucketValue.IsNull() && bucketValue.AsString() != "" {
+			if err = identity.Set("bucket", bucketValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting bucket: %s", err)
+			}
+		}
+		if entityValue := d.GetRawConfig().GetAttr("entity"); !entityValue.IsNull() && entityValue.AsString() != "" {
+			if err = identity.Set("entity", entityValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting entity: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceStorageBucketAccessControlRead(d, meta)

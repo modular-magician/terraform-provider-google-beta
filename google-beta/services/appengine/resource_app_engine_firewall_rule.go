@@ -241,6 +241,22 @@ func resourceAppEngineFirewallRuleCreate(d *schema.ResourceData, meta interface{
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if priorityValue := d.GetRawConfig().GetAttr("priority"); !priorityValue.IsNull() && priorityValue.AsString() != "" {
+			if err = identity.Set("priority", priorityValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting priority: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = transport_tpg.PollingWaitTime(resourceAppEngineFirewallRulePollRead(d, meta), transport_tpg.PollCheckForExistence, "Creating FirewallRule", d.Timeout(schema.TimeoutCreate), 1)
 	if err != nil {
 		return fmt.Errorf("Error waiting to create FirewallRule: %s", err)
@@ -349,21 +365,21 @@ func resourceAppEngineFirewallRuleRead(d *schema.ResourceData, meta interface{})
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("priority"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("priority"); !ok && v == "" {
 			err = identity.Set("priority", d.Get("priority").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting priority: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -471,6 +487,22 @@ func resourceAppEngineFirewallRuleUpdate(d *schema.ResourceData, meta interface{
 			log.Printf("[DEBUG] Finished updating FirewallRule %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if priorityValue := d.GetRawConfig().GetAttr("priority"); !priorityValue.IsNull() && priorityValue.AsString() != "" {
+			if err = identity.Set("priority", priorityValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting priority: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceAppEngineFirewallRuleRead(d, meta)

@@ -248,6 +248,22 @@ func resourceIdentityPlatformDefaultSupportedIdpConfigCreate(d *schema.ResourceD
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if idpIdValue := d.GetRawConfig().GetAttr("idp_id"); !idpIdValue.IsNull() && idpIdValue.AsString() != "" {
+			if err = identity.Set("idp_id", idpIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting idp_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating DefaultSupportedIdpConfig %q: %#v", d.Id(), res)
 
 	return resourceIdentityPlatformDefaultSupportedIdpConfigRead(d, meta)
@@ -309,21 +325,21 @@ func resourceIdentityPlatformDefaultSupportedIdpConfigRead(d *schema.ResourceDat
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("idp_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("idp_id"); !ok && v == "" {
 			err = identity.Set("idp_id", d.Get("idp_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting idp_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -414,6 +430,22 @@ func resourceIdentityPlatformDefaultSupportedIdpConfigUpdate(d *schema.ResourceD
 			log.Printf("[DEBUG] Finished updating DefaultSupportedIdpConfig %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if idpIdValue := d.GetRawConfig().GetAttr("idp_id"); !idpIdValue.IsNull() && idpIdValue.AsString() != "" {
+			if err = identity.Set("idp_id", idpIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting idp_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceIdentityPlatformDefaultSupportedIdpConfigRead(d, meta)

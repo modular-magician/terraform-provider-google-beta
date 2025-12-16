@@ -224,6 +224,22 @@ func resourceFirebaseAppCheckRecaptchaEnterpriseConfigCreate(d *schema.ResourceD
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if appIdValue := d.GetRawConfig().GetAttr("app_id"); !appIdValue.IsNull() && appIdValue.AsString() != "" {
+			if err = identity.Set("app_id", appIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting app_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating RecaptchaEnterpriseConfig %q: %#v", d.Id(), res)
 
 	return resourceFirebaseAppCheckRecaptchaEnterpriseConfigRead(d, meta)
@@ -282,21 +298,21 @@ func resourceFirebaseAppCheckRecaptchaEnterpriseConfigRead(d *schema.ResourceDat
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("app_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("app_id"); !ok && v == "" {
 			err = identity.Set("app_id", d.Get("app_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting app_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -377,6 +393,22 @@ func resourceFirebaseAppCheckRecaptchaEnterpriseConfigUpdate(d *schema.ResourceD
 			log.Printf("[DEBUG] Finished updating RecaptchaEnterpriseConfig %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if appIdValue := d.GetRawConfig().GetAttr("app_id"); !appIdValue.IsNull() && appIdValue.AsString() != "" {
+			if err = identity.Set("app_id", appIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting app_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceFirebaseAppCheckRecaptchaEnterpriseConfigRead(d, meta)

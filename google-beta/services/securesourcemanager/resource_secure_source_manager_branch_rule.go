@@ -315,6 +315,32 @@ func resourceSecureSourceManagerBranchRuleCreate(d *schema.ResourceData, meta in
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if branchRuleIdValue := d.GetRawConfig().GetAttr("branch_rule_id"); !branchRuleIdValue.IsNull() && branchRuleIdValue.AsString() != "" {
+			if err = identity.Set("branch_rule_id", branchRuleIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting branch_rule_id: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if repositoryIdValue := d.GetRawConfig().GetAttr("repository_id"); !repositoryIdValue.IsNull() && repositoryIdValue.AsString() != "" {
+			if err = identity.Set("repository_id", repositoryIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting repository_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = SecureSourceManagerOperationWaitTime(
 		config, res, project, "Creating BranchRule", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -410,33 +436,33 @@ func resourceSecureSourceManagerBranchRuleRead(d *schema.ResourceData, meta inte
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("branch_rule_id"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("branch_rule_id"); !ok && v == "" {
 			err = identity.Set("branch_rule_id", d.Get("branch_rule_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting branch_rule_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("repository_id"); ok && v != "" {
+		if v, ok := identity.GetOk("repository_id"); !ok && v == "" {
 			err = identity.Set("repository_id", d.Get("repository_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting repository_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -577,6 +603,32 @@ func resourceSecureSourceManagerBranchRuleUpdate(d *schema.ResourceData, meta in
 			log.Printf("[DEBUG] Finished updating BranchRule %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if branchRuleIdValue := d.GetRawConfig().GetAttr("branch_rule_id"); !branchRuleIdValue.IsNull() && branchRuleIdValue.AsString() != "" {
+			if err = identity.Set("branch_rule_id", branchRuleIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting branch_rule_id: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if repositoryIdValue := d.GetRawConfig().GetAttr("repository_id"); !repositoryIdValue.IsNull() && repositoryIdValue.AsString() != "" {
+			if err = identity.Set("repository_id", repositoryIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting repository_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceSecureSourceManagerBranchRuleRead(d, meta)

@@ -333,6 +333,32 @@ func resourceChronicleReferenceListCreate(d *schema.ResourceData, meta interface
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if instanceValue := d.GetRawConfig().GetAttr("instance"); !instanceValue.IsNull() && instanceValue.AsString() != "" {
+			if err = identity.Set("instance", instanceValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting instance: %s", err)
+			}
+		}
+		if referenceListIdValue := d.GetRawConfig().GetAttr("reference_list_id"); !referenceListIdValue.IsNull() && referenceListIdValue.AsString() != "" {
+			if err = identity.Set("reference_list_id", referenceListIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting reference_list_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating ReferenceList %q: %#v", d.Id(), res)
 
 	return resourceChronicleReferenceListRead(d, meta)
@@ -409,33 +435,33 @@ func resourceChronicleReferenceListRead(d *schema.ResourceData, meta interface{}
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("instance"); ok && v != "" {
+		if v, ok := identity.GetOk("instance"); !ok && v == "" {
 			err = identity.Set("instance", d.Get("instance").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting instance: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("reference_list_id"); ok && v != "" {
+		if v, ok := identity.GetOk("reference_list_id"); !ok && v == "" {
 			err = identity.Set("reference_list_id", d.Get("reference_list_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting reference_list_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -536,6 +562,32 @@ func resourceChronicleReferenceListUpdate(d *schema.ResourceData, meta interface
 			log.Printf("[DEBUG] Finished updating ReferenceList %q: %#v", d.Id(), res)
 		}
 
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if instanceValue := d.GetRawConfig().GetAttr("instance"); !instanceValue.IsNull() && instanceValue.AsString() != "" {
+			if err = identity.Set("instance", instanceValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting instance: %s", err)
+			}
+		}
+		if referenceListIdValue := d.GetRawConfig().GetAttr("reference_list_id"); !referenceListIdValue.IsNull() && referenceListIdValue.AsString() != "" {
+			if err = identity.Set("reference_list_id", referenceListIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting reference_list_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceChronicleReferenceListRead(d, meta)

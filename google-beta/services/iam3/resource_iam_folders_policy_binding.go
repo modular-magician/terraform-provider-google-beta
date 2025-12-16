@@ -367,6 +367,27 @@ func resourceIAM3FoldersPolicyBindingCreate(d *schema.ResourceData, meta interfa
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if folderValue := d.GetRawConfig().GetAttr("folder"); !folderValue.IsNull() && folderValue.AsString() != "" {
+			if err = identity.Set("folder", folderValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if policyBindingIdValue := d.GetRawConfig().GetAttr("policy_binding_id"); !policyBindingIdValue.IsNull() && policyBindingIdValue.AsString() != "" {
+			if err = identity.Set("policy_binding_id", policyBindingIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting policy_binding_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = IAM3OperationWaitTime(
 		config, res, project, "Creating FoldersPolicyBinding", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -455,27 +476,27 @@ func resourceIAM3FoldersPolicyBindingRead(d *schema.ResourceData, meta interface
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("folder"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("folder"); !ok && v == "" {
 			err = identity.Set("folder", d.Get("folder").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting folder: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("policy_binding_id"); ok && v != "" {
+		if v, ok := identity.GetOk("policy_binding_id"); !ok && v == "" {
 			err = identity.Set("policy_binding_id", d.Get("policy_binding_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting policy_binding_id: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -578,6 +599,27 @@ func resourceIAM3FoldersPolicyBindingUpdate(d *schema.ResourceData, meta interfa
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if folderValue := d.GetRawConfig().GetAttr("folder"); !folderValue.IsNull() && folderValue.AsString() != "" {
+			if err = identity.Set("folder", folderValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting folder: %s", err)
+			}
+		}
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if policyBindingIdValue := d.GetRawConfig().GetAttr("policy_binding_id"); !policyBindingIdValue.IsNull() && policyBindingIdValue.AsString() != "" {
+			if err = identity.Set("policy_binding_id", policyBindingIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting policy_binding_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceIAM3FoldersPolicyBindingRead(d, meta)

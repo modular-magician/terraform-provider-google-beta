@@ -428,6 +428,27 @@ func resourceBackupDRBackupVaultCreate(d *schema.ResourceData, meta interface{})
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if backupVaultIdValue := d.GetRawConfig().GetAttr("backup_vault_id"); !backupVaultIdValue.IsNull() && backupVaultIdValue.AsString() != "" {
+			if err = identity.Set("backup_vault_id", backupVaultIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting backup_vault_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = BackupDROperationWaitTime(
 		config, res, project, "Creating BackupVault", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -547,27 +568,27 @@ func resourceBackupDRBackupVaultRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("location"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("location"); !ok && v == "" {
 			err = identity.Set("location", d.Get("location").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting location: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("backup_vault_id"); ok && v != "" {
+		if v, ok := identity.GetOk("backup_vault_id"); !ok && v == "" {
 			err = identity.Set("backup_vault_id", d.Get("backup_vault_id").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting backup_vault_id: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -705,6 +726,27 @@ func resourceBackupDRBackupVaultUpdate(d *schema.ResourceData, meta interface{})
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if locationValue := d.GetRawConfig().GetAttr("location"); !locationValue.IsNull() && locationValue.AsString() != "" {
+			if err = identity.Set("location", locationValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting location: %s", err)
+			}
+		}
+		if backupVaultIdValue := d.GetRawConfig().GetAttr("backup_vault_id"); !backupVaultIdValue.IsNull() && backupVaultIdValue.AsString() != "" {
+			if err = identity.Set("backup_vault_id", backupVaultIdValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting backup_vault_id: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceBackupDRBackupVaultRead(d, meta)

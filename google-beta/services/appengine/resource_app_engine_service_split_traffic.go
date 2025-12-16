@@ -235,6 +235,22 @@ func resourceAppEngineServiceSplitTrafficCreate(d *schema.ResourceData, meta int
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if serviceValue := d.GetRawConfig().GetAttr("service"); !serviceValue.IsNull() && serviceValue.AsString() != "" {
+			if err = identity.Set("service", serviceValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting service: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = AppEngineOperationWaitTime(
 		config, res, project, "Creating ServiceSplitTraffic", userAgent,
 		d.Timeout(schema.TimeoutCreate))
@@ -297,21 +313,21 @@ func resourceAppEngineServiceSplitTrafficRead(d *schema.ResourceData, meta inter
 	}
 
 	identity, err := d.Identity()
-	if err != nil && identity != nil {
-		if v, ok := identity.GetOk("service"); ok && v != "" {
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("service"); !ok && v == "" {
 			err = identity.Set("service", d.Get("service").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting service: %s", err)
 			}
 		}
-		if v, ok := identity.GetOk("project"); ok && v != "" {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
 			err = identity.Set("project", d.Get("project").(string))
 			if err != nil {
 				return fmt.Errorf("Error setting project: %s", err)
 			}
 		}
 	} else {
-		log.Printf("[DEBUG] identity not set: %s", err)
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 	return nil
 }
@@ -406,6 +422,22 @@ func resourceAppEngineServiceSplitTrafficUpdate(d *schema.ResourceData, meta int
 		if err != nil {
 			return err
 		}
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if serviceValue := d.GetRawConfig().GetAttr("service"); !serviceValue.IsNull() && serviceValue.AsString() != "" {
+			if err = identity.Set("service", serviceValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting service: %s", err)
+			}
+		}
+		if projectValue := d.GetRawConfig().GetAttr("project"); !projectValue.IsNull() && projectValue.AsString() != "" {
+			if err = identity.Set("project", projectValue.AsString()); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	return resourceAppEngineServiceSplitTrafficRead(d, meta)
