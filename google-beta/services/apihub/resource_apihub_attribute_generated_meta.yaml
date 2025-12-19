@@ -1,0 +1,25 @@
+resource: google_apihub_attribute
+generation_type: mmv1
+source_file: products/apihub/Attribute.yaml
+api_service_name: apihub.googleapis.com
+api_version: v1
+api_resource_type_kind: Attribute
+fields:
+    - api_field: allowedValues.description
+    - api_field: allowedValues.displayName
+    - api_field: allowedValues.id
+    - api_field: allowedValues.immutable
+    - field: attribute_id
+      provider_only: true
+    - api_field: cardinality
+    - api_field: createTime
+    - api_field: dataType
+    - api_field: definitionType
+    - api_field: description
+    - api_field: displayName
+    - field: location
+      provider_only: true
+    - api_field: mandatory
+    - api_field: name
+    - api_field: scope
+    - api_field: updateTime
