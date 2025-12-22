@@ -14,5 +14,6 @@ fields:
     - api_field: labels
     - api_field: managedService
     - api_field: name
+    - api_field: tags
     - field: terraform_labels
       provider_only: true

@@ -139,6 +139,15 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 				Description: `Immutable. The name of a Google Managed Service ( https://cloud.google.com/service-infrastructure/docs/glossary#managed).
 If not specified, a new Service will automatically be created in the same project as this API.`,
 			},
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				ForceNew: true,
+				Description: `A map of resource manager tags.
+Resource manager tag keys and values have the same definition as resource manager tags.
+Keys must be in the format tagKeys/{tag_key_id}, and values are in the format tagValues/{tag_value_id}.`,
+				Elem: &schema.Schema{Type: schema.TypeString},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -192,6 +201,12 @@ func resourceApiGatewayApiCreate(d *schema.ResourceData, meta interface{}) error
 		return err
 	} else if v, ok := d.GetOkExists("managed_service"); !tpgresource.IsEmptyValue(reflect.ValueOf(managedServiceProp)) && (ok || !reflect.DeepEqual(v, managedServiceProp)) {
 		obj["managedService"] = managedServiceProp
+	}
+	tagsProp, err := expandApiGatewayApiTags(d.Get("tags"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("tags"); !tpgresource.IsEmptyValue(reflect.ValueOf(tagsProp)) && (ok || !reflect.DeepEqual(v, tagsProp)) {
+		obj["tags"] = tagsProp
 	}
 	effectiveLabelsProp, err := expandApiGatewayApiEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
@@ -543,6 +558,17 @@ func expandApiGatewayApiDisplayName(v interface{}, d tpgresource.TerraformResour
 
 func expandApiGatewayApiManagedService(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandApiGatewayApiTags(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
 }
 
 func expandApiGatewayApiEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
