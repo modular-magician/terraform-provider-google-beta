@@ -164,6 +164,14 @@ The following arguments are supported:
   letter, or digit, except the last character, which cannot be a dash.
 
 
+* `l2_forwarding` -
+  (Optional)
+  L2 Interconnect Attachment related config. This field is required if the type is L2_DEDICATED.
+  The configuration specifies how VLAN tags (like dot1q, qinq, or dot1ad) within L2 packets are mapped
+  to the destination appliances IP addresses.
+  The packet is then encapsulated with the appliance IP address and sent to the edge appliance.
+  Structure is [documented below](#nested_l2_forwarding).
+
 * `admin_enabled` -
   (Optional)
   Whether the VLAN attachment is enabled or disabled.  When using
@@ -206,7 +214,7 @@ The following arguments are supported:
   (Optional)
   The type of InterconnectAttachment you wish to create. Defaults to
   DEDICATED.
-  Possible values are: `DEDICATED`, `PARTNER`, `PARTNER_PROVIDER`.
+  Possible values are: `DEDICATED`, `PARTNER`, `PARTNER_PROVIDER`, `L2_DEDICATED`.
 
 * `candidate_subnets` -
   (Optional)
@@ -310,6 +318,37 @@ The following arguments are supported:
     If it is not provided, the provider project is used.
 
 
+
+<a name="nested_l2_forwarding"></a>The `l2_forwarding` block supports:
+
+* `network` -
+  (Optional)
+  Resource URL of the network to which this attachment belongs.
+
+* `geneve_header` -
+  (Optional)
+  It represents the structure of a Geneve (Generic Network Virtualization Encapsulation) header,
+  as defined in RFC8926. It encapsulates packets from various protocols (e.g., Ethernet, IPv4, IPv6)
+  for use in network virtualization environments.
+  Structure is [documented below](#nested_l2_forwarding_geneve_header).
+
+* `default_appliance_ip_address` -
+  (Optional)
+  A single IPv4 or IPv6 address used as the default destination IP when there is no VLAN mapping result found.
+  Unset field (null-value) indicates the unmatched packet should be dropped.
+
+* `tunnel_endpoint_ip_address` -
+  (Optional)
+  A single IPv4 or IPv6 address. This address will be used as the source IP address for
+  packets sent to the appliances, and must be used as the destination IP address for packets that
+  should be sent out through this attachment.
+
+
+<a name="nested_l2_forwarding_geneve_header"></a>The `geneve_header` block supports:
+
+* `vni` -
+  (Optional)
+  VNI is a 24-bit unique virtual network identifier, from 0 to 16,777,215.
 
 ## Attributes Reference
 

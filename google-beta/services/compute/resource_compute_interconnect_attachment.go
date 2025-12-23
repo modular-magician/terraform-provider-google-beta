@@ -279,6 +279,54 @@ allocated from regional external IP address pool.`,
 					DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
 				},
 			},
+			"l2_forwarding": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `L2 Interconnect Attachment related config. This field is required if the type is L2_DEDICATED.
+The configuration specifies how VLAN tags (like dot1q, qinq, or dot1ad) within L2 packets are mapped
+to the destination appliances IP addresses.
+The packet is then encapsulated with the appliance IP address and sent to the edge appliance.`,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"default_appliance_ip_address": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `A single IPv4 or IPv6 address used as the default destination IP when there is no VLAN mapping result found.
+Unset field (null-value) indicates the unmatched packet should be dropped.`,
+						},
+						"geneve_header": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `It represents the structure of a Geneve (Generic Network Virtualization Encapsulation) header,
+as defined in RFC8926. It encapsulates packets from various protocols (e.g., Ethernet, IPv4, IPv6)
+for use in network virtualization environments.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"vni": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: `VNI is a 24-bit unique virtual network identifier, from 0 to 16,777,215.`,
+									},
+								},
+							},
+						},
+						"network": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Resource URL of the network to which this attachment belongs.`,
+						},
+						"tunnel_endpoint_ip_address": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Description: `A single IPv4 or IPv6 address. This address will be used as the source IP address for
+packets sent to the appliances, and must be used as the destination IP address for packets that
+should be sent out through this attachment.`,
+						},
+					},
+				},
+			},
 			"labels": {
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -330,9 +378,9 @@ gives Google Cloud Support more debugging visibility.`,
 				Computed:     true,
 				Optional:     true,
 				ForceNew:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"DEDICATED", "PARTNER", "PARTNER_PROVIDER", ""}),
+				ValidateFunc: verify.ValidateEnum([]string{"DEDICATED", "PARTNER", "PARTNER_PROVIDER", "L2_DEDICATED", ""}),
 				Description: `The type of InterconnectAttachment you wish to create. Defaults to
-DEDICATED. Possible values: ["DEDICATED", "PARTNER", "PARTNER_PROVIDER"]`,
+DEDICATED. Possible values: ["DEDICATED", "PARTNER", "PARTNER_PROVIDER", "L2_DEDICATED"]`,
 			},
 			"vlan_tag8021q": {
 				Type:     schema.TypeInt,
@@ -462,6 +510,12 @@ func resourceComputeInterconnectAttachmentCreate(d *schema.ResourceData, meta in
 	}
 
 	obj := make(map[string]interface{})
+	l2ForwardingProp, err := expandComputeInterconnectAttachmentL2Forwarding(d.Get("l2_forwarding"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("l2_forwarding"); !tpgresource.IsEmptyValue(reflect.ValueOf(l2ForwardingProp)) && (ok || !reflect.DeepEqual(v, l2ForwardingProp)) {
+		obj["l2Forwarding"] = l2ForwardingProp
+	}
 	adminEnabledProp, err := expandComputeInterconnectAttachmentAdminEnabled(d.Get("admin_enabled"), d, config)
 	if err != nil {
 		return err
@@ -757,6 +811,9 @@ func resourceComputeInterconnectAttachmentRead(d *schema.ResourceData, meta inte
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
 
+	if err := d.Set("l2_forwarding", flattenComputeInterconnectAttachmentL2Forwarding(res["l2Forwarding"], d, config)); err != nil {
+		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
+	}
 	if err := d.Set("admin_enabled", flattenComputeInterconnectAttachmentAdminEnabled(res["adminEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InterconnectAttachment: %s", err)
 	}
@@ -879,6 +936,12 @@ func resourceComputeInterconnectAttachmentUpdate(d *schema.ResourceData, meta in
 	billingProject = project
 
 	obj := make(map[string]interface{})
+	l2ForwardingProp, err := expandComputeInterconnectAttachmentL2Forwarding(d.Get("l2_forwarding"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("l2_forwarding"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, l2ForwardingProp)) {
+		obj["l2Forwarding"] = l2ForwardingProp
+	}
 	adminEnabledProp, err := expandComputeInterconnectAttachmentAdminEnabled(d.Get("admin_enabled"), d, config)
 	if err != nil {
 		return err
@@ -1092,6 +1155,67 @@ func resourceComputeInterconnectAttachmentImport(d *schema.ResourceData, meta in
 	return []*schema.ResourceData{d}, nil
 }
 
+func flattenComputeInterconnectAttachmentL2Forwarding(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["network"] =
+		flattenComputeInterconnectAttachmentL2ForwardingNetwork(original["network"], d, config)
+	transformed["geneve_header"] =
+		flattenComputeInterconnectAttachmentL2ForwardingGeneveHeader(original["geneveHeader"], d, config)
+	transformed["default_appliance_ip_address"] =
+		flattenComputeInterconnectAttachmentL2ForwardingDefaultApplianceIpAddress(original["defaultApplianceIpAddress"], d, config)
+	transformed["tunnel_endpoint_ip_address"] =
+		flattenComputeInterconnectAttachmentL2ForwardingTunnelEndpointIpAddress(original["tunnelEndpointIpAddress"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeInterconnectAttachmentL2ForwardingNetwork(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeInterconnectAttachmentL2ForwardingGeneveHeader(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["vni"] =
+		flattenComputeInterconnectAttachmentL2ForwardingGeneveHeaderVni(original["vni"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeInterconnectAttachmentL2ForwardingGeneveHeaderVni(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenComputeInterconnectAttachmentL2ForwardingDefaultApplianceIpAddress(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeInterconnectAttachmentL2ForwardingTunnelEndpointIpAddress(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeInterconnectAttachmentAdminEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1300,6 +1424,87 @@ func flattenComputeInterconnectAttachmentRegion(v interface{}, d *schema.Resourc
 		return v
 	}
 	return tpgresource.ConvertSelfLinkToV1(v.(string))
+}
+
+func expandComputeInterconnectAttachmentL2Forwarding(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedNetwork, err := expandComputeInterconnectAttachmentL2ForwardingNetwork(original["network"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedNetwork); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["network"] = transformedNetwork
+	}
+
+	transformedGeneveHeader, err := expandComputeInterconnectAttachmentL2ForwardingGeneveHeader(original["geneve_header"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedGeneveHeader); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["geneveHeader"] = transformedGeneveHeader
+	}
+
+	transformedDefaultApplianceIpAddress, err := expandComputeInterconnectAttachmentL2ForwardingDefaultApplianceIpAddress(original["default_appliance_ip_address"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDefaultApplianceIpAddress); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["defaultApplianceIpAddress"] = transformedDefaultApplianceIpAddress
+	}
+
+	transformedTunnelEndpointIpAddress, err := expandComputeInterconnectAttachmentL2ForwardingTunnelEndpointIpAddress(original["tunnel_endpoint_ip_address"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTunnelEndpointIpAddress); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tunnelEndpointIpAddress"] = transformedTunnelEndpointIpAddress
+	}
+
+	return transformed, nil
+}
+
+func expandComputeInterconnectAttachmentL2ForwardingNetwork(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeInterconnectAttachmentL2ForwardingGeneveHeader(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedVni, err := expandComputeInterconnectAttachmentL2ForwardingGeneveHeaderVni(original["vni"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedVni); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["vni"] = transformedVni
+	}
+
+	return transformed, nil
+}
+
+func expandComputeInterconnectAttachmentL2ForwardingGeneveHeaderVni(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeInterconnectAttachmentL2ForwardingDefaultApplianceIpAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeInterconnectAttachmentL2ForwardingTunnelEndpointIpAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandComputeInterconnectAttachmentAdminEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

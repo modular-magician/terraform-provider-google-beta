@@ -26,6 +26,10 @@ fields:
     - api_field: googleReferenceId
     - api_field: interconnect
     - api_field: ipsecInternalAddresses
+    - api_field: l2Forwarding.defaultApplianceIpAddress
+    - api_field: l2Forwarding.geneveHeader.vni
+    - api_field: l2Forwarding.network
+    - api_field: l2Forwarding.tunnelEndpointIpAddress
     - api_field: labelFingerprint
     - api_field: labels
     - api_field: mtu

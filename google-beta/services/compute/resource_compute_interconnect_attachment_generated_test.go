@@ -101,6 +101,66 @@ resource "google_compute_network" "foobar" {
 `, context)
 }
 
+func TestAccComputeInterconnectAttachment_interconnectAttachmentL2Example(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeInterconnectAttachmentDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeInterconnectAttachment_interconnectAttachmentL2Example(context),
+			},
+			{
+				ResourceName:            "google_compute_interconnect_attachment.on_prem",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"candidate_subnets", "labels", "region", "router", "subnet_length", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccComputeInterconnectAttachment_interconnectAttachmentL2Example(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_interconnect_attachment" "on_prem" {
+  name                     = "tf-test-on-prem-attachment%{random_suffix}"
+  edge_availability_domain = "AVAILABILITY_DOMAIN_1"
+  type                     = "L2_DEDICATED"
+  router                   = google_compute_router.foobar.id
+  mtu                      = 1500
+  labels                   = { mykey = "myvalue" }
+
+  l2_forwarding {
+    network = google_compute_network.foobar.self_link
+    geneve_header {
+      vni = 1001
+    }
+    default_appliance_ip_address = "192.168.0.1"
+    tunnel_endpoint_ip_address   = "192.168.0.2"
+  }
+}
+
+resource "google_compute_router" "foobar" {
+  name    = "tf-test-router-1%{random_suffix}"
+  network = google_compute_network.foobar.name
+  bgp {
+    asn = 16550
+  }
+}
+
+resource "google_compute_network" "foobar" {
+  name                    = "tf-test-network-1%{random_suffix}"
+  auto_create_subnetworks = false
+}
+`, context)
+}
+
 func TestAccComputeInterconnectAttachment_interconnectAttachmentDedicatedExample(t *testing.T) {
 	t.Parallel()
 
