@@ -25,6 +25,7 @@ fields:
     - field: effective_labels
       provider_only: true
     - api_field: enableConfidentialCompute
+    - api_field: eraseWindowsVssSignature
     - api_field: guestOsFeatures.type
     - api_field: sourceImage
       field: image
@@ -52,6 +53,7 @@ fields:
       field: source_image_encryption_key.kms_key_self_link
     - api_field: sourceImageEncryptionKey.kmsKeyServiceAccount
     - api_field: sourceImageEncryptionKey.rawKey
+    - api_field: sourceImageEncryptionKey.rsaEncryptedKey
     - api_field: sourceImageEncryptionKey.sha256
     - api_field: sourceImageId
     - api_field: sourceInstantSnapshot
@@ -60,6 +62,7 @@ fields:
       field: source_snapshot_encryption_key.kms_key_self_link
     - api_field: sourceSnapshotEncryptionKey.kmsKeyServiceAccount
     - api_field: sourceSnapshotEncryptionKey.rawKey
+    - api_field: sourceSnapshotEncryptionKey.rsaEncryptedKey
     - api_field: sourceSnapshotEncryptionKey.sha256
     - api_field: sourceSnapshotId
     - api_field: sourceStorageObject
@@ -67,6 +70,7 @@ fields:
     - field: terraform_labels
       provider_only: true
     - api_field: type
+    - api_field: userLicenses
     - api_field: users
     - api_field: zone
     - api_field: selfLink

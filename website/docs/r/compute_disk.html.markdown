@@ -132,6 +132,164 @@ resource "google_compute_disk" "default" {
   physical_block_size_bytes = 4096
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=disk_user_licenses&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Disk User Licenses
+
+
+```hcl
+resource "google_compute_disk" "default" {
+  name  = "test-disk-user-licenses"
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+  size  = 10
+
+  user_licenses = [
+    "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-9-stretch"
+  ]
+
+  physical_block_size_bytes = 4096
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=disk_erase_windows_vss&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Disk Erase Windows Vss
+
+
+```hcl
+data "google_compute_image" "my_image" {
+  family  = "windows-2022"
+  project = "windows-cloud"
+}
+
+resource "google_compute_disk" "source" {
+  name  = "test-disk-vss-source"
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+  image = data.google_compute_image.my_image.self_link
+  physical_block_size_bytes = 4096
+}
+
+resource "google_compute_snapshot" "snapshot" {
+  name        = "test-snapshot-vss"
+  source_disk = google_compute_disk.source.id
+  zone        = "us-central1-a"
+}
+
+resource "google_compute_disk" "default" {
+  name     = "test-disk-vss"
+  type     = "pd-ssd"
+  zone     = "us-central1-a"
+  snapshot = google_compute_snapshot.snapshot.id
+
+  erase_windows_vss_signature = true
+
+  physical_block_size_bytes = 4096
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=disk_source_snapshot_encryption&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Disk Source Snapshot Encryption
+
+
+```hcl
+data "google_compute_image" "my_image" {
+  family  = "debian-11"
+  project = "debian-cloud"
+}
+
+resource "google_compute_disk" "source" {
+  name  = "test-disk-enc-source"
+  image = data.google_compute_image.my_image.self_link
+  size  = 10
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+
+  disk_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+
+resource "google_compute_snapshot" "encrypted_snapshot" {
+  name        = "test-encrypted-snapshot"
+  source_disk = google_compute_disk.source.self_link
+  zone        = "us-central1-a"
+  snapshot_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+  source_disk_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+
+resource "google_compute_disk" "default" {
+  name     = "test-disk-from-enc-snap"
+  type     = "pd-ssd"
+  zone     = "us-central1-a"
+  snapshot = google_compute_snapshot.encrypted_snapshot.self_link
+
+  source_snapshot_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=disk_source_image_encryption&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Disk Source Image Encryption
+
+
+```hcl
+data "google_compute_image" "my_image" {
+  family  = "debian-11"
+  project = "debian-cloud"
+}
+
+resource "google_compute_disk" "source" {
+  name  = "test-disk-img-source"
+  image = data.google_compute_image.my_image.self_link
+  size  = 10
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+
+  disk_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+
+resource "google_compute_image" "encrypted_image" {
+  name        = "test-encrypted-image"
+  source_disk = google_compute_disk.source.self_link
+  image_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+  source_disk_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+
+resource "google_compute_disk" "default" {
+  name  = "test-disk-from-enc-img"
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+  image = google_compute_image.encrypted_image.self_link
+
+  source_image_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+```
 
 ## Argument Reference
 
@@ -242,6 +400,11 @@ The following arguments are supported:
   * zones/{zone}/disks/{disk}
   * regions/{region}/disks/{disk}
 
+* `erase_windows_vss_signature` -
+  (Optional)
+  Specifies whether the disk restored from a source snapshot should erase
+  Windows specific VSS signature.
+
 * `type` -
   (Optional)
   URL of the disk type resource describing which disk type to use to
@@ -313,6 +476,13 @@ The following arguments are supported:
   (Optional)
   Any applicable license URI.
 
+* `user_licenses` -
+  (Optional)
+  A list of publicly visible user-licenses. Unlike regular licenses, user
+  provided licenses can be modified after the disk is created. This includes
+  a list of URLs to the license resource. For example, to provide a debian license:
+  https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-9-stretch
+
 * `storage_pool` -
   (Optional)
   The URL or the name of the storage pool in which the new disk is created.
@@ -363,6 +533,12 @@ The name of the snapshot by default will be `{{disk-name}}-YYYYMMDD-HHmm`
   (Optional)
   Specifies a 256-bit customer-supplied encryption key, encoded in
   RFC 4648 base64 to either encrypt or decrypt this resource.
+
+* `rsa_encrypted_key` -
+  (Optional)
+  Specifies an RFC 4648 base64 encoded, RSA-wrapped 2048-bit
+  customer-supplied encryption key to either encrypt or decrypt
+  this resource. You can provide either the rawKey or the rsaEncryptedKey.
 
 * `sha256` -
   (Output)
@@ -421,6 +597,12 @@ The name of the snapshot by default will be `{{disk-name}}-YYYYMMDD-HHmm`
   (Optional)
   Specifies a 256-bit customer-supplied encryption key, encoded in
   RFC 4648 base64 to either encrypt or decrypt this resource.
+
+* `rsa_encrypted_key` -
+  (Optional)
+  Specifies an RFC 4648 base64 encoded, RSA-wrapped 2048-bit
+  customer-supplied encryption key to either encrypt or decrypt
+  this resource. You can provide either the rawKey or the rsaEncryptedKey.
 
 * `kms_key_self_link` -
   (Optional)

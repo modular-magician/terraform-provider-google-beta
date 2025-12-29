@@ -193,6 +193,244 @@ resource "google_compute_disk" "default" {
 `, context)
 }
 
+func TestAccComputeDisk_diskUserLicensesExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeDiskDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeDisk_diskUserLicensesExample(context),
+			},
+			{
+				ResourceName:            "google_compute_disk.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"architecture", "interface", "labels", "params", "snapshot", "source_storage_object", "terraform_labels", "type", "zone"},
+			},
+		},
+	})
+}
+
+func testAccComputeDisk_diskUserLicensesExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_disk" "default" {
+  name  = "tf-test-test-disk-user-licenses%{random_suffix}"
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+  size  = 10
+
+  user_licenses = [
+    "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-9-stretch"
+  ]
+
+  physical_block_size_bytes = 4096
+}
+`, context)
+}
+
+func TestAccComputeDisk_diskEraseWindowsVssExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeDiskDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeDisk_diskEraseWindowsVssExample(context),
+			},
+			{
+				ResourceName:            "google_compute_disk.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"architecture", "interface", "labels", "params", "snapshot", "source_storage_object", "terraform_labels", "type", "zone"},
+			},
+		},
+	})
+}
+
+func testAccComputeDisk_diskEraseWindowsVssExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_compute_image" "my_image" {
+  family  = "windows-2022"
+  project = "windows-cloud"
+}
+
+resource "google_compute_disk" "source" {
+  name  = "tf-test-test-disk-vss-source%{random_suffix}"
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+  image = data.google_compute_image.my_image.self_link
+  physical_block_size_bytes = 4096
+}
+
+resource "google_compute_snapshot" "snapshot" {
+  name        = "tf-test-test-snapshot-vss%{random_suffix}"
+  source_disk = google_compute_disk.source.id
+  zone        = "us-central1-a"
+}
+
+resource "google_compute_disk" "default" {
+  name     = "tf-test-test-disk-vss%{random_suffix}"
+  type     = "pd-ssd"
+  zone     = "us-central1-a"
+  snapshot = google_compute_snapshot.snapshot.id
+
+  erase_windows_vss_signature = true
+
+  physical_block_size_bytes = 4096
+}
+`, context)
+}
+
+func TestAccComputeDisk_diskSourceSnapshotEncryptionExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeDiskDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeDisk_diskSourceSnapshotEncryptionExample(context),
+			},
+			{
+				ResourceName:            "google_compute_disk.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"architecture", "interface", "labels", "params", "snapshot", "source_storage_object", "terraform_labels", "type", "zone"},
+			},
+		},
+	})
+}
+
+func testAccComputeDisk_diskSourceSnapshotEncryptionExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_compute_image" "my_image" {
+  family  = "debian-11"
+  project = "debian-cloud"
+}
+
+resource "google_compute_disk" "source" {
+  name  = "tf-test-test-disk-enc-source%{random_suffix}"
+  image = data.google_compute_image.my_image.self_link
+  size  = 10
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+
+  disk_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+
+resource "google_compute_snapshot" "encrypted_snapshot" {
+  name        = "tf-test-test-encrypted-snapshot%{random_suffix}"
+  source_disk = google_compute_disk.source.self_link
+  zone        = "us-central1-a"
+  snapshot_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+  source_disk_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+
+resource "google_compute_disk" "default" {
+  name     = "tf-test-test-disk-from-enc-snap%{random_suffix}"
+  type     = "pd-ssd"
+  zone     = "us-central1-a"
+  snapshot = google_compute_snapshot.encrypted_snapshot.self_link
+
+  source_snapshot_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+`, context)
+}
+
+func TestAccComputeDisk_diskSourceImageEncryptionExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeDiskDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeDisk_diskSourceImageEncryptionExample(context),
+			},
+			{
+				ResourceName:            "google_compute_disk.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"architecture", "interface", "labels", "params", "snapshot", "source_storage_object", "terraform_labels", "type", "zone"},
+			},
+		},
+	})
+}
+
+func testAccComputeDisk_diskSourceImageEncryptionExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_compute_image" "my_image" {
+  family  = "debian-11"
+  project = "debian-cloud"
+}
+
+resource "google_compute_disk" "source" {
+  name  = "tf-test-test-disk-img-source%{random_suffix}"
+  image = data.google_compute_image.my_image.self_link
+  size  = 10
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+
+  disk_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+
+resource "google_compute_image" "encrypted_image" {
+  name        = "tf-test-test-encrypted-image%{random_suffix}"
+  source_disk = google_compute_disk.source.self_link
+  image_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+  source_disk_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+
+resource "google_compute_disk" "default" {
+  name  = "tf-test-test-disk-from-enc-img%{random_suffix}"
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+  image = google_compute_image.encrypted_image.self_link
+
+  source_image_encryption_key {
+    raw_key = "SGVsbG9Xb3JsZEhlbGxvV29ybGRIZWxsb1dvcmxkMTI="
+  }
+}
+`, context)
+}
+
 func testAccCheckComputeDiskDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
