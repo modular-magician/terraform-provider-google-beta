@@ -251,6 +251,11 @@ The following arguments are supported:
   the external IPv6 address reservation.
   Possible values are: `VM`, `NETLB`.
 
+* `ip_collection` -
+  (Optional)
+  Reference to the source of external IPv4 addresses, like a PublicDelegatedPrefix (PDP) for BYOIP.
+  The PDP must support enhanced IPv4 allocations.
+
 * `region` -
   (Optional)
   The Region in which the created address should reside.

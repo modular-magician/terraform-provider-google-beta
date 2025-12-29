@@ -69,7 +69,7 @@ func TestAccComputeAddress_addressBasicExample(t *testing.T) {
 				ResourceName:            "google_compute_address.ip_address",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "network", "region", "subnetwork", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"ip_collection", "labels", "network", "region", "subnetwork", "terraform_labels"},
 			},
 		},
 	})
@@ -102,7 +102,7 @@ func TestAccComputeAddress_addressWithSubnetworkExample(t *testing.T) {
 				ResourceName:            "google_compute_address.internal_with_subnet_and_address",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "network", "region", "subnetwork", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"ip_collection", "labels", "network", "region", "subnetwork", "terraform_labels"},
 			},
 		},
 	})
@@ -150,7 +150,7 @@ func TestAccComputeAddress_addressWithGceEndpointExample(t *testing.T) {
 				ResourceName:            "google_compute_address.internal_with_gce_endpoint",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "network", "region", "subnetwork", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"ip_collection", "labels", "network", "region", "subnetwork", "terraform_labels"},
 			},
 		},
 	})
@@ -185,7 +185,7 @@ func TestAccComputeAddress_addressWithSharedLoadbalancerVipExample(t *testing.T)
 				ResourceName:            "google_compute_address.internal_with_shared_loadbalancer_vip",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "network", "region", "subnetwork", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"ip_collection", "labels", "network", "region", "subnetwork", "terraform_labels"},
 			},
 		},
 	})
@@ -220,7 +220,7 @@ func TestAccComputeAddress_instanceWithIpExample(t *testing.T) {
 				ResourceName:            "google_compute_address.static",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "network", "region", "subnetwork", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"ip_collection", "labels", "network", "region", "subnetwork", "terraform_labels"},
 			},
 		},
 	})
@@ -277,7 +277,7 @@ func TestAccComputeAddress_computeAddressIpsecInterconnectExample(t *testing.T) 
 				ResourceName:            "google_compute_address.ipsec-interconnect-address",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "network", "region", "subnetwork", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"ip_collection", "labels", "network", "region", "subnetwork", "terraform_labels"},
 			},
 		},
 	})
