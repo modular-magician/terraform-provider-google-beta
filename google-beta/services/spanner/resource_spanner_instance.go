@@ -333,6 +333,14 @@ This number is on a scale from 0 (no utilization) to 100 (full utilization)..`,
 should be trying to achieve for the instance.
 This number is on a scale from 0 (no utilization) to 100 (full utilization).`,
 									},
+									"total_cpu_utilization_percent": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Description: `The target total cpu utilization percentage that the autoscaler should be trying to achieve for the instance.
+This number is on a scale from 0 (no utilization) to 100 (full utilization). The valid range is [10, 90] inclusive.
+If not specified or set to 0, the autoscaler will skip scaling based on total cpu utilization.
+The value should be higher than high_priority_cpu_utilization_percent if present.`,
+									},
 								},
 							},
 						},
@@ -1159,6 +1167,8 @@ func flattenSpannerInstanceAutoscalingConfigAutoscalingTargets(v interface{}, d 
 		flattenSpannerInstanceAutoscalingConfigAutoscalingTargetsHighPriorityCpuUtilizationPercent(original["highPriorityCpuUtilizationPercent"], d, config)
 	transformed["storage_utilization_percent"] =
 		flattenSpannerInstanceAutoscalingConfigAutoscalingTargetsStorageUtilizationPercent(original["storageUtilizationPercent"], d, config)
+	transformed["total_cpu_utilization_percent"] =
+		flattenSpannerInstanceAutoscalingConfigAutoscalingTargetsTotalCpuUtilizationPercent(original["totalCpuUtilizationPercent"], d, config)
 	return []interface{}{transformed}
 }
 func flattenSpannerInstanceAutoscalingConfigAutoscalingTargetsHighPriorityCpuUtilizationPercent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1179,6 +1189,23 @@ func flattenSpannerInstanceAutoscalingConfigAutoscalingTargetsHighPriorityCpuUti
 }
 
 func flattenSpannerInstanceAutoscalingConfigAutoscalingTargetsStorageUtilizationPercent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenSpannerInstanceAutoscalingConfigAutoscalingTargetsTotalCpuUtilizationPercent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
 		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
@@ -1475,6 +1502,13 @@ func expandSpannerInstanceAutoscalingConfigAutoscalingTargets(v interface{}, d t
 		transformed["storageUtilizationPercent"] = transformedStorageUtilizationPercent
 	}
 
+	transformedTotalCpuUtilizationPercent, err := expandSpannerInstanceAutoscalingConfigAutoscalingTargetsTotalCpuUtilizationPercent(original["total_cpu_utilization_percent"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTotalCpuUtilizationPercent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["totalCpuUtilizationPercent"] = transformedTotalCpuUtilizationPercent
+	}
+
 	return transformed, nil
 }
 
@@ -1483,6 +1517,10 @@ func expandSpannerInstanceAutoscalingConfigAutoscalingTargetsHighPriorityCpuUtil
 }
 
 func expandSpannerInstanceAutoscalingConfigAutoscalingTargetsStorageUtilizationPercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSpannerInstanceAutoscalingConfigAutoscalingTargetsTotalCpuUtilizationPercent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1707,6 +1745,9 @@ func resourceSpannerInstanceUpdateEncoder(d *schema.ResourceData, meta interface
 			}
 			if d.HasChange("autoscaling_config.0.autoscaling_targets.0.storage_utilization_percent") {
 				updateMask = append(updateMask, "autoscalingConfig.autoscalingTargets.storageUtilizationPercent")
+			}
+			if d.HasChange("autoscaling_config.0.autoscaling_targets.0.total_cpu_utilization_percent") {
+				updateMask = append(updateMask, "autoscalingConfig.autoscalingTargets.totalCpuUtilizationPercent")
 			}
 			if d.HasChange("autoscaling_config.0.asymmetric_autoscaling_options") {
 				updateMask = append(updateMask, "autoscalingConfig.asymmetricAutoscalingOptions")

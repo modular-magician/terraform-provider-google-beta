@@ -551,7 +551,7 @@ func flattenNestedDataCatalogTagFields(v interface{}, d *schema.ResourceData, co
 		original := raw.(map[string]interface{})
 		transformed = append(transformed, map[string]interface{}{
 			"field_name":      k,
-			"display_name":    flattenNestedDataCatalogTagFieldsDisplayName(original["display_name"], d, config),
+			"display_name":    flattenNestedDataCatalogTagFieldsDisplayName(original["displayName"], d, config),
 			"order":           flattenNestedDataCatalogTagFieldsOrder(original["order"], d, config),
 			"double_value":    flattenNestedDataCatalogTagFieldsDoubleValue(original["doubleValue"], d, config),
 			"string_value":    flattenNestedDataCatalogTagFieldsStringValue(original["stringValue"], d, config),
@@ -628,7 +628,7 @@ func expandNestedDataCatalogTagFields(v interface{}, d tpgresource.TerraformReso
 		if err != nil {
 			return nil, err
 		} else if val := reflect.ValueOf(transformedDisplayName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["display_name"] = transformedDisplayName
+			transformed["displayName"] = transformedDisplayName
 		}
 
 		transformedOrder, err := expandNestedDataCatalogTagFieldsOrder(original["order"], d, config)

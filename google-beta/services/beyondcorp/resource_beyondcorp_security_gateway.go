@@ -418,7 +418,7 @@ func resourceBeyondcorpSecurityGatewayCreate(d *schema.ResourceData, meta interf
 	serviceDiscoveryProp, err := expandBeyondcorpSecurityGatewayServiceDiscovery(d.Get("service_discovery"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("service_discovery"); !tpgresource.IsEmptyValue(reflect.ValueOf(serviceDiscoveryProp)) && (ok || !reflect.DeepEqual(v, serviceDiscoveryProp)) {
+	} else if v, ok := d.GetOkExists("service_discovery"); ok || !reflect.DeepEqual(v, serviceDiscoveryProp) {
 		obj["serviceDiscovery"] = serviceDiscoveryProp
 	}
 
@@ -656,7 +656,7 @@ func resourceBeyondcorpSecurityGatewayUpdate(d *schema.ResourceData, meta interf
 	serviceDiscoveryProp, err := expandBeyondcorpSecurityGatewayServiceDiscovery(d.Get("service_discovery"), d, config)
 	if err != nil {
 		return err
-	} else if v, ok := d.GetOkExists("service_discovery"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, serviceDiscoveryProp)) {
+	} else if v, ok := d.GetOkExists("service_discovery"); ok || !reflect.DeepEqual(v, serviceDiscoveryProp) {
 		obj["serviceDiscovery"] = serviceDiscoveryProp
 	}
 
@@ -979,9 +979,6 @@ func flattenBeyondcorpSecurityGatewayServiceDiscovery(v interface{}, d *schema.R
 		return nil
 	}
 	original := v.(map[string]interface{})
-	if len(original) == 0 {
-		return nil
-	}
 	transformed := make(map[string]interface{})
 	transformed["api_gateway"] =
 		flattenBeyondcorpSecurityGatewayServiceDiscoveryApiGateway(original["apiGateway"], d, config)
@@ -1275,8 +1272,13 @@ func expandBeyondcorpSecurityGatewayServiceDiscovery(v interface{}, d tpgresourc
 		return nil, nil
 	}
 	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
+	if len(l) == 0 {
 		return nil, nil
+	}
+
+	if l[0] == nil {
+		transformed := make(map[string]interface{})
+		return transformed, nil
 	}
 	raw := l[0]
 	original := raw.(map[string]interface{})
