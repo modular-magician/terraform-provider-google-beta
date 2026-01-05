@@ -107,7 +107,8 @@ func ResourceAccessContextManagerServicePerimeterResource() *schema.Resource {
 				Required:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
-				Description:      `The name of the Service Perimeter to add this resource to.`,
+				Description: `The name of the Service Perimeter to add this resource to.
+Format: accessPolicies/{accessPolicy}/servicePerimeters/{servicePerimeter}`,
 			},
 			"resource": {
 				Type:     schema.TypeString,
@@ -409,8 +410,17 @@ func resourceAccessContextManagerServicePerimeterResourceEncoder(d *schema.Resou
 
 	// The is logic is inside the encoder since the access_policy_id field is part of
 	// the mutex lock and encoders run before the lock is set.
-	parts := strings.Split(d.Get("perimeter_name").(string), "/")
-	d.Set("access_policy_id", fmt.Sprintf("accessPolicies/%s", parts[1]))
+
+	perimeterName := d.Get("perimeter_name").(string)
+
+	parts := strings.Split(perimeterName, "/")
+	if len(parts) < 2 {
+		return nil, fmt.Errorf("invalid perimeter_name format: %s. Expected format: accessPolicies/{accessPolicy}/servicePerimeters/{servicePerimeter}", perimeterName)
+	}
+
+	if err := d.Set("access_policy_id", fmt.Sprintf("accessPolicies/%s", parts[1])); err != nil {
+		return nil, fmt.Errorf("error setting access_policy_id: %s", err)
+	}
 
 	return obj, nil
 }

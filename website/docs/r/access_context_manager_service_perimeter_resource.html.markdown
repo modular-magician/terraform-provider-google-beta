@@ -86,6 +86,7 @@ The following arguments are supported:
 * `perimeter_name` -
   (Required)
   The name of the Service Perimeter to add this resource to.
+  Format: accessPolicies/{accessPolicy}/servicePerimeters/{servicePerimeter}
 
 
 
