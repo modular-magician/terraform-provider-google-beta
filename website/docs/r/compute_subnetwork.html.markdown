@@ -93,6 +93,8 @@ resource "google_compute_subnetwork" "subnet-with-logging" {
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
 
+  enable_flow_logs = true
+
   log_config {
     aggregation_interval = "INTERVAL_10_MIN"
     flow_sampling        = 0.5
@@ -431,6 +433,14 @@ The following arguments are supported:
 * `private_ipv6_google_access` -
   (Optional)
   The private IPv6 google access type for the VMs in this subnet.
+
+* `enable_flow_logs` -
+  (Optional)
+  Whether to enable flow logging for this subnetwork. If this field is not explicitly
+  set, it will not appear in get listings. If not set the default behavior is
+  determined by the org policy, if there is no org policy specified, then it will
+  default to disabled. This field isn't supported if the subnet purpose field is set
+  to REGIONAL_MANAGED_PROXY.
 
 * `region` -
   (Optional)
