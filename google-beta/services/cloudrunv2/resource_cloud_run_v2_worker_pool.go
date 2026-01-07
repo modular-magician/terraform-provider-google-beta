@@ -868,6 +868,7 @@ For example, if ALPHA is provided as input, but only BETA and GA-level features 
 						},
 						"scaling_mode": {
 							Type:         schema.TypeString,
+							Computed:     true,
 							Optional:     true,
 							ValidateFunc: verify.ValidateEnum([]string{"AUTOMATIC", "MANUAL", ""}),
 							Description:  `The scaling mode for the worker pool. It defaults to MANUAL. Possible values: ["AUTOMATIC", "MANUAL"]`,
