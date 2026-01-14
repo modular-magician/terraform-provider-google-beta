@@ -71,6 +71,12 @@ func TestAccHealthcarePipelineJob_healthcarePipelineJobReconciliationExample(t *
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"dataset", "labels", "location", "self_link", "terraform_labels"},
 			},
+			{
+				ResourceName:       "google_healthcare_pipeline_job.example-pipeline",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -153,6 +159,12 @@ func TestAccHealthcarePipelineJob_healthcarePipelineJobBackfillExample(t *testin
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"dataset", "labels", "location", "self_link", "terraform_labels"},
 			},
+			{
+				ResourceName:       "google_healthcare_pipeline_job.example-pipeline",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -195,6 +207,12 @@ func TestAccHealthcarePipelineJob_healthcarePipelineJobWhistleMappingExample(t *
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"dataset", "labels", "location", "self_link", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_healthcare_pipeline_job.example-mapping-pipeline",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -290,6 +308,12 @@ func TestAccHealthcarePipelineJob_healthcarePipelineJobMappingReconDestExample(t
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"dataset", "labels", "location", "self_link", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_healthcare_pipeline_job.example-mapping-pipeline",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

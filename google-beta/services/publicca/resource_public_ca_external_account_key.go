@@ -216,6 +216,8 @@ func resourcePublicCAExternalAccountKeyCreate(d *schema.ResourceData, meta inter
 func resourcePublicCAExternalAccountKeyRead(d *schema.ResourceData, meta interface{}) error {
 	// This resource could not be read from the API.
 	return nil
+
+	return nil
 }
 
 func resourcePublicCAExternalAccountKeyDelete(d *schema.ResourceData, meta interface{}) error {

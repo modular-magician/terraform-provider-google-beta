@@ -103,6 +103,17 @@ func ResourceComputeOrganizationSecurityPolicy() *schema.Resource {
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"policy_id": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"parent": {
 				Type:     schema.TypeString,
@@ -240,6 +251,17 @@ func resourceComputeOrganizationSecurityPolicyCreate(d *schema.ResourceData, met
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if policyIdValue, ok := d.GetOk("policy_id"); ok && policyIdValue.(string) != "" {
+			if err = identity.Set("policy_id", policyIdValue.(string)); err != nil {
+				return fmt.Errorf("Error setting policy_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	parent := d.Get("parent").(string)
 	var opRes map[string]interface{}
 	err = ComputeOrgOperationWaitTimeWithResponse(
@@ -323,6 +345,18 @@ func resourceComputeOrganizationSecurityPolicyRead(d *schema.ResourceData, meta 
 		return fmt.Errorf("Error reading OrganizationSecurityPolicy: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("policy_id"); !ok && v == "" {
+			err = identity.Set("policy_id", d.Get("policy_id").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting policy_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
+	}
+
 	return nil
 }
 
@@ -331,6 +365,17 @@ func resourceComputeOrganizationSecurityPolicyUpdate(d *schema.ResourceData, met
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if policyIdValue, ok := d.GetOk("policy_id"); ok && policyIdValue.(string) != "" {
+			if err = identity.Set("policy_id", policyIdValue.(string)); err != nil {
+				return fmt.Errorf("Error setting policy_id: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	billingProject := ""

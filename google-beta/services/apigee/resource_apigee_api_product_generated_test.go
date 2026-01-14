@@ -76,6 +76,12 @@ func TestAccApigeeApiProduct_apigeeApiProductBasicTestExample(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"org_id"},
 			},
+			{
+				ResourceName:       "google_apigee_api_product.apigee_api_product",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -196,6 +202,12 @@ func TestAccApigeeApiProduct_apigeeApiProductWithLegacyOperationTestExample(t *t
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"org_id"},
+			},
+			{
+				ResourceName:       "google_apigee_api_product.apigee_api_product",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -353,6 +365,12 @@ func TestAccApigeeApiProduct_apigeeApiProductWithAttributesTestExample(t *testin
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"org_id"},
+			},
+			{
+				ResourceName:       "google_apigee_api_product.apigee_api_product",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

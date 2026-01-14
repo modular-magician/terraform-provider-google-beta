@@ -71,6 +71,12 @@ func TestAccAlloydbCluster_alloydbClusterBasicExample(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"annotations", "cluster_id", "deletion_protection", "initial_user", "labels", "location", "restore_backup_source", "restore_continuous_backup_source", "terraform_labels"},
 			},
+			{
+				ResourceName:       "google_alloydb_cluster.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -116,6 +122,12 @@ func TestAccAlloydbCluster_alloydbClusterBeforeUpgradeExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"annotations", "cluster_id", "deletion_protection", "initial_user", "labels", "location", "restore_backup_source", "restore_continuous_backup_source", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_alloydb_cluster.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -177,6 +189,12 @@ func TestAccAlloydbCluster_alloydbClusterAfterUpgradeExample(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"annotations", "cluster_id", "deletion_protection", "initial_user", "labels", "location", "restore_backup_source", "restore_continuous_backup_source", "terraform_labels"},
 			},
+			{
+				ResourceName:       "google_alloydb_cluster.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -235,6 +253,12 @@ func TestAccAlloydbCluster_alloydbClusterFullExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"annotations", "cluster_id", "deletion_protection", "initial_user", "labels", "location", "restore_backup_source", "restore_continuous_backup_source", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_alloydb_cluster.full",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -321,6 +345,12 @@ func TestAccAlloydbCluster_alloydbSecondaryClusterBasicTestExample(t *testing.T)
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"annotations", "cluster_id", "deletion_protection", "initial_user", "labels", "location", "restore_backup_source", "restore_continuous_backup_source", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_alloydb_cluster.secondary",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

@@ -72,6 +72,12 @@ func TestAccDataplexEntry_dataplexEntryBasicExample(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"entry_group_id", "entry_id", "location"},
 			},
+			{
+				ResourceName:       "google_dataplex_entry.test_basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -121,6 +127,12 @@ func TestAccDataplexEntry_dataplexEntryFullExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"aspects", "entry_group_id", "entry_id", "location"},
+			},
+			{
+				ResourceName:       "google_dataplex_entry.test_entry_full",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -287,6 +299,12 @@ func TestAccDataplexEntry_dataplexEntryBigqueryTableExample(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"aspects", "entry_group_id", "entry_id", "location"},
 			},
+			{
+				ResourceName:       "google_dataplex_entry.tf_test_table",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -444,6 +462,12 @@ func TestAccDataplexEntry_dataplexEntryGlossaryTermExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"aspects", "entry_group_id", "entry_id", "location"},
+			},
+			{
+				ResourceName:       "google_dataplex_entry.tf_test_glossary_term",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

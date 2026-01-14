@@ -107,6 +107,25 @@ func ResourceBigtableLogicalView() *schema.Resource {
 			tpgresource.DefaultProviderProject,
 		),
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"logical_view_id": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+					"instance": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+					"project": {
+						Type:              schema.TypeString,
+						OptionalForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"logical_view_id": {
 				Type:        schema.TypeString,
@@ -209,6 +228,27 @@ func resourceBigtableLogicalViewCreate(d *schema.ResourceData, meta interface{})
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if logicalViewIdValue, ok := d.GetOk("logical_view_id"); ok && logicalViewIdValue.(string) != "" {
+			if err = identity.Set("logical_view_id", logicalViewIdValue.(string)); err != nil {
+				return fmt.Errorf("Error setting logical_view_id: %s", err)
+			}
+		}
+		if instanceValue, ok := d.GetOk("instance"); ok && instanceValue.(string) != "" {
+			if err = identity.Set("instance", instanceValue.(string)); err != nil {
+				return fmt.Errorf("Error setting instance: %s", err)
+			}
+		}
+		if projectValue, ok := d.GetOk("project"); ok && projectValue.(string) != "" {
+			if err = identity.Set("project", projectValue.(string)); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	log.Printf("[DEBUG] Finished creating LogicalView %q: %#v", d.Id(), res)
 
 	return resourceBigtableLogicalViewRead(d, meta)
@@ -266,6 +306,30 @@ func resourceBigtableLogicalViewRead(d *schema.ResourceData, meta interface{}) e
 		return fmt.Errorf("Error reading LogicalView: %s", err)
 	}
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("logical_view_id"); !ok && v == "" {
+			err = identity.Set("logical_view_id", d.Get("logical_view_id").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting logical_view_id: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("instance"); !ok && v == "" {
+			err = identity.Set("instance", d.Get("instance").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting instance: %s", err)
+			}
+		}
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
+			err = identity.Set("project", d.Get("project").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
+	}
+
 	return nil
 }
 
@@ -274,6 +338,27 @@ func resourceBigtableLogicalViewUpdate(d *schema.ResourceData, meta interface{})
 	userAgent, err := tpgresource.GenerateUserAgentString(d, config.UserAgent)
 	if err != nil {
 		return err
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if logicalViewIdValue, ok := d.GetOk("logical_view_id"); ok && logicalViewIdValue.(string) != "" {
+			if err = identity.Set("logical_view_id", logicalViewIdValue.(string)); err != nil {
+				return fmt.Errorf("Error setting logical_view_id: %s", err)
+			}
+		}
+		if instanceValue, ok := d.GetOk("instance"); ok && instanceValue.(string) != "" {
+			if err = identity.Set("instance", instanceValue.(string)); err != nil {
+				return fmt.Errorf("Error setting instance: %s", err)
+			}
+		}
+		if projectValue, ok := d.GetOk("project"); ok && projectValue.(string) != "" {
+			if err = identity.Set("project", projectValue.(string)); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Update) identity not set: %s", err)
 	}
 
 	billingProject := ""

@@ -107,6 +107,17 @@ func ResourceIapBrand() *schema.Resource {
 
 		DeprecationMessage: "This resource is deprecated on Jan 22, 2025. After Jan 19, 2026 the `google_iap_brand` Terraform resource will no longer function as intended due to the deprecation of the IAP OAuth Admin APIs. New projects will not be able to use these APIs. March 19, 2026 The IAP OAuth Admin APIs will be permanently shut down. Access to this feature will no longer be available.",
 
+		Identity: &schema.ResourceIdentity{
+			Version: 1,
+			SchemaFunc: func() map[string]*schema.Schema {
+				return map[string]*schema.Schema{
+					"project": {
+						Type:              schema.TypeString,
+						RequiredForImport: true,
+					},
+				}
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"application_title": {
 				Type:        schema.TypeString,
@@ -216,6 +227,17 @@ func resourceIapBrandCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 	d.SetId(id)
 
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if projectValue, ok := d.GetOk("project"); ok && projectValue.(string) != "" {
+			if err = identity.Set("project", projectValue.(string)); err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Create) identity not set: %s", err)
+	}
+
 	err = transport_tpg.PollingWaitTime(resourceIapBrandPollRead(d, meta), transport_tpg.PollCheckForExistence, "Creating Brand", d.Timeout(schema.TimeoutCreate), 5)
 	if err != nil {
 		return fmt.Errorf("Error waiting to create Brand: %s", err)
@@ -321,6 +343,18 @@ func resourceIapBrandRead(d *schema.ResourceData, meta interface{}) error {
 	}
 	if err := d.Set("name", flattenIapBrandName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Brand: %s", err)
+	}
+
+	identity, err := d.Identity()
+	if err == nil && identity != nil {
+		if v, ok := identity.GetOk("project"); !ok && v == "" {
+			err = identity.Set("project", d.Get("project").(string))
+			if err != nil {
+				return fmt.Errorf("Error setting project: %s", err)
+			}
+		}
+	} else {
+		log.Printf("[DEBUG] (Read) identity not set: %s", err)
 	}
 
 	return nil

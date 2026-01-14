@@ -71,6 +71,12 @@ func TestAccCESTool_cesToolClientFunctionBasicExample(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"app", "location", "tool_id"},
 			},
+			{
+				ResourceName:       "google_ces_tool.ces_tool_client_function_basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -207,6 +213,12 @@ func TestAccCESTool_cesToolDataStoreToolEngineSourceBasicExample(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"app", "location", "tool_id"},
 			},
+			{
+				ResourceName:       "google_ces_tool.ces_tool_data_store_tool_engine_source_basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -328,6 +340,12 @@ func TestAccCESTool_cesToolGoogleSearchToolBasicExample(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"app", "location", "tool_id"},
 			},
+			{
+				ResourceName:       "google_ces_tool.ces_tool_google_search_tool_basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -378,6 +396,12 @@ func TestAccCESTool_cesToolPythonFunctionBasicExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"app", "location", "tool_id"},
+			},
+			{
+				ResourceName:       "google_ces_tool.ces_tool_python_function_basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

@@ -74,6 +74,12 @@ func TestAccOracleDatabaseExascaleDbStorageVault_oracledatabaseExascaleDbStorage
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"deletion_protection", "exascale_db_storage_vault_id", "labels", "location", "terraform_labels"},
 			},
+			{
+				ResourceName:       "google_oracle_database_exascale_db_storage_vault.my_storage_vault",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -119,6 +125,12 @@ func TestAccOracleDatabaseExascaleDbStorageVault_oracledatabaseExascaleDbStorage
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"deletion_protection", "exascale_db_storage_vault_id", "labels", "location", "terraform_labels"},
+			},
+			{
+				ResourceName:       "google_oracle_database_exascale_db_storage_vault.my_storage_vault",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

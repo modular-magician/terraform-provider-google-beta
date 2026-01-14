@@ -76,6 +76,12 @@ func TestAccApigeeSecurityFeedback_apigeeSecurityFeedbackBasicTestExample(t *tes
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"feedback_id", "org_id"},
 			},
+			{
+				ResourceName:       "google_apigee_security_feedback.security_feedback",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }

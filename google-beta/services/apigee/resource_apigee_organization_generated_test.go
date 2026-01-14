@@ -76,6 +76,12 @@ func TestAccApigeeOrganization_apigeeOrganizationCloudBasicTestExample(t *testin
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"project_id", "properties", "retention"},
 			},
+			{
+				ResourceName:       "google_apigee_organization.org",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -183,6 +189,12 @@ func TestAccApigeeOrganization_apigeeOrganizationCloudBasicDisableVpcPeeringTest
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"project_id", "properties", "retention"},
 			},
+			{
+				ResourceName:       "google_apigee_organization.org",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -250,6 +262,12 @@ func TestAccApigeeOrganization_apigeeOrganizationCloudBasicDataResidencyTestExam
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"project_id", "properties", "retention"},
+			},
+			{
+				ResourceName:       "google_apigee_organization.org",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -322,6 +340,12 @@ func TestAccApigeeOrganization_apigeeOrganizationCloudFullTestExample(t *testing
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"project_id", "properties", "retention"},
+			},
+			{
+				ResourceName:       "google_apigee_organization.org",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -506,6 +530,12 @@ func TestAccApigeeOrganization_apigeeOrganizationCloudFullDisableVpcPeeringTestE
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"project_id", "properties", "retention"},
 			},
+			{
+				ResourceName:       "google_apigee_organization.org",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -651,6 +681,12 @@ func TestAccApigeeOrganization_apigeeOrganizationRetentionTestExample(t *testing
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"project_id", "retention"},
+			},
+			{
+				ResourceName:       "google_apigee_organization.org",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
@@ -824,6 +860,12 @@ func TestAccApigeeOrganization_apigeeOrganizationDrzTestExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"project_id", "retention"},
+			},
+			{
+				ResourceName:       "google_apigee_organization.org",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})

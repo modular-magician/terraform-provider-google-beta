@@ -72,6 +72,12 @@ func TestAccCloudSecurityComplianceCloudControl_cloudsecuritycomplianceCloudcont
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"cloud_control_id", "location", "organization"},
 			},
+			{
+				ResourceName:       "google_cloud_security_compliance_cloud_control.example",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }

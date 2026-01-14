@@ -71,6 +71,12 @@ func TestAccCESAgent_cesAgentBasicExample(t *testing.T) {
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"agent_id", "app", "location"},
 			},
+			{
+				ResourceName:       "google_ces_agent.ces_agent_basic",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
 		},
 	})
 }
@@ -276,6 +282,12 @@ func TestAccCESAgent_cesAgentRemoteDialogflowAgentExample(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"agent_id", "app", "location"},
+			},
+			{
+				ResourceName:       "google_ces_agent.ces_agent_remote_dialogflow_agent",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
 			},
 		},
 	})
