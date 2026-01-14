@@ -32,12 +32,7 @@ To get more information about ListingSubscription, see:
 
 ~> **Note:** When importing the resource with `terraform import`, provide the destination project and location
 in the format projects/{{destination_project}}/locations/{{destination_location}}/subscriptions/{{subscription_id}}
-<div class = "oics-button" style="float: right; margin: 0 0 -15px">
-  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=bigquery_analyticshub_listing_subscription_basic&open_in_editor=main.tf" target="_blank">
-    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
-  </a>
-</div>
-## Example Usage - Bigquery Analyticshub Listing Subscription Basic
+## Example Usage - Basic
 
 
 ```hcl
@@ -82,6 +77,50 @@ resource "google_bigquery_analytics_hub_listing_subscription" "subscription" {
       dataset_id = "destination_dataset"
       project_id = google_bigquery_dataset.subscription.project
     }
+  }
+}
+```
+## Example Usage - Subscription Multiregion
+
+
+```hcl
+resource "google_bigquery_analytics_hub_data_exchange" "subscription" {
+  location         = "us"
+  data_exchange_id = "my_data_exchange"
+  display_name     = "my_data_exchange"
+  description      = "example listing multiregion subscription"
+}
+
+resource "google_bigquery_analytics_hub_listing" "subscription" {
+  location         = "us"
+  data_exchange_id = google_bigquery_analytics_hub_data_exchange.subscription.data_exchange_id
+  listing_id       = "my_listing"
+  display_name     = "my_listing"
+  description      = "example listing multiregion subscription"
+
+  bigquery_dataset {
+    dataset = "projects/project_id/datasets/my_listing_example2"
+    replica_locations = ["eu"]
+  }
+}
+
+resource "google_bigquery_analytics_hub_listing_subscription" "subscription" {
+  location         = "US"
+  data_exchange_id = google_bigquery_analytics_hub_data_exchange.subscription.data_exchange_id
+  listing_id       = google_bigquery_analytics_hub_listing.subscription.listing_id
+
+  destination_dataset {
+    description   = "example listing multiregion subscription"
+    friendly_name = "My Destination Dataset"
+    labels = {
+      testing = "123"
+    }
+    location = "US"
+    dataset_reference {
+      dataset_id = "destination_dataset"
+      project_id = google_bigquery_analytics_hub_data_exchange.subscription.project
+    }
+    replica_locations = ["eu"]
   }
 }
 ```
@@ -138,6 +177,10 @@ The following arguments are supported:
   (Optional)
   The labels associated with this dataset. You can use these to
   organize and group your datasets.
+
+* `replica_locations` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  List of regions where the subscriber wants dataset replicas.
 
 
 <a name="nested_destination_dataset_dataset_reference"></a>The `dataset_reference` block supports:

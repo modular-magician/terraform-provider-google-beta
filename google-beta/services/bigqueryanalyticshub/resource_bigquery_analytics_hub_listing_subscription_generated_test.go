@@ -19,11 +19,8 @@ package bigqueryanalyticshub_test
 
 import (
 	"fmt"
-	"log"
-	"strconv"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
@@ -32,28 +29,13 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
-
-	"google.golang.org/api/googleapi"
-)
-
-var (
-	_ = fmt.Sprintf
-	_ = log.Print
-	_ = strconv.Atoi
-	_ = strings.Trim
-	_ = time.Now
-	_ = resource.TestMain
-	_ = terraform.NewState
-	_ = envvar.TestEnvVar
-	_ = tpgresource.SetLabels
-	_ = transport_tpg.Config{}
-	_ = googleapi.Error{}
 )
 
 func TestAccBigqueryAnalyticsHubListingSubscription_bigqueryAnalyticshubListingSubscriptionBasicExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
+		"project_name":  envvar.GetTestProjectFromEnv(),
 		"random_suffix": acctest.RandString(t, 10),
 	}
 
@@ -63,7 +45,7 @@ func TestAccBigqueryAnalyticsHubListingSubscription_bigqueryAnalyticshubListingS
 		CheckDestroy:             testAccCheckBigqueryAnalyticsHubListingSubscriptionDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBigqueryAnalyticsHubListingSubscription_bigqueryAnalyticshubListingSubscriptionBasicExample(context),
+				Config: testAccBigqueryAnalyticsHubListingSubscription_basicExample(context),
 			},
 			{
 				ResourceName:            "google_bigquery_analytics_hub_listing_subscription.subscription",
@@ -75,20 +57,20 @@ func TestAccBigqueryAnalyticsHubListingSubscription_bigqueryAnalyticshubListingS
 	})
 }
 
-func testAccBigqueryAnalyticsHubListingSubscription_bigqueryAnalyticshubListingSubscriptionBasicExample(context map[string]interface{}) string {
+func testAccBigqueryAnalyticsHubListingSubscription_basicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_bigquery_analytics_hub_data_exchange" "subscription" {
   location         = "US"
-  data_exchange_id = "tf_test_my_data_exchange%{random_suffix}"
-  display_name     = "tf_test_my_data_exchange%{random_suffix}"
+  data_exchange_id = "my_data_exchange"
+  display_name     = "my_data_exchange"
   description      = "Test Description"
 }
 
 resource "google_bigquery_analytics_hub_listing" "subscription" {
   location         = "US"
   data_exchange_id = google_bigquery_analytics_hub_data_exchange.subscription.data_exchange_id
-  listing_id       = "tf_test_my_listing%{random_suffix}"
-  display_name     = "tf_test_my_listing%{random_suffix}"
+  listing_id       = "my_listing"
+  display_name     = "my_listing"
   description      = "Test Description"
 
   bigquery_dataset {
@@ -97,8 +79,8 @@ resource "google_bigquery_analytics_hub_listing" "subscription" {
 }
 
 resource "google_bigquery_dataset" "subscription" {
-  dataset_id                  = "tf_test_my_listing%{random_suffix}"
-  friendly_name               = "tf_test_my_listing%{random_suffix}"
+  dataset_id                  = "my_listing"
+  friendly_name               = "my_listing"
   description                 = "Test Description"
   location                    = "US"
 }
@@ -115,7 +97,7 @@ resource "google_bigquery_analytics_hub_listing_subscription" "subscription" {
     }
     location = "US"
     dataset_reference {
-      dataset_id = "tf_test_destination_dataset%{random_suffix}"
+      dataset_id = "destination_dataset"
       project_id = google_bigquery_dataset.subscription.project
     }
   }
