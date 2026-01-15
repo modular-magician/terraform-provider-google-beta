@@ -37,7 +37,8 @@ fields:
     - api_field: runtimeConfig.autotuningConfig.scenarios
     - api_field: runtimeConfig.cohort
     - api_field: runtimeConfig.containerImage
-    - api_field: runtimeConfig.effective_properties
+    - api_field: runtimeConfig.properties
+      field: runtime_config.effective_properties
     - api_field: runtimeConfig.properties
     - api_field: runtimeConfig.version
     - api_field: runtimeInfo.approximateUsage.acceleratorType

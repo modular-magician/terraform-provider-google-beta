@@ -67,7 +67,7 @@ fields:
     - api_field: template.containers.args
     - api_field: template.containers.baseImageUri
     - api_field: template.containers.buildInfo.functionTarget
-    - api_field: template.containers.buildInfo.source_location
+    - api_field: template.containers.buildInfo.sourceLocation
     - api_field: template.containers.command
     - api_field: template.containers.dependsOn
     - api_field: template.containers.env.name

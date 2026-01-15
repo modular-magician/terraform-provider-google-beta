@@ -1231,7 +1231,7 @@ func flattenDataprocBatchRuntimeConfig(v interface{}, d *schema.ResourceData, co
 	transformed["properties"] =
 		flattenDataprocBatchRuntimeConfigProperties(original["properties"], d, config)
 	transformed["effective_properties"] =
-		flattenDataprocBatchRuntimeConfigEffectiveProperties(original["effective_properties"], d, config)
+		flattenDataprocBatchRuntimeConfigEffectiveProperties(original["properties"], d, config)
 	transformed["autotuning_config"] =
 		flattenDataprocBatchRuntimeConfigAutotuningConfig(original["autotuningConfig"], d, config)
 	transformed["cohort"] =
@@ -1645,7 +1645,7 @@ func expandDataprocBatchRuntimeConfig(v interface{}, d tpgresource.TerraformReso
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedEffectiveProperties); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["effective_properties"] = transformedEffectiveProperties
+		transformed["properties"] = transformedEffectiveProperties
 	}
 
 	transformedAutotuningConfig, err := expandDataprocBatchRuntimeConfigAutotuningConfig(original["autotuning_config"], d, config)

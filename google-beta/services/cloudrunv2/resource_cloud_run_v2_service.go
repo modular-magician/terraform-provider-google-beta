@@ -3070,7 +3070,7 @@ func flattenCloudRunV2ServiceTemplateContainersBuildInfo(v interface{}, d *schem
 	transformed["function_target"] =
 		flattenCloudRunV2ServiceTemplateContainersBuildInfoFunctionTarget(original["functionTarget"], d, config)
 	transformed["source_location"] =
-		flattenCloudRunV2ServiceTemplateContainersBuildInfoSourceLocation(original["source_location"], d, config)
+		flattenCloudRunV2ServiceTemplateContainersBuildInfoSourceLocation(original["sourceLocation"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCloudRunV2ServiceTemplateContainersBuildInfoFunctionTarget(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -5114,7 +5114,7 @@ func expandCloudRunV2ServiceTemplateContainersBuildInfo(v interface{}, d tpgreso
 	if err != nil {
 		return nil, err
 	} else if val := reflect.ValueOf(transformedSourceLocation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["source_location"] = transformedSourceLocation
+		transformed["sourceLocation"] = transformedSourceLocation
 	}
 
 	return transformed, nil
