@@ -93,6 +93,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/eventarc"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/filestore"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebase"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebaseailogic"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebaseappcheck"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebaseapphosting"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebasedatabase"
@@ -633,9 +634,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 768
+// Generated resources: 769
 // Generated IAM resources: 351
-// Total generated resources: 1119
+// Total generated resources: 1120
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     accessapproval.ResourceAccessApprovalFolderSettings(),
 	"google_organization_access_approval_settings":                               accessapproval.ResourceAccessApprovalOrganizationSettings(),
@@ -1224,6 +1225,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_firebase_apple_app":                                                  firebase.ResourceFirebaseAppleApp(),
 	"google_firebase_project":                                                    firebase.ResourceFirebaseProject(),
 	"google_firebase_web_app":                                                    firebase.ResourceFirebaseWebApp(),
+	"google_firebase_ai_logic_config":                                            firebaseailogic.ResourceFirebaseAILogicConfig(),
 	"google_firebase_app_check_app_attest_config":                                firebaseappcheck.ResourceFirebaseAppCheckAppAttestConfig(),
 	"google_firebase_app_check_debug_token":                                      firebaseappcheck.ResourceFirebaseAppCheckDebugToken(),
 	"google_firebase_app_check_device_check_config":                              firebaseappcheck.ResourceFirebaseAppCheckDeviceCheckConfig(),
@@ -2003,6 +2005,7 @@ func UseGeneratedProducts() {
 	var _ = eventarc.ProductName
 	var _ = filestore.ProductName
 	var _ = firebase.ProductName
+	var _ = firebaseailogic.ProductName
 	var _ = firebaseappcheck.ProductName
 	var _ = firebaseapphosting.ProductName
 	var _ = firebasedatabase.ProductName
