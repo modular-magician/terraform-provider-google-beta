@@ -5,6 +5,7 @@ api_service_name: compute.googleapis.com
 api_version: beta
 api_resource_type_kind: VpnTunnel
 fields:
+    - api_field: capacityTier
     - api_field: cipherSuite.phase1.dh
     - api_field: cipherSuite.phase1.encryption
     - api_field: cipherSuite.phase1.integrity

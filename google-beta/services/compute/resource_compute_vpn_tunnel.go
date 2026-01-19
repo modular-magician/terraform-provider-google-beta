@@ -224,6 +224,17 @@ must be a lowercase letter, and all following characters must
 be a dash, lowercase letter, or digit,
 except the last character, which cannot be a dash.`,
 			},
+			"capacity_tier": {
+				Type:         schema.TypeString,
+				Computed:     true,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"DEFAULT", "HIGH", ""}),
+				Description: `The capacity tier for this VPN tunnel.
+Possible values:
+  - 'DEFAULT': A VPN tunnel which can support up to 3 Gbps.
+  - 'HIGH': A VPN tunnel which can support up to 6 Gbps. Possible values: ["DEFAULT", "HIGH"]`,
+			},
 			"cipher_suite": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -626,6 +637,12 @@ func resourceComputeVpnTunnelCreate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("cipher_suite"); !tpgresource.IsEmptyValue(reflect.ValueOf(cipherSuiteProp)) && (ok || !reflect.DeepEqual(v, cipherSuiteProp)) {
 		obj["cipherSuite"] = cipherSuiteProp
 	}
+	capacityTierProp, err := expandComputeVpnTunnelCapacityTier(d.Get("capacity_tier"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("capacity_tier"); !tpgresource.IsEmptyValue(reflect.ValueOf(capacityTierProp)) && (ok || !reflect.DeepEqual(v, capacityTierProp)) {
+		obj["capacityTier"] = capacityTierProp
+	}
 	sharedSecretWoProp, err := expandComputeVpnTunnelSharedSecretWo(tpgresource.GetRawConfigAttributeAsString(d, "shared_secret_wo"), d, config)
 	if err != nil {
 		return err
@@ -866,6 +883,9 @@ func resourceComputeVpnTunnelRead(d *schema.ResourceData, meta interface{}) erro
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
 	if err := d.Set("cipher_suite", flattenComputeVpnTunnelCipherSuite(res["cipherSuite"], d, config)); err != nil {
+		return fmt.Errorf("Error reading VpnTunnel: %s", err)
+	}
+	if err := d.Set("capacity_tier", flattenComputeVpnTunnelCapacityTier(res["capacityTier"], d, config)); err != nil {
 		return fmt.Errorf("Error reading VpnTunnel: %s", err)
 	}
 	if err := d.Set("shared_secret_wo_version", flattenComputeVpnTunnelSharedSecretWoVersion(res["sharedSecretWoVersion"], d, config)); err != nil {
@@ -1264,6 +1284,10 @@ func flattenComputeVpnTunnelCipherSuitePhase2Pfs(v interface{}, d *schema.Resour
 	return v
 }
 
+func flattenComputeVpnTunnelCapacityTier(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeVpnTunnelSharedSecretWoVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return d.Get("shared_secret_wo_version")
 }
@@ -1518,6 +1542,10 @@ func expandComputeVpnTunnelCipherSuitePhase2Integrity(v interface{}, d tpgresour
 }
 
 func expandComputeVpnTunnelCipherSuitePhase2Pfs(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeVpnTunnelCapacityTier(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

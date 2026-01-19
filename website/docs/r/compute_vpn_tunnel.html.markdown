@@ -292,6 +292,14 @@ The following arguments are supported:
   User specified list of ciphers to use for the phase 1 and phase 2 of the IKE protocol.
   Structure is [documented below](#nested_cipher_suite).
 
+* `capacity_tier` -
+  (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
+  The capacity tier for this VPN tunnel.
+  Possible values:
+    - `DEFAULT`: A VPN tunnel which can support up to 3 Gbps.
+    - `HIGH`: A VPN tunnel which can support up to 6 Gbps.
+  Possible values are: `DEFAULT`, `HIGH`.
+
 * `shared_secret_wo` -
   (Optional, Write-Only)
   Shared secret used to set the secure session between the Cloud VPN
