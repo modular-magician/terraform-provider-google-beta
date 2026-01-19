@@ -1,0 +1,99 @@
+resource: google_document_ai_evaluation
+generation_type: mmv1
+source_file: products/documentai/Evaluation.yaml
+api_service_name: documentai.googleapis.com
+api_version: v1
+api_resource_type_kind: Evaluation
+fields:
+    - api_field: allEntitiesMetrics.auprc
+    - api_field: allEntitiesMetrics.auprcExact
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.confidenceLevel
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.metrics.f1Score
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.metrics.falseNegativesCount
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.metrics.falsePositivesCount
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.metrics.groundTruthCccurrencesCount
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.metrics.groundTruthDocumentCount
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.metrics.precision
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.metrics.predictedDocumentCount
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.metrics.predictedOccurrencesCount
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.metrics.recall
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.metrics.totalDocumentsCount
+    - api_field: allEntitiesMetrics.confidenceLevelMetrics.metrics.truePositivesCount
+    - api_field: allEntitiesMetrics.estimatedCalibrationError
+    - api_field: allEntitiesMetrics.estimatedCalibrationErrorExact
+    - api_field: allEntitiesMetrics.metricsType
+    - api_field: createTime
+    - api_field: documentCounters.evaluatedDocumentsCount
+    - api_field: documentCounters.failedDocumentsCount
+    - api_field: documentCounters.inputDocumentsCount
+    - api_field: documentCounters.invalidDocumentsCount
+    - api_field: entityMetrics.key
+      field: entity_metrics.entity
+    - api_field: entityMetrics.value.auprc
+      field: entity_metrics.auprc
+    - api_field: entityMetrics.value.auprcExact
+      field: entity_metrics.auprc_exact
+    - api_field: entityMetrics.value.confidenceLevelMetrics.confidenceLevel
+      field: entity_metrics.confidence_level_metrics.confidence_level
+    - api_field: entityMetrics.value.confidenceLevelMetrics.metrics.f1Score
+      field: entity_metrics.confidence_level_metrics.metrics.f1_score
+    - api_field: entityMetrics.value.confidenceLevelMetrics.metrics.falseNegativesCount
+      field: entity_metrics.confidence_level_metrics.metrics.false_negatives_count
+    - api_field: entityMetrics.value.confidenceLevelMetrics.metrics.falsePositivesCount
+      field: entity_metrics.confidence_level_metrics.metrics.false_positives_count
+    - api_field: entityMetrics.value.confidenceLevelMetrics.metrics.groundTruthCccurrencesCount
+      field: entity_metrics.confidence_level_metrics.metrics.ground_truth_cccurrences_count
+    - api_field: entityMetrics.value.confidenceLevelMetrics.metrics.groundTruthDocumentCount
+      field: entity_metrics.confidence_level_metrics.metrics.ground_truth_document_count
+    - api_field: entityMetrics.value.confidenceLevelMetrics.metrics.precision
+      field: entity_metrics.confidence_level_metrics.metrics.precision
+    - api_field: entityMetrics.value.confidenceLevelMetrics.metrics.predictedDocumentCount
+      field: entity_metrics.confidence_level_metrics.metrics.predicted_document_count
+    - api_field: entityMetrics.value.confidenceLevelMetrics.metrics.predictedOccurrencesCount
+      field: entity_metrics.confidence_level_metrics.metrics.predicted_occurrences_count
+    - api_field: entityMetrics.value.confidenceLevelMetrics.metrics.recall
+      field: entity_metrics.confidence_level_metrics.metrics.recall
+    - api_field: entityMetrics.value.confidenceLevelMetrics.metrics.totalDocumentsCount
+      field: entity_metrics.confidence_level_metrics.metrics.total_documents_count
+    - api_field: entityMetrics.value.confidenceLevelMetrics.metrics.truePositivesCount
+      field: entity_metrics.confidence_level_metrics.metrics.true_positives_count
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.confidenceLevel
+      field: entity_metrics.confidence_level_metrics_exact.confidence_level
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.metrics.f1Score
+      field: entity_metrics.confidence_level_metrics_exact.metrics.f1_score
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.metrics.falseNegativesCount
+      field: entity_metrics.confidence_level_metrics_exact.metrics.false_negatives_count
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.metrics.falsePositivesCount
+      field: entity_metrics.confidence_level_metrics_exact.metrics.false_positives_count
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.metrics.groundTruthCccurrencesCount
+      field: entity_metrics.confidence_level_metrics_exact.metrics.ground_truth_cccurrences_count
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.metrics.groundTruthDocumentCount
+      field: entity_metrics.confidence_level_metrics_exact.metrics.ground_truth_document_count
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.metrics.precision
+      field: entity_metrics.confidence_level_metrics_exact.metrics.precision
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.metrics.predictedDocumentCount
+      field: entity_metrics.confidence_level_metrics_exact.metrics.predicted_document_count
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.metrics.predictedOccurrencesCount
+      field: entity_metrics.confidence_level_metrics_exact.metrics.predicted_occurrences_count
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.metrics.recall
+      field: entity_metrics.confidence_level_metrics_exact.metrics.recall
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.metrics.totalDocumentsCount
+      field: entity_metrics.confidence_level_metrics_exact.metrics.total_documents_count
+    - api_field: entityMetrics.value.confidenceLevelMetricsExact.metrics.truePositivesCount
+      field: entity_metrics.confidence_level_metrics_exact.metrics.true_positives_count
+    - api_field: entityMetrics.value.estimatedCalibrationError
+      field: entity_metrics.estimated_calibration_error
+    - api_field: entityMetrics.value.estimatedCalibrationErrorExact
+      field: entity_metrics.estimated_calibration_error_exact
+    - api_field: entityMetrics.value.metricsType
+      field: entity_metrics.metrics_type
+    - api_field: kmsKeyName
+    - api_field: kmsKeyVersionName
+    - field: location
+      provider_only: true
+    - api_field: name
+    - field: processor
+      provider_only: true
+    - field: processor_version
+      provider_only: true
+    - api_field: schemaVersion
