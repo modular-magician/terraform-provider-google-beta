@@ -286,6 +286,12 @@ character, which cannot be a dash.`,
 				Optional:    true,
 				Description: `An optional description of this resource.`,
 			},
+			"enable_emergent_maintenance": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Indicates if this group of VMs have emergent maintenance enabled.`,
+			},
 			"name_prefix": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -297,6 +303,14 @@ character, which cannot be a dash.`,
 				Optional:     true,
 				ValidateFunc: verify.ValidateEnum([]string{"DRAFT", "SUBMITTED", ""}),
 				Description:  `Planning state before being submitted for evaluation Possible values: ["DRAFT", "SUBMITTED"]`,
+			},
+			"protection_tier": {
+				Type:         schema.TypeString,
+				Computed:     true,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"STANDARD", "CAPACITY_OPTIMIZED", ""}),
+				Description:  `Protection tier for the workload. Possible values: ["STANDARD", "CAPACITY_OPTIMIZED"]`,
 			},
 			"reservation_mode": {
 				Type:         schema.TypeString,
@@ -813,6 +827,12 @@ func resourceComputeFutureReservationCreate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("name_prefix"); !tpgresource.IsEmptyValue(reflect.ValueOf(namePrefixProp)) && (ok || !reflect.DeepEqual(v, namePrefixProp)) {
 		obj["namePrefix"] = namePrefixProp
 	}
+	protectionTierProp, err := expandComputeFutureReservationProtectionTier(d.Get("protection_tier"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("protection_tier"); !tpgresource.IsEmptyValue(reflect.ValueOf(protectionTierProp)) && (ok || !reflect.DeepEqual(v, protectionTierProp)) {
+		obj["protectionTier"] = protectionTierProp
+	}
 	planningStatusProp, err := expandComputeFutureReservationPlanningStatus(d.Get("planning_status"), d, config)
 	if err != nil {
 		return err
@@ -830,6 +850,12 @@ func resourceComputeFutureReservationCreate(d *schema.ResourceData, meta interfa
 		return err
 	} else if v, ok := d.GetOkExists("specific_reservation_required"); !tpgresource.IsEmptyValue(reflect.ValueOf(specificReservationRequiredProp)) && (ok || !reflect.DeepEqual(v, specificReservationRequiredProp)) {
 		obj["specificReservationRequired"] = specificReservationRequiredProp
+	}
+	enableEmergentMaintenanceProp, err := expandComputeFutureReservationEnableEmergentMaintenance(d.Get("enable_emergent_maintenance"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("enable_emergent_maintenance"); !tpgresource.IsEmptyValue(reflect.ValueOf(enableEmergentMaintenanceProp)) && (ok || !reflect.DeepEqual(v, enableEmergentMaintenanceProp)) {
+		obj["enableEmergentMaintenance"] = enableEmergentMaintenanceProp
 	}
 	reservationNameProp, err := expandComputeFutureReservationReservationName(d.Get("reservation_name"), d, config)
 	if err != nil {
@@ -1011,6 +1037,9 @@ func resourceComputeFutureReservationRead(d *schema.ResourceData, meta interface
 	if err := d.Set("name_prefix", flattenComputeFutureReservationNamePrefix(res["namePrefix"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FutureReservation: %s", err)
 	}
+	if err := d.Set("protection_tier", flattenComputeFutureReservationProtectionTier(res["protectionTier"], d, config)); err != nil {
+		return fmt.Errorf("Error reading FutureReservation: %s", err)
+	}
 	if err := d.Set("status", flattenComputeFutureReservationStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FutureReservation: %s", err)
 	}
@@ -1018,6 +1047,9 @@ func resourceComputeFutureReservationRead(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error reading FutureReservation: %s", err)
 	}
 	if err := d.Set("specific_reservation_required", flattenComputeFutureReservationSpecificReservationRequired(res["specificReservationRequired"], d, config)); err != nil {
+		return fmt.Errorf("Error reading FutureReservation: %s", err)
+	}
+	if err := d.Set("enable_emergent_maintenance", flattenComputeFutureReservationEnableEmergentMaintenance(res["enableEmergentMaintenance"], d, config)); err != nil {
 		return fmt.Errorf("Error reading FutureReservation: %s", err)
 	}
 	if err := d.Set("reservation_name", flattenComputeFutureReservationReservationName(res["reservationName"], d, config)); err != nil {
@@ -1479,6 +1511,10 @@ func flattenComputeFutureReservationNamePrefix(v interface{}, d *schema.Resource
 	return v
 }
 
+func flattenComputeFutureReservationProtectionTier(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeFutureReservationStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -1880,6 +1916,10 @@ func flattenComputeFutureReservationPlanningStatus(v interface{}, d *schema.Reso
 }
 
 func flattenComputeFutureReservationSpecificReservationRequired(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeFutureReservationEnableEmergentMaintenance(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2359,6 +2399,10 @@ func expandComputeFutureReservationNamePrefix(v interface{}, d tpgresource.Terra
 	return v, nil
 }
 
+func expandComputeFutureReservationProtectionTier(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandComputeFutureReservationPlanningStatus(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -2368,6 +2412,10 @@ func expandComputeFutureReservationAutoDeleteAutoCreatedReservations(v interface
 }
 
 func expandComputeFutureReservationSpecificReservationRequired(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeFutureReservationEnableEmergentMaintenance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

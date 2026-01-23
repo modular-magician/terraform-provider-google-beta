@@ -132,6 +132,11 @@ The following arguments are supported:
   (Optional)
   Name prefix for the reservations to be created at the time of delivery. The name prefix must comply with RFC1035. Maximum allowed length for name prefix is 20. Automatically created reservations name format will be -date-####.
 
+* `protection_tier` -
+  (Optional)
+  Protection tier for the workload.
+  Possible values are: `STANDARD`, `CAPACITY_OPTIMIZED`.
+
 * `planning_status` -
   (Optional)
   Planning state before being submitted for evaluation
@@ -144,6 +149,10 @@ The following arguments are supported:
 * `specific_reservation_required` -
   (Optional)
   Indicates whether the auto-created reservation can be consumed by VMs with affinity for "any" reservation. If the field is set, then only VMs that target the reservation by name can consume from the delivered reservation.
+
+* `enable_emergent_maintenance` -
+  (Optional)
+  Indicates if this group of VMs have emergent maintenance enabled.
 
 * `reservation_name` -
   (Optional)

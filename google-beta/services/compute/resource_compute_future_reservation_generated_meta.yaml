@@ -19,9 +19,11 @@ fields:
     - api_field: creationTimestamp
     - api_field: deploymentType
     - api_field: description
+    - api_field: enableEmergentMaintenance
     - api_field: name
     - api_field: namePrefix
     - api_field: planningStatus
+    - api_field: protectionTier
     - api_field: reservationMode
     - api_field: reservationName
     - api_field: schedulingType
