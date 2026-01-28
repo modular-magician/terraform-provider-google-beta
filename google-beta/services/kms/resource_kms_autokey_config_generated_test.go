@@ -50,7 +50,7 @@ var (
 	_ = googleapi.Error{}
 )
 
-func TestAccKMSAutokeyConfig_kmsAutokeyConfigAllExample(t *testing.T) {
+func TestAccKMSAutokeyConfig_kmsAutokeyConfigFolderExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
@@ -63,30 +63,29 @@ func TestAccKMSAutokeyConfig_kmsAutokeyConfigAllExample(t *testing.T) {
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
 		ExternalProviders: map[string]resource.ExternalProvider{
-			"random": {},
-			"time":   {},
+			"time": {},
 		},
 		CheckDestroy: testAccCheckKMSAutokeyConfigDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccKMSAutokeyConfig_kmsAutokeyConfigAllExample(context),
+				Config: testAccKMSAutokeyConfig_kmsAutokeyConfigFolderExample(context),
 			},
 			{
-				ResourceName:            "google_kms_autokey_config.example-autokeyconfig",
+				ResourceName:            "google_kms_autokey_config.example-autokeyconfig-folder",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"folder"},
+				ImportStateVerifyIgnore: []string{"folder", "project"},
 			},
 		},
 	})
 }
 
-func testAccKMSAutokeyConfig_kmsAutokeyConfigAllExample(context map[string]interface{}) string {
+func testAccKMSAutokeyConfig_kmsAutokeyConfigFolderExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 # Create Folder in GCP Organization
 resource "google_folder" "autokms_folder" {
   provider     = google-beta
-  display_name = "tf-test-folder-cfg%{random_suffix}"
+  display_name = "tf-test-my-folder%{random_suffix}"
   parent       = "organizations/%{org_id}"
   deletion_protection = false
 }
@@ -146,7 +145,7 @@ resource "time_sleep" "wait_srv_acc_permissions" {
   depends_on      = [google_project_iam_member.autokey_project_admin]
 }
 
-resource "google_kms_autokey_config" "example-autokeyconfig" {
+resource "google_kms_autokey_config" "example-autokeyconfig-folder" {
   provider    = google-beta
   folder      = google_folder.autokms_folder.id
   key_project = "projects/${google_project.key_project.project_id}"
@@ -157,7 +156,108 @@ resource "google_kms_autokey_config" "example-autokeyconfig" {
 # because setting the config takes a little to fully propagate.
 resource "time_sleep" "wait_autokey_propagation" {
   create_duration = "30s"
-  depends_on      = [google_kms_autokey_config.example-autokeyconfig]
+  depends_on      = [google_kms_autokey_config.example-autokeyconfig-folder]
+}
+
+`, context)
+}
+
+func TestAccKMSAutokeyConfig_kmsAutokeyConfigProjectExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
+		"org_id":          envvar.GetTestOrgFromEnv(t),
+		"random_suffix":   acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"time": {},
+		},
+		CheckDestroy: testAccCheckKMSAutokeyConfigDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccKMSAutokeyConfig_kmsAutokeyConfigProjectExample(context),
+			},
+			{
+				ResourceName:            "google_kms_autokey_config.example-autokeyconfig-project",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"folder", "project"},
+			},
+		},
+	})
+}
+
+func testAccKMSAutokeyConfig_kmsAutokeyConfigProjectExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_project" "test_project" {
+  provider        = google-beta
+  project_id      = "tf-test-my-test-proj%{random_suffix}"
+  name            = "tf-test-my-test-proj%{random_suffix}"
+  org_id          = "%{org_id}"
+  billing_account = "%{billing_account}"
+  deletion_policy = "DELETE"
+}
+
+# Enable the Cloud KMS API
+resource "google_project_service" "kms_api_service" {
+  provider                   = google-beta
+  service                    = "cloudkms.googleapis.com"
+  project                    = google_project.test_project.project_id
+  disable_dependent_services = true
+  depends_on                 = [google_project.test_project]
+}
+
+# Wait delay after enabling APIs
+resource "time_sleep" "wait_enable_service_api" {
+  depends_on       = [google_project_service.kms_api_service]
+  create_duration  = "30s"
+}
+
+#Create KMS Service Agent
+resource "google_project_service_identity" "kms_service_agent" {
+  provider   = google-beta
+  service    = "cloudkms.googleapis.com"
+  project    = google_project.test_project.number
+  depends_on = [time_sleep.wait_enable_service_api]
+}
+
+# Wait delay after creating service agent.
+resource "time_sleep" "wait_service_agent" {
+  depends_on       = [google_project_service_identity.kms_service_agent]
+  create_duration  = "10s"
+}
+
+#Grant the KMS Service Agent the Cloud KMS Admin role
+resource "google_project_iam_member" "autokey_project_admin" {
+  provider   = google-beta
+  project    = google_project.test_project.project_id
+  role       = "roles/cloudkms.admin"
+  member     = "serviceAccount:service-${google_project.test_project.number}@gcp-sa-cloudkms.iam.gserviceaccount.com"
+  depends_on = [time_sleep.wait_service_agent]
+}
+
+# Wait delay after granting IAM permissions
+resource "time_sleep" "wait_srv_acc_permissions" {
+  create_duration = "10s"
+  depends_on      = [google_project_iam_member.autokey_project_admin]
+}
+
+resource "google_kms_autokey_config" "example-autokeyconfig-project" {
+  provider    = google-beta
+  project     = google_project.test_project.name
+  depends_on  = [time_sleep.wait_srv_acc_permissions]
+}
+
+# Wait delay after setting AutokeyConfig, to prevent diffs on reapply,
+# because setting the config takes a little to fully propagate.
+resource "time_sleep" "wait_autokey_propagation" {
+  create_duration = "30s"
+  depends_on      = [google_kms_autokey_config.example-autokeyconfig-project]
 }
 `, context)
 }
