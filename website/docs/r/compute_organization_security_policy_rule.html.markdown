@@ -23,8 +23,6 @@ description: |-
 
 A rule for the OrganizationSecurityPolicy.
 
-~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](../guides/provider_versions.html.markdown) for more details on beta resources.
 
 To get more information about OrganizationSecurityPolicyRule, see:
 
