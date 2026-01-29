@@ -22,6 +22,7 @@ import (
 	sdk_schema "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
 	"github.com/hashicorp/terraform-plugin-framework/function"
@@ -37,6 +38,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/fwmodels"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/fwvalidators"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/apigee"
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/compute"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/firebase"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/secretmanager"
@@ -52,6 +54,7 @@ var (
 	_ provider.ProviderWithMetaSchema         = &FrameworkProvider{}
 	_ provider.ProviderWithFunctions          = &FrameworkProvider{}
 	_ provider.ProviderWithEphemeralResources = &FrameworkProvider{}
+	_ provider.ProviderWithActions            = &FrameworkProvider{}
 )
 
 // New is a helper function to simplify provider server and testing implementation.
@@ -1340,6 +1343,7 @@ func (p *FrameworkProvider) Configure(ctx context.Context, req provider.Configur
 	resp.DataSourceData = meta
 	resp.ResourceData = meta
 	resp.EphemeralResourceData = meta
+	resp.ActionData = meta
 }
 
 // DataSources defines the data sources implemented in the provider.
@@ -1383,4 +1387,13 @@ func (p *FrameworkProvider) EphemeralResources(_ context.Context) []func() ephem
 		resourcemanager.GoogleEphemeralServiceAccountKey,
 		secretmanager.GoogleEphemeralSecretManagerSecretVersion,
 	}
+}
+
+func (p *FrameworkProvider) Actions(_ context.Context) []func() action.Action {
+
+	return []func() action.Action{
+
+		compute.NewComputeInstancePowerAction,
+	}
+
 }
