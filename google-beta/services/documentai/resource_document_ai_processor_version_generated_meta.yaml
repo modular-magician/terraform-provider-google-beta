@@ -1,0 +1,68 @@
+resource: google_document_ai_processor_version
+generation_type: mmv1
+source_file: products/documentai/ProcessorVersion.yaml
+api_service_name: documentai.googleapis.com
+api_version: v1
+api_resource_type_kind: ProcessorVersion
+fields:
+    - api_field: createTime
+    - api_field: deprecationInfo.deprecationTime
+    - api_field: deprecationInfo.replacementProcessorVersion
+    - api_field: displayName
+    - api_field: documentSchema.description
+    - api_field: documentSchema.displayName
+    - api_field: documentSchema.documentPrompt
+    - api_field: documentSchema.entityTypes.baseTypes
+    - api_field: documentSchema.entityTypes.displayName
+    - api_field: documentSchema.entityTypes.enumValues.values
+    - api_field: documentSchema.entityTypes.name
+    - api_field: documentSchema.entityTypes.properties.displayName
+    - api_field: documentSchema.entityTypes.properties.method
+    - api_field: documentSchema.entityTypes.properties.name
+    - api_field: documentSchema.entityTypes.properties.occurrenceType
+    - api_field: documentSchema.entityTypes.properties.valueType
+    - api_field: documentSchema.metadata.documentAllowMultipleLabels
+    - api_field: documentSchema.metadata.documentSplitter
+    - api_field: documentSchema.metadata.prefixedNamingOnProperties
+    - api_field: documentSchema.metadata.skipNamingValidation
+    - api_field: genAiModelInfo.customGenAiModelInfo.baseProcessorVersionId
+    - api_field: genAiModelInfo.customGenAiModelInfo.customModelType
+    - api_field: genAiModelInfo.foundationGenAiModelInfo.finetuningAllowed
+    - api_field: genAiModelInfo.foundationGenAiModelInfo.minTrainLabeledDocuments
+    - api_field: googleManaged
+    - api_field: kmsKeyName
+    - api_field: kmsKeyVersionName
+    - api_field: latestEvaluation.aggregateMetrics.f1Score
+    - api_field: latestEvaluation.aggregateMetrics.falseNegativesCount
+    - api_field: latestEvaluation.aggregateMetrics.falsePositivesCount
+    - api_field: latestEvaluation.aggregateMetrics.groundTruthDocumentCount
+    - api_field: latestEvaluation.aggregateMetrics.groundTruthOccurrencesCount
+    - api_field: latestEvaluation.aggregateMetrics.precision
+    - api_field: latestEvaluation.aggregateMetrics.predictedDocumentCount
+    - api_field: latestEvaluation.aggregateMetrics.predictedOccurrencesCount
+    - api_field: latestEvaluation.aggregateMetrics.recall
+    - api_field: latestEvaluation.aggregateMetrics.totalDocumentsCount
+    - api_field: latestEvaluation.aggregateMetrics.truePositivesCount
+    - api_field: latestEvaluation.aggregateMetricsExact.f1Score
+    - api_field: latestEvaluation.aggregateMetricsExact.falseNegativesCount
+    - api_field: latestEvaluation.aggregateMetricsExact.falsePositivesCount
+    - api_field: latestEvaluation.aggregateMetricsExact.groundTruthDocumentCount
+    - api_field: latestEvaluation.aggregateMetricsExact.groundTruthOccurrencesCount
+    - api_field: latestEvaluation.aggregateMetricsExact.precision
+    - api_field: latestEvaluation.aggregateMetricsExact.predictedDocumentCount
+    - api_field: latestEvaluation.aggregateMetricsExact.predictedOccurrencesCount
+    - api_field: latestEvaluation.aggregateMetricsExact.recall
+    - api_field: latestEvaluation.aggregateMetricsExact.totalDocumentsCount
+    - api_field: latestEvaluation.aggregateMetricsExact.truePositivesCount
+    - api_field: latestEvaluation.evaluation
+    - api_field: latestEvaluation.operation
+    - field: location
+      provider_only: true
+    - api_field: modelType
+    - api_field: name
+    - field: processor
+      provider_only: true
+    - api_field: satisfiesPzi
+    - api_field: satisfiesPzs
+    - api_field: schemaVersion
+    - api_field: state
