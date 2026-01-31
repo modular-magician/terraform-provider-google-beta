@@ -43,6 +43,8 @@ resource "google_document_ai_processor" "processor" {
   location = "us"
   display_name = "test-processor"
   type = "OCR_PROCESSOR"
+  default_processor_version = "default_processor_version"
+  schema = "schema"
 }
 ```
 
@@ -68,6 +70,14 @@ The following arguments are supported:
   (Optional)
   The KMS key used for encryption/decryption in CMEK scenarios. See https://cloud.google.com/security-key-management.
 
+* `default_processor_version` -
+  (Optional)
+  The default processor version.
+
+* `schema` -
+  (Optional)
+  The Schema used by the Processor. All SchemaVersions must belong to this Schema to be bound to the Processor's dataset or ProcessorVersions. Format is `projects/{project}/locations/{location}/schemas/{schema}`
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
@@ -82,6 +92,41 @@ In addition to the arguments listed above, the following computed attributes are
 * `name` -
   The resource name of the processor.
 
+* `active_schema_version` -
+  SchemaVersion used by the Processor. It is the same as Processor's
+  DatasetSchema.schema_version
+  Format is
+  `projects/{project}/locations/{location}/schemas/{schema}/schemaVersions/{schema_version}
+
+* `create_time` -
+  The time the processor was created.
+
+* `process_endpoint` -
+  The http endpoint that can be called to invoke processing.
+
+* `processor_version_aliases` -
+  The processor version aliases.
+  Structure is [documented below](#nested_processor_version_aliases).
+
+* `satisfies_pzi` -
+  Reserved for future use.
+
+* `satisfies_pzs` -
+  Reserved for future use.
+
+* `state` -
+  The state of the processor.
+
+
+<a name="nested_processor_version_aliases"></a>The `processor_version_aliases` block contains:
+
+* `alias` -
+  (Output)
+  The alias in the form of `processor_version` resource name.
+
+* `processor_version` -
+  (Output)
+  The resource name of aliased processor version.
 
 ## Timeouts
 

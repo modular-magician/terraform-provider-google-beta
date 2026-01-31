@@ -134,16 +134,80 @@ func ResourceDocumentAIProcessor() *schema.Resource {
 				ForceNew:    true,
 				Description: `The type of processor. For possible types see the [official list](https://cloud.google.com/document-ai/docs/reference/rest/v1/projects.locations/fetchProcessorTypes#google.cloud.documentai.v1.DocumentProcessorService.FetchProcessorTypes)`,
 			},
+			"default_processor_version": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `The default processor version.`,
+			},
 			"kms_key_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
 				Description: `The KMS key used for encryption/decryption in CMEK scenarios. See https://cloud.google.com/security-key-management.`,
 			},
+			"schema": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `The Schema used by the Processor. All SchemaVersions must belong to this Schema to be bound to the Processor's dataset or ProcessorVersions. Format is 'projects/{project}/locations/{location}/schemas/{schema}'`,
+			},
+			"active_schema_version": {
+				Type:     schema.TypeString,
+				Computed: true,
+				Description: `SchemaVersion used by the Processor. It is the same as Processor's
+DatasetSchema.schema_version
+Format is
+'projects/{project}/locations/{location}/schemas/{schema}/schemaVersions/{schema_version}`,
+			},
+			"create_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The time the processor was created.`,
+			},
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `The resource name of the processor.`,
+			},
+			"process_endpoint": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The http endpoint that can be called to invoke processing.`,
+			},
+			"processor_version_aliases": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: `The processor version aliases.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"alias": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `The alias in the form of 'processor_version' resource name.`,
+						},
+						"processor_version": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: `The resource name of aliased processor version.`,
+						},
+					},
+				},
+			},
+			"satisfies_pzi": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: `Reserved for future use.`,
+			},
+			"satisfies_pzs": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: `Reserved for future use.`,
+			},
+			"state": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The state of the processor.`,
 			},
 			"project": {
 				Type:     schema.TypeString,
@@ -181,6 +245,18 @@ func resourceDocumentAIProcessorCreate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("kms_key_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(kmsKeyNameProp)) && (ok || !reflect.DeepEqual(v, kmsKeyNameProp)) {
 		obj["kmsKeyName"] = kmsKeyNameProp
+	}
+	defaultProcessorVersionProp, err := expandDocumentAIProcessorDefaultProcessorVersion(d.Get("default_processor_version"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("default_processor_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(defaultProcessorVersionProp)) && (ok || !reflect.DeepEqual(v, defaultProcessorVersionProp)) {
+		obj["defaultProcessorVersion"] = defaultProcessorVersionProp
+	}
+	schemaProp, err := expandDocumentAIProcessorSchema(d.Get("schema"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("schema"); !tpgresource.IsEmptyValue(reflect.ValueOf(schemaProp)) && (ok || !reflect.DeepEqual(v, schemaProp)) {
+		obj["schema"] = schemaProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{DocumentAIBasePath}}projects/{{project}}/locations/{{location}}/processors")
@@ -289,6 +365,33 @@ func resourceDocumentAIProcessorRead(d *schema.ResourceData, meta interface{}) e
 	if err := d.Set("kms_key_name", flattenDocumentAIProcessorKmsKeyName(res["kmsKeyName"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Processor: %s", err)
 	}
+	if err := d.Set("active_schema_version", flattenDocumentAIProcessorActiveSchemaVersion(res["activeSchemaVersion"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Processor: %s", err)
+	}
+	if err := d.Set("create_time", flattenDocumentAIProcessorCreateTime(res["createTime"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Processor: %s", err)
+	}
+	if err := d.Set("default_processor_version", flattenDocumentAIProcessorDefaultProcessorVersion(res["defaultProcessorVersion"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Processor: %s", err)
+	}
+	if err := d.Set("process_endpoint", flattenDocumentAIProcessorProcessEndpoint(res["processEndpoint"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Processor: %s", err)
+	}
+	if err := d.Set("processor_version_aliases", flattenDocumentAIProcessorProcessorVersionAliases(res["processorVersionAliases"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Processor: %s", err)
+	}
+	if err := d.Set("satisfies_pzi", flattenDocumentAIProcessorSatisfiesPzi(res["satisfiesPzi"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Processor: %s", err)
+	}
+	if err := d.Set("satisfies_pzs", flattenDocumentAIProcessorSatisfiesPzs(res["satisfiesPzs"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Processor: %s", err)
+	}
+	if err := d.Set("schema", flattenDocumentAIProcessorSchema(res["schema"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Processor: %s", err)
+	}
+	if err := d.Set("state", flattenDocumentAIProcessorState(res["state"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Processor: %s", err)
+	}
 
 	return nil
 }
@@ -380,6 +483,65 @@ func flattenDocumentAIProcessorKmsKeyName(v interface{}, d *schema.ResourceData,
 	return v
 }
 
+func flattenDocumentAIProcessorActiveSchemaVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDocumentAIProcessorCreateTime(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDocumentAIProcessorDefaultProcessorVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDocumentAIProcessorProcessEndpoint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDocumentAIProcessorProcessorVersionAliases(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"alias":             flattenDocumentAIProcessorProcessorVersionAliasesAlias(original["alias"], d, config),
+			"processor_version": flattenDocumentAIProcessorProcessorVersionAliasesProcessorVersion(original["processorVersion"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDocumentAIProcessorProcessorVersionAliasesAlias(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDocumentAIProcessorProcessorVersionAliasesProcessorVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDocumentAIProcessorSatisfiesPzi(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDocumentAIProcessorSatisfiesPzs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDocumentAIProcessorSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDocumentAIProcessorState(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandDocumentAIProcessorType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -389,6 +551,14 @@ func expandDocumentAIProcessorDisplayName(v interface{}, d tpgresource.Terraform
 }
 
 func expandDocumentAIProcessorKmsKeyName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDocumentAIProcessorDefaultProcessorVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDocumentAIProcessorSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
