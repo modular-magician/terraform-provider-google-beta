@@ -21,6 +21,7 @@ package iap
 
 import (
 	"fmt"
+	"net/http"
 	"regexp"
 	"strings"
 
@@ -207,6 +208,8 @@ func (u *IapWebRegionForwardingRuleServiceIamUpdater) GetResourceIamPolicy() (*c
 		return nil, err
 	}
 
+	headers := make(http.Header)
+
 	policy, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    u.Config,
 		Method:    "POST",
@@ -214,6 +217,7 @@ func (u *IapWebRegionForwardingRuleServiceIamUpdater) GetResourceIamPolicy() (*c
 		RawURL:    url,
 		UserAgent: userAgent,
 		Body:      obj,
+		Headers:   headers,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("Error retrieving IAM policy for %s: %w", u.DescribeResource(), err)
@@ -251,6 +255,8 @@ func (u *IapWebRegionForwardingRuleServiceIamUpdater) SetResourceIamPolicy(polic
 		return err
 	}
 
+	headers := make(http.Header)
+
 	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    u.Config,
 		Method:    "POST",
@@ -258,6 +264,7 @@ func (u *IapWebRegionForwardingRuleServiceIamUpdater) SetResourceIamPolicy(polic
 		RawURL:    url,
 		UserAgent: userAgent,
 		Body:      obj,
+		Headers:   headers,
 		Timeout:   u.d.Timeout(schema.TimeoutCreate),
 	})
 	if err != nil {

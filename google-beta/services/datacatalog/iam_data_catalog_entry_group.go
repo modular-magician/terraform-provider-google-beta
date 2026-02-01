@@ -21,6 +21,7 @@ package datacatalog
 
 import (
 	"fmt"
+	"net/http"
 	"regexp"
 	"strings"
 
@@ -202,6 +203,8 @@ func (u *DataCatalogEntryGroupIamUpdater) GetResourceIamPolicy() (*cloudresource
 		return nil, err
 	}
 
+	headers := make(http.Header)
+
 	policy, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    u.Config,
 		Method:    "POST",
@@ -209,6 +212,7 @@ func (u *DataCatalogEntryGroupIamUpdater) GetResourceIamPolicy() (*cloudresource
 		RawURL:    url,
 		UserAgent: userAgent,
 		Body:      obj,
+		Headers:   headers,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("Error retrieving IAM policy for %s: %w", u.DescribeResource(), err)
@@ -246,6 +250,8 @@ func (u *DataCatalogEntryGroupIamUpdater) SetResourceIamPolicy(policy *cloudreso
 		return err
 	}
 
+	headers := make(http.Header)
+
 	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    u.Config,
 		Method:    "POST",
@@ -253,6 +259,7 @@ func (u *DataCatalogEntryGroupIamUpdater) SetResourceIamPolicy(policy *cloudreso
 		RawURL:    url,
 		UserAgent: userAgent,
 		Body:      obj,
+		Headers:   headers,
 		Timeout:   u.d.Timeout(schema.TimeoutCreate),
 	})
 	if err != nil {

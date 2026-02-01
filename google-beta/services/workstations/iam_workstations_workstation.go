@@ -21,6 +21,7 @@ package workstations
 
 import (
 	"fmt"
+	"net/http"
 	"regexp"
 	"strings"
 
@@ -232,6 +233,8 @@ func (u *WorkstationsWorkstationIamUpdater) GetResourceIamPolicy() (*cloudresour
 		return nil, err
 	}
 
+	headers := make(http.Header)
+
 	policy, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    u.Config,
 		Method:    "GET",
@@ -239,6 +242,7 @@ func (u *WorkstationsWorkstationIamUpdater) GetResourceIamPolicy() (*cloudresour
 		RawURL:    url,
 		UserAgent: userAgent,
 		Body:      obj,
+		Headers:   headers,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("Error retrieving IAM policy for %s: %w", u.DescribeResource(), err)
@@ -276,6 +280,8 @@ func (u *WorkstationsWorkstationIamUpdater) SetResourceIamPolicy(policy *cloudre
 		return err
 	}
 
+	headers := make(http.Header)
+
 	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    u.Config,
 		Method:    "POST",
@@ -283,6 +289,7 @@ func (u *WorkstationsWorkstationIamUpdater) SetResourceIamPolicy(policy *cloudre
 		RawURL:    url,
 		UserAgent: userAgent,
 		Body:      obj,
+		Headers:   headers,
 		Timeout:   u.d.Timeout(schema.TimeoutCreate),
 	})
 	if err != nil {

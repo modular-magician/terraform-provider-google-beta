@@ -21,6 +21,7 @@ package cloudrun
 
 import (
 	"fmt"
+	"net/http"
 	"regexp"
 	"strings"
 
@@ -202,6 +203,8 @@ func (u *CloudRunServiceIamUpdater) GetResourceIamPolicy() (*cloudresourcemanage
 		return nil, err
 	}
 
+	headers := make(http.Header)
+
 	policy, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:               u.Config,
 		Method:               "GET",
@@ -209,6 +212,7 @@ func (u *CloudRunServiceIamUpdater) GetResourceIamPolicy() (*cloudresourcemanage
 		RawURL:               url,
 		UserAgent:            userAgent,
 		Body:                 obj,
+		Headers:              headers,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsCloudRunCreationConflict},
 	})
 	if err != nil {
@@ -247,6 +251,8 @@ func (u *CloudRunServiceIamUpdater) SetResourceIamPolicy(policy *cloudresourcema
 		return err
 	}
 
+	headers := make(http.Header)
+
 	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:               u.Config,
 		Method:               "POST",
@@ -254,6 +260,7 @@ func (u *CloudRunServiceIamUpdater) SetResourceIamPolicy(policy *cloudresourcema
 		RawURL:               url,
 		UserAgent:            userAgent,
 		Body:                 obj,
+		Headers:              headers,
 		Timeout:              u.d.Timeout(schema.TimeoutCreate),
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsCloudRunCreationConflict},
 	})
