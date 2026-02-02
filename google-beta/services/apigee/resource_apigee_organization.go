@@ -259,6 +259,19 @@ Valid only when 'RuntimeType' is CLOUD. A base64-encoded string.`,
 				Description: `Output only. Subscription type of the Apigee organization.
 Valid values include trial (free, limited, and for evaluation purposes only) or paid (full subscription has been purchased).`,
 			},
+
+			"deletion_policy": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `Whether Terraform will be prevented from destroying the instance. Defaults to "DELETE".
+When a 'terraform destroy' or 'terraform apply' would delete the instance,
+the command will fail if this field is set to "PREVENT" in Terraform state.
+When set to "ABANDON", the command will remove the resource from Terraform
+management without updating or deleting the resource in the API.
+When set to "DELETE", deleting the resource is allowed.
+`,
+				Default: "DELETE",
+			},
 		},
 		UseJSONNumber: true,
 	}
@@ -641,6 +654,13 @@ func resourceApigeeOrganizationDelete(d *schema.ResourceData, meta interface{}) 
 	}
 
 	headers := make(http.Header)
+	if d.Get("deletion_policy").(string) == "PREVENT" {
+		return fmt.Errorf("cannot destroy ApigeeOrganization without setting deletion_policy=\"DELETE\" and running `terraform apply`")
+	}
+	if d.Get("deletion_policy").(string) == "ABANDON" {
+		log.Printf("[DEBUG] deletion_policy set to \"ABANDON\", removing Organization %q from Terraform state without deletion", d.Id())
+		return nil
+	}
 
 	log.Printf("[DEBUG] Deleting Organization %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
