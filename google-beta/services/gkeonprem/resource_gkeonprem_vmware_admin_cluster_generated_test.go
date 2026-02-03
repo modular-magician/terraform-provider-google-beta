@@ -68,7 +68,7 @@ func TestAccGkeonpremVmwareAdminCluster_gkeonpremVmwareAdminClusterBasicExample(
 				ResourceName:            "google_gkeonprem_vmware_admin_cluster.admin-cluster-basic",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"annotations", "location", "name", "platform_config.0.required_platform_version"},
+				ImportStateVerifyIgnore: []string{"annotations", "location", "name", "platform_config.0.required_platform_version", "skip_validations"},
 			},
 		},
 	})
@@ -78,6 +78,7 @@ func testAccGkeonpremVmwareAdminCluster_gkeonpremVmwareAdminClusterBasicExample(
 	return acctest.Nprintf(`
 resource "google_gkeonprem_vmware_admin_cluster" "admin-cluster-basic" {
   name = "basic%{random_suffix}"
+  skip_validations = ["WORKSTATION", "CONFIG", "DOCKER"]
   location = "us-west1"
   description = "test admin cluster"
   bootstrap_cluster_membership = "projects/870316890899/locations/global/memberships/gkeonprem-terraform-test"
@@ -141,7 +142,7 @@ func TestAccGkeonpremVmwareAdminCluster_gkeonpremVmwareAdminClusterFullExample(t
 				ResourceName:            "google_gkeonprem_vmware_admin_cluster.admin-cluster-full",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"annotations", "location", "name", "platform_config.0.required_platform_version"},
+				ImportStateVerifyIgnore: []string{"annotations", "location", "name", "platform_config.0.required_platform_version", "skip_validations"},
 			},
 		},
 	})
@@ -151,6 +152,7 @@ func testAccGkeonpremVmwareAdminCluster_gkeonpremVmwareAdminClusterFullExample(c
 	return acctest.Nprintf(`
 resource "google_gkeonprem_vmware_admin_cluster" "admin-cluster-full" {
   name = "full%{random_suffix}"
+  skip_validations = ["WORKSTATION", "CONFIG", "DOCKER"]
   location = "us-west1"
   description = "test admin cluster"
   bootstrap_cluster_membership = "projects/870316890899/locations/global/memberships/gkeonprem-terraform-test"
@@ -265,7 +267,7 @@ func TestAccGkeonpremVmwareAdminCluster_gkeonpremVmwareAdminClusterMetallbExampl
 				ResourceName:            "google_gkeonprem_vmware_admin_cluster.admin-cluster-metallb",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"annotations", "location", "name", "platform_config.0.required_platform_version"},
+				ImportStateVerifyIgnore: []string{"annotations", "location", "name", "platform_config.0.required_platform_version", "skip_validations"},
 			},
 		},
 	})
@@ -275,6 +277,7 @@ func testAccGkeonpremVmwareAdminCluster_gkeonpremVmwareAdminClusterMetallbExampl
 	return acctest.Nprintf(`
 resource "google_gkeonprem_vmware_admin_cluster" "admin-cluster-metallb" {
   name = "metallb%{random_suffix}"
+  skip_validations = ["WORKSTATION", "CONFIG", "DOCKER"]
   location = "us-west1"
   description = "test admin cluster"
   bootstrap_cluster_membership = "projects/870316890899/locations/global/memberships/gkeonprem-terraform-test"

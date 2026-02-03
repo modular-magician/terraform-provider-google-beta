@@ -34,6 +34,7 @@ To get more information about VmwareAdminCluster, see:
 ```hcl
 resource "google_gkeonprem_vmware_admin_cluster" "admin-cluster-basic" {
   name = "basic"
+  skip_validations = ["WORKSTATION", "CONFIG", "DOCKER"]
   location = "us-west1"
   description = "test admin cluster"
   bootstrap_cluster_membership = "projects/870316890899/locations/global/memberships/gkeonprem-terraform-test"
@@ -83,6 +84,7 @@ resource "google_gkeonprem_vmware_admin_cluster" "admin-cluster-basic" {
 ```hcl
 resource "google_gkeonprem_vmware_admin_cluster" "admin-cluster-full" {
   name = "full"
+  skip_validations = ["WORKSTATION", "CONFIG", "DOCKER"]
   location = "us-west1"
   description = "test admin cluster"
   bootstrap_cluster_membership = "projects/870316890899/locations/global/memberships/gkeonprem-terraform-test"
@@ -183,6 +185,7 @@ resource "google_gkeonprem_vmware_admin_cluster" "admin-cluster-full" {
 ```hcl
 resource "google_gkeonprem_vmware_admin_cluster" "admin-cluster-metallb" {
   name = "metallb"
+  skip_validations = ["WORKSTATION", "CONFIG", "DOCKER"]
   location = "us-west1"
   description = "test admin cluster"
   bootstrap_cluster_membership = "projects/870316890899/locations/global/memberships/gkeonprem-terraform-test"
@@ -314,6 +317,11 @@ The following arguments are supported:
   (Optional)
   The VMware admin cluster authorization configuration.
   Structure is [documented below](#nested_authorization).
+
+* `skip_validations` -
+  (Optional)
+  A list of validations to skip during preflight checks.
+  Each value may be one of: `VALIDATION_SKIP_UNSPECIFIED`, `ALL`, `WORKSTATION`, `CONFIG`, `DOCKER`, `INFRA`, `LOAD_BALANCER`, `VIPS`, `NODE_IPS`, `DNS`, `TOD`, `NET_CONFIG`, `STORAGE_DRIVER`, `PROXY`, `INTERNET`, `GCP`, `GKEHUB`, `RESERVED_IPS`, `STACKDRIVER`, `NODEPOOL_AUTOSCALING`, `OS_IMAGES`, `CLUSTER_VERSION`, `CLUSTER_HEALTH`, `WINDOWS`, `HSM_SECRET_ENCRYPTION`, `BACKUP_ADMIN`, `CONNECTIVITY`, `CLUSTER_SECRETS_CONFIG`, `CSI_WORKLOAD`, `VSPHERE_VERSION`, `MIGRATION`.
 
 * `platform_config` -
   (Optional)

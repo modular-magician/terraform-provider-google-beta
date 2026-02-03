@@ -785,6 +785,15 @@ host names, and domain names that should not go through the proxy server.`,
 					},
 				},
 			},
+			"skip_validations": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `A list of validations to skip during preflight checks. Possible values: ["VALIDATION_SKIP_UNSPECIFIED", "ALL", "WORKSTATION", "CONFIG", "DOCKER", "INFRA", "LOAD_BALANCER", "VIPS", "NODE_IPS", "DNS", "TOD", "NET_CONFIG", "STORAGE_DRIVER", "PROXY", "INTERNET", "GCP", "GKEHUB", "RESERVED_IPS", "STACKDRIVER", "NODEPOOL_AUTOSCALING", "OS_IMAGES", "CLUSTER_VERSION", "CLUSTER_HEALTH", "WINDOWS", "HSM_SECRET_ENCRYPTION", "BACKUP_ADMIN", "CONNECTIVITY", "CLUSTER_SECRETS_CONFIG", "CSI_WORKLOAD", "VSPHERE_VERSION", "MIGRATION"]`,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: verify.ValidateEnum([]string{"VALIDATION_SKIP_UNSPECIFIED", "ALL", "WORKSTATION", "CONFIG", "DOCKER", "INFRA", "LOAD_BALANCER", "VIPS", "NODE_IPS", "DNS", "TOD", "NET_CONFIG", "STORAGE_DRIVER", "PROXY", "INTERNET", "GCP", "GKEHUB", "RESERVED_IPS", "STACKDRIVER", "NODEPOOL_AUTOSCALING", "OS_IMAGES", "CLUSTER_VERSION", "CLUSTER_HEALTH", "WINDOWS", "HSM_SECRET_ENCRYPTION", "BACKUP_ADMIN", "CONNECTIVITY", "CLUSTER_SECRETS_CONFIG", "CSI_WORKLOAD", "VSPHERE_VERSION", "MIGRATION"}),
+				},
+			},
 			"vcenter": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -1090,7 +1099,7 @@ func resourceGkeonpremVmwareAdminClusterCreate(d *schema.ResourceData, meta inte
 		obj["annotations"] = effectiveAnnotationsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareAdminClusters?vmware_admin_cluster_id={{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareAdminClusters?vmware_admin_cluster_id={{name}}&skipValidations={{skip_validations}}")
 	if err != nil {
 		return err
 	}
@@ -1394,7 +1403,7 @@ func resourceGkeonpremVmwareAdminClusterUpdate(d *schema.ResourceData, meta inte
 		obj["annotations"] = effectiveAnnotationsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareAdminClusters/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{GkeonpremBasePath}}projects/{{project}}/locations/{{location}}/vmwareAdminClusters/{{name}}?skipValidations={{skip_validations}}")
 	if err != nil {
 		return err
 	}
