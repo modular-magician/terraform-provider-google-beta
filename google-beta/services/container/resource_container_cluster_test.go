@@ -16082,7 +16082,7 @@ func TestAccContainerCluster_additional_ip_ranges_config_on_create(t *testing.T)
 		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri),
+				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri, false),
 			},
 			{
 				ResourceName:            "google_container_cluster.primary",
@@ -16108,7 +16108,7 @@ func TestAccContainerCluster_additional_ip_ranges_config_on_update(t *testing.T)
 		CheckDestroy:             testAccCheckContainerClusterDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri),
+				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri, false),
 			},
 			{
 				ResourceName:            "google_container_cluster.primary",
@@ -16118,7 +16118,7 @@ func TestAccContainerCluster_additional_ip_ranges_config_on_update(t *testing.T)
 				Check:                   resource.TestCheckResourceAttrSet("google_container_cluster.primary", "node_pool.0.network_config.subnetwork"),
 			},
 			{
-				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri[:len(sri)-1]),
+				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri[:len(sri)-1], false),
 			},
 			{
 				ResourceName:            "google_container_cluster.primary",
@@ -16127,7 +16127,7 @@ func TestAccContainerCluster_additional_ip_ranges_config_on_update(t *testing.T)
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
-				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri[:1]),
+				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri[:1], false),
 			},
 			{
 				ResourceName:            "google_container_cluster.primary",
@@ -16136,7 +16136,7 @@ func TestAccContainerCluster_additional_ip_ranges_config_on_update(t *testing.T)
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
-				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri),
+				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri, false),
 			},
 			{
 				ResourceName:            "google_container_cluster.primary",
@@ -16145,7 +16145,25 @@ func TestAccContainerCluster_additional_ip_ranges_config_on_update(t *testing.T)
 				ImportStateVerifyIgnore: []string{"deletion_protection"},
 			},
 			{
-				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri[:1]),
+				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri[:1], false),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+			{
+				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri[:1], true),
+			},
+			{
+				ResourceName:            "google_container_cluster.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection"},
+			},
+			{
+				Config: testAccContainerCluster_additional_ip_ranges_config(clusterName, network, sri[:1], false),
 			},
 			{
 				ResourceName:            "google_container_cluster.primary",
@@ -16309,8 +16327,12 @@ func TestAccContainerCluster_withAnonymousAuthenticationConfig(t *testing.T) {
 	})
 }
 
-func testAccContainerCluster_additional_ip_ranges_config(clusterName string, networkName string, sri []subnetRangeInfo) string {
+func testAccContainerCluster_additional_ip_ranges_config(clusterName string, networkName string, sri []subnetRangeInfo, draining bool) string {
 	var additionalIpRangesStr string
+	status := "ACTIVE"
+	if draining {
+		status = "DRAINING"
+	}
 
 	for _, si := range sri[1:] {
 		var podIpv4RangeStr string
@@ -16324,8 +16346,9 @@ func testAccContainerCluster_additional_ip_ranges_config(clusterName string, net
 			additional_ip_ranges_config {
 				subnetwork  = "%s"
 				pod_ipv4_range_names = [%s]
+				status = "%s"
 			}
-		`, si.SubnetName, podIpv4RangeStr)
+		`, si.SubnetName, podIpv4RangeStr, status)
 	}
 
 	return fmt.Sprintf(`
