@@ -8,6 +8,167 @@ fields:
     - api_field: createTime
     - api_field: displayName
     - api_field: goal
+    - api_field: handlers.eventHandler.condition
+    - api_field: handlers.eventHandler.event
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.audioExportGcsDestination.uri
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.dtmfSettings.enabled
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.dtmfSettings.endpointingTimeoutDuration
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.dtmfSettings.finishDigit
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.dtmfSettings.interdigitTimeoutDuration
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.dtmfSettings.maxDigits
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.loggingSettings.disableLogging
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.loggingSettings.enableConsentBasedRedaction
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.loggingSettings.enableInteractionLogging
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.loggingSettings.enableStackdriverLogging
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.speechSettings.endpointerSensitivity
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.speechSettings.models
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.speechSettings.noSpeechTimeout
+    - api_field: handlers.eventHandler.fulfillment.advancedSettings.speechSettings.useTimeoutBasedEndpointing
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.additionalCases
+      json: true
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.conversationSuccess.metadata
+      json: true
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.endInteraction
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.knowledgeInfoCard.maximumSnippets
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.liveAgentHandoff.metadata
+      json: true
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.mixedAudio.segments.allowPlaybackInterruption
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.mixedAudio.segments.audio
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.mixedAudio.segments.uri
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.outputAudioText.allowPlaybackInterruption
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.outputAudioText.ssml
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.outputAudioText.text
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.payload
+      json: true
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.playAudio.allowPlaybackInterruption
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.playAudio.audioUri
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.telephonyTransferCall.phoneNumber
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.text.allowPlaybackInterruption
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.text.text
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.toolCall.action
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.toolCall.inputParameters
+      json: true
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.caseContent.message.toolCall.tool
+    - api_field: handlers.eventHandler.fulfillment.conditionalCases.cases.condition
+    - api_field: handlers.eventHandler.fulfillment.enableGenerativeFallback
+    - api_field: handlers.eventHandler.fulfillment.generators.generator
+    - api_field: handlers.eventHandler.fulfillment.generators.inputParameters
+    - api_field: handlers.eventHandler.fulfillment.generators.outputParameter
+    - api_field: handlers.eventHandler.fulfillment.messages.channel
+    - api_field: handlers.eventHandler.fulfillment.messages.conversationSuccess.metadata
+      json: true
+    - api_field: handlers.eventHandler.fulfillment.messages.endInteraction
+    - api_field: handlers.eventHandler.fulfillment.messages.knowledgeInfoCard.maximumSnippets
+    - api_field: handlers.eventHandler.fulfillment.messages.liveAgentHandoff.metadata
+      json: true
+    - api_field: handlers.eventHandler.fulfillment.messages.mixedAudio.segments.allowPlaybackInterruption
+    - api_field: handlers.eventHandler.fulfillment.messages.mixedAudio.segments.audio
+    - api_field: handlers.eventHandler.fulfillment.messages.mixedAudio.segments.uri
+    - api_field: handlers.eventHandler.fulfillment.messages.outputAudioText.allowPlaybackInterruption
+    - api_field: handlers.eventHandler.fulfillment.messages.outputAudioText.ssml
+    - api_field: handlers.eventHandler.fulfillment.messages.outputAudioText.text
+    - api_field: handlers.eventHandler.fulfillment.messages.payload
+      json: true
+    - api_field: handlers.eventHandler.fulfillment.messages.playAudio.allowPlaybackInterruption
+    - api_field: handlers.eventHandler.fulfillment.messages.playAudio.audioUri
+    - api_field: handlers.eventHandler.fulfillment.messages.responseType
+    - api_field: handlers.eventHandler.fulfillment.messages.telephonyTransferCall.phoneNumber
+    - api_field: handlers.eventHandler.fulfillment.messages.text.allowPlaybackInterruption
+    - api_field: handlers.eventHandler.fulfillment.messages.text.text
+    - api_field: handlers.eventHandler.fulfillment.messages.toolCall.action
+    - api_field: handlers.eventHandler.fulfillment.messages.toolCall.inputParameters
+      json: true
+    - api_field: handlers.eventHandler.fulfillment.messages.toolCall.tool
+    - api_field: handlers.eventHandler.fulfillment.returnPartialResponses
+    - api_field: handlers.eventHandler.fulfillment.setParameterActions.parameter
+    - api_field: handlers.eventHandler.fulfillment.setParameterActions.value
+      json: true
+    - api_field: handlers.eventHandler.fulfillment.tag
+    - api_field: handlers.eventHandler.fulfillment.webhook
+    - api_field: handlers.lifecycleHandler.condition
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.audioExportGcsDestination.uri
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.dtmfSettings.enabled
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.dtmfSettings.endpointingTimeoutDuration
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.dtmfSettings.finishDigit
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.dtmfSettings.interdigitTimeoutDuration
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.dtmfSettings.maxDigits
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.loggingSettings.disableLogging
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.loggingSettings.enableConsentBasedRedaction
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.loggingSettings.enableInteractionLogging
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.loggingSettings.enableStackdriverLogging
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.speechSettings.endpointerSensitivity
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.speechSettings.models
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.speechSettings.noSpeechTimeout
+    - api_field: handlers.lifecycleHandler.fulfillment.advancedSettings.speechSettings.useTimeoutBasedEndpointing
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.additionalCases
+      json: true
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.conversationSuccess.metadata
+      json: true
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.endInteraction
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.knowledgeInfoCard.maximumSnippets
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.liveAgentHandoff.metadata
+      json: true
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.mixedAudio.segments.allowPlaybackInterruption
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.mixedAudio.segments.audio
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.mixedAudio.segments.uri
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.outputAudioText.allowPlaybackInterruption
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.outputAudioText.ssml
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.outputAudioText.text
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.payload
+      json: true
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.playAudio.allowPlaybackInterruption
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.playAudio.audioUri
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.telephonyTransferCall.phoneNumber
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.text.allowPlaybackInterruption
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.text.text
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.toolCall.action
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.toolCall.inputParameters
+      json: true
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.caseContent.message.toolCall.tool
+    - api_field: handlers.lifecycleHandler.fulfillment.conditionalCases.cases.condition
+    - api_field: handlers.lifecycleHandler.fulfillment.enableGenerativeFallback
+    - api_field: handlers.lifecycleHandler.fulfillment.generators.generator
+    - api_field: handlers.lifecycleHandler.fulfillment.generators.inputParameters
+    - api_field: handlers.lifecycleHandler.fulfillment.generators.outputParameter
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.channel
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.conversationSuccess.metadata
+      json: true
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.endInteraction
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.knowledgeInfoCard.maximumSnippets
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.liveAgentHandoff.metadata
+      json: true
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.mixedAudio.segments.allowPlaybackInterruption
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.mixedAudio.segments.audio
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.mixedAudio.segments.uri
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.outputAudioText.allowPlaybackInterruption
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.outputAudioText.ssml
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.outputAudioText.text
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.payload
+      json: true
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.playAudio.allowPlaybackInterruption
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.playAudio.audioUri
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.responseType
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.telephonyTransferCall.phoneNumber
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.text.allowPlaybackInterruption
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.text.text
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.toolCall.action
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.toolCall.inputParameters
+      json: true
+    - api_field: handlers.lifecycleHandler.fulfillment.messages.toolCall.tool
+    - api_field: handlers.lifecycleHandler.fulfillment.returnPartialResponses
+    - api_field: handlers.lifecycleHandler.fulfillment.setParameterActions.parameter
+    - api_field: handlers.lifecycleHandler.fulfillment.setParameterActions.value
+      json: true
+    - api_field: handlers.lifecycleHandler.fulfillment.tag
+    - api_field: handlers.lifecycleHandler.fulfillment.webhook
+    - api_field: handlers.lifecycleHandler.lifecycleStage
+    - api_field: inputParameterDefinitions.description
+    - api_field: inputParameterDefinitions.name
+    - api_field: inputParameterDefinitions.typeSchema.inlineSchema.items
+      json: true
+    - api_field: inputParameterDefinitions.typeSchema.inlineSchema.type
+    - api_field: inputParameterDefinitions.typeSchema.schemaReference.schema
+    - api_field: inputParameterDefinitions.typeSchema.schemaReference.tool
     - api_field: instruction.guidelines
     - api_field: instruction.steps.steps
       json: true
@@ -15,6 +176,13 @@ fields:
     - api_field: llmModelSettings.model
     - api_field: llmModelSettings.promptText
     - api_field: name
+    - api_field: outputParameterDefinitions.description
+    - api_field: outputParameterDefinitions.name
+    - api_field: outputParameterDefinitions.typeSchema.inlineSchema.items
+      json: true
+    - api_field: outputParameterDefinitions.typeSchema.inlineSchema.type
+    - api_field: outputParameterDefinitions.typeSchema.schemaReference.schema
+    - api_field: outputParameterDefinitions.typeSchema.schemaReference.tool
     - field: parent
       provider_only: true
     - api_field: playbookType

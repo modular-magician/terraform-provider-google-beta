@@ -124,6 +124,1945 @@ func ResourceDialogflowCXPlaybook() *schema.Resource {
 				Required:    true,
 				Description: `High level description of the goal the playbook intend to accomplish. A goal should be concise since it's visible to other playbooks that may reference this playbook.`,
 			},
+			"handlers": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `A list of registered handlers to execute based on the specified triggers.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"event_handler": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `A handler triggered by event.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"event": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `The name of the event that triggers this handler.`,
+									},
+									"fulfillment": {
+										Type:     schema.TypeList,
+										Required: true,
+										Description: `The fulfillment to call when the event occurs.
+
+A fulfillment can do one or more of the following actions at the same time:
+* Generate rich message responses.
+* Set parameter values.
+* Call the webhook.
+Fulfillments can be called at various stages in the Page or
+Form lifecycle. For example, when a DetectIntentRequest drives a
+session to enter a new page, the page's entry fulfillment can add a static
+response to the QueryResult in the returning DetectIntentResponse,
+call the webhook (e.g., to load user data from a database), or both.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"advanced_settings": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Description: `Hierarchical advanced settings for agent/flow/page/fulfillment/parameter.
+Settings exposed at lower level overrides the settings exposed at higher
+level. Overriding occurs at the sub-setting level. For example, the
+playback_interruption_settings at fulfillment level only overrides the
+playback_interruption_settings at the agent level, leaving other settings
+at the agent level unchanged.
+
+DTMF settings does not override each other. DTMF settings set at different
+levels define DTMF detections running in parallel.
+
+Hierarchy: Agent->Flow->Page->Fulfillment/Parameter.`,
+													MaxItems: 1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"audio_export_gcs_destination": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `Google Cloud Storage location for a Dialogflow operation that writes or
+exports objects (e.g. exported agent or transcripts) outside of Dialogflow.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"uri": {
+																			Type:     schema.TypeString,
+																			Required: true,
+																			Description: `The Google Cloud Storage URI for the exported objects. A URI is of the
+form:
+'gs://bucket/object-name-or-prefix'
+Whether a full object name, or just a prefix, its usage depends on the
+Dialogflow operation.`,
+																		},
+																	},
+																},
+															},
+															"dtmf_settings": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Define behaviors for DTMF (dual tone multi frequency).`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"enabled": {
+																			Type:     schema.TypeBool,
+																			Optional: true,
+																			Description: `If true, incoming audio is processed for DTMF (dual tone multi frequency)
+events. For example, if the caller presses a button on their telephone
+keypad and DTMF processing is enabled, Dialogflow will detect the
+event (e.g. a "3" was pressed) in the incoming audio and pass the event
+to the bot to drive business logic (e.g. when 3 is pressed, return the
+account balance).`,
+																		},
+																		"endpointing_timeout_duration": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: `Endpoint timeout setting for matching dtmf input to regex.`,
+																		},
+																		"finish_digit": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: `The digit that terminates a DTMF digit sequence.`,
+																		},
+																		"interdigit_timeout_duration": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: `Interdigit timeout setting for matching dtmf input to regex.`,
+																		},
+																		"max_digits": {
+																			Type:        schema.TypeInt,
+																			Optional:    true,
+																			Description: `Max length of DTMF digits.`,
+																		},
+																	},
+																},
+															},
+															"logging_settings": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Define behaviors on logging.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"disable_logging": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: `If true, DF Interaction logging is currently disabled.`,
+																		},
+																		"enable_consent_based_redaction": {
+																			Type:     schema.TypeBool,
+																			Optional: true,
+																			Description: `Enables consent-based end-user input redaction, if true, a pre-defined
+session parameter '$session.params.conversation-redaction' will be
+used to determine if the utterance should be redacted.`,
+																		},
+																		"enable_interaction_logging": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: `Enables DF Interaction logging.`,
+																		},
+																		"enable_stackdriver_logging": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: `Enables Google Cloud Logging.`,
+																		},
+																	},
+																},
+															},
+															"speech_settings": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Define behaviors of speech to text detection.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"endpointer_sensitivity": {
+																			Type:     schema.TypeInt,
+																			Optional: true,
+																			Description: `Sensitivity of the speech model that detects the end of speech.
+Scale from 0 to 100.`,
+																		},
+																		"models": {
+																			Type:     schema.TypeMap,
+																			Optional: true,
+																			Description: `Mapping from language to Speech-to-Text model. The mapped Speech-to-Text
+model will be selected for requests from its corresponding language.
+For more information, see
+[Speech
+models](https://cloud.google.com/dialogflow/cx/docs/concept/speech-models).`,
+																			Elem: &schema.Schema{Type: schema.TypeString},
+																		},
+																		"no_speech_timeout": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: `Timeout before detecting no speech.`,
+																		},
+																		"use_timeout_based_endpointing": {
+																			Type:     schema.TypeBool,
+																			Optional: true,
+																			Description: `Use timeout based endpointing, interpreting endpointer sensitivity as
+seconds of timeout value.`,
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+												"conditional_cases": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `Conditional cases for this fulfillment.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"cases": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `A list of cascading if-else conditions.`,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"case_content": {
+																			Type:        schema.TypeList,
+																			Optional:    true,
+																			Description: `A list of case content.`,
+																			Elem: &schema.Resource{
+																				Schema: map[string]*schema.Schema{
+																					"additional_cases": {
+																						Type:         schema.TypeString,
+																						Optional:     true,
+																						ValidateFunc: validation.StringIsJSON,
+																						StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																						Description: `A generic empty message that you can re-use to avoid defining duplicated
+empty messages in your APIs. A typical example is to use it as the request
+or the response type of an API method. For instance:
+
+service Foo {
+rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [ConditionalCases](https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#ConditionalCases).`,
+																					},
+																					"message": {
+																						Type:     schema.TypeList,
+																						Optional: true,
+																						Description: `Represents a response message that can be returned by a conversational agent.
+
+Response messages are also used for output audio synthesis. The approach is
+as follows:
+
+* If at least one OutputAudioText response is present, then all
+OutputAudioText responses are linearly concatenated, and the result is used
+for output audio synthesis.
+* If the OutputAudioText responses are a mixture of text and SSML, then the
+concatenated result is treated as SSML; otherwise, the result is treated as
+either text or SSML as appropriate. The agent designer should ideally use
+either text or SSML consistently throughout the bot design.
+* Otherwise, all Text responses are linearly concatenated, and the result is
+used for output audio synthesis.
+
+This approach allows for more sophisticated user experience scenarios, where
+the text displayed to the user may differ from what is heard.`,
+																						MaxItems: 1,
+																						Elem: &schema.Resource{
+																							Schema: map[string]*schema.Schema{
+																								"conversation_success": {
+																									Type:     schema.TypeList,
+																									Optional: true,
+																									Description: `Indicates that the conversation succeeded, i.e., the bot handled the issue
+that the customer talked to it about.
+
+Dialogflow only uses this to determine which conversations should be
+counted as successful and doesn't process the metadata in this message in
+any way. Note that Dialogflow also considers conversations that get to the
+conversation end page as successful even if they don't return
+ConversationSuccess.
+
+You may set this, for example:
+* In the entry_fulfillment of a Page if
+entering the page indicates that the conversation succeeded.
+* In a webhook response when you determine that you handled the customer
+issue.`,
+																									MaxItems: 1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"metadata": {
+																												Type:         schema.TypeString,
+																												Optional:     true,
+																												ValidateFunc: validation.StringIsJSON,
+																												StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																												Description: `Custom metadata. Dialogflow doesn't impose any structure on this.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																											},
+																										},
+																									},
+																								},
+																								"knowledge_info_card": {
+																									Type:     schema.TypeList,
+																									Optional: true,
+																									Description: `Represents info card response. If the response contains generative
+knowledge prediction, Dialogflow will return a payload with Infobot
+Messenger compatible info card.
+
+Otherwise, the info card response is skipped.`,
+																									MaxItems: 1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"maximum_snippets": {
+																												Type:     schema.TypeInt,
+																												Optional: true,
+																												Description: `The maximum number of snippets that can be included in the response.
+Default to 1 if the value is unset.
+The maximum allowed is 5.
+If set to 0, fallback to Data Store search results gets disabled.`,
+																											},
+																										},
+																									},
+																								},
+																								"live_agent_handoff": {
+																									Type:     schema.TypeList,
+																									Optional: true,
+																									Description: `Indicates that the conversation should be handed off to a live agent.
+
+Dialogflow only uses this to determine which conversations were handed off
+to a human agent for measurement purposes. What else to do with this signal
+is up to you and your handoff procedures.
+
+You may set this, for example:
+* In the entry_fulfillment of a Page if
+entering the page indicates something went extremely wrong in the
+conversation.
+* In a webhook response when you determine that the customer issue can only
+be handled by a human.`,
+																									MaxItems: 1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"metadata": {
+																												Type:         schema.TypeString,
+																												Optional:     true,
+																												ValidateFunc: validation.StringIsJSON,
+																												StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																												Description: `Custom metadata for your handoff procedure. Dialogflow doesn't impose
+any structure on this.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																											},
+																										},
+																									},
+																								},
+																								"output_audio_text": {
+																									Type:     schema.TypeList,
+																									Optional: true,
+																									Description: `A text or ssml response that is preferentially used for TTS output audio
+synthesis, as described in the comment on the ResponseMessage message.`,
+																									MaxItems: 1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"ssml": {
+																												Type:     schema.TypeString,
+																												Optional: true,
+																												Description: `The SSML text to be synthesized. For more information, see
+[SSML](/speech/text-to-speech/docs/ssml).`,
+																											},
+																											"text": {
+																												Type:        schema.TypeString,
+																												Optional:    true,
+																												Description: `The raw text to be synthesized.`,
+																											},
+																											"allow_playback_interruption": {
+																												Type:     schema.TypeBool,
+																												Computed: true,
+																												Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																											},
+																										},
+																									},
+																								},
+																								"payload": {
+																									Type:         schema.TypeString,
+																									Optional:     true,
+																									ValidateFunc: validation.StringIsJSON,
+																									StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																									Description: `Returns a response containing a custom, platform-specific payload.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																								},
+																								"play_audio": {
+																									Type:        schema.TypeList,
+																									Optional:    true,
+																									Description: `Specifies an audio clip to be played by the client as part of the response.`,
+																									MaxItems:    1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"audio_uri": {
+																												Type:     schema.TypeString,
+																												Required: true,
+																												Description: `URI of the audio clip. Dialogflow does not impose any validation on this
+value. It is specific to the client that reads it.`,
+																											},
+																											"allow_playback_interruption": {
+																												Type:     schema.TypeBool,
+																												Computed: true,
+																												Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																											},
+																										},
+																									},
+																								},
+																								"telephony_transfer_call": {
+																									Type:     schema.TypeList,
+																									Optional: true,
+																									Description: `Represents the signal that telles the client to transfer the phone call
+connected to the agent to a third-party endpoint.`,
+																									MaxItems: 1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"phone_number": {
+																												Type:     schema.TypeString,
+																												Optional: true,
+																												Description: `Transfer the call to a phone number
+in [E.164 format](https://en.wikipedia.org/wiki/E.164).`,
+																											},
+																										},
+																									},
+																								},
+																								"text": {
+																									Type:        schema.TypeList,
+																									Optional:    true,
+																									Description: `The text response message.`,
+																									MaxItems:    1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"text": {
+																												Type:     schema.TypeList,
+																												Required: true,
+																												Description: `A collection of text response variants. If multiple variants are
+defined, only one text response variant is returned at runtime.`,
+																												Elem: &schema.Schema{
+																													Type: schema.TypeString,
+																												},
+																											},
+																											"allow_playback_interruption": {
+																												Type:     schema.TypeBool,
+																												Computed: true,
+																												Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																											},
+																										},
+																									},
+																								},
+																								"tool_call": {
+																									Type:        schema.TypeList,
+																									Optional:    true,
+																									Description: `Represents a call of a specific tool's action with the specified inputs.`,
+																									MaxItems:    1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"action": {
+																												Type:        schema.TypeString,
+																												Required:    true,
+																												Description: `The name of the tool's action associated with this call.`,
+																											},
+																											"tool": {
+																												Type:     schema.TypeString,
+																												Required: true,
+																												Description: `The tool associated with this call.
+Format:
+'projects//locations//agents//tools/'.`,
+																											},
+																											"input_parameters": {
+																												Type:         schema.TypeString,
+																												Optional:     true,
+																												ValidateFunc: validation.StringIsJSON,
+																												StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																												Description: `The action's input parameters.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																											},
+																										},
+																									},
+																								},
+																								"end_interaction": {
+																									Type:     schema.TypeString,
+																									Computed: true,
+																									Description: `Indicates that interaction with the Dialogflow agent has ended.
+This message is generated by Dialogflow only and not supposed to be
+defined by the user.`,
+																								},
+																								"mixed_audio": {
+																									Type:     schema.TypeList,
+																									Computed: true,
+																									Description: `Represents an audio message that is composed of both segments
+synthesized from the Dialogflow agent prompts and ones hosted externally
+at the specified URIs.
+The external URIs are specified via
+play_audio.
+This message is generated by Dialogflow only and not supposed to be
+defined by the user.`,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"segments": {
+																												Type:        schema.TypeList,
+																												Computed:    true,
+																												Description: `Segments this audio response is composed of.`,
+																												Elem: &schema.Resource{
+																													Schema: map[string]*schema.Schema{
+																														"allow_playback_interruption": {
+																															Type:     schema.TypeBool,
+																															Computed: true,
+																															Description: `Whether the playback of this segment can be interrupted by the end
+user's speech and the client should then start the next Dialogflow
+request.`,
+																														},
+																														"audio": {
+																															Type:     schema.TypeString,
+																															Computed: true,
+																															Description: `Raw audio synthesized from the Dialogflow agent's response using
+the output config specified in the request.`,
+																														},
+																														"uri": {
+																															Type:     schema.TypeString,
+																															Computed: true,
+																															Description: `Client-specific URI that points to an audio clip accessible to the
+client. Dialogflow does not impose any validation on it.`,
+																														},
+																													},
+																												},
+																											},
+																										},
+																									},
+																								},
+																							},
+																						},
+																					},
+																				},
+																			},
+																		},
+																		"condition": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `The condition to activate and select this case. Empty means the
+condition is always true. The condition is evaluated against form
+parameters or session
+parameters.
+
+See the [conditions
+reference](https://cloud.google.com/dialogflow/priv/docs/v3/condition).`,
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+												"enable_generative_fallback": {
+													Type:     schema.TypeBool,
+													Optional: true,
+													Description: `If the flag is true, the agent will utilize LLM to generate a text
+response. If LLM generation fails, the defined
+responses in the fulfillment will be respected.
+This flag is only useful for fulfillments associated with no-match event
+handlers.`,
+												},
+												"generators": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `A list of Generators to be called during this fulfillment.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"generator": {
+																Type:     schema.TypeString,
+																Required: true,
+																Description: `The generator to call.
+Format:
+'projects//locations//agents//generators/'.`,
+															},
+															"output_parameter": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: `Output parameter which should contain the generator response.`,
+															},
+															"input_parameters": {
+																Type:     schema.TypeMap,
+																Optional: true,
+																Description: `Map from placeholder parameter in the
+Generator to corresponding session parameters. By default,
+Dialogflow uses the session parameter with the same name to fill in the
+generator template. e.g. If there is a placeholder parameter 'city' in
+the Generator, Dialogflow default to fill in the '$city' with
+'$session.params.city'. However, you may choose to fill '$city' with
+'$session.params.desination-city'.
+- Map key: parameter ID
+- Map value: session parameter name`,
+																Elem: &schema.Schema{Type: schema.TypeString},
+															},
+														},
+													},
+												},
+												"messages": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `The list of rich message responses to present to the user.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"channel": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: `The channel which the response is associated with. Clients can specify the channel via [QueryParameters.channel](https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/QueryParameters#FIELDS.channel), and only associated channel response will be returned.`,
+															},
+															"conversation_success": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `Indicates that the conversation succeeded, i.e., the bot handled the issue
+that the customer talked to it about.
+
+Dialogflow only uses this to determine which conversations should be
+counted as successful and doesn't process the metadata in this message in
+any way. Note that Dialogflow also considers conversations that get to the
+conversation end page as successful even if they don't return
+ConversationSuccess.
+
+You may set this, for example:
+* In the entry_fulfillment of a Page if
+entering the page indicates that the conversation succeeded.
+* In a webhook response when you determine that you handled the customer
+issue.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"metadata": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			ValidateFunc: validation.StringIsJSON,
+																			StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																			Description: `Custom metadata. Dialogflow doesn't impose any structure on this.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																		},
+																	},
+																},
+															},
+															"knowledge_info_card": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `Represents info card response. If the response contains generative
+knowledge prediction, Dialogflow will return a payload with Infobot
+Messenger compatible info card.
+
+Otherwise, the info card response is skipped.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"maximum_snippets": {
+																			Type:     schema.TypeInt,
+																			Optional: true,
+																			Description: `The maximum number of snippets that can be included in the response.
+Default to 1 if the value is unset.
+The maximum allowed is 5.
+If set to 0, fallback to Data Store search results gets disabled.`,
+																		},
+																	},
+																},
+															},
+															"live_agent_handoff": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `Indicates that the conversation should be handed off to a live agent.
+
+Dialogflow only uses this to determine which conversations were handed off
+to a human agent for measurement purposes. What else to do with this signal
+is up to you and your handoff procedures.
+
+You may set this, for example:
+* In the entry_fulfillment of a Page if
+entering the page indicates something went extremely wrong in the
+conversation.
+* In a webhook response when you determine that the customer issue can only
+be handled by a human.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"metadata": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			ValidateFunc: validation.StringIsJSON,
+																			StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																			Description: `Custom metadata for your handoff procedure. Dialogflow doesn't impose
+any structure on this.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																		},
+																	},
+																},
+															},
+															"output_audio_text": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `A text or ssml response that is preferentially used for TTS output audio
+synthesis, as described in the comment on the ResponseMessage message.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"ssml": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `The SSML text to be synthesized. For more information, see
+[SSML](/speech/text-to-speech/docs/ssml).`,
+																		},
+																		"text": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: `The raw text to be synthesized.`,
+																		},
+																		"allow_playback_interruption": {
+																			Type:     schema.TypeBool,
+																			Computed: true,
+																			Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																		},
+																	},
+																},
+															},
+															"payload": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																ValidateFunc: validation.StringIsJSON,
+																StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																Description: `Returns a response containing a custom, platform-specific payload.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+															},
+															"play_audio": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Specifies an audio clip to be played by the client as part of the response.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"audio_uri": {
+																			Type:     schema.TypeString,
+																			Required: true,
+																			Description: `URI of the audio clip. Dialogflow does not impose any validation on this
+value. It is specific to the client that reads it.`,
+																		},
+																		"allow_playback_interruption": {
+																			Type:     schema.TypeBool,
+																			Computed: true,
+																			Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																		},
+																	},
+																},
+															},
+															"response_type": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																ValidateFunc: verify.ValidateEnum([]string{"ENTRY_PROMPT", "PARAMETER_PROMPT", "HANDLER_PROMPT", ""}),
+																Description:  `Response type. Possible values: ["ENTRY_PROMPT", "PARAMETER_PROMPT", "HANDLER_PROMPT"]`,
+															},
+															"telephony_transfer_call": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `Represents the signal that telles the client to transfer the phone call
+connected to the agent to a third-party endpoint.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"phone_number": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `Transfer the call to a phone number
+in [E.164 format](https://en.wikipedia.org/wiki/E.164).`,
+																		},
+																	},
+																},
+															},
+															"text": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `The text response message.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"text": {
+																			Type:     schema.TypeList,
+																			Required: true,
+																			Description: `A collection of text response variants. If multiple variants are
+defined, only one text response variant is returned at runtime.`,
+																			Elem: &schema.Schema{
+																				Type: schema.TypeString,
+																			},
+																		},
+																		"allow_playback_interruption": {
+																			Type:     schema.TypeBool,
+																			Computed: true,
+																			Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																		},
+																	},
+																},
+															},
+															"tool_call": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Represents a call of a specific tool's action with the specified inputs.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"action": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: `The name of the tool's action associated with this call.`,
+																		},
+																		"tool": {
+																			Type:     schema.TypeString,
+																			Required: true,
+																			Description: `The tool associated with this call.
+Format:
+'projects//locations//agents//tools/'.`,
+																		},
+																		"input_parameters": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			ValidateFunc: validation.StringIsJSON,
+																			StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																			Description: `The action's input parameters.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																		},
+																	},
+																},
+															},
+															"end_interaction": {
+																Type:     schema.TypeString,
+																Computed: true,
+																Description: `Indicates that interaction with the Dialogflow agent has ended.
+This message is generated by Dialogflow only and not supposed to be
+defined by the user.`,
+															},
+															"mixed_audio": {
+																Type:     schema.TypeList,
+																Computed: true,
+																Description: `Represents an audio message that is composed of both segments
+synthesized from the Dialogflow agent prompts and ones hosted externally
+at the specified URIs.
+The external URIs are specified via
+play_audio.
+This message is generated by Dialogflow only and not supposed to be
+defined by the user.`,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"segments": {
+																			Type:        schema.TypeList,
+																			Computed:    true,
+																			Description: `Segments this audio response is composed of.`,
+																			Elem: &schema.Resource{
+																				Schema: map[string]*schema.Schema{
+																					"allow_playback_interruption": {
+																						Type:     schema.TypeBool,
+																						Computed: true,
+																						Description: `Whether the playback of this segment can be interrupted by the end
+user's speech and the client should then start the next Dialogflow
+request.`,
+																					},
+																					"audio": {
+																						Type:     schema.TypeString,
+																						Computed: true,
+																						Description: `Raw audio synthesized from the Dialogflow agent's response using
+the output config specified in the request.`,
+																					},
+																					"uri": {
+																						Type:     schema.TypeString,
+																						Computed: true,
+																						Description: `Client-specific URI that points to an audio clip accessible to the
+client. Dialogflow does not impose any validation on it.`,
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+												"return_partial_responses": {
+													Type:     schema.TypeBool,
+													Optional: true,
+													Description: `Whether Dialogflow should return currently queued fulfillment response
+messages in streaming APIs. If a webhook is specified, it happens before
+Dialogflow invokes webhook.
+Warning:
+1) This flag only affects streaming API. Responses are still queued
+and returned once in non-streaming API.
+2) The flag can be enabled in any fulfillment but only the first 3 partial
+responses will be returned. You may only want to apply it to fulfillments
+that have slow webhooks.`,
+												},
+												"set_parameter_actions": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `Set parameter values before executing the webhook.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"parameter": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: `Display name of the parameter.`,
+															},
+															"value": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																ValidateFunc: validation.StringIsJSON,
+																StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																Description: `The new value of the parameter. A null value clears the parameter.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Value](https://protobuf.dev/reference/protobuf/google.protobuf/#value).`,
+															},
+														},
+													},
+												},
+												"tag": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The value of this field will be populated in the WebhookRequest
+'fulfillmentInfo.tag' field by Dialogflow when the associated webhook is
+called.
+The tag is typically used by the webhook service to identify which
+fulfillment is being called, but it could be used for other purposes.
+This field is required if 'webhook' is specified.`,
+												},
+												"webhook": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The webhook to call.
+Format:
+'projects//locations//agents//webhooks/'.`,
+												},
+											},
+										},
+									},
+									"condition": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The condition that must be satisfied to trigger this handler.`,
+									},
+								},
+							},
+						},
+						"lifecycle_handler": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `A handler triggered during specific lifecycle of the playbook execution.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"fulfillment": {
+										Type:     schema.TypeList,
+										Required: true,
+										Description: `The fulfillment to call when the event occurs.
+
+A fulfillment can do one or more of the following actions at the same time:
+* Generate rich message responses.
+* Set parameter values.
+* Call the webhook.
+Fulfillments can be called at various stages in the Page or
+Form lifecycle. For example, when a DetectIntentRequest drives a
+session to enter a new page, the page's entry fulfillment can add a static
+response to the QueryResult in the returning DetectIntentResponse,
+call the webhook (e.g., to load user data from a database), or both.`,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"advanced_settings": {
+													Type:     schema.TypeList,
+													Optional: true,
+													Description: `Hierarchical advanced settings for agent/flow/page/fulfillment/parameter.
+Settings exposed at lower level overrides the settings exposed at higher
+level. Overriding occurs at the sub-setting level. For example, the
+playback_interruption_settings at fulfillment level only overrides the
+playback_interruption_settings at the agent level, leaving other settings
+at the agent level unchanged.
+
+DTMF settings does not override each other. DTMF settings set at different
+levels define DTMF detections running in parallel.
+
+Hierarchy: Agent->Flow->Page->Fulfillment/Parameter.`,
+													MaxItems: 1,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"audio_export_gcs_destination": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `Google Cloud Storage location for a Dialogflow operation that writes or
+exports objects (e.g. exported agent or transcripts) outside of Dialogflow.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"uri": {
+																			Type:     schema.TypeString,
+																			Required: true,
+																			Description: `The Google Cloud Storage URI for the exported objects. A URI is of the
+form:
+'gs://bucket/object-name-or-prefix'
+Whether a full object name, or just a prefix, its usage depends on the
+Dialogflow operation.`,
+																		},
+																	},
+																},
+															},
+															"dtmf_settings": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Define behaviors for DTMF (dual tone multi frequency).`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"enabled": {
+																			Type:     schema.TypeBool,
+																			Optional: true,
+																			Description: `If true, incoming audio is processed for DTMF (dual tone multi frequency)
+events. For example, if the caller presses a button on their telephone
+keypad and DTMF processing is enabled, Dialogflow will detect the
+event (e.g. a "3" was pressed) in the incoming audio and pass the event
+to the bot to drive business logic (e.g. when 3 is pressed, return the
+account balance).`,
+																		},
+																		"endpointing_timeout_duration": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: `Endpoint timeout setting for matching dtmf input to regex.`,
+																		},
+																		"finish_digit": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: `The digit that terminates a DTMF digit sequence.`,
+																		},
+																		"interdigit_timeout_duration": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: `Interdigit timeout setting for matching dtmf input to regex.`,
+																		},
+																		"max_digits": {
+																			Type:        schema.TypeInt,
+																			Optional:    true,
+																			Description: `Max length of DTMF digits.`,
+																		},
+																	},
+																},
+															},
+															"logging_settings": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Define behaviors on logging.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"disable_logging": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: `If true, DF Interaction logging is currently disabled.`,
+																		},
+																		"enable_consent_based_redaction": {
+																			Type:     schema.TypeBool,
+																			Optional: true,
+																			Description: `Enables consent-based end-user input redaction, if true, a pre-defined
+session parameter '$session.params.conversation-redaction' will be
+used to determine if the utterance should be redacted.`,
+																		},
+																		"enable_interaction_logging": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: `Enables DF Interaction logging.`,
+																		},
+																		"enable_stackdriver_logging": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: `Enables Google Cloud Logging.`,
+																		},
+																	},
+																},
+															},
+															"speech_settings": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Define behaviors of speech to text detection.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"endpointer_sensitivity": {
+																			Type:     schema.TypeInt,
+																			Optional: true,
+																			Description: `Sensitivity of the speech model that detects the end of speech.
+Scale from 0 to 100.`,
+																		},
+																		"models": {
+																			Type:     schema.TypeMap,
+																			Optional: true,
+																			Description: `Mapping from language to Speech-to-Text model. The mapped Speech-to-Text
+model will be selected for requests from its corresponding language.
+For more information, see
+[Speech
+models](https://cloud.google.com/dialogflow/cx/docs/concept/speech-models).`,
+																			Elem: &schema.Schema{Type: schema.TypeString},
+																		},
+																		"no_speech_timeout": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: `Timeout before detecting no speech.`,
+																		},
+																		"use_timeout_based_endpointing": {
+																			Type:     schema.TypeBool,
+																			Optional: true,
+																			Description: `Use timeout based endpointing, interpreting endpointer sensitivity as
+seconds of timeout value.`,
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+												"conditional_cases": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `Conditional cases for this fulfillment.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"cases": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `A list of cascading if-else conditions.`,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"case_content": {
+																			Type:        schema.TypeList,
+																			Optional:    true,
+																			Description: `A list of case content.`,
+																			Elem: &schema.Resource{
+																				Schema: map[string]*schema.Schema{
+																					"additional_cases": {
+																						Type:         schema.TypeString,
+																						Optional:     true,
+																						ValidateFunc: validation.StringIsJSON,
+																						StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																						Description: `A generic empty message that you can re-use to avoid defining duplicated
+empty messages in your APIs. A typical example is to use it as the request
+or the response type of an API method. For instance:
+
+service Foo {
+rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [ConditionalCases](https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/Fulfillment#ConditionalCases).`,
+																					},
+																					"message": {
+																						Type:     schema.TypeList,
+																						Optional: true,
+																						Description: `Represents a response message that can be returned by a conversational agent.
+
+Response messages are also used for output audio synthesis. The approach is
+as follows:
+
+* If at least one OutputAudioText response is present, then all
+OutputAudioText responses are linearly concatenated, and the result is used
+for output audio synthesis.
+* If the OutputAudioText responses are a mixture of text and SSML, then the
+concatenated result is treated as SSML; otherwise, the result is treated as
+either text or SSML as appropriate. The agent designer should ideally use
+either text or SSML consistently throughout the bot design.
+* Otherwise, all Text responses are linearly concatenated, and the result is
+used for output audio synthesis.
+
+This approach allows for more sophisticated user experience scenarios, where
+the text displayed to the user may differ from what is heard.`,
+																						MaxItems: 1,
+																						Elem: &schema.Resource{
+																							Schema: map[string]*schema.Schema{
+																								"conversation_success": {
+																									Type:     schema.TypeList,
+																									Optional: true,
+																									Description: `Indicates that the conversation succeeded, i.e., the bot handled the issue
+that the customer talked to it about.
+
+Dialogflow only uses this to determine which conversations should be
+counted as successful and doesn't process the metadata in this message in
+any way. Note that Dialogflow also considers conversations that get to the
+conversation end page as successful even if they don't return
+ConversationSuccess.
+
+You may set this, for example:
+* In the entry_fulfillment of a Page if
+entering the page indicates that the conversation succeeded.
+* In a webhook response when you determine that you handled the customer
+issue.`,
+																									MaxItems: 1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"metadata": {
+																												Type:         schema.TypeString,
+																												Optional:     true,
+																												ValidateFunc: validation.StringIsJSON,
+																												StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																												Description: `Custom metadata. Dialogflow doesn't impose any structure on this.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																											},
+																										},
+																									},
+																								},
+																								"knowledge_info_card": {
+																									Type:     schema.TypeList,
+																									Optional: true,
+																									Description: `Represents info card response. If the response contains generative
+knowledge prediction, Dialogflow will return a payload with Infobot
+Messenger compatible info card.
+
+Otherwise, the info card response is skipped.`,
+																									MaxItems: 1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"maximum_snippets": {
+																												Type:     schema.TypeInt,
+																												Optional: true,
+																												Description: `The maximum number of snippets that can be included in the response.
+Default to 1 if the value is unset.
+The maximum allowed is 5.
+If set to 0, fallback to Data Store search results gets disabled.`,
+																											},
+																										},
+																									},
+																								},
+																								"live_agent_handoff": {
+																									Type:     schema.TypeList,
+																									Optional: true,
+																									Description: `Indicates that the conversation should be handed off to a live agent.
+
+Dialogflow only uses this to determine which conversations were handed off
+to a human agent for measurement purposes. What else to do with this signal
+is up to you and your handoff procedures.
+
+You may set this, for example:
+* In the entry_fulfillment of a Page if
+entering the page indicates something went extremely wrong in the
+conversation.
+* In a webhook response when you determine that the customer issue can only
+be handled by a human.`,
+																									MaxItems: 1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"metadata": {
+																												Type:         schema.TypeString,
+																												Optional:     true,
+																												ValidateFunc: validation.StringIsJSON,
+																												StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																												Description: `Custom metadata for your handoff procedure. Dialogflow doesn't impose
+any structure on this.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																											},
+																										},
+																									},
+																								},
+																								"output_audio_text": {
+																									Type:     schema.TypeList,
+																									Optional: true,
+																									Description: `A text or ssml response that is preferentially used for TTS output audio
+synthesis, as described in the comment on the ResponseMessage message.`,
+																									MaxItems: 1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"ssml": {
+																												Type:     schema.TypeString,
+																												Optional: true,
+																												Description: `The SSML text to be synthesized. For more information, see
+[SSML](/speech/text-to-speech/docs/ssml).`,
+																											},
+																											"text": {
+																												Type:        schema.TypeString,
+																												Optional:    true,
+																												Description: `The raw text to be synthesized.`,
+																											},
+																											"allow_playback_interruption": {
+																												Type:     schema.TypeBool,
+																												Computed: true,
+																												Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																											},
+																										},
+																									},
+																								},
+																								"payload": {
+																									Type:         schema.TypeString,
+																									Optional:     true,
+																									ValidateFunc: validation.StringIsJSON,
+																									StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																									Description: `Returns a response containing a custom, platform-specific payload.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																								},
+																								"play_audio": {
+																									Type:        schema.TypeList,
+																									Optional:    true,
+																									Description: `Specifies an audio clip to be played by the client as part of the response.`,
+																									MaxItems:    1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"audio_uri": {
+																												Type:     schema.TypeString,
+																												Required: true,
+																												Description: `URI of the audio clip. Dialogflow does not impose any validation on this
+value. It is specific to the client that reads it.`,
+																											},
+																											"allow_playback_interruption": {
+																												Type:     schema.TypeBool,
+																												Computed: true,
+																												Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																											},
+																										},
+																									},
+																								},
+																								"telephony_transfer_call": {
+																									Type:     schema.TypeList,
+																									Optional: true,
+																									Description: `Represents the signal that telles the client to transfer the phone call
+connected to the agent to a third-party endpoint.`,
+																									MaxItems: 1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"phone_number": {
+																												Type:     schema.TypeString,
+																												Optional: true,
+																												Description: `Transfer the call to a phone number
+in [E.164 format](https://en.wikipedia.org/wiki/E.164).`,
+																											},
+																										},
+																									},
+																								},
+																								"text": {
+																									Type:        schema.TypeList,
+																									Optional:    true,
+																									Description: `The text response message.`,
+																									MaxItems:    1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"text": {
+																												Type:     schema.TypeList,
+																												Required: true,
+																												Description: `A collection of text response variants. If multiple variants are
+defined, only one text response variant is returned at runtime.`,
+																												Elem: &schema.Schema{
+																													Type: schema.TypeString,
+																												},
+																											},
+																											"allow_playback_interruption": {
+																												Type:     schema.TypeBool,
+																												Computed: true,
+																												Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																											},
+																										},
+																									},
+																								},
+																								"tool_call": {
+																									Type:        schema.TypeList,
+																									Optional:    true,
+																									Description: `Represents a call of a specific tool's action with the specified inputs.`,
+																									MaxItems:    1,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"action": {
+																												Type:        schema.TypeString,
+																												Required:    true,
+																												Description: `The name of the tool's action associated with this call.`,
+																											},
+																											"tool": {
+																												Type:     schema.TypeString,
+																												Required: true,
+																												Description: `The tool associated with this call.
+Format:
+'projects//locations//agents//tools/'.`,
+																											},
+																											"input_parameters": {
+																												Type:         schema.TypeString,
+																												Optional:     true,
+																												ValidateFunc: validation.StringIsJSON,
+																												StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																												Description: `The action's input parameters.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																											},
+																										},
+																									},
+																								},
+																								"end_interaction": {
+																									Type:     schema.TypeString,
+																									Computed: true,
+																									Description: `Indicates that interaction with the Dialogflow agent has ended.
+This message is generated by Dialogflow only and not supposed to be
+defined by the user.`,
+																								},
+																								"mixed_audio": {
+																									Type:     schema.TypeList,
+																									Computed: true,
+																									Description: `Represents an audio message that is composed of both segments
+synthesized from the Dialogflow agent prompts and ones hosted externally
+at the specified URIs.
+The external URIs are specified via
+play_audio.
+This message is generated by Dialogflow only and not supposed to be
+defined by the user.`,
+																									Elem: &schema.Resource{
+																										Schema: map[string]*schema.Schema{
+																											"segments": {
+																												Type:        schema.TypeList,
+																												Computed:    true,
+																												Description: `Segments this audio response is composed of.`,
+																												Elem: &schema.Resource{
+																													Schema: map[string]*schema.Schema{
+																														"allow_playback_interruption": {
+																															Type:     schema.TypeBool,
+																															Computed: true,
+																															Description: `Whether the playback of this segment can be interrupted by the end
+user's speech and the client should then start the next Dialogflow
+request.`,
+																														},
+																														"audio": {
+																															Type:     schema.TypeString,
+																															Computed: true,
+																															Description: `Raw audio synthesized from the Dialogflow agent's response using
+the output config specified in the request.`,
+																														},
+																														"uri": {
+																															Type:     schema.TypeString,
+																															Computed: true,
+																															Description: `Client-specific URI that points to an audio clip accessible to the
+client. Dialogflow does not impose any validation on it.`,
+																														},
+																													},
+																												},
+																											},
+																										},
+																									},
+																								},
+																							},
+																						},
+																					},
+																				},
+																			},
+																		},
+																		"condition": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `The condition to activate and select this case. Empty means the
+condition is always true. The condition is evaluated against form
+parameters or session
+parameters.
+
+See the [conditions
+reference](https://cloud.google.com/dialogflow/priv/docs/v3/condition).`,
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+												"enable_generative_fallback": {
+													Type:     schema.TypeBool,
+													Optional: true,
+													Description: `If the flag is true, the agent will utilize LLM to generate a text
+response. If LLM generation fails, the defined
+responses in the fulfillment will be respected.
+This flag is only useful for fulfillments associated with no-match event
+handlers.`,
+												},
+												"generators": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `A list of Generators to be called during this fulfillment.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"generator": {
+																Type:     schema.TypeString,
+																Required: true,
+																Description: `The generator to call.
+Format:
+'projects//locations//agents//generators/'.`,
+															},
+															"output_parameter": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: `Output parameter which should contain the generator response.`,
+															},
+															"input_parameters": {
+																Type:     schema.TypeMap,
+																Optional: true,
+																Description: `Map from placeholder parameter in the
+Generator to corresponding session parameters. By default,
+Dialogflow uses the session parameter with the same name to fill in the
+generator template. e.g. If there is a placeholder parameter 'city' in
+the Generator, Dialogflow default to fill in the '$city' with
+'$session.params.city'. However, you may choose to fill '$city' with
+'$session.params.desination-city'.
+- Map key: parameter ID
+- Map value: session parameter name`,
+																Elem: &schema.Schema{Type: schema.TypeString},
+															},
+														},
+													},
+												},
+												"messages": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `The list of rich message responses to present to the user.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"channel": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: `The channel which the response is associated with. Clients can specify the channel via [QueryParameters.channel](https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/QueryParameters#FIELDS.channel), and only associated channel response will be returned.`,
+															},
+															"conversation_success": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `Indicates that the conversation succeeded, i.e., the bot handled the issue
+that the customer talked to it about.
+
+Dialogflow only uses this to determine which conversations should be
+counted as successful and doesn't process the metadata in this message in
+any way. Note that Dialogflow also considers conversations that get to the
+conversation end page as successful even if they don't return
+ConversationSuccess.
+
+You may set this, for example:
+* In the entry_fulfillment of a Page if
+entering the page indicates that the conversation succeeded.
+* In a webhook response when you determine that you handled the customer
+issue.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"metadata": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			ValidateFunc: validation.StringIsJSON,
+																			StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																			Description: `Custom metadata. Dialogflow doesn't impose any structure on this.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																		},
+																	},
+																},
+															},
+															"knowledge_info_card": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `Represents info card response. If the response contains generative
+knowledge prediction, Dialogflow will return a payload with Infobot
+Messenger compatible info card.
+
+Otherwise, the info card response is skipped.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"maximum_snippets": {
+																			Type:     schema.TypeInt,
+																			Optional: true,
+																			Description: `The maximum number of snippets that can be included in the response.
+Default to 1 if the value is unset.
+The maximum allowed is 5.
+If set to 0, fallback to Data Store search results gets disabled.`,
+																		},
+																	},
+																},
+															},
+															"live_agent_handoff": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `Indicates that the conversation should be handed off to a live agent.
+
+Dialogflow only uses this to determine which conversations were handed off
+to a human agent for measurement purposes. What else to do with this signal
+is up to you and your handoff procedures.
+
+You may set this, for example:
+* In the entry_fulfillment of a Page if
+entering the page indicates something went extremely wrong in the
+conversation.
+* In a webhook response when you determine that the customer issue can only
+be handled by a human.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"metadata": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			ValidateFunc: validation.StringIsJSON,
+																			StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																			Description: `Custom metadata for your handoff procedure. Dialogflow doesn't impose
+any structure on this.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																		},
+																	},
+																},
+															},
+															"output_audio_text": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `A text or ssml response that is preferentially used for TTS output audio
+synthesis, as described in the comment on the ResponseMessage message.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"ssml": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `The SSML text to be synthesized. For more information, see
+[SSML](/speech/text-to-speech/docs/ssml).`,
+																		},
+																		"text": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: `The raw text to be synthesized.`,
+																		},
+																		"allow_playback_interruption": {
+																			Type:     schema.TypeBool,
+																			Computed: true,
+																			Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																		},
+																	},
+																},
+															},
+															"payload": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																ValidateFunc: validation.StringIsJSON,
+																StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																Description: `Returns a response containing a custom, platform-specific payload.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+															},
+															"play_audio": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Specifies an audio clip to be played by the client as part of the response.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"audio_uri": {
+																			Type:     schema.TypeString,
+																			Required: true,
+																			Description: `URI of the audio clip. Dialogflow does not impose any validation on this
+value. It is specific to the client that reads it.`,
+																		},
+																		"allow_playback_interruption": {
+																			Type:     schema.TypeBool,
+																			Computed: true,
+																			Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																		},
+																	},
+																},
+															},
+															"response_type": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																ValidateFunc: verify.ValidateEnum([]string{"ENTRY_PROMPT", "PARAMETER_PROMPT", "HANDLER_PROMPT", ""}),
+																Description:  `Response type. Possible values: ["ENTRY_PROMPT", "PARAMETER_PROMPT", "HANDLER_PROMPT"]`,
+															},
+															"telephony_transfer_call": {
+																Type:     schema.TypeList,
+																Optional: true,
+																Description: `Represents the signal that telles the client to transfer the phone call
+connected to the agent to a third-party endpoint.`,
+																MaxItems: 1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"phone_number": {
+																			Type:     schema.TypeString,
+																			Optional: true,
+																			Description: `Transfer the call to a phone number
+in [E.164 format](https://en.wikipedia.org/wiki/E.164).`,
+																		},
+																	},
+																},
+															},
+															"text": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `The text response message.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"text": {
+																			Type:     schema.TypeList,
+																			Required: true,
+																			Description: `A collection of text response variants. If multiple variants are
+defined, only one text response variant is returned at runtime.`,
+																			Elem: &schema.Schema{
+																				Type: schema.TypeString,
+																			},
+																		},
+																		"allow_playback_interruption": {
+																			Type:     schema.TypeBool,
+																			Computed: true,
+																			Description: `Whether the playback of this message can be interrupted by the end
+user's speech and the client can then starts the next Dialogflow
+request.`,
+																		},
+																	},
+																},
+															},
+															"tool_call": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																Description: `Represents a call of a specific tool's action with the specified inputs.`,
+																MaxItems:    1,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"action": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: `The name of the tool's action associated with this call.`,
+																		},
+																		"tool": {
+																			Type:     schema.TypeString,
+																			Required: true,
+																			Description: `The tool associated with this call.
+Format:
+'projects//locations//agents//tools/'.`,
+																		},
+																		"input_parameters": {
+																			Type:         schema.TypeString,
+																			Optional:     true,
+																			ValidateFunc: validation.StringIsJSON,
+																			StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																			Description: `The action's input parameters.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Struct](https://protobuf.dev/reference/protobuf/google.protobuf/#struct).`,
+																		},
+																	},
+																},
+															},
+															"end_interaction": {
+																Type:     schema.TypeString,
+																Computed: true,
+																Description: `Indicates that interaction with the Dialogflow agent has ended.
+This message is generated by Dialogflow only and not supposed to be
+defined by the user.`,
+															},
+															"mixed_audio": {
+																Type:     schema.TypeList,
+																Computed: true,
+																Description: `Represents an audio message that is composed of both segments
+synthesized from the Dialogflow agent prompts and ones hosted externally
+at the specified URIs.
+The external URIs are specified via
+play_audio.
+This message is generated by Dialogflow only and not supposed to be
+defined by the user.`,
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"segments": {
+																			Type:        schema.TypeList,
+																			Computed:    true,
+																			Description: `Segments this audio response is composed of.`,
+																			Elem: &schema.Resource{
+																				Schema: map[string]*schema.Schema{
+																					"allow_playback_interruption": {
+																						Type:     schema.TypeBool,
+																						Computed: true,
+																						Description: `Whether the playback of this segment can be interrupted by the end
+user's speech and the client should then start the next Dialogflow
+request.`,
+																					},
+																					"audio": {
+																						Type:     schema.TypeString,
+																						Computed: true,
+																						Description: `Raw audio synthesized from the Dialogflow agent's response using
+the output config specified in the request.`,
+																					},
+																					"uri": {
+																						Type:     schema.TypeString,
+																						Computed: true,
+																						Description: `Client-specific URI that points to an audio clip accessible to the
+client. Dialogflow does not impose any validation on it.`,
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+												"return_partial_responses": {
+													Type:     schema.TypeBool,
+													Optional: true,
+													Description: `Whether Dialogflow should return currently queued fulfillment response
+messages in streaming APIs. If a webhook is specified, it happens before
+Dialogflow invokes webhook.
+Warning:
+1) This flag only affects streaming API. Responses are still queued
+and returned once in non-streaming API.
+2) The flag can be enabled in any fulfillment but only the first 3 partial
+responses will be returned. You may only want to apply it to fulfillments
+that have slow webhooks.`,
+												},
+												"set_parameter_actions": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Description: `Set parameter values before executing the webhook.`,
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"parameter": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: `Display name of the parameter.`,
+															},
+															"value": {
+																Type:         schema.TypeString,
+																Optional:     true,
+																ValidateFunc: validation.StringIsJSON,
+																StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+																Description: `The new value of the parameter. A null value clears the parameter.
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [Value](https://protobuf.dev/reference/protobuf/google.protobuf/#value).`,
+															},
+														},
+													},
+												},
+												"tag": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The value of this field will be populated in the WebhookRequest
+'fulfillmentInfo.tag' field by Dialogflow when the associated webhook is
+called.
+The tag is typically used by the webhook service to identify which
+fulfillment is being called, but it could be used for other purposes.
+This field is required if 'webhook' is specified.`,
+												},
+												"webhook": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The webhook to call.
+Format:
+'projects//locations//agents//webhooks/'.`,
+												},
+											},
+										},
+									},
+									"lifecycle_stage": {
+										Type:     schema.TypeString,
+										Required: true,
+										Description: `The name of the lifecycle stage that triggers this handler. Supported values:
+* **playbook-start**
+* **pre-action-selection**
+* **pre-action-execution**`,
+									},
+									"condition": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The condition that must be satisfied to trigger this handler.`,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			"input_parameter_definitions": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Defined structured input parameters for this playbook.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `Name of parameter.`,
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Human-readable description of the parameter. Limited to 300 characters.`,
+						},
+						"type_schema": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `Type schema of parameter.
+
+Union field **schema**. The encapsulated schema. **schema** can be only one of the following: inlineSchema and schemaReference.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"inline_schema": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Set if this is an inline schema definition.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"items": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													ValidateFunc: validation.StringIsJSON,
+													StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+													Description: `Schema of the elements if this is an ARRAY type
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [TypeSchema](https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/ParameterDefinition#TypeSchema).`,
+												},
+												"type": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													ValidateFunc: verify.ValidateEnum([]string{"STRING", "NUMBER", "BOOLEAN", "ARRAY", ""}),
+													Description:  `Data type of the schema. Possible values: ["STRING", "NUMBER", "BOOLEAN", "ARRAY"]`,
+												},
+											},
+										},
+									},
+									"schema_reference": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Set if this is a schema reference.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"schema": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: `The name of the schema.`,
+												},
+												"tool": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The tool that contains this schema definition.
+Format: **projects/<ProjectID>/locations/<LocationID>/agents/<AgentID>/tools/<ToolID>**.`,
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"instruction": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -178,6 +2117,83 @@ This field uses JSON data as a string. The value provided must be a valid JSON r
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: `The custom prompt to use.`,
+						},
+					},
+				},
+			},
+			"output_parameter_definitions": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Defined structured output parameters for this playbook.`,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: `Name of parameter.`,
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Human-readable description of the parameter. Limited to 300 characters.`,
+						},
+						"type_schema": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `Type schema of parameter.
+
+Union field **schema**. The encapsulated schema. **schema** can be only one of the following: inlineSchema and schemaReference.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"inline_schema": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Set if this is an inline schema definition.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"items": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													ValidateFunc: validation.StringIsJSON,
+													StateFunc:    func(v interface{}) string { s, _ := structure.NormalizeJsonString(v); return s },
+													Description: `Schema of the elements if this is an ARRAY type
+
+This field uses JSON data as a string. The value provided must be a valid JSON representation documented in [TypeSchema](https://cloud.google.com/dialogflow/cx/docs/reference/rest/v3/ParameterDefinition#TypeSchema).`,
+												},
+												"type": {
+													Type:         schema.TypeString,
+													Optional:     true,
+													ValidateFunc: verify.ValidateEnum([]string{"STRING", "NUMBER", "BOOLEAN", "ARRAY", ""}),
+													Description:  `Data type of the schema. Possible values: ["STRING", "NUMBER", "BOOLEAN", "ARRAY"]`,
+												},
+											},
+										},
+									},
+									"schema_reference": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Set if this is a schema reference.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"schema": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: `The name of the schema.`,
+												},
+												"tool": {
+													Type:     schema.TypeString,
+													Optional: true,
+													Description: `The tool that contains this schema definition.
+Format: **projects/<ProjectID>/locations/<LocationID>/agents/<AgentID>/tools/<ToolID>**.`,
+												},
+											},
+										},
+									},
+								},
+							},
 						},
 					},
 				},
@@ -269,6 +2285,18 @@ func resourceDialogflowCXPlaybookCreate(d *schema.ResourceData, meta interface{}
 	} else if v, ok := d.GetOkExists("goal"); !tpgresource.IsEmptyValue(reflect.ValueOf(goalProp)) && (ok || !reflect.DeepEqual(v, goalProp)) {
 		obj["goal"] = goalProp
 	}
+	inputParameterDefinitionsProp, err := expandDialogflowCXPlaybookInputParameterDefinitions(d.Get("input_parameter_definitions"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("input_parameter_definitions"); !tpgresource.IsEmptyValue(reflect.ValueOf(inputParameterDefinitionsProp)) && (ok || !reflect.DeepEqual(v, inputParameterDefinitionsProp)) {
+		obj["inputParameterDefinitions"] = inputParameterDefinitionsProp
+	}
+	outputParameterDefinitionsProp, err := expandDialogflowCXPlaybookOutputParameterDefinitions(d.Get("output_parameter_definitions"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("output_parameter_definitions"); !tpgresource.IsEmptyValue(reflect.ValueOf(outputParameterDefinitionsProp)) && (ok || !reflect.DeepEqual(v, outputParameterDefinitionsProp)) {
+		obj["outputParameterDefinitions"] = outputParameterDefinitionsProp
+	}
 	instructionProp, err := expandDialogflowCXPlaybookInstruction(d.Get("instruction"), d, config)
 	if err != nil {
 		return err
@@ -286,6 +2314,12 @@ func resourceDialogflowCXPlaybookCreate(d *schema.ResourceData, meta interface{}
 		return err
 	} else if v, ok := d.GetOkExists("llm_model_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(llmModelSettingsProp)) && (ok || !reflect.DeepEqual(v, llmModelSettingsProp)) {
 		obj["llmModelSettings"] = llmModelSettingsProp
+	}
+	handlersProp, err := expandDialogflowCXPlaybookHandlers(d.Get("handlers"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("handlers"); !tpgresource.IsEmptyValue(reflect.ValueOf(handlersProp)) && (ok || !reflect.DeepEqual(v, handlersProp)) {
+		obj["handlers"] = handlersProp
 	}
 	playbookTypeProp, err := expandDialogflowCXPlaybookPlaybookType(d.Get("playbook_type"), d, config)
 	if err != nil {
@@ -412,6 +2446,18 @@ func resourceDialogflowCXPlaybookRead(d *schema.ResourceData, meta interface{}) 
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("DialogflowCXPlaybook %q", d.Id()))
 	}
 
+	res, err = resourceDialogflowCXPlaybookDecoder(d, meta, res)
+	if err != nil {
+		return err
+	}
+
+	if res == nil {
+		// Decoding the object has resulted in it being gone. It may be marked deleted
+		log.Printf("[DEBUG] Removing DialogflowCXPlaybook because it no longer exists.")
+		d.SetId("")
+		return nil
+	}
+
 	if err := d.Set("name", flattenDialogflowCXPlaybookName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Playbook: %s", err)
 	}
@@ -419,6 +2465,12 @@ func resourceDialogflowCXPlaybookRead(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error reading Playbook: %s", err)
 	}
 	if err := d.Set("goal", flattenDialogflowCXPlaybookGoal(res["goal"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Playbook: %s", err)
+	}
+	if err := d.Set("input_parameter_definitions", flattenDialogflowCXPlaybookInputParameterDefinitions(res["inputParameterDefinitions"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Playbook: %s", err)
+	}
+	if err := d.Set("output_parameter_definitions", flattenDialogflowCXPlaybookOutputParameterDefinitions(res["outputParameterDefinitions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Playbook: %s", err)
 	}
 	if err := d.Set("instruction", flattenDialogflowCXPlaybookInstruction(res["instruction"], d, config)); err != nil {
@@ -443,6 +2495,9 @@ func resourceDialogflowCXPlaybookRead(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("Error reading Playbook: %s", err)
 	}
 	if err := d.Set("llm_model_settings", flattenDialogflowCXPlaybookLlmModelSettings(res["llmModelSettings"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Playbook: %s", err)
+	}
+	if err := d.Set("handlers", flattenDialogflowCXPlaybookHandlers(res["handlers"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Playbook: %s", err)
 	}
 
@@ -471,6 +2526,18 @@ func resourceDialogflowCXPlaybookUpdate(d *schema.ResourceData, meta interface{}
 	} else if v, ok := d.GetOkExists("goal"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, goalProp)) {
 		obj["goal"] = goalProp
 	}
+	inputParameterDefinitionsProp, err := expandDialogflowCXPlaybookInputParameterDefinitions(d.Get("input_parameter_definitions"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("input_parameter_definitions"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, inputParameterDefinitionsProp)) {
+		obj["inputParameterDefinitions"] = inputParameterDefinitionsProp
+	}
+	outputParameterDefinitionsProp, err := expandDialogflowCXPlaybookOutputParameterDefinitions(d.Get("output_parameter_definitions"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("output_parameter_definitions"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, outputParameterDefinitionsProp)) {
+		obj["outputParameterDefinitions"] = outputParameterDefinitionsProp
+	}
 	instructionProp, err := expandDialogflowCXPlaybookInstruction(d.Get("instruction"), d, config)
 	if err != nil {
 		return err
@@ -488,6 +2555,12 @@ func resourceDialogflowCXPlaybookUpdate(d *schema.ResourceData, meta interface{}
 		return err
 	} else if v, ok := d.GetOkExists("llm_model_settings"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, llmModelSettingsProp)) {
 		obj["llmModelSettings"] = llmModelSettingsProp
+	}
+	handlersProp, err := expandDialogflowCXPlaybookHandlers(d.Get("handlers"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("handlers"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, handlersProp)) {
+		obj["handlers"] = handlersProp
 	}
 	playbookTypeProp, err := expandDialogflowCXPlaybookPlaybookType(d.Get("playbook_type"), d, config)
 	if err != nil {
@@ -513,6 +2586,14 @@ func resourceDialogflowCXPlaybookUpdate(d *schema.ResourceData, meta interface{}
 		updateMask = append(updateMask, "goal")
 	}
 
+	if d.HasChange("input_parameter_definitions") {
+		updateMask = append(updateMask, "inputParameterDefinitions")
+	}
+
+	if d.HasChange("output_parameter_definitions") {
+		updateMask = append(updateMask, "outputParameterDefinitions")
+	}
+
 	if d.HasChange("instruction") {
 		updateMask = append(updateMask, "instruction")
 	}
@@ -523,6 +2604,10 @@ func resourceDialogflowCXPlaybookUpdate(d *schema.ResourceData, meta interface{}
 
 	if d.HasChange("llm_model_settings") {
 		updateMask = append(updateMask, "llmModelSettings")
+	}
+
+	if d.HasChange("handlers") {
+		updateMask = append(updateMask, "handlers")
 	}
 
 	if d.HasChange("playbook_type") {
@@ -703,6 +2788,200 @@ func flattenDialogflowCXPlaybookGoal(v interface{}, d *schema.ResourceData, conf
 	return v
 }
 
+func flattenDialogflowCXPlaybookInputParameterDefinitions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"name":        flattenDialogflowCXPlaybookInputParameterDefinitionsName(original["name"], d, config),
+			"description": flattenDialogflowCXPlaybookInputParameterDefinitionsDescription(original["description"], d, config),
+			"type_schema": flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchema(original["typeSchema"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookInputParameterDefinitionsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookInputParameterDefinitionsDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["schema_reference"] =
+		flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReference(original["schemaReference"], d, config)
+	transformed["inline_schema"] =
+		flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchema(original["inlineSchema"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReference(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["tool"] =
+		flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReferenceTool(original["tool"], d, config)
+	transformed["schema"] =
+		flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReferenceSchema(original["schema"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReferenceTool(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReferenceSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["type"] =
+		flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchemaType(original["type"], d, config)
+	transformed["items"] =
+		flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchemaItems(original["items"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchemaType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchemaItems(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookOutputParameterDefinitions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"name":        flattenDialogflowCXPlaybookOutputParameterDefinitionsName(original["name"], d, config),
+			"description": flattenDialogflowCXPlaybookOutputParameterDefinitionsDescription(original["description"], d, config),
+			"type_schema": flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchema(original["typeSchema"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookOutputParameterDefinitionsName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookOutputParameterDefinitionsDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["schema_reference"] =
+		flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReference(original["schemaReference"], d, config)
+	transformed["inline_schema"] =
+		flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchema(original["inlineSchema"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReference(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["tool"] =
+		flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReferenceTool(original["tool"], d, config)
+	transformed["schema"] =
+		flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReferenceSchema(original["schema"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReferenceTool(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReferenceSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchema(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["type"] =
+		flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchemaType(original["type"], d, config)
+	transformed["items"] =
+		flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchemaItems(original["items"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchemaType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchemaItems(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
 func flattenDialogflowCXPlaybookInstruction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return nil
@@ -804,12 +3083,2333 @@ func flattenDialogflowCXPlaybookLlmModelSettingsPromptText(v interface{}, d *sch
 	return v
 }
 
+func flattenDialogflowCXPlaybookHandlers(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"event_handler":     flattenDialogflowCXPlaybookHandlersEventHandler(original["eventHandler"], d, config),
+			"lifecycle_handler": flattenDialogflowCXPlaybookHandlersLifecycleHandler(original["lifecycleHandler"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersEventHandler(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["event"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerEvent(original["event"], d, config)
+	transformed["condition"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerCondition(original["condition"], d, config)
+	transformed["fulfillment"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillment(original["fulfillment"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerEvent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillment(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["messages"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessages(original["messages"], d, config)
+	transformed["tag"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentTag(original["tag"], d, config)
+	transformed["webhook"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentWebhook(original["webhook"], d, config)
+	transformed["return_partial_responses"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentReturnPartialResponses(original["returnPartialResponses"], d, config)
+	transformed["set_parameter_actions"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActions(original["setParameterActions"], d, config)
+	transformed["conditional_cases"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCases(original["conditionalCases"], d, config)
+	transformed["advanced_settings"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettings(original["advancedSettings"], d, config)
+	transformed["enable_generative_fallback"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentEnableGenerativeFallback(original["enableGenerativeFallback"], d, config)
+	transformed["generators"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentGenerators(original["generators"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessages(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"response_type":           flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesResponseType(original["responseType"], d, config),
+			"channel":                 flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesChannel(original["channel"], d, config),
+			"play_audio":              flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudio(original["playAudio"], d, config),
+			"mixed_audio":             flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudio(original["mixedAudio"], d, config),
+			"telephony_transfer_call": flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTelephonyTransferCall(original["telephonyTransferCall"], d, config),
+			"knowledge_info_card":     flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesKnowledgeInfoCard(original["knowledgeInfoCard"], d, config),
+			"tool_call":               flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCall(original["toolCall"], d, config),
+			"text":                    flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesText(original["text"], d, config),
+			"payload":                 flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPayload(original["payload"], d, config),
+			"conversation_success":    flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesConversationSuccess(original["conversationSuccess"], d, config),
+			"output_audio_text":       flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioText(original["outputAudioText"], d, config),
+			"live_agent_handoff":      flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesLiveAgentHandoff(original["liveAgentHandoff"], d, config),
+			"end_interaction":         flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesEndInteraction(original["endInteraction"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesResponseType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesChannel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["audio_uri"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudioAudioUri(original["audioUri"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudioAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudioAudioUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudioAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["segments"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegments(original["segments"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegments(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"audio":                       flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsAudio(original["audio"], d, config),
+			"uri":                         flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsUri(original["uri"], d, config),
+			"allow_playback_interruption": flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTelephonyTransferCall(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["phone_number"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTelephonyTransferCallPhoneNumber(original["phoneNumber"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTelephonyTransferCallPhoneNumber(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesKnowledgeInfoCard(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["maximum_snippets"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesKnowledgeInfoCardMaximumSnippets(original["maximumSnippets"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesKnowledgeInfoCardMaximumSnippets(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCall(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["input_parameters"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallInputParameters(original["inputParameters"], d, config)
+	transformed["tool"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallTool(original["tool"], d, config)
+	transformed["action"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallAction(original["action"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallInputParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallTool(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["text"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTextText(original["text"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTextAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTextText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTextAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPayload(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesConversationSuccess(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["metadata"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesConversationSuccessMetadata(original["metadata"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesConversationSuccessMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["text"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextText(original["text"], d, config)
+	transformed["ssml"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextSsml(original["ssml"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextSsml(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesLiveAgentHandoff(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["metadata"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesLiveAgentHandoffMetadata(original["metadata"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesLiveAgentHandoffMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesEndInteraction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentTag(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentWebhook(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentReturnPartialResponses(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"parameter": flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActionsParameter(original["parameter"], d, config),
+			"value":     flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActionsValue(original["value"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActionsParameter(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActionsValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCases(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"cases": flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCases(original["cases"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCases(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"case_content": flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContent(original["caseContent"], d, config),
+			"condition":    flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCondition(original["condition"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"message":          flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessage(original["message"], d, config),
+			"additional_cases": flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentAdditionalCases(original["additionalCases"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["conversation_success"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccess(original["conversationSuccess"], d, config)
+	transformed["output_audio_text"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioText(original["outputAudioText"], d, config)
+	transformed["live_agent_handoff"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoff(original["liveAgentHandoff"], d, config)
+	transformed["end_interaction"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageEndInteraction(original["endInteraction"], d, config)
+	transformed["play_audio"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudio(original["playAudio"], d, config)
+	transformed["mixed_audio"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudio(original["mixedAudio"], d, config)
+	transformed["telephony_transfer_call"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCall(original["telephonyTransferCall"], d, config)
+	transformed["knowledge_info_card"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCard(original["knowledgeInfoCard"], d, config)
+	transformed["tool_call"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCall(original["toolCall"], d, config)
+	transformed["text"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageText(original["text"], d, config)
+	transformed["payload"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePayload(original["payload"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccess(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["metadata"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccessMetadata(original["metadata"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccessMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["text"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextText(original["text"], d, config)
+	transformed["ssml"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextSsml(original["ssml"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextSsml(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoff(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["metadata"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoffMetadata(original["metadata"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoffMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageEndInteraction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["audio_uri"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAudioUri(original["audioUri"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAudioUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["segments"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegments(original["segments"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegments(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"audio":                       flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAudio(original["audio"], d, config),
+			"uri":                         flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsUri(original["uri"], d, config),
+			"allow_playback_interruption": flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCall(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["phone_number"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCallPhoneNumber(original["phoneNumber"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCallPhoneNumber(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCard(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["maximum_snippets"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCardMaximumSnippets(original["maximumSnippets"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCardMaximumSnippets(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCall(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["tool"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallTool(original["tool"], d, config)
+	transformed["action"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallAction(original["action"], d, config)
+	transformed["input_parameters"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallInputParameters(original["inputParameters"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallTool(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallInputParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["text"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextText(original["text"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePayload(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentAdditionalCases(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["audio_export_gcs_destination"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsAudioExportGcsDestination(original["audioExportGcsDestination"], d, config)
+	transformed["speech_settings"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettings(original["speechSettings"], d, config)
+	transformed["dtmf_settings"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettings(original["dtmfSettings"], d, config)
+	transformed["logging_settings"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettings(original["loggingSettings"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsAudioExportGcsDestination(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["uri"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsAudioExportGcsDestinationUri(original["uri"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsAudioExportGcsDestinationUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["endpointer_sensitivity"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsEndpointerSensitivity(original["endpointerSensitivity"], d, config)
+	transformed["no_speech_timeout"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsNoSpeechTimeout(original["noSpeechTimeout"], d, config)
+	transformed["use_timeout_based_endpointing"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsUseTimeoutBasedEndpointing(original["useTimeoutBasedEndpointing"], d, config)
+	transformed["models"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsModels(original["models"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsEndpointerSensitivity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsNoSpeechTimeout(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsUseTimeoutBasedEndpointing(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsModels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enabled"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsEnabled(original["enabled"], d, config)
+	transformed["max_digits"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsMaxDigits(original["maxDigits"], d, config)
+	transformed["finish_digit"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsFinishDigit(original["finishDigit"], d, config)
+	transformed["interdigit_timeout_duration"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsInterdigitTimeoutDuration(original["interdigitTimeoutDuration"], d, config)
+	transformed["endpointing_timeout_duration"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsEndpointingTimeoutDuration(original["endpointingTimeoutDuration"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsMaxDigits(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsFinishDigit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsInterdigitTimeoutDuration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsEndpointingTimeoutDuration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enable_interaction_logging"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableInteractionLogging(original["enableInteractionLogging"], d, config)
+	transformed["enable_consent_based_redaction"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableConsentBasedRedaction(original["enableConsentBasedRedaction"], d, config)
+	transformed["disable_logging"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsDisableLogging(original["disableLogging"], d, config)
+	transformed["enable_stackdriver_logging"] =
+		flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableStackdriverLogging(original["enableStackdriverLogging"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableInteractionLogging(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableConsentBasedRedaction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsDisableLogging(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableStackdriverLogging(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentEnableGenerativeFallback(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentGenerators(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"generator":        flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsGenerator(original["generator"], d, config),
+			"input_parameters": flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsInputParameters(original["inputParameters"], d, config),
+			"output_parameter": flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsOutputParameter(original["outputParameter"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsGenerator(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsInputParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsOutputParameter(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandler(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["lifecycle_stage"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerLifecycleStage(original["lifecycleStage"], d, config)
+	transformed["condition"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerCondition(original["condition"], d, config)
+	transformed["fulfillment"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillment(original["fulfillment"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerLifecycleStage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillment(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["messages"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessages(original["messages"], d, config)
+	transformed["tag"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentTag(original["tag"], d, config)
+	transformed["webhook"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentWebhook(original["webhook"], d, config)
+	transformed["return_partial_responses"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentReturnPartialResponses(original["returnPartialResponses"], d, config)
+	transformed["set_parameter_actions"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActions(original["setParameterActions"], d, config)
+	transformed["conditional_cases"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCases(original["conditionalCases"], d, config)
+	transformed["advanced_settings"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettings(original["advancedSettings"], d, config)
+	transformed["enable_generative_fallback"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentEnableGenerativeFallback(original["enableGenerativeFallback"], d, config)
+	transformed["generators"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGenerators(original["generators"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessages(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"response_type":           flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesResponseType(original["responseType"], d, config),
+			"channel":                 flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesChannel(original["channel"], d, config),
+			"play_audio":              flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudio(original["playAudio"], d, config),
+			"mixed_audio":             flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudio(original["mixedAudio"], d, config),
+			"telephony_transfer_call": flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTelephonyTransferCall(original["telephonyTransferCall"], d, config),
+			"knowledge_info_card":     flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesKnowledgeInfoCard(original["knowledgeInfoCard"], d, config),
+			"tool_call":               flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCall(original["toolCall"], d, config),
+			"text":                    flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesText(original["text"], d, config),
+			"payload":                 flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPayload(original["payload"], d, config),
+			"conversation_success":    flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesConversationSuccess(original["conversationSuccess"], d, config),
+			"output_audio_text":       flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioText(original["outputAudioText"], d, config),
+			"live_agent_handoff":      flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesLiveAgentHandoff(original["liveAgentHandoff"], d, config),
+			"end_interaction":         flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesEndInteraction(original["endInteraction"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesResponseType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesChannel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["audio_uri"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudioAudioUri(original["audioUri"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudioAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudioAudioUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudioAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["segments"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegments(original["segments"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegments(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"audio":                       flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsAudio(original["audio"], d, config),
+			"uri":                         flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsUri(original["uri"], d, config),
+			"allow_playback_interruption": flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTelephonyTransferCall(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["phone_number"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTelephonyTransferCallPhoneNumber(original["phoneNumber"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTelephonyTransferCallPhoneNumber(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesKnowledgeInfoCard(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["maximum_snippets"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesKnowledgeInfoCardMaximumSnippets(original["maximumSnippets"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesKnowledgeInfoCardMaximumSnippets(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCall(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["input_parameters"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallInputParameters(original["inputParameters"], d, config)
+	transformed["tool"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallTool(original["tool"], d, config)
+	transformed["action"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallAction(original["action"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallInputParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallTool(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["text"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTextText(original["text"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTextAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTextText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTextAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPayload(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesConversationSuccess(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["metadata"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesConversationSuccessMetadata(original["metadata"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesConversationSuccessMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["text"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextText(original["text"], d, config)
+	transformed["ssml"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextSsml(original["ssml"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextSsml(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesLiveAgentHandoff(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["metadata"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesLiveAgentHandoffMetadata(original["metadata"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesLiveAgentHandoffMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesEndInteraction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentTag(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentWebhook(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentReturnPartialResponses(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"parameter": flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActionsParameter(original["parameter"], d, config),
+			"value":     flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActionsValue(original["value"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActionsParameter(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActionsValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCases(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"cases": flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCases(original["cases"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCases(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"case_content": flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContent(original["caseContent"], d, config),
+			"condition":    flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCondition(original["condition"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"message":          flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessage(original["message"], d, config),
+			"additional_cases": flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentAdditionalCases(original["additionalCases"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["conversation_success"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccess(original["conversationSuccess"], d, config)
+	transformed["output_audio_text"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioText(original["outputAudioText"], d, config)
+	transformed["live_agent_handoff"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoff(original["liveAgentHandoff"], d, config)
+	transformed["end_interaction"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageEndInteraction(original["endInteraction"], d, config)
+	transformed["play_audio"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudio(original["playAudio"], d, config)
+	transformed["mixed_audio"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudio(original["mixedAudio"], d, config)
+	transformed["telephony_transfer_call"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCall(original["telephonyTransferCall"], d, config)
+	transformed["knowledge_info_card"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCard(original["knowledgeInfoCard"], d, config)
+	transformed["tool_call"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCall(original["toolCall"], d, config)
+	transformed["text"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageText(original["text"], d, config)
+	transformed["payload"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePayload(original["payload"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccess(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["metadata"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccessMetadata(original["metadata"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccessMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["text"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextText(original["text"], d, config)
+	transformed["ssml"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextSsml(original["ssml"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextSsml(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoff(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["metadata"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoffMetadata(original["metadata"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoffMetadata(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageEndInteraction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["audio_uri"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAudioUri(original["audioUri"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAudioUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["segments"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegments(original["segments"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegments(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"audio":                       flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAudio(original["audio"], d, config),
+			"uri":                         flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsUri(original["uri"], d, config),
+			"allow_playback_interruption": flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAudio(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCall(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["phone_number"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCallPhoneNumber(original["phoneNumber"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCallPhoneNumber(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCard(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["maximum_snippets"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCardMaximumSnippets(original["maximumSnippets"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCardMaximumSnippets(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCall(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["tool"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallTool(original["tool"], d, config)
+	transformed["action"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallAction(original["action"], d, config)
+	transformed["input_parameters"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallInputParameters(original["inputParameters"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallTool(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallInputParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["text"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextText(original["text"], d, config)
+	transformed["allow_playback_interruption"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextAllowPlaybackInterruption(original["allowPlaybackInterruption"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextText(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextAllowPlaybackInterruption(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePayload(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentAdditionalCases(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	b, err := json.Marshal(v)
+	if err != nil {
+		// TODO: return error once https://github.com/GoogleCloudPlatform/magic-modules/issues/3257 is fixed.
+		log.Printf("[ERROR] failed to marshal schema to JSON: %v", err)
+	}
+	return string(b)
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["audio_export_gcs_destination"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsAudioExportGcsDestination(original["audioExportGcsDestination"], d, config)
+	transformed["speech_settings"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettings(original["speechSettings"], d, config)
+	transformed["dtmf_settings"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettings(original["dtmfSettings"], d, config)
+	transformed["logging_settings"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettings(original["loggingSettings"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsAudioExportGcsDestination(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["uri"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsAudioExportGcsDestinationUri(original["uri"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsAudioExportGcsDestinationUri(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["endpointer_sensitivity"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsEndpointerSensitivity(original["endpointerSensitivity"], d, config)
+	transformed["no_speech_timeout"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsNoSpeechTimeout(original["noSpeechTimeout"], d, config)
+	transformed["use_timeout_based_endpointing"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsUseTimeoutBasedEndpointing(original["useTimeoutBasedEndpointing"], d, config)
+	transformed["models"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsModels(original["models"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsEndpointerSensitivity(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsNoSpeechTimeout(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsUseTimeoutBasedEndpointing(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsModels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enabled"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsEnabled(original["enabled"], d, config)
+	transformed["max_digits"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsMaxDigits(original["maxDigits"], d, config)
+	transformed["finish_digit"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsFinishDigit(original["finishDigit"], d, config)
+	transformed["interdigit_timeout_duration"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsInterdigitTimeoutDuration(original["interdigitTimeoutDuration"], d, config)
+	transformed["endpointing_timeout_duration"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsEndpointingTimeoutDuration(original["endpointingTimeoutDuration"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsMaxDigits(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsFinishDigit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsInterdigitTimeoutDuration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsEndpointingTimeoutDuration(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enable_interaction_logging"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableInteractionLogging(original["enableInteractionLogging"], d, config)
+	transformed["enable_consent_based_redaction"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableConsentBasedRedaction(original["enableConsentBasedRedaction"], d, config)
+	transformed["disable_logging"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsDisableLogging(original["disableLogging"], d, config)
+	transformed["enable_stackdriver_logging"] =
+		flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableStackdriverLogging(original["enableStackdriverLogging"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableInteractionLogging(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableConsentBasedRedaction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsDisableLogging(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableStackdriverLogging(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentEnableGenerativeFallback(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGenerators(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"generator":        flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsGenerator(original["generator"], d, config),
+			"input_parameters": flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsInputParameters(original["inputParameters"], d, config),
+			"output_parameter": flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsOutputParameter(original["outputParameter"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsGenerator(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsInputParameters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsOutputParameter(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandDialogflowCXPlaybookDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func expandDialogflowCXPlaybookGoal(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandDialogflowCXPlaybookInputParameterDefinitions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedName, err := expandDialogflowCXPlaybookInputParameterDefinitionsName(original["name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["name"] = transformedName
+		}
+
+		transformedDescription, err := expandDialogflowCXPlaybookInputParameterDefinitionsDescription(original["description"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["description"] = transformedDescription
+		}
+
+		transformedTypeSchema, err := expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchema(original["type_schema"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedTypeSchema); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["typeSchema"] = transformedTypeSchema
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookInputParameterDefinitionsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookInputParameterDefinitionsDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedSchemaReference, err := expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReference(original["schema_reference"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSchemaReference); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["schemaReference"] = transformedSchemaReference
+	}
+
+	transformedInlineSchema, err := expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchema(original["inline_schema"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInlineSchema); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["inlineSchema"] = transformedInlineSchema
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReference(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedTool, err := expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReferenceTool(original["tool"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTool); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tool"] = transformedTool
+	}
+
+	transformedSchema, err := expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReferenceSchema(original["schema"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSchema); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["schema"] = transformedSchema
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReferenceTool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaSchemaReferenceSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedType, err := expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchemaType(original["type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["type"] = transformedType
+	}
+
+	transformedItems, err := expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchemaItems(original["items"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedItems); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["items"] = transformedItems
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchemaType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookInputParameterDefinitionsTypeSchemaInlineSchemaItems(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookOutputParameterDefinitions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedName, err := expandDialogflowCXPlaybookOutputParameterDefinitionsName(original["name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["name"] = transformedName
+		}
+
+		transformedDescription, err := expandDialogflowCXPlaybookOutputParameterDefinitionsDescription(original["description"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["description"] = transformedDescription
+		}
+
+		transformedTypeSchema, err := expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchema(original["type_schema"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedTypeSchema); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["typeSchema"] = transformedTypeSchema
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookOutputParameterDefinitionsName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookOutputParameterDefinitionsDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedSchemaReference, err := expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReference(original["schema_reference"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSchemaReference); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["schemaReference"] = transformedSchemaReference
+	}
+
+	transformedInlineSchema, err := expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchema(original["inline_schema"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInlineSchema); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["inlineSchema"] = transformedInlineSchema
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReference(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedTool, err := expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReferenceTool(original["tool"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTool); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tool"] = transformedTool
+	}
+
+	transformedSchema, err := expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReferenceSchema(original["schema"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSchema); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["schema"] = transformedSchema
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReferenceTool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaSchemaReferenceSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchema(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedType, err := expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchemaType(original["type"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["type"] = transformedType
+	}
+
+	transformedItems, err := expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchemaItems(original["items"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedItems); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["items"] = transformedItems
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchemaType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookOutputParameterDefinitionsTypeSchemaInlineSchemaItems(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func expandDialogflowCXPlaybookInstruction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
@@ -934,12 +5534,3512 @@ func expandDialogflowCXPlaybookLlmModelSettingsPromptText(v interface{}, d tpgre
 	return v, nil
 }
 
+func expandDialogflowCXPlaybookHandlers(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedEventHandler, err := expandDialogflowCXPlaybookHandlersEventHandler(original["event_handler"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEventHandler); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["eventHandler"] = transformedEventHandler
+		}
+
+		transformedLifecycleHandler, err := expandDialogflowCXPlaybookHandlersLifecycleHandler(original["lifecycle_handler"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedLifecycleHandler); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["lifecycleHandler"] = transformedLifecycleHandler
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandler(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEvent, err := expandDialogflowCXPlaybookHandlersEventHandlerEvent(original["event"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEvent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["event"] = transformedEvent
+	}
+
+	transformedCondition, err := expandDialogflowCXPlaybookHandlersEventHandlerCondition(original["condition"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["condition"] = transformedCondition
+	}
+
+	transformedFulfillment, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillment(original["fulfillment"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedFulfillment); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["fulfillment"] = transformedFulfillment
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerEvent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMessages, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessages(original["messages"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMessages); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["messages"] = transformedMessages
+	}
+
+	transformedTag, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentTag(original["tag"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTag); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tag"] = transformedTag
+	}
+
+	transformedWebhook, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentWebhook(original["webhook"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedWebhook); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["webhook"] = transformedWebhook
+	}
+
+	transformedReturnPartialResponses, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentReturnPartialResponses(original["return_partial_responses"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedReturnPartialResponses); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["returnPartialResponses"] = transformedReturnPartialResponses
+	}
+
+	transformedSetParameterActions, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActions(original["set_parameter_actions"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSetParameterActions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["setParameterActions"] = transformedSetParameterActions
+	}
+
+	transformedConditionalCases, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCases(original["conditional_cases"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConditionalCases); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["conditionalCases"] = transformedConditionalCases
+	}
+
+	transformedAdvancedSettings, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettings(original["advanced_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAdvancedSettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["advancedSettings"] = transformedAdvancedSettings
+	}
+
+	transformedEnableGenerativeFallback, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentEnableGenerativeFallback(original["enable_generative_fallback"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableGenerativeFallback); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableGenerativeFallback"] = transformedEnableGenerativeFallback
+	}
+
+	transformedGenerators, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentGenerators(original["generators"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedGenerators); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["generators"] = transformedGenerators
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessages(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedResponseType, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesResponseType(original["response_type"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedResponseType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["responseType"] = transformedResponseType
+		}
+
+		transformedChannel, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesChannel(original["channel"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedChannel); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["channel"] = transformedChannel
+		}
+
+		transformedPlayAudio, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudio(original["play_audio"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPlayAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["playAudio"] = transformedPlayAudio
+		}
+
+		transformedMixedAudio, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudio(original["mixed_audio"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMixedAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["mixedAudio"] = transformedMixedAudio
+		}
+
+		transformedTelephonyTransferCall, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTelephonyTransferCall(original["telephony_transfer_call"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedTelephonyTransferCall); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["telephonyTransferCall"] = transformedTelephonyTransferCall
+		}
+
+		transformedKnowledgeInfoCard, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesKnowledgeInfoCard(original["knowledge_info_card"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedKnowledgeInfoCard); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["knowledgeInfoCard"] = transformedKnowledgeInfoCard
+		}
+
+		transformedToolCall, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCall(original["tool_call"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedToolCall); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["toolCall"] = transformedToolCall
+		}
+
+		transformedText, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesText(original["text"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["text"] = transformedText
+		}
+
+		transformedPayload, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPayload(original["payload"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPayload); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["payload"] = transformedPayload
+		}
+
+		transformedConversationSuccess, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesConversationSuccess(original["conversation_success"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedConversationSuccess); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["conversationSuccess"] = transformedConversationSuccess
+		}
+
+		transformedOutputAudioText, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioText(original["output_audio_text"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedOutputAudioText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["outputAudioText"] = transformedOutputAudioText
+		}
+
+		transformedLiveAgentHandoff, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesLiveAgentHandoff(original["live_agent_handoff"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedLiveAgentHandoff); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["liveAgentHandoff"] = transformedLiveAgentHandoff
+		}
+
+		transformedEndInteraction, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesEndInteraction(original["end_interaction"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEndInteraction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["endInteraction"] = transformedEndInteraction
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesResponseType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesChannel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAudioUri, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudioAudioUri(original["audio_uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAudioUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["audioUri"] = transformedAudioUri
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudioAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudioAudioUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPlayAudioAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedSegments, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegments(original["segments"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSegments); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["segments"] = transformedSegments
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegments(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedAudio, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsAudio(original["audio"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["audio"] = transformedAudio
+		}
+
+		transformedUri, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsUri(original["uri"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["uri"] = transformedUri
+		}
+
+		transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesMixedAudioSegmentsAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTelephonyTransferCall(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPhoneNumber, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTelephonyTransferCallPhoneNumber(original["phone_number"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPhoneNumber); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["phoneNumber"] = transformedPhoneNumber
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTelephonyTransferCallPhoneNumber(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesKnowledgeInfoCard(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMaximumSnippets, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesKnowledgeInfoCardMaximumSnippets(original["maximum_snippets"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaximumSnippets); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["maximumSnippets"] = transformedMaximumSnippets
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesKnowledgeInfoCardMaximumSnippets(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCall(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedInputParameters, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallInputParameters(original["input_parameters"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInputParameters); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["inputParameters"] = transformedInputParameters
+	}
+
+	transformedTool, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallTool(original["tool"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTool); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tool"] = transformedTool
+	}
+
+	transformedAction, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallAction(original["action"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["action"] = transformedAction
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallInputParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallTool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesToolCallAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedText, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTextText(original["text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["text"] = transformedText
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTextAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTextText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesTextAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesPayload(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesConversationSuccess(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMetadata, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesConversationSuccessMetadata(original["metadata"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMetadata); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["metadata"] = transformedMetadata
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesConversationSuccessMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedText, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextText(original["text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["text"] = transformedText
+	}
+
+	transformedSsml, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextSsml(original["ssml"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSsml); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["ssml"] = transformedSsml
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextSsml(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesOutputAudioTextAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesLiveAgentHandoff(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMetadata, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesLiveAgentHandoffMetadata(original["metadata"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMetadata); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["metadata"] = transformedMetadata
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesLiveAgentHandoffMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentMessagesEndInteraction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentTag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentWebhook(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentReturnPartialResponses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedParameter, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActionsParameter(original["parameter"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedParameter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["parameter"] = transformedParameter
+		}
+
+		transformedValue, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActionsValue(original["value"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["value"] = transformedValue
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActionsParameter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentSetParameterActionsValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	var j interface{}
+	if err := json.Unmarshal(b, &j); err != nil {
+		return nil, err
+	}
+	return j, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCases(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedCases, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCases(original["cases"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCases); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["cases"] = transformedCases
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCases(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedCaseContent, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContent(original["case_content"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCaseContent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["caseContent"] = transformedCaseContent
+		}
+
+		transformedCondition, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCondition(original["condition"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["condition"] = transformedCondition
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedMessage, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessage(original["message"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMessage); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["message"] = transformedMessage
+		}
+
+		transformedAdditionalCases, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentAdditionalCases(original["additional_cases"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAdditionalCases); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["additionalCases"] = transformedAdditionalCases
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedConversationSuccess, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccess(original["conversation_success"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConversationSuccess); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["conversationSuccess"] = transformedConversationSuccess
+	}
+
+	transformedOutputAudioText, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioText(original["output_audio_text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOutputAudioText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["outputAudioText"] = transformedOutputAudioText
+	}
+
+	transformedLiveAgentHandoff, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoff(original["live_agent_handoff"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLiveAgentHandoff); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["liveAgentHandoff"] = transformedLiveAgentHandoff
+	}
+
+	transformedEndInteraction, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageEndInteraction(original["end_interaction"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEndInteraction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["endInteraction"] = transformedEndInteraction
+	}
+
+	transformedPlayAudio, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudio(original["play_audio"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPlayAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["playAudio"] = transformedPlayAudio
+	}
+
+	transformedMixedAudio, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudio(original["mixed_audio"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMixedAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["mixedAudio"] = transformedMixedAudio
+	}
+
+	transformedTelephonyTransferCall, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCall(original["telephony_transfer_call"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTelephonyTransferCall); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["telephonyTransferCall"] = transformedTelephonyTransferCall
+	}
+
+	transformedKnowledgeInfoCard, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCard(original["knowledge_info_card"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedKnowledgeInfoCard); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["knowledgeInfoCard"] = transformedKnowledgeInfoCard
+	}
+
+	transformedToolCall, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCall(original["tool_call"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedToolCall); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["toolCall"] = transformedToolCall
+	}
+
+	transformedText, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageText(original["text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["text"] = transformedText
+	}
+
+	transformedPayload, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePayload(original["payload"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPayload); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["payload"] = transformedPayload
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccess(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMetadata, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccessMetadata(original["metadata"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMetadata); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["metadata"] = transformedMetadata
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccessMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedText, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextText(original["text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["text"] = transformedText
+	}
+
+	transformedSsml, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextSsml(original["ssml"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSsml); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["ssml"] = transformedSsml
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextSsml(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoff(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMetadata, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoffMetadata(original["metadata"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMetadata); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["metadata"] = transformedMetadata
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoffMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageEndInteraction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAudioUri, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAudioUri(original["audio_uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAudioUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["audioUri"] = transformedAudioUri
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAudioUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedSegments, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegments(original["segments"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSegments); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["segments"] = transformedSegments
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegments(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedAudio, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAudio(original["audio"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["audio"] = transformedAudio
+		}
+
+		transformedUri, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsUri(original["uri"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["uri"] = transformedUri
+		}
+
+		transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCall(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPhoneNumber, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCallPhoneNumber(original["phone_number"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPhoneNumber); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["phoneNumber"] = transformedPhoneNumber
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCallPhoneNumber(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCard(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMaximumSnippets, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCardMaximumSnippets(original["maximum_snippets"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaximumSnippets); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["maximumSnippets"] = transformedMaximumSnippets
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCardMaximumSnippets(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCall(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedTool, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallTool(original["tool"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTool); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tool"] = transformedTool
+	}
+
+	transformedAction, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallAction(original["action"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["action"] = transformedAction
+	}
+
+	transformedInputParameters, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallInputParameters(original["input_parameters"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInputParameters); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["inputParameters"] = transformedInputParameters
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallTool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallInputParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedText, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextText(original["text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["text"] = transformedText
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentMessagePayload(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCaseContentAdditionalCases(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentConditionalCasesCasesCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAudioExportGcsDestination, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsAudioExportGcsDestination(original["audio_export_gcs_destination"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAudioExportGcsDestination); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["audioExportGcsDestination"] = transformedAudioExportGcsDestination
+	}
+
+	transformedSpeechSettings, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettings(original["speech_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSpeechSettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["speechSettings"] = transformedSpeechSettings
+	}
+
+	transformedDtmfSettings, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettings(original["dtmf_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDtmfSettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["dtmfSettings"] = transformedDtmfSettings
+	}
+
+	transformedLoggingSettings, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettings(original["logging_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLoggingSettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["loggingSettings"] = transformedLoggingSettings
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsAudioExportGcsDestination(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedUri, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsAudioExportGcsDestinationUri(original["uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["uri"] = transformedUri
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsAudioExportGcsDestinationUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEndpointerSensitivity, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsEndpointerSensitivity(original["endpointer_sensitivity"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEndpointerSensitivity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["endpointerSensitivity"] = transformedEndpointerSensitivity
+	}
+
+	transformedNoSpeechTimeout, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsNoSpeechTimeout(original["no_speech_timeout"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedNoSpeechTimeout); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["noSpeechTimeout"] = transformedNoSpeechTimeout
+	}
+
+	transformedUseTimeoutBasedEndpointing, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsUseTimeoutBasedEndpointing(original["use_timeout_based_endpointing"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUseTimeoutBasedEndpointing); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["useTimeoutBasedEndpointing"] = transformedUseTimeoutBasedEndpointing
+	}
+
+	transformedModels, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsModels(original["models"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedModels); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["models"] = transformedModels
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsEndpointerSensitivity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsNoSpeechTimeout(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsUseTimeoutBasedEndpointing(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsSpeechSettingsModels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnabled, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	transformedMaxDigits, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsMaxDigits(original["max_digits"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxDigits); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["maxDigits"] = transformedMaxDigits
+	}
+
+	transformedFinishDigit, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsFinishDigit(original["finish_digit"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedFinishDigit); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["finishDigit"] = transformedFinishDigit
+	}
+
+	transformedInterdigitTimeoutDuration, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsInterdigitTimeoutDuration(original["interdigit_timeout_duration"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInterdigitTimeoutDuration); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["interdigitTimeoutDuration"] = transformedInterdigitTimeoutDuration
+	}
+
+	transformedEndpointingTimeoutDuration, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsEndpointingTimeoutDuration(original["endpointing_timeout_duration"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEndpointingTimeoutDuration); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["endpointingTimeoutDuration"] = transformedEndpointingTimeoutDuration
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsMaxDigits(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsFinishDigit(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsInterdigitTimeoutDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsDtmfSettingsEndpointingTimeoutDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnableInteractionLogging, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableInteractionLogging(original["enable_interaction_logging"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableInteractionLogging); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableInteractionLogging"] = transformedEnableInteractionLogging
+	}
+
+	transformedEnableConsentBasedRedaction, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableConsentBasedRedaction(original["enable_consent_based_redaction"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableConsentBasedRedaction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableConsentBasedRedaction"] = transformedEnableConsentBasedRedaction
+	}
+
+	transformedDisableLogging, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsDisableLogging(original["disable_logging"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDisableLogging); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["disableLogging"] = transformedDisableLogging
+	}
+
+	transformedEnableStackdriverLogging, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableStackdriverLogging(original["enable_stackdriver_logging"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableStackdriverLogging); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableStackdriverLogging"] = transformedEnableStackdriverLogging
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableInteractionLogging(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableConsentBasedRedaction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsDisableLogging(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableStackdriverLogging(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentEnableGenerativeFallback(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentGenerators(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedGenerator, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsGenerator(original["generator"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedGenerator); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["generator"] = transformedGenerator
+		}
+
+		transformedInputParameters, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsInputParameters(original["input_parameters"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedInputParameters); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["inputParameters"] = transformedInputParameters
+		}
+
+		transformedOutputParameter, err := expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsOutputParameter(original["output_parameter"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedOutputParameter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["outputParameter"] = transformedOutputParameter
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsGenerator(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsInputParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersEventHandlerFulfillmentGeneratorsOutputParameter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandler(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedLifecycleStage, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerLifecycleStage(original["lifecycle_stage"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLifecycleStage); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["lifecycleStage"] = transformedLifecycleStage
+	}
+
+	transformedCondition, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerCondition(original["condition"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["condition"] = transformedCondition
+	}
+
+	transformedFulfillment, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillment(original["fulfillment"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedFulfillment); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["fulfillment"] = transformedFulfillment
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerLifecycleStage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillment(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMessages, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessages(original["messages"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMessages); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["messages"] = transformedMessages
+	}
+
+	transformedTag, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentTag(original["tag"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTag); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tag"] = transformedTag
+	}
+
+	transformedWebhook, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentWebhook(original["webhook"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedWebhook); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["webhook"] = transformedWebhook
+	}
+
+	transformedReturnPartialResponses, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentReturnPartialResponses(original["return_partial_responses"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedReturnPartialResponses); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["returnPartialResponses"] = transformedReturnPartialResponses
+	}
+
+	transformedSetParameterActions, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActions(original["set_parameter_actions"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSetParameterActions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["setParameterActions"] = transformedSetParameterActions
+	}
+
+	transformedConditionalCases, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCases(original["conditional_cases"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConditionalCases); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["conditionalCases"] = transformedConditionalCases
+	}
+
+	transformedAdvancedSettings, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettings(original["advanced_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAdvancedSettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["advancedSettings"] = transformedAdvancedSettings
+	}
+
+	transformedEnableGenerativeFallback, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentEnableGenerativeFallback(original["enable_generative_fallback"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableGenerativeFallback); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableGenerativeFallback"] = transformedEnableGenerativeFallback
+	}
+
+	transformedGenerators, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGenerators(original["generators"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedGenerators); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["generators"] = transformedGenerators
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessages(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedResponseType, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesResponseType(original["response_type"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedResponseType); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["responseType"] = transformedResponseType
+		}
+
+		transformedChannel, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesChannel(original["channel"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedChannel); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["channel"] = transformedChannel
+		}
+
+		transformedPlayAudio, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudio(original["play_audio"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPlayAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["playAudio"] = transformedPlayAudio
+		}
+
+		transformedMixedAudio, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudio(original["mixed_audio"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMixedAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["mixedAudio"] = transformedMixedAudio
+		}
+
+		transformedTelephonyTransferCall, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTelephonyTransferCall(original["telephony_transfer_call"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedTelephonyTransferCall); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["telephonyTransferCall"] = transformedTelephonyTransferCall
+		}
+
+		transformedKnowledgeInfoCard, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesKnowledgeInfoCard(original["knowledge_info_card"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedKnowledgeInfoCard); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["knowledgeInfoCard"] = transformedKnowledgeInfoCard
+		}
+
+		transformedToolCall, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCall(original["tool_call"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedToolCall); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["toolCall"] = transformedToolCall
+		}
+
+		transformedText, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesText(original["text"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["text"] = transformedText
+		}
+
+		transformedPayload, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPayload(original["payload"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedPayload); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["payload"] = transformedPayload
+		}
+
+		transformedConversationSuccess, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesConversationSuccess(original["conversation_success"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedConversationSuccess); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["conversationSuccess"] = transformedConversationSuccess
+		}
+
+		transformedOutputAudioText, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioText(original["output_audio_text"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedOutputAudioText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["outputAudioText"] = transformedOutputAudioText
+		}
+
+		transformedLiveAgentHandoff, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesLiveAgentHandoff(original["live_agent_handoff"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedLiveAgentHandoff); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["liveAgentHandoff"] = transformedLiveAgentHandoff
+		}
+
+		transformedEndInteraction, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesEndInteraction(original["end_interaction"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedEndInteraction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["endInteraction"] = transformedEndInteraction
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesResponseType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesChannel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAudioUri, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudioAudioUri(original["audio_uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAudioUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["audioUri"] = transformedAudioUri
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudioAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudioAudioUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPlayAudioAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedSegments, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegments(original["segments"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSegments); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["segments"] = transformedSegments
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegments(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedAudio, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsAudio(original["audio"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["audio"] = transformedAudio
+		}
+
+		transformedUri, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsUri(original["uri"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["uri"] = transformedUri
+		}
+
+		transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesMixedAudioSegmentsAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTelephonyTransferCall(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPhoneNumber, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTelephonyTransferCallPhoneNumber(original["phone_number"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPhoneNumber); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["phoneNumber"] = transformedPhoneNumber
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTelephonyTransferCallPhoneNumber(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesKnowledgeInfoCard(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMaximumSnippets, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesKnowledgeInfoCardMaximumSnippets(original["maximum_snippets"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaximumSnippets); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["maximumSnippets"] = transformedMaximumSnippets
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesKnowledgeInfoCardMaximumSnippets(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCall(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedInputParameters, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallInputParameters(original["input_parameters"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInputParameters); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["inputParameters"] = transformedInputParameters
+	}
+
+	transformedTool, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallTool(original["tool"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTool); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tool"] = transformedTool
+	}
+
+	transformedAction, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallAction(original["action"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["action"] = transformedAction
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallInputParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallTool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesToolCallAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedText, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTextText(original["text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["text"] = transformedText
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTextAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTextText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesTextAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesPayload(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesConversationSuccess(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMetadata, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesConversationSuccessMetadata(original["metadata"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMetadata); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["metadata"] = transformedMetadata
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesConversationSuccessMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedText, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextText(original["text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["text"] = transformedText
+	}
+
+	transformedSsml, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextSsml(original["ssml"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSsml); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["ssml"] = transformedSsml
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextSsml(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesOutputAudioTextAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesLiveAgentHandoff(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMetadata, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesLiveAgentHandoffMetadata(original["metadata"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMetadata); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["metadata"] = transformedMetadata
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesLiveAgentHandoffMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentMessagesEndInteraction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentTag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentWebhook(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentReturnPartialResponses(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedParameter, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActionsParameter(original["parameter"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedParameter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["parameter"] = transformedParameter
+		}
+
+		transformedValue, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActionsValue(original["value"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedValue); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["value"] = transformedValue
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActionsParameter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentSetParameterActionsValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	var j interface{}
+	if err := json.Unmarshal(b, &j); err != nil {
+		return nil, err
+	}
+	return j, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCases(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedCases, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCases(original["cases"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCases); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["cases"] = transformedCases
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCases(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedCaseContent, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContent(original["case_content"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCaseContent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["caseContent"] = transformedCaseContent
+		}
+
+		transformedCondition, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCondition(original["condition"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["condition"] = transformedCondition
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedMessage, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessage(original["message"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedMessage); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["message"] = transformedMessage
+		}
+
+		transformedAdditionalCases, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentAdditionalCases(original["additional_cases"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAdditionalCases); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["additionalCases"] = transformedAdditionalCases
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedConversationSuccess, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccess(original["conversation_success"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedConversationSuccess); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["conversationSuccess"] = transformedConversationSuccess
+	}
+
+	transformedOutputAudioText, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioText(original["output_audio_text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOutputAudioText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["outputAudioText"] = transformedOutputAudioText
+	}
+
+	transformedLiveAgentHandoff, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoff(original["live_agent_handoff"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLiveAgentHandoff); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["liveAgentHandoff"] = transformedLiveAgentHandoff
+	}
+
+	transformedEndInteraction, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageEndInteraction(original["end_interaction"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEndInteraction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["endInteraction"] = transformedEndInteraction
+	}
+
+	transformedPlayAudio, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudio(original["play_audio"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPlayAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["playAudio"] = transformedPlayAudio
+	}
+
+	transformedMixedAudio, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudio(original["mixed_audio"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMixedAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["mixedAudio"] = transformedMixedAudio
+	}
+
+	transformedTelephonyTransferCall, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCall(original["telephony_transfer_call"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTelephonyTransferCall); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["telephonyTransferCall"] = transformedTelephonyTransferCall
+	}
+
+	transformedKnowledgeInfoCard, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCard(original["knowledge_info_card"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedKnowledgeInfoCard); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["knowledgeInfoCard"] = transformedKnowledgeInfoCard
+	}
+
+	transformedToolCall, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCall(original["tool_call"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedToolCall); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["toolCall"] = transformedToolCall
+	}
+
+	transformedText, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageText(original["text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["text"] = transformedText
+	}
+
+	transformedPayload, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePayload(original["payload"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPayload); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["payload"] = transformedPayload
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccess(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMetadata, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccessMetadata(original["metadata"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMetadata); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["metadata"] = transformedMetadata
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageConversationSuccessMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedText, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextText(original["text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["text"] = transformedText
+	}
+
+	transformedSsml, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextSsml(original["ssml"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSsml); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["ssml"] = transformedSsml
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextSsml(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageOutputAudioTextAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoff(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMetadata, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoffMetadata(original["metadata"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMetadata); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["metadata"] = transformedMetadata
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageLiveAgentHandoffMetadata(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageEndInteraction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAudioUri, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAudioUri(original["audio_uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAudioUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["audioUri"] = transformedAudioUri
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAudioUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePlayAudioAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedSegments, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegments(original["segments"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSegments); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["segments"] = transformedSegments
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegments(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedAudio, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAudio(original["audio"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAudio); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["audio"] = transformedAudio
+		}
+
+		transformedUri, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsUri(original["uri"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["uri"] = transformedUri
+		}
+
+		transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAudio(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageMixedAudioSegmentsAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCall(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedPhoneNumber, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCallPhoneNumber(original["phone_number"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedPhoneNumber); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["phoneNumber"] = transformedPhoneNumber
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTelephonyTransferCallPhoneNumber(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCard(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedMaximumSnippets, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCardMaximumSnippets(original["maximum_snippets"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaximumSnippets); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["maximumSnippets"] = transformedMaximumSnippets
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageKnowledgeInfoCardMaximumSnippets(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCall(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedTool, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallTool(original["tool"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTool); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tool"] = transformedTool
+	}
+
+	transformedAction, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallAction(original["action"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["action"] = transformedAction
+	}
+
+	transformedInputParameters, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallInputParameters(original["input_parameters"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInputParameters); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["inputParameters"] = transformedInputParameters
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallTool(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageToolCallInputParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedText, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextText(original["text"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedText); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["text"] = transformedText
+	}
+
+	transformedAllowPlaybackInterruption, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextAllowPlaybackInterruption(original["allow_playback_interruption"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAllowPlaybackInterruption); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["allowPlaybackInterruption"] = transformedAllowPlaybackInterruption
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextText(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessageTextAllowPlaybackInterruption(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentMessagePayload(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCaseContentAdditionalCases(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	b := []byte(v.(string))
+	if len(b) == 0 {
+		return nil, nil
+	}
+	m := make(map[string]interface{})
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentConditionalCasesCasesCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAudioExportGcsDestination, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsAudioExportGcsDestination(original["audio_export_gcs_destination"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAudioExportGcsDestination); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["audioExportGcsDestination"] = transformedAudioExportGcsDestination
+	}
+
+	transformedSpeechSettings, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettings(original["speech_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSpeechSettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["speechSettings"] = transformedSpeechSettings
+	}
+
+	transformedDtmfSettings, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettings(original["dtmf_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDtmfSettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["dtmfSettings"] = transformedDtmfSettings
+	}
+
+	transformedLoggingSettings, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettings(original["logging_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedLoggingSettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["loggingSettings"] = transformedLoggingSettings
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsAudioExportGcsDestination(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedUri, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsAudioExportGcsDestinationUri(original["uri"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUri); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["uri"] = transformedUri
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsAudioExportGcsDestinationUri(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEndpointerSensitivity, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsEndpointerSensitivity(original["endpointer_sensitivity"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEndpointerSensitivity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["endpointerSensitivity"] = transformedEndpointerSensitivity
+	}
+
+	transformedNoSpeechTimeout, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsNoSpeechTimeout(original["no_speech_timeout"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedNoSpeechTimeout); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["noSpeechTimeout"] = transformedNoSpeechTimeout
+	}
+
+	transformedUseTimeoutBasedEndpointing, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsUseTimeoutBasedEndpointing(original["use_timeout_based_endpointing"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedUseTimeoutBasedEndpointing); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["useTimeoutBasedEndpointing"] = transformedUseTimeoutBasedEndpointing
+	}
+
+	transformedModels, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsModels(original["models"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedModels); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["models"] = transformedModels
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsEndpointerSensitivity(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsNoSpeechTimeout(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsUseTimeoutBasedEndpointing(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsSpeechSettingsModels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnabled, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	transformedMaxDigits, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsMaxDigits(original["max_digits"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMaxDigits); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["maxDigits"] = transformedMaxDigits
+	}
+
+	transformedFinishDigit, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsFinishDigit(original["finish_digit"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedFinishDigit); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["finishDigit"] = transformedFinishDigit
+	}
+
+	transformedInterdigitTimeoutDuration, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsInterdigitTimeoutDuration(original["interdigit_timeout_duration"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInterdigitTimeoutDuration); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["interdigitTimeoutDuration"] = transformedInterdigitTimeoutDuration
+	}
+
+	transformedEndpointingTimeoutDuration, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsEndpointingTimeoutDuration(original["endpointing_timeout_duration"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEndpointingTimeoutDuration); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["endpointingTimeoutDuration"] = transformedEndpointingTimeoutDuration
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsMaxDigits(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsFinishDigit(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsInterdigitTimeoutDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsDtmfSettingsEndpointingTimeoutDuration(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnableInteractionLogging, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableInteractionLogging(original["enable_interaction_logging"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableInteractionLogging); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableInteractionLogging"] = transformedEnableInteractionLogging
+	}
+
+	transformedEnableConsentBasedRedaction, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableConsentBasedRedaction(original["enable_consent_based_redaction"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableConsentBasedRedaction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableConsentBasedRedaction"] = transformedEnableConsentBasedRedaction
+	}
+
+	transformedDisableLogging, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsDisableLogging(original["disable_logging"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDisableLogging); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["disableLogging"] = transformedDisableLogging
+	}
+
+	transformedEnableStackdriverLogging, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableStackdriverLogging(original["enable_stackdriver_logging"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnableStackdriverLogging); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enableStackdriverLogging"] = transformedEnableStackdriverLogging
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableInteractionLogging(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableConsentBasedRedaction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsDisableLogging(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentAdvancedSettingsLoggingSettingsEnableStackdriverLogging(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentEnableGenerativeFallback(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGenerators(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedGenerator, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsGenerator(original["generator"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedGenerator); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["generator"] = transformedGenerator
+		}
+
+		transformedInputParameters, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsInputParameters(original["input_parameters"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedInputParameters); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["inputParameters"] = transformedInputParameters
+		}
+
+		transformedOutputParameter, err := expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsOutputParameter(original["output_parameter"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedOutputParameter); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["outputParameter"] = transformedOutputParameter
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsGenerator(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsInputParameters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
+func expandDialogflowCXPlaybookHandlersLifecycleHandlerFulfillmentGeneratorsOutputParameter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandDialogflowCXPlaybookPlaybookType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
+func resourceDialogflowCXPlaybookDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	// Modify response for the following fields that are ignore_read (i.e. removed in the response): //
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+
+	handlers, ok := res["handlers"].([]interface{})
+	if !ok {
+		return res, nil
+	}
+
+	for i, rawHandler := range handlers {
+		handler, ok := rawHandler.(map[string]interface{})
+		if !ok {
+			continue
+		}
+
+		// Helper to process both eventHandler and lifecycleHandler
+		processSubHandler := func(jsonKey, tfKey string) {
+
+			// 1. Drill down to fulfillment in the generic Map (res)
+			subHandler, ok := handler[jsonKey].(map[string]interface{})
+			if !ok {
+				return
+			}
+
+			fulfillment, ok := subHandler["fulfillment"].(map[string]interface{})
+			if !ok {
+				return
+			}
+
+			// 2. Construct the Base Terraform Path (stops at fulfillment.0)
+			// Example: handlers.0.event_handler.0.fulfillment.0
+			baseFulfillmentPath := fmt.Sprintf("handlers.%d.%s.0.fulfillment.0", i, tfKey)
+
+			// --- Handle Advanced Settings ---
+			if advancedSettings, ok := fulfillment["advancedSettings"].(map[string]interface{}); ok {
+
+				// Audio Export
+				audioPath := baseFulfillmentPath + ".advanced_settings.0.audio_export_gcs_destination.0"
+				if val := d.Get(audioPath); val != nil {
+					if m, ok := val.(map[string]interface{}); ok && len(m) > 0 {
+						advancedSettings["audioExportGcsDestination"] = m
+					}
+				}
+
+				// Logging Settings
+				getLogBool := func(field string) bool {
+					path := fmt.Sprintf("%s.advanced_settings.0.logging_settings.0.%s", baseFulfillmentPath, field)
+					if v, ok := d.Get(path).(bool); ok {
+						return v
+					}
+					return false
+				}
+
+				advancedSettings["loggingSettings"] = map[string]interface{}{
+					"enableConsentBasedRedaction": getLogBool("enable_consent_based_redaction"),
+					"enableInteractionLogging":    getLogBool("enable_interaction_logging"),
+					"enableStackdriverLogging":    getLogBool("enable_stackdriver_logging"),
+				}
+			}
+
+			// --- Handle Messages ---
+			// Check if messages exist and is a slice
+			if msgs, ok := fulfillment["messages"].([]interface{}); ok {
+
+				// Iterate over the messages slice
+				for j, rawMsg := range msgs {
+					msg, ok := rawMsg.(map[string]interface{})
+					if !ok {
+						continue
+					}
+
+					// Define the base path for this specific message in Terraform state
+					msgTFPath := fmt.Sprintf("%s.messages.%d", baseFulfillmentPath, j)
+
+					// 1. Response Type
+					if val := d.Get(msgTFPath + ".response_type"); val != nil {
+						if strVal, ok := val.(string); ok && strVal != "" {
+							msg["responseType"] = strVal
+						}
+					}
+
+					// 2. Tool Call
+					// We get the map directly from d.Get
+					if val := d.Get(msgTFPath + ".tool_call.0"); val != nil {
+
+						// Cast directly to map[string]interface{} (No loop needed)
+						if toolMap, ok := val.(map[string]interface{}); ok && len(toolMap) > 0 {
+
+							// Create the destination map for the JSON payload
+							newToolCall := make(map[string]interface{})
+
+							// Extract fields directly from the Go map 'toolMap'
+							// Note: We access keys using valid Terraform schema names (usually snake_case)
+
+							// Action
+							if action, ok := toolMap["action"].(string); ok && action != "" {
+								newToolCall["action"] = action
+							}
+
+							// Tool
+							if tool, ok := toolMap["tool"].(string); ok && tool != "" {
+								newToolCall["tool"] = tool
+							}
+
+							// Input Parameters
+							// 1. Get the raw string from the map (e.g. "{\"query\": \"...\"}")
+							if inputParamsRaw, ok := toolMap["input_parameters"].(string); ok && inputParamsRaw != "" {
+
+								var paramsMap map[string]interface{}
+
+								// 2. Unmarshal the string into a Go map
+								err := json.Unmarshal([]byte(inputParamsRaw), &paramsMap)
+
+								// 3. If successful, assign it
+								if err == nil && len(paramsMap) > 0 {
+									newToolCall["inputParameters"] = paramsMap
+								}
+							}
+
+							// Assign if we found valid data
+							if len(newToolCall) > 0 {
+								msg["toolCall"] = newToolCall
+							}
+						}
+					}
+
+					// 3. Knowledge Info Card
+					// Get the map directly from Terraform state
+					// Path example: handlers.0.event_handler.0.fulfillment.0.messages.0.knowledge_info_card.0
+					if val := d.Get(msgTFPath + ".knowledge_info_card.0"); val != nil {
+
+						// Cast directly to map[string]interface{}
+						if cardMap, ok := val.(map[string]interface{}); ok && len(cardMap) > 0 {
+
+							// Check if the specific key exists in the Go map
+							if v, ok := cardMap["maximum_snippets"]; ok {
+
+								// Assert that the value is an integer
+								if maxSnip, ok := v.(int); ok {
+
+									// Construct the JSON object (camelCase for API)
+									msg["knowledgeInfoCard"] = map[string]interface{}{
+										"maximumSnippets": maxSnip,
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			// --- Handle Conditional Cases ---
+			if ccList, ok := fulfillment["conditionalCases"].([]interface{}); ok {
+
+				// Loop 1: conditionalCases
+				for k, rawCC := range ccList {
+					ccMap, ok := rawCC.(map[string]interface{})
+					if !ok {
+						continue
+					}
+
+					if casesList, ok := ccMap["cases"].([]interface{}); ok {
+
+						// Loop 2: cases
+						for l, rawCase := range casesList {
+							caseMap, ok := rawCase.(map[string]interface{})
+							if !ok {
+								continue
+							}
+
+							if contentList, ok := caseMap["caseContent"].([]interface{}); ok {
+
+								// Loop 3: caseContent
+								for m, rawContent := range contentList {
+									contentMap, ok := rawContent.(map[string]interface{})
+									if !ok {
+										continue
+									}
+
+									// Check if this content block has a "message"
+									if msgMap, ok := contentMap["message"].(map[string]interface{}); ok {
+
+										// Construct the deep Terraform path
+										// Format: ...conditional_cases.k.cases.l.case_content.m.message.0
+										// Note: We use 'baseFulfillmentPath' which ends at "...fulfillment.0"
+										msgTFPath := fmt.Sprintf("%s.conditional_cases.%d.cases.%d.case_content.%d.message.0",
+											baseFulfillmentPath, k, l, m)
+
+										// --- Knowledge Info Card Logic (Same as before) ---
+										// Path: ...message.0.knowledge_info_card.0
+										if val := d.Get(msgTFPath + ".knowledge_info_card.0"); val != nil {
+
+											// Treat knowledge_info_card as a Map
+											if cardMap, ok := val.(map[string]interface{}); ok && len(cardMap) > 0 {
+
+												// Extract maximum_snippets
+												if v, ok := cardMap["maximum_snippets"]; ok {
+													if maxSnip, ok := v.(int); ok {
+
+														// Assign to the existing message map
+														msgMap["knowledgeInfoCard"] = map[string]interface{}{
+															"maximumSnippets": maxSnip,
+														}
+													}
+												}
+											}
+										}
+
+										// --- Tool Call (Same as before) ---
+										// We get the map directly from d.Get
+										if val := d.Get(msgTFPath + ".tool_call.0"); val != nil {
+
+											// Cast directly to map[string]interface{} (No loop needed)
+											if toolMap, ok := val.(map[string]interface{}); ok && len(toolMap) > 0 {
+
+												// Create the destination map for the JSON payload
+												newToolCall := make(map[string]interface{})
+
+												// Extract fields directly from the Go map 'toolMap'
+												// Note: We access keys using valid Terraform schema names (usually snake_case)
+
+												// Action
+												if action, ok := toolMap["action"].(string); ok && action != "" {
+													newToolCall["action"] = action
+												}
+
+												// Tool
+												if tool, ok := toolMap["tool"].(string); ok && tool != "" {
+													newToolCall["tool"] = tool
+												}
+
+												// Input Parameters
+												// 1. Get the raw string from the map (e.g. "{\"query\": \"...\"}")
+												if inputParamsRaw, ok := toolMap["input_parameters"].(string); ok && inputParamsRaw != "" {
+
+													var paramsMap map[string]interface{}
+
+													// 2. Unmarshal the string into a Go map
+													err := json.Unmarshal([]byte(inputParamsRaw), &paramsMap)
+
+													// 3. If successful, assign it
+													if err == nil && len(paramsMap) > 0 {
+														newToolCall["inputParameters"] = paramsMap
+													}
+												}
+
+												// Assign if we found valid data
+												if len(newToolCall) > 0 {
+													msgMap["toolCall"] = newToolCall
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Process both paths
+		processSubHandler("eventHandler", "event_handler")
+		processSubHandler("lifecycleHandler", "lifecycle_handler")
+	}
+
+	return res, nil
+}
 func resourceDialogflowCXPlaybookPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
 	config := meta.(*transport_tpg.Config)
+	res, err := resourceDialogflowCXPlaybookDecoder(d, meta, res)
+	if err != nil {
+		return fmt.Errorf("decoding response: %w", err)
+	}
+	if res == nil {
+		return fmt.Errorf("decoding response, could not find object")
+	}
 	if err := d.Set("name", flattenDialogflowCXPlaybookName(res["name"], d, config)); err != nil {
 		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
 	}
