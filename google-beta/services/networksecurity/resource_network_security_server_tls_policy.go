@@ -220,6 +220,14 @@ Required if the policy is to be used with the external HTTPS load balancing. For
 If specified, the chain validation will be performed against certificates configured in the given TrustConfig.
 Allowed only if the policy is to be used with external HTTPS load balancers.`,
 						},
+						"tier": {
+							Type:         schema.TypeString,
+							Computed:     true,
+							Optional:     true,
+							ForceNew:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"STANDARD", "ADVANCED", ""}),
+							Description:  `Mutual TLS tier for XLB. Allowed only if the policy is to be used with Application Load Balancers. Possible values: ["STANDARD", "ADVANCED"]`,
+						},
 					},
 				},
 			},
@@ -751,6 +759,8 @@ func flattenNetworkSecurityServerTlsPolicyMtlsPolicy(v interface{}, d *schema.Re
 		return nil
 	}
 	transformed := make(map[string]interface{})
+	transformed["tier"] =
+		flattenNetworkSecurityServerTlsPolicyMtlsPolicyTier(original["tier"], d, config)
 	transformed["client_validation_mode"] =
 		flattenNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationMode(original["clientValidationMode"], d, config)
 	transformed["client_validation_trust_config"] =
@@ -759,6 +769,10 @@ func flattenNetworkSecurityServerTlsPolicyMtlsPolicy(v interface{}, d *schema.Re
 		flattenNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationCa(original["clientValidationCa"], d, config)
 	return []interface{}{transformed}
 }
+func flattenNetworkSecurityServerTlsPolicyMtlsPolicyTier(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -940,6 +954,13 @@ func expandNetworkSecurityServerTlsPolicyMtlsPolicy(v interface{}, d tpgresource
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
+	transformedTier, err := expandNetworkSecurityServerTlsPolicyMtlsPolicyTier(original["tier"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTier); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["tier"] = transformedTier
+	}
+
 	transformedClientValidationMode, err := expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationMode(original["client_validation_mode"], d, config)
 	if err != nil {
 		return nil, err
@@ -962,6 +983,10 @@ func expandNetworkSecurityServerTlsPolicyMtlsPolicy(v interface{}, d tpgresource
 	}
 
 	return transformed, nil
+}
+
+func expandNetworkSecurityServerTlsPolicyMtlsPolicyTier(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func expandNetworkSecurityServerTlsPolicyMtlsPolicyClientValidationMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {

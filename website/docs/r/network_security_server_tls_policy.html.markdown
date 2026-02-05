@@ -128,6 +128,7 @@ resource "google_network_security_server_tls_policy" "default" {
   mtls_policy {
     client_validation_mode         = "REJECT_INVALID"
     client_validation_trust_config = "projects/${data.google_project.project.number}/locations/global/trustConfigs/${google_certificate_manager_trust_config.default.name}"
+    tier = "ADVANCED"
   }
 
   labels = {
@@ -229,6 +230,11 @@ The following arguments are supported:
   Plugin instance name, used to locate and load CertificateProvider instance configuration. Set to "google_cloud_private_spiffe" to use Certificate Authority Service certificate provider instance.
 
 <a name="nested_mtls_policy"></a>The `mtls_policy` block supports:
+
+* `tier` -
+  (Optional)
+  Mutual TLS tier for XLB. Allowed only if the policy is to be used with Application Load Balancers.
+  Possible values are: `STANDARD`, `ADVANCED`.
 
 * `client_validation_mode` -
   (Optional)
