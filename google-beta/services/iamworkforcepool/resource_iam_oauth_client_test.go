@@ -90,6 +90,7 @@ resource "google_iam_oauth_client" "example" {
   allowed_redirect_uris     = ["https://www.example.com"]
   allowed_scopes            = ["https://www.googleapis.com/auth/cloud-platform"]
   client_type               = "CONFIDENTIAL_CLIENT"
+  pkce_enforced				= false
 }
 `, context)
 }
@@ -106,6 +107,7 @@ resource "google_iam_oauth_client" "example" {
   allowed_redirect_uris     = ["https://www.update.com"]
   allowed_scopes            = ["https://www.googleapis.com/auth/cloud-platform", "openid"]
   client_type               = "CONFIDENTIAL_CLIENT"
+  pkce_enforced				= false
 }
 `, context)
 }

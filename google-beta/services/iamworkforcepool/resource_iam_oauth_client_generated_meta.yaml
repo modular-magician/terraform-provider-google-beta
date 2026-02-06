@@ -19,4 +19,5 @@ fields:
     - api_field: name
     - field: oauth_client_id
       provider_only: true
+    - api_field: pkceEnforced
     - api_field: state

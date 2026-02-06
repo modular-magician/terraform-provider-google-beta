@@ -202,6 +202,12 @@ client.`,
 
 Cannot exceed 32 characters.`,
 			},
+			"pkce_enforced": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `Whether PKCE (RFC 7636) will be enforced for the OauthClient.
+For public clients, this field must to be true.`,
+			},
 			"client_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -289,6 +295,12 @@ func resourceIAMWorkforcePoolOauthClientCreate(d *schema.ResourceData, meta inte
 		return err
 	} else if v, ok := d.GetOkExists("allowed_redirect_uris"); !tpgresource.IsEmptyValue(reflect.ValueOf(allowedRedirectUrisProp)) && (ok || !reflect.DeepEqual(v, allowedRedirectUrisProp)) {
 		obj["allowedRedirectUris"] = allowedRedirectUrisProp
+	}
+	pkceEnforcedProp, err := expandIAMWorkforcePoolOauthClientPkceEnforced(d.Get("pkce_enforced"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("pkce_enforced"); !tpgresource.IsEmptyValue(reflect.ValueOf(pkceEnforcedProp)) && (ok || !reflect.DeepEqual(v, pkceEnforcedProp)) {
+		obj["pkceEnforced"] = pkceEnforcedProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{IAMWorkforcePoolBasePath}}projects/{{project}}/locations/{{location}}/oauthClients?oauthClientId={{oauth_client_id}}")
@@ -429,6 +441,9 @@ func resourceIAMWorkforcePoolOauthClientRead(d *schema.ResourceData, meta interf
 	if err := d.Set("allowed_redirect_uris", flattenIAMWorkforcePoolOauthClientAllowedRedirectUris(res["allowedRedirectUris"], d, config)); err != nil {
 		return fmt.Errorf("Error reading OauthClient: %s", err)
 	}
+	if err := d.Set("pkce_enforced", flattenIAMWorkforcePoolOauthClientPkceEnforced(res["pkceEnforced"], d, config)); err != nil {
+		return fmt.Errorf("Error reading OauthClient: %s", err)
+	}
 
 	return nil
 }
@@ -485,6 +500,12 @@ func resourceIAMWorkforcePoolOauthClientUpdate(d *schema.ResourceData, meta inte
 	} else if v, ok := d.GetOkExists("allowed_redirect_uris"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, allowedRedirectUrisProp)) {
 		obj["allowedRedirectUris"] = allowedRedirectUrisProp
 	}
+	pkceEnforcedProp, err := expandIAMWorkforcePoolOauthClientPkceEnforced(d.Get("pkce_enforced"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("pkce_enforced"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, pkceEnforcedProp)) {
+		obj["pkceEnforced"] = pkceEnforcedProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{IAMWorkforcePoolBasePath}}projects/{{project}}/locations/{{location}}/oauthClients/{{oauth_client_id}}")
 	if err != nil {
@@ -517,6 +538,10 @@ func resourceIAMWorkforcePoolOauthClientUpdate(d *schema.ResourceData, meta inte
 
 	if d.HasChange("allowed_redirect_uris") {
 		updateMask = append(updateMask, "allowedRedirectUris")
+	}
+
+	if d.HasChange("pkce_enforced") {
+		updateMask = append(updateMask, "pkceEnforced")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -675,6 +700,10 @@ func flattenIAMWorkforcePoolOauthClientAllowedRedirectUris(v interface{}, d *sch
 	return v
 }
 
+func flattenIAMWorkforcePoolOauthClientPkceEnforced(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandIAMWorkforcePoolOauthClientAllowedScopes(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -700,6 +729,10 @@ func expandIAMWorkforcePoolOauthClientClientType(v interface{}, d tpgresource.Te
 }
 
 func expandIAMWorkforcePoolOauthClientAllowedRedirectUris(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandIAMWorkforcePoolOauthClientPkceEnforced(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

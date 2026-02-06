@@ -119,6 +119,11 @@ The following arguments are supported:
   PUBLIC_CLIENT
   CONFIDENTIAL_CLIENT
 
+* `pkce_enforced` -
+  (Optional)
+  Whether PKCE (RFC 7636) will be enforced for the OauthClient.
+  For public clients, this field must to be true.
+
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
