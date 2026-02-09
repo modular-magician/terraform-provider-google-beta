@@ -44,6 +44,7 @@ To get more information about TargetHttpProxy, see:
 resource "google_compute_target_http_proxy" "default" {
   name    = "test-proxy"
   url_map = google_compute_url_map.default.id
+  http_filters = []
 }
 
 resource "google_compute_url_map" "default" {
@@ -241,6 +242,12 @@ The following arguments are supported:
   (Optional)
   This field only applies when the forwarding rule that references
   this target proxy has a loadBalancingScheme set to INTERNAL_SELF_MANAGED.
+
+* `http_filters` -
+  (Optional)
+  URLs to **networkservices.HttpFilter** resources enabled for xDS clients using this configuration.
+  This field only applies when the forwarding rule that references this target proxy has a
+  **loadBalancingScheme** set to INTERNAL_SELF_MANAGED.
 
 * `http_keep_alive_timeout_sec` -
   (Optional)

@@ -143,6 +143,16 @@ to the BackendService.`,
 				ForceNew:    true,
 				Description: `An optional description of this resource.`,
 			},
+			"http_filters": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Description: `URLs to **networkservices.HttpFilter** resources enabled for xDS clients using this configuration.
+This field only applies when the forwarding rule that references this target proxy has a
+**loadBalancingScheme** set to INTERNAL_SELF_MANAGED.`,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"http_keep_alive_timeout_sec": {
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -230,6 +240,12 @@ func resourceComputeTargetHttpProxyCreate(d *schema.ResourceData, meta interface
 		return err
 	} else if v, ok := d.GetOkExists("proxy_bind"); !tpgresource.IsEmptyValue(reflect.ValueOf(proxyBindProp)) && (ok || !reflect.DeepEqual(v, proxyBindProp)) {
 		obj["proxyBind"] = proxyBindProp
+	}
+	httpFiltersProp, err := expandComputeTargetHttpProxyHttpFilters(d.Get("http_filters"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("http_filters"); ok || !reflect.DeepEqual(v, httpFiltersProp) {
+		obj["httpFilters"] = httpFiltersProp
 	}
 	httpKeepAliveTimeoutSecProp, err := expandComputeTargetHttpProxyHttpKeepAliveTimeoutSec(d.Get("http_keep_alive_timeout_sec"), d, config)
 	if err != nil {
@@ -360,6 +376,9 @@ func resourceComputeTargetHttpProxyRead(d *schema.ResourceData, meta interface{}
 	if err := d.Set("proxy_bind", flattenComputeTargetHttpProxyProxyBind(res["proxyBind"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
+	if err := d.Set("http_filters", flattenComputeTargetHttpProxyHttpFilters(res["httpFilters"], d, config)); err != nil {
+		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
+	}
 	if err := d.Set("http_keep_alive_timeout_sec", flattenComputeTargetHttpProxyHttpKeepAliveTimeoutSec(res["httpKeepAliveTimeoutSec"], d, config)); err != nil {
 		return fmt.Errorf("Error reading TargetHttpProxy: %s", err)
 	}
@@ -415,6 +434,74 @@ func resourceComputeTargetHttpProxyUpdate(d *schema.ResourceData, meta interface
 		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 			Config:    config,
 			Method:    "POST",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutUpdate),
+			Headers:   headers,
+		})
+		if err != nil {
+			return fmt.Errorf("Error updating TargetHttpProxy %q: %s", d.Id(), err)
+		} else {
+			log.Printf("[DEBUG] Finished updating TargetHttpProxy %q: %#v", d.Id(), res)
+		}
+
+		err = ComputeOperationWaitTime(
+			config, res, project, "Updating TargetHttpProxy", userAgent,
+			d.Timeout(schema.TimeoutUpdate))
+		if err != nil {
+			return err
+		}
+	}
+	if d.HasChange("http_filters") {
+		obj := make(map[string]interface{})
+
+		getUrl, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/targetHttpProxies/{{name}}")
+		if err != nil {
+			return err
+		}
+
+		// err == nil indicates that the billing_project value was found
+		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		getRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "GET",
+			Project:   billingProject,
+			RawURL:    getUrl,
+			UserAgent: userAgent,
+		})
+		if err != nil {
+			return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("ComputeTargetHttpProxy %q", d.Id()))
+		}
+
+		obj["fingerprint"] = getRes["fingerprint"]
+
+		httpFiltersProp, err := expandComputeTargetHttpProxyHttpFilters(d.Get("http_filters"), d, config)
+		if err != nil {
+			return err
+		} else if v, ok := d.GetOkExists("http_filters"); ok || !reflect.DeepEqual(v, httpFiltersProp) {
+			obj["httpFilters"] = httpFiltersProp
+		}
+
+		url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/global/targetHttpProxies/{{name}}")
+		if err != nil {
+			return err
+		}
+
+		headers := make(http.Header)
+
+		// err == nil indicates that the billing_project value was found
+		if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+			billingProject = bp
+		}
+
+		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
 			Project:   billingProject,
 			RawURL:    url,
 			UserAgent: userAgent,
@@ -557,6 +644,10 @@ func flattenComputeTargetHttpProxyProxyBind(v interface{}, d *schema.ResourceDat
 	return v
 }
 
+func flattenComputeTargetHttpProxyHttpFilters(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenComputeTargetHttpProxyHttpKeepAliveTimeoutSec(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
@@ -595,6 +686,10 @@ func expandComputeTargetHttpProxyUrlMap(v interface{}, d tpgresource.TerraformRe
 }
 
 func expandComputeTargetHttpProxyProxyBind(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeTargetHttpProxyHttpFilters(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

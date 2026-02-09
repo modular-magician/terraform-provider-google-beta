@@ -80,6 +80,7 @@ func testAccComputeTargetHttpProxy_targetHttpProxyBasicExample(context map[strin
 resource "google_compute_target_http_proxy" "default" {
   name    = "tf-test-test-proxy%{random_suffix}"
   url_map = google_compute_url_map.default.id
+  http_filters = []
 }
 
 resource "google_compute_url_map" "default" {
