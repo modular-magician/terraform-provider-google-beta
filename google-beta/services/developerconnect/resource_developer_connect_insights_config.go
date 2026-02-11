@@ -120,13 +120,6 @@ func ResourceDeveloperConnectInsightsConfig() *schema.Resource {
 		),
 
 		Schema: map[string]*schema.Schema{
-			"app_hub_application": {
-				Type:     schema.TypeString,
-				Required: true,
-				Description: `The name of the App Hub Application.
-Format:
-projects/{project}/locations/{location}/applications/{application}`,
-			},
 			"insights_config_id": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -148,6 +141,14 @@ for more details such as format and size limitations.
 **Note**: This field is non-authoritative, and will only manage the annotations present in your configuration.
 Please refer to the field 'effective_annotations' for all of the annotations present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
+			},
+			"app_hub_application": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `The name of the App Hub Application.
+Format:
+projects/{project}/locations/{location}/applications/{application}`,
+				ConflictsWith: []string{"traget_projects"},
 			},
 			"artifact_configs": {
 				Type:        schema.TypeList,
@@ -211,6 +212,28 @@ artifacts.`,
 **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
+			},
+			"traget_projects": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `The projects to track with the InsightsConfig.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"project_ids": {
+							Type:             schema.TypeList,
+							Optional:         true,
+							ForceNew:         true,
+							DiffSuppressFunc: tpgresource.ProjectNumberDiffSuppress,
+							Description:      `The project IDs. Format {project}.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+				ConflictsWith: []string{"app_hub_application"},
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -409,6 +432,12 @@ func resourceDeveloperConnectInsightsConfigCreate(d *schema.ResourceData, meta i
 	} else if v, ok := d.GetOkExists("app_hub_application"); !tpgresource.IsEmptyValue(reflect.ValueOf(appHubApplicationProp)) && (ok || !reflect.DeepEqual(v, appHubApplicationProp)) {
 		obj["appHubApplication"] = appHubApplicationProp
 	}
+	tragetProjectsProp, err := expandDeveloperConnectInsightsConfigTragetProjects(d.Get("traget_projects"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("traget_projects"); !tpgresource.IsEmptyValue(reflect.ValueOf(tragetProjectsProp)) && (ok || !reflect.DeepEqual(v, tragetProjectsProp)) {
+		obj["projects"] = tragetProjectsProp
+	}
 	artifactConfigsProp, err := expandDeveloperConnectInsightsConfigArtifactConfigs(d.Get("artifact_configs"), d, config)
 	if err != nil {
 		return err
@@ -527,6 +556,9 @@ func resourceDeveloperConnectInsightsConfigRead(d *schema.ResourceData, meta int
 	}
 
 	if err := d.Set("app_hub_application", flattenDeveloperConnectInsightsConfigAppHubApplication(res["appHubApplication"], d, config)); err != nil {
+		return fmt.Errorf("Error reading InsightsConfig: %s", err)
+	}
+	if err := d.Set("traget_projects", flattenDeveloperConnectInsightsConfigTragetProjects(res["projects"], d, config)); err != nil {
 		return fmt.Errorf("Error reading InsightsConfig: %s", err)
 	}
 	if err := d.Set("name", flattenDeveloperConnectInsightsConfigName(res["name"], d, config)); err != nil {
@@ -754,6 +786,23 @@ func resourceDeveloperConnectInsightsConfigImport(d *schema.ResourceData, meta i
 }
 
 func flattenDeveloperConnectInsightsConfigAppHubApplication(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDeveloperConnectInsightsConfigTragetProjects(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["project_ids"] =
+		flattenDeveloperConnectInsightsConfigTragetProjectsProjectIds(original["projectIds"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDeveloperConnectInsightsConfigTragetProjectsProjectIds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1024,6 +1073,32 @@ func flattenDeveloperConnectInsightsConfigEffectiveLabels(v interface{}, d *sche
 }
 
 func expandDeveloperConnectInsightsConfigAppHubApplication(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDeveloperConnectInsightsConfigTragetProjects(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedProjectIds, err := expandDeveloperConnectInsightsConfigTragetProjectsProjectIds(original["project_ids"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProjectIds); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["projectIds"] = transformedProjectIds
+	}
+
+	return transformed, nil
+}
+
+func expandDeveloperConnectInsightsConfigTragetProjectsProjectIds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

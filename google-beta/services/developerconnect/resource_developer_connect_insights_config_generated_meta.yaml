@@ -37,4 +37,6 @@ fields:
     - api_field: state
     - field: terraform_labels
       provider_only: true
+    - api_field: projects.projectIds
+      field: traget_projects.project_ids
     - api_field: updateTime
