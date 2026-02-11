@@ -66,6 +66,7 @@ resource "google_looker_instance" "looker-instance" {
   region             = "us-central1"
   public_ip_enabled  = true
   gemini_enabled     = true
+  catalog_integration_enabled = true
   admin_settings {
     allowed_email_domains = ["google.com"]
   }
@@ -134,6 +135,7 @@ resource "google_looker_instance" "looker-instance" {
   private_ip_enabled = true
   public_ip_enabled  = false
   gemini_enabled     = true
+  catalog_integration_enabled = true
   reserved_range     = "${google_compute_global_address.looker_range.name}"
   consumer_network   = google_compute_network.looker_network.id
   admin_settings {
@@ -346,6 +348,10 @@ The following arguments are supported:
 * `gemini_enabled` -
   (Optional)
   Gemini enablement for Looker (Google Cloud Core).
+
+* `catalog_integration_enabled` -
+  (Optional)
+  Catalog Integration Enablement for Looker (Google Cloud Core).
 
 * `maintenance_window` -
   (Optional)

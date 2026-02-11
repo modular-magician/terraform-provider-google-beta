@@ -168,6 +168,12 @@ existing list of allowed email domains.`,
 					},
 				},
 			},
+			"catalog_integration_enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: `Catalog Integration Enablement for Looker (Google Cloud Core).`,
+				Default:     true,
+			},
 			"consumer_network": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -732,6 +738,12 @@ func resourceLookerInstanceCreate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("gemini_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(geminiEnabledProp)) && (ok || !reflect.DeepEqual(v, geminiEnabledProp)) {
 		obj["geminiEnabled"] = geminiEnabledProp
 	}
+	catalogIntegrationEnabledProp, err := expandLookerInstanceCatalogIntegrationEnabled(d.Get("catalog_integration_enabled"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("catalog_integration_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(catalogIntegrationEnabledProp)) && (ok || !reflect.DeepEqual(v, catalogIntegrationEnabledProp)) {
+		obj["catalogIntegrationEnabled"] = catalogIntegrationEnabledProp
+	}
 	maintenanceWindowProp, err := expandLookerInstanceMaintenanceWindow(d.Get("maintenance_window"), d, config)
 	if err != nil {
 		return err
@@ -935,6 +947,9 @@ func resourceLookerInstanceRead(d *schema.ResourceData, meta interface{}) error 
 	if err := d.Set("gemini_enabled", flattenLookerInstanceGeminiEnabled(res["geminiEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	if err := d.Set("catalog_integration_enabled", flattenLookerInstanceCatalogIntegrationEnabled(res["catalogIntegrationEnabled"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
 	if err := d.Set("ingress_private_ip", flattenLookerInstanceIngressPrivateIp(res["ingressPrivateIp"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
@@ -1048,6 +1063,12 @@ func resourceLookerInstanceUpdate(d *schema.ResourceData, meta interface{}) erro
 	} else if v, ok := d.GetOkExists("gemini_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, geminiEnabledProp)) {
 		obj["geminiEnabled"] = geminiEnabledProp
 	}
+	catalogIntegrationEnabledProp, err := expandLookerInstanceCatalogIntegrationEnabled(d.Get("catalog_integration_enabled"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("catalog_integration_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, catalogIntegrationEnabledProp)) {
+		obj["catalogIntegrationEnabled"] = catalogIntegrationEnabledProp
+	}
 	maintenanceWindowProp, err := expandLookerInstanceMaintenanceWindow(d.Get("maintenance_window"), d, config)
 	if err != nil {
 		return err
@@ -1149,6 +1170,10 @@ func resourceLookerInstanceUpdate(d *schema.ResourceData, meta interface{}) erro
 
 	if d.HasChange("gemini_enabled") {
 		updateMask = append(updateMask, "geminiEnabled")
+	}
+
+	if d.HasChange("catalog_integration_enabled") {
+		updateMask = append(updateMask, "catalogIntegrationEnabled")
 	}
 
 	if d.HasChange("maintenance_window") {
@@ -1652,6 +1677,10 @@ func flattenLookerInstanceFipsEnabled(v interface{}, d *schema.ResourceData, con
 }
 
 func flattenLookerInstanceGeminiEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenLookerInstanceCatalogIntegrationEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2376,6 +2405,10 @@ func expandLookerInstanceFipsEnabled(v interface{}, d tpgresource.TerraformResou
 }
 
 func expandLookerInstanceGeminiEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandLookerInstanceCatalogIntegrationEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
