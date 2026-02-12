@@ -313,6 +313,8 @@ var handwrittenDatasources = map[string]*schema.Resource{
 	"google_compute_reservation_block":                           compute.DataSourceGoogleComputeReservationBlock(),
 	"google_compute_reservation_sub_block":                       compute.DataSourceGoogleComputeReservationSubBlock(),
 	"google_compute_resource_policy":                             compute.DataSourceGoogleComputeResourcePolicy(),
+	"google_compute_rollout":                                     compute.DataSourceGoogleComputeRollout(),
+	"google_compute_rollouts":                                    compute.DataSourceGoogleComputeRollouts(),
 	"google_compute_router":                                      compute.DataSourceGoogleComputeRouter(),
 	"google_compute_routers":                                     compute.DataSourceGoogleComputeRouters(),
 	"google_compute_router_nat":                                  compute.DataSourceGoogleComputeRouterNat(),
@@ -638,9 +640,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 782
+// Generated resources: 783
 // Generated IAM resources: 354
-// Total generated resources: 1136
+// Total generated resources: 1137
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     registry.Resource("google_folder_access_approval_settings"),
 	"google_organization_access_approval_settings":                               registry.Resource("google_organization_access_approval_settings"),
@@ -1019,6 +1021,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_compute_resize_request":                                              registry.Resource("google_compute_resize_request"),
 	"google_compute_resource_policy":                                             registry.Resource("google_compute_resource_policy"),
 	"google_compute_resource_policy_attachment":                                  registry.Resource("google_compute_resource_policy_attachment"),
+	"google_compute_rollout_plan":                                                registry.Resource("google_compute_rollout_plan"),
 	"google_compute_route":                                                       registry.Resource("google_compute_route"),
 	"google_compute_router":                                                      registry.Resource("google_compute_router"),
 	"google_compute_router_nat":                                                  registry.Resource("google_compute_router_nat"),
