@@ -50,6 +50,7 @@ data "google_iam_policy" "admin" {
 }
 
 resource "google_dataproc_metastore_table_iam_policy" "policy" {
+  depends_on      = [time_sleep.wait_hive_job]
   project = google_dataproc_metastore_service.dpms_service.project
   location = google_dataproc_metastore_service.dpms_service.location
   service_id = google_dataproc_metastore_service.dpms_service.service_id
@@ -63,6 +64,7 @@ resource "google_dataproc_metastore_table_iam_policy" "policy" {
 
 ```hcl
 resource "google_dataproc_metastore_table_iam_binding" "binding" {
+  depends_on      = [time_sleep.wait_hive_job]
   project = google_dataproc_metastore_service.dpms_service.project
   location = google_dataproc_metastore_service.dpms_service.location
   service_id = google_dataproc_metastore_service.dpms_service.service_id
@@ -79,6 +81,7 @@ resource "google_dataproc_metastore_table_iam_binding" "binding" {
 
 ```hcl
 resource "google_dataproc_metastore_table_iam_member" "member" {
+  depends_on      = [time_sleep.wait_hive_job]
   project = google_dataproc_metastore_service.dpms_service.project
   location = google_dataproc_metastore_service.dpms_service.location
   service_id = google_dataproc_metastore_service.dpms_service.service_id

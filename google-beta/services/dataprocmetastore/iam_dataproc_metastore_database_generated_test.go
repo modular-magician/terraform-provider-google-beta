@@ -214,6 +214,7 @@ resource "time_sleep" "wait_hive_job" {
 }
 
 resource "google_dataproc_metastore_database_iam_member" "foo" {
+  depends_on      = [time_sleep.wait_hive_job]
   project = google_dataproc_metastore_service.dpms_service.project
   location = google_dataproc_metastore_service.dpms_service.location
   service_id = google_dataproc_metastore_service.dpms_service.service_id
@@ -301,6 +302,7 @@ data "google_iam_policy" "foo" {
 }
 
 resource "google_dataproc_metastore_database_iam_policy" "foo" {
+  depends_on      = [time_sleep.wait_hive_job]
   project = google_dataproc_metastore_service.dpms_service.project
   location = google_dataproc_metastore_service.dpms_service.location
   service_id = google_dataproc_metastore_service.dpms_service.service_id
@@ -309,6 +311,7 @@ resource "google_dataproc_metastore_database_iam_policy" "foo" {
 }
 
 data "google_dataproc_metastore_database_iam_policy" "foo" {
+  depends_on      = [time_sleep.wait_hive_job]
   project = google_dataproc_metastore_service.dpms_service.project
   location = google_dataproc_metastore_service.dpms_service.location
   service_id = google_dataproc_metastore_service.dpms_service.service_id
@@ -393,6 +396,7 @@ data "google_iam_policy" "foo" {
 }
 
 resource "google_dataproc_metastore_database_iam_policy" "foo" {
+  depends_on      = [time_sleep.wait_hive_job]
   project = google_dataproc_metastore_service.dpms_service.project
   location = google_dataproc_metastore_service.dpms_service.location
   service_id = google_dataproc_metastore_service.dpms_service.service_id
@@ -472,6 +476,7 @@ resource "time_sleep" "wait_hive_job" {
 }
 
 resource "google_dataproc_metastore_database_iam_binding" "foo" {
+  depends_on      = [time_sleep.wait_hive_job]
   project = google_dataproc_metastore_service.dpms_service.project
   location = google_dataproc_metastore_service.dpms_service.location
   service_id = google_dataproc_metastore_service.dpms_service.service_id
@@ -552,6 +557,7 @@ resource "time_sleep" "wait_hive_job" {
 }
 
 resource "google_dataproc_metastore_database_iam_binding" "foo" {
+  depends_on      = [time_sleep.wait_hive_job]
   project = google_dataproc_metastore_service.dpms_service.project
   location = google_dataproc_metastore_service.dpms_service.location
   service_id = google_dataproc_metastore_service.dpms_service.service_id

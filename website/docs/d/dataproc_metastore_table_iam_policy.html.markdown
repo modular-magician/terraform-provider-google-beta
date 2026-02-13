@@ -30,6 +30,7 @@ Retrieves the current IAM policy data for table
 
 ```hcl
 data "google_dataproc_metastore_table_iam_policy" "policy" {
+  depends_on      = [time_sleep.wait_hive_job]
   project = google_dataproc_metastore_service.dpms_service.project
   location = google_dataproc_metastore_service.dpms_service.location
   service_id = google_dataproc_metastore_service.dpms_service.service_id
