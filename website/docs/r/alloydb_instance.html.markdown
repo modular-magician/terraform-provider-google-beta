@@ -250,7 +250,7 @@ The following arguments are supported:
   Structure is [documented below](#nested_query_insights_config).
 
 * `observability_config` -
-  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  (Optional)
   Configuration for enhanced query insights.
   Structure is [documented below](#nested_observability_config).
 
@@ -339,8 +339,12 @@ The following arguments are supported:
   Track actively running queries. If not set, default value is "off".
 
 * `assistive_experiences_enabled` -
-  (Optional)
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
   Whether assistive experiences are enabled for this AlloyDB instance.
+
+* `track_client_address` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Track client address for an instance.
 
 <a name="nested_read_pool_config"></a>The `read_pool_config` block supports:
 

@@ -398,6 +398,12 @@ the same instance.`,
 							Optional:    true,
 							Description: `Track actively running queries. If not set, default value is "off".`,
 						},
+						"track_client_address": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Optional:    true,
+							Description: `Track client address for an instance.`,
+						},
 						"track_wait_event_types": {
 							Type:        schema.TypeBool,
 							Computed:    true,
@@ -1372,6 +1378,8 @@ func flattenAlloydbInstanceObservabilityConfig(v interface{}, d *schema.Resource
 		flattenAlloydbInstanceObservabilityConfigTrackActiveQueries(original["trackActiveQueries"], d, config)
 	transformed["assistive_experiences_enabled"] =
 		flattenAlloydbInstanceObservabilityConfigAssistiveExperiencesEnabled(original["assistiveExperiencesEnabled"], d, config)
+	transformed["track_client_address"] =
+		flattenAlloydbInstanceObservabilityConfigTrackClientAddress(original["trackClientAddress"], d, config)
 	return []interface{}{transformed}
 }
 func flattenAlloydbInstanceObservabilityConfigEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1433,6 +1441,10 @@ func flattenAlloydbInstanceObservabilityConfigTrackActiveQueries(v interface{}, 
 }
 
 func flattenAlloydbInstanceObservabilityConfigAssistiveExperiencesEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenAlloydbInstanceObservabilityConfigTrackClientAddress(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1929,6 +1941,13 @@ func expandAlloydbInstanceObservabilityConfig(v interface{}, d tpgresource.Terra
 	} else if transformedAssistiveExperiencesEnabled != nil {
 		transformed["assistiveExperiencesEnabled"] = transformedAssistiveExperiencesEnabled
 	}
+
+	transformedTrackClientAddress, err := expandAlloydbInstanceObservabilityConfigTrackClientAddress(original["track_client_address"], d, config)
+	if err != nil {
+		return nil, err
+	} else if transformedTrackClientAddress != nil {
+		transformed["trackClientAddress"] = transformedTrackClientAddress
+	}
 	log.Printf("vkanishk: expandAlloydbInstanceObservabilityConfig transformed %v", transformed)
 	return transformed, nil
 }
@@ -1966,6 +1985,10 @@ func expandAlloydbInstanceObservabilityConfigTrackActiveQueries(v interface{}, d
 }
 
 func expandAlloydbInstanceObservabilityConfigAssistiveExperiencesEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandAlloydbInstanceObservabilityConfigTrackClientAddress(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
