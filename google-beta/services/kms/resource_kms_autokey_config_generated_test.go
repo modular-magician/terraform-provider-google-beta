@@ -50,13 +50,13 @@ var (
 	_ = googleapi.Error{}
 )
 
-func TestAccKMSAutokeyConfig_kmsAutokeyConfigAllExample(t *testing.T) {
+func TestAccKMSAutokeyConfig_kmsAutokeyConfigFolderExample(t *testing.T) {
 	t.Parallel()
 
 	context := map[string]interface{}{
-		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
-		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"random_suffix":   acctest.RandString(t, 10),
+		"folder_id":      envvar.GetTestKMSAutokeyFolderIDFromEnv(t),
+		"key_project_id": envvar.GetTestKMSAutokeyKeyProjectIDFromEnv(t),
+		"random_suffix":  acctest.RandString(t, 10),
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -69,95 +69,65 @@ func TestAccKMSAutokeyConfig_kmsAutokeyConfigAllExample(t *testing.T) {
 		CheckDestroy: testAccCheckKMSAutokeyConfigDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccKMSAutokeyConfig_kmsAutokeyConfigAllExample(context),
+				Config: testAccKMSAutokeyConfig_kmsAutokeyConfigFolderExample(context),
 			},
 			{
-				ResourceName:            "google_kms_autokey_config.example-autokeyconfig",
+				ResourceName:            "google_kms_autokey_config.example-autokeyconfig-folder",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"folder"},
+				ImportStateVerifyIgnore: []string{"folder", "project"},
 			},
 		},
 	})
 }
 
-func testAccKMSAutokeyConfig_kmsAutokeyConfigAllExample(context map[string]interface{}) string {
+func testAccKMSAutokeyConfig_kmsAutokeyConfigFolderExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-# Create Folder in GCP Organization
-resource "google_folder" "autokms_folder" {
-  provider     = google-beta
-  display_name = "tf-test-folder-cfg%{random_suffix}"
-  parent       = "organizations/%{org_id}"
-  deletion_protection = false
-}
-
-# Create the key project
-resource "google_project" "key_project" {
-  provider        = google-beta
-  project_id      = "tf-test-key-proj%{random_suffix}"
-  name            = "tf-test-key-proj%{random_suffix}"
-  folder_id       = google_folder.autokms_folder.folder_id
-  billing_account = "%{billing_account}"
-  depends_on      = [google_folder.autokms_folder]
-  deletion_policy = "DELETE"
-}
-
-# Enable the Cloud KMS API
-resource "google_project_service" "kms_api_service" {
-  provider                   = google-beta
-  service                    = "cloudkms.googleapis.com"
-  project                    = google_project.key_project.project_id
-  disable_dependent_services = true
-  depends_on                 = [google_project.key_project]
-}
-
-# Wait delay after enabling APIs
-resource "time_sleep" "wait_enable_service_api" {
-  depends_on       = [google_project_service.kms_api_service]
-  create_duration  = "30s"
-}
-
-#Create KMS Service Agent
-resource "google_project_service_identity" "kms_service_agent" {
-  provider   = google-beta
-  service    = "cloudkms.googleapis.com"
-  project    = google_project.key_project.number
-  depends_on = [time_sleep.wait_enable_service_api]
-}
-
-# Wait delay after creating service agent.
-resource "time_sleep" "wait_service_agent" {
-  depends_on       = [google_project_service_identity.kms_service_agent]
-  create_duration  = "10s"
-}
-
-#Grant the KMS Service Agent the Cloud KMS Admin role
-resource "google_project_iam_member" "autokey_project_admin" {
-  provider   = google-beta
-  project    = google_project.key_project.project_id
-  role       = "roles/cloudkms.admin"
-  member     = "serviceAccount:service-${google_project.key_project.number}@gcp-sa-cloudkms.iam.gserviceaccount.com"
-  depends_on = [time_sleep.wait_service_agent]
-}
-
-# Wait delay after granting IAM permissions
-resource "time_sleep" "wait_srv_acc_permissions" {
-  create_duration = "10s"
-  depends_on      = [google_project_iam_member.autokey_project_admin]
-}
-
-resource "google_kms_autokey_config" "example-autokeyconfig" {
+resource "google_kms_autokey_config" "example-autokeyconfig-folder" {
   provider    = google-beta
-  folder      = google_folder.autokms_folder.id
-  key_project = "projects/${google_project.key_project.project_id}"
-  depends_on  = [time_sleep.wait_srv_acc_permissions]
+  folder      = "folders/%{folder_id}"
+  key_project = "projects/%{key_project_id}"
+  key_project_resolution_mode = "DEDICATED_KEY_PROJECT"
+}
+`, context)
 }
 
-# Wait delay after setting AutokeyConfig, to prevent diffs on reapply,
-# because setting the config takes a little to fully propagate.
-resource "time_sleep" "wait_autokey_propagation" {
-  create_duration = "30s"
-  depends_on      = [google_kms_autokey_config.example-autokeyconfig]
+func TestAccKMSAutokeyConfig_kmsAutokeyConfigProjectExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"project_number": envvar.GetTestProjectNumberFromEnv(),
+		"random_suffix":  acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ExternalProviders: map[string]resource.ExternalProvider{
+			"random": {},
+			"time":   {},
+		},
+		CheckDestroy: testAccCheckKMSAutokeyConfigDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccKMSAutokeyConfig_kmsAutokeyConfigProjectExample(context),
+			},
+			{
+				ResourceName:            "google_kms_autokey_config.example-autokeyconfig-project",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"folder", "key_project_resolution_mode", "project"},
+			},
+		},
+	})
+}
+
+func testAccKMSAutokeyConfig_kmsAutokeyConfigProjectExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_kms_autokey_config" "example-autokeyconfig-project" {
+  provider    = google-beta
+  project     = "projects/%{project_number}"
+  key_project_resolution_mode = "RESOURCE_PROJECT"
 }
 `, context)
 }

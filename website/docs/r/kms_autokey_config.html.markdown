@@ -37,85 +37,25 @@ To get more information about AutokeyConfig, see:
 * How-to Guides
     * [Cloud KMS with Autokey](https://cloud.google.com/kms/docs/kms-with-autokey)
 
-## Example Usage - Kms Autokey Config All
+## Example Usage - Kms Autokey Config Folder
 
 
 ```hcl
-# Create Folder in GCP Organization
-resource "google_folder" "autokms_folder" {
-  provider     = google-beta
-  display_name = "folder-cfg"
-  parent       = "organizations/123456789"
-  deletion_protection = false
-}
-
-# Create the key project
-resource "google_project" "key_project" {
-  provider        = google-beta
-  project_id      = "key-proj"
-  name            = "key-proj"
-  folder_id       = google_folder.autokms_folder.folder_id
-  billing_account = "000000-0000000-0000000-000000"
-  depends_on      = [google_folder.autokms_folder]
-  deletion_policy = "DELETE"
-}
-
-# Enable the Cloud KMS API
-resource "google_project_service" "kms_api_service" {
-  provider                   = google-beta
-  service                    = "cloudkms.googleapis.com"
-  project                    = google_project.key_project.project_id
-  disable_dependent_services = true
-  depends_on                 = [google_project.key_project]
-}
-
-# Wait delay after enabling APIs
-resource "time_sleep" "wait_enable_service_api" {
-  depends_on       = [google_project_service.kms_api_service]
-  create_duration  = "30s"
-}
-
-#Create KMS Service Agent
-resource "google_project_service_identity" "kms_service_agent" {
-  provider   = google-beta
-  service    = "cloudkms.googleapis.com"
-  project    = google_project.key_project.number
-  depends_on = [time_sleep.wait_enable_service_api]
-}
-
-# Wait delay after creating service agent.
-resource "time_sleep" "wait_service_agent" {
-  depends_on       = [google_project_service_identity.kms_service_agent]
-  create_duration  = "10s"
-}
-
-#Grant the KMS Service Agent the Cloud KMS Admin role
-resource "google_project_iam_member" "autokey_project_admin" {
-  provider   = google-beta
-  project    = google_project.key_project.project_id
-  role       = "roles/cloudkms.admin"
-  member     = "serviceAccount:service-${google_project.key_project.number}@gcp-sa-cloudkms.iam.gserviceaccount.com"
-  depends_on = [time_sleep.wait_service_agent]
-}
-
-# Wait delay after granting IAM permissions
-resource "time_sleep" "wait_srv_acc_permissions" {
-  create_duration = "10s"
-  depends_on      = [google_project_iam_member.autokey_project_admin]
-}
-
-resource "google_kms_autokey_config" "example-autokeyconfig" {
+resource "google_kms_autokey_config" "example-autokeyconfig-folder" {
   provider    = google-beta
-  folder      = google_folder.autokms_folder.id
-  key_project = "projects/${google_project.key_project.project_id}"
-  depends_on  = [time_sleep.wait_srv_acc_permissions]
+  folder      = "folders/"
+  key_project = "projects/"
+  key_project_resolution_mode = "DEDICATED_KEY_PROJECT"
 }
+```
+## Example Usage - Kms Autokey Config Project
 
-# Wait delay after setting AutokeyConfig, to prevent diffs on reapply,
-# because setting the config takes a little to fully propagate.
-resource "time_sleep" "wait_autokey_propagation" {
-  create_duration = "30s"
-  depends_on      = [google_kms_autokey_config.example-autokeyconfig]
+
+```hcl
+resource "google_kms_autokey_config" "example-autokeyconfig-project" {
+  provider    = google-beta
+  project     = "projects/1111111111111"
+  key_project_resolution_mode = "RESOURCE_PROJECT"
 }
 ```
 
@@ -124,10 +64,6 @@ resource "time_sleep" "wait_autokey_propagation" {
 The following arguments are supported:
 
 
-* `folder` -
-  (Required)
-  The folder for which to retrieve config.
-
 
 * `key_project` -
   (Optional)
@@ -135,13 +71,29 @@ The following arguments are supported:
   CryptoKey for any new KeyHandle the Developer creates. Should have the form
   `projects/<project_id_or_number>`.
 
+* `key_project_resolution_mode` -
+  (Optional)
+  How Autokey determines which project to use when provisioning CMEK keys.
+  Possible values are: `KEY_PROJECT_RESOLUTION_MODE_UNSPECIFIED`, `DEDICATED_KEY_PROJECT`, `RESOURCE_PROJECT`, `DISABLED`.
+
+* `folder` -
+  (Optional)
+  The folder for which to retrieve config.
+
+* `project` -
+  (Optional)
+  The project for which to retrieve config.
+
 
 
 ## Attributes Reference
 
 In addition to the arguments listed above, the following computed attributes are exported:
 
-* `id` - an identifier for the resource with format `folders/{{folder}}/autokeyConfig`
+* `id` - an identifier for the resource with format `{{name}}`
+
+* `name` -
+  The resource name for the `AutokeyConfig` in the format `folders/{{folder_id}}/autokeyConfig` or `projects/{{project_id}}/autokeyConfig`.
 
 * `etag` -
   The etag of the AutokeyConfig for optimistic concurrency control.
@@ -161,15 +113,15 @@ This resource provides the following
 
 AutokeyConfig can be imported using any of these accepted formats:
 
-* `folders/{{folder}}/autokeyConfig`
-* `{{folder}}`
+* `{{parent}}/autokeyConfig/{{name}}`
+* `{{parent}}/{{name}}`
 
 
 In Terraform v1.5.0 and later, use an [`import` block](https://developer.hashicorp.com/terraform/language/import) to import AutokeyConfig using one of the formats above. For example:
 
 ```tf
 import {
-  id = "folders/{{folder}}/autokeyConfig"
+  id = "{{parent}}/autokeyConfig/{{name}}"
   to = google_kms_autokey_config.default
 }
 ```
@@ -177,6 +129,6 @@ import {
 When using the [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import), AutokeyConfig can be imported using one of the formats above. For example:
 
 ```
-$ terraform import google_kms_autokey_config.default folders/{{folder}}/autokeyConfig
-$ terraform import google_kms_autokey_config.default {{folder}}
+$ terraform import google_kms_autokey_config.default {{parent}}/autokeyConfig/{{name}}
+$ terraform import google_kms_autokey_config.default {{parent}}/{{name}}
 ```

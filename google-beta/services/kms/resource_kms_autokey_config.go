@@ -55,9 +55,64 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
-func folderPrefixSuppress(_, old, new string, d *schema.ResourceData) bool {
-	prefix := "folders/"
-	return prefix+old == new || prefix+new == old
+const (
+	autokeyFolderPrefix  = "folders/"
+	autokeyProjectPrefix = "projects/"
+	autokeyConfigSuffix  = "/autokeyConfig"
+)
+
+func autokeyHasPrefix(value, prefix string) bool {
+	return len(value) >= len(prefix) && value[:len(prefix)] == prefix
+}
+
+func autokeyTrimPrefix(value, prefix string) string {
+	if autokeyHasPrefix(value, prefix) {
+		return value[len(prefix):]
+	}
+	return value
+}
+
+func autokeyTrimSuffix(value, suffix string) string {
+	if len(value) >= len(suffix) && value[len(value)-len(suffix):] == suffix {
+		return value[:len(value)-len(suffix)]
+	}
+	return value
+}
+
+func autokeyJoin(fields []string) string {
+	result := ""
+	for i, field := range fields {
+		if i > 0 {
+			result += ","
+		}
+		result += field
+	}
+	return result
+}
+
+func normalizeParent(parent, kind string) string {
+	if parent == "" {
+		return parent
+	}
+	switch kind {
+	case "folder":
+		if !autokeyHasPrefix(parent, autokeyFolderPrefix) {
+			return autokeyFolderPrefix + parent
+		}
+	case "project":
+		if !autokeyHasPrefix(parent, autokeyProjectPrefix) {
+			return autokeyProjectPrefix + parent
+		}
+	}
+	return parent
+}
+
+func folderPrefixSuppress(k, old, new string, d *schema.ResourceData) bool {
+	return autokeyTrimPrefix(old, autokeyFolderPrefix) == autokeyTrimPrefix(new, autokeyFolderPrefix)
+}
+
+func projectPrefixSuppress(k, old, new string, d *schema.ResourceData) bool {
+	return autokeyTrimPrefix(old, autokeyProjectPrefix) == autokeyTrimPrefix(new, autokeyProjectPrefix)
 }
 
 var (
@@ -121,10 +176,11 @@ func ResourceKMSAutokeyConfig() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"folder": {
 				Type:             schema.TypeString,
-				Required:         true,
+				Optional:         true,
 				ForceNew:         true,
 				DiffSuppressFunc: folderPrefixSuppress,
 				Description:      `The folder for which to retrieve config.`,
+				ConflictsWith:    []string{},
 			},
 			"key_project": {
 				Type:     schema.TypeString,
@@ -133,10 +189,29 @@ func ResourceKMSAutokeyConfig() *schema.Resource {
 CryptoKey for any new KeyHandle the Developer creates. Should have the form
 'projects/<project_id_or_number>'.`,
 			},
+			"key_project_resolution_mode": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"KEY_PROJECT_RESOLUTION_MODE_UNSPECIFIED", "DEDICATED_KEY_PROJECT", "RESOURCE_PROJECT", "DISABLED", ""}),
+				Description:  `How Autokey determines which project to use when provisioning CMEK keys. Possible values: ["KEY_PROJECT_RESOLUTION_MODE_UNSPECIFIED", "DEDICATED_KEY_PROJECT", "RESOURCE_PROJECT", "DISABLED"]`,
+			},
+			"project": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				ForceNew:         true,
+				DiffSuppressFunc: projectPrefixSuppress,
+				Description:      `The project for which to retrieve config.`,
+				ConflictsWith:    []string{},
+			},
 			"etag": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `The etag of the AutokeyConfig for optimistic concurrency control.`,
+			},
+			"name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The resource name for the 'AutokeyConfig' in the format 'folders/{{folder_id}}/autokeyConfig' or 'projects/{{project_id}}/autokeyConfig'.`,
 			},
 		},
 		UseJSONNumber: true,
@@ -150,6 +225,21 @@ func resourceKMSAutokeyConfigCreate(d *schema.ResourceData, meta interface{}) er
 		return err
 	}
 
+	var parent string
+	if v, ok := d.GetOk("folder"); ok {
+		parent = normalizeParent(v.(string), "folder")
+	} else if v, ok := d.GetOk("project"); ok {
+		parent = normalizeParent(v.(string), "project")
+	} else {
+		return fmt.Errorf("either folder or project must be set")
+	}
+
+	billingProject := ""
+	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
+		billingProject = bp
+	}
+
+	headers := make(http.Header)
 	obj := make(map[string]interface{})
 	keyProjectProp, err := expandKMSAutokeyConfigKeyProject(d.Get("key_project"), d, config)
 	if err != nil {
@@ -157,50 +247,60 @@ func resourceKMSAutokeyConfigCreate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("key_project"); !tpgresource.IsEmptyValue(reflect.ValueOf(keyProjectProp)) && (ok || !reflect.DeepEqual(v, keyProjectProp)) {
 		obj["keyProject"] = keyProjectProp
 	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{KMSBasePath}}folders/{{folder}}/autokeyConfig?updateMask=keyProject")
+	keyProjectResolutionModeProp, err := expandKMSAutokeyConfigKeyProjectResolutionMode(d.Get("key_project_resolution_mode"), d, config)
 	if err != nil {
 		return err
+	} else if v, ok := d.GetOkExists("key_project_resolution_mode"); !tpgresource.IsEmptyValue(reflect.ValueOf(keyProjectResolutionModeProp)) && (ok || !reflect.DeepEqual(v, keyProjectResolutionModeProp)) {
+		obj["keyProjectResolutionMode"] = keyProjectResolutionModeProp
 	}
-
-	log.Printf("[DEBUG] Creating new AutokeyConfig: %#v", obj)
-	billingProject := ""
-
-	// err == nil indicates that the billing_project value was found
-	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
-		billingProject = bp
+	var updateMask []string
+	if !tpgresource.IsEmptyValue(reflect.ValueOf(keyProjectProp)) {
+		updateMask = append(updateMask, "keyProject")
 	}
-
-	headers := make(http.Header)
-	url = strings.Replace(url, "folders/folders/", "folders/", 1)
-	folderValue := d.Get("folder").(string)
-	folderValue = strings.Replace(folderValue, "folders/", "", 1)
-	d.Set("folder", folderValue)
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-		Headers:   headers,
-	})
+	if !tpgresource.IsEmptyValue(reflect.ValueOf(keyProjectResolutionModeProp)) {
+		updateMask = append(updateMask, "keyProjectResolutionMode")
+	}
+	var res map[string]interface{}
+	if len(updateMask) == 0 {
+		url := config.KMSBasePath + parent + "/autokeyConfig"
+		res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutCreate),
+			Headers:   headers,
+		})
+		if err != nil {
+			return fmt.Errorf("Error creating AutokeyConfig: %s", err)
+		}
+	} else {
+		url := config.KMSBasePath + parent + "/autokeyConfig?update_mask=" + autokeyJoin(updateMask)
+		res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "PATCH",
+			Project:   billingProject,
+			RawURL:    url,
+			UserAgent: userAgent,
+			Body:      obj,
+			Timeout:   d.Timeout(schema.TimeoutCreate),
+			Headers:   headers,
+		})
+		if err != nil {
+			return fmt.Errorf("Error creating AutokeyConfig: %s", err)
+		}
+	}
+	err = resourceKMSAutokeyConfigPostCreateSetComputedFields(d, meta, res)
 	if err != nil {
-		return fmt.Errorf("Error creating AutokeyConfig: %s", err)
+		return fmt.Errorf("setting computed ID format fields: %w", err)
 	}
-
-	// Store the ID now
-	id, err := tpgresource.ReplaceVars(d, config, "folders/{{folder}}/autokeyConfig")
-	if err != nil {
-		return fmt.Errorf("Error constructing id: %s", err)
+	if nameVal, ok := d.Get("name").(string); ok && nameVal != "" {
+		d.SetId(nameVal)
+	} else {
+		return fmt.Errorf("Error constructing id: computed `name` not set")
 	}
-	d.SetId(id)
-
-	// This is useful if the resource in question doesn't have a perfectly consistent API
-	// That is, the Operation for Create might return before the Get operation shows the
-	// completed state of the resource.
-	time.Sleep(5 * time.Second)
 
 	log.Printf("[DEBUG] Finished creating AutokeyConfig %q: %#v", d.Id(), res)
 
@@ -214,7 +314,7 @@ func resourceKMSAutokeyConfigRead(d *schema.ResourceData, meta interface{}) erro
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{KMSBasePath}}folders/{{folder}}/autokeyConfig")
+	url, err := tpgresource.ReplaceVars(d, config, "{{KMSBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -227,7 +327,6 @@ func resourceKMSAutokeyConfigRead(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	headers := make(http.Header)
-	url = strings.Replace(url, "folders/folders/", "folders/", 1)
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "GET",
@@ -240,7 +339,25 @@ func resourceKMSAutokeyConfigRead(d *schema.ResourceData, meta interface{}) erro
 		return transport_tpg.HandleNotFoundError(err, d, fmt.Sprintf("KMSAutokeyConfig %q", d.Id()))
 	}
 
+	res, err = resourceKMSAutokeyConfigDecoder(d, meta, res)
+	if err != nil {
+		return err
+	}
+
+	if res == nil {
+		// Decoding the object has resulted in it being gone. It may be marked deleted
+		log.Printf("[DEBUG] Removing KMSAutokeyConfig because it no longer exists.")
+		d.SetId("")
+		return nil
+	}
+
+	if err := d.Set("name", flattenKMSAutokeyConfigName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading AutokeyConfig: %s", err)
+	}
 	if err := d.Set("key_project", flattenKMSAutokeyConfigKeyProject(res["keyProject"], d, config)); err != nil {
+		return fmt.Errorf("Error reading AutokeyConfig: %s", err)
+	}
+	if err := d.Set("key_project_resolution_mode", flattenKMSAutokeyConfigKeyProjectResolutionMode(res["keyProjectResolutionMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading AutokeyConfig: %s", err)
 	}
 	if err := d.Set("etag", flattenKMSAutokeyConfigEtag(res["etag"], d, config)); err != nil {
@@ -258,51 +375,67 @@ func resourceKMSAutokeyConfigUpdate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	billingProject := ""
-
-	obj := make(map[string]interface{})
-	keyProjectProp, err := expandKMSAutokeyConfigKeyProject(d.Get("key_project"), d, config)
-	if err != nil {
-		return err
-	} else if v, ok := d.GetOkExists("key_project"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, keyProjectProp)) {
-		obj["keyProject"] = keyProjectProp
-	}
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{KMSBasePath}}folders/{{folder}}/autokeyConfig?updateMask=keyProject")
-	if err != nil {
-		return err
-	}
-
-	log.Printf("[DEBUG] Updating AutokeyConfig %q: %#v", d.Id(), obj)
-	headers := make(http.Header)
-	url = strings.Replace(url, "folders/folders/", "folders/", 1)
-
-	// err == nil indicates that the billing_project value was found
 	if bp, err := tpgresource.GetBillingProject(d, config); err == nil {
 		billingProject = bp
 	}
 
-	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+	headers := make(http.Header)
+
+	var parent string
+	if v, ok := d.GetOk("folder"); ok {
+		parent = normalizeParent(v.(string), "folder")
+	} else if v, ok := d.GetOk("project"); ok {
+		parent = normalizeParent(v.(string), "project")
+	} else {
+		return fmt.Errorf("either folder or project must be set")
+	}
+
+	body := make(map[string]interface{})
+	var updateMask []string
+
+	if d.HasChange("key_project") {
+		updateMask = append(updateMask, "keyProject")
+		if !autokeyHasPrefix(parent, autokeyProjectPrefix) {
+			keyProjectProp, _ := expandKMSAutokeyConfigKeyProject(d.Get("key_project"), d, config)
+			if v, ok := d.GetOkExists("key_project"); !tpgresource.IsEmptyValue(reflect.ValueOf(keyProjectProp)) && (ok || !reflect.DeepEqual(v, keyProjectProp)) {
+				body["keyProject"] = keyProjectProp
+			} else {
+				body["keyProject"] = nil
+			}
+		}
+	}
+
+	if d.HasChange("key_project_resolution_mode") {
+		updateMask = append(updateMask, "keyProjectResolutionMode")
+		keyProjectResolutionModeProp, _ := expandKMSAutokeyConfigKeyProjectResolutionMode(d.Get("key_project_resolution_mode"), d, config)
+		if v, ok := d.GetOkExists("key_project_resolution_mode"); !tpgresource.IsEmptyValue(reflect.ValueOf(keyProjectResolutionModeProp)) && (ok || !reflect.DeepEqual(v, keyProjectResolutionModeProp)) {
+			body["keyProjectResolutionMode"] = keyProjectResolutionModeProp
+		} else {
+			body["keyProjectResolutionMode"] = nil
+		}
+	}
+
+	if len(updateMask) == 0 {
+		return resourceKMSAutokeyConfigRead(d, meta)
+	}
+	url := config.KMSBasePath + parent + "/autokeyConfig?update_mask=" + autokeyJoin(updateMask)
+
+	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "PATCH",
 		Project:   billingProject,
 		RawURL:    url,
 		UserAgent: userAgent,
-		Body:      obj,
+		Body:      body,
 		Timeout:   d.Timeout(schema.TimeoutUpdate),
 		Headers:   headers,
 	})
-
 	if err != nil {
-		return fmt.Errorf("Error updating AutokeyConfig %q: %s", d.Id(), err)
-	} else {
-		log.Printf("[DEBUG] Finished updating AutokeyConfig %q: %#v", d.Id(), res)
+		return fmt.Errorf("Error updating AutokeyConfig: %s", err)
 	}
 
-	// This is useful if the resource in question doesn't have a perfectly consistent API
-	// That is, the Operation for Create might return before the Get operation shows the
-	// completed state of the resource.
-	time.Sleep(5 * time.Second)
 	return resourceKMSAutokeyConfigRead(d, meta)
+
 }
 
 func resourceKMSAutokeyConfigDelete(d *schema.ResourceData, meta interface{}) error {
@@ -314,7 +447,7 @@ func resourceKMSAutokeyConfigDelete(d *schema.ResourceData, meta interface{}) er
 
 	billingProject := ""
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{KMSBasePath}}folders/{{folder}}/autokeyConfig?updateMask=keyProject")
+	url, err := tpgresource.ReplaceVars(d, config, "{{KMSBasePath}}{{name}}")
 	if err != nil {
 		return err
 	}
@@ -327,12 +460,47 @@ func resourceKMSAutokeyConfigDelete(d *schema.ResourceData, meta interface{}) er
 	}
 
 	headers := make(http.Header)
-	url = strings.Replace(url, "folders/folders/", "folders/", 1)
+	var parent string
+	var updateMask string
+
+	if v, ok := d.GetOk("folder"); ok {
+		parent = normalizeParent(v.(string), "folder")
+		updateMask = "keyProject,keyProjectResolutionMode"
+	} else if v, ok := d.GetOk("project"); ok {
+		parent = normalizeParent(v.(string), "project")
+		updateMask = "keyProjectResolutionMode"
+	} else {
+		return fmt.Errorf("either folder or project must be set")
+	}
+	url = config.KMSBasePath + parent + "/autokeyConfig?update_mask=" + updateMask
+	obj = make(map[string]interface{})
+	if autokeyHasPrefix(parent, autokeyFolderPrefix) {
+		obj["keyProject"] = nil
+		obj["keyProjectResolutionMode"] = nil
+	} else {
+		obj["keyProjectResolutionMode"] = nil
+	}
+
+	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+		Config:    config,
+		Method:    "PATCH",
+		Project:   billingProject,
+		RawURL:    url,
+		UserAgent: userAgent,
+		Body:      obj,
+		Timeout:   d.Timeout(schema.TimeoutDelete),
+		Headers:   headers,
+	})
+	if err != nil {
+		return fmt.Errorf("Error clearing AutokeyConfig for %s: %s", parent, err)
+	}
+
+	return nil
 
 	log.Printf("[DEBUG] Deleting AutokeyConfig %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
-		Method:    "PATCH",
+		Method:    "DELETE",
 		Project:   billingProject,
 		RawURL:    url,
 		UserAgent: userAgent,
@@ -349,25 +517,38 @@ func resourceKMSAutokeyConfigDelete(d *schema.ResourceData, meta interface{}) er
 }
 
 func resourceKMSAutokeyConfigImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	config := meta.(*transport_tpg.Config)
-	if err := tpgresource.ParseImportId([]string{
-		"^folders/(?P<folder>[^/]+)/autokeyConfig$",
-		"^(?P<folder>[^/]+)$",
-	}, d, config); err != nil {
-		return nil, err
+	id := d.Id()
+	parent := id
+	if autokeyHasPrefix(id, autokeyFolderPrefix) || autokeyHasPrefix(id, autokeyProjectPrefix) {
+		parent = autokeyTrimSuffix(id, autokeyConfigSuffix)
+	} else {
+		return nil, fmt.Errorf("invalid import id %q, expected folders/{folder_id}, projects/{project_id}, or */autokeyConfig", id)
 	}
 
-	// Replace import id for the resource id
-	id, err := tpgresource.ReplaceVars(d, config, "folders/{{folder}}/autokeyConfig")
-	if err != nil {
-		return nil, fmt.Errorf("Error constructing id: %s", err)
+	if autokeyHasPrefix(parent, autokeyFolderPrefix) {
+		d.Set("folder", parent)
+		d.Set("project", nil)
+	} else if autokeyHasPrefix(parent, autokeyProjectPrefix) {
+		d.Set("project", parent)
+		d.Set("folder", nil)
+	} else {
+		return nil, fmt.Errorf("invalid import id %q, expected folders/{folder_id}, projects/{project_id}, or */autokeyConfig", id)
 	}
-	d.SetId(id)
 
+	d.Set("name", parent+autokeyConfigSuffix)
+	d.SetId(parent + autokeyConfigSuffix)
 	return []*schema.ResourceData{d}, nil
 }
 
+func flattenKMSAutokeyConfigName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenKMSAutokeyConfigKeyProject(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenKMSAutokeyConfigKeyProjectResolutionMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -377,4 +558,96 @@ func flattenKMSAutokeyConfigEtag(v interface{}, d *schema.ResourceData, config *
 
 func expandKMSAutokeyConfigKeyProject(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
+}
+
+func expandKMSAutokeyConfigKeyProjectResolutionMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func resourceKMSAutokeyConfigEncoder(d *schema.ResourceData, meta interface{}, obj map[string]interface{}) (map[string]interface{}, error) {
+	config := meta.(*transport_tpg.Config)
+
+	body := make(map[string]interface{})
+
+	if d.HasChange("key_project") {
+		keyProjectProp, _ := expandKMSAutokeyConfigKeyProject(d.Get("key_project"), d, config)
+		if v, ok := d.GetOkExists("key_project"); !tpgresource.IsEmptyValue(reflect.ValueOf(keyProjectProp)) && (ok || !reflect.DeepEqual(v, keyProjectProp)) {
+			body["keyProject"] = keyProjectProp
+		} else {
+			body["keyProject"] = nil
+		}
+	}
+
+	if d.HasChange("key_project_resolution_mode") {
+		keyProjectResolutionModeProp, _ := expandKMSAutokeyConfigKeyProjectResolutionMode(d.Get("key_project_resolution_mode"), d, config)
+		if v, ok := d.GetOkExists("key_project_resolution_mode"); !tpgresource.IsEmptyValue(reflect.ValueOf(keyProjectResolutionModeProp)) && (ok || !reflect.DeepEqual(v, keyProjectResolutionModeProp)) {
+			body["keyProjectResolutionMode"] = keyProjectResolutionModeProp
+		} else {
+			body["keyProjectResolutionMode"] = nil
+		}
+	}
+
+	return body, nil
+}
+
+func resourceKMSAutokeyConfigDecoder(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {
+	if name, ok := res["name"].(string); ok {
+		if autokeyHasPrefix(name, autokeyFolderPrefix) {
+			d.Set("folder", autokeyTrimSuffix(name, autokeyConfigSuffix))
+			d.Set("project", nil)
+		} else if autokeyHasPrefix(name, autokeyProjectPrefix) {
+			d.Set("project", autokeyTrimSuffix(name, autokeyConfigSuffix))
+			d.Set("folder", nil)
+		}
+	}
+
+	if v, ok := res["keyProject"].(string); ok {
+		d.Set("key_project", v)
+		res["keyProject"] = v
+	} else if v, ok := d.GetOkExists("key_project"); ok {
+		// Preserve configured value when the API omits the field.
+		d.Set("key_project", v)
+		res["keyProject"] = v
+	} else {
+		d.Set("key_project", nil)
+	}
+
+	apiResolutionMode := ""
+	if v, ok := res["keyProjectResolutionMode"].(string); ok {
+		apiResolutionMode = v
+	}
+
+	stateResolutionMode := ""
+	if v, ok := d.GetOkExists("key_project_resolution_mode"); ok {
+		if s, ok := v.(string); ok {
+			stateResolutionMode = s
+		}
+	}
+
+	if apiResolutionMode != "" {
+		d.Set("key_project_resolution_mode", apiResolutionMode)
+		res["keyProjectResolutionMode"] = apiResolutionMode
+	} else if stateResolutionMode != "" {
+		// If one value is empty and the other is non-empty, preserve the non-empty one.
+		d.Set("key_project_resolution_mode", stateResolutionMode)
+		res["keyProjectResolutionMode"] = stateResolutionMode
+	} else {
+		d.Set("key_project_resolution_mode", nil)
+	}
+
+	return res, nil
+}
+func resourceKMSAutokeyConfigPostCreateSetComputedFields(d *schema.ResourceData, meta interface{}, res map[string]interface{}) error {
+	config := meta.(*transport_tpg.Config)
+	res, err := resourceKMSAutokeyConfigDecoder(d, meta, res)
+	if err != nil {
+		return fmt.Errorf("decoding response: %w", err)
+	}
+	if res == nil {
+		return fmt.Errorf("decoding response, could not find object")
+	}
+	if err := d.Set("name", flattenKMSAutokeyConfigName(res["name"], d, config)); err != nil {
+		return fmt.Errorf(`Error setting computed identity field "name": %s`, err)
+	}
+	return nil
 }
