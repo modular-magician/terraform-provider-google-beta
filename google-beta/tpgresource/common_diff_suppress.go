@@ -19,8 +19,10 @@
 package tpgresource
 
 import (
+	"fmt"
 	"reflect"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 
@@ -176,4 +178,38 @@ func Base64DiffSuppress(_, old, new string, _ *schema.ResourceData) bool {
 
 func CaseInsensitiveHash(v interface{}) int {
 	return Hashcode(strings.ToLower(v.(string)))
+}
+
+// StringListDiffSuppress suppresses diffs for TypeList fields where the
+// order of elements does not matter. It derives the root key from k by
+// stripping the element index suffix, making it reusable across any TypeList.
+func StringListDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
+	root := k
+	if idx := strings.IndexByte(k, '.'); idx != -1 {
+		root = k[:idx]
+	}
+
+	o, n := d.GetChange(root)
+
+	oldList, ok1 := o.([]interface{})
+	newList, ok2 := n.([]interface{})
+
+	if !ok1 || !ok2 || len(oldList) != len(newList) {
+		return false
+	}
+
+	oldStrs := make([]string, len(oldList))
+	for i, v := range oldList {
+		oldStrs[i] = fmt.Sprintf("%v", v)
+	}
+
+	newStrs := make([]string, len(newList))
+	for i, v := range newList {
+		newStrs[i] = fmt.Sprintf("%v", v)
+	}
+
+	sort.Strings(oldStrs)
+	sort.Strings(newStrs)
+
+	return reflect.DeepEqual(oldStrs, newStrs)
 }

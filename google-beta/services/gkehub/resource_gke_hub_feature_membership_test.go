@@ -1012,6 +1012,7 @@ resource "google_gke_hub_feature_membership" "feature_member" {
       audit_interval_seconds = 30
       referential_rules_enabled = true
     }
+    version = "1.22.1"
   }
 }
 `, context)

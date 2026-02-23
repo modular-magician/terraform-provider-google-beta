@@ -21,6 +21,7 @@ import (
 	"log"
 	"net/url"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 
@@ -70,10 +71,11 @@ func ResourceServiceNetworkingConnection() *schema.Resource {
 				Description: `Provider peering service that is managing peering connectivity for a service provider organization. For Google services that support this functionality it is 'servicenetworking.googleapis.com'.`,
 			},
 			"reserved_peering_ranges": {
-				Type:        schema.TypeList,
-				Required:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: `Named IP address range(s) of PEERING type reserved for this service provider. Note that invoking this method with a different range when connection is already established will not reallocate already provisioned service producer subnetworks.`,
+				Type:             schema.TypeList,
+				Required:         true,
+				Elem:             &schema.Schema{Type: schema.TypeString},
+				DiffSuppressFunc: tpgresource.StringListDiffSuppress,
+				Description:      `Named IP address range(s) of PEERING type reserved for this service provider. Note that invoking this method with a different range when connection is already established will not reallocate already provisioned service producer subnetworks.`,
 			},
 			"deletion_policy": {
 				Type:         schema.TypeString,
@@ -227,7 +229,10 @@ func resourceServiceNetworkingConnectionRead(d *schema.ResourceData, meta interf
 	if err := d.Set("peering", connection.Peering); err != nil {
 		return fmt.Errorf("Error setting peering: %s", err)
 	}
-	if err := d.Set("reserved_peering_ranges", connection.ReservedPeeringRanges); err != nil {
+
+	ranges := connection.ReservedPeeringRanges
+	sort.Strings(ranges)
+	if err := d.Set("reserved_peering_ranges", ranges); err != nil {
 		return fmt.Errorf("Error setting reserved_peering_ranges: %s", err)
 	}
 	return nil
