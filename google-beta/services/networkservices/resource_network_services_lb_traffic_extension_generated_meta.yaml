@@ -25,5 +25,6 @@ fields:
       provider_only: true
     - field: name
       provider_only: true
+    - api_field: target.resources
     - field: terraform_labels
       provider_only: true

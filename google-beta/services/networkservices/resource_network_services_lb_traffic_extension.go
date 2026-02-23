@@ -235,16 +235,6 @@ and the last a letter or a number.`,
 					},
 				},
 			},
-			"forwarding_rules": {
-				Type:             schema.TypeList,
-				Required:         true,
-				DiffSuppressFunc: tpgresource.ProjectNumberDiffSuppress,
-				Description: `A list of references to the forwarding rules to which this service extension is attached to.
-At least one forwarding rule is required. There can be only one LBTrafficExtension resource per forwarding rule.`,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"load_balancing_scheme": {
 				Type:         schema.TypeString,
 				Required:     true,
@@ -271,6 +261,17 @@ For more information, refer to [Choosing a load balancer](https://cloud.google.c
 				Optional:    true,
 				Description: `A human-readable description of the resource.`,
 			},
+			"forwarding_rules": {
+				Type:             schema.TypeList,
+				Optional:         true,
+				DiffSuppressFunc: tpgresource.ProjectNumberDiffSuppress,
+				Description: `A list of references to the forwarding rules to which this service extension is attached to.
+At least one forwarding rule is required. There can be only one LBTrafficExtension resource per forwarding rule.`,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				ExactlyOneOf: []string{"forwarding_rules", "target"},
+			},
 			"labels": {
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -279,6 +280,26 @@ For more information, refer to [Choosing a load balancer](https://cloud.google.c
 **Note**: This field is non-authoritative, and will only manage the labels present in your configuration.
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
+			},
+			"target": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `'Target' Specifies the set of targets to which an extension should be applied to.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"resources": {
+							Type:     schema.TypeList,
+							Required: true,
+							Description: `A list of references to the resources that are targeted by the extension.
+Types of resources supported: 'BackendService', 'HttpRoute'.`,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+				ExactlyOneOf: []string{"forwarding_rules", "target"},
 			},
 			"effective_labels": {
 				Type:        schema.TypeMap,
@@ -323,6 +344,12 @@ func resourceNetworkServicesLbTrafficExtensionCreate(d *schema.ResourceData, met
 		return err
 	} else if v, ok := d.GetOkExists("forwarding_rules"); !tpgresource.IsEmptyValue(reflect.ValueOf(forwardingRulesProp)) && (ok || !reflect.DeepEqual(v, forwardingRulesProp)) {
 		obj["forwardingRules"] = forwardingRulesProp
+	}
+	targetProp, err := expandNetworkServicesLbTrafficExtensionTarget(d.Get("target"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("target"); !tpgresource.IsEmptyValue(reflect.ValueOf(targetProp)) && (ok || !reflect.DeepEqual(v, targetProp)) {
+		obj["target"] = targetProp
 	}
 	extensionChainsProp, err := expandNetworkServicesLbTrafficExtensionExtensionChains(d.Get("extension_chains"), d, config)
 	if err != nil {
@@ -450,6 +477,9 @@ func resourceNetworkServicesLbTrafficExtensionRead(d *schema.ResourceData, meta 
 	if err := d.Set("forwarding_rules", flattenNetworkServicesLbTrafficExtensionForwardingRules(res["forwardingRules"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LbTrafficExtension: %s", err)
 	}
+	if err := d.Set("target", flattenNetworkServicesLbTrafficExtensionTarget(res["target"], d, config)); err != nil {
+		return fmt.Errorf("Error reading LbTrafficExtension: %s", err)
+	}
 	if err := d.Set("extension_chains", flattenNetworkServicesLbTrafficExtensionExtensionChains(res["extensionChains"], d, config)); err != nil {
 		return fmt.Errorf("Error reading LbTrafficExtension: %s", err)
 	}
@@ -494,6 +524,12 @@ func resourceNetworkServicesLbTrafficExtensionUpdate(d *schema.ResourceData, met
 	} else if v, ok := d.GetOkExists("forwarding_rules"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, forwardingRulesProp)) {
 		obj["forwardingRules"] = forwardingRulesProp
 	}
+	targetProp, err := expandNetworkServicesLbTrafficExtensionTarget(d.Get("target"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("target"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, targetProp)) {
+		obj["target"] = targetProp
+	}
 	extensionChainsProp, err := expandNetworkServicesLbTrafficExtensionExtensionChains(d.Get("extension_chains"), d, config)
 	if err != nil {
 		return err
@@ -522,6 +558,10 @@ func resourceNetworkServicesLbTrafficExtensionUpdate(d *schema.ResourceData, met
 
 	if d.HasChange("forwarding_rules") {
 		updateMask = append(updateMask, "forwardingRules")
+	}
+
+	if d.HasChange("target") {
+		updateMask = append(updateMask, "target")
 	}
 
 	if d.HasChange("extension_chains") {
@@ -673,6 +713,23 @@ func flattenNetworkServicesLbTrafficExtensionForwardingRules(v interface{}, d *s
 	return v
 }
 
+func flattenNetworkServicesLbTrafficExtensionTarget(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["resources"] =
+		flattenNetworkServicesLbTrafficExtensionTargetResources(original["resources"], d, config)
+	return []interface{}{transformed}
+}
+func flattenNetworkServicesLbTrafficExtensionTargetResources(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenNetworkServicesLbTrafficExtensionExtensionChains(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -799,6 +856,32 @@ func expandNetworkServicesLbTrafficExtensionDescription(v interface{}, d tpgreso
 }
 
 func expandNetworkServicesLbTrafficExtensionForwardingRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNetworkServicesLbTrafficExtensionTarget(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedResources, err := expandNetworkServicesLbTrafficExtensionTargetResources(original["resources"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedResources); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["resources"] = transformedResources
+	}
+
+	return transformed, nil
+}
+
+func expandNetworkServicesLbTrafficExtensionTargetResources(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
