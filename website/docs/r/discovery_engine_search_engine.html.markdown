@@ -68,25 +68,24 @@ resource "google_discovery_engine_search_engine" "basic" {
 
 ```hcl
 resource "google_discovery_engine_data_store" "agentspace_basic" {
-  location                    = "global"
-  data_store_id               = "example-datastore-id"
-  display_name                = "tf-test-structured-datastore"
-  industry_vertical           = "GENERIC"
-  content_config              = "NO_CONTENT"
-  solution_types              = ["SOLUTION_TYPE_SEARCH"]
-  create_advanced_site_search = false
+  location                      = "global"
+  data_store_id                 = "example-datastore-id"
+  display_name                  = "tf-test-structured-datastore"
+  industry_vertical             = "GENERIC"
+  content_config                = "NO_CONTENT"
+  solution_types                = ["SOLUTION_TYPE_SEARCH"]
+  create_advanced_site_search   = false
 }
 resource "google_discovery_engine_search_engine" "agentspace_basic" {
-  engine_id                   = "example-engine-id"
-  collection_id               = "default_collection"
-  location                    = google_discovery_engine_data_store.agentspace_basic.location
-  display_name                = "tf-test-agentspace-search-engine"
-  data_store_ids              = [google_discovery_engine_data_store.agentspace_basic.data_store_id]
-  industry_vertical           = "GENERIC"
-  app_type                    = "APP_TYPE_INTRANET"
+  engine_id                     = "example-engine-id"
+  collection_id                 = "default_collection"
+  location                      = google_discovery_engine_data_store.agentspace_basic.location
+  display_name                  = "tf-test-agentspace-search-engine"
+  data_store_ids                = [google_discovery_engine_data_store.agentspace_basic.data_store_id]
+  industry_vertical             = "GENERIC"
+  app_type                      = "APP_TYPE_INTRANET"
   search_engine_config {
-  }
-  knowledge_graph_config {
+    required_subscription_tier  = "SUBSCRIPTION_TIER_SEARCH_AND_ASSISTANT"
   }
 }
 ```
@@ -171,6 +170,12 @@ The following arguments are supported:
   The search feature tier of this engine. Defaults to SearchTier.SEARCH_TIER_STANDARD if not specified.
   Default value is `SEARCH_TIER_STANDARD`.
   Possible values are: `SEARCH_TIER_STANDARD`, `SEARCH_TIER_ENTERPRISE`.
+
+* `required_subscription_tier` -
+  (Optional)
+  Optional. The required subscription tier of this engine.
+  They cannot be modified after engine creation. If the required subscription tier is search, user with higher license tier like assist can still access the standalone app associated with this engine.
+  Possible values are: `SUBSCRIPTION_TIER_UNSPECIFIED`, `SUBSCRIPTION_TIER_SEARCH`, `SUBSCRIPTION_TIER_SEARCH_AND_ASSISTANT`, `SUBSCRIPTION_TIER_NOTEBOOK_LM`, `SUBSCRIPTION_TIER_FRONTLINE_WORKER`, `SUBSCRIPTION_TIER_AGENTSPACE_STARTER`, `SUBSCRIPTION_TIER_AGENTSPACE_BUSINESS`, `SUBSCRIPTION_TIER_ENTERPRISE`, `SUBSCRIPTION_TIER_EDU`, `SUBSCRIPTION_TIER_EDU_PRO`, `SUBSCRIPTION_TIER_EDU_EMERGING`, `SUBSCRIPTION_TIER_EDU_PRO_EMERGING`, `SUBSCRIPTION_TIER_FRONTLINE_STARTER`.
 
 * `search_add_ons` -
   (Optional)
