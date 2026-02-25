@@ -112,6 +112,7 @@ resource "google_ces_toolset" "ces_toolset_openapi_service_account_auth_config" 
     api_authentication {
         service_account_auth_config {
             service_account = "testaccount@gmail.com"
+            scopes = ["https://www.googleapis.com/auth/cloud-platform"]
         }
     }
   }
@@ -167,7 +168,8 @@ resource "google_ces_toolset" "ces_toolset_openapi_service_account_auth_config" 
     }
     api_authentication {
         service_account_auth_config {
-            service_account = "testaccountupdated@gmail.com"
+            service_account = "testaccount@gmail.com"
+            scopes = ["https://www.googleapis.com/auth/cloud-platform"]
         }
     }
   }
@@ -864,6 +866,7 @@ resource "google_ces_toolset" "ces_toolset_mcp_service_account_auth_config" {
     api_authentication {
         service_account_auth_config {
             service_account = "testaccount@gmail.com"
+            scopes = ["https://www.googleapis.com/auth/cloud-platform"]
         }
     }
   }
@@ -906,7 +909,8 @@ resource "google_ces_toolset" "ces_toolset_mcp_service_account_auth_config" {
     }
     api_authentication {
         service_account_auth_config {
-            service_account = "testaccountupdated@gmail.com"
+            service_account = "testaccount@gmail.com"
+            scopes = ["https://www.googleapis.com/auth/cloud-platform"]
         }
     }
   }
@@ -987,7 +991,7 @@ resource "google_ces_toolset" "ces_toolset_mcp_oauth_config" {
       service = "projects/example/locations/us/namespaces/namespace/services/service"
     }
     api_authentication {
-        oauth_config {
+        oauth_config {f
             oauth_grant_type = "CLIENT_CREDENTIAL"
             client_id = "example_client_id"
             client_secret_version = "projects/fake-project/secrets/fake-secret/versions/version1"
