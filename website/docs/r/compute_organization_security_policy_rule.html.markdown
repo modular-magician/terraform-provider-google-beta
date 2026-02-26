@@ -156,21 +156,38 @@ The following arguments are supported:
   A description of the rule.
 
 * `versioned_expr` -
-  (Optional)
-  Preconfigured versioned expression. For organization security policy rules,
-  the only supported type is "SRC_IPS_V1".
-  **NOTE** : 'FIREWALL' type is deprecated. Please use 'google_compute_firewall_policy_rule' resource instead.
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Preconfigured versioned expression. For FIREWALL type organization security policy rules,
+  the only supported type is "FIREWALL". For CLOUD_ARMOR type rules using config block,
+  use "SRC_IPS_V1". This field should not be set when using the expr block.
+
+* `expr` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  User defined CEVAL expression. A CEVAL expression is used to specify match criteria
+  such as origin.ip, source.region_code and contents in the request header.
+  This field is only supported for CLOUD_ARMOR organization security policies.
+  Structure is [documented below](#nested_match_expr).
 
 * `config` -
-  (Required)
-  The configuration options for matching the rule.
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  The configuration options for matching the rule. This field is required for
+  FIREWALL type organization security policies. For CLOUD_ARMOR type policies,
+  use the expr field instead.
   Structure is [documented below](#nested_match_config).
 
+
+<a name="nested_match_expr"></a>The `expr` block supports:
+
+* `expression` -
+  (Required, [Beta](../guides/provider_versions.html.markdown))
+  Textual representation of an expression in Common Expression Language syntax.
+  The application context of the containing message determines which well-known
+  feature set of CEL is supported.
 
 <a name="nested_match_config"></a>The `config` block supports:
 
 * `src_ip_ranges` -
-  (Optional)
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
   Source IP address range in CIDR format. Required for
   INGRESS rules.
 

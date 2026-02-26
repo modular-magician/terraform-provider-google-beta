@@ -128,10 +128,12 @@ func ResourceComputeOrganizationSecurityPolicyRule() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"config": {
-							Type:        schema.TypeList,
-							Required:    true,
-							Description: `The configuration options for matching the rule.`,
-							MaxItems:    1,
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `The configuration options for matching the rule. This field is required for
+FIREWALL type organization security policies. For CLOUD_ARMOR type policies,
+use the expr field instead.`,
+							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"dest_ip_ranges": {
@@ -195,13 +197,31 @@ INGRESS rules.`,
 							Optional:    true,
 							Description: `A description of the rule.`,
 						},
+						"expr": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Description: `User defined CEVAL expression. A CEVAL expression is used to specify match criteria
+such as origin.ip, source.region_code and contents in the request header.
+This field is only supported for CLOUD_ARMOR organization security policies.`,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"expression": {
+										Type:     schema.TypeString,
+										Required: true,
+										Description: `Textual representation of an expression in Common Expression Language syntax.
+The application context of the containing message determines which well-known
+feature set of CEL is supported.`,
+									},
+								},
+							},
+						},
 						"versioned_expr": {
 							Type:     schema.TypeString,
 							Optional: true,
-							Description: `Preconfigured versioned expression. For organization security policy rules,
-the only supported type is "SRC_IPS_V1".
-**NOTE** : 'FIREWALL' type is deprecated. Please use 'google_compute_firewall_policy_rule' resource instead.`,
-							Default: "FIREWALL",
+							Description: `Preconfigured versioned expression. For FIREWALL type organization security policy rules,
+the only supported type is "FIREWALL". For CLOUD_ARMOR type rules using config block,
+use "SRC_IPS_V1". This field should not be set when using the expr block.`,
 						},
 					},
 				},
@@ -717,6 +737,8 @@ func flattenComputeOrganizationSecurityPolicyRuleMatch(v interface{}, d *schema.
 		flattenComputeOrganizationSecurityPolicyRuleMatchDescription(original["description"], d, config)
 	transformed["versioned_expr"] =
 		flattenComputeOrganizationSecurityPolicyRuleMatchVersionedExpr(original["versionedExpr"], d, config)
+	transformed["expr"] =
+		flattenComputeOrganizationSecurityPolicyRuleMatchExpr(original["expr"], d, config)
 	transformed["config"] =
 		flattenComputeOrganizationSecurityPolicyRuleMatchConfig(original["config"], d, config)
 	return []interface{}{transformed}
@@ -726,6 +748,23 @@ func flattenComputeOrganizationSecurityPolicyRuleMatchDescription(v interface{},
 }
 
 func flattenComputeOrganizationSecurityPolicyRuleMatchVersionedExpr(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeOrganizationSecurityPolicyRuleMatchExpr(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["expression"] =
+		flattenComputeOrganizationSecurityPolicyRuleMatchExprExpression(original["expression"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeOrganizationSecurityPolicyRuleMatchExprExpression(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -839,6 +878,13 @@ func expandComputeOrganizationSecurityPolicyRuleMatch(v interface{}, d tpgresour
 		transformed["versionedExpr"] = transformedVersionedExpr
 	}
 
+	transformedExpr, err := expandComputeOrganizationSecurityPolicyRuleMatchExpr(original["expr"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExpr); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["expr"] = transformedExpr
+	}
+
 	transformedConfig, err := expandComputeOrganizationSecurityPolicyRuleMatchConfig(original["config"], d, config)
 	if err != nil {
 		return nil, err
@@ -854,6 +900,32 @@ func expandComputeOrganizationSecurityPolicyRuleMatchDescription(v interface{}, 
 }
 
 func expandComputeOrganizationSecurityPolicyRuleMatchVersionedExpr(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeOrganizationSecurityPolicyRuleMatchExpr(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedExpression, err := expandComputeOrganizationSecurityPolicyRuleMatchExprExpression(original["expression"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExpression); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["expression"] = transformedExpression
+	}
+
+	return transformed, nil
+}
+
+func expandComputeOrganizationSecurityPolicyRuleMatchExprExpression(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
