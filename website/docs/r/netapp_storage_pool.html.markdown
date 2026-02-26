@@ -204,6 +204,13 @@ The following arguments are supported:
   If not specified during creation, it defaults to FILE.
   Possible values are: `STORAGE_POOL_TYPE_UNSPECIFIED`, `FILE`, `UNIFIED`.
 
+* `mode` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Mode of the storage pool.
+  The operational mode of the storage pool. ONTAP mode enables operations via ONTAP Mode APIs, while DEFAULT mode enables operations via NetApp Volumes APIs.
+  If not specified during creation, the mode defaults to DEFAULT.
+  Possible values are: `MODE_UNSPECIFIED`, `DEFAULT`, `ONTAP`.
+
 * `scale_tier` -
   (Optional, [Beta](../guides/provider_versions.html.markdown))
   The effective scale tier of the storage pool. If `scale_tier` is not
