@@ -46,6 +46,7 @@ fields:
       field: document_processing_config.parsing_config_overrides.layout_parsing_config.structured_content_types
     - api_field: documentProcessingConfig.parsingConfigOverrides.value.ocrParsingConfig.useNativeText
       field: document_processing_config.parsing_config_overrides.ocr_parsing_config.use_native_text
+    - api_field: excludeFromGenAiFeatures
     - api_field: industryVertical
     - api_field: kmsKeyName
     - field: location

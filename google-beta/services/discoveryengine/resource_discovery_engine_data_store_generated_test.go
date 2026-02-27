@@ -380,6 +380,47 @@ resource "google_discovery_engine_data_store" "advanced_site_search_config" {
 `, context)
 }
 
+func TestAccDiscoveryEngineDataStore_discoveryengineDatastoreExcludeFromGenAiFeaturesExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDiscoveryEngineDataStoreDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDiscoveryEngineDataStore_discoveryengineDatastoreExcludeFromGenAiFeaturesExample(context),
+			},
+			{
+				ResourceName:            "google_discovery_engine_data_store.exclude_from_gen_ai_features",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"create_advanced_site_search", "data_store_id", "kms_key_name", "location", "skip_default_schema_creation"},
+			},
+		},
+	})
+}
+
+func testAccDiscoveryEngineDataStore_discoveryengineDatastoreExcludeFromGenAiFeaturesExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_discovery_engine_data_store" "exclude_from_gen_ai_features" {
+  location                     = "global"
+  data_store_id                = "tf-test-data-store-id%{random_suffix}"
+  display_name                 = "tf-test-structured-datastore"
+  industry_vertical            = "GENERIC"
+  content_config               = "NO_CONTENT"
+  solution_types               = ["SOLUTION_TYPE_SEARCH"]
+  create_advanced_site_search  = false
+  skip_default_schema_creation = false
+  exclude_from_gen_ai_features = true
+}
+`, context)
+}
+
 func testAccCheckDiscoveryEngineDataStoreDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

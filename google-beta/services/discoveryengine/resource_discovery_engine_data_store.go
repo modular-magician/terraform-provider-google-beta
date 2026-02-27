@@ -416,6 +416,11 @@ config will be applied to all file types for Document parsing.`,
 					},
 				},
 			},
+			"exclude_from_gen_ai_features": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: `If set true, the DataStore will not be used for Generative AI features.`,
+			},
 			"kms_key_name": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -526,6 +531,12 @@ func resourceDiscoveryEngineDataStoreCreate(d *schema.ResourceData, meta interfa
 		return err
 	} else if v, ok := d.GetOkExists("document_processing_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(documentProcessingConfigProp)) && (ok || !reflect.DeepEqual(v, documentProcessingConfigProp)) {
 		obj["documentProcessingConfig"] = documentProcessingConfigProp
+	}
+	excludeFromGenAiFeaturesProp, err := expandDiscoveryEngineDataStoreExcludeFromGenAiFeatures(d.Get("exclude_from_gen_ai_features"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("exclude_from_gen_ai_features"); !tpgresource.IsEmptyValue(reflect.ValueOf(excludeFromGenAiFeaturesProp)) && (ok || !reflect.DeepEqual(v, excludeFromGenAiFeaturesProp)) {
+		obj["excludeFromGenAiFeatures"] = excludeFromGenAiFeaturesProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{DiscoveryEngineBasePath}}projects/{{project}}/locations/{{location}}/collections/default_collection/dataStores?dataStoreId={{data_store_id}}&createAdvancedSiteSearch={{create_advanced_site_search}}&skipDefaultSchemaCreation={{skip_default_schema_creation}}")
@@ -650,6 +661,9 @@ func resourceDiscoveryEngineDataStoreRead(d *schema.ResourceData, meta interface
 	if err := d.Set("document_processing_config", flattenDiscoveryEngineDataStoreDocumentProcessingConfig(res["documentProcessingConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataStore: %s", err)
 	}
+	if err := d.Set("exclude_from_gen_ai_features", flattenDiscoveryEngineDataStoreExcludeFromGenAiFeatures(res["excludeFromGenAiFeatures"], d, config)); err != nil {
+		return fmt.Errorf("Error reading DataStore: %s", err)
+	}
 	if err := d.Set("create_time", flattenDiscoveryEngineDataStoreCreateTime(res["createTime"], d, config)); err != nil {
 		return fmt.Errorf("Error reading DataStore: %s", err)
 	}
@@ -685,6 +699,12 @@ func resourceDiscoveryEngineDataStoreUpdate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("kms_key_name"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, kmsKeyNameProp)) {
 		obj["kmsKeyName"] = kmsKeyNameProp
 	}
+	excludeFromGenAiFeaturesProp, err := expandDiscoveryEngineDataStoreExcludeFromGenAiFeatures(d.Get("exclude_from_gen_ai_features"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("exclude_from_gen_ai_features"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, excludeFromGenAiFeaturesProp)) {
+		obj["excludeFromGenAiFeatures"] = excludeFromGenAiFeaturesProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{DiscoveryEngineBasePath}}projects/{{project}}/locations/{{location}}/collections/default_collection/dataStores/{{data_store_id}}")
 	if err != nil {
@@ -701,6 +721,10 @@ func resourceDiscoveryEngineDataStoreUpdate(d *schema.ResourceData, meta interfa
 
 	if d.HasChange("kms_key_name") {
 		updateMask = append(updateMask, "kmsKeyName")
+	}
+
+	if d.HasChange("exclude_from_gen_ai_features") {
+		updateMask = append(updateMask, "excludeFromGenAiFeatures")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1099,6 +1123,10 @@ func flattenDiscoveryEngineDataStoreDocumentProcessingConfigParsingConfigOverrid
 }
 
 func flattenDiscoveryEngineDataStoreDocumentProcessingConfigParsingConfigOverridesLayoutParsingConfigExcludeHtmlIds(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineDataStoreExcludeFromGenAiFeatures(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1606,5 +1634,9 @@ func expandDiscoveryEngineDataStoreDocumentProcessingConfigParsingConfigOverride
 }
 
 func expandDiscoveryEngineDataStoreDocumentProcessingConfigParsingConfigOverridesLayoutParsingConfigExcludeHtmlIds(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineDataStoreExcludeFromGenAiFeatures(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
