@@ -649,9 +649,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 790
+// Generated resources: 791
 // Generated IAM resources: 357
-// Total generated resources: 1147
+// Total generated resources: 1148
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     registry.Resource("google_folder_access_approval_settings"),
 	"google_organization_access_approval_settings":                               registry.Resource("google_organization_access_approval_settings"),
@@ -794,6 +794,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_bigquery_analytics_hub_listing_iam_member":                           registry.Resource("google_bigquery_analytics_hub_listing_iam_member"),
 	"google_bigquery_analytics_hub_listing_iam_policy":                           registry.Resource("google_bigquery_analytics_hub_listing_iam_policy"),
 	"google_bigquery_analytics_hub_listing_subscription":                         registry.Resource("google_bigquery_analytics_hub_listing_subscription"),
+	"google_bigquery_analytics_hub_query_template":                               registry.Resource("google_bigquery_analytics_hub_query_template"),
 	"google_bigquery_connection":                                                 registry.Resource("google_bigquery_connection"),
 	"google_bigquery_connection_iam_binding":                                     registry.Resource("google_bigquery_connection_iam_binding"),
 	"google_bigquery_connection_iam_member":                                      registry.Resource("google_bigquery_connection_iam_member"),
