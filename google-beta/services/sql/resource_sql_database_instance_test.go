@@ -1725,6 +1725,50 @@ func TestAccSqlDatabaseInstance_basicClone(t *testing.T) {
 		},
 	})
 }
+func TestAccSqlDatabaseInstance_crossProjectClone(t *testing.T) {
+	// Sqladmin client
+	//acctest.SkipIfVcr(t)
+	t.Parallel()
+
+	// cloneDestinationProject := envvar.GetTestProjectFromEnv()
+	cloneSourceProject := envvar.GetTestProjectFromEnv()
+	cloneDestinationProject := acctest.BootstrapProject(t, "tf-cpc-", envvar.GetTestBillingAccountFromEnv(t), []string{"sqladmin.googleapis.com"}).ProjectId //"sdeekshaa-playground"
+
+	context := map[string]interface{}{
+		"random_suffix":    acctest.RandString(t, 10),
+		"original_db_name": acctest.BootstrapSharedSQLInstanceBackupRun(t, cloneSourceProject),
+		//"destinationNetwork":	   acctest.BootstrapSharedServiceNetworkingConnection(t, "test-cross-project-clone", acctest.ServiceNetworkWithProjectID(cloneDestinationProject)),
+		"cloneSourceProject":      cloneSourceProject,
+		"cloneDestinationProject": cloneDestinationProject,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSqlDatabaseInstance_crossProjectClone(context),
+			},
+			{
+				ResourceName:            "google_sql_database_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateIdFunc:       testAccSqlDatabaseInstanceImportStateIdFunc("google_sql_database_instance.instance"),
+				ImportStateVerifyIgnore: []string{"deletion_protection", "clone"},
+			},
+		},
+	})
+}
+
+func testAccSqlDatabaseInstanceImportStateIdFunc(resourceName string) resource.ImportStateIdFunc {
+	return func(s *terraform.State) (string, error) {
+		rs, ok := s.RootModule().Resources[resourceName]
+		if !ok {
+			return "", fmt.Errorf("Not found: %s", resourceName)
+		}
+		return fmt.Sprintf("%s/%s", rs.Primary.Attributes["project"], rs.Primary.Attributes["name"]), nil
+	}
+}
 
 func TestAccSqlDatabaseInstance_cloneWithSettings(t *testing.T) {
 	// Sqladmin client
@@ -8253,6 +8297,58 @@ data "google_sql_backup_run" "backup" {
 	most_recent = true
 }
 `, context)
+}
+
+func testAccSqlDatabaseInstance_crossProjectClone(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+			data "google_project" "destination_project" {
+				project_id = "%{cloneDestinationProject}"
+			}
+			resource "google_sql_database_instance" "instance" {
+				name             = "tf-test-cpc-%{random_suffix}"
+				database_version = "POSTGRES_11"
+				region           = "us-central1"
+				project          = "${data.google_project.destination_project.project_id}"
+
+				settings {
+					tier = "db-custom-2-3840"
+					edition = "ENTERPRISE"
+					ip_configuration {
+						private_network = "projects/%{cloneDestinationProject}/global/networks/default" //data.google_compute_network.servicenet.self_link
+					}
+					backup_configuration {
+						enabled                        = true
+						point_in_time_recovery_enabled = true
+					}
+				}
+
+				clone {
+					source_project =  "${data.google_project.source_project.project_id}"
+					source_instance_name = data.google_sql_database_instance.source_instance.name
+				}
+
+				deletion_protection = false
+
+				// Ignore changes, since the most recent backup may change during the test
+				lifecycle{
+					ignore_changes = [clone[0].point_in_time]
+				}
+			}
+
+			data "google_sql_database_instance" "source_instance" {
+				name = "%{original_db_name}"
+				project = "${data.google_project.source_project.project_id}"
+			}
+
+			//data "google_compute_network" "servicenet" {
+			//	name = "%{destinationNetwork}"
+			//	project = "${data.google_project.destination_project.project_id}"
+			//}
+
+			data "google_project" "source_project" {
+				project_id = "%{cloneSourceProject}"
+			}
+		`, context)
 }
 
 func testAccSqlDatabaseInstance_cloneWithSettings(context map[string]interface{}) string {
