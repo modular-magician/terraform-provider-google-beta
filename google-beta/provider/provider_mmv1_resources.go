@@ -391,6 +391,7 @@ var handwrittenDatasources = map[string]*schema.Resource{
 	"google_monitoring_app_engine_service":                       monitoring.DataSourceMonitoringServiceAppEngine(),
 	"google_monitoring_uptime_check_ips":                         monitoring.DataSourceGoogleMonitoringUptimeCheckIps(),
 	"google_netblock_ip_ranges":                                  resourcemanager.DataSourceGoogleNetblockIpRanges(),
+	"google_observability_project_settings":                      observability.DataSourceObservabilityProjectSettings(),
 	"google_observability_organization_settings":                 observability.DataSourceObservabilityOrganizationSettings(),
 	"google_oracle_database_autonomous_database":                 oracledatabase.DataSourceOracleDatabaseAutonomousDatabase(),
 	"google_oracle_database_autonomous_databases":                oracledatabase.DataSourceOracleDatabaseAutonomousDatabases(),
@@ -649,9 +650,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 790
+// Generated resources: 792
 // Generated IAM resources: 357
-// Total generated resources: 1147
+// Total generated resources: 1149
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     registry.Resource("google_folder_access_approval_settings"),
 	"google_organization_access_approval_settings":                               registry.Resource("google_organization_access_approval_settings"),
@@ -1097,6 +1098,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_data_catalog_taxonomy_iam_binding":                                   registry.Resource("google_data_catalog_taxonomy_iam_binding"),
 	"google_data_catalog_taxonomy_iam_member":                                    registry.Resource("google_data_catalog_taxonomy_iam_member"),
 	"google_data_catalog_taxonomy_iam_policy":                                    registry.Resource("google_data_catalog_taxonomy_iam_policy"),
+	"google_dataform_config":                                                     registry.Resource("google_dataform_config"),
 	"google_dataform_folder":                                                     registry.Resource("google_dataform_folder"),
 	"google_dataform_repository":                                                 registry.Resource("google_dataform_repository"),
 	"google_dataform_repository_iam_binding":                                     registry.Resource("google_dataform_repository_iam_binding"),
@@ -1564,6 +1566,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_notebooks_runtime_iam_member":                                        registry.Resource("google_notebooks_runtime_iam_member"),
 	"google_notebooks_runtime_iam_policy":                                        registry.Resource("google_notebooks_runtime_iam_policy"),
 	"google_observability_organization_settings":                                 registry.Resource("google_observability_organization_settings"),
+	"google_observability_project_settings":                                      registry.Resource("google_observability_project_settings"),
 	"google_observability_trace_scope":                                           registry.Resource("google_observability_trace_scope"),
 	"google_oracle_database_autonomous_database":                                 registry.Resource("google_oracle_database_autonomous_database"),
 	"google_oracle_database_cloud_exadata_infrastructure":                        registry.Resource("google_oracle_database_cloud_exadata_infrastructure"),
