@@ -156,6 +156,16 @@ func ResourceDiscoveryEngineSearchEngine() *schema.Resource {
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"required_subscription_tier": {
+							Type:         schema.TypeString,
+							Computed:     true,
+							Optional:     true,
+							ForceNew:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"SUBSCRIPTION_TIER_UNSPECIFIED", "SUBSCRIPTION_TIER_SEARCH", "SUBSCRIPTION_TIER_SEARCH_AND_ASSISTANT", "SUBSCRIPTION_TIER_FRONTLINE_WORKER", "SUBSCRIPTION_TIER_AGENTSPACE_STARTER", "SUBSCRIPTION_TIER_AGENTSPACE_BUSINESS", "SUBSCRIPTION_TIER_ENTERPRISE", "SUBSCRIPTION_TIER_ENTERPRISE_EMERGING", "SUBSCRIPTION_TIER_EDU", "SUBSCRIPTION_TIER_EDU_PRO", "SUBSCRIPTION_TIER_EDU_EMERGING", "SUBSCRIPTION_TIER_EDU_PRO_EMERGING", "SUBSCRIPTION_TIER_FRONTLINE_STARTER", ""}),
+							Description: `The required subscription tier of this engine.
+
+They cannot be modified after engine creation. If the required subscription tier is search, user with higher license tier like assist can still access the standalone app associated with this engine. Possible values: ["SUBSCRIPTION_TIER_UNSPECIFIED", "SUBSCRIPTION_TIER_SEARCH", "SUBSCRIPTION_TIER_SEARCH_AND_ASSISTANT", "SUBSCRIPTION_TIER_FRONTLINE_WORKER", "SUBSCRIPTION_TIER_AGENTSPACE_STARTER", "SUBSCRIPTION_TIER_AGENTSPACE_BUSINESS", "SUBSCRIPTION_TIER_ENTERPRISE", "SUBSCRIPTION_TIER_ENTERPRISE_EMERGING", "SUBSCRIPTION_TIER_EDU", "SUBSCRIPTION_TIER_EDU_PRO", "SUBSCRIPTION_TIER_EDU_EMERGING", "SUBSCRIPTION_TIER_EDU_PRO_EMERGING", "SUBSCRIPTION_TIER_FRONTLINE_STARTER"]`,
+						},
 						"search_add_ons": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -777,11 +787,17 @@ func flattenDiscoveryEngineSearchEngineSearchEngineConfig(v interface{}, d *sche
 	transformed := make(map[string]interface{})
 	transformed["search_tier"] =
 		flattenDiscoveryEngineSearchEngineSearchEngineConfigSearchTier(original["searchTier"], d, config)
+	transformed["required_subscription_tier"] =
+		flattenDiscoveryEngineSearchEngineSearchEngineConfigRequiredSubscriptionTier(original["requiredSubscriptionTier"], d, config)
 	transformed["search_add_ons"] =
 		flattenDiscoveryEngineSearchEngineSearchEngineConfigSearchAddOns(original["searchAddOns"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDiscoveryEngineSearchEngineSearchEngineConfigSearchTier(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDiscoveryEngineSearchEngineSearchEngineConfigRequiredSubscriptionTier(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -915,6 +931,13 @@ func expandDiscoveryEngineSearchEngineSearchEngineConfig(v interface{}, d tpgres
 		transformed["searchTier"] = transformedSearchTier
 	}
 
+	transformedRequiredSubscriptionTier, err := expandDiscoveryEngineSearchEngineSearchEngineConfigRequiredSubscriptionTier(original["required_subscription_tier"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedRequiredSubscriptionTier); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["requiredSubscriptionTier"] = transformedRequiredSubscriptionTier
+	}
+
 	transformedSearchAddOns, err := expandDiscoveryEngineSearchEngineSearchEngineConfigSearchAddOns(original["search_add_ons"], d, config)
 	if err != nil {
 		return nil, err
@@ -926,6 +949,10 @@ func expandDiscoveryEngineSearchEngineSearchEngineConfig(v interface{}, d tpgres
 }
 
 func expandDiscoveryEngineSearchEngineSearchEngineConfigSearchTier(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDiscoveryEngineSearchEngineSearchEngineConfigRequiredSubscriptionTier(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
