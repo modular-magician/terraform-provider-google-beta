@@ -593,8 +593,11 @@ const SharedTestNetworkPrefix = "tf-bootstrap-net-"
 //
 // Returns the name of a network, creating it if it hasn't been created in the
 // test project.
-func BootstrapSharedTestNetwork(t *testing.T, testId string) string {
+func BootstrapSharedTestNetwork(t *testing.T, testId string, project_id ...string) string {
 	project := envvar.GetTestProjectFromEnv()
+	if len(project_id) > 0 && project_id[0] != "" {
+		project = project_id[0]
+	}
 	networkName := SharedTestNetworkPrefix + testId
 
 	config := BootstrapConfig(t)
@@ -644,6 +647,13 @@ func BootstrapSharedTestNetwork(t *testing.T, testId string) string {
 
 type AddressSettings struct {
 	PrefixLength int
+	ProjectID    string
+}
+
+func AddressWithProjectID(projectID string) func(*AddressSettings) {
+	return func(settings *AddressSettings) {
+		settings.ProjectID = projectID
+	}
 }
 
 func AddressWithPrefixLength(prefixLength int) func(*AddressSettings) {
@@ -667,9 +677,13 @@ const SharedTestGlobalAddressPrefix = "tf-bootstrap-addr-"
 
 // params are the functions to set compute global address
 func BootstrapSharedTestGlobalAddress(t *testing.T, testId string, params ...func(*AddressSettings)) string {
-	project := envvar.GetTestProjectFromEnv()
+	settings := NewAddressSettings(params...)
+	project := settings.ProjectID
+	if project == "" {
+		project = envvar.GetTestProjectFromEnv()
+	}
 	addressName := SharedTestGlobalAddressPrefix + testId
-	networkName := BootstrapSharedTestNetwork(t, testId)
+	networkName := BootstrapSharedTestNetwork(t, testId, project)
 	networkId := fmt.Sprintf("projects/%v/global/networks/%v", project, networkName)
 
 	config := BootstrapConfig(t)
@@ -682,8 +696,6 @@ func BootstrapSharedTestGlobalAddress(t *testing.T, testId string, params ...fun
 	if err != nil && transport_tpg.IsGoogleApiErrorWithCode(err, 404) {
 		log.Printf("[DEBUG] Global address %q not found, bootstrapping", addressName)
 		url := fmt.Sprintf("%sprojects/%s/global/addresses", config.ComputeBasePath, project)
-
-		settings := NewAddressSettings(params...)
 
 		netObj := map[string]interface{}{
 			"name":          addressName,
@@ -726,6 +738,7 @@ func BootstrapSharedTestGlobalAddress(t *testing.T, testId string, params ...fun
 type ServiceNetworkSettings struct {
 	PrefixLength  int
 	ParentService string
+	ProjectID     string
 }
 
 func ServiceNetworkWithPrefixLength(prefixLength int) func(*ServiceNetworkSettings) {
@@ -740,10 +753,17 @@ func ServiceNetworkWithParentService(parentService string) func(*ServiceNetworkS
 	}
 }
 
+func ServiceNetworkWithProjectID(projectID string) func(*ServiceNetworkSettings) {
+	return func(settings *ServiceNetworkSettings) {
+		settings.ProjectID = projectID
+	}
+}
+
 func NewServiceNetworkSettings(options ...func(*ServiceNetworkSettings)) *ServiceNetworkSettings {
 	settings := &ServiceNetworkSettings{
 		PrefixLength:  16,                                 // default prefix length
 		ParentService: "servicenetworking.googleapis.com", // default parent service
+		ProjectID:     "",                                 // default project id is empty
 	}
 
 	for _, o := range options {
@@ -774,6 +794,9 @@ func BootstrapSharedServiceNetworkingConnection(t *testing.T, testId string, par
 	settings := NewServiceNetworkSettings(params...)
 	parentService := "services/" + settings.ParentService
 	projectId := envvar.GetTestProjectFromEnv()
+	if settings.ProjectID != "" {
+		projectId = settings.ProjectID
+	}
 
 	config := BootstrapConfig(t)
 	if config == nil {
@@ -789,7 +812,12 @@ func BootstrapSharedServiceNetworkingConnection(t *testing.T, testId string, par
 
 	networkName := SharedTestNetworkPrefix + testId
 	networkId := fmt.Sprintf("projects/%v/global/networks/%v", project.ProjectNumber, networkName)
-	globalAddressName := BootstrapSharedTestGlobalAddress(t, testId, AddressWithPrefixLength(settings.PrefixLength))
+	addrParams := []func(*AddressSettings){AddressWithPrefixLength(settings.PrefixLength)}
+	if settings.ProjectID != "" {
+		addrParams = append(addrParams, AddressWithProjectID(settings.ProjectID))
+	}
+	log.Printf("[DEBUG] Printing networkId %q and projectId %q", networkId, projectId)
+	globalAddressName := BootstrapSharedTestGlobalAddress(t, testId, addrParams...)
 
 	readCall := config.NewServiceNetworkingClient(config.UserAgent).Services.Connections.List(parentService).Network(networkId)
 	if config.UserProjectOverride {
@@ -1084,8 +1112,13 @@ const SharedTestSQLInstanceNamePrefix = "tf-bootstrap-"
 
 // BootstrapSharedSQLInstanceBackupRun will return a shared SQL db instance that
 // has a backup created for it.
-func BootstrapSharedSQLInstanceBackupRun(t *testing.T) string {
-	project := envvar.GetTestProjectFromEnv()
+func BootstrapSharedSQLInstanceBackupRun(t *testing.T, projectID ...string) string {
+	var project string
+	if len(projectID) > 0 && projectID[0] != "" {
+		project = projectID[0]
+	} else {
+		project = envvar.GetTestProjectFromEnv()
+	}
 
 	config := BootstrapConfig(t)
 	if config == nil {
