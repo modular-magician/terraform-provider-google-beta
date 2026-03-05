@@ -165,6 +165,14 @@ which cannot be a dash.`,
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"accelerator_topology_mode": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"AUTO_CONNECT", "PROVISION_ONLY", ""}),
+							Description:  `Specifies the connection mode for the accelerator topology. If not specified, the default is AUTO_CONNECT. Default value: "AUTO_CONNECT" Possible values: ["AUTO_CONNECT", "PROVISION_ONLY"]`,
+							Default:      "AUTO_CONNECT",
+						},
 						"availability_domain_count": {
 							Type:     schema.TypeInt,
 							Optional: true,
@@ -454,6 +462,14 @@ with RFC1035.`,
 							Description: `The accelerator topology. This field can be set only when the workload policy type is HIGH_THROUGHPUT
 and cannot be set if max topology distance is set.`,
 							ConflictsWith: []string{"workload_policy.0.max_topology_distance"},
+						},
+						"accelerator_topology_mode": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"AUTO_CONNECT", "PROVISION_ONLY", ""}),
+							Description:  `Specifies the connection mode for the accelerator topology. If not specified, the default is AUTO_CONNECT. Default value: "AUTO_CONNECT" Possible values: ["AUTO_CONNECT", "PROVISION_ONLY"]`,
+							Default:      "AUTO_CONNECT",
 						},
 						"max_topology_distance": {
 							Type:         schema.TypeString,
@@ -1118,6 +1134,8 @@ func flattenComputeResourcePolicyGroupPlacementPolicy(v interface{}, d *schema.R
 		flattenComputeResourcePolicyGroupPlacementPolicyGpuTopology(original["gpuTopology"], d, config)
 	transformed["tpu_topology"] =
 		flattenComputeResourcePolicyGroupPlacementPolicyTpuTopology(original["tpuTopology"], d, config)
+	transformed["accelerator_topology_mode"] =
+		flattenComputeResourcePolicyGroupPlacementPolicyAcceleratorTopologyMode(original["acceleratorTopologyMode"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeResourcePolicyGroupPlacementPolicyVmCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1180,6 +1198,10 @@ func flattenComputeResourcePolicyGroupPlacementPolicyGpuTopology(v interface{}, 
 }
 
 func flattenComputeResourcePolicyGroupPlacementPolicyTpuTopology(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeResourcePolicyGroupPlacementPolicyAcceleratorTopologyMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1274,6 +1296,8 @@ func flattenComputeResourcePolicyWorkloadPolicy(v interface{}, d *schema.Resourc
 		flattenComputeResourcePolicyWorkloadPolicyMaxTopologyDistance(original["maxTopologyDistance"], d, config)
 	transformed["accelerator_topology"] =
 		flattenComputeResourcePolicyWorkloadPolicyAcceleratorTopology(original["acceleratorTopology"], d, config)
+	transformed["accelerator_topology_mode"] =
+		flattenComputeResourcePolicyWorkloadPolicyAcceleratorTopologyMode(original["acceleratorTopologyMode"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeResourcePolicyWorkloadPolicyType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1285,6 +1309,10 @@ func flattenComputeResourcePolicyWorkloadPolicyMaxTopologyDistance(v interface{}
 }
 
 func flattenComputeResourcePolicyWorkloadPolicyAcceleratorTopology(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeResourcePolicyWorkloadPolicyAcceleratorTopologyMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1663,6 +1691,13 @@ func expandComputeResourcePolicyGroupPlacementPolicy(v interface{}, d tpgresourc
 		transformed["tpuTopology"] = transformedTpuTopology
 	}
 
+	transformedAcceleratorTopologyMode, err := expandComputeResourcePolicyGroupPlacementPolicyAcceleratorTopologyMode(original["accelerator_topology_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAcceleratorTopologyMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["acceleratorTopologyMode"] = transformedAcceleratorTopologyMode
+	}
+
 	return transformed, nil
 }
 
@@ -1687,6 +1722,10 @@ func expandComputeResourcePolicyGroupPlacementPolicyGpuTopology(v interface{}, d
 }
 
 func expandComputeResourcePolicyGroupPlacementPolicyTpuTopology(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeResourcePolicyGroupPlacementPolicyAcceleratorTopologyMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -1854,6 +1893,13 @@ func expandComputeResourcePolicyWorkloadPolicy(v interface{}, d tpgresource.Terr
 		transformed["acceleratorTopology"] = transformedAcceleratorTopology
 	}
 
+	transformedAcceleratorTopologyMode, err := expandComputeResourcePolicyWorkloadPolicyAcceleratorTopologyMode(original["accelerator_topology_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAcceleratorTopologyMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["acceleratorTopologyMode"] = transformedAcceleratorTopologyMode
+	}
+
 	return transformed, nil
 }
 
@@ -1866,6 +1912,10 @@ func expandComputeResourcePolicyWorkloadPolicyMaxTopologyDistance(v interface{},
 }
 
 func expandComputeResourcePolicyWorkloadPolicyAcceleratorTopology(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeResourcePolicyWorkloadPolicyAcceleratorTopologyMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -7,6 +7,7 @@ api_resource_type_kind: ResourcePolicy
 fields:
     - api_field: description
     - api_field: diskConsistencyGroupPolicy.enabled
+    - api_field: groupPlacementPolicy.acceleratorTopologyMode
     - api_field: groupPlacementPolicy.availabilityDomainCount
     - api_field: groupPlacementPolicy.collocation
     - api_field: groupPlacementPolicy.gpuTopology
@@ -33,6 +34,7 @@ fields:
     - api_field: snapshotSchedulePolicy.snapshotProperties.labels
     - api_field: snapshotSchedulePolicy.snapshotProperties.storageLocations
     - api_field: workloadPolicy.acceleratorTopology
+    - api_field: workloadPolicy.acceleratorTopologyMode
     - api_field: workloadPolicy.maxTopologyDistance
     - api_field: workloadPolicy.type
     - api_field: selfLink

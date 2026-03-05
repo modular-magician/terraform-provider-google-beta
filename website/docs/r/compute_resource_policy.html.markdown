@@ -490,6 +490,12 @@ The following arguments are supported:
   (Optional, [Beta](../guides/provider_versions.html.markdown))
   Specifies the shape of the TPU slice.
 
+* `accelerator_topology_mode` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Specifies the connection mode for the accelerator topology. If not specified, the default is AUTO_CONNECT.
+  Default value is `AUTO_CONNECT`.
+  Possible values are: `AUTO_CONNECT`, `PROVISION_ONLY`.
+
 <a name="nested_instance_schedule_policy"></a>The `instance_schedule_policy` block supports:
 
 * `vm_start_schedule` -
@@ -551,6 +557,12 @@ The following arguments are supported:
   (Optional)
   The accelerator topology. This field can be set only when the workload policy type is HIGH_THROUGHPUT
   and cannot be set if max topology distance is set.
+
+* `accelerator_topology_mode` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  Specifies the connection mode for the accelerator topology. If not specified, the default is AUTO_CONNECT.
+  Default value is `AUTO_CONNECT`.
+  Possible values are: `AUTO_CONNECT`, `PROVISION_ONLY`.
 
 ## Attributes Reference
 
