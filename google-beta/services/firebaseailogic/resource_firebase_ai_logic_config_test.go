@@ -67,7 +67,7 @@ func TestAccFirebaseAILogicConfig_firebaseailogicConfigUpdate(t *testing.T) {
 		CheckDestroy: testAccCheckFirebaseAILogicConfigDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccFirebaseAILogicConfig_firebaseailogicConfigUpdateExample(context, "key1", 0.5, "ALL"),
+				Config: testAccFirebaseAILogicConfig_firebaseailogicConfigUpdateExample(context, "key1", 0.5, "ALL", "TRUE"),
 			},
 			{
 				ResourceName:            "google_firebase_ai_logic_config.default",
@@ -76,7 +76,25 @@ func TestAccFirebaseAILogicConfig_firebaseailogicConfigUpdate(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"generative_language_config.0.api_key", "generative_language_config.0.api_key_wo", "location"},
 			},
 			{
-				Config: testAccFirebaseAILogicConfig_firebaseailogicConfigUpdateExample(context, "key2", 1.0, "NONE"),
+				Config: testAccFirebaseAILogicConfig_firebaseailogicConfigUpdateExample(context, "key2", 1.0, "NONE", "FALSE"),
+			},
+			{
+				ResourceName:            "google_firebase_ai_logic_config.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"generative_language_config.0.api_key", "generative_language_config.0.api_key_wo", "location"},
+			},
+			{
+				Config: testAccFirebaseAILogicConfig_firebaseailogicConfigUpdateExample(context, "key3", 1.0, "NONE", "EMPTY"),
+			},
+			{
+				ResourceName:            "google_firebase_ai_logic_config.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"generative_language_config.0.api_key", "generative_language_config.0.api_key_wo", "location"},
+			},
+			{
+				Config: testAccFirebaseAILogicConfig_firebaseailogicConfigUpdateExample(context, "key4", 1.0, "NONE", "OMITTED"),
 			},
 			{
 				ResourceName:            "google_firebase_ai_logic_config.default",
@@ -89,10 +107,27 @@ func TestAccFirebaseAILogicConfig_firebaseailogicConfigUpdate(t *testing.T) {
 }
 
 func testAccFirebaseAILogicConfig_firebaseailogicConfigUpdateExample(
-	context map[string]interface{}, apiKeyId string, samplingRate float32, telemetryMode string) string {
+	context map[string]interface{}, apiKeyId string, samplingRate float32, telemetryMode string, trafficFilterState string) string {
 	context["api_key_id"] = apiKeyId
 	context["sampling_rate"] = samplingRate
 	context["telemetry_mode"] = telemetryMode
+
+	var trafficFilterBlock string
+	switch trafficFilterState {
+	case "TRUE":
+		trafficFilterBlock = "traffic_filter {\n    template_only = true\n  }"
+	case "FALSE":
+		trafficFilterBlock = "traffic_filter {\n    template_only = false\n  }"
+	case "EMPTY":
+		trafficFilterBlock = "traffic_filter {}"
+	case "OMITTED":
+		trafficFilterBlock = ""
+	default:
+		trafficFilterBlock = ""
+	}
+
+	context["traffic_filter_block"] = trafficFilterBlock
+
 	return acctest.Nprintf(`
 resource "google_project" "project" {
   provider = google-beta
@@ -162,6 +197,8 @@ resource "google_firebase_ai_logic_config" "default" {
     mode = "%{telemetry_mode}"
     sampling_rate = %{sampling_rate}
   }
+
+  %{traffic_filter_block}
 
   depends_on = [time_sleep.wait_30s]
 }

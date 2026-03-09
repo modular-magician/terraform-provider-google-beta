@@ -200,6 +200,23 @@ the specified value if the system is overloaded. Default is 1.0.`,
 					},
 				},
 			},
+			"traffic_filter": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Configuration for traffic filtering.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"template_only": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Description: `Only allows users to use AI Logic via prompt templates for this project.
+If true, only calls using server templates are permitted.`,
+							Default: false,
+						},
+					},
+				},
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -236,6 +253,12 @@ func resourceFirebaseAILogicConfigCreate(d *schema.ResourceData, meta interface{
 		return err
 	} else if v, ok := d.GetOkExists("telemetry_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(telemetryConfigProp)) && (ok || !reflect.DeepEqual(v, telemetryConfigProp)) {
 		obj["telemetryConfig"] = telemetryConfigProp
+	}
+	trafficFilterProp, err := expandFirebaseAILogicConfigTrafficFilter(d.Get("traffic_filter"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("traffic_filter"); !tpgresource.IsEmptyValue(reflect.ValueOf(trafficFilterProp)) && (ok || !reflect.DeepEqual(v, trafficFilterProp)) {
+		obj["trafficFilter"] = trafficFilterProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{FirebaseAILogicBasePath}}projects/{{project}}/locations/{{location}}/config?update_mask=*")
@@ -335,6 +358,9 @@ func resourceFirebaseAILogicConfigRead(d *schema.ResourceData, meta interface{})
 	if err := d.Set("telemetry_config", flattenFirebaseAILogicConfigTelemetryConfig(res["telemetryConfig"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Config: %s", err)
 	}
+	if err := d.Set("traffic_filter", flattenFirebaseAILogicConfigTrafficFilter(res["trafficFilter"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Config: %s", err)
+	}
 
 	return nil
 }
@@ -367,6 +393,12 @@ func resourceFirebaseAILogicConfigUpdate(d *schema.ResourceData, meta interface{
 	} else if v, ok := d.GetOkExists("telemetry_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, telemetryConfigProp)) {
 		obj["telemetryConfig"] = telemetryConfigProp
 	}
+	trafficFilterProp, err := expandFirebaseAILogicConfigTrafficFilter(d.Get("traffic_filter"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("traffic_filter"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, trafficFilterProp)) {
+		obj["trafficFilter"] = trafficFilterProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{FirebaseAILogicBasePath}}projects/{{project}}/locations/{{location}}/config")
 	if err != nil {
@@ -383,6 +415,10 @@ func resourceFirebaseAILogicConfigUpdate(d *schema.ResourceData, meta interface{
 
 	if d.HasChange("telemetry_config") {
 		updateMask = append(updateMask, "telemetryConfig")
+	}
+
+	if d.HasChange("traffic_filter") {
+		updateMask = append(updateMask, "trafficFilter")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -538,6 +574,43 @@ func flattenFirebaseAILogicConfigTelemetryConfigSamplingRate(v interface{}, d *s
 	return v
 }
 
+func flattenFirebaseAILogicConfigTrafficFilter(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+
+	original, ok := v.(map[string]interface{})
+	if !ok {
+		return nil
+	}
+
+	transformed := make(map[string]interface{})
+
+	// 1. If the API returned the field (e.g., when it is true), use it.
+	if val, ok := original["templateOnly"]; ok {
+		transformed["template_only"] = val
+	} else {
+		// 2. The API dropped the field (because false is the protobuf zero-value).
+		// We look at the Terraform state to see if the user had this block configured.
+		oldRaw := d.Get("traffic_filter")
+		if oldList, ok := oldRaw.([]interface{}); ok && len(oldList) > 0 && oldList[0] != nil {
+			oldMap := oldList[0].(map[string]interface{})
+			// Inject the user's state value back in so Terraform doesn't see a diff
+			if templateOnly, ok := oldMap["template_only"].(bool); ok && !templateOnly {
+				transformed["template_only"] = templateOnly
+			}
+		}
+	}
+
+	// 3. If the API returned an empty object `{}` AND the user didn't configure the block,
+	// return nil to prevent Terraform from trying to add an empty block to the state.
+	if len(transformed) == 0 {
+		return nil
+	}
+
+	return []interface{}{transformed}
+}
+
 func expandFirebaseAILogicConfigGenerativeLanguageConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -613,5 +686,31 @@ func expandFirebaseAILogicConfigTelemetryConfigMode(v interface{}, d tpgresource
 }
 
 func expandFirebaseAILogicConfigTelemetryConfigSamplingRate(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandFirebaseAILogicConfigTrafficFilter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedTemplateOnly, err := expandFirebaseAILogicConfigTrafficFilterTemplateOnly(original["template_only"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedTemplateOnly); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["templateOnly"] = transformedTemplateOnly
+	}
+
+	return transformed, nil
+}
+
+func expandFirebaseAILogicConfigTrafficFilterTemplateOnly(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
