@@ -92,8 +92,8 @@ The following arguments are supported:
 
 * `catalog_type` -
   (Required)
-  The catalog type of the IcebergCatalog. Currently only supports the type for Google Cloud Storage Buckets.
-  Possible values are: `CATALOG_TYPE_GCS_BUCKET`.
+  The catalog type of the IcebergCatalog.
+  Possible values are: `CATALOG_TYPE_GCS_BUCKET`, `CATALOG_TYPE_BIGLAKE`.
 
 * `name` -
   (Required)
@@ -107,6 +107,14 @@ The following arguments are supported:
   (Optional)
   The credential mode used for the catalog. CREDENTIAL_MODE_END_USER - End user credentials, default. The authenticating user must have access to the catalog resources and the corresponding Google Cloud Storage files. CREDENTIAL_MODE_VENDED_CREDENTIALS - Use credential vending. The authenticating user must have access to the catalog resources and the system will provide the caller with downscoped credentials to access the Google Cloud Storage files. All table operations in this mode would require `X-Iceberg-Access-Delegation` header with `vended-credentials` value included. System will generate a service account and the catalog administrator must grant the service account appropriate permissions.
   Possible values are: `CREDENTIAL_MODE_END_USER`, `CREDENTIAL_MODE_VENDED_CREDENTIALS`.
+
+* `default_location` -
+  (Optional)
+  The default storage location for the catalog, e.g., `gs://my-bucket`. Output only when the catalog type is CATALOG_TYPE_GCS_BUCKET. Required when the catalog type is CATALOG_TYPE_BIGLAKE.
+
+* `additional_locations` -
+  (Optional)
+  Additional GCS locations (e.g., `gs://my-other-bucket/...`) that are permitted for use by resources within this catalog. This field can be used to specify either a GCS bucket or a path within it.
 
 * `primary_location` -
   (Optional)
@@ -127,9 +135,6 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `biglake_service_account` -
   Output only. The service account used for credential vending. It might be empty if credential vending was never enabled for the catalog.
-
-* `default_location` -
-  Output only. The default storage location for the catalog, e.g., `gs://my-bucket`.
 
 * `storage_regions` -
   Output only. The GCP region(s) where the physical metadata for the tables is stored, e.g. `us-central1`, `nam4` or `us`. This will contain one value for all locations, except for the catalogs that are configured to use custom dual region buckets.

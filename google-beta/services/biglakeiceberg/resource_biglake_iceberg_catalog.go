@@ -122,8 +122,8 @@ func ResourceBiglakeIcebergIcebergCatalog() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: verify.ValidateEnum([]string{"CATALOG_TYPE_GCS_BUCKET"}),
-				Description:  `The catalog type of the IcebergCatalog. Currently only supports the type for Google Cloud Storage Buckets. Possible values: ["CATALOG_TYPE_GCS_BUCKET"]`,
+				ValidateFunc: verify.ValidateEnum([]string{"CATALOG_TYPE_GCS_BUCKET", "CATALOG_TYPE_BIGLAKE"}),
+				Description:  `The catalog type of the IcebergCatalog. Possible values: ["CATALOG_TYPE_GCS_BUCKET", "CATALOG_TYPE_BIGLAKE"]`,
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -134,12 +134,25 @@ For CATALOG_TYPE_GCS_BUCKET typed catalogs, the name needs to be the
 exact same value of the GCS bucket's name. For example, for a bucket:
 gs://bucket-name, the catalog name will be exactly "bucket-name".`,
 			},
+			"additional_locations": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Additional GCS locations (e.g., 'gs://my-other-bucket/...') that are permitted for use by resources within this catalog. This field can be used to specify either a GCS bucket or a path within it.`,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"credential_mode": {
 				Type:         schema.TypeString,
 				Computed:     true,
 				Optional:     true,
 				ValidateFunc: verify.ValidateEnum([]string{"CREDENTIAL_MODE_END_USER", "CREDENTIAL_MODE_VENDED_CREDENTIALS", ""}),
 				Description:  `The credential mode used for the catalog. CREDENTIAL_MODE_END_USER - End user credentials, default. The authenticating user must have access to the catalog resources and the corresponding Google Cloud Storage files. CREDENTIAL_MODE_VENDED_CREDENTIALS - Use credential vending. The authenticating user must have access to the catalog resources and the system will provide the caller with downscoped credentials to access the Google Cloud Storage files. All table operations in this mode would require 'X-Iceberg-Access-Delegation' header with 'vended-credentials' value included. System will generate a service account and the catalog administrator must grant the service account appropriate permissions. Possible values: ["CREDENTIAL_MODE_END_USER", "CREDENTIAL_MODE_VENDED_CREDENTIALS"]`,
+			},
+			"default_location": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `The default storage location for the catalog, e.g., 'gs://my-bucket'. Output only when the catalog type is CATALOG_TYPE_GCS_BUCKET. Required when the catalog type is CATALOG_TYPE_BIGLAKE.`,
 			},
 			"primary_location": {
 				Type:     schema.TypeString,
@@ -158,11 +171,6 @@ catalog's location.`,
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: `Output only. The creation time of the IcebergCatalog.`,
-			},
-			"default_location": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: `Output only. The default storage location for the catalog, e.g., 'gs://my-bucket'.`,
 			},
 			"replicas": {
 				Type:        schema.TypeList,
@@ -227,8 +235,32 @@ func resourceBiglakeIcebergIcebergCatalogCreate(d *schema.ResourceData, meta int
 	} else if v, ok := d.GetOkExists("catalog_type"); !tpgresource.IsEmptyValue(reflect.ValueOf(catalogTypeProp)) && (ok || !reflect.DeepEqual(v, catalogTypeProp)) {
 		obj["catalog-type"] = catalogTypeProp
 	}
+	defaultLocationProp, err := expandBiglakeIcebergIcebergCatalogDefaultLocation(d.Get("default_location"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("default_location"); !tpgresource.IsEmptyValue(reflect.ValueOf(defaultLocationProp)) && (ok || !reflect.DeepEqual(v, defaultLocationProp)) {
+		obj["default-location"] = defaultLocationProp
+	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{BiglakeIcebergBasePath}}iceberg/v1/restcatalog/extensions/projects/{{project}}/catalogs?iceberg-catalog-id={{name}}&primary-location={{primary_location}}")
+	// This custom logic determines whether the default-location is required or output only.
+	if tpgresource.IsEmptyValue(reflect.ValueOf(defaultLocationProp)) {
+		if v, ok := catalogTypeProp.(string); ok && v == "CATALOG_TYPE_BIGLAKE" {
+			return fmt.Errorf("CATALOG_TYPE_BIGLAKE requires a non-empty default_location.")
+		}
+	} else {
+		if v, ok := catalogTypeProp.(string); ok && v == "CATALOG_TYPE_GCS_BUCKET" {
+			return fmt.Errorf("CATALOG_TYPE_GCS_BUCKET outputs the default_location only. Do not set it.")
+		}
+	}
+
+	additionalLocationsProp, err := expandBiglakeIcebergIcebergCatalogAdditionalLocations(d.Get("additional_locations"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("additional_locations"); !tpgresource.IsEmptyValue(reflect.ValueOf(additionalLocationsProp)) && (ok || !reflect.DeepEqual(v, additionalLocationsProp)) {
+		obj["additional-locations"] = additionalLocationsProp
+	}
+
+	url, err := tpgresource.ReplaceVars(d, config, "{{BiglakeIcebergBasePath}}iceberg/v1/restcatalog/extensions/projects/{{project}}/catalogs?iceberg-catalog-id={{name}}")
 	if err != nil {
 		return err
 	}
@@ -348,6 +380,9 @@ func resourceBiglakeIcebergIcebergCatalogRead(d *schema.ResourceData, meta inter
 	if err := d.Set("replicas", flattenBiglakeIcebergIcebergCatalogReplicas(res["replicas"], d, config)); err != nil {
 		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
 	}
+	if err := d.Set("additional_locations", flattenBiglakeIcebergIcebergCatalogAdditionalLocations(res["additional-locations"], d, config)); err != nil {
+		return fmt.Errorf("Error reading IcebergCatalog: %s", err)
+	}
 
 	return nil
 }
@@ -374,6 +409,34 @@ func resourceBiglakeIcebergIcebergCatalogUpdate(d *schema.ResourceData, meta int
 	} else if v, ok := d.GetOkExists("credential_mode"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, credentialModeProp)) {
 		obj["credential-mode"] = credentialModeProp
 	}
+	defaultLocationProp, err := expandBiglakeIcebergIcebergCatalogDefaultLocation(d.Get("default_location"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("default_location"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, defaultLocationProp)) {
+		obj["default-location"] = defaultLocationProp
+	}
+
+	// This custom logic determines whether the default-location is required or output only.
+	catalogTypeProp, err := expandBiglakeIcebergIcebergCatalogCatalogType(d.Get("catalog_type"), d, config)
+	if err != nil {
+		return err
+	}
+	if tpgresource.IsEmptyValue(reflect.ValueOf(defaultLocationProp)) {
+		if v, ok := catalogTypeProp.(string); ok && v == "CATALOG_TYPE_BIGLAKE" {
+			return fmt.Errorf("CATALOG_TYPE_BIGLAKE requires a non-empty default_location.")
+		}
+	} else {
+		if v, ok := catalogTypeProp.(string); ok && v == "CATALOG_TYPE_GCS_BUCKET" && d.HasChange("default_location") {
+			return fmt.Errorf("CATALOG_TYPE_GCS_BUCKET outputs the default_location only. Do not change it.")
+		}
+	}
+
+	additionalLocationsProp, err := expandBiglakeIcebergIcebergCatalogAdditionalLocations(d.Get("additional_locations"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("additional_locations"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, additionalLocationsProp)) {
+		obj["additional-locations"] = additionalLocationsProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{BiglakeIcebergBasePath}}iceberg/v1/restcatalog/extensions/projects/{{project}}/catalogs/{{name}}")
 	if err != nil {
@@ -390,11 +453,23 @@ func resourceBiglakeIcebergIcebergCatalogUpdate(d *schema.ResourceData, meta int
 	if d.HasChange("credential_mode") {
 		updateMask = append(updateMask, "credential_mode")
 	}
+
+	if d.HasChange("default_location") {
+		updateMask = append(updateMask, "default_location")
+	}
+
+	if d.HasChange("additional_locations") {
+		updateMask = append(updateMask, "additional_locations")
+	}
+
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
 	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": strings.Join(updateMask, ",")})
 	if err != nil {
 		return err
+	}
+	if parts := regexp.MustCompile(`projects\/([^\/]+)\/`).FindStringSubmatch(url); parts != nil {
+		billingProject = parts[1]
 	}
 
 	// err == nil indicates that the billing_project value was found
@@ -552,10 +627,22 @@ func flattenBiglakeIcebergIcebergCatalogReplicasState(v interface{}, d *schema.R
 	return v
 }
 
+func flattenBiglakeIcebergIcebergCatalogAdditionalLocations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandBiglakeIcebergIcebergCatalogCredentialMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
 func expandBiglakeIcebergIcebergCatalogCatalogType(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBiglakeIcebergIcebergCatalogDefaultLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBiglakeIcebergIcebergCatalogAdditionalLocations(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
