@@ -53,6 +53,30 @@ resource "google_bigquery_reservation" "reservation" {
     }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=bigquery_reservation_with_reservation_group&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Bigquery Reservation With Reservation Group
+
+
+```hcl
+resource "google_bigquery_reservation" "reservation" {
+  name              = "my-reservation"
+  location          = "us-west2"
+  // Set to 0 for testing purposes
+  // In reality this would be larger than zero
+  slot_capacity     = 0
+  edition           = "STANDARD"
+  ignore_idle_slots = true
+  concurrency       = 0
+  reservation_group = "my-reservation-group"
+  autoscale {
+    max_slots = 100
+  }
+}
+```
 
 ## Argument Reference
 
@@ -165,6 +189,10 @@ The following arguments are supported:
   Please note that if maxSlots is set to 0, we will treat it as unset. Customers can set
   maxSlots to 0 and set scalingMode to SCALING_MODE_UNSPECIFIED to disable the maxSlots
   feature.
+
+* `reservation_group` -
+  (Optional)
+  The reservation group that this reservation belongs to. You can set this property when you create or update a reservation. Reservations do not need to belong to a reservation group. Format: projects/{project}/locations/{location}/reservationGroups/{reservation_group} or just {reservation_group}
 
 * `location` -
   (Optional)
