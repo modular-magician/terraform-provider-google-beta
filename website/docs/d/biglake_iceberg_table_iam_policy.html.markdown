@@ -30,10 +30,6 @@ Retrieves the current IAM policy data for icebergtable
 
 ```hcl
 data "google_biglake_iceberg_table_iam_policy" "policy" {
-  project = google_biglake_iceberg_table.my_iceberg_table.project
-  catalog = google_biglake_iceberg_table.my_iceberg_table.catalog
-  namespace = google_biglake_iceberg_table.my_iceberg_table.namespace
-  name = google_biglake_iceberg_table.my_iceberg_table.name
 project = google_biglake_iceberg_table.my_iceberg_table.project
   catalog = google_biglake_iceberg_table.my_iceberg_table.catalog
   namespace = google_biglake_iceberg_table.my_iceberg_table.namespace

@@ -1367,7 +1367,7 @@ data "google_project" "project" {
 }
 
 resource "google_datastream_stream" "stream" {
-    stream_id = "rules-stream"
+    stream_id = ""
     location = "us-central1"
     display_name = "BigQuery Stream with Rules"
 
