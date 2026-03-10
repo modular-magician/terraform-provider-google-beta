@@ -1,0 +1,14 @@
+resource: google_service_usage_v2_project_consumer_policy
+generation_type: mmv1
+source_file: products/serviceusagev2/ProjectConsumerPolicy.yaml
+api_service_name: serviceusage.googleapis.com
+api_version: v2beta
+api_resource_type_kind: ProjectConsumerPolicy
+fields:
+    - api_field: createTime
+    - api_field: enableRules.services
+    - api_field: etag
+    - field: force
+      provider_only: true
+    - api_field: name
+    - api_field: updateTime
