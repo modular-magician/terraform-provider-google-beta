@@ -727,6 +727,28 @@ feature which together with Service Extension allows customized and complex rout
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"forward_proxy": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Dynamic Forwarding Proxy configuration.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `A boolean flag enabling dynamic forwarding proxy.`,
+									},
+									"proxy_mode": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"DIRECT_FORWARDING", "CLOUD_RUN", ""}),
+										Description:  `Determines the dynamic forwarding proxy mode Possible values: ["DIRECT_FORWARDING", "CLOUD_RUN"]`,
+									},
+								},
+							},
+						},
 						"ip_port_selection": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -4314,6 +4336,8 @@ func flattenComputeBackendServiceDynamicForwarding(v interface{}, d *schema.Reso
 	transformed := make(map[string]interface{})
 	transformed["ip_port_selection"] =
 		flattenComputeBackendServiceDynamicForwardingIpPortSelection(original["ipPortSelection"], d, config)
+	transformed["forward_proxy"] =
+		flattenComputeBackendServiceDynamicForwardingForwardProxy(original["ForwardProxy"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeBackendServiceDynamicForwardingIpPortSelection(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -4330,6 +4354,29 @@ func flattenComputeBackendServiceDynamicForwardingIpPortSelection(v interface{},
 	return []interface{}{transformed}
 }
 func flattenComputeBackendServiceDynamicForwardingIpPortSelectionEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeBackendServiceDynamicForwardingForwardProxy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enabled"] =
+		flattenComputeBackendServiceDynamicForwardingForwardProxyEnabled(original["enabled"], d, config)
+	transformed["proxy_mode"] =
+		flattenComputeBackendServiceDynamicForwardingForwardProxyProxyMode(original["proxyMode"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeBackendServiceDynamicForwardingForwardProxyEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeBackendServiceDynamicForwardingForwardProxyProxyMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -6053,6 +6100,13 @@ func expandComputeBackendServiceDynamicForwarding(v interface{}, d tpgresource.T
 		transformed["ipPortSelection"] = transformedIpPortSelection
 	}
 
+	transformedForwardProxy, err := expandComputeBackendServiceDynamicForwardingForwardProxy(original["forward_proxy"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedForwardProxy); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["ForwardProxy"] = transformedForwardProxy
+	}
+
 	return transformed, nil
 }
 
@@ -6079,6 +6133,43 @@ func expandComputeBackendServiceDynamicForwardingIpPortSelection(v interface{}, 
 }
 
 func expandComputeBackendServiceDynamicForwardingIpPortSelectionEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeBackendServiceDynamicForwardingForwardProxy(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnabled, err := expandComputeBackendServiceDynamicForwardingForwardProxyEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	transformedProxyMode, err := expandComputeBackendServiceDynamicForwardingForwardProxyProxyMode(original["proxy_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedProxyMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["proxyMode"] = transformedProxyMode
+	}
+
+	return transformed, nil
+}
+
+func expandComputeBackendServiceDynamicForwardingForwardProxyEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeBackendServiceDynamicForwardingForwardProxyProxyMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
