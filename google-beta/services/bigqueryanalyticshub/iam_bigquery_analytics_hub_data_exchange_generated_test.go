@@ -139,9 +139,9 @@ func testAccBigqueryAnalyticsHubDataExchangeIamMember_basicGenerated(context map
 	return acctest.Nprintf(`
 resource "google_bigquery_analytics_hub_data_exchange" "data_exchange" {
   location         = "US"
-  data_exchange_id = "tf_test_my_data_exchange%{random_suffix}"
-  display_name     = "tf_test_my_data_exchange%{random_suffix}"
-  description      = "example data exchange%{random_suffix}"
+  data_exchange_id = "%{data_exchange_id}"
+  display_name     = "%{data_exchange_id}"
+  description      = "%{desc}"
 }
 
 resource "google_bigquery_analytics_hub_data_exchange_iam_member" "foo" {
@@ -158,9 +158,9 @@ func testAccBigqueryAnalyticsHubDataExchangeIamPolicy_basicGenerated(context map
 	return acctest.Nprintf(`
 resource "google_bigquery_analytics_hub_data_exchange" "data_exchange" {
   location         = "US"
-  data_exchange_id = "tf_test_my_data_exchange%{random_suffix}"
-  display_name     = "tf_test_my_data_exchange%{random_suffix}"
-  description      = "example data exchange%{random_suffix}"
+  data_exchange_id = "%{data_exchange_id}"
+  display_name     = "%{data_exchange_id}"
+  description      = "%{desc}"
 }
 
 data "google_iam_policy" "foo" {
@@ -192,9 +192,9 @@ func testAccBigqueryAnalyticsHubDataExchangeIamPolicy_emptyBinding(context map[s
 	return acctest.Nprintf(`
 resource "google_bigquery_analytics_hub_data_exchange" "data_exchange" {
   location         = "US"
-  data_exchange_id = "tf_test_my_data_exchange%{random_suffix}"
-  display_name     = "tf_test_my_data_exchange%{random_suffix}"
-  description      = "example data exchange%{random_suffix}"
+  data_exchange_id = "%{data_exchange_id}"
+  display_name     = "%{data_exchange_id}"
+  description      = "%{desc}"
 }
 
 data "google_iam_policy" "foo" {
@@ -213,9 +213,9 @@ func testAccBigqueryAnalyticsHubDataExchangeIamBinding_basicGenerated(context ma
 	return acctest.Nprintf(`
 resource "google_bigquery_analytics_hub_data_exchange" "data_exchange" {
   location         = "US"
-  data_exchange_id = "tf_test_my_data_exchange%{random_suffix}"
-  display_name     = "tf_test_my_data_exchange%{random_suffix}"
-  description      = "example data exchange%{random_suffix}"
+  data_exchange_id = "%{data_exchange_id}"
+  display_name     = "%{data_exchange_id}"
+  description      = "%{desc}"
 }
 
 resource "google_bigquery_analytics_hub_data_exchange_iam_binding" "foo" {
@@ -232,9 +232,9 @@ func testAccBigqueryAnalyticsHubDataExchangeIamBinding_updateGenerated(context m
 	return acctest.Nprintf(`
 resource "google_bigquery_analytics_hub_data_exchange" "data_exchange" {
   location         = "US"
-  data_exchange_id = "tf_test_my_data_exchange%{random_suffix}"
-  display_name     = "tf_test_my_data_exchange%{random_suffix}"
-  description      = "example data exchange%{random_suffix}"
+  data_exchange_id = "%{data_exchange_id}"
+  display_name     = "%{data_exchange_id}"
+  description      = "%{desc}"
 }
 
 resource "google_bigquery_analytics_hub_data_exchange_iam_binding" "foo" {

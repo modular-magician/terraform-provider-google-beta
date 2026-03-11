@@ -341,7 +341,7 @@ func TestAccIapWebCloudRunServiceIamPolicyGenerated_withCondition(t *testing.T) 
 func testAccIapWebCloudRunServiceIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloud-run-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -370,7 +370,7 @@ resource "google_iap_web_cloud_run_service_iam_member" "foo" {
 func testAccIapWebCloudRunServiceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloud-run-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -414,7 +414,7 @@ data "google_iap_web_cloud_run_service_iam_policy" "foo" {
 func testAccIapWebCloudRunServiceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloud-run-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -445,7 +445,7 @@ resource "google_iap_web_cloud_run_service_iam_policy" "foo" {
 func testAccIapWebCloudRunServiceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloud-run-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -474,7 +474,7 @@ resource "google_iap_web_cloud_run_service_iam_binding" "foo" {
 func testAccIapWebCloudRunServiceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloud-run-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -503,7 +503,7 @@ resource "google_iap_web_cloud_run_service_iam_binding" "foo" {
 func testAccIapWebCloudRunServiceIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloud-run-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -537,7 +537,7 @@ resource "google_iap_web_cloud_run_service_iam_binding" "foo" {
 func testAccIapWebCloudRunServiceIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloud-run-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -593,7 +593,7 @@ resource "google_iap_web_cloud_run_service_iam_binding" "foo3" {
 func testAccIapWebCloudRunServiceIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloud-run-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -627,7 +627,7 @@ resource "google_iap_web_cloud_run_service_iam_member" "foo" {
 func testAccIapWebCloudRunServiceIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloud-run-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -683,7 +683,7 @@ resource "google_iap_web_cloud_run_service_iam_member" "foo3" {
 func testAccIapWebCloudRunServiceIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloud-run-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"

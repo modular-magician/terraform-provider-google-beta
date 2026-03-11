@@ -138,7 +138,7 @@ func TestAccCloudRunV2ServiceIamPolicyGenerated(t *testing.T) {
 func testAccCloudRunV2ServiceIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloudrun-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -167,7 +167,7 @@ resource "google_cloud_run_v2_service_iam_member" "foo" {
 func testAccCloudRunV2ServiceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloudrun-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -211,7 +211,7 @@ data "google_cloud_run_v2_service_iam_policy" "foo" {
 func testAccCloudRunV2ServiceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloudrun-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -242,7 +242,7 @@ resource "google_cloud_run_v2_service_iam_policy" "foo" {
 func testAccCloudRunV2ServiceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloudrun-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -271,7 +271,7 @@ resource "google_cloud_run_v2_service_iam_binding" "foo" {
 func testAccCloudRunV2ServiceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_service" "default" {
-  name     = "tf-test-cloudrun-service%{random_suffix}"
+  name     = "%{cloud_run_service_name}"
   location = "us-central1"
   deletion_protection = false
   ingress = "INGRESS_TRAFFIC_ALL"

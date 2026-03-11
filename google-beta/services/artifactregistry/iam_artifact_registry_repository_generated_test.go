@@ -139,8 +139,8 @@ func testAccArtifactRegistryRepositoryIamMember_basicGenerated(context map[strin
 	return acctest.Nprintf(`
 resource "google_artifact_registry_repository" "my-repo" {
   location      = "us-central1"
-  repository_id = "tf-test-my-repository%{random_suffix}"
-  description   = "example docker repository%{random_suffix}"
+  repository_id = "%{repository_id}"
+  description   = "%{desc}"
   format        = "DOCKER"
 }
 
@@ -158,8 +158,8 @@ func testAccArtifactRegistryRepositoryIamPolicy_basicGenerated(context map[strin
 	return acctest.Nprintf(`
 resource "google_artifact_registry_repository" "my-repo" {
   location      = "us-central1"
-  repository_id = "tf-test-my-repository%{random_suffix}"
-  description   = "example docker repository%{random_suffix}"
+  repository_id = "%{repository_id}"
+  description   = "%{desc}"
   format        = "DOCKER"
 }
 
@@ -192,8 +192,8 @@ func testAccArtifactRegistryRepositoryIamPolicy_emptyBinding(context map[string]
 	return acctest.Nprintf(`
 resource "google_artifact_registry_repository" "my-repo" {
   location      = "us-central1"
-  repository_id = "tf-test-my-repository%{random_suffix}"
-  description   = "example docker repository%{random_suffix}"
+  repository_id = "%{repository_id}"
+  description   = "%{desc}"
   format        = "DOCKER"
 }
 
@@ -213,8 +213,8 @@ func testAccArtifactRegistryRepositoryIamBinding_basicGenerated(context map[stri
 	return acctest.Nprintf(`
 resource "google_artifact_registry_repository" "my-repo" {
   location      = "us-central1"
-  repository_id = "tf-test-my-repository%{random_suffix}"
-  description   = "example docker repository%{random_suffix}"
+  repository_id = "%{repository_id}"
+  description   = "%{desc}"
   format        = "DOCKER"
 }
 
@@ -232,8 +232,8 @@ func testAccArtifactRegistryRepositoryIamBinding_updateGenerated(context map[str
 	return acctest.Nprintf(`
 resource "google_artifact_registry_repository" "my-repo" {
   location      = "us-central1"
-  repository_id = "tf-test-my-repository%{random_suffix}"
-  description   = "example docker repository%{random_suffix}"
+  repository_id = "%{repository_id}"
+  description   = "%{desc}"
   format        = "DOCKER"
 }
 

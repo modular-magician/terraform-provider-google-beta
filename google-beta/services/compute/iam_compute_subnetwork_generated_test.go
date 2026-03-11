@@ -341,7 +341,7 @@ func TestAccComputeSubnetworkIamPolicyGenerated_withCondition(t *testing.T) {
 func testAccComputeSubnetworkIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  name          = "tf-test-test-subnetwork%{random_suffix}"
+  name          = "%{subnetwork_name}"
   ip_cidr_range = "10.2.0.0/16"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
@@ -352,7 +352,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 }
 
 resource "google_compute_network" "custom-test" {
-  name                    = "tf-test-test-network%{random_suffix}"
+  name                    = "%{network_name}"
   auto_create_subnetworks = false
 }
 
@@ -369,7 +369,7 @@ resource "google_compute_subnetwork_iam_member" "foo" {
 func testAccComputeSubnetworkIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  name          = "tf-test-test-subnetwork%{random_suffix}"
+  name          = "%{subnetwork_name}"
   ip_cidr_range = "10.2.0.0/16"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
@@ -380,7 +380,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 }
 
 resource "google_compute_network" "custom-test" {
-  name                    = "tf-test-test-network%{random_suffix}"
+  name                    = "%{network_name}"
   auto_create_subnetworks = false
 }
 
@@ -412,7 +412,7 @@ data "google_compute_subnetwork_iam_policy" "foo" {
 func testAccComputeSubnetworkIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  name          = "tf-test-test-subnetwork%{random_suffix}"
+  name          = "%{subnetwork_name}"
   ip_cidr_range = "10.2.0.0/16"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
@@ -423,7 +423,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 }
 
 resource "google_compute_network" "custom-test" {
-  name                    = "tf-test-test-network%{random_suffix}"
+  name                    = "%{network_name}"
   auto_create_subnetworks = false
 }
 
@@ -442,7 +442,7 @@ resource "google_compute_subnetwork_iam_policy" "foo" {
 func testAccComputeSubnetworkIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  name          = "tf-test-test-subnetwork%{random_suffix}"
+  name          = "%{subnetwork_name}"
   ip_cidr_range = "10.2.0.0/16"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
@@ -453,7 +453,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 }
 
 resource "google_compute_network" "custom-test" {
-  name                    = "tf-test-test-network%{random_suffix}"
+  name                    = "%{network_name}"
   auto_create_subnetworks = false
 }
 
@@ -470,7 +470,7 @@ resource "google_compute_subnetwork_iam_binding" "foo" {
 func testAccComputeSubnetworkIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  name          = "tf-test-test-subnetwork%{random_suffix}"
+  name          = "%{subnetwork_name}"
   ip_cidr_range = "10.2.0.0/16"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
@@ -481,7 +481,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 }
 
 resource "google_compute_network" "custom-test" {
-  name                    = "tf-test-test-network%{random_suffix}"
+  name                    = "%{network_name}"
   auto_create_subnetworks = false
 }
 
@@ -498,7 +498,7 @@ resource "google_compute_subnetwork_iam_binding" "foo" {
 func testAccComputeSubnetworkIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  name          = "tf-test-test-subnetwork%{random_suffix}"
+  name          = "%{subnetwork_name}"
   ip_cidr_range = "10.2.0.0/16"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
@@ -509,7 +509,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 }
 
 resource "google_compute_network" "custom-test" {
-  name                    = "tf-test-test-network%{random_suffix}"
+  name                    = "%{network_name}"
   auto_create_subnetworks = false
 }
 
@@ -531,7 +531,7 @@ resource "google_compute_subnetwork_iam_binding" "foo" {
 func testAccComputeSubnetworkIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  name          = "tf-test-test-subnetwork%{random_suffix}"
+  name          = "%{subnetwork_name}"
   ip_cidr_range = "10.2.0.0/16"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
@@ -542,7 +542,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 }
 
 resource "google_compute_network" "custom-test" {
-  name                    = "tf-test-test-network%{random_suffix}"
+  name                    = "%{network_name}"
   auto_create_subnetworks = false
 }
 
@@ -586,7 +586,7 @@ resource "google_compute_subnetwork_iam_binding" "foo3" {
 func testAccComputeSubnetworkIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  name          = "tf-test-test-subnetwork%{random_suffix}"
+  name          = "%{subnetwork_name}"
   ip_cidr_range = "10.2.0.0/16"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
@@ -597,7 +597,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 }
 
 resource "google_compute_network" "custom-test" {
-  name                    = "tf-test-test-network%{random_suffix}"
+  name                    = "%{network_name}"
   auto_create_subnetworks = false
 }
 
@@ -619,7 +619,7 @@ resource "google_compute_subnetwork_iam_member" "foo" {
 func testAccComputeSubnetworkIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  name          = "tf-test-test-subnetwork%{random_suffix}"
+  name          = "%{subnetwork_name}"
   ip_cidr_range = "10.2.0.0/16"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
@@ -630,7 +630,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 }
 
 resource "google_compute_network" "custom-test" {
-  name                    = "tf-test-test-network%{random_suffix}"
+  name                    = "%{network_name}"
   auto_create_subnetworks = false
 }
 
@@ -674,7 +674,7 @@ resource "google_compute_subnetwork_iam_member" "foo3" {
 func testAccComputeSubnetworkIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" {
-  name          = "tf-test-test-subnetwork%{random_suffix}"
+  name          = "%{subnetwork_name}"
   ip_cidr_range = "10.2.0.0/16"
   region        = "us-central1"
   network       = google_compute_network.custom-test.id
@@ -685,7 +685,7 @@ resource "google_compute_subnetwork" "network-with-private-secondary-ip-ranges" 
 }
 
 resource "google_compute_network" "custom-test" {
-  name                    = "tf-test-test-network%{random_suffix}"
+  name                    = "%{network_name}"
   auto_create_subnetworks = false
 }
 

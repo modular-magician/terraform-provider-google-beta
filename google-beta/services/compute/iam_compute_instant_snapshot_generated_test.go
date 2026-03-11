@@ -341,13 +341,13 @@ func TestAccComputeInstantSnapshotIamPolicyGenerated_withCondition(t *testing.T)
 func testAccComputeInstantSnapshotIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "foo" {
-  name = "tf-test-example-disk%{random_suffix}"
+  name = "%{disk_name}"
   type = "pd-ssd"
   size = 10
 }
 
 resource "google_compute_instant_snapshot" "default" {
-  name         = "tf-test-instant-snapshot%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   source_disk  = google_compute_disk.foo.self_link
 }
@@ -365,13 +365,13 @@ resource "google_compute_instant_snapshot_iam_member" "foo" {
 func testAccComputeInstantSnapshotIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "foo" {
-  name = "tf-test-example-disk%{random_suffix}"
+  name = "%{disk_name}"
   type = "pd-ssd"
   size = 10
 }
 
 resource "google_compute_instant_snapshot" "default" {
-  name         = "tf-test-instant-snapshot%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   source_disk  = google_compute_disk.foo.self_link
 }
@@ -404,13 +404,13 @@ data "google_compute_instant_snapshot_iam_policy" "foo" {
 func testAccComputeInstantSnapshotIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "foo" {
-  name = "tf-test-example-disk%{random_suffix}"
+  name = "%{disk_name}"
   type = "pd-ssd"
   size = 10
 }
 
 resource "google_compute_instant_snapshot" "default" {
-  name         = "tf-test-instant-snapshot%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   source_disk  = google_compute_disk.foo.self_link
 }
@@ -430,13 +430,13 @@ resource "google_compute_instant_snapshot_iam_policy" "foo" {
 func testAccComputeInstantSnapshotIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "foo" {
-  name = "tf-test-example-disk%{random_suffix}"
+  name = "%{disk_name}"
   type = "pd-ssd"
   size = 10
 }
 
 resource "google_compute_instant_snapshot" "default" {
-  name         = "tf-test-instant-snapshot%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   source_disk  = google_compute_disk.foo.self_link
 }
@@ -454,13 +454,13 @@ resource "google_compute_instant_snapshot_iam_binding" "foo" {
 func testAccComputeInstantSnapshotIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "foo" {
-  name = "tf-test-example-disk%{random_suffix}"
+  name = "%{disk_name}"
   type = "pd-ssd"
   size = 10
 }
 
 resource "google_compute_instant_snapshot" "default" {
-  name         = "tf-test-instant-snapshot%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   source_disk  = google_compute_disk.foo.self_link
 }
@@ -478,13 +478,13 @@ resource "google_compute_instant_snapshot_iam_binding" "foo" {
 func testAccComputeInstantSnapshotIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "foo" {
-  name = "tf-test-example-disk%{random_suffix}"
+  name = "%{disk_name}"
   type = "pd-ssd"
   size = 10
 }
 
 resource "google_compute_instant_snapshot" "default" {
-  name         = "tf-test-instant-snapshot%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   source_disk  = google_compute_disk.foo.self_link
 }
@@ -507,13 +507,13 @@ resource "google_compute_instant_snapshot_iam_binding" "foo" {
 func testAccComputeInstantSnapshotIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "foo" {
-  name = "tf-test-example-disk%{random_suffix}"
+  name = "%{disk_name}"
   type = "pd-ssd"
   size = 10
 }
 
 resource "google_compute_instant_snapshot" "default" {
-  name         = "tf-test-instant-snapshot%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   source_disk  = google_compute_disk.foo.self_link
 }
@@ -558,13 +558,13 @@ resource "google_compute_instant_snapshot_iam_binding" "foo3" {
 func testAccComputeInstantSnapshotIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "foo" {
-  name = "tf-test-example-disk%{random_suffix}"
+  name = "%{disk_name}"
   type = "pd-ssd"
   size = 10
 }
 
 resource "google_compute_instant_snapshot" "default" {
-  name         = "tf-test-instant-snapshot%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   source_disk  = google_compute_disk.foo.self_link
 }
@@ -587,13 +587,13 @@ resource "google_compute_instant_snapshot_iam_member" "foo" {
 func testAccComputeInstantSnapshotIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "foo" {
-  name = "tf-test-example-disk%{random_suffix}"
+  name = "%{disk_name}"
   type = "pd-ssd"
   size = 10
 }
 
 resource "google_compute_instant_snapshot" "default" {
-  name         = "tf-test-instant-snapshot%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   source_disk  = google_compute_disk.foo.self_link
 }
@@ -638,13 +638,13 @@ resource "google_compute_instant_snapshot_iam_member" "foo3" {
 func testAccComputeInstantSnapshotIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "foo" {
-  name = "tf-test-example-disk%{random_suffix}"
+  name = "%{disk_name}"
   type = "pd-ssd"
   size = 10
 }
 
 resource "google_compute_instant_snapshot" "default" {
-  name         = "tf-test-instant-snapshot%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   source_disk  = google_compute_disk.foo.self_link
 }

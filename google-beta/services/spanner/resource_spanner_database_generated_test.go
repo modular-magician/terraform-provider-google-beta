@@ -54,8 +54,11 @@ func TestAccSpannerDatabase_spannerDatabaseBasicExample(t *testing.T) {
 	acctest.SkipIfVcr(t)
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"database_name": "tf-test-my-database" + randomSuffix,
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -86,7 +89,7 @@ resource "google_spanner_instance" "main" {
 
 resource "google_spanner_database" "database" {
   instance = google_spanner_instance.main.name
-  name     = "tf-test-my-database%{random_suffix}"
+  name     = "%{database_name}"
   version_retention_period = "3d"
   default_time_zone = "UTC"
   ddl = [

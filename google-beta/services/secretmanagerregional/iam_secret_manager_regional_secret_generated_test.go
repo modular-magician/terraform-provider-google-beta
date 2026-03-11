@@ -341,7 +341,7 @@ func TestAccSecretManagerRegionalRegionalSecretIamPolicyGenerated_withCondition(
 func testAccSecretManagerRegionalRegionalSecretIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_regional_secret" "regional-secret-basic" {
-  secret_id = "tf-test-tf-reg-secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   location = "us-central1"
 
   labels = {
@@ -369,7 +369,7 @@ resource "google_secret_manager_regional_secret_iam_member" "foo" {
 func testAccSecretManagerRegionalRegionalSecretIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_regional_secret" "regional-secret-basic" {
-  secret_id = "tf-test-tf-reg-secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   location = "us-central1"
 
   labels = {
@@ -412,7 +412,7 @@ data "google_secret_manager_regional_secret_iam_policy" "foo" {
 func testAccSecretManagerRegionalRegionalSecretIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_regional_secret" "regional-secret-basic" {
-  secret_id = "tf-test-tf-reg-secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   location = "us-central1"
 
   labels = {
@@ -442,7 +442,7 @@ resource "google_secret_manager_regional_secret_iam_policy" "foo" {
 func testAccSecretManagerRegionalRegionalSecretIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_regional_secret" "regional-secret-basic" {
-  secret_id = "tf-test-tf-reg-secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   location = "us-central1"
 
   labels = {
@@ -470,7 +470,7 @@ resource "google_secret_manager_regional_secret_iam_binding" "foo" {
 func testAccSecretManagerRegionalRegionalSecretIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_regional_secret" "regional-secret-basic" {
-  secret_id = "tf-test-tf-reg-secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   location = "us-central1"
 
   labels = {
@@ -498,7 +498,7 @@ resource "google_secret_manager_regional_secret_iam_binding" "foo" {
 func testAccSecretManagerRegionalRegionalSecretIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_regional_secret" "regional-secret-basic" {
-  secret_id = "tf-test-tf-reg-secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   location = "us-central1"
 
   labels = {
@@ -531,7 +531,7 @@ resource "google_secret_manager_regional_secret_iam_binding" "foo" {
 func testAccSecretManagerRegionalRegionalSecretIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_regional_secret" "regional-secret-basic" {
-  secret_id = "tf-test-tf-reg-secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   location = "us-central1"
 
   labels = {
@@ -586,7 +586,7 @@ resource "google_secret_manager_regional_secret_iam_binding" "foo3" {
 func testAccSecretManagerRegionalRegionalSecretIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_regional_secret" "regional-secret-basic" {
-  secret_id = "tf-test-tf-reg-secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   location = "us-central1"
 
   labels = {
@@ -619,7 +619,7 @@ resource "google_secret_manager_regional_secret_iam_member" "foo" {
 func testAccSecretManagerRegionalRegionalSecretIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_regional_secret" "regional-secret-basic" {
-  secret_id = "tf-test-tf-reg-secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   location = "us-central1"
 
   labels = {
@@ -674,7 +674,7 @@ resource "google_secret_manager_regional_secret_iam_member" "foo3" {
 func testAccSecretManagerRegionalRegionalSecretIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_regional_secret" "regional-secret-basic" {
-  secret_id = "tf-test-tf-reg-secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   location = "us-central1"
 
   labels = {

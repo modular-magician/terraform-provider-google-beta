@@ -108,12 +108,12 @@ func TestAccServiceDirectoryServiceIamPolicyGenerated(t *testing.T) {
 func testAccServiceDirectoryServiceIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_service_directory_namespace" "example" {
-  namespace_id = "tf-test-example-namespace%{random_suffix}"
+  namespace_id = "%{namespace_id}"
   location     = "us-central1"
 }
 
 resource "google_service_directory_service" "example" {
-  service_id = "tf-test-example-service%{random_suffix}"
+  service_id = "%{service_id}"
   namespace  = google_service_directory_namespace.example.id
 
   metadata = {
@@ -133,12 +133,12 @@ resource "google_service_directory_service_iam_member" "foo" {
 func testAccServiceDirectoryServiceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_service_directory_namespace" "example" {
-  namespace_id = "tf-test-example-namespace%{random_suffix}"
+  namespace_id = "%{namespace_id}"
   location     = "us-central1"
 }
 
 resource "google_service_directory_service" "example" {
-  service_id = "tf-test-example-service%{random_suffix}"
+  service_id = "%{service_id}"
   namespace  = google_service_directory_namespace.example.id
 
   metadata = {
@@ -171,12 +171,12 @@ data "google_service_directory_service_iam_policy" "foo" {
 func testAccServiceDirectoryServiceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_service_directory_namespace" "example" {
-  namespace_id = "tf-test-example-namespace%{random_suffix}"
+  namespace_id = "%{namespace_id}"
   location     = "us-central1"
 }
 
 resource "google_service_directory_service" "example" {
-  service_id = "tf-test-example-service%{random_suffix}"
+  service_id = "%{service_id}"
   namespace  = google_service_directory_namespace.example.id
 
   metadata = {
@@ -198,12 +198,12 @@ resource "google_service_directory_service_iam_policy" "foo" {
 func testAccServiceDirectoryServiceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_service_directory_namespace" "example" {
-  namespace_id = "tf-test-example-namespace%{random_suffix}"
+  namespace_id = "%{namespace_id}"
   location     = "us-central1"
 }
 
 resource "google_service_directory_service" "example" {
-  service_id = "tf-test-example-service%{random_suffix}"
+  service_id = "%{service_id}"
   namespace  = google_service_directory_namespace.example.id
 
   metadata = {
@@ -223,12 +223,12 @@ resource "google_service_directory_service_iam_binding" "foo" {
 func testAccServiceDirectoryServiceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_service_directory_namespace" "example" {
-  namespace_id = "tf-test-example-namespace%{random_suffix}"
+  namespace_id = "%{namespace_id}"
   location     = "us-central1"
 }
 
 resource "google_service_directory_service" "example" {
-  service_id = "tf-test-example-service%{random_suffix}"
+  service_id = "%{service_id}"
   namespace  = google_service_directory_namespace.example.id
 
   metadata = {

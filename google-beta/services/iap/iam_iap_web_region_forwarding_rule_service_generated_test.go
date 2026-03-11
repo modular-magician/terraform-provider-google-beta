@@ -341,7 +341,7 @@ func TestAccIapWebRegionForwardingRuleServiceIamPolicyGenerated_withCondition(t 
 func testAccIapWebRegionForwardingRuleServiceIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_health_check" "default" {
-  name    = "tf-test-tf-test-region-health-check%{random_suffix}"
+  name    = "%{regional_health_check_name}"
   http_health_check {
     port         = 80
     request_path = "/"
@@ -349,7 +349,7 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name     = "tf-test-regional-bs%{random_suffix}"
+  name     = "%{regional_backend_service_name}"
   protocol = "HTTP"
   port_name = "http"
   timeout_sec = 10
@@ -358,23 +358,23 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_region_url_map" "default" {
-  name    = "tf-test-regional-url-map%{random_suffix}"
+  name    = "%{regional_url_map_name}"
   default_service = google_compute_region_backend_service.default.id
 }
 
 
 resource "google_compute_region_target_http_proxy" "default" {
-  name    = "tf-test-regional-target-http-proxy%{random_suffix}"
+  name    = "%{regional_target_http_proxy_name}"
   url_map = google_compute_region_url_map.default.id
 }
 
 resource "google_compute_network" "my_vpc" {
-  name                    = "tf-test-tf-test-network-name%{random_suffix}"
+  name                    = "%{compute_network_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "proxy_only_subnet" {
-  name          = "tf-test-tf-test-subnetwork-name%{random_suffix}"
+  name          = "%{compute_subnetwork_name}"
   ip_cidr_range = "10.129.0.0/23"
   network       = google_compute_network.my_vpc.id
   purpose       = "REGIONAL_MANAGED_PROXY"
@@ -382,7 +382,7 @@ resource "google_compute_subnetwork" "proxy_only_subnet" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  name                  = "tf-test-forwarding-rule-region-service%{random_suffix}"
+  name                  = "%{forwarding_rule_region_service_name}"
   target                = google_compute_region_target_http_proxy.default.id
   port_range            = "80"
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -403,7 +403,7 @@ resource "google_iap_web_region_forwarding_rule_service_iam_member" "foo" {
 func testAccIapWebRegionForwardingRuleServiceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_health_check" "default" {
-  name    = "tf-test-tf-test-region-health-check%{random_suffix}"
+  name    = "%{regional_health_check_name}"
   http_health_check {
     port         = 80
     request_path = "/"
@@ -411,7 +411,7 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name     = "tf-test-regional-bs%{random_suffix}"
+  name     = "%{regional_backend_service_name}"
   protocol = "HTTP"
   port_name = "http"
   timeout_sec = 10
@@ -420,23 +420,23 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_region_url_map" "default" {
-  name    = "tf-test-regional-url-map%{random_suffix}"
+  name    = "%{regional_url_map_name}"
   default_service = google_compute_region_backend_service.default.id
 }
 
 
 resource "google_compute_region_target_http_proxy" "default" {
-  name    = "tf-test-regional-target-http-proxy%{random_suffix}"
+  name    = "%{regional_target_http_proxy_name}"
   url_map = google_compute_region_url_map.default.id
 }
 
 resource "google_compute_network" "my_vpc" {
-  name                    = "tf-test-tf-test-network-name%{random_suffix}"
+  name                    = "%{compute_network_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "proxy_only_subnet" {
-  name          = "tf-test-tf-test-subnetwork-name%{random_suffix}"
+  name          = "%{compute_subnetwork_name}"
   ip_cidr_range = "10.129.0.0/23"
   network       = google_compute_network.my_vpc.id
   purpose       = "REGIONAL_MANAGED_PROXY"
@@ -444,7 +444,7 @@ resource "google_compute_subnetwork" "proxy_only_subnet" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  name                  = "tf-test-forwarding-rule-region-service%{random_suffix}"
+  name                  = "%{forwarding_rule_region_service_name}"
   target                = google_compute_region_target_http_proxy.default.id
   port_range            = "80"
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -480,7 +480,7 @@ data "google_iap_web_region_forwarding_rule_service_iam_policy" "foo" {
 func testAccIapWebRegionForwardingRuleServiceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_health_check" "default" {
-  name    = "tf-test-tf-test-region-health-check%{random_suffix}"
+  name    = "%{regional_health_check_name}"
   http_health_check {
     port         = 80
     request_path = "/"
@@ -488,7 +488,7 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name     = "tf-test-regional-bs%{random_suffix}"
+  name     = "%{regional_backend_service_name}"
   protocol = "HTTP"
   port_name = "http"
   timeout_sec = 10
@@ -497,23 +497,23 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_region_url_map" "default" {
-  name    = "tf-test-regional-url-map%{random_suffix}"
+  name    = "%{regional_url_map_name}"
   default_service = google_compute_region_backend_service.default.id
 }
 
 
 resource "google_compute_region_target_http_proxy" "default" {
-  name    = "tf-test-regional-target-http-proxy%{random_suffix}"
+  name    = "%{regional_target_http_proxy_name}"
   url_map = google_compute_region_url_map.default.id
 }
 
 resource "google_compute_network" "my_vpc" {
-  name                    = "tf-test-tf-test-network-name%{random_suffix}"
+  name                    = "%{compute_network_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "proxy_only_subnet" {
-  name          = "tf-test-tf-test-subnetwork-name%{random_suffix}"
+  name          = "%{compute_subnetwork_name}"
   ip_cidr_range = "10.129.0.0/23"
   network       = google_compute_network.my_vpc.id
   purpose       = "REGIONAL_MANAGED_PROXY"
@@ -521,7 +521,7 @@ resource "google_compute_subnetwork" "proxy_only_subnet" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  name                  = "tf-test-forwarding-rule-region-service%{random_suffix}"
+  name                  = "%{forwarding_rule_region_service_name}"
   target                = google_compute_region_target_http_proxy.default.id
   port_range            = "80"
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -544,7 +544,7 @@ resource "google_iap_web_region_forwarding_rule_service_iam_policy" "foo" {
 func testAccIapWebRegionForwardingRuleServiceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_health_check" "default" {
-  name    = "tf-test-tf-test-region-health-check%{random_suffix}"
+  name    = "%{regional_health_check_name}"
   http_health_check {
     port         = 80
     request_path = "/"
@@ -552,7 +552,7 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name     = "tf-test-regional-bs%{random_suffix}"
+  name     = "%{regional_backend_service_name}"
   protocol = "HTTP"
   port_name = "http"
   timeout_sec = 10
@@ -561,23 +561,23 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_region_url_map" "default" {
-  name    = "tf-test-regional-url-map%{random_suffix}"
+  name    = "%{regional_url_map_name}"
   default_service = google_compute_region_backend_service.default.id
 }
 
 
 resource "google_compute_region_target_http_proxy" "default" {
-  name    = "tf-test-regional-target-http-proxy%{random_suffix}"
+  name    = "%{regional_target_http_proxy_name}"
   url_map = google_compute_region_url_map.default.id
 }
 
 resource "google_compute_network" "my_vpc" {
-  name                    = "tf-test-tf-test-network-name%{random_suffix}"
+  name                    = "%{compute_network_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "proxy_only_subnet" {
-  name          = "tf-test-tf-test-subnetwork-name%{random_suffix}"
+  name          = "%{compute_subnetwork_name}"
   ip_cidr_range = "10.129.0.0/23"
   network       = google_compute_network.my_vpc.id
   purpose       = "REGIONAL_MANAGED_PROXY"
@@ -585,7 +585,7 @@ resource "google_compute_subnetwork" "proxy_only_subnet" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  name                  = "tf-test-forwarding-rule-region-service%{random_suffix}"
+  name                  = "%{forwarding_rule_region_service_name}"
   target                = google_compute_region_target_http_proxy.default.id
   port_range            = "80"
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -606,7 +606,7 @@ resource "google_iap_web_region_forwarding_rule_service_iam_binding" "foo" {
 func testAccIapWebRegionForwardingRuleServiceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_health_check" "default" {
-  name    = "tf-test-tf-test-region-health-check%{random_suffix}"
+  name    = "%{regional_health_check_name}"
   http_health_check {
     port         = 80
     request_path = "/"
@@ -614,7 +614,7 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name     = "tf-test-regional-bs%{random_suffix}"
+  name     = "%{regional_backend_service_name}"
   protocol = "HTTP"
   port_name = "http"
   timeout_sec = 10
@@ -623,23 +623,23 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_region_url_map" "default" {
-  name    = "tf-test-regional-url-map%{random_suffix}"
+  name    = "%{regional_url_map_name}"
   default_service = google_compute_region_backend_service.default.id
 }
 
 
 resource "google_compute_region_target_http_proxy" "default" {
-  name    = "tf-test-regional-target-http-proxy%{random_suffix}"
+  name    = "%{regional_target_http_proxy_name}"
   url_map = google_compute_region_url_map.default.id
 }
 
 resource "google_compute_network" "my_vpc" {
-  name                    = "tf-test-tf-test-network-name%{random_suffix}"
+  name                    = "%{compute_network_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "proxy_only_subnet" {
-  name          = "tf-test-tf-test-subnetwork-name%{random_suffix}"
+  name          = "%{compute_subnetwork_name}"
   ip_cidr_range = "10.129.0.0/23"
   network       = google_compute_network.my_vpc.id
   purpose       = "REGIONAL_MANAGED_PROXY"
@@ -647,7 +647,7 @@ resource "google_compute_subnetwork" "proxy_only_subnet" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  name                  = "tf-test-forwarding-rule-region-service%{random_suffix}"
+  name                  = "%{forwarding_rule_region_service_name}"
   target                = google_compute_region_target_http_proxy.default.id
   port_range            = "80"
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -668,7 +668,7 @@ resource "google_iap_web_region_forwarding_rule_service_iam_binding" "foo" {
 func testAccIapWebRegionForwardingRuleServiceIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_health_check" "default" {
-  name    = "tf-test-tf-test-region-health-check%{random_suffix}"
+  name    = "%{regional_health_check_name}"
   http_health_check {
     port         = 80
     request_path = "/"
@@ -676,7 +676,7 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name     = "tf-test-regional-bs%{random_suffix}"
+  name     = "%{regional_backend_service_name}"
   protocol = "HTTP"
   port_name = "http"
   timeout_sec = 10
@@ -685,23 +685,23 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_region_url_map" "default" {
-  name    = "tf-test-regional-url-map%{random_suffix}"
+  name    = "%{regional_url_map_name}"
   default_service = google_compute_region_backend_service.default.id
 }
 
 
 resource "google_compute_region_target_http_proxy" "default" {
-  name    = "tf-test-regional-target-http-proxy%{random_suffix}"
+  name    = "%{regional_target_http_proxy_name}"
   url_map = google_compute_region_url_map.default.id
 }
 
 resource "google_compute_network" "my_vpc" {
-  name                    = "tf-test-tf-test-network-name%{random_suffix}"
+  name                    = "%{compute_network_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "proxy_only_subnet" {
-  name          = "tf-test-tf-test-subnetwork-name%{random_suffix}"
+  name          = "%{compute_subnetwork_name}"
   ip_cidr_range = "10.129.0.0/23"
   network       = google_compute_network.my_vpc.id
   purpose       = "REGIONAL_MANAGED_PROXY"
@@ -709,7 +709,7 @@ resource "google_compute_subnetwork" "proxy_only_subnet" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  name                  = "tf-test-forwarding-rule-region-service%{random_suffix}"
+  name                  = "%{forwarding_rule_region_service_name}"
   target                = google_compute_region_target_http_proxy.default.id
   port_range            = "80"
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -735,7 +735,7 @@ resource "google_iap_web_region_forwarding_rule_service_iam_binding" "foo" {
 func testAccIapWebRegionForwardingRuleServiceIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_health_check" "default" {
-  name    = "tf-test-tf-test-region-health-check%{random_suffix}"
+  name    = "%{regional_health_check_name}"
   http_health_check {
     port         = 80
     request_path = "/"
@@ -743,7 +743,7 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name     = "tf-test-regional-bs%{random_suffix}"
+  name     = "%{regional_backend_service_name}"
   protocol = "HTTP"
   port_name = "http"
   timeout_sec = 10
@@ -752,23 +752,23 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_region_url_map" "default" {
-  name    = "tf-test-regional-url-map%{random_suffix}"
+  name    = "%{regional_url_map_name}"
   default_service = google_compute_region_backend_service.default.id
 }
 
 
 resource "google_compute_region_target_http_proxy" "default" {
-  name    = "tf-test-regional-target-http-proxy%{random_suffix}"
+  name    = "%{regional_target_http_proxy_name}"
   url_map = google_compute_region_url_map.default.id
 }
 
 resource "google_compute_network" "my_vpc" {
-  name                    = "tf-test-tf-test-network-name%{random_suffix}"
+  name                    = "%{compute_network_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "proxy_only_subnet" {
-  name          = "tf-test-tf-test-subnetwork-name%{random_suffix}"
+  name          = "%{compute_subnetwork_name}"
   ip_cidr_range = "10.129.0.0/23"
   network       = google_compute_network.my_vpc.id
   purpose       = "REGIONAL_MANAGED_PROXY"
@@ -776,7 +776,7 @@ resource "google_compute_subnetwork" "proxy_only_subnet" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  name                  = "tf-test-forwarding-rule-region-service%{random_suffix}"
+  name                  = "%{forwarding_rule_region_service_name}"
   target                = google_compute_region_target_http_proxy.default.id
   port_range            = "80"
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -824,7 +824,7 @@ resource "google_iap_web_region_forwarding_rule_service_iam_binding" "foo3" {
 func testAccIapWebRegionForwardingRuleServiceIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_health_check" "default" {
-  name    = "tf-test-tf-test-region-health-check%{random_suffix}"
+  name    = "%{regional_health_check_name}"
   http_health_check {
     port         = 80
     request_path = "/"
@@ -832,7 +832,7 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name     = "tf-test-regional-bs%{random_suffix}"
+  name     = "%{regional_backend_service_name}"
   protocol = "HTTP"
   port_name = "http"
   timeout_sec = 10
@@ -841,23 +841,23 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_region_url_map" "default" {
-  name    = "tf-test-regional-url-map%{random_suffix}"
+  name    = "%{regional_url_map_name}"
   default_service = google_compute_region_backend_service.default.id
 }
 
 
 resource "google_compute_region_target_http_proxy" "default" {
-  name    = "tf-test-regional-target-http-proxy%{random_suffix}"
+  name    = "%{regional_target_http_proxy_name}"
   url_map = google_compute_region_url_map.default.id
 }
 
 resource "google_compute_network" "my_vpc" {
-  name                    = "tf-test-tf-test-network-name%{random_suffix}"
+  name                    = "%{compute_network_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "proxy_only_subnet" {
-  name          = "tf-test-tf-test-subnetwork-name%{random_suffix}"
+  name          = "%{compute_subnetwork_name}"
   ip_cidr_range = "10.129.0.0/23"
   network       = google_compute_network.my_vpc.id
   purpose       = "REGIONAL_MANAGED_PROXY"
@@ -865,7 +865,7 @@ resource "google_compute_subnetwork" "proxy_only_subnet" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  name                  = "tf-test-forwarding-rule-region-service%{random_suffix}"
+  name                  = "%{forwarding_rule_region_service_name}"
   target                = google_compute_region_target_http_proxy.default.id
   port_range            = "80"
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -891,7 +891,7 @@ resource "google_iap_web_region_forwarding_rule_service_iam_member" "foo" {
 func testAccIapWebRegionForwardingRuleServiceIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_health_check" "default" {
-  name    = "tf-test-tf-test-region-health-check%{random_suffix}"
+  name    = "%{regional_health_check_name}"
   http_health_check {
     port         = 80
     request_path = "/"
@@ -899,7 +899,7 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name     = "tf-test-regional-bs%{random_suffix}"
+  name     = "%{regional_backend_service_name}"
   protocol = "HTTP"
   port_name = "http"
   timeout_sec = 10
@@ -908,23 +908,23 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_region_url_map" "default" {
-  name    = "tf-test-regional-url-map%{random_suffix}"
+  name    = "%{regional_url_map_name}"
   default_service = google_compute_region_backend_service.default.id
 }
 
 
 resource "google_compute_region_target_http_proxy" "default" {
-  name    = "tf-test-regional-target-http-proxy%{random_suffix}"
+  name    = "%{regional_target_http_proxy_name}"
   url_map = google_compute_region_url_map.default.id
 }
 
 resource "google_compute_network" "my_vpc" {
-  name                    = "tf-test-tf-test-network-name%{random_suffix}"
+  name                    = "%{compute_network_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "proxy_only_subnet" {
-  name          = "tf-test-tf-test-subnetwork-name%{random_suffix}"
+  name          = "%{compute_subnetwork_name}"
   ip_cidr_range = "10.129.0.0/23"
   network       = google_compute_network.my_vpc.id
   purpose       = "REGIONAL_MANAGED_PROXY"
@@ -932,7 +932,7 @@ resource "google_compute_subnetwork" "proxy_only_subnet" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  name                  = "tf-test-forwarding-rule-region-service%{random_suffix}"
+  name                  = "%{forwarding_rule_region_service_name}"
   target                = google_compute_region_target_http_proxy.default.id
   port_range            = "80"
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -980,7 +980,7 @@ resource "google_iap_web_region_forwarding_rule_service_iam_member" "foo3" {
 func testAccIapWebRegionForwardingRuleServiceIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_health_check" "default" {
-  name    = "tf-test-tf-test-region-health-check%{random_suffix}"
+  name    = "%{regional_health_check_name}"
   http_health_check {
     port         = 80
     request_path = "/"
@@ -988,7 +988,7 @@ resource "google_compute_region_health_check" "default" {
 }
 
 resource "google_compute_region_backend_service" "default" {
-  name     = "tf-test-regional-bs%{random_suffix}"
+  name     = "%{regional_backend_service_name}"
   protocol = "HTTP"
   port_name = "http"
   timeout_sec = 10
@@ -997,23 +997,23 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_region_url_map" "default" {
-  name    = "tf-test-regional-url-map%{random_suffix}"
+  name    = "%{regional_url_map_name}"
   default_service = google_compute_region_backend_service.default.id
 }
 
 
 resource "google_compute_region_target_http_proxy" "default" {
-  name    = "tf-test-regional-target-http-proxy%{random_suffix}"
+  name    = "%{regional_target_http_proxy_name}"
   url_map = google_compute_region_url_map.default.id
 }
 
 resource "google_compute_network" "my_vpc" {
-  name                    = "tf-test-tf-test-network-name%{random_suffix}"
+  name                    = "%{compute_network_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "proxy_only_subnet" {
-  name          = "tf-test-tf-test-subnetwork-name%{random_suffix}"
+  name          = "%{compute_subnetwork_name}"
   ip_cidr_range = "10.129.0.0/23"
   network       = google_compute_network.my_vpc.id
   purpose       = "REGIONAL_MANAGED_PROXY"
@@ -1021,7 +1021,7 @@ resource "google_compute_subnetwork" "proxy_only_subnet" {
 }
 
 resource "google_compute_forwarding_rule" "default" {
-  name                  = "tf-test-forwarding-rule-region-service%{random_suffix}"
+  name                  = "%{forwarding_rule_region_service_name}"
   target                = google_compute_region_target_http_proxy.default.id
   port_range            = "80"
   load_balancing_scheme = "EXTERNAL_MANAGED"

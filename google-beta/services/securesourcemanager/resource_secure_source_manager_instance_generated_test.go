@@ -53,9 +53,12 @@ var (
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstanceBasicExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
 		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+		"instance_id":     "tf-test-my-instance" + randomSuffix,
+		"random_suffix":   randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -80,7 +83,7 @@ func testAccSecureSourceManagerInstance_secureSourceManagerInstanceBasicExample(
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "default" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
     labels = {
       "foo" = "bar"
     }
@@ -94,10 +97,13 @@ resource "google_secure_source_manager_instance" "default" {
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstanceCmekExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
 		"deletion_policy": "DELETE",
+		"instance_id":     "tf-test-my-instance" + randomSuffix,
 		"kms_key_name":    acctest.BootstrapKMSKeyWithPurposeInLocationAndName(t, "ENCRYPT_DECRYPT", "us-central1", "tf-bootstrap-secure-source-manager-key1").CryptoKey.Name,
-		"random_suffix":   acctest.RandString(t, 10),
+		"random_suffix":   randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -129,7 +135,7 @@ resource "google_kms_crypto_key_iam_member" "crypto_key_binding" {
 
 resource "google_secure_source_manager_instance" "default" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
     kms_key = "%{kms_key_name}"
 
     depends_on = [
@@ -147,8 +153,11 @@ data "google_project" "project" {}
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstancePrivateTrustedCertExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"instance_id":   "tf-test-my-instance" + randomSuffix,
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -172,7 +181,7 @@ func TestAccSecureSourceManagerInstance_secureSourceManagerInstancePrivateTruste
 func testAccSecureSourceManagerInstance_secureSourceManagerInstancePrivateTrustedCertExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "default" {
-  instance_id = "tf-test-my-instance%{random_suffix}"
+  instance_id = "%{instance_id}"
   location    = "us-central1"
 
   private_config {
@@ -186,9 +195,14 @@ resource "google_secure_source_manager_instance" "default" {
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstancePrivateExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
+		"ca_pool_id":      "tf-test-ca-pool" + randomSuffix,
 		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+		"instance_id":     "tf-test-my-instance" + randomSuffix,
+		"root_ca_id":      "tf-test-root-ca" + randomSuffix,
+		"random_suffix":   randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -215,7 +229,7 @@ func TestAccSecureSourceManagerInstance_secureSourceManagerInstancePrivateExampl
 func testAccSecureSourceManagerInstance_secureSourceManagerInstancePrivateExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "ca_pool" {
-  name     = "tf-test-ca-pool%{random_suffix}"
+  name     = "%{ca_pool_id}"
   location = "us-central1"
   tier     = "ENTERPRISE"
   publishing_options {
@@ -226,7 +240,7 @@ resource "google_privateca_ca_pool" "ca_pool" {
 
 resource "google_privateca_certificate_authority" "root_ca" {
   pool                     = google_privateca_ca_pool.ca_pool.name
-  certificate_authority_id = "tf-test-root-ca%{random_suffix}"
+  certificate_authority_id = "%{root_ca_id}"
   location                 = "us-central1"
   config {
     subject_config {
@@ -270,7 +284,7 @@ resource "google_privateca_ca_pool_iam_binding" "ca_pool_binding" {
 }
 
 resource "google_secure_source_manager_instance" "default" {
-  instance_id = "tf-test-my-instance%{random_suffix}"
+  instance_id = "%{instance_id}"
   location = "us-central1"
   private_config {
     is_private = true
@@ -300,9 +314,22 @@ data "google_project" "project" {}
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstancePrivatePscBackendExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+		"backend_id":                 "tf-test-my-backend-service" + randomSuffix,
+		"ca_pool_id":                 "tf-test-ca-pool" + randomSuffix,
+		"deletion_policy":            "DELETE",
+		"dns_zone_id":                "tf-test-my-dns-zone" + randomSuffix,
+		"fw_rule_to_target_proxy_id": "tf-test-fw-rule-target-proxy" + randomSuffix,
+		"instance_id":                "tf-test-my-instance" + randomSuffix,
+		"neg_id":                     "tf-test-my-neg" + randomSuffix,
+		"network_id":                 "tf-test-my-network" + randomSuffix,
+		"proxy_subnet_id":            "tf-test-my-proxy-subnet" + randomSuffix,
+		"root_ca_id":                 "tf-test-root-ca" + randomSuffix,
+		"subnet_id":                  "tf-test-my-subnet" + randomSuffix,
+		"target_proxy_id":            "tf-test-my-target-proxy" + randomSuffix,
+		"random_suffix":              randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -331,7 +358,7 @@ func testAccSecureSourceManagerInstance_secureSourceManagerInstancePrivatePscBac
 data "google_project" "project" {}
 
 resource "google_privateca_ca_pool" "ca_pool" {
-  name     = "tf-test-ca-pool%{random_suffix}"
+  name     = "%{ca_pool_id}"
   location = "us-central1"
   tier     = "ENTERPRISE"
   publishing_options {
@@ -342,7 +369,7 @@ resource "google_privateca_ca_pool" "ca_pool" {
 
 resource "google_privateca_certificate_authority" "root_ca" {
   pool                     = google_privateca_ca_pool.ca_pool.name
-  certificate_authority_id = "tf-test-root-ca%{random_suffix}"
+  certificate_authority_id = "%{root_ca_id}"
   location                 = "us-central1"
   config {
     subject_config {
@@ -387,7 +414,7 @@ resource "google_privateca_ca_pool_iam_binding" "ca_pool_binding" {
 
 // See https://cloud.google.com/secure-source-manager/docs/create-private-service-connect-instance#root-ca-api
 resource "google_secure_source_manager_instance" "default" {
-  instance_id = "tf-test-my-instance%{random_suffix}"
+  instance_id = "%{instance_id}"
   location = "us-central1"
   private_config {
     is_private = true
@@ -412,12 +439,12 @@ resource "time_sleep" "wait_120_seconds" {
 
 // Connect SSM private instance with L4 proxy ILB.
 resource "google_compute_network" "network" {
-  name = "tf-test-my-network%{random_suffix}"
+  name = "%{network_id}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "subnet" {
-  name = "tf-test-my-subnet%{random_suffix}"
+  name = "%{subnet_id}"
   region = "us-central1"
   network = google_compute_network.network.id
   ip_cidr_range = "10.0.1.0/24"
@@ -425,7 +452,7 @@ resource "google_compute_subnetwork" "subnet" {
 }
 
 resource "google_compute_region_network_endpoint_group" "psc_neg" {
-  name = "tf-test-my-neg%{random_suffix}"
+  name = "%{neg_id}"
   region = "us-central1"
 
   network_endpoint_type = "PRIVATE_SERVICE_CONNECT"
@@ -436,7 +463,7 @@ resource "google_compute_region_network_endpoint_group" "psc_neg" {
 }
 
 resource "google_compute_region_backend_service" "backend_service" {
-  name = "tf-test-my-backend-service%{random_suffix}"
+  name = "%{backend_id}"
   region = "us-central1"
   protocol = "TCP"
   load_balancing_scheme = "INTERNAL_MANAGED"
@@ -448,7 +475,7 @@ resource "google_compute_region_backend_service" "backend_service" {
 }
 
 resource "google_compute_subnetwork" "proxy_subnet" {
-  name = "tf-test-my-proxy-subnet%{random_suffix}"
+  name = "%{proxy_subnet_id}"
   region = "us-central1"
   network = google_compute_network.network.id
   ip_cidr_range = "10.0.2.0/24"
@@ -457,13 +484,13 @@ resource "google_compute_subnetwork" "proxy_subnet" {
 }
 
 resource "google_compute_region_target_tcp_proxy" "target_proxy" {
-  name = "tf-test-my-target-proxy%{random_suffix}"
+  name = "%{target_proxy_id}"
   region = "us-central1"
   backend_service = google_compute_region_backend_service.backend_service.id
 }
 
 resource "google_compute_forwarding_rule" "fw_rule_target_proxy" {
-  name = "tf-test-fw-rule-target-proxy%{random_suffix}"
+  name = "%{fw_rule_to_target_proxy_id}"
   region = "us-central1"
 
   load_balancing_scheme = "INTERNAL_MANAGED"
@@ -477,7 +504,7 @@ resource "google_compute_forwarding_rule" "fw_rule_target_proxy" {
 }
 
 resource "google_dns_managed_zone" "private_zone" {
-  name = "tf-test-my-dns-zone%{random_suffix}"
+  name = "%{dns_zone_id}"
   dns_name = "p.sourcemanager.dev."
   visibility = "private"
   private_visibility_config {
@@ -516,9 +543,19 @@ resource "google_dns_record_set" "ssm_instance_git_record" {
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstancePrivatePscEndpointExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+		"address_id":                       "tf-test-my-address" + randomSuffix,
+		"ca_pool_id":                       "tf-test-ca-pool" + randomSuffix,
+		"deletion_policy":                  "DELETE",
+		"dns_zone_id":                      "tf-test-my-dns-zone" + randomSuffix,
+		"fw_rule_to_service_attachment_id": "tf-test-fw-rule-service-attachment" + randomSuffix,
+		"instance_id":                      "tf-test-my-instance" + randomSuffix,
+		"network_id":                       "tf-test-my-network" + randomSuffix,
+		"root_ca_id":                       "tf-test-root-ca" + randomSuffix,
+		"subnet_id":                        "tf-test-my-subnet" + randomSuffix,
+		"random_suffix":                    randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -547,7 +584,7 @@ func testAccSecureSourceManagerInstance_secureSourceManagerInstancePrivatePscEnd
 data "google_project" "project" {}
 
 resource "google_privateca_ca_pool" "ca_pool" {
-  name     = "tf-test-ca-pool%{random_suffix}"
+  name     = "%{ca_pool_id}"
   location = "us-central1"
   tier     = "ENTERPRISE"
   publishing_options {
@@ -558,7 +595,7 @@ resource "google_privateca_ca_pool" "ca_pool" {
 
 resource "google_privateca_certificate_authority" "root_ca" {
   pool                     = google_privateca_ca_pool.ca_pool.name
-  certificate_authority_id = "tf-test-root-ca%{random_suffix}"
+  certificate_authority_id = "%{root_ca_id}"
   location                 = "us-central1"
   config {
     subject_config {
@@ -603,7 +640,7 @@ resource "google_privateca_ca_pool_iam_binding" "ca_pool_binding" {
 
 // See https://cloud.google.com/secure-source-manager/docs/create-private-service-connect-instance#root-ca-api
 resource "google_secure_source_manager_instance" "default" {
-  instance_id = "tf-test-my-instance%{random_suffix}"
+  instance_id = "%{instance_id}"
   location = "us-central1"
   private_config {
     is_private = true
@@ -628,12 +665,12 @@ resource "time_sleep" "wait_120_seconds" {
 
 // Connect SSM private instance with endpoint.
 resource "google_compute_network" "network" {
-  name = "tf-test-my-network%{random_suffix}"
+  name = "%{network_id}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "subnet" {
-  name = "tf-test-my-subnet%{random_suffix}"
+  name = "%{subnet_id}"
   region = "us-central1"
   network = google_compute_network.network.id
   ip_cidr_range = "10.0.60.0/24"
@@ -641,7 +678,7 @@ resource "google_compute_subnetwork" "subnet" {
 }
 
 resource "google_compute_address" "address" {
-  name = "tf-test-my-address%{random_suffix}"
+  name = "%{address_id}"
   region = "us-central1"
   address = "10.0.60.100"
   address_type = "INTERNAL"
@@ -649,7 +686,7 @@ resource "google_compute_address" "address" {
 }
 
 resource "google_compute_forwarding_rule" "fw_rule_service_attachment" {
-  name = "tf-test-fw-rule-service-attachment%{random_suffix}"
+  name = "%{fw_rule_to_service_attachment_id}"
   region = "us-central1"
 
   load_balancing_scheme = ""
@@ -660,7 +697,7 @@ resource "google_compute_forwarding_rule" "fw_rule_service_attachment" {
 }
 
 resource "google_dns_managed_zone" "private_zone" {
-  name = "tf-test-my-dns-zone%{random_suffix}"
+  name = "%{dns_zone_id}"
   dns_name = "p.sourcemanager.dev."
   visibility = "private"
   private_visibility_config {
@@ -699,9 +736,12 @@ resource "google_dns_record_set" "ssm_instance_git_record" {
 func TestAccSecureSourceManagerInstance_secureSourceManagerInstanceWorkforceIdentityFederationExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
 		"deletion_policy": "DELETE",
-		"random_suffix":   acctest.RandString(t, 10),
+		"instance_id":     "tf-test-my-instance" + randomSuffix,
+		"random_suffix":   randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -726,7 +766,7 @@ func testAccSecureSourceManagerInstance_secureSourceManagerInstanceWorkforceIden
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "default" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
 
     workforce_identity_federation_config {
       enabled = true

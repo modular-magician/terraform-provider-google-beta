@@ -139,7 +139,7 @@ func testAccBigqueryDatapolicyDataPolicyIamMember_basicGenerated(context map[str
 	return acctest.Nprintf(`
 resource "google_bigquery_datapolicy_data_policy" "data_policy" {
   location         = "us-central1"
-  data_policy_id   = "tf_test_data_policy%{random_suffix}"
+  data_policy_id   = "%{data_policy_id}"
   policy_tag       = google_data_catalog_policy_tag.policy_tag.name
   data_policy_type = "COLUMN_LEVEL_SECURITY_POLICY"
 }
@@ -152,7 +152,7 @@ resource "google_data_catalog_policy_tag" "policy_tag" {
 
 resource "google_data_catalog_taxonomy" "taxonomy" {
   region                 = "us-central1"
-  display_name           = "taxonomy%{random_suffix}"
+  display_name           = "%{taxonomy}"
   description            = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -171,7 +171,7 @@ func testAccBigqueryDatapolicyDataPolicyIamPolicy_basicGenerated(context map[str
 	return acctest.Nprintf(`
 resource "google_bigquery_datapolicy_data_policy" "data_policy" {
   location         = "us-central1"
-  data_policy_id   = "tf_test_data_policy%{random_suffix}"
+  data_policy_id   = "%{data_policy_id}"
   policy_tag       = google_data_catalog_policy_tag.policy_tag.name
   data_policy_type = "COLUMN_LEVEL_SECURITY_POLICY"
 }
@@ -184,7 +184,7 @@ resource "google_data_catalog_policy_tag" "policy_tag" {
 
 resource "google_data_catalog_taxonomy" "taxonomy" {
   region                 = "us-central1"
-  display_name           = "taxonomy%{random_suffix}"
+  display_name           = "%{taxonomy}"
   description            = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -218,7 +218,7 @@ func testAccBigqueryDatapolicyDataPolicyIamPolicy_emptyBinding(context map[strin
 	return acctest.Nprintf(`
 resource "google_bigquery_datapolicy_data_policy" "data_policy" {
   location         = "us-central1"
-  data_policy_id   = "tf_test_data_policy%{random_suffix}"
+  data_policy_id   = "%{data_policy_id}"
   policy_tag       = google_data_catalog_policy_tag.policy_tag.name
   data_policy_type = "COLUMN_LEVEL_SECURITY_POLICY"
 }
@@ -231,7 +231,7 @@ resource "google_data_catalog_policy_tag" "policy_tag" {
 
 resource "google_data_catalog_taxonomy" "taxonomy" {
   region                 = "us-central1"
-  display_name           = "taxonomy%{random_suffix}"
+  display_name           = "%{taxonomy}"
   description            = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -252,7 +252,7 @@ func testAccBigqueryDatapolicyDataPolicyIamBinding_basicGenerated(context map[st
 	return acctest.Nprintf(`
 resource "google_bigquery_datapolicy_data_policy" "data_policy" {
   location         = "us-central1"
-  data_policy_id   = "tf_test_data_policy%{random_suffix}"
+  data_policy_id   = "%{data_policy_id}"
   policy_tag       = google_data_catalog_policy_tag.policy_tag.name
   data_policy_type = "COLUMN_LEVEL_SECURITY_POLICY"
 }
@@ -265,7 +265,7 @@ resource "google_data_catalog_policy_tag" "policy_tag" {
 
 resource "google_data_catalog_taxonomy" "taxonomy" {
   region                 = "us-central1"
-  display_name           = "taxonomy%{random_suffix}"
+  display_name           = "%{taxonomy}"
   description            = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -284,7 +284,7 @@ func testAccBigqueryDatapolicyDataPolicyIamBinding_updateGenerated(context map[s
 	return acctest.Nprintf(`
 resource "google_bigquery_datapolicy_data_policy" "data_policy" {
   location         = "us-central1"
-  data_policy_id   = "tf_test_data_policy%{random_suffix}"
+  data_policy_id   = "%{data_policy_id}"
   policy_tag       = google_data_catalog_policy_tag.policy_tag.name
   data_policy_type = "COLUMN_LEVEL_SECURITY_POLICY"
 }
@@ -297,7 +297,7 @@ resource "google_data_catalog_policy_tag" "policy_tag" {
 
 resource "google_data_catalog_taxonomy" "taxonomy" {
   region                 = "us-central1"
-  display_name           = "taxonomy%{random_suffix}"
+  display_name           = "%{taxonomy}"
   description            = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }

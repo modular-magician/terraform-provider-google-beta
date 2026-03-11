@@ -160,13 +160,13 @@ resource "google_tags_tag_value" "tag_value1" {
 
 resource "google_compute_network" "default" {
   provider                = google-beta
-  name                    = "tf-test-workstation-cluster%{random_suffix}"
+  name                    = "%{workstation_cluster_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "default" {
   provider      = google-beta
-  name          = "tf-test-workstation-cluster%{random_suffix}"
+  name          = "%{workstation_cluster_name}"
   ip_cidr_range = "10.0.0.0/24"
   region        = "us-central1"
   network       = google_compute_network.default.name
@@ -174,7 +174,7 @@ resource "google_compute_subnetwork" "default" {
 
 resource "google_workstations_workstation_cluster" "default" {
   provider               = google-beta
-  workstation_cluster_id = "tf-test-workstation-cluster%{random_suffix}"
+  workstation_cluster_id = "%{workstation_cluster_name}"
   network                = google_compute_network.default.id
   subnetwork             = google_compute_subnetwork.default.id
   location               = "us-central1"
@@ -190,7 +190,7 @@ resource "google_workstations_workstation_cluster" "default" {
 
 resource "google_workstations_workstation_config" "default" {
   provider               = google-beta
-  workstation_config_id  = "tf-test-workstation-config%{random_suffix}"
+  workstation_config_id  = "%{workstation_config_name}"
   workstation_cluster_id = google_workstations_workstation_cluster.default.workstation_cluster_id
   location   		         = "us-central1"
 
@@ -249,13 +249,13 @@ resource "google_tags_tag_value" "tag_value1" {
 
 resource "google_compute_network" "default" {
   provider                = google-beta
-  name                    = "tf-test-workstation-cluster%{random_suffix}"
+  name                    = "%{workstation_cluster_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "default" {
   provider      = google-beta
-  name          = "tf-test-workstation-cluster%{random_suffix}"
+  name          = "%{workstation_cluster_name}"
   ip_cidr_range = "10.0.0.0/24"
   region        = "us-central1"
   network       = google_compute_network.default.name
@@ -263,7 +263,7 @@ resource "google_compute_subnetwork" "default" {
 
 resource "google_workstations_workstation_cluster" "default" {
   provider               = google-beta
-  workstation_cluster_id = "tf-test-workstation-cluster%{random_suffix}"
+  workstation_cluster_id = "%{workstation_cluster_name}"
   network                = google_compute_network.default.id
   subnetwork             = google_compute_subnetwork.default.id
   location               = "us-central1"
@@ -279,7 +279,7 @@ resource "google_workstations_workstation_cluster" "default" {
 
 resource "google_workstations_workstation_config" "default" {
   provider               = google-beta
-  workstation_config_id  = "tf-test-workstation-config%{random_suffix}"
+  workstation_config_id  = "%{workstation_config_name}"
   workstation_cluster_id = google_workstations_workstation_cluster.default.workstation_cluster_id
   location   		         = "us-central1"
 
@@ -356,13 +356,13 @@ resource "google_tags_tag_value" "tag_value1" {
 
 resource "google_compute_network" "default" {
   provider                = google-beta
-  name                    = "tf-test-workstation-cluster%{random_suffix}"
+  name                    = "%{workstation_cluster_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "default" {
   provider      = google-beta
-  name          = "tf-test-workstation-cluster%{random_suffix}"
+  name          = "%{workstation_cluster_name}"
   ip_cidr_range = "10.0.0.0/24"
   region        = "us-central1"
   network       = google_compute_network.default.name
@@ -370,7 +370,7 @@ resource "google_compute_subnetwork" "default" {
 
 resource "google_workstations_workstation_cluster" "default" {
   provider               = google-beta
-  workstation_cluster_id = "tf-test-workstation-cluster%{random_suffix}"
+  workstation_cluster_id = "%{workstation_cluster_name}"
   network                = google_compute_network.default.id
   subnetwork             = google_compute_subnetwork.default.id
   location               = "us-central1"
@@ -386,7 +386,7 @@ resource "google_workstations_workstation_cluster" "default" {
 
 resource "google_workstations_workstation_config" "default" {
   provider               = google-beta
-  workstation_config_id  = "tf-test-workstation-config%{random_suffix}"
+  workstation_config_id  = "%{workstation_config_name}"
   workstation_cluster_id = google_workstations_workstation_cluster.default.workstation_cluster_id
   location   		         = "us-central1"
 
@@ -448,13 +448,13 @@ resource "google_tags_tag_value" "tag_value1" {
 
 resource "google_compute_network" "default" {
   provider                = google-beta
-  name                    = "tf-test-workstation-cluster%{random_suffix}"
+  name                    = "%{workstation_cluster_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "default" {
   provider      = google-beta
-  name          = "tf-test-workstation-cluster%{random_suffix}"
+  name          = "%{workstation_cluster_name}"
   ip_cidr_range = "10.0.0.0/24"
   region        = "us-central1"
   network       = google_compute_network.default.name
@@ -462,7 +462,7 @@ resource "google_compute_subnetwork" "default" {
 
 resource "google_workstations_workstation_cluster" "default" {
   provider               = google-beta
-  workstation_cluster_id = "tf-test-workstation-cluster%{random_suffix}"
+  workstation_cluster_id = "%{workstation_cluster_name}"
   network                = google_compute_network.default.id
   subnetwork             = google_compute_subnetwork.default.id
   location               = "us-central1"
@@ -478,7 +478,7 @@ resource "google_workstations_workstation_cluster" "default" {
 
 resource "google_workstations_workstation_config" "default" {
   provider               = google-beta
-  workstation_config_id  = "tf-test-workstation-config%{random_suffix}"
+  workstation_config_id  = "%{workstation_config_name}"
   workstation_cluster_id = google_workstations_workstation_cluster.default.workstation_cluster_id
   location   		         = "us-central1"
 
@@ -537,13 +537,13 @@ resource "google_tags_tag_value" "tag_value1" {
 
 resource "google_compute_network" "default" {
   provider                = google-beta
-  name                    = "tf-test-workstation-cluster%{random_suffix}"
+  name                    = "%{workstation_cluster_name}"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "default" {
   provider      = google-beta
-  name          = "tf-test-workstation-cluster%{random_suffix}"
+  name          = "%{workstation_cluster_name}"
   ip_cidr_range = "10.0.0.0/24"
   region        = "us-central1"
   network       = google_compute_network.default.name
@@ -551,7 +551,7 @@ resource "google_compute_subnetwork" "default" {
 
 resource "google_workstations_workstation_cluster" "default" {
   provider               = google-beta
-  workstation_cluster_id = "tf-test-workstation-cluster%{random_suffix}"
+  workstation_cluster_id = "%{workstation_cluster_name}"
   network                = google_compute_network.default.id
   subnetwork             = google_compute_subnetwork.default.id
   location               = "us-central1"
@@ -567,7 +567,7 @@ resource "google_workstations_workstation_cluster" "default" {
 
 resource "google_workstations_workstation_config" "default" {
   provider               = google-beta
-  workstation_config_id  = "tf-test-workstation-config%{random_suffix}"
+  workstation_config_id  = "%{workstation_config_name}"
   workstation_cluster_id = google_workstations_workstation_cluster.default.workstation_cluster_id
   location   		         = "us-central1"
 

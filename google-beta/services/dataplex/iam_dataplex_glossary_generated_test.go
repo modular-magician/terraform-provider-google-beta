@@ -138,7 +138,7 @@ func TestAccDataplexGlossaryIamPolicyGenerated(t *testing.T) {
 func testAccDataplexGlossaryIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_glossary" "glossary_test_id" {
-  glossary_id = "tf-test-glossary-basic%{random_suffix}"
+  glossary_id = "%{glossary_name}"
   location = "us-central1"
 }
 
@@ -155,7 +155,7 @@ resource "google_dataplex_glossary_iam_member" "foo" {
 func testAccDataplexGlossaryIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_glossary" "glossary_test_id" {
-  glossary_id = "tf-test-glossary-basic%{random_suffix}"
+  glossary_id = "%{glossary_name}"
   location = "us-central1"
 }
 
@@ -187,7 +187,7 @@ data "google_dataplex_glossary_iam_policy" "foo" {
 func testAccDataplexGlossaryIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_glossary" "glossary_test_id" {
-  glossary_id = "tf-test-glossary-basic%{random_suffix}"
+  glossary_id = "%{glossary_name}"
   location = "us-central1"
 }
 
@@ -206,7 +206,7 @@ resource "google_dataplex_glossary_iam_policy" "foo" {
 func testAccDataplexGlossaryIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_glossary" "glossary_test_id" {
-  glossary_id = "tf-test-glossary-basic%{random_suffix}"
+  glossary_id = "%{glossary_name}"
   location = "us-central1"
 }
 
@@ -223,7 +223,7 @@ resource "google_dataplex_glossary_iam_binding" "foo" {
 func testAccDataplexGlossaryIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_glossary" "glossary_test_id" {
-  glossary_id = "tf-test-glossary-basic%{random_suffix}"
+  glossary_id = "%{glossary_name}"
   location = "us-central1"
 }
 

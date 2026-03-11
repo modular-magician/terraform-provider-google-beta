@@ -139,12 +139,12 @@ func testAccHealthcareConsentStoreIamMember_basicGenerated(context map[string]in
 	return acctest.Nprintf(`
 resource "google_healthcare_dataset" "dataset" {
   location = "us-central1"
-  name     = "tf-test-my-dataset%{random_suffix}"
+  name     = "%{dataset_id}"
 }
 
 resource "google_healthcare_consent_store" "my-consent" {
   dataset = google_healthcare_dataset.dataset.id
-  name    = "tf-test-my-consent-store%{random_suffix}"
+  name    = "%{consent_id}"
 }
 
 resource "google_healthcare_consent_store_iam_member" "foo" {
@@ -160,12 +160,12 @@ func testAccHealthcareConsentStoreIamPolicy_basicGenerated(context map[string]in
 	return acctest.Nprintf(`
 resource "google_healthcare_dataset" "dataset" {
   location = "us-central1"
-  name     = "tf-test-my-dataset%{random_suffix}"
+  name     = "%{dataset_id}"
 }
 
 resource "google_healthcare_consent_store" "my-consent" {
   dataset = google_healthcare_dataset.dataset.id
-  name    = "tf-test-my-consent-store%{random_suffix}"
+  name    = "%{consent_id}"
 }
 
 data "google_iam_policy" "foo" {
@@ -195,12 +195,12 @@ func testAccHealthcareConsentStoreIamPolicy_emptyBinding(context map[string]inte
 	return acctest.Nprintf(`
 resource "google_healthcare_dataset" "dataset" {
   location = "us-central1"
-  name     = "tf-test-my-dataset%{random_suffix}"
+  name     = "%{dataset_id}"
 }
 
 resource "google_healthcare_consent_store" "my-consent" {
   dataset = google_healthcare_dataset.dataset.id
-  name    = "tf-test-my-consent-store%{random_suffix}"
+  name    = "%{consent_id}"
 }
 
 data "google_iam_policy" "foo" {
@@ -218,12 +218,12 @@ func testAccHealthcareConsentStoreIamBinding_basicGenerated(context map[string]i
 	return acctest.Nprintf(`
 resource "google_healthcare_dataset" "dataset" {
   location = "us-central1"
-  name     = "tf-test-my-dataset%{random_suffix}"
+  name     = "%{dataset_id}"
 }
 
 resource "google_healthcare_consent_store" "my-consent" {
   dataset = google_healthcare_dataset.dataset.id
-  name    = "tf-test-my-consent-store%{random_suffix}"
+  name    = "%{consent_id}"
 }
 
 resource "google_healthcare_consent_store_iam_binding" "foo" {
@@ -239,12 +239,12 @@ func testAccHealthcareConsentStoreIamBinding_updateGenerated(context map[string]
 	return acctest.Nprintf(`
 resource "google_healthcare_dataset" "dataset" {
   location = "us-central1"
-  name     = "tf-test-my-dataset%{random_suffix}"
+  name     = "%{dataset_id}"
 }
 
 resource "google_healthcare_consent_store" "my-consent" {
   dataset = google_healthcare_dataset.dataset.id
-  name    = "tf-test-my-consent-store%{random_suffix}"
+  name    = "%{consent_id}"
 }
 
 resource "google_healthcare_consent_store_iam_binding" "foo" {

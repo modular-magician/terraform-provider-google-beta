@@ -143,12 +143,12 @@ data "google_project" "project" {
 
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
-  name = "my/repository%{random_suffix}"
+  name = "%{git_repository_name}"
 }
 
 resource "google_secret_manager_secret" "secret" {
   provider = google-beta
-  secret_id = "tf-test-my-secret%{random_suffix}"
+  secret_id = "%{secret_name}"
 
   replication {
     auto {}
@@ -159,20 +159,20 @@ resource "google_secret_manager_secret_version" "secret_version" {
   provider = google-beta
   secret = google_secret_manager_secret.secret.id
 
-  secret_data = "tf-test-secret-data%{random_suffix}"
+  secret_data = "%{data}"
 }
 
 resource "google_kms_key_ring" "keyring" {
   provider = google-beta
   
-  name     = "tf-test-example-key-ring%{random_suffix}"
+  name     = "%{key_ring_name}"
   location = "us-central1"
 }
 
 resource "google_kms_crypto_key" "example_key" {
   provider = google-beta
   
-  name            = "tf-test-example-crypto-key-name%{random_suffix}"
+  name            = "%{crypto_key_name}"
   key_ring        = google_kms_key_ring.keyring.id
 }
 
@@ -189,8 +189,8 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
 
 resource "google_dataform_repository" "dataform_repository" {
   provider = google-beta
-  name = "tf_test_dataform_repository%{random_suffix}"
-  display_name = "tf_test_dataform_repository%{random_suffix}"
+  name = "%{dataform_repository_name}"
+  display_name = "%{dataform_repository_name}"
   npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
   kms_key_name = google_kms_crypto_key.example_key.id
   deletion_policy = "FORCE"
@@ -235,12 +235,12 @@ data "google_project" "project" {
 
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
-  name = "my/repository%{random_suffix}"
+  name = "%{git_repository_name}"
 }
 
 resource "google_secret_manager_secret" "secret" {
   provider = google-beta
-  secret_id = "tf-test-my-secret%{random_suffix}"
+  secret_id = "%{secret_name}"
 
   replication {
     auto {}
@@ -251,20 +251,20 @@ resource "google_secret_manager_secret_version" "secret_version" {
   provider = google-beta
   secret = google_secret_manager_secret.secret.id
 
-  secret_data = "tf-test-secret-data%{random_suffix}"
+  secret_data = "%{data}"
 }
 
 resource "google_kms_key_ring" "keyring" {
   provider = google-beta
   
-  name     = "tf-test-example-key-ring%{random_suffix}"
+  name     = "%{key_ring_name}"
   location = "us-central1"
 }
 
 resource "google_kms_crypto_key" "example_key" {
   provider = google-beta
   
-  name            = "tf-test-example-crypto-key-name%{random_suffix}"
+  name            = "%{crypto_key_name}"
   key_ring        = google_kms_key_ring.keyring.id
 }
 
@@ -281,8 +281,8 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
 
 resource "google_dataform_repository" "dataform_repository" {
   provider = google-beta
-  name = "tf_test_dataform_repository%{random_suffix}"
-  display_name = "tf_test_dataform_repository%{random_suffix}"
+  name = "%{dataform_repository_name}"
+  display_name = "%{dataform_repository_name}"
   npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
   kms_key_name = google_kms_crypto_key.example_key.id
   deletion_policy = "FORCE"
@@ -344,12 +344,12 @@ data "google_project" "project" {
 
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
-  name = "my/repository%{random_suffix}"
+  name = "%{git_repository_name}"
 }
 
 resource "google_secret_manager_secret" "secret" {
   provider = google-beta
-  secret_id = "tf-test-my-secret%{random_suffix}"
+  secret_id = "%{secret_name}"
 
   replication {
     auto {}
@@ -360,20 +360,20 @@ resource "google_secret_manager_secret_version" "secret_version" {
   provider = google-beta
   secret = google_secret_manager_secret.secret.id
 
-  secret_data = "tf-test-secret-data%{random_suffix}"
+  secret_data = "%{data}"
 }
 
 resource "google_kms_key_ring" "keyring" {
   provider = google-beta
   
-  name     = "tf-test-example-key-ring%{random_suffix}"
+  name     = "%{key_ring_name}"
   location = "us-central1"
 }
 
 resource "google_kms_crypto_key" "example_key" {
   provider = google-beta
   
-  name            = "tf-test-example-crypto-key-name%{random_suffix}"
+  name            = "%{crypto_key_name}"
   key_ring        = google_kms_key_ring.keyring.id
 }
 
@@ -390,8 +390,8 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
 
 resource "google_dataform_repository" "dataform_repository" {
   provider = google-beta
-  name = "tf_test_dataform_repository%{random_suffix}"
-  display_name = "tf_test_dataform_repository%{random_suffix}"
+  name = "%{dataform_repository_name}"
+  display_name = "%{dataform_repository_name}"
   npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
   kms_key_name = google_kms_crypto_key.example_key.id
   deletion_policy = "FORCE"
@@ -439,12 +439,12 @@ data "google_project" "project" {
 
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
-  name = "my/repository%{random_suffix}"
+  name = "%{git_repository_name}"
 }
 
 resource "google_secret_manager_secret" "secret" {
   provider = google-beta
-  secret_id = "tf-test-my-secret%{random_suffix}"
+  secret_id = "%{secret_name}"
 
   replication {
     auto {}
@@ -455,20 +455,20 @@ resource "google_secret_manager_secret_version" "secret_version" {
   provider = google-beta
   secret = google_secret_manager_secret.secret.id
 
-  secret_data = "tf-test-secret-data%{random_suffix}"
+  secret_data = "%{data}"
 }
 
 resource "google_kms_key_ring" "keyring" {
   provider = google-beta
   
-  name     = "tf-test-example-key-ring%{random_suffix}"
+  name     = "%{key_ring_name}"
   location = "us-central1"
 }
 
 resource "google_kms_crypto_key" "example_key" {
   provider = google-beta
   
-  name            = "tf-test-example-crypto-key-name%{random_suffix}"
+  name            = "%{crypto_key_name}"
   key_ring        = google_kms_key_ring.keyring.id
 }
 
@@ -485,8 +485,8 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
 
 resource "google_dataform_repository" "dataform_repository" {
   provider = google-beta
-  name = "tf_test_dataform_repository%{random_suffix}"
-  display_name = "tf_test_dataform_repository%{random_suffix}"
+  name = "%{dataform_repository_name}"
+  display_name = "%{dataform_repository_name}"
   npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
   kms_key_name = google_kms_crypto_key.example_key.id
   deletion_policy = "FORCE"
@@ -531,12 +531,12 @@ data "google_project" "project" {
 
 resource "google_sourcerepo_repository" "git_repository" {
   provider = google-beta
-  name = "my/repository%{random_suffix}"
+  name = "%{git_repository_name}"
 }
 
 resource "google_secret_manager_secret" "secret" {
   provider = google-beta
-  secret_id = "tf-test-my-secret%{random_suffix}"
+  secret_id = "%{secret_name}"
 
   replication {
     auto {}
@@ -547,20 +547,20 @@ resource "google_secret_manager_secret_version" "secret_version" {
   provider = google-beta
   secret = google_secret_manager_secret.secret.id
 
-  secret_data = "tf-test-secret-data%{random_suffix}"
+  secret_data = "%{data}"
 }
 
 resource "google_kms_key_ring" "keyring" {
   provider = google-beta
   
-  name     = "tf-test-example-key-ring%{random_suffix}"
+  name     = "%{key_ring_name}"
   location = "us-central1"
 }
 
 resource "google_kms_crypto_key" "example_key" {
   provider = google-beta
   
-  name            = "tf-test-example-crypto-key-name%{random_suffix}"
+  name            = "%{crypto_key_name}"
   key_ring        = google_kms_key_ring.keyring.id
 }
 
@@ -577,8 +577,8 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_binding" {
 
 resource "google_dataform_repository" "dataform_repository" {
   provider = google-beta
-  name = "tf_test_dataform_repository%{random_suffix}"
-  display_name = "tf_test_dataform_repository%{random_suffix}"
+  name = "%{dataform_repository_name}"
+  display_name = "%{dataform_repository_name}"
   npmrc_environment_variables_secret_version = google_secret_manager_secret_version.secret_version.id
   kms_key_name = google_kms_crypto_key.example_key.id
   deletion_policy = "FORCE"

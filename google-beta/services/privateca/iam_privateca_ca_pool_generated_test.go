@@ -341,7 +341,7 @@ func TestAccPrivatecaCaPoolIamPolicyGenerated_withCondition(t *testing.T) {
 func testAccPrivatecaCaPoolIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "default" {
-  name = "tf-test-my-pool%{random_suffix}"
+  name = "%{name}"
   location = "us-central1"
   tier = "ENTERPRISE"
   publishing_options {
@@ -364,7 +364,7 @@ resource "google_privateca_ca_pool_iam_member" "foo" {
 func testAccPrivatecaCaPoolIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "default" {
-  name = "tf-test-my-pool%{random_suffix}"
+  name = "%{name}"
   location = "us-central1"
   tier = "ENTERPRISE"
   publishing_options {
@@ -400,7 +400,7 @@ data "google_privateca_ca_pool_iam_policy" "foo" {
 func testAccPrivatecaCaPoolIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "default" {
-  name = "tf-test-my-pool%{random_suffix}"
+  name = "%{name}"
   location = "us-central1"
   tier = "ENTERPRISE"
   publishing_options {
@@ -425,7 +425,7 @@ resource "google_privateca_ca_pool_iam_policy" "foo" {
 func testAccPrivatecaCaPoolIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "default" {
-  name = "tf-test-my-pool%{random_suffix}"
+  name = "%{name}"
   location = "us-central1"
   tier = "ENTERPRISE"
   publishing_options {
@@ -448,7 +448,7 @@ resource "google_privateca_ca_pool_iam_binding" "foo" {
 func testAccPrivatecaCaPoolIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "default" {
-  name = "tf-test-my-pool%{random_suffix}"
+  name = "%{name}"
   location = "us-central1"
   tier = "ENTERPRISE"
   publishing_options {
@@ -471,7 +471,7 @@ resource "google_privateca_ca_pool_iam_binding" "foo" {
 func testAccPrivatecaCaPoolIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "default" {
-  name = "tf-test-my-pool%{random_suffix}"
+  name = "%{name}"
   location = "us-central1"
   tier = "ENTERPRISE"
   publishing_options {
@@ -499,7 +499,7 @@ resource "google_privateca_ca_pool_iam_binding" "foo" {
 func testAccPrivatecaCaPoolIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "default" {
-  name = "tf-test-my-pool%{random_suffix}"
+  name = "%{name}"
   location = "us-central1"
   tier = "ENTERPRISE"
   publishing_options {
@@ -545,7 +545,7 @@ resource "google_privateca_ca_pool_iam_binding" "foo3" {
 func testAccPrivatecaCaPoolIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "default" {
-  name = "tf-test-my-pool%{random_suffix}"
+  name = "%{name}"
   location = "us-central1"
   tier = "ENTERPRISE"
   publishing_options {
@@ -573,7 +573,7 @@ resource "google_privateca_ca_pool_iam_member" "foo" {
 func testAccPrivatecaCaPoolIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "default" {
-  name = "tf-test-my-pool%{random_suffix}"
+  name = "%{name}"
   location = "us-central1"
   tier = "ENTERPRISE"
   publishing_options {
@@ -619,7 +619,7 @@ resource "google_privateca_ca_pool_iam_member" "foo3" {
 func testAccPrivatecaCaPoolIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_privateca_ca_pool" "default" {
-  name = "tf-test-my-pool%{random_suffix}"
+  name = "%{name}"
   location = "us-central1"
   tier = "ENTERPRISE"
   publishing_options {

@@ -138,7 +138,7 @@ func TestAccClouddeployTargetIamPolicyGenerated(t *testing.T) {
 func testAccClouddeployTargetIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_clouddeploy_target" "default" {
-  name = "tf-test-cd-target%{random_suffix}"
+  name = "%{target}"
   location = "us-central1"
  }
 
@@ -155,7 +155,7 @@ resource "google_clouddeploy_target_iam_member" "foo" {
 func testAccClouddeployTargetIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_clouddeploy_target" "default" {
-  name = "tf-test-cd-target%{random_suffix}"
+  name = "%{target}"
   location = "us-central1"
  }
 
@@ -187,7 +187,7 @@ data "google_clouddeploy_target_iam_policy" "foo" {
 func testAccClouddeployTargetIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_clouddeploy_target" "default" {
-  name = "tf-test-cd-target%{random_suffix}"
+  name = "%{target}"
   location = "us-central1"
  }
 
@@ -206,7 +206,7 @@ resource "google_clouddeploy_target_iam_policy" "foo" {
 func testAccClouddeployTargetIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_clouddeploy_target" "default" {
-  name = "tf-test-cd-target%{random_suffix}"
+  name = "%{target}"
   location = "us-central1"
  }
 
@@ -223,7 +223,7 @@ resource "google_clouddeploy_target_iam_binding" "foo" {
 func testAccClouddeployTargetIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_clouddeploy_target" "default" {
-  name = "tf-test-cd-target%{random_suffix}"
+  name = "%{target}"
   location = "us-central1"
  }
 

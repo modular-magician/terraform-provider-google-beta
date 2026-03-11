@@ -341,7 +341,7 @@ func TestAccIapTunnelInstanceIamPolicyGenerated_withCondition(t *testing.T) {
 func testAccIapTunnelInstanceIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "tunnelvm" {
-  name         = "tf-test-tunnel-vm%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -369,7 +369,7 @@ resource "google_iap_tunnel_instance_iam_member" "foo" {
 func testAccIapTunnelInstanceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "tunnelvm" {
-  name         = "tf-test-tunnel-vm%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -412,7 +412,7 @@ data "google_iap_tunnel_instance_iam_policy" "foo" {
 func testAccIapTunnelInstanceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "tunnelvm" {
-  name         = "tf-test-tunnel-vm%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -442,7 +442,7 @@ resource "google_iap_tunnel_instance_iam_policy" "foo" {
 func testAccIapTunnelInstanceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "tunnelvm" {
-  name         = "tf-test-tunnel-vm%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -470,7 +470,7 @@ resource "google_iap_tunnel_instance_iam_binding" "foo" {
 func testAccIapTunnelInstanceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "tunnelvm" {
-  name         = "tf-test-tunnel-vm%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -498,7 +498,7 @@ resource "google_iap_tunnel_instance_iam_binding" "foo" {
 func testAccIapTunnelInstanceIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "tunnelvm" {
-  name         = "tf-test-tunnel-vm%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -531,7 +531,7 @@ resource "google_iap_tunnel_instance_iam_binding" "foo" {
 func testAccIapTunnelInstanceIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "tunnelvm" {
-  name         = "tf-test-tunnel-vm%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -586,7 +586,7 @@ resource "google_iap_tunnel_instance_iam_binding" "foo3" {
 func testAccIapTunnelInstanceIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "tunnelvm" {
-  name         = "tf-test-tunnel-vm%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -619,7 +619,7 @@ resource "google_iap_tunnel_instance_iam_member" "foo" {
 func testAccIapTunnelInstanceIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "tunnelvm" {
-  name         = "tf-test-tunnel-vm%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -674,7 +674,7 @@ resource "google_iap_tunnel_instance_iam_member" "foo3" {
 func testAccIapTunnelInstanceIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "tunnelvm" {
-  name         = "tf-test-tunnel-vm%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 

@@ -142,7 +142,7 @@ func testAccSecureSourceManagerRepositoryIamMember_basicGenerated(context map[st
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "instance" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
 
     # Prevent accidental deletions.
     deletion_policy = "%{deletion_policy}"
@@ -150,7 +150,7 @@ resource "google_secure_source_manager_instance" "instance" {
 
 resource "google_secure_source_manager_repository" "default" {
     location = "us-central1"
-    repository_id = "tf-test-my-repository%{random_suffix}"
+    repository_id = "%{repository_id}"
     instance = google_secure_source_manager_instance.instance.name
 
     # Prevent accidental deletions.
@@ -171,7 +171,7 @@ func testAccSecureSourceManagerRepositoryIamPolicy_basicGenerated(context map[st
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "instance" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
 
     # Prevent accidental deletions.
     deletion_policy = "%{deletion_policy}"
@@ -179,7 +179,7 @@ resource "google_secure_source_manager_instance" "instance" {
 
 resource "google_secure_source_manager_repository" "default" {
     location = "us-central1"
-    repository_id = "tf-test-my-repository%{random_suffix}"
+    repository_id = "%{repository_id}"
     instance = google_secure_source_manager_instance.instance.name
 
     # Prevent accidental deletions.
@@ -215,7 +215,7 @@ func testAccSecureSourceManagerRepositoryIamPolicy_emptyBinding(context map[stri
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "instance" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
 
     # Prevent accidental deletions.
     deletion_policy = "%{deletion_policy}"
@@ -223,7 +223,7 @@ resource "google_secure_source_manager_instance" "instance" {
 
 resource "google_secure_source_manager_repository" "default" {
     location = "us-central1"
-    repository_id = "tf-test-my-repository%{random_suffix}"
+    repository_id = "%{repository_id}"
     instance = google_secure_source_manager_instance.instance.name
 
     # Prevent accidental deletions.
@@ -246,7 +246,7 @@ func testAccSecureSourceManagerRepositoryIamBinding_basicGenerated(context map[s
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "instance" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
 
     # Prevent accidental deletions.
     deletion_policy = "%{deletion_policy}"
@@ -254,7 +254,7 @@ resource "google_secure_source_manager_instance" "instance" {
 
 resource "google_secure_source_manager_repository" "default" {
     location = "us-central1"
-    repository_id = "tf-test-my-repository%{random_suffix}"
+    repository_id = "%{repository_id}"
     instance = google_secure_source_manager_instance.instance.name
 
     # Prevent accidental deletions.
@@ -275,7 +275,7 @@ func testAccSecureSourceManagerRepositoryIamBinding_updateGenerated(context map[
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "instance" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
 
     # Prevent accidental deletions.
     deletion_policy = "%{deletion_policy}"
@@ -283,7 +283,7 @@ resource "google_secure_source_manager_instance" "instance" {
 
 resource "google_secure_source_manager_repository" "default" {
     location = "us-central1"
-    repository_id = "tf-test-my-repository%{random_suffix}"
+    repository_id = "%{repository_id}"
     instance = google_secure_source_manager_instance.instance.name
 
     # Prevent accidental deletions.

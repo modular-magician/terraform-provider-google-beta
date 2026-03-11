@@ -139,7 +139,7 @@ func testAccRuntimeConfigConfigIamMember_basicGenerated(context map[string]inter
 	return acctest.Nprintf(`
 resource "google_runtimeconfig_config" "config" {
   provider    = google-beta
-  name        = "tf-test-my-config%{random_suffix}"
+  name        = "%{config_name}"
   description = "Runtime configuration values for my service"
 }
 
@@ -157,7 +157,7 @@ func testAccRuntimeConfigConfigIamPolicy_basicGenerated(context map[string]inter
 	return acctest.Nprintf(`
 resource "google_runtimeconfig_config" "config" {
   provider    = google-beta
-  name        = "tf-test-my-config%{random_suffix}"
+  name        = "%{config_name}"
   description = "Runtime configuration values for my service"
 }
 
@@ -191,7 +191,7 @@ func testAccRuntimeConfigConfigIamPolicy_emptyBinding(context map[string]interfa
 	return acctest.Nprintf(`
 resource "google_runtimeconfig_config" "config" {
   provider    = google-beta
-  name        = "tf-test-my-config%{random_suffix}"
+  name        = "%{config_name}"
   description = "Runtime configuration values for my service"
 }
 
@@ -212,7 +212,7 @@ func testAccRuntimeConfigConfigIamBinding_basicGenerated(context map[string]inte
 	return acctest.Nprintf(`
 resource "google_runtimeconfig_config" "config" {
   provider    = google-beta
-  name        = "tf-test-my-config%{random_suffix}"
+  name        = "%{config_name}"
   description = "Runtime configuration values for my service"
 }
 
@@ -230,7 +230,7 @@ func testAccRuntimeConfigConfigIamBinding_updateGenerated(context map[string]int
 	return acctest.Nprintf(`
 resource "google_runtimeconfig_config" "config" {
   provider    = google-beta
-  name        = "tf-test-my-config%{random_suffix}"
+  name        = "%{config_name}"
   description = "Runtime configuration values for my service"
 }
 

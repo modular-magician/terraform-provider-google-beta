@@ -138,7 +138,7 @@ func TestAccSourceRepoRepositoryIamPolicyGenerated(t *testing.T) {
 func testAccSourceRepoRepositoryIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_sourcerepo_repository" "my-repo" {
-  name = "my/repository%{random_suffix}"
+  name = "%{repository_name}"
 }
 
 resource "google_sourcerepo_repository_iam_member" "foo" {
@@ -153,7 +153,7 @@ resource "google_sourcerepo_repository_iam_member" "foo" {
 func testAccSourceRepoRepositoryIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_sourcerepo_repository" "my-repo" {
-  name = "my/repository%{random_suffix}"
+  name = "%{repository_name}"
 }
 
 data "google_iam_policy" "foo" {
@@ -182,7 +182,7 @@ data "google_sourcerepo_repository_iam_policy" "foo" {
 func testAccSourceRepoRepositoryIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_sourcerepo_repository" "my-repo" {
-  name = "my/repository%{random_suffix}"
+  name = "%{repository_name}"
 }
 
 data "google_iam_policy" "foo" {
@@ -199,7 +199,7 @@ resource "google_sourcerepo_repository_iam_policy" "foo" {
 func testAccSourceRepoRepositoryIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_sourcerepo_repository" "my-repo" {
-  name = "my/repository%{random_suffix}"
+  name = "%{repository_name}"
 }
 
 resource "google_sourcerepo_repository_iam_binding" "foo" {
@@ -214,7 +214,7 @@ resource "google_sourcerepo_repository_iam_binding" "foo" {
 func testAccSourceRepoRepositoryIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_sourcerepo_repository" "my-repo" {
-  name = "my/repository%{random_suffix}"
+  name = "%{repository_name}"
 }
 
 resource "google_sourcerepo_repository_iam_binding" "foo" {

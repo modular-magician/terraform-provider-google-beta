@@ -138,14 +138,14 @@ func TestAccComputeBackendBucketIamPolicyGenerated(t *testing.T) {
 func testAccComputeBackendBucketIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_backend_bucket" "image_backend" {
-  name        = "tf-test-image-backend-bucket%{random_suffix}"
+  name        = "%{backend_bucket_name}"
   description = "Contains beautiful images"
   bucket_name = google_storage_bucket.image_bucket.name
   enable_cdn  = true
 }
 
 resource "google_storage_bucket" "image_bucket" {
-  name     = "tf-test-image-store-bucket%{random_suffix}"
+  name     = "%{bucket_name}"
   location = "EU"
 }
 
@@ -161,14 +161,14 @@ resource "google_compute_backend_bucket_iam_member" "foo" {
 func testAccComputeBackendBucketIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_backend_bucket" "image_backend" {
-  name        = "tf-test-image-backend-bucket%{random_suffix}"
+  name        = "%{backend_bucket_name}"
   description = "Contains beautiful images"
   bucket_name = google_storage_bucket.image_bucket.name
   enable_cdn  = true
 }
 
 resource "google_storage_bucket" "image_bucket" {
-  name     = "tf-test-image-store-bucket%{random_suffix}"
+  name     = "%{bucket_name}"
   location = "EU"
 }
 
@@ -198,14 +198,14 @@ data "google_compute_backend_bucket_iam_policy" "foo" {
 func testAccComputeBackendBucketIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_backend_bucket" "image_backend" {
-  name        = "tf-test-image-backend-bucket%{random_suffix}"
+  name        = "%{backend_bucket_name}"
   description = "Contains beautiful images"
   bucket_name = google_storage_bucket.image_bucket.name
   enable_cdn  = true
 }
 
 resource "google_storage_bucket" "image_bucket" {
-  name     = "tf-test-image-store-bucket%{random_suffix}"
+  name     = "%{bucket_name}"
   location = "EU"
 }
 
@@ -223,14 +223,14 @@ resource "google_compute_backend_bucket_iam_policy" "foo" {
 func testAccComputeBackendBucketIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_backend_bucket" "image_backend" {
-  name        = "tf-test-image-backend-bucket%{random_suffix}"
+  name        = "%{backend_bucket_name}"
   description = "Contains beautiful images"
   bucket_name = google_storage_bucket.image_bucket.name
   enable_cdn  = true
 }
 
 resource "google_storage_bucket" "image_bucket" {
-  name     = "tf-test-image-store-bucket%{random_suffix}"
+  name     = "%{bucket_name}"
   location = "EU"
 }
 
@@ -246,14 +246,14 @@ resource "google_compute_backend_bucket_iam_binding" "foo" {
 func testAccComputeBackendBucketIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_backend_bucket" "image_backend" {
-  name        = "tf-test-image-backend-bucket%{random_suffix}"
+  name        = "%{backend_bucket_name}"
   description = "Contains beautiful images"
   bucket_name = google_storage_bucket.image_bucket.name
   enable_cdn  = true
 }
 
 resource "google_storage_bucket" "image_bucket" {
-  name     = "tf-test-image-store-bucket%{random_suffix}"
+  name     = "%{bucket_name}"
   location = "EU"
 }
 

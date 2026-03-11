@@ -111,7 +111,7 @@ func TestAccDataplexEntryGroupIamPolicyGenerated(t *testing.T) {
 func testAccDataplexEntryGroupIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_entry_group" "test_entry_group_basic" {
-  entry_group_id = "tf-test-entry-group-basic%{random_suffix}"
+  entry_group_id = "%{entry_group_name}"
   project = "%{project_name}"
   location = "us-central1"
 }
@@ -129,7 +129,7 @@ resource "google_dataplex_entry_group_iam_member" "foo" {
 func testAccDataplexEntryGroupIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_entry_group" "test_entry_group_basic" {
-  entry_group_id = "tf-test-entry-group-basic%{random_suffix}"
+  entry_group_id = "%{entry_group_name}"
   project = "%{project_name}"
   location = "us-central1"
 }
@@ -162,7 +162,7 @@ data "google_dataplex_entry_group_iam_policy" "foo" {
 func testAccDataplexEntryGroupIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_entry_group" "test_entry_group_basic" {
-  entry_group_id = "tf-test-entry-group-basic%{random_suffix}"
+  entry_group_id = "%{entry_group_name}"
   project = "%{project_name}"
   location = "us-central1"
 }
@@ -182,7 +182,7 @@ resource "google_dataplex_entry_group_iam_policy" "foo" {
 func testAccDataplexEntryGroupIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_entry_group" "test_entry_group_basic" {
-  entry_group_id = "tf-test-entry-group-basic%{random_suffix}"
+  entry_group_id = "%{entry_group_name}"
   project = "%{project_name}"
   location = "us-central1"
 }
@@ -200,7 +200,7 @@ resource "google_dataplex_entry_group_iam_binding" "foo" {
 func testAccDataplexEntryGroupIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_entry_group" "test_entry_group_basic" {
-  entry_group_id = "tf-test-entry-group-basic%{random_suffix}"
+  entry_group_id = "%{entry_group_name}"
   project = "%{project_name}"
   location = "us-central1"
 }

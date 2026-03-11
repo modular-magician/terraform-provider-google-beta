@@ -141,7 +141,7 @@ func TestAccDataFusionInstanceIamPolicyGenerated(t *testing.T) {
 func testAccDataFusionInstanceIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_data_fusion_instance" "basic_instance" {
-  name   = "tf-test-my-instance%{random_suffix}"
+  name   = "%{instance_name}"
   region = "us-central1"
   type   = "BASIC"
   %{prober_test_run}
@@ -160,7 +160,7 @@ resource "google_data_fusion_instance_iam_member" "foo" {
 func testAccDataFusionInstanceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_data_fusion_instance" "basic_instance" {
-  name   = "tf-test-my-instance%{random_suffix}"
+  name   = "%{instance_name}"
   region = "us-central1"
   type   = "BASIC"
   %{prober_test_run}
@@ -194,7 +194,7 @@ data "google_data_fusion_instance_iam_policy" "foo" {
 func testAccDataFusionInstanceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_data_fusion_instance" "basic_instance" {
-  name   = "tf-test-my-instance%{random_suffix}"
+  name   = "%{instance_name}"
   region = "us-central1"
   type   = "BASIC"
   %{prober_test_run}
@@ -215,7 +215,7 @@ resource "google_data_fusion_instance_iam_policy" "foo" {
 func testAccDataFusionInstanceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_data_fusion_instance" "basic_instance" {
-  name   = "tf-test-my-instance%{random_suffix}"
+  name   = "%{instance_name}"
   region = "us-central1"
   type   = "BASIC"
   %{prober_test_run}
@@ -234,7 +234,7 @@ resource "google_data_fusion_instance_iam_binding" "foo" {
 func testAccDataFusionInstanceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_data_fusion_instance" "basic_instance" {
-  name   = "tf-test-my-instance%{random_suffix}"
+  name   = "%{instance_name}"
   region = "us-central1"
   type   = "BASIC"
   %{prober_test_run}

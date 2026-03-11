@@ -341,7 +341,7 @@ func TestAccComputeInstanceIamPolicyGenerated_withCondition(t *testing.T) {
 func testAccComputeInstanceIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "default" {
-  name         = "tf-test-my-instance%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -369,7 +369,7 @@ resource "google_compute_instance_iam_member" "foo" {
 func testAccComputeInstanceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "default" {
-  name         = "tf-test-my-instance%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -412,7 +412,7 @@ data "google_compute_instance_iam_policy" "foo" {
 func testAccComputeInstanceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "default" {
-  name         = "tf-test-my-instance%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -442,7 +442,7 @@ resource "google_compute_instance_iam_policy" "foo" {
 func testAccComputeInstanceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "default" {
-  name         = "tf-test-my-instance%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -470,7 +470,7 @@ resource "google_compute_instance_iam_binding" "foo" {
 func testAccComputeInstanceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "default" {
-  name         = "tf-test-my-instance%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -498,7 +498,7 @@ resource "google_compute_instance_iam_binding" "foo" {
 func testAccComputeInstanceIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "default" {
-  name         = "tf-test-my-instance%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -531,7 +531,7 @@ resource "google_compute_instance_iam_binding" "foo" {
 func testAccComputeInstanceIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "default" {
-  name         = "tf-test-my-instance%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -586,7 +586,7 @@ resource "google_compute_instance_iam_binding" "foo3" {
 func testAccComputeInstanceIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "default" {
-  name         = "tf-test-my-instance%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -619,7 +619,7 @@ resource "google_compute_instance_iam_member" "foo" {
 func testAccComputeInstanceIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "default" {
-  name         = "tf-test-my-instance%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 
@@ -674,7 +674,7 @@ resource "google_compute_instance_iam_member" "foo3" {
 func testAccComputeInstanceIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_instance" "default" {
-  name         = "tf-test-my-instance%{random_suffix}"
+  name         = "%{instance_name}"
   zone         = "us-central1-a"
   machine_type = "e2-medium"
 

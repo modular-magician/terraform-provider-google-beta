@@ -114,7 +114,7 @@ resource "google_data_catalog_policy_tag" "basic_policy_tag" {
 }
 
 resource "google_data_catalog_taxonomy" "my_taxonomy" {
-  display_name =  "tf_test_taxonomy_display_name%{random_suffix}"
+  display_name =  "%{taxonomy_display_name}"
   description = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -136,7 +136,7 @@ resource "google_data_catalog_policy_tag" "basic_policy_tag" {
 }
 
 resource "google_data_catalog_taxonomy" "my_taxonomy" {
-  display_name =  "tf_test_taxonomy_display_name%{random_suffix}"
+  display_name =  "%{taxonomy_display_name}"
   description = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -171,7 +171,7 @@ resource "google_data_catalog_policy_tag" "basic_policy_tag" {
 }
 
 resource "google_data_catalog_taxonomy" "my_taxonomy" {
-  display_name =  "tf_test_taxonomy_display_name%{random_suffix}"
+  display_name =  "%{taxonomy_display_name}"
   description = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -195,7 +195,7 @@ resource "google_data_catalog_policy_tag" "basic_policy_tag" {
 }
 
 resource "google_data_catalog_taxonomy" "my_taxonomy" {
-  display_name =  "tf_test_taxonomy_display_name%{random_suffix}"
+  display_name =  "%{taxonomy_display_name}"
   description = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -217,7 +217,7 @@ resource "google_data_catalog_policy_tag" "basic_policy_tag" {
 }
 
 resource "google_data_catalog_taxonomy" "my_taxonomy" {
-  display_name =  "tf_test_taxonomy_display_name%{random_suffix}"
+  display_name =  "%{taxonomy_display_name}"
   description = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }

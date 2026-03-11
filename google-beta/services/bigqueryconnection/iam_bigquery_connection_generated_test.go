@@ -150,7 +150,7 @@ func TestAccBigqueryConnectionConnectionIamPolicyGenerated(t *testing.T) {
 func testAccBigqueryConnectionConnectionIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_bigquery_connection" "connection" {
-   connection_id = "tf-test-my-connection%{random_suffix}"
+   connection_id = "%{connection_id}"
    location      = "US"
    friendly_name = "👋"
    description   = "a riveting description"
@@ -170,7 +170,7 @@ resource "google_bigquery_connection_iam_member" "foo" {
 func testAccBigqueryConnectionConnectionIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_bigquery_connection" "connection" {
-   connection_id = "tf-test-my-connection%{random_suffix}"
+   connection_id = "%{connection_id}"
    location      = "US"
    friendly_name = "👋"
    description   = "a riveting description"
@@ -205,7 +205,7 @@ data "google_bigquery_connection_iam_policy" "foo" {
 func testAccBigqueryConnectionConnectionIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_bigquery_connection" "connection" {
-   connection_id = "tf-test-my-connection%{random_suffix}"
+   connection_id = "%{connection_id}"
    location      = "US"
    friendly_name = "👋"
    description   = "a riveting description"
@@ -227,7 +227,7 @@ resource "google_bigquery_connection_iam_policy" "foo" {
 func testAccBigqueryConnectionConnectionIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_bigquery_connection" "connection" {
-   connection_id = "tf-test-my-connection%{random_suffix}"
+   connection_id = "%{connection_id}"
    location      = "US"
    friendly_name = "👋"
    description   = "a riveting description"
@@ -247,7 +247,7 @@ resource "google_bigquery_connection_iam_binding" "foo" {
 func testAccBigqueryConnectionConnectionIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_bigquery_connection" "connection" {
-   connection_id = "tf-test-my-connection%{random_suffix}"
+   connection_id = "%{connection_id}"
    location      = "US"
    friendly_name = "👋"
    description   = "a riveting description"

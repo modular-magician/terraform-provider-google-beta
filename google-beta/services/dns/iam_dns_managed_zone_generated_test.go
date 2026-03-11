@@ -142,7 +142,7 @@ func testAccDNSManagedZoneIamMember_basicGenerated(context map[string]interface{
 	return acctest.Nprintf(`
 # to setup a web-server
 resource "google_compute_instance" "default" {
-  name         = "tf-test-dns-compute-instance%{random_suffix}"
+  name         = "%{dns_compute_instance}"
   machine_type = "g1-small"
   zone         = "us-central1-b"
 
@@ -167,7 +167,7 @@ resource "google_compute_instance" "default" {
 
 # to allow http traffic
 resource "google_compute_firewall" "default" {
-  name     = "tf-test-allow-http-traffic%{random_suffix}"
+  name     = "%{allow_http_traffic}"
   network  = "default"
   allow {
     ports    = ["80"]
@@ -178,7 +178,7 @@ resource "google_compute_firewall" "default" {
 
 # to create a DNS zone
 resource "google_dns_managed_zone" "default" {
-  name          = "tf-test-example-zone-googlecloudexample%{random_suffix}"
+  name          = "%{example_zone_googlecloudexample}"
   dns_name      = "%{dns_name}"
   description   = "Example DNS zone"
   force_destroy = "true"
@@ -208,7 +208,7 @@ func testAccDNSManagedZoneIamPolicy_basicGenerated(context map[string]interface{
 	return acctest.Nprintf(`
 # to setup a web-server
 resource "google_compute_instance" "default" {
-  name         = "tf-test-dns-compute-instance%{random_suffix}"
+  name         = "%{dns_compute_instance}"
   machine_type = "g1-small"
   zone         = "us-central1-b"
 
@@ -233,7 +233,7 @@ resource "google_compute_instance" "default" {
 
 # to allow http traffic
 resource "google_compute_firewall" "default" {
-  name     = "tf-test-allow-http-traffic%{random_suffix}"
+  name     = "%{allow_http_traffic}"
   network  = "default"
   allow {
     ports    = ["80"]
@@ -244,7 +244,7 @@ resource "google_compute_firewall" "default" {
 
 # to create a DNS zone
 resource "google_dns_managed_zone" "default" {
-  name          = "tf-test-example-zone-googlecloudexample%{random_suffix}"
+  name          = "%{example_zone_googlecloudexample}"
   dns_name      = "%{dns_name}"
   description   = "Example DNS zone"
   force_destroy = "true"
@@ -288,7 +288,7 @@ func testAccDNSManagedZoneIamPolicy_emptyBinding(context map[string]interface{})
 	return acctest.Nprintf(`
 # to setup a web-server
 resource "google_compute_instance" "default" {
-  name         = "tf-test-dns-compute-instance%{random_suffix}"
+  name         = "%{dns_compute_instance}"
   machine_type = "g1-small"
   zone         = "us-central1-b"
 
@@ -313,7 +313,7 @@ resource "google_compute_instance" "default" {
 
 # to allow http traffic
 resource "google_compute_firewall" "default" {
-  name     = "tf-test-allow-http-traffic%{random_suffix}"
+  name     = "%{allow_http_traffic}"
   network  = "default"
   allow {
     ports    = ["80"]
@@ -324,7 +324,7 @@ resource "google_compute_firewall" "default" {
 
 # to create a DNS zone
 resource "google_dns_managed_zone" "default" {
-  name          = "tf-test-example-zone-googlecloudexample%{random_suffix}"
+  name          = "%{example_zone_googlecloudexample}"
   dns_name      = "%{dns_name}"
   description   = "Example DNS zone"
   force_destroy = "true"
@@ -356,7 +356,7 @@ func testAccDNSManagedZoneIamBinding_basicGenerated(context map[string]interface
 	return acctest.Nprintf(`
 # to setup a web-server
 resource "google_compute_instance" "default" {
-  name         = "tf-test-dns-compute-instance%{random_suffix}"
+  name         = "%{dns_compute_instance}"
   machine_type = "g1-small"
   zone         = "us-central1-b"
 
@@ -381,7 +381,7 @@ resource "google_compute_instance" "default" {
 
 # to allow http traffic
 resource "google_compute_firewall" "default" {
-  name     = "tf-test-allow-http-traffic%{random_suffix}"
+  name     = "%{allow_http_traffic}"
   network  = "default"
   allow {
     ports    = ["80"]
@@ -392,7 +392,7 @@ resource "google_compute_firewall" "default" {
 
 # to create a DNS zone
 resource "google_dns_managed_zone" "default" {
-  name          = "tf-test-example-zone-googlecloudexample%{random_suffix}"
+  name          = "%{example_zone_googlecloudexample}"
   dns_name      = "%{dns_name}"
   description   = "Example DNS zone"
   force_destroy = "true"
@@ -422,7 +422,7 @@ func testAccDNSManagedZoneIamBinding_updateGenerated(context map[string]interfac
 	return acctest.Nprintf(`
 # to setup a web-server
 resource "google_compute_instance" "default" {
-  name         = "tf-test-dns-compute-instance%{random_suffix}"
+  name         = "%{dns_compute_instance}"
   machine_type = "g1-small"
   zone         = "us-central1-b"
 
@@ -447,7 +447,7 @@ resource "google_compute_instance" "default" {
 
 # to allow http traffic
 resource "google_compute_firewall" "default" {
-  name     = "tf-test-allow-http-traffic%{random_suffix}"
+  name     = "%{allow_http_traffic}"
   network  = "default"
   allow {
     ports    = ["80"]
@@ -458,7 +458,7 @@ resource "google_compute_firewall" "default" {
 
 # to create a DNS zone
 resource "google_dns_managed_zone" "default" {
-  name          = "tf-test-example-zone-googlecloudexample%{random_suffix}"
+  name          = "%{example_zone_googlecloudexample}"
   dns_name      = "%{dns_name}"
   description   = "Example DNS zone"
   force_destroy = "true"

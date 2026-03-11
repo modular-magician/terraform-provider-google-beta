@@ -138,7 +138,7 @@ func TestAccClouddeployDeliveryPipelineIamPolicyGenerated(t *testing.T) {
 func testAccClouddeployDeliveryPipelineIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_clouddeploy_delivery_pipeline" "default" {
-  name = "tf-test-cd-delivery-pipeline%{random_suffix}"
+  name = "%{delivery_pipeline}"
   location = "us-central1"
   serial_pipeline  {
     stages {
@@ -161,7 +161,7 @@ resource "google_clouddeploy_delivery_pipeline_iam_member" "foo" {
 func testAccClouddeployDeliveryPipelineIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_clouddeploy_delivery_pipeline" "default" {
-  name = "tf-test-cd-delivery-pipeline%{random_suffix}"
+  name = "%{delivery_pipeline}"
   location = "us-central1"
   serial_pipeline  {
     stages {
@@ -199,7 +199,7 @@ data "google_clouddeploy_delivery_pipeline_iam_policy" "foo" {
 func testAccClouddeployDeliveryPipelineIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_clouddeploy_delivery_pipeline" "default" {
-  name = "tf-test-cd-delivery-pipeline%{random_suffix}"
+  name = "%{delivery_pipeline}"
   location = "us-central1"
   serial_pipeline  {
     stages {
@@ -224,7 +224,7 @@ resource "google_clouddeploy_delivery_pipeline_iam_policy" "foo" {
 func testAccClouddeployDeliveryPipelineIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_clouddeploy_delivery_pipeline" "default" {
-  name = "tf-test-cd-delivery-pipeline%{random_suffix}"
+  name = "%{delivery_pipeline}"
   location = "us-central1"
   serial_pipeline  {
     stages {
@@ -247,7 +247,7 @@ resource "google_clouddeploy_delivery_pipeline_iam_binding" "foo" {
 func testAccClouddeployDeliveryPipelineIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_clouddeploy_delivery_pipeline" "default" {
-  name = "tf-test-cd-delivery-pipeline%{random_suffix}"
+  name = "%{delivery_pipeline}"
   location = "us-central1"
   serial_pipeline  {
     stages {

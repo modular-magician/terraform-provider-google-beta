@@ -53,8 +53,11 @@ var (
 func TestAccDialogflowConversationProfile_dialogflowConversationProfileBasicExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"profile_name":  "tf-test-dialogflow-profile" + randomSuffix,
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -83,7 +86,7 @@ resource "google_dialogflow_agent" "basic_agent" {
   time_zone = "America/New_York"
 }
 resource "google_dialogflow_conversation_profile" "basic_profile" {
-  display_name = "tf-test-dialogflow-profile%{random_suffix}"
+  display_name = "%{profile_name}"
   location = "global"
   automated_agent_config {
     agent = "projects/${google_dialogflow_agent.basic_agent.id}/locations/global/agent/environments/draft"
@@ -101,8 +104,12 @@ resource "google_dialogflow_conversation_profile" "basic_profile" {
 func TestAccDialogflowConversationProfile_dialogflowConversationProfileRecognitionResultNotificationExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"profile_name":  "tf-test-dialogflow-profile" + randomSuffix,
+		"topic_name":    "tf-test-recognition-result-notification" + randomSuffix,
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -126,7 +133,7 @@ func TestAccDialogflowConversationProfile_dialogflowConversationProfileRecogniti
 func testAccDialogflowConversationProfile_dialogflowConversationProfileRecognitionResultNotificationExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dialogflow_conversation_profile" "recognition_result_notification_profile" {
-  display_name = "tf-test-dialogflow-profile%{random_suffix}"
+  display_name = "%{profile_name}"
   location = "global"
   new_recognition_result_notification_config {
     topic = google_pubsub_topic.recognition_result_notification_profile.id
@@ -135,7 +142,7 @@ resource "google_dialogflow_conversation_profile" "recognition_result_notificati
 }
 
 resource "google_pubsub_topic" "recognition_result_notification_profile" {
-  name = "tf-test-recognition-result-notification%{random_suffix}"
+  name = "%{topic_name}"
 }
 `, context)
 }

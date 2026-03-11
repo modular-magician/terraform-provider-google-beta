@@ -153,7 +153,7 @@ func TestAccGKEBackupBackupPlanIamPolicyGenerated(t *testing.T) {
 func testAccGKEBackupBackupPlanIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_container_cluster" "primary" {
-  name               = "tf-test-basic-cluster%{random_suffix}"
+  name               = "%{cluster_name}"
   location           = "us-central1"
   initial_node_count = 1
   workload_identity_config {
@@ -170,7 +170,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_gke_backup_backup_plan" "basic" {
-  name = "tf-test-basic-plan%{random_suffix}"
+  name = "%{name}"
   cluster = google_container_cluster.primary.id
   location = "us-central1"
   backup_config {
@@ -193,7 +193,7 @@ resource "google_gke_backup_backup_plan_iam_member" "foo" {
 func testAccGKEBackupBackupPlanIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_container_cluster" "primary" {
-  name               = "tf-test-basic-cluster%{random_suffix}"
+  name               = "%{cluster_name}"
   location           = "us-central1"
   initial_node_count = 1
   workload_identity_config {
@@ -210,7 +210,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_gke_backup_backup_plan" "basic" {
-  name = "tf-test-basic-plan%{random_suffix}"
+  name = "%{name}"
   cluster = google_container_cluster.primary.id
   location = "us-central1"
   backup_config {
@@ -248,7 +248,7 @@ data "google_gke_backup_backup_plan_iam_policy" "foo" {
 func testAccGKEBackupBackupPlanIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_container_cluster" "primary" {
-  name               = "tf-test-basic-cluster%{random_suffix}"
+  name               = "%{cluster_name}"
   location           = "us-central1"
   initial_node_count = 1
   workload_identity_config {
@@ -265,7 +265,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_gke_backup_backup_plan" "basic" {
-  name = "tf-test-basic-plan%{random_suffix}"
+  name = "%{name}"
   cluster = google_container_cluster.primary.id
   location = "us-central1"
   backup_config {
@@ -290,7 +290,7 @@ resource "google_gke_backup_backup_plan_iam_policy" "foo" {
 func testAccGKEBackupBackupPlanIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_container_cluster" "primary" {
-  name               = "tf-test-basic-cluster%{random_suffix}"
+  name               = "%{cluster_name}"
   location           = "us-central1"
   initial_node_count = 1
   workload_identity_config {
@@ -307,7 +307,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_gke_backup_backup_plan" "basic" {
-  name = "tf-test-basic-plan%{random_suffix}"
+  name = "%{name}"
   cluster = google_container_cluster.primary.id
   location = "us-central1"
   backup_config {
@@ -330,7 +330,7 @@ resource "google_gke_backup_backup_plan_iam_binding" "foo" {
 func testAccGKEBackupBackupPlanIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_container_cluster" "primary" {
-  name               = "tf-test-basic-cluster%{random_suffix}"
+  name               = "%{cluster_name}"
   location           = "us-central1"
   initial_node_count = 1
   workload_identity_config {
@@ -347,7 +347,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_gke_backup_backup_plan" "basic" {
-  name = "tf-test-basic-plan%{random_suffix}"
+  name = "%{name}"
   cluster = google_container_cluster.primary.id
   location = "us-central1"
   backup_config {

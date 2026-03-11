@@ -53,10 +53,15 @@ var (
 func TestAccDataformConfig_dataformConfigWithKmsKeyExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
 		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"random_suffix":   acctest.RandString(t, 10),
+		"crypto_key_name": "tf-test-example-crypto-key-name" + randomSuffix,
+		"key_ring_name":   "tf-test-example-key-ring" + randomSuffix,
+		"project_name":    "tf-test-project-1" + randomSuffix,
+		"random_suffix":   randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -83,8 +88,8 @@ func testAccDataformConfig_dataformConfigWithKmsKeyExample(context map[string]in
 	return acctest.Nprintf(`
 resource "google_project" "project" {
   provider        = google-beta
-  name            = "tf-test-project-1%{random_suffix}"
-  project_id      = "tf-test-project-1%{random_suffix}"
+  name            = "%{project_name}"
+  project_id      = "%{project_name}"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
   deletion_policy = "DELETE"
@@ -124,7 +129,7 @@ resource "google_project_service_identity" "dataform_sa" {
 resource "google_kms_key_ring" "keyring" {
   provider   = google-beta
   project    = google_project.project.project_id
-  name       = "tf-test-example-key-ring%{random_suffix}"
+  name       = "%{key_ring_name}"
   location   = "us-central1"
   depends_on = [
     google_project_service.cloudkms_api
@@ -133,7 +138,7 @@ resource "google_kms_key_ring" "keyring" {
 
 resource "google_kms_crypto_key" "example_key" {
   provider = google-beta
-  name     = "tf-test-example-crypto-key-name%{random_suffix}"
+  name     = "%{crypto_key_name}"
   key_ring = google_kms_key_ring.keyring.id
 }
 
@@ -164,10 +169,13 @@ resource "google_dataform_config" "config" {
 func TestAccDataformConfig_dataformConfigWithoutKmsKeyExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
 		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"random_suffix":   acctest.RandString(t, 10),
+		"project_name":    "tf-test-project-1" + randomSuffix,
+		"random_suffix":   randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -194,8 +202,8 @@ func testAccDataformConfig_dataformConfigWithoutKmsKeyExample(context map[string
 	return acctest.Nprintf(`
 resource "google_project" "project" {
   provider        = google-beta
-  name            = "tf-test-project-1%{random_suffix}"
-  project_id      = "tf-test-project-1%{random_suffix}"
+  name            = "%{project_name}"
+  project_id      = "%{project_name}"
   org_id          = "%{org_id}"
   billing_account = "%{billing_account}"
   deletion_policy = "DELETE"

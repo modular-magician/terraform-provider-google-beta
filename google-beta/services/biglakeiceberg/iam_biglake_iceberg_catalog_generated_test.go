@@ -138,7 +138,7 @@ func TestAccBiglakeIcebergIcebergCatalogIamPolicyGenerated(t *testing.T) {
 func testAccBiglakeIcebergIcebergCatalogIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket_for_my_iceberg_catalog" {
-  name          = "tf_test_my_iceberg_catalog%{random_suffix}"
+  name          = "%{name}"
   location      = "us-central1"
   force_destroy = true
   uniform_bucket_level_access = true
@@ -174,7 +174,7 @@ resource "google_biglake_iceberg_catalog_iam_member" "foo" {
 func testAccBiglakeIcebergIcebergCatalogIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket_for_my_iceberg_catalog" {
-  name          = "tf_test_my_iceberg_catalog%{random_suffix}"
+  name          = "%{name}"
   location      = "us-central1"
   force_destroy = true
   uniform_bucket_level_access = true
@@ -224,7 +224,7 @@ data "google_biglake_iceberg_catalog_iam_policy" "foo" {
 func testAccBiglakeIcebergIcebergCatalogIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket_for_my_iceberg_catalog" {
-  name          = "tf_test_my_iceberg_catalog%{random_suffix}"
+  name          = "%{name}"
   location      = "us-central1"
   force_destroy = true
   uniform_bucket_level_access = true
@@ -262,7 +262,7 @@ resource "google_biglake_iceberg_catalog_iam_policy" "foo" {
 func testAccBiglakeIcebergIcebergCatalogIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket_for_my_iceberg_catalog" {
-  name          = "tf_test_my_iceberg_catalog%{random_suffix}"
+  name          = "%{name}"
   location      = "us-central1"
   force_destroy = true
   uniform_bucket_level_access = true
@@ -298,7 +298,7 @@ resource "google_biglake_iceberg_catalog_iam_binding" "foo" {
 func testAccBiglakeIcebergIcebergCatalogIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket_for_my_iceberg_catalog" {
-  name          = "tf_test_my_iceberg_catalog%{random_suffix}"
+  name          = "%{name}"
   location      = "us-central1"
   force_destroy = true
   uniform_bucket_level_access = true

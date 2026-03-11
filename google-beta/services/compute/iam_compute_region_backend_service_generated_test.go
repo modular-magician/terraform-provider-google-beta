@@ -341,7 +341,7 @@ func TestAccComputeRegionBackendServiceIamPolicyGenerated_withCondition(t *testi
 func testAccComputeRegionBackendServiceIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  name                            = "tf-test-region-service%{random_suffix}"
+  name                            = "%{region_backend_service_name}"
   region                          = "us-central1"
   health_checks                   = [google_compute_health_check.default.id]
   connection_draining_timeout_sec = 10
@@ -349,7 +349,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "tf-test-rbs-health-check%{random_suffix}"
+  name               = "%{health_check_name}"
   check_interval_sec = 1
   timeout_sec        = 1
 
@@ -371,7 +371,7 @@ resource "google_compute_region_backend_service_iam_member" "foo" {
 func testAccComputeRegionBackendServiceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  name                            = "tf-test-region-service%{random_suffix}"
+  name                            = "%{region_backend_service_name}"
   region                          = "us-central1"
   health_checks                   = [google_compute_health_check.default.id]
   connection_draining_timeout_sec = 10
@@ -379,7 +379,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "tf-test-rbs-health-check%{random_suffix}"
+  name               = "%{health_check_name}"
   check_interval_sec = 1
   timeout_sec        = 1
 
@@ -416,7 +416,7 @@ data "google_compute_region_backend_service_iam_policy" "foo" {
 func testAccComputeRegionBackendServiceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  name                            = "tf-test-region-service%{random_suffix}"
+  name                            = "%{region_backend_service_name}"
   region                          = "us-central1"
   health_checks                   = [google_compute_health_check.default.id]
   connection_draining_timeout_sec = 10
@@ -424,7 +424,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "tf-test-rbs-health-check%{random_suffix}"
+  name               = "%{health_check_name}"
   check_interval_sec = 1
   timeout_sec        = 1
 
@@ -448,7 +448,7 @@ resource "google_compute_region_backend_service_iam_policy" "foo" {
 func testAccComputeRegionBackendServiceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  name                            = "tf-test-region-service%{random_suffix}"
+  name                            = "%{region_backend_service_name}"
   region                          = "us-central1"
   health_checks                   = [google_compute_health_check.default.id]
   connection_draining_timeout_sec = 10
@@ -456,7 +456,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "tf-test-rbs-health-check%{random_suffix}"
+  name               = "%{health_check_name}"
   check_interval_sec = 1
   timeout_sec        = 1
 
@@ -478,7 +478,7 @@ resource "google_compute_region_backend_service_iam_binding" "foo" {
 func testAccComputeRegionBackendServiceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  name                            = "tf-test-region-service%{random_suffix}"
+  name                            = "%{region_backend_service_name}"
   region                          = "us-central1"
   health_checks                   = [google_compute_health_check.default.id]
   connection_draining_timeout_sec = 10
@@ -486,7 +486,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "tf-test-rbs-health-check%{random_suffix}"
+  name               = "%{health_check_name}"
   check_interval_sec = 1
   timeout_sec        = 1
 
@@ -508,7 +508,7 @@ resource "google_compute_region_backend_service_iam_binding" "foo" {
 func testAccComputeRegionBackendServiceIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  name                            = "tf-test-region-service%{random_suffix}"
+  name                            = "%{region_backend_service_name}"
   region                          = "us-central1"
   health_checks                   = [google_compute_health_check.default.id]
   connection_draining_timeout_sec = 10
@@ -516,7 +516,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "tf-test-rbs-health-check%{random_suffix}"
+  name               = "%{health_check_name}"
   check_interval_sec = 1
   timeout_sec        = 1
 
@@ -543,7 +543,7 @@ resource "google_compute_region_backend_service_iam_binding" "foo" {
 func testAccComputeRegionBackendServiceIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  name                            = "tf-test-region-service%{random_suffix}"
+  name                            = "%{region_backend_service_name}"
   region                          = "us-central1"
   health_checks                   = [google_compute_health_check.default.id]
   connection_draining_timeout_sec = 10
@@ -551,7 +551,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "tf-test-rbs-health-check%{random_suffix}"
+  name               = "%{health_check_name}"
   check_interval_sec = 1
   timeout_sec        = 1
 
@@ -600,7 +600,7 @@ resource "google_compute_region_backend_service_iam_binding" "foo3" {
 func testAccComputeRegionBackendServiceIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  name                            = "tf-test-region-service%{random_suffix}"
+  name                            = "%{region_backend_service_name}"
   region                          = "us-central1"
   health_checks                   = [google_compute_health_check.default.id]
   connection_draining_timeout_sec = 10
@@ -608,7 +608,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "tf-test-rbs-health-check%{random_suffix}"
+  name               = "%{health_check_name}"
   check_interval_sec = 1
   timeout_sec        = 1
 
@@ -635,7 +635,7 @@ resource "google_compute_region_backend_service_iam_member" "foo" {
 func testAccComputeRegionBackendServiceIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  name                            = "tf-test-region-service%{random_suffix}"
+  name                            = "%{region_backend_service_name}"
   region                          = "us-central1"
   health_checks                   = [google_compute_health_check.default.id]
   connection_draining_timeout_sec = 10
@@ -643,7 +643,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "tf-test-rbs-health-check%{random_suffix}"
+  name               = "%{health_check_name}"
   check_interval_sec = 1
   timeout_sec        = 1
 
@@ -692,7 +692,7 @@ resource "google_compute_region_backend_service_iam_member" "foo3" {
 func testAccComputeRegionBackendServiceIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_service" "default" {
-  name                            = "tf-test-region-service%{random_suffix}"
+  name                            = "%{region_backend_service_name}"
   region                          = "us-central1"
   health_checks                   = [google_compute_health_check.default.id]
   connection_draining_timeout_sec = 10
@@ -700,7 +700,7 @@ resource "google_compute_region_backend_service" "default" {
 }
 
 resource "google_compute_health_check" "default" {
-  name               = "tf-test-rbs-health-check%{random_suffix}"
+  name               = "%{health_check_name}"
   check_interval_sec = 1
   timeout_sec        = 1
 

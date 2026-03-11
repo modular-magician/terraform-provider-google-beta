@@ -148,7 +148,7 @@ func testAccSecureSourceManagerInstanceIamMember_basicGenerated(context map[stri
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "default" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
     labels = {
       "foo" = "bar"
     }
@@ -171,7 +171,7 @@ func testAccSecureSourceManagerInstanceIamPolicy_basicGenerated(context map[stri
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "default" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
     labels = {
       "foo" = "bar"
     }
@@ -213,7 +213,7 @@ func testAccSecureSourceManagerInstanceIamPolicy_emptyBinding(context map[string
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "default" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
     labels = {
       "foo" = "bar"
     }
@@ -238,7 +238,7 @@ func testAccSecureSourceManagerInstanceIamBinding_basicGenerated(context map[str
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "default" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
     labels = {
       "foo" = "bar"
     }
@@ -261,7 +261,7 @@ func testAccSecureSourceManagerInstanceIamBinding_updateGenerated(context map[st
 	return acctest.Nprintf(`
 resource "google_secure_source_manager_instance" "default" {
     location = "us-central1"
-    instance_id = "tf-test-my-instance%{random_suffix}"
+    instance_id = "%{instance_id}"
     labels = {
       "foo" = "bar"
     }

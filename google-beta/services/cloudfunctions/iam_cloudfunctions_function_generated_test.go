@@ -141,7 +141,7 @@ func TestAccCloudFunctionsCloudFunctionIamPolicyGenerated(t *testing.T) {
 func testAccCloudFunctionsCloudFunctionIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name     = "tf-test-cloudfunctions-function-example-bucket%{random_suffix}"
+  name     = "%{bucket_name}"
   location = "US"
 }
 
@@ -152,7 +152,7 @@ resource "google_storage_bucket_object" "archive" {
 }
 
 resource "google_cloudfunctions_function" "function" {
-  name        = "tf-test-my-function%{random_suffix}"
+  name        = "%{function_name}"
   description = "My function"
   runtime     = "nodejs20"
 
@@ -177,7 +177,7 @@ resource "google_cloudfunctions_function_iam_member" "foo" {
 func testAccCloudFunctionsCloudFunctionIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name     = "tf-test-cloudfunctions-function-example-bucket%{random_suffix}"
+  name     = "%{bucket_name}"
   location = "US"
 }
 
@@ -188,7 +188,7 @@ resource "google_storage_bucket_object" "archive" {
 }
 
 resource "google_cloudfunctions_function" "function" {
-  name        = "tf-test-my-function%{random_suffix}"
+  name        = "%{function_name}"
   description = "My function"
   runtime     = "nodejs20"
 
@@ -228,7 +228,7 @@ data "google_cloudfunctions_function_iam_policy" "foo" {
 func testAccCloudFunctionsCloudFunctionIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name     = "tf-test-cloudfunctions-function-example-bucket%{random_suffix}"
+  name     = "%{bucket_name}"
   location = "US"
 }
 
@@ -239,7 +239,7 @@ resource "google_storage_bucket_object" "archive" {
 }
 
 resource "google_cloudfunctions_function" "function" {
-  name        = "tf-test-my-function%{random_suffix}"
+  name        = "%{function_name}"
   description = "My function"
   runtime     = "nodejs20"
 
@@ -266,7 +266,7 @@ resource "google_cloudfunctions_function_iam_policy" "foo" {
 func testAccCloudFunctionsCloudFunctionIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name     = "tf-test-cloudfunctions-function-example-bucket%{random_suffix}"
+  name     = "%{bucket_name}"
   location = "US"
 }
 
@@ -277,7 +277,7 @@ resource "google_storage_bucket_object" "archive" {
 }
 
 resource "google_cloudfunctions_function" "function" {
-  name        = "tf-test-my-function%{random_suffix}"
+  name        = "%{function_name}"
   description = "My function"
   runtime     = "nodejs20"
 
@@ -302,7 +302,7 @@ resource "google_cloudfunctions_function_iam_binding" "foo" {
 func testAccCloudFunctionsCloudFunctionIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name     = "tf-test-cloudfunctions-function-example-bucket%{random_suffix}"
+  name     = "%{bucket_name}"
   location = "US"
 }
 
@@ -313,7 +313,7 @@ resource "google_storage_bucket_object" "archive" {
 }
 
 resource "google_cloudfunctions_function" "function" {
-  name        = "tf-test-my-function%{random_suffix}"
+  name        = "%{function_name}"
   description = "My function"
   runtime     = "nodejs20"
 

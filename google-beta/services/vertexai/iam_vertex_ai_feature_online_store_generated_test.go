@@ -138,7 +138,7 @@ func TestAccVertexAIFeatureOnlineStoreIamPolicyGenerated(t *testing.T) {
 func testAccVertexAIFeatureOnlineStoreIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_vertex_ai_feature_online_store" "feature_online_store" {
-  name = "tf_test_example_feature_online_store%{random_suffix}"
+  name = "%{name}"
   labels = {
     foo = "bar"
   }
@@ -164,7 +164,7 @@ resource "google_vertex_ai_feature_online_store_iam_member" "foo" {
 func testAccVertexAIFeatureOnlineStoreIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_vertex_ai_feature_online_store" "feature_online_store" {
-  name = "tf_test_example_feature_online_store%{random_suffix}"
+  name = "%{name}"
   labels = {
     foo = "bar"
   }
@@ -204,7 +204,7 @@ data "google_vertex_ai_feature_online_store_iam_policy" "foo" {
 func testAccVertexAIFeatureOnlineStoreIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_vertex_ai_feature_online_store" "feature_online_store" {
-  name = "tf_test_example_feature_online_store%{random_suffix}"
+  name = "%{name}"
   labels = {
     foo = "bar"
   }
@@ -232,7 +232,7 @@ resource "google_vertex_ai_feature_online_store_iam_policy" "foo" {
 func testAccVertexAIFeatureOnlineStoreIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_vertex_ai_feature_online_store" "feature_online_store" {
-  name = "tf_test_example_feature_online_store%{random_suffix}"
+  name = "%{name}"
   labels = {
     foo = "bar"
   }
@@ -258,7 +258,7 @@ resource "google_vertex_ai_feature_online_store_iam_binding" "foo" {
 func testAccVertexAIFeatureOnlineStoreIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_vertex_ai_feature_online_store" "feature_online_store" {
-  name = "tf_test_example_feature_online_store%{random_suffix}"
+  name = "%{name}"
   labels = {
     foo = "bar"
   }

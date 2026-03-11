@@ -138,7 +138,7 @@ func TestAccComputeDiskIamPolicyGenerated(t *testing.T) {
 func testAccComputeDiskIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "default" {
-  name  = "tf-test-test-disk%{random_suffix}"
+  name  = "%{disk_name}"
   type  = "pd-ssd"
   zone  = "us-central1-a"
   image = "debian-11-bullseye-v20220719"
@@ -161,7 +161,7 @@ resource "google_compute_disk_iam_member" "foo" {
 func testAccComputeDiskIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "default" {
-  name  = "tf-test-test-disk%{random_suffix}"
+  name  = "%{disk_name}"
   type  = "pd-ssd"
   zone  = "us-central1-a"
   image = "debian-11-bullseye-v20220719"
@@ -199,7 +199,7 @@ data "google_compute_disk_iam_policy" "foo" {
 func testAccComputeDiskIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "default" {
-  name  = "tf-test-test-disk%{random_suffix}"
+  name  = "%{disk_name}"
   type  = "pd-ssd"
   zone  = "us-central1-a"
   image = "debian-11-bullseye-v20220719"
@@ -224,7 +224,7 @@ resource "google_compute_disk_iam_policy" "foo" {
 func testAccComputeDiskIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "default" {
-  name  = "tf-test-test-disk%{random_suffix}"
+  name  = "%{disk_name}"
   type  = "pd-ssd"
   zone  = "us-central1-a"
   image = "debian-11-bullseye-v20220719"
@@ -247,7 +247,7 @@ resource "google_compute_disk_iam_binding" "foo" {
 func testAccComputeDiskIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_disk" "default" {
-  name  = "tf-test-test-disk%{random_suffix}"
+  name  = "%{disk_name}"
   type  = "pd-ssd"
   zone  = "us-central1-a"
   image = "debian-11-bullseye-v20220719"

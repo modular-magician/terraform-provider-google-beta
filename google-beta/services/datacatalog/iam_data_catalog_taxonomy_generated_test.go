@@ -108,7 +108,7 @@ func TestAccDataCatalogTaxonomyIamPolicyGenerated(t *testing.T) {
 func testAccDataCatalogTaxonomyIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_data_catalog_taxonomy" "basic_taxonomy" {
-  display_name =  "tf_test_my_taxonomy%{random_suffix}"
+  display_name =  "%{display_name}"
   description = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -124,7 +124,7 @@ resource "google_data_catalog_taxonomy_iam_member" "foo" {
 func testAccDataCatalogTaxonomyIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_data_catalog_taxonomy" "basic_taxonomy" {
-  display_name =  "tf_test_my_taxonomy%{random_suffix}"
+  display_name =  "%{display_name}"
   description = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -153,7 +153,7 @@ data "google_data_catalog_taxonomy_iam_policy" "foo" {
 func testAccDataCatalogTaxonomyIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_data_catalog_taxonomy" "basic_taxonomy" {
-  display_name =  "tf_test_my_taxonomy%{random_suffix}"
+  display_name =  "%{display_name}"
   description = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -171,7 +171,7 @@ resource "google_data_catalog_taxonomy_iam_policy" "foo" {
 func testAccDataCatalogTaxonomyIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_data_catalog_taxonomy" "basic_taxonomy" {
-  display_name =  "tf_test_my_taxonomy%{random_suffix}"
+  display_name =  "%{display_name}"
   description = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
@@ -187,7 +187,7 @@ resource "google_data_catalog_taxonomy_iam_binding" "foo" {
 func testAccDataCatalogTaxonomyIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_data_catalog_taxonomy" "basic_taxonomy" {
-  display_name =  "tf_test_my_taxonomy%{random_suffix}"
+  display_name =  "%{display_name}"
   description = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }

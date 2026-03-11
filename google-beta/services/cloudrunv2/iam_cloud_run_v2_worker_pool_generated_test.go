@@ -138,7 +138,7 @@ func TestAccCloudRunV2WorkerPoolIamPolicyGenerated(t *testing.T) {
 func testAccCloudRunV2WorkerPoolIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_worker_pool" "default" {
-  name     = "tf-test-cloudrun-worker-pool%{random_suffix}"
+  name     = "%{cloud_run_worker_pool_name}"
   location = "us-central1"
   deletion_protection = false
   launch_stage = "BETA"
@@ -163,7 +163,7 @@ resource "google_cloud_run_v2_worker_pool_iam_member" "foo" {
 func testAccCloudRunV2WorkerPoolIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_worker_pool" "default" {
-  name     = "tf-test-cloudrun-worker-pool%{random_suffix}"
+  name     = "%{cloud_run_worker_pool_name}"
   location = "us-central1"
   deletion_protection = false
   launch_stage = "BETA"
@@ -203,7 +203,7 @@ data "google_cloud_run_v2_worker_pool_iam_policy" "foo" {
 func testAccCloudRunV2WorkerPoolIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_worker_pool" "default" {
-  name     = "tf-test-cloudrun-worker-pool%{random_suffix}"
+  name     = "%{cloud_run_worker_pool_name}"
   location = "us-central1"
   deletion_protection = false
   launch_stage = "BETA"
@@ -230,7 +230,7 @@ resource "google_cloud_run_v2_worker_pool_iam_policy" "foo" {
 func testAccCloudRunV2WorkerPoolIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_worker_pool" "default" {
-  name     = "tf-test-cloudrun-worker-pool%{random_suffix}"
+  name     = "%{cloud_run_worker_pool_name}"
   location = "us-central1"
   deletion_protection = false
   launch_stage = "BETA"
@@ -255,7 +255,7 @@ resource "google_cloud_run_v2_worker_pool_iam_binding" "foo" {
 func testAccCloudRunV2WorkerPoolIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_cloud_run_v2_worker_pool" "default" {
-  name     = "tf-test-cloudrun-worker-pool%{random_suffix}"
+  name     = "%{cloud_run_worker_pool_name}"
   location = "us-central1"
   deletion_protection = false
   launch_stage = "BETA"

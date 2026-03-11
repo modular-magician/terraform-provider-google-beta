@@ -154,7 +154,7 @@ locals {
 }
 
 resource "google_storage_bucket" "bucket" {
-  name     = "${local.project}-tf-test-gcf-source%{random_suffix}"  # Every bucket name must be globally unique
+  name     = "${local.project}-%{bucket_name}"  # Every bucket name must be globally unique
   location = "US"
   uniform_bucket_level_access = true
 }
@@ -166,7 +166,7 @@ resource "google_storage_bucket_object" "object" {
 }
  
 resource "google_cloudfunctions2_function" "function" {
-  name = "tf-test-function-v2%{random_suffix}"
+  name = "%{function}"
   location = "us-central1"
   description = "a new function"
  
@@ -205,7 +205,7 @@ locals {
 }
 
 resource "google_storage_bucket" "bucket" {
-  name     = "${local.project}-tf-test-gcf-source%{random_suffix}"  # Every bucket name must be globally unique
+  name     = "${local.project}-%{bucket_name}"  # Every bucket name must be globally unique
   location = "US"
   uniform_bucket_level_access = true
 }
@@ -217,7 +217,7 @@ resource "google_storage_bucket_object" "object" {
 }
  
 resource "google_cloudfunctions2_function" "function" {
-  name = "tf-test-function-v2%{random_suffix}"
+  name = "%{function}"
   location = "us-central1"
   description = "a new function"
  
@@ -271,7 +271,7 @@ locals {
 }
 
 resource "google_storage_bucket" "bucket" {
-  name     = "${local.project}-tf-test-gcf-source%{random_suffix}"  # Every bucket name must be globally unique
+  name     = "${local.project}-%{bucket_name}"  # Every bucket name must be globally unique
   location = "US"
   uniform_bucket_level_access = true
 }
@@ -283,7 +283,7 @@ resource "google_storage_bucket_object" "object" {
 }
  
 resource "google_cloudfunctions2_function" "function" {
-  name = "tf-test-function-v2%{random_suffix}"
+  name = "%{function}"
   location = "us-central1"
   description = "a new function"
  
@@ -324,7 +324,7 @@ locals {
 }
 
 resource "google_storage_bucket" "bucket" {
-  name     = "${local.project}-tf-test-gcf-source%{random_suffix}"  # Every bucket name must be globally unique
+  name     = "${local.project}-%{bucket_name}"  # Every bucket name must be globally unique
   location = "US"
   uniform_bucket_level_access = true
 }
@@ -336,7 +336,7 @@ resource "google_storage_bucket_object" "object" {
 }
  
 resource "google_cloudfunctions2_function" "function" {
-  name = "tf-test-function-v2%{random_suffix}"
+  name = "%{function}"
   location = "us-central1"
   description = "a new function"
  
@@ -375,7 +375,7 @@ locals {
 }
 
 resource "google_storage_bucket" "bucket" {
-  name     = "${local.project}-tf-test-gcf-source%{random_suffix}"  # Every bucket name must be globally unique
+  name     = "${local.project}-%{bucket_name}"  # Every bucket name must be globally unique
   location = "US"
   uniform_bucket_level_access = true
 }
@@ -387,7 +387,7 @@ resource "google_storage_bucket_object" "object" {
 }
  
 resource "google_cloudfunctions2_function" "function" {
-  name = "tf-test-function-v2%{random_suffix}"
+  name = "%{function}"
   location = "us-central1"
   description = "a new function"
  

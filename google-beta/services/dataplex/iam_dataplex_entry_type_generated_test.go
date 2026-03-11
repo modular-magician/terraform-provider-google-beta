@@ -111,7 +111,7 @@ func TestAccDataplexEntryTypeIamPolicyGenerated(t *testing.T) {
 func testAccDataplexEntryTypeIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_entry_type" "test_entry_type_basic" {
-  entry_type_id = "tf-test-entry-type-basic%{random_suffix}"
+  entry_type_id = "%{entry_type_name}"
   project = "%{project_name}"
   location = "us-central1"
 }
@@ -129,7 +129,7 @@ resource "google_dataplex_entry_type_iam_member" "foo" {
 func testAccDataplexEntryTypeIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_entry_type" "test_entry_type_basic" {
-  entry_type_id = "tf-test-entry-type-basic%{random_suffix}"
+  entry_type_id = "%{entry_type_name}"
   project = "%{project_name}"
   location = "us-central1"
 }
@@ -162,7 +162,7 @@ data "google_dataplex_entry_type_iam_policy" "foo" {
 func testAccDataplexEntryTypeIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_entry_type" "test_entry_type_basic" {
-  entry_type_id = "tf-test-entry-type-basic%{random_suffix}"
+  entry_type_id = "%{entry_type_name}"
   project = "%{project_name}"
   location = "us-central1"
 }
@@ -182,7 +182,7 @@ resource "google_dataplex_entry_type_iam_policy" "foo" {
 func testAccDataplexEntryTypeIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_entry_type" "test_entry_type_basic" {
-  entry_type_id = "tf-test-entry-type-basic%{random_suffix}"
+  entry_type_id = "%{entry_type_name}"
   project = "%{project_name}"
   location = "us-central1"
 }
@@ -200,7 +200,7 @@ resource "google_dataplex_entry_type_iam_binding" "foo" {
 func testAccDataplexEntryTypeIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_entry_type" "test_entry_type_basic" {
-  entry_type_id = "tf-test-entry-type-basic%{random_suffix}"
+  entry_type_id = "%{entry_type_name}"
   project = "%{project_name}"
   location = "us-central1"
 }

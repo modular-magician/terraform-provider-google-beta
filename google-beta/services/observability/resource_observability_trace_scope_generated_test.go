@@ -53,9 +53,12 @@ var (
 func TestAccObservabilityTraceScope_observabilityTraceScopeBasicExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"random_suffix": acctest.RandString(t, 10),
+		"org_id":         envvar.GetTestOrgFromEnv(t),
+		"trace_scope_id": "tf-test-test-scope" + randomSuffix,
+		"random_suffix":  randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -81,7 +84,7 @@ func testAccObservabilityTraceScope_observabilityTraceScopeBasicExample(context 
 resource "google_observability_trace_scope" "observability_trace_scope" {
     depends_on       = [google_project.project-2]
     provider         = google-beta
-    trace_scope_id   = "tf-test-test-scope%{random_suffix}"
+    trace_scope_id   = "%{trace_scope_id}"
     location         = "global"
     resource_names   = [
         "projects/${data.google_project.project.project_id}",

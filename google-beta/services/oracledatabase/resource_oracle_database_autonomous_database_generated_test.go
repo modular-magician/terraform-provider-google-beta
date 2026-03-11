@@ -53,11 +53,14 @@ var (
 func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseBasicExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"database_name":       fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
-		"deletion_protection": false,
-		"project":             "oci-terraform-testing-prod",
-		"random_suffix":       acctest.RandString(t, 10),
+		"autonomous_database_id": "tf-test-my-instance" + randomSuffix,
+		"database_name":          fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
+		"deletion_protection":    false,
+		"project":                "oci-terraform-testing-prod",
+		"random_suffix":          randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -81,7 +84,7 @@ func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseBas
 func testAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_oracle_database_autonomous_database" "myADB"{
-  autonomous_database_id = "tf-test-my-instance%{random_suffix}"
+  autonomous_database_id = "%{autonomous_database_id}"
   location = "us-east4"
   project = "%{project}"
   database = "%{database_name}"
@@ -108,12 +111,15 @@ data "google_compute_network" "default" {
 func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseFullExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"database_name":       fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
-		"deletion_protection": false,
-		"endpoint_name":       fmt.Sprintf("tftestendpoint%s", acctest.RandString(t, 10)),
-		"project":             "oci-terraform-testing-prod",
-		"random_suffix":       acctest.RandString(t, 10),
+		"autonomous_database_id": "tf-test-my-instance" + randomSuffix,
+		"database_name":          fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
+		"deletion_protection":    false,
+		"endpoint_name":          fmt.Sprintf("tftestendpoint%s", acctest.RandString(t, 10)),
+		"project":                "oci-terraform-testing-prod",
+		"random_suffix":          randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -137,7 +143,7 @@ func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseFul
 func testAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseFullExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_oracle_database_autonomous_database" "myADB"{
-  autonomous_database_id = "tf-test-my-instance%{random_suffix}"
+  autonomous_database_id = "%{autonomous_database_id}"
   location = "us-east4"
   project = "%{project}"
   display_name = "autonomousDatabase displayname"
@@ -182,13 +188,16 @@ data "google_compute_network" "default" {
 func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseOdbnetworkExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"database_name":       fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
-		"deletion_protection": false,
-		"odb_network":         "projects/oci-terraform-testing-prod/locations/europe-west2/odbNetworks/tf-test-permanent-odbnetwork",
-		"odb_subnet":          "projects/oci-terraform-testing-prod/locations/europe-west2/odbNetworks/tf-test-permanent-odbnetwork/odbSubnets/tf-test-permanent-client-odbsubnet",
-		"project":             "oci-terraform-testing-prod",
-		"random_suffix":       acctest.RandString(t, 10),
+		"autonomous_database_id": "tf-test-my-instance" + randomSuffix,
+		"database_name":          fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
+		"deletion_protection":    false,
+		"odb_network":            "projects/oci-terraform-testing-prod/locations/europe-west2/odbNetworks/tf-test-permanent-odbnetwork",
+		"odb_subnet":             "projects/oci-terraform-testing-prod/locations/europe-west2/odbNetworks/tf-test-permanent-odbnetwork/odbSubnets/tf-test-permanent-client-odbsubnet",
+		"project":                "oci-terraform-testing-prod",
+		"random_suffix":          randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -212,7 +221,7 @@ func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseOdb
 func testAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseOdbnetworkExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_oracle_database_autonomous_database" "myADB"{
-  autonomous_database_id = "tf-test-my-instance%{random_suffix}"
+  autonomous_database_id = "%{autonomous_database_id}"
   location = "europe-west2"
   project = "%{project}"
   database = "%{database_name}"
@@ -234,11 +243,14 @@ resource "google_oracle_database_autonomous_database" "myADB"{
 func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabasePublicipExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"database_name":       fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
-		"deletion_protection": false,
-		"project":             "oci-terraform-testing-prod",
-		"random_suffix":       acctest.RandString(t, 10),
+		"autonomous_database_id": "tf-test-my-instance" + randomSuffix,
+		"database_name":          fmt.Sprintf("tftestdatabase%s", acctest.RandString(t, 10)),
+		"deletion_protection":    false,
+		"project":                "oci-terraform-testing-prod",
+		"random_suffix":          randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -262,7 +274,7 @@ func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabasePub
 func testAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabasePublicipExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_oracle_database_autonomous_database" "myADB"{
-  autonomous_database_id = "tf-test-my-instance%{random_suffix}"
+  autonomous_database_id = "%{autonomous_database_id}"
   location = "europe-west2"
   project = "%{project}"
   database = "%{database_name}"
@@ -283,14 +295,17 @@ resource "google_oracle_database_autonomous_database" "myADB"{
 func TestAccOracleDatabaseAutonomousDatabase_oracledatabaseAutonomousDatabaseDisasterRecoveryExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
 		"adb_id":                    "do-not-delete-dr-adb",
+		"autonomous_database_id":    "tf-test-my-instance" + randomSuffix,
 		"deletion_protection":       false,
 		"enable_backup_replication": true,
 		"location":                  "us-west3",
 		"peer_adb_name":             "projects/oci-terraform-testing-prod/locations/us-east4/autonomousDatabases/do-not-delete-dr-adb",
 		"project":                   "oci-terraform-testing-prod",
-		"random_suffix":             acctest.RandString(t, 10),
+		"random_suffix":             randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

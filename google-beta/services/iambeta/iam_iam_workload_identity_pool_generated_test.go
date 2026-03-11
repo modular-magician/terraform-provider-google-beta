@@ -341,7 +341,7 @@ func TestAccIAMBetaWorkloadIdentityPoolIamPolicyGenerated_withCondition(t *testi
 func testAccIAMBetaWorkloadIdentityPoolIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
+  workload_identity_pool_id = "%{workload_identity_pool_id}"
 }
 
 resource "google_iam_workload_identity_pool_iam_member" "foo" {
@@ -356,7 +356,7 @@ resource "google_iam_workload_identity_pool_iam_member" "foo" {
 func testAccIAMBetaWorkloadIdentityPoolIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
+  workload_identity_pool_id = "%{workload_identity_pool_id}"
 }
 
 data "google_iam_policy" "foo" {
@@ -385,7 +385,7 @@ data "google_iam_workload_identity_pool_iam_policy" "foo" {
 func testAccIAMBetaWorkloadIdentityPoolIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
+  workload_identity_pool_id = "%{workload_identity_pool_id}"
 }
 
 data "google_iam_policy" "foo" {
@@ -402,7 +402,7 @@ resource "google_iam_workload_identity_pool_iam_policy" "foo" {
 func testAccIAMBetaWorkloadIdentityPoolIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
+  workload_identity_pool_id = "%{workload_identity_pool_id}"
 }
 
 resource "google_iam_workload_identity_pool_iam_binding" "foo" {
@@ -417,7 +417,7 @@ resource "google_iam_workload_identity_pool_iam_binding" "foo" {
 func testAccIAMBetaWorkloadIdentityPoolIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
+  workload_identity_pool_id = "%{workload_identity_pool_id}"
 }
 
 resource "google_iam_workload_identity_pool_iam_binding" "foo" {
@@ -432,7 +432,7 @@ resource "google_iam_workload_identity_pool_iam_binding" "foo" {
 func testAccIAMBetaWorkloadIdentityPoolIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
+  workload_identity_pool_id = "%{workload_identity_pool_id}"
 }
 
 resource "google_iam_workload_identity_pool_iam_binding" "foo" {
@@ -452,7 +452,7 @@ resource "google_iam_workload_identity_pool_iam_binding" "foo" {
 func testAccIAMBetaWorkloadIdentityPoolIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
+  workload_identity_pool_id = "%{workload_identity_pool_id}"
 }
 
 resource "google_iam_workload_identity_pool_iam_binding" "foo" {
@@ -492,7 +492,7 @@ resource "google_iam_workload_identity_pool_iam_binding" "foo3" {
 func testAccIAMBetaWorkloadIdentityPoolIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
+  workload_identity_pool_id = "%{workload_identity_pool_id}"
 }
 
 resource "google_iam_workload_identity_pool_iam_member" "foo" {
@@ -512,7 +512,7 @@ resource "google_iam_workload_identity_pool_iam_member" "foo" {
 func testAccIAMBetaWorkloadIdentityPoolIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
+  workload_identity_pool_id = "%{workload_identity_pool_id}"
 }
 
 resource "google_iam_workload_identity_pool_iam_member" "foo" {
@@ -552,7 +552,7 @@ resource "google_iam_workload_identity_pool_iam_member" "foo3" {
 func testAccIAMBetaWorkloadIdentityPoolIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
+  workload_identity_pool_id = "%{workload_identity_pool_id}"
 }
 
 data "google_iam_policy" "foo" {

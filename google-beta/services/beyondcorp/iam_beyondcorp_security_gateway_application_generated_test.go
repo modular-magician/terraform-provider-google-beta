@@ -341,14 +341,14 @@ func TestAccBeyondcorpSecurityGatewayApplicationIamPolicyGenerated_withCondition
 func testAccBeyondcorpSecurityGatewayApplicationIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "default" {
-  security_gateway_id = "tf-test-default-sg%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
 
 resource "google_beyondcorp_security_gateway_application" "example" {
   security_gateway_id = google_beyondcorp_security_gateway.default.security_gateway_id
-  application_id = "tf-test-google-sga%{random_suffix}"
+  application_id = "%{application_name}"
   endpoint_matchers {
     hostname = "google.com"
     ports = [80, 443]
@@ -368,14 +368,14 @@ resource "google_beyondcorp_security_gateway_application_iam_member" "foo" {
 func testAccBeyondcorpSecurityGatewayApplicationIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "default" {
-  security_gateway_id = "tf-test-default-sg%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
 
 resource "google_beyondcorp_security_gateway_application" "example" {
   security_gateway_id = google_beyondcorp_security_gateway.default.security_gateway_id
-  application_id = "tf-test-google-sga%{random_suffix}"
+  application_id = "%{application_name}"
   endpoint_matchers {
     hostname = "google.com"
     ports = [80, 443]
@@ -410,14 +410,14 @@ data "google_beyondcorp_security_gateway_application_iam_policy" "foo" {
 func testAccBeyondcorpSecurityGatewayApplicationIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "default" {
-  security_gateway_id = "tf-test-default-sg%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
 
 resource "google_beyondcorp_security_gateway_application" "example" {
   security_gateway_id = google_beyondcorp_security_gateway.default.security_gateway_id
-  application_id = "tf-test-google-sga%{random_suffix}"
+  application_id = "%{application_name}"
   endpoint_matchers {
     hostname = "google.com"
     ports = [80, 443]
@@ -439,14 +439,14 @@ resource "google_beyondcorp_security_gateway_application_iam_policy" "foo" {
 func testAccBeyondcorpSecurityGatewayApplicationIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "default" {
-  security_gateway_id = "tf-test-default-sg%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
 
 resource "google_beyondcorp_security_gateway_application" "example" {
   security_gateway_id = google_beyondcorp_security_gateway.default.security_gateway_id
-  application_id = "tf-test-google-sga%{random_suffix}"
+  application_id = "%{application_name}"
   endpoint_matchers {
     hostname = "google.com"
     ports = [80, 443]
@@ -466,14 +466,14 @@ resource "google_beyondcorp_security_gateway_application_iam_binding" "foo" {
 func testAccBeyondcorpSecurityGatewayApplicationIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "default" {
-  security_gateway_id = "tf-test-default-sg%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
 
 resource "google_beyondcorp_security_gateway_application" "example" {
   security_gateway_id = google_beyondcorp_security_gateway.default.security_gateway_id
-  application_id = "tf-test-google-sga%{random_suffix}"
+  application_id = "%{application_name}"
   endpoint_matchers {
     hostname = "google.com"
     ports = [80, 443]
@@ -493,14 +493,14 @@ resource "google_beyondcorp_security_gateway_application_iam_binding" "foo" {
 func testAccBeyondcorpSecurityGatewayApplicationIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "default" {
-  security_gateway_id = "tf-test-default-sg%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
 
 resource "google_beyondcorp_security_gateway_application" "example" {
   security_gateway_id = google_beyondcorp_security_gateway.default.security_gateway_id
-  application_id = "tf-test-google-sga%{random_suffix}"
+  application_id = "%{application_name}"
   endpoint_matchers {
     hostname = "google.com"
     ports = [80, 443]
@@ -525,14 +525,14 @@ resource "google_beyondcorp_security_gateway_application_iam_binding" "foo" {
 func testAccBeyondcorpSecurityGatewayApplicationIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "default" {
-  security_gateway_id = "tf-test-default-sg%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
 
 resource "google_beyondcorp_security_gateway_application" "example" {
   security_gateway_id = google_beyondcorp_security_gateway.default.security_gateway_id
-  application_id = "tf-test-google-sga%{random_suffix}"
+  application_id = "%{application_name}"
   endpoint_matchers {
     hostname = "google.com"
     ports = [80, 443]
@@ -579,14 +579,14 @@ resource "google_beyondcorp_security_gateway_application_iam_binding" "foo3" {
 func testAccBeyondcorpSecurityGatewayApplicationIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "default" {
-  security_gateway_id = "tf-test-default-sg%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
 
 resource "google_beyondcorp_security_gateway_application" "example" {
   security_gateway_id = google_beyondcorp_security_gateway.default.security_gateway_id
-  application_id = "tf-test-google-sga%{random_suffix}"
+  application_id = "%{application_name}"
   endpoint_matchers {
     hostname = "google.com"
     ports = [80, 443]
@@ -611,14 +611,14 @@ resource "google_beyondcorp_security_gateway_application_iam_member" "foo" {
 func testAccBeyondcorpSecurityGatewayApplicationIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "default" {
-  security_gateway_id = "tf-test-default-sg%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
 
 resource "google_beyondcorp_security_gateway_application" "example" {
   security_gateway_id = google_beyondcorp_security_gateway.default.security_gateway_id
-  application_id = "tf-test-google-sga%{random_suffix}"
+  application_id = "%{application_name}"
   endpoint_matchers {
     hostname = "google.com"
     ports = [80, 443]
@@ -665,14 +665,14 @@ resource "google_beyondcorp_security_gateway_application_iam_member" "foo3" {
 func testAccBeyondcorpSecurityGatewayApplicationIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "default" {
-  security_gateway_id = "tf-test-default-sg%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
 
 resource "google_beyondcorp_security_gateway_application" "example" {
   security_gateway_id = google_beyondcorp_security_gateway.default.security_gateway_id
-  application_id = "tf-test-google-sga%{random_suffix}"
+  application_id = "%{application_name}"
   endpoint_matchers {
     hostname = "google.com"
     ports = [80, 443]

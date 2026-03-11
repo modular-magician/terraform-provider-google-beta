@@ -153,7 +153,7 @@ func TestAccGKEHubMembershipIamPolicyGenerated(t *testing.T) {
 func testAccGKEHubMembershipIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_container_cluster" "primary" {
-  name               = "tf-test-basic-cluster%{random_suffix}"
+  name               = "%{cluster_name}"
   location           = "us-central1-a"
   initial_node_count = 1
   deletion_protection = false
@@ -162,7 +162,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_gke_hub_membership" "membership" {
-  membership_id = "basic%{random_suffix}"
+  membership_id = "%{name}"
   location = "%{location}"
   endpoint {
     gke_cluster {
@@ -184,7 +184,7 @@ resource "google_gke_hub_membership_iam_member" "foo" {
 func testAccGKEHubMembershipIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_container_cluster" "primary" {
-  name               = "tf-test-basic-cluster%{random_suffix}"
+  name               = "%{cluster_name}"
   location           = "us-central1-a"
   initial_node_count = 1
   deletion_protection = false
@@ -193,7 +193,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_gke_hub_membership" "membership" {
-  membership_id = "basic%{random_suffix}"
+  membership_id = "%{name}"
   location = "%{location}"
   endpoint {
     gke_cluster {
@@ -230,7 +230,7 @@ data "google_gke_hub_membership_iam_policy" "foo" {
 func testAccGKEHubMembershipIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_container_cluster" "primary" {
-  name               = "tf-test-basic-cluster%{random_suffix}"
+  name               = "%{cluster_name}"
   location           = "us-central1-a"
   initial_node_count = 1
   deletion_protection = false
@@ -239,7 +239,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_gke_hub_membership" "membership" {
-  membership_id = "basic%{random_suffix}"
+  membership_id = "%{name}"
   location = "%{location}"
   endpoint {
     gke_cluster {
@@ -263,7 +263,7 @@ resource "google_gke_hub_membership_iam_policy" "foo" {
 func testAccGKEHubMembershipIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_container_cluster" "primary" {
-  name               = "tf-test-basic-cluster%{random_suffix}"
+  name               = "%{cluster_name}"
   location           = "us-central1-a"
   initial_node_count = 1
   deletion_protection = false
@@ -272,7 +272,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_gke_hub_membership" "membership" {
-  membership_id = "basic%{random_suffix}"
+  membership_id = "%{name}"
   location = "%{location}"
   endpoint {
     gke_cluster {
@@ -294,7 +294,7 @@ resource "google_gke_hub_membership_iam_binding" "foo" {
 func testAccGKEHubMembershipIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_container_cluster" "primary" {
-  name               = "tf-test-basic-cluster%{random_suffix}"
+  name               = "%{cluster_name}"
   location           = "us-central1-a"
   initial_node_count = 1
   deletion_protection = false
@@ -303,7 +303,7 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_gke_hub_membership" "membership" {
-  membership_id = "basic%{random_suffix}"
+  membership_id = "%{name}"
   location = "%{location}"
   endpoint {
     gke_cluster {

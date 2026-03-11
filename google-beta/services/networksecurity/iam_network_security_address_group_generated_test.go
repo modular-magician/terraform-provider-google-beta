@@ -111,7 +111,7 @@ func TestAccNetworkSecurityProjectAddressGroupIamPolicyGenerated(t *testing.T) {
 func testAccNetworkSecurityProjectAddressGroupIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_network_security_address_group" "default" {
-  name        = "tf-test-my-project-address-group%{random_suffix}"
+  name        = "%{resource_name}"
   parent      = "projects/%{project}"
   location    = "us-central1"
   type        = "IPV4"
@@ -132,7 +132,7 @@ name = google_network_security_address_group.default.name
 func testAccNetworkSecurityProjectAddressGroupIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_network_security_address_group" "default" {
-  name        = "tf-test-my-project-address-group%{random_suffix}"
+  name        = "%{resource_name}"
   parent      = "projects/%{project}"
   location    = "us-central1"
   type        = "IPV4"
@@ -168,7 +168,7 @@ name = google_network_security_address_group.default.name
 func testAccNetworkSecurityProjectAddressGroupIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_network_security_address_group" "default" {
-  name        = "tf-test-my-project-address-group%{random_suffix}"
+  name        = "%{resource_name}"
   parent      = "projects/%{project}"
   location    = "us-central1"
   type        = "IPV4"
@@ -191,7 +191,7 @@ name = google_network_security_address_group.default.name
 func testAccNetworkSecurityProjectAddressGroupIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_network_security_address_group" "default" {
-  name        = "tf-test-my-project-address-group%{random_suffix}"
+  name        = "%{resource_name}"
   parent      = "projects/%{project}"
   location    = "us-central1"
   type        = "IPV4"
@@ -212,7 +212,7 @@ name = google_network_security_address_group.default.name
 func testAccNetworkSecurityProjectAddressGroupIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_network_security_address_group" "default" {
-  name        = "tf-test-my-project-address-group%{random_suffix}"
+  name        = "%{resource_name}"
   parent      = "projects/%{project}"
   location    = "us-central1"
   type        = "IPV4"

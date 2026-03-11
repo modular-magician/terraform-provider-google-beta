@@ -141,7 +141,7 @@ func TestAccBiglakeIcebergIcebergNamespaceIamPolicyGenerated(t *testing.T) {
 func testAccBiglakeIcebergIcebergNamespaceIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name          = "tf-test-example-bucket%{random_suffix}"
+  name          = "%{bucket_name}"
   location      = "us-central1"
   force_destroy = true
   uniform_bucket_level_access = true
@@ -173,7 +173,7 @@ resource "google_biglake_iceberg_namespace_iam_member" "foo" {
 func testAccBiglakeIcebergIcebergNamespaceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name          = "tf-test-example-bucket%{random_suffix}"
+  name          = "%{bucket_name}"
   location      = "us-central1"
   force_destroy = true
   uniform_bucket_level_access = true
@@ -220,7 +220,7 @@ data "google_biglake_iceberg_namespace_iam_policy" "foo" {
 func testAccBiglakeIcebergIcebergNamespaceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name          = "tf-test-example-bucket%{random_suffix}"
+  name          = "%{bucket_name}"
   location      = "us-central1"
   force_destroy = true
   uniform_bucket_level_access = true
@@ -254,7 +254,7 @@ resource "google_biglake_iceberg_namespace_iam_policy" "foo" {
 func testAccBiglakeIcebergIcebergNamespaceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name          = "tf-test-example-bucket%{random_suffix}"
+  name          = "%{bucket_name}"
   location      = "us-central1"
   force_destroy = true
   uniform_bucket_level_access = true
@@ -286,7 +286,7 @@ resource "google_biglake_iceberg_namespace_iam_binding" "foo" {
 func testAccBiglakeIcebergIcebergNamespaceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_storage_bucket" "bucket" {
-  name          = "tf-test-example-bucket%{random_suffix}"
+  name          = "%{bucket_name}"
   location      = "us-central1"
   force_destroy = true
   uniform_bucket_level_access = true

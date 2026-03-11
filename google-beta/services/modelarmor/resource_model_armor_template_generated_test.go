@@ -53,10 +53,12 @@ var (
 func TestAccModelArmorTemplate_modelarmorTemplateBasicExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
 		"location":      "us-central1",
 		"templateId":    "modelarmor1",
-		"random_suffix": acctest.RandString(t, 10),
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -80,8 +82,8 @@ func TestAccModelArmorTemplate_modelarmorTemplateBasicExample(t *testing.T) {
 func testAccModelArmorTemplate_modelarmorTemplateBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_model_armor_template" "template-basic" {
-  location    = "%{location}"
-  template_id = "%{templateId}"
+  location    = "<no value>"
+  template_id = "<no value>"
 
   filter_config {
 
@@ -97,6 +99,8 @@ resource "google_model_armor_template" "template-basic" {
 func TestAccModelArmorTemplate_modelarmorTemplateFilterConfigExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
 		"filter_config_malicious_uri_filter_settings_filter_enforcement":    "ENABLED",
 		"filter_config_pi_and_jailbreak_filter_settings_confidence_level":   "MEDIUM_AND_ABOVE",
@@ -108,7 +112,7 @@ func TestAccModelArmorTemplate_modelarmorTemplateFilterConfigExample(t *testing.
 		"sdp_settings_config_type": "basic_config",
 		"templateId":               "modelarmor2",
 		"template_metadata_multi_language_detection_enable_multi_language_detection": false,
-		"random_suffix": acctest.RandString(t, 10),
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -132,32 +136,32 @@ func TestAccModelArmorTemplate_modelarmorTemplateFilterConfigExample(t *testing.
 func testAccModelArmorTemplate_modelarmorTemplateFilterConfigExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_model_armor_template" "template-filter-config" {
-  location    = "%{location}"
-  template_id = "%{templateId}"
+  location    = "<no value>"
+  template_id = "<no value>"
 
   filter_config {
     rai_settings {
       rai_filters {
-        filter_type      = "%{filter_config_rai_settings_rai_filters_0_filter_type}"
-        confidence_level = "%{filter_config_rai_settings_rai_filters_0_confidence_level}"
+        filter_type      = "<no value>"
+        confidence_level = "<no value>"
       }
     }
     sdp_settings {
       basic_config {
-          filter_enforcement = "%{filter_config_sdp_settings_basic_config_filter_enforcement}"
+          filter_enforcement = "<no value>"
       }
     }
     pi_and_jailbreak_filter_settings {
-      filter_enforcement = "%{filter_config_pi_and_jailbreak_filter_settings_filter_enforcement}"
-      confidence_level   = "%{filter_config_pi_and_jailbreak_filter_settings_confidence_level}"
+      filter_enforcement = "<no value>"
+      confidence_level   = "<no value>"
     }
     malicious_uri_filter_settings {
-      filter_enforcement = "%{filter_config_malicious_uri_filter_settings_filter_enforcement}"
+      filter_enforcement = "<no value>"
     }
   }
   template_metadata {
     multi_language_detection {
-    enable_multi_language_detection        = %{template_metadata_multi_language_detection_enable_multi_language_detection}
+    enable_multi_language_detection        = <no value>
     }
   }
 }
@@ -166,6 +170,8 @@ resource "google_model_armor_template" "template-filter-config" {
 
 func TestAccModelArmorTemplate_modelarmorTemplateTemplateMetadataExample(t *testing.T) {
 	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
 		"filter_config_rai_settings_rai_filters_0_confidence_level": "MEDIUM_AND_ABOVE",
@@ -181,7 +187,7 @@ func TestAccModelArmorTemplate_modelarmorTemplateTemplateMetadataExample(t *test
 		"template_metadata_log_sanitize_operations":                                  false,
 		"template_metadata_log_template_operations":                                  true,
 		"template_metadata_multi_language_detection_enable_multi_language_detection": true,
-		"random_suffix": acctest.RandString(t, 10),
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -205,29 +211,29 @@ func TestAccModelArmorTemplate_modelarmorTemplateTemplateMetadataExample(t *test
 func testAccModelArmorTemplate_modelarmorTemplateTemplateMetadataExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_model_armor_template" "template-template-metadata" {
-  location    = "%{location}"
-  template_id = "%{templateId}"
+  location    = "<no value>"
+  template_id = "<no value>"
 
   filter_config {
     rai_settings {
       rai_filters {
-        filter_type      = "%{filter_config_rai_settings_rai_filters_0_filter_type}"
-        confidence_level = "%{filter_config_rai_settings_rai_filters_0_confidence_level}"
+        filter_type      = "<no value>"
+        confidence_level = "<no value>"
       }
     }
   }
   template_metadata {
-    custom_llm_response_safety_error_message = "%{template_metadata_custom_llm_response_safety_error_message}"
-    log_sanitize_operations                  = %{template_metadata_log_sanitize_operations}
-    log_template_operations                  = %{template_metadata_log_template_operations}
+    custom_llm_response_safety_error_message = "<no value>"
+    log_sanitize_operations                  = <no value>
+    log_template_operations                  = <no value>
     multi_language_detection {
-      enable_multi_language_detection        = %{template_metadata_multi_language_detection_enable_multi_language_detection}
+      enable_multi_language_detection        = <no value>
     }
-    ignore_partial_invocation_failures       = %{template_metadata_ignore_partial_invocation_failures}
-    custom_prompt_safety_error_code          = %{template_metadata_custom_prompt_safety_error_code}
-    custom_prompt_safety_error_message       = "%{template_metadata_custom_prompt_safety_error_message}"
-    custom_llm_response_safety_error_code    = %{template_metadata_custom_llm_response_safety_error_code}
-    enforcement_type                         = "%{template_metadata_enforcement_type}"
+    ignore_partial_invocation_failures       = <no value>
+    custom_prompt_safety_error_code          = <no value>
+    custom_prompt_safety_error_message       = "<no value>"
+    custom_llm_response_safety_error_code    = <no value>
+    enforcement_type                         = "<no value>"
   }
 }
 `, context)
@@ -235,6 +241,8 @@ resource "google_model_armor_template" "template-template-metadata" {
 
 func TestAccModelArmorTemplate_modelarmorTemplateLabelExample(t *testing.T) {
 	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
 		"filter_config_rai_settings_rai_filters_0_confidence_level":      "MEDIUM_AND_ABOVE",
@@ -247,7 +255,7 @@ func TestAccModelArmorTemplate_modelarmorTemplateLabelExample(t *testing.T) {
 		"sdp_settings_config_type": "advanced_config",
 		"templateId":               "modelarmor4",
 		"template_metadata_multi_language_detection_enable_multi_language_detection": false,
-		"random_suffix": acctest.RandString(t, 10),
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -271,30 +279,30 @@ func TestAccModelArmorTemplate_modelarmorTemplateLabelExample(t *testing.T) {
 func testAccModelArmorTemplate_modelarmorTemplateLabelExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_model_armor_template" "template-label-advanced-config" {
-  location    = "%{location}"
-  template_id = "%{templateId}"
+  location    = "<no value>"
+  template_id = "<no value>"
 
   labels = {
-    "test-label" = "%{label_test_label}"
+    "test-label" = "<no value>"
   }
 
   filter_config {
     rai_settings {
       rai_filters {
-        filter_type      = "%{filter_config_rai_settings_rai_filters_0_filter_type}"
-        confidence_level = "%{filter_config_rai_settings_rai_filters_0_confidence_level}"
+        filter_type      = "<no value>"
+        confidence_level = "<no value>"
       }
     }
     sdp_settings {
       advanced_config {
-        inspect_template     = "%{filter_config_sdp_settings_advanced_config_inspect_template}"
-        deidentify_template  = "%{filter_config_sdp_settings_advanced_config_deidentify_template}"
+        inspect_template     = "<no value>"
+        deidentify_template  = "<no value>"
       }
     }
   }
   template_metadata {
     multi_language_detection {
-      enable_multi_language_detection = %{template_metadata_multi_language_detection_enable_multi_language_detection}
+      enable_multi_language_detection = <no value>
     }
   }
 }

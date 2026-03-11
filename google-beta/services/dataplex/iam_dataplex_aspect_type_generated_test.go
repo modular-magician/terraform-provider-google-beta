@@ -111,7 +111,7 @@ func TestAccDataplexAspectTypeIamPolicyGenerated(t *testing.T) {
 func testAccDataplexAspectTypeIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_aspect_type" "test_aspect_type_basic" {
-  aspect_type_id = "tf-test-aspect-type-basic%{random_suffix}"
+  aspect_type_id = "%{aspect_type_name}"
   project = "%{project_name}"
   location = "us-central1"
 
@@ -157,7 +157,7 @@ resource "google_dataplex_aspect_type_iam_member" "foo" {
 func testAccDataplexAspectTypeIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_aspect_type" "test_aspect_type_basic" {
-  aspect_type_id = "tf-test-aspect-type-basic%{random_suffix}"
+  aspect_type_id = "%{aspect_type_name}"
   project = "%{project_name}"
   location = "us-central1"
 
@@ -218,7 +218,7 @@ data "google_dataplex_aspect_type_iam_policy" "foo" {
 func testAccDataplexAspectTypeIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_aspect_type" "test_aspect_type_basic" {
-  aspect_type_id = "tf-test-aspect-type-basic%{random_suffix}"
+  aspect_type_id = "%{aspect_type_name}"
   project = "%{project_name}"
   location = "us-central1"
 
@@ -266,7 +266,7 @@ resource "google_dataplex_aspect_type_iam_policy" "foo" {
 func testAccDataplexAspectTypeIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_aspect_type" "test_aspect_type_basic" {
-  aspect_type_id = "tf-test-aspect-type-basic%{random_suffix}"
+  aspect_type_id = "%{aspect_type_name}"
   project = "%{project_name}"
   location = "us-central1"
 
@@ -312,7 +312,7 @@ resource "google_dataplex_aspect_type_iam_binding" "foo" {
 func testAccDataplexAspectTypeIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataplex_aspect_type" "test_aspect_type_basic" {
-  aspect_type_id = "tf-test-aspect-type-basic%{random_suffix}"
+  aspect_type_id = "%{aspect_type_name}"
   project = "%{project_name}"
   location = "us-central1"
 

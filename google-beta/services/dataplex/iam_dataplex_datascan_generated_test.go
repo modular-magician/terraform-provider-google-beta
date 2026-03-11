@@ -142,7 +142,7 @@ func testAccDataplexDatascanIamMember_basicGenerated(context map[string]interfac
 	return acctest.Nprintf(`
 resource "google_dataplex_datascan" "basic_profile" {
   location     = "us-central1"
-  data_scan_id = "tf-test-dataprofile-basic%{random_suffix}"
+  data_scan_id = "%{datascan_name}"
 
   data {
 	  resource = "//bigquery.googleapis.com/projects/bigquery-public-data/datasets/samples/tables/shakespeare"
@@ -173,7 +173,7 @@ func testAccDataplexDatascanIamPolicy_basicGenerated(context map[string]interfac
 	return acctest.Nprintf(`
 resource "google_dataplex_datascan" "basic_profile" {
   location     = "us-central1"
-  data_scan_id = "tf-test-dataprofile-basic%{random_suffix}"
+  data_scan_id = "%{datascan_name}"
 
   data {
 	  resource = "//bigquery.googleapis.com/projects/bigquery-public-data/datasets/samples/tables/shakespeare"
@@ -219,7 +219,7 @@ func testAccDataplexDatascanIamPolicy_emptyBinding(context map[string]interface{
 	return acctest.Nprintf(`
 resource "google_dataplex_datascan" "basic_profile" {
   location     = "us-central1"
-  data_scan_id = "tf-test-dataprofile-basic%{random_suffix}"
+  data_scan_id = "%{datascan_name}"
 
   data {
 	  resource = "//bigquery.googleapis.com/projects/bigquery-public-data/datasets/samples/tables/shakespeare"
@@ -252,7 +252,7 @@ func testAccDataplexDatascanIamBinding_basicGenerated(context map[string]interfa
 	return acctest.Nprintf(`
 resource "google_dataplex_datascan" "basic_profile" {
   location     = "us-central1"
-  data_scan_id = "tf-test-dataprofile-basic%{random_suffix}"
+  data_scan_id = "%{datascan_name}"
 
   data {
 	  resource = "//bigquery.googleapis.com/projects/bigquery-public-data/datasets/samples/tables/shakespeare"
@@ -283,7 +283,7 @@ func testAccDataplexDatascanIamBinding_updateGenerated(context map[string]interf
 	return acctest.Nprintf(`
 resource "google_dataplex_datascan" "basic_profile" {
   location     = "us-central1"
-  data_scan_id = "tf-test-dataprofile-basic%{random_suffix}"
+  data_scan_id = "%{datascan_name}"
 
   data {
 	  resource = "//bigquery.googleapis.com/projects/bigquery-public-data/datasets/samples/tables/shakespeare"

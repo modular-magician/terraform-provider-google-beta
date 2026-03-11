@@ -139,7 +139,7 @@ func testAccClouddeployCustomTargetTypeIamMember_basicGenerated(context map[stri
 	return acctest.Nprintf(`
 resource "google_clouddeploy_custom_target_type" "custom-target-type" {
     location = "us-central1"
-    name = "tf-test-my-custom-target-type%{random_suffix}"
+    name = "%{custom_target_type_name}"
     description = "My custom target type"
     annotations = {
       my_first_annotation = "example-annotation-1"
@@ -169,7 +169,7 @@ func testAccClouddeployCustomTargetTypeIamPolicy_basicGenerated(context map[stri
 	return acctest.Nprintf(`
 resource "google_clouddeploy_custom_target_type" "custom-target-type" {
     location = "us-central1"
-    name = "tf-test-my-custom-target-type%{random_suffix}"
+    name = "%{custom_target_type_name}"
     description = "My custom target type"
     annotations = {
       my_first_annotation = "example-annotation-1"
@@ -214,7 +214,7 @@ func testAccClouddeployCustomTargetTypeIamPolicy_emptyBinding(context map[string
 	return acctest.Nprintf(`
 resource "google_clouddeploy_custom_target_type" "custom-target-type" {
     location = "us-central1"
-    name = "tf-test-my-custom-target-type%{random_suffix}"
+    name = "%{custom_target_type_name}"
     description = "My custom target type"
     annotations = {
       my_first_annotation = "example-annotation-1"
@@ -246,7 +246,7 @@ func testAccClouddeployCustomTargetTypeIamBinding_basicGenerated(context map[str
 	return acctest.Nprintf(`
 resource "google_clouddeploy_custom_target_type" "custom-target-type" {
     location = "us-central1"
-    name = "tf-test-my-custom-target-type%{random_suffix}"
+    name = "%{custom_target_type_name}"
     description = "My custom target type"
     annotations = {
       my_first_annotation = "example-annotation-1"
@@ -276,7 +276,7 @@ func testAccClouddeployCustomTargetTypeIamBinding_updateGenerated(context map[st
 	return acctest.Nprintf(`
 resource "google_clouddeploy_custom_target_type" "custom-target-type" {
     location = "us-central1"
-    name = "tf-test-my-custom-target-type%{random_suffix}"
+    name = "%{custom_target_type_name}"
     description = "My custom target type"
     annotations = {
       my_first_annotation = "example-annotation-1"

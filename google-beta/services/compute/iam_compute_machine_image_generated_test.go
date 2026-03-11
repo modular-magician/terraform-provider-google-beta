@@ -342,7 +342,7 @@ func testAccComputeMachineImageIamMember_basicGenerated(context map[string]inter
 	return acctest.Nprintf(`
 resource "google_compute_instance" "vm" {
   provider     = google-beta
-  name         = "tf-test-my-vm%{random_suffix}"
+  name         = "%{vm_name}"
   machine_type = "e2-medium"
 
   boot_disk {
@@ -358,7 +358,7 @@ resource "google_compute_instance" "vm" {
 
 resource "google_compute_machine_image" "image" {
   provider        = google-beta
-  name            = "tf-test-my-image%{random_suffix}"
+  name            = "%{image_name}"
   source_instance = google_compute_instance.vm.self_link
 }
 
@@ -376,7 +376,7 @@ func testAccComputeMachineImageIamPolicy_basicGenerated(context map[string]inter
 	return acctest.Nprintf(`
 resource "google_compute_instance" "vm" {
   provider     = google-beta
-  name         = "tf-test-my-vm%{random_suffix}"
+  name         = "%{vm_name}"
   machine_type = "e2-medium"
 
   boot_disk {
@@ -392,7 +392,7 @@ resource "google_compute_instance" "vm" {
 
 resource "google_compute_machine_image" "image" {
   provider        = google-beta
-  name            = "tf-test-my-image%{random_suffix}"
+  name            = "%{image_name}"
   source_instance = google_compute_instance.vm.self_link
 }
 
@@ -426,7 +426,7 @@ func testAccComputeMachineImageIamPolicy_emptyBinding(context map[string]interfa
 	return acctest.Nprintf(`
 resource "google_compute_instance" "vm" {
   provider     = google-beta
-  name         = "tf-test-my-vm%{random_suffix}"
+  name         = "%{vm_name}"
   machine_type = "e2-medium"
 
   boot_disk {
@@ -442,7 +442,7 @@ resource "google_compute_instance" "vm" {
 
 resource "google_compute_machine_image" "image" {
   provider        = google-beta
-  name            = "tf-test-my-image%{random_suffix}"
+  name            = "%{image_name}"
   source_instance = google_compute_instance.vm.self_link
 }
 
@@ -463,7 +463,7 @@ func testAccComputeMachineImageIamBinding_basicGenerated(context map[string]inte
 	return acctest.Nprintf(`
 resource "google_compute_instance" "vm" {
   provider     = google-beta
-  name         = "tf-test-my-vm%{random_suffix}"
+  name         = "%{vm_name}"
   machine_type = "e2-medium"
 
   boot_disk {
@@ -479,7 +479,7 @@ resource "google_compute_instance" "vm" {
 
 resource "google_compute_machine_image" "image" {
   provider        = google-beta
-  name            = "tf-test-my-image%{random_suffix}"
+  name            = "%{image_name}"
   source_instance = google_compute_instance.vm.self_link
 }
 
@@ -497,7 +497,7 @@ func testAccComputeMachineImageIamBinding_updateGenerated(context map[string]int
 	return acctest.Nprintf(`
 resource "google_compute_instance" "vm" {
   provider     = google-beta
-  name         = "tf-test-my-vm%{random_suffix}"
+  name         = "%{vm_name}"
   machine_type = "e2-medium"
 
   boot_disk {
@@ -513,7 +513,7 @@ resource "google_compute_instance" "vm" {
 
 resource "google_compute_machine_image" "image" {
   provider        = google-beta
-  name            = "tf-test-my-image%{random_suffix}"
+  name            = "%{image_name}"
   source_instance = google_compute_instance.vm.self_link
 }
 
@@ -531,7 +531,7 @@ func testAccComputeMachineImageIamBinding_withConditionGenerated(context map[str
 	return acctest.Nprintf(`
 resource "google_compute_instance" "vm" {
   provider     = google-beta
-  name         = "tf-test-my-vm%{random_suffix}"
+  name         = "%{vm_name}"
   machine_type = "e2-medium"
 
   boot_disk {
@@ -547,7 +547,7 @@ resource "google_compute_instance" "vm" {
 
 resource "google_compute_machine_image" "image" {
   provider        = google-beta
-  name            = "tf-test-my-image%{random_suffix}"
+  name            = "%{image_name}"
   source_instance = google_compute_instance.vm.self_link
 }
 
@@ -570,7 +570,7 @@ func testAccComputeMachineImageIamBinding_withAndWithoutConditionGenerated(conte
 	return acctest.Nprintf(`
 resource "google_compute_instance" "vm" {
   provider     = google-beta
-  name         = "tf-test-my-vm%{random_suffix}"
+  name         = "%{vm_name}"
   machine_type = "e2-medium"
 
   boot_disk {
@@ -586,7 +586,7 @@ resource "google_compute_instance" "vm" {
 
 resource "google_compute_machine_image" "image" {
   provider        = google-beta
-  name            = "tf-test-my-image%{random_suffix}"
+  name            = "%{image_name}"
   source_instance = google_compute_instance.vm.self_link
 }
 
@@ -631,7 +631,7 @@ func testAccComputeMachineImageIamMember_withConditionGenerated(context map[stri
 	return acctest.Nprintf(`
 resource "google_compute_instance" "vm" {
   provider     = google-beta
-  name         = "tf-test-my-vm%{random_suffix}"
+  name         = "%{vm_name}"
   machine_type = "e2-medium"
 
   boot_disk {
@@ -647,7 +647,7 @@ resource "google_compute_instance" "vm" {
 
 resource "google_compute_machine_image" "image" {
   provider        = google-beta
-  name            = "tf-test-my-image%{random_suffix}"
+  name            = "%{image_name}"
   source_instance = google_compute_instance.vm.self_link
 }
 
@@ -670,7 +670,7 @@ func testAccComputeMachineImageIamMember_withAndWithoutConditionGenerated(contex
 	return acctest.Nprintf(`
 resource "google_compute_instance" "vm" {
   provider     = google-beta
-  name         = "tf-test-my-vm%{random_suffix}"
+  name         = "%{vm_name}"
   machine_type = "e2-medium"
 
   boot_disk {
@@ -686,7 +686,7 @@ resource "google_compute_instance" "vm" {
 
 resource "google_compute_machine_image" "image" {
   provider        = google-beta
-  name            = "tf-test-my-image%{random_suffix}"
+  name            = "%{image_name}"
   source_instance = google_compute_instance.vm.self_link
 }
 
@@ -731,7 +731,7 @@ func testAccComputeMachineImageIamPolicy_withConditionGenerated(context map[stri
 	return acctest.Nprintf(`
 resource "google_compute_instance" "vm" {
   provider     = google-beta
-  name         = "tf-test-my-vm%{random_suffix}"
+  name         = "%{vm_name}"
   machine_type = "e2-medium"
 
   boot_disk {
@@ -747,7 +747,7 @@ resource "google_compute_instance" "vm" {
 
 resource "google_compute_machine_image" "image" {
   provider        = google-beta
-  name            = "tf-test-my-image%{random_suffix}"
+  name            = "%{image_name}"
   source_instance = google_compute_instance.vm.self_link
 }
 

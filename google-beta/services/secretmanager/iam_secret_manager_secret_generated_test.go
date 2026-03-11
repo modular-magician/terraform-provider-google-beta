@@ -341,7 +341,7 @@ func TestAccSecretManagerSecretIamPolicyGenerated_withCondition(t *testing.T) {
 func testAccSecretManagerSecretIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_secret" "secret-basic" {
-  secret_id = "secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   
   labels = {
     label = "my-label"
@@ -372,7 +372,7 @@ resource "google_secret_manager_secret_iam_member" "foo" {
 func testAccSecretManagerSecretIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_secret" "secret-basic" {
-  secret_id = "secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   
   labels = {
     label = "my-label"
@@ -417,7 +417,7 @@ data "google_secret_manager_secret_iam_policy" "foo" {
 func testAccSecretManagerSecretIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_secret" "secret-basic" {
-  secret_id = "secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   
   labels = {
     label = "my-label"
@@ -450,7 +450,7 @@ resource "google_secret_manager_secret_iam_policy" "foo" {
 func testAccSecretManagerSecretIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_secret" "secret-basic" {
-  secret_id = "secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   
   labels = {
     label = "my-label"
@@ -481,7 +481,7 @@ resource "google_secret_manager_secret_iam_binding" "foo" {
 func testAccSecretManagerSecretIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_secret" "secret-basic" {
-  secret_id = "secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   
   labels = {
     label = "my-label"
@@ -512,7 +512,7 @@ resource "google_secret_manager_secret_iam_binding" "foo" {
 func testAccSecretManagerSecretIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_secret" "secret-basic" {
-  secret_id = "secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   
   labels = {
     label = "my-label"
@@ -548,7 +548,7 @@ resource "google_secret_manager_secret_iam_binding" "foo" {
 func testAccSecretManagerSecretIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_secret" "secret-basic" {
-  secret_id = "secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   
   labels = {
     label = "my-label"
@@ -604,7 +604,7 @@ resource "google_secret_manager_secret_iam_binding" "foo3" {
 func testAccSecretManagerSecretIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_secret" "secret-basic" {
-  secret_id = "secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   
   labels = {
     label = "my-label"
@@ -640,7 +640,7 @@ resource "google_secret_manager_secret_iam_member" "foo" {
 func testAccSecretManagerSecretIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_secret" "secret-basic" {
-  secret_id = "secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   
   labels = {
     label = "my-label"
@@ -696,7 +696,7 @@ resource "google_secret_manager_secret_iam_member" "foo3" {
 func testAccSecretManagerSecretIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_secret_manager_secret" "secret-basic" {
-  secret_id = "secret%{random_suffix}"
+  secret_id = "%{secret_id}"
   
   labels = {
     label = "my-label"

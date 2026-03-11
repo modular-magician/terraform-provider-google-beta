@@ -341,7 +341,7 @@ func TestAccBeyondcorpSecurityGatewayIamPolicyGenerated_withCondition(t *testing
 func testAccBeyondcorpSecurityGatewayIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "example" {
-  security_gateway_id = "default%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
@@ -359,7 +359,7 @@ resource "google_beyondcorp_security_gateway_iam_member" "foo" {
 func testAccBeyondcorpSecurityGatewayIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "example" {
-  security_gateway_id = "default%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
@@ -392,7 +392,7 @@ data "google_beyondcorp_security_gateway_iam_policy" "foo" {
 func testAccBeyondcorpSecurityGatewayIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "example" {
-  security_gateway_id = "default%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
@@ -412,7 +412,7 @@ resource "google_beyondcorp_security_gateway_iam_policy" "foo" {
 func testAccBeyondcorpSecurityGatewayIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "example" {
-  security_gateway_id = "default%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
@@ -430,7 +430,7 @@ resource "google_beyondcorp_security_gateway_iam_binding" "foo" {
 func testAccBeyondcorpSecurityGatewayIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "example" {
-  security_gateway_id = "default%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
@@ -448,7 +448,7 @@ resource "google_beyondcorp_security_gateway_iam_binding" "foo" {
 func testAccBeyondcorpSecurityGatewayIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "example" {
-  security_gateway_id = "default%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
@@ -471,7 +471,7 @@ resource "google_beyondcorp_security_gateway_iam_binding" "foo" {
 func testAccBeyondcorpSecurityGatewayIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "example" {
-  security_gateway_id = "default%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
@@ -516,7 +516,7 @@ resource "google_beyondcorp_security_gateway_iam_binding" "foo3" {
 func testAccBeyondcorpSecurityGatewayIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "example" {
-  security_gateway_id = "default%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
@@ -539,7 +539,7 @@ resource "google_beyondcorp_security_gateway_iam_member" "foo" {
 func testAccBeyondcorpSecurityGatewayIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "example" {
-  security_gateway_id = "default%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }
@@ -584,7 +584,7 @@ resource "google_beyondcorp_security_gateway_iam_member" "foo3" {
 func testAccBeyondcorpSecurityGatewayIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_beyondcorp_security_gateway" "example" {
-  security_gateway_id = "default%{random_suffix}"
+  security_gateway_id = "%{security_gateway_name}"
   display_name = "My Security Gateway resource"
   hubs { region = "us-central1" }
 }

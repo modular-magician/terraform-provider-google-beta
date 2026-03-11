@@ -138,7 +138,7 @@ func TestAccWorkbenchInstanceIamPolicyGenerated(t *testing.T) {
 func testAccWorkbenchInstanceIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_workbench_instance" "instance" {
-  name = "tf-test-workbench-instance%{random_suffix}"
+  name = "%{instance_name}"
   location = "us-west1-a"
 }
 
@@ -155,7 +155,7 @@ resource "google_workbench_instance_iam_member" "foo" {
 func testAccWorkbenchInstanceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_workbench_instance" "instance" {
-  name = "tf-test-workbench-instance%{random_suffix}"
+  name = "%{instance_name}"
   location = "us-west1-a"
 }
 
@@ -187,7 +187,7 @@ data "google_workbench_instance_iam_policy" "foo" {
 func testAccWorkbenchInstanceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_workbench_instance" "instance" {
-  name = "tf-test-workbench-instance%{random_suffix}"
+  name = "%{instance_name}"
   location = "us-west1-a"
 }
 
@@ -206,7 +206,7 @@ resource "google_workbench_instance_iam_policy" "foo" {
 func testAccWorkbenchInstanceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_workbench_instance" "instance" {
-  name = "tf-test-workbench-instance%{random_suffix}"
+  name = "%{instance_name}"
   location = "us-west1-a"
 }
 
@@ -223,7 +223,7 @@ resource "google_workbench_instance_iam_binding" "foo" {
 func testAccWorkbenchInstanceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_workbench_instance" "instance" {
-  name = "tf-test-workbench-instance%{random_suffix}"
+  name = "%{instance_name}"
   location = "us-west1-a"
 }
 

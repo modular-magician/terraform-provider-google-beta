@@ -341,7 +341,7 @@ func TestAccComputeRegionBackendBucketIamPolicyGenerated_withCondition(t *testin
 func testAccComputeRegionBackendBucketIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "image_backend" {
-  name                  = "tf-test-region-image-backend-bucket%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.image_backend.name
   description           = "Regional backend bucket example"
@@ -349,7 +349,7 @@ resource "google_compute_region_backend_bucket" "image_backend" {
 }
 
 resource "google_storage_bucket" "image_backend" {
-  name                        = "tf-test-region-image-store-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true
@@ -368,7 +368,7 @@ resource "google_compute_region_backend_bucket_iam_member" "foo" {
 func testAccComputeRegionBackendBucketIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "image_backend" {
-  name                  = "tf-test-region-image-backend-bucket%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.image_backend.name
   description           = "Regional backend bucket example"
@@ -376,7 +376,7 @@ resource "google_compute_region_backend_bucket" "image_backend" {
 }
 
 resource "google_storage_bucket" "image_backend" {
-  name                        = "tf-test-region-image-store-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true
@@ -410,7 +410,7 @@ data "google_compute_region_backend_bucket_iam_policy" "foo" {
 func testAccComputeRegionBackendBucketIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "image_backend" {
-  name                  = "tf-test-region-image-backend-bucket%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.image_backend.name
   description           = "Regional backend bucket example"
@@ -418,7 +418,7 @@ resource "google_compute_region_backend_bucket" "image_backend" {
 }
 
 resource "google_storage_bucket" "image_backend" {
-  name                        = "tf-test-region-image-store-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true
@@ -439,7 +439,7 @@ resource "google_compute_region_backend_bucket_iam_policy" "foo" {
 func testAccComputeRegionBackendBucketIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "image_backend" {
-  name                  = "tf-test-region-image-backend-bucket%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.image_backend.name
   description           = "Regional backend bucket example"
@@ -447,7 +447,7 @@ resource "google_compute_region_backend_bucket" "image_backend" {
 }
 
 resource "google_storage_bucket" "image_backend" {
-  name                        = "tf-test-region-image-store-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true
@@ -466,7 +466,7 @@ resource "google_compute_region_backend_bucket_iam_binding" "foo" {
 func testAccComputeRegionBackendBucketIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "image_backend" {
-  name                  = "tf-test-region-image-backend-bucket%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.image_backend.name
   description           = "Regional backend bucket example"
@@ -474,7 +474,7 @@ resource "google_compute_region_backend_bucket" "image_backend" {
 }
 
 resource "google_storage_bucket" "image_backend" {
-  name                        = "tf-test-region-image-store-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true
@@ -493,7 +493,7 @@ resource "google_compute_region_backend_bucket_iam_binding" "foo" {
 func testAccComputeRegionBackendBucketIamBinding_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "image_backend" {
-  name                  = "tf-test-region-image-backend-bucket%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.image_backend.name
   description           = "Regional backend bucket example"
@@ -501,7 +501,7 @@ resource "google_compute_region_backend_bucket" "image_backend" {
 }
 
 resource "google_storage_bucket" "image_backend" {
-  name                        = "tf-test-region-image-store-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true
@@ -525,7 +525,7 @@ resource "google_compute_region_backend_bucket_iam_binding" "foo" {
 func testAccComputeRegionBackendBucketIamBinding_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "image_backend" {
-  name                  = "tf-test-region-image-backend-bucket%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.image_backend.name
   description           = "Regional backend bucket example"
@@ -533,7 +533,7 @@ resource "google_compute_region_backend_bucket" "image_backend" {
 }
 
 resource "google_storage_bucket" "image_backend" {
-  name                        = "tf-test-region-image-store-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true
@@ -579,7 +579,7 @@ resource "google_compute_region_backend_bucket_iam_binding" "foo3" {
 func testAccComputeRegionBackendBucketIamMember_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "image_backend" {
-  name                  = "tf-test-region-image-backend-bucket%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.image_backend.name
   description           = "Regional backend bucket example"
@@ -587,7 +587,7 @@ resource "google_compute_region_backend_bucket" "image_backend" {
 }
 
 resource "google_storage_bucket" "image_backend" {
-  name                        = "tf-test-region-image-store-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true
@@ -611,7 +611,7 @@ resource "google_compute_region_backend_bucket_iam_member" "foo" {
 func testAccComputeRegionBackendBucketIamMember_withAndWithoutConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "image_backend" {
-  name                  = "tf-test-region-image-backend-bucket%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.image_backend.name
   description           = "Regional backend bucket example"
@@ -619,7 +619,7 @@ resource "google_compute_region_backend_bucket" "image_backend" {
 }
 
 resource "google_storage_bucket" "image_backend" {
-  name                        = "tf-test-region-image-store-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true
@@ -665,7 +665,7 @@ resource "google_compute_region_backend_bucket_iam_member" "foo3" {
 func testAccComputeRegionBackendBucketIamPolicy_withConditionGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "image_backend" {
-  name                  = "tf-test-region-image-backend-bucket%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.image_backend.name
   description           = "Regional backend bucket example"
@@ -673,7 +673,7 @@ resource "google_compute_region_backend_bucket" "image_backend" {
 }
 
 resource "google_storage_bucket" "image_backend" {
-  name                        = "tf-test-region-image-store-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true

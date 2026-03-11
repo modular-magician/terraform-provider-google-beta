@@ -53,8 +53,13 @@ var (
 func TestAccComputeRegionBackendBucket_regionBackendBucketBasicExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"backend_bucket_name": "tf-test-region-image-backend-bucket" + randomSuffix,
+		"bucket_name":         "tf-test-region-image-store-bucket" + randomSuffix,
+		"region":              "tf-test-us-central1" + randomSuffix,
+		"random_suffix":       randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -78,7 +83,7 @@ func TestAccComputeRegionBackendBucket_regionBackendBucketBasicExample(t *testin
 func testAccComputeRegionBackendBucket_regionBackendBucketBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "image_backend" {
-  name                  = "tf-test-region-image-backend-bucket%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.image_backend.name
   description           = "Regional backend bucket example"
@@ -86,7 +91,7 @@ resource "google_compute_region_backend_bucket" "image_backend" {
 }
 
 resource "google_storage_bucket" "image_backend" {
-  name                        = "tf-test-region-image-store-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true
@@ -97,8 +102,13 @@ resource "google_storage_bucket" "image_backend" {
 func TestAccComputeRegionBackendBucket_regionBackendBucketInternalLbExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"backend_bucket_name": "tf-test-regional-internal-backend" + randomSuffix,
+		"bucket_name":         "tf-test-regional-internal-bucket" + randomSuffix,
+		"region":              "tf-test-us-central1" + randomSuffix,
+		"random_suffix":       randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -122,7 +132,7 @@ func TestAccComputeRegionBackendBucket_regionBackendBucketInternalLbExample(t *t
 func testAccComputeRegionBackendBucket_regionBackendBucketInternalLbExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "internal_backend" {
-  name                  = "tf-test-regional-internal-backend%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-central1"
   bucket_name           = google_storage_bucket.internal_backend.name
   load_balancing_scheme = "INTERNAL_MANAGED"
@@ -130,7 +140,7 @@ resource "google_compute_region_backend_bucket" "internal_backend" {
 }
 
 resource "google_storage_bucket" "internal_backend" {
-  name                        = "tf-test-regional-internal-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-CENTRAL1"
   force_destroy               = true
   uniform_bucket_level_access = true
@@ -152,8 +162,13 @@ resource "google_storage_bucket_object" "index" {
 func TestAccComputeRegionBackendBucket_regionBackendBucketExternalLbExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"backend_bucket_name": "tf-test-regional-external-backend" + randomSuffix,
+		"bucket_name":         "tf-test-regional-external-bucket" + randomSuffix,
+		"region":              "tf-test-us-east1" + randomSuffix,
+		"random_suffix":       randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -177,7 +192,7 @@ func TestAccComputeRegionBackendBucket_regionBackendBucketExternalLbExample(t *t
 func testAccComputeRegionBackendBucket_regionBackendBucketExternalLbExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_backend_bucket" "external_backend" {
-  name                  = "tf-test-regional-external-backend%{random_suffix}"
+  name                  = "%{backend_bucket_name}"
   region                = "us-east1"
   bucket_name           = google_storage_bucket.external_backend.name
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -188,7 +203,7 @@ resource "google_compute_region_backend_bucket" "external_backend" {
 }
 
 resource "google_storage_bucket" "external_backend" {
-  name                        = "tf-test-regional-external-bucket%{random_suffix}"
+  name                        = "%{bucket_name}"
   location                    = "US-EAST1"
   force_destroy               = true
   uniform_bucket_level_access = true

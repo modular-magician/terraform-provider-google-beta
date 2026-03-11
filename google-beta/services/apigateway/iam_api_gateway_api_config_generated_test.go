@@ -109,13 +109,13 @@ func testAccApiGatewayApiConfigIamMember_basicGenerated(context map[string]inter
 	return acctest.Nprintf(`
 resource "google_api_gateway_api" "api_cfg" {
   provider = google-beta
-  api_id = "tf-test-my-api%{random_suffix}"
+  api_id = "%{api_id}"
 }
 
 resource "google_api_gateway_api_config" "api_cfg" {
   provider = google-beta
   api = google_api_gateway_api.api_cfg.api_id
-  api_config_id = "tf-test-my-config%{random_suffix}"
+  api_config_id = "%{config_id}"
 
   openapi_documents {
     document {
@@ -142,13 +142,13 @@ func testAccApiGatewayApiConfigIamPolicy_basicGenerated(context map[string]inter
 	return acctest.Nprintf(`
 resource "google_api_gateway_api" "api_cfg" {
   provider = google-beta
-  api_id = "tf-test-my-api%{random_suffix}"
+  api_id = "%{api_id}"
 }
 
 resource "google_api_gateway_api_config" "api_cfg" {
   provider = google-beta
   api = google_api_gateway_api.api_cfg.api_id
-  api_config_id = "tf-test-my-config%{random_suffix}"
+  api_config_id = "%{config_id}"
 
   openapi_documents {
     document {
@@ -191,13 +191,13 @@ func testAccApiGatewayApiConfigIamPolicy_emptyBinding(context map[string]interfa
 	return acctest.Nprintf(`
 resource "google_api_gateway_api" "api_cfg" {
   provider = google-beta
-  api_id = "tf-test-my-api%{random_suffix}"
+  api_id = "%{api_id}"
 }
 
 resource "google_api_gateway_api_config" "api_cfg" {
   provider = google-beta
   api = google_api_gateway_api.api_cfg.api_id
-  api_config_id = "tf-test-my-config%{random_suffix}"
+  api_config_id = "%{config_id}"
 
   openapi_documents {
     document {
@@ -227,13 +227,13 @@ func testAccApiGatewayApiConfigIamBinding_basicGenerated(context map[string]inte
 	return acctest.Nprintf(`
 resource "google_api_gateway_api" "api_cfg" {
   provider = google-beta
-  api_id = "tf-test-my-api%{random_suffix}"
+  api_id = "%{api_id}"
 }
 
 resource "google_api_gateway_api_config" "api_cfg" {
   provider = google-beta
   api = google_api_gateway_api.api_cfg.api_id
-  api_config_id = "tf-test-my-config%{random_suffix}"
+  api_config_id = "%{config_id}"
 
   openapi_documents {
     document {
@@ -260,13 +260,13 @@ func testAccApiGatewayApiConfigIamBinding_updateGenerated(context map[string]int
 	return acctest.Nprintf(`
 resource "google_api_gateway_api" "api_cfg" {
   provider = google-beta
-  api_id = "tf-test-my-api%{random_suffix}"
+  api_id = "%{api_id}"
 }
 
 resource "google_api_gateway_api_config" "api_cfg" {
   provider = google-beta
   api = google_api_gateway_api.api_cfg.api_id
-  api_config_id = "tf-test-my-config%{random_suffix}"
+  api_config_id = "%{config_id}"
 
   openapi_documents {
     document {

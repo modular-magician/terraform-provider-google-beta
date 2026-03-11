@@ -53,8 +53,11 @@ var (
 func TestAccBiglakeIcebergIcebergTable_biglakeIcebergTableBasicExample(t *testing.T) {
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"random_suffix": "tf-test-random-suffix" + randomSuffix,
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -131,8 +134,11 @@ func TestAccBiglakeIcebergIcebergTable_biglakeIcebergTableUpdateExample(t *testi
 	t.Skip("true")
 	t.Parallel()
 
+	randomSuffix := acctest.RandString(t, 10)
+
 	context := map[string]interface{}{
-		"random_suffix": acctest.RandString(t, 10),
+		"random_suffix": "tf-test-random-suffix" + randomSuffix,
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

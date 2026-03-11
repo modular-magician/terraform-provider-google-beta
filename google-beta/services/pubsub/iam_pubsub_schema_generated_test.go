@@ -138,7 +138,7 @@ func TestAccPubsubSchemaIamPolicyGenerated(t *testing.T) {
 func testAccPubsubSchemaIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_pubsub_schema" "example" {
-  name = "tf-test-example-schema%{random_suffix}"
+  name = "%{schema_name}"
   type = "AVRO"
   definition = "{\n  \"type\" : \"record\",\n  \"name\" : \"Avro\",\n  \"fields\" : [\n    {\n      \"name\" : \"StringField\",\n      \"type\" : \"string\"\n    },\n    {\n      \"name\" : \"IntField\",\n      \"type\" : \"int\"\n    }\n  ]\n}\n"
 }
@@ -155,7 +155,7 @@ resource "google_pubsub_schema_iam_member" "foo" {
 func testAccPubsubSchemaIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_pubsub_schema" "example" {
-  name = "tf-test-example-schema%{random_suffix}"
+  name = "%{schema_name}"
   type = "AVRO"
   definition = "{\n  \"type\" : \"record\",\n  \"name\" : \"Avro\",\n  \"fields\" : [\n    {\n      \"name\" : \"StringField\",\n      \"type\" : \"string\"\n    },\n    {\n      \"name\" : \"IntField\",\n      \"type\" : \"int\"\n    }\n  ]\n}\n"
 }
@@ -186,7 +186,7 @@ data "google_pubsub_schema_iam_policy" "foo" {
 func testAccPubsubSchemaIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_pubsub_schema" "example" {
-  name = "tf-test-example-schema%{random_suffix}"
+  name = "%{schema_name}"
   type = "AVRO"
   definition = "{\n  \"type\" : \"record\",\n  \"name\" : \"Avro\",\n  \"fields\" : [\n    {\n      \"name\" : \"StringField\",\n      \"type\" : \"string\"\n    },\n    {\n      \"name\" : \"IntField\",\n      \"type\" : \"int\"\n    }\n  ]\n}\n"
 }
@@ -205,7 +205,7 @@ resource "google_pubsub_schema_iam_policy" "foo" {
 func testAccPubsubSchemaIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_pubsub_schema" "example" {
-  name = "tf-test-example-schema%{random_suffix}"
+  name = "%{schema_name}"
   type = "AVRO"
   definition = "{\n  \"type\" : \"record\",\n  \"name\" : \"Avro\",\n  \"fields\" : [\n    {\n      \"name\" : \"StringField\",\n      \"type\" : \"string\"\n    },\n    {\n      \"name\" : \"IntField\",\n      \"type\" : \"int\"\n    }\n  ]\n}\n"
 }
@@ -222,7 +222,7 @@ resource "google_pubsub_schema_iam_binding" "foo" {
 func testAccPubsubSchemaIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_pubsub_schema" "example" {
-  name = "tf-test-example-schema%{random_suffix}"
+  name = "%{schema_name}"
   type = "AVRO"
   definition = "{\n  \"type\" : \"record\",\n  \"name\" : \"Avro\",\n  \"fields\" : [\n    {\n      \"name\" : \"StringField\",\n      \"type\" : \"string\"\n    },\n    {\n      \"name\" : \"IntField\",\n      \"type\" : \"int\"\n    }\n  ]\n}\n"
 }

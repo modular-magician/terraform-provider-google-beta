@@ -138,7 +138,7 @@ func TestAccDataprocMetastoreServiceIamPolicyGenerated(t *testing.T) {
 func testAccDataprocMetastoreServiceIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_metastore_service" "default" {
-  service_id = "tf-test-metastore-srv%{random_suffix}"
+  service_id = "%{metastore_service_name}"
   location   = "us-central1"
   port       = 9080
   tier       = "DEVELOPER"
@@ -170,7 +170,7 @@ resource "google_dataproc_metastore_service_iam_member" "foo" {
 func testAccDataprocMetastoreServiceIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_metastore_service" "default" {
-  service_id = "tf-test-metastore-srv%{random_suffix}"
+  service_id = "%{metastore_service_name}"
   location   = "us-central1"
   port       = 9080
   tier       = "DEVELOPER"
@@ -217,7 +217,7 @@ data "google_dataproc_metastore_service_iam_policy" "foo" {
 func testAccDataprocMetastoreServiceIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_metastore_service" "default" {
-  service_id = "tf-test-metastore-srv%{random_suffix}"
+  service_id = "%{metastore_service_name}"
   location   = "us-central1"
   port       = 9080
   tier       = "DEVELOPER"
@@ -251,7 +251,7 @@ resource "google_dataproc_metastore_service_iam_policy" "foo" {
 func testAccDataprocMetastoreServiceIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_metastore_service" "default" {
-  service_id = "tf-test-metastore-srv%{random_suffix}"
+  service_id = "%{metastore_service_name}"
   location   = "us-central1"
   port       = 9080
   tier       = "DEVELOPER"
@@ -283,7 +283,7 @@ resource "google_dataproc_metastore_service_iam_binding" "foo" {
 func testAccDataprocMetastoreServiceIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_metastore_service" "default" {
-  service_id = "tf-test-metastore-srv%{random_suffix}"
+  service_id = "%{metastore_service_name}"
   location   = "us-central1"
   port       = 9080
   tier       = "DEVELOPER"

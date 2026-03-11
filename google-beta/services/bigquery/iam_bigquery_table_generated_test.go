@@ -138,12 +138,12 @@ func TestAccBigQueryTableIamPolicyGenerated(t *testing.T) {
 func testAccBigQueryTableIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_bigquery_dataset" "test" {
-  dataset_id = "tf_test_dataset_id%{random_suffix}"
+  dataset_id = "%{dataset_id}"
 }
 
 resource "google_bigquery_table" "test" {
   deletion_protection = false
-  table_id   = "tf_test_table_id%{random_suffix}"
+  table_id   = "%{table_id}"
   dataset_id = google_bigquery_dataset.test.dataset_id
   time_partitioning {
     type = "DAY"
@@ -205,12 +205,12 @@ resource "google_bigquery_table_iam_member" "foo" {
 func testAccBigQueryTableIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_bigquery_dataset" "test" {
-  dataset_id = "tf_test_dataset_id%{random_suffix}"
+  dataset_id = "%{dataset_id}"
 }
 
 resource "google_bigquery_table" "test" {
   deletion_protection = false
-  table_id   = "tf_test_table_id%{random_suffix}"
+  table_id   = "%{table_id}"
   dataset_id = google_bigquery_dataset.test.dataset_id
   time_partitioning {
     type = "DAY"
@@ -287,12 +287,12 @@ data "google_bigquery_table_iam_policy" "foo" {
 func testAccBigQueryTableIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_bigquery_dataset" "test" {
-  dataset_id = "tf_test_dataset_id%{random_suffix}"
+  dataset_id = "%{dataset_id}"
 }
 
 resource "google_bigquery_table" "test" {
   deletion_protection = false
-  table_id   = "tf_test_table_id%{random_suffix}"
+  table_id   = "%{table_id}"
   dataset_id = google_bigquery_dataset.test.dataset_id
   time_partitioning {
     type = "DAY"
@@ -356,12 +356,12 @@ resource "google_bigquery_table_iam_policy" "foo" {
 func testAccBigQueryTableIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_bigquery_dataset" "test" {
-  dataset_id = "tf_test_dataset_id%{random_suffix}"
+  dataset_id = "%{dataset_id}"
 }
 
 resource "google_bigquery_table" "test" {
   deletion_protection = false
-  table_id   = "tf_test_table_id%{random_suffix}"
+  table_id   = "%{table_id}"
   dataset_id = google_bigquery_dataset.test.dataset_id
   time_partitioning {
     type = "DAY"
@@ -423,12 +423,12 @@ resource "google_bigquery_table_iam_binding" "foo" {
 func testAccBigQueryTableIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_bigquery_dataset" "test" {
-  dataset_id = "tf_test_dataset_id%{random_suffix}"
+  dataset_id = "%{dataset_id}"
 }
 
 resource "google_bigquery_table" "test" {
   deletion_protection = false
-  table_id   = "tf_test_table_id%{random_suffix}"
+  table_id   = "%{table_id}"
   dataset_id = google_bigquery_dataset.test.dataset_id
   time_partitioning {
     type = "DAY"

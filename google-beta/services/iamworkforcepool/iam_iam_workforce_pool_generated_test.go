@@ -147,7 +147,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolIamPolicyGenerated(t *testing.T) {
 func testAccIAMWorkforcePoolWorkforcePoolIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workforce_pool" "example" {
-  workforce_pool_id = "tf-test-example-pool%{random_suffix}"
+  workforce_pool_id = "%{workforce_pool_id}"
   parent            = "organizations/%{org_id}"
   location          = "global"
 }
@@ -164,7 +164,7 @@ resource "google_iam_workforce_pool_iam_member" "foo" {
 func testAccIAMWorkforcePoolWorkforcePoolIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workforce_pool" "example" {
-  workforce_pool_id = "tf-test-example-pool%{random_suffix}"
+  workforce_pool_id = "%{workforce_pool_id}"
   parent            = "organizations/%{org_id}"
   location          = "global"
 }
@@ -199,7 +199,7 @@ data "google_iam_workforce_pool_iam_policy" "foo" {
 func testAccIAMWorkforcePoolWorkforcePoolIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workforce_pool" "example" {
-  workforce_pool_id = "tf-test-example-pool%{random_suffix}"
+  workforce_pool_id = "%{workforce_pool_id}"
   parent            = "organizations/%{org_id}"
   location          = "global"
 }
@@ -218,7 +218,7 @@ resource "google_iam_workforce_pool_iam_policy" "foo" {
 func testAccIAMWorkforcePoolWorkforcePoolIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workforce_pool" "example" {
-  workforce_pool_id = "tf-test-example-pool%{random_suffix}"
+  workforce_pool_id = "%{workforce_pool_id}"
   parent            = "organizations/%{org_id}"
   location          = "global"
 }
@@ -235,7 +235,7 @@ resource "google_iam_workforce_pool_iam_binding" "foo" {
 func testAccIAMWorkforcePoolWorkforcePoolIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workforce_pool" "example" {
-  workforce_pool_id = "tf-test-example-pool%{random_suffix}"
+  workforce_pool_id = "%{workforce_pool_id}"
   parent            = "organizations/%{org_id}"
   location          = "global"
 }

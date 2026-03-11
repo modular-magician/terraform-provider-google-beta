@@ -138,7 +138,7 @@ func TestAccVertexAIEndpointIamPolicyGenerated(t *testing.T) {
 func testAccVertexAIEndpointIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_network" "default" {
-  name = "tf-test-psc-network%{random_suffix}-%{random_suffix}"
+  name = "%{network_name}-%{random_suffix}"
 }
 
 resource "google_vertex_ai_endpoint" "endpoint" {
@@ -178,7 +178,7 @@ resource "google_vertex_ai_endpoint_iam_member" "foo" {
 func testAccVertexAIEndpointIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_network" "default" {
-  name = "tf-test-psc-network%{random_suffix}-%{random_suffix}"
+  name = "%{network_name}-%{random_suffix}"
 }
 
 resource "google_vertex_ai_endpoint" "endpoint" {
@@ -233,7 +233,7 @@ data "google_vertex_ai_endpoint_iam_policy" "foo" {
 func testAccVertexAIEndpointIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_network" "default" {
-  name = "tf-test-psc-network%{random_suffix}-%{random_suffix}"
+  name = "%{network_name}-%{random_suffix}"
 }
 
 resource "google_vertex_ai_endpoint" "endpoint" {
@@ -275,7 +275,7 @@ resource "google_vertex_ai_endpoint_iam_policy" "foo" {
 func testAccVertexAIEndpointIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_network" "default" {
-  name = "tf-test-psc-network%{random_suffix}-%{random_suffix}"
+  name = "%{network_name}-%{random_suffix}"
 }
 
 resource "google_vertex_ai_endpoint" "endpoint" {
@@ -315,7 +315,7 @@ resource "google_vertex_ai_endpoint_iam_binding" "foo" {
 func testAccVertexAIEndpointIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_network" "default" {
-  name = "tf-test-psc-network%{random_suffix}-%{random_suffix}"
+  name = "%{network_name}-%{random_suffix}"
 }
 
 resource "google_vertex_ai_endpoint" "endpoint" {

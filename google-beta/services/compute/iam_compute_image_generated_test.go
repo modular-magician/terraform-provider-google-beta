@@ -346,7 +346,7 @@ data "google_compute_image" "debian" {
 }
 
 resource "google_compute_disk" "persistent" {
-  name  = "tf-test-example-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = data.google_compute_image.debian.self_link
   size  = 10
   type  = "pd-ssd"
@@ -354,7 +354,7 @@ resource "google_compute_disk" "persistent" {
 }
 
 resource "google_compute_image" "example" {
-  name = "tf-test-example-image%{random_suffix}"
+  name = "%{image_name}"
 
   source_disk = google_compute_disk.persistent.id
 }
@@ -376,7 +376,7 @@ data "google_compute_image" "debian" {
 }
 
 resource "google_compute_disk" "persistent" {
-  name  = "tf-test-example-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = data.google_compute_image.debian.self_link
   size  = 10
   type  = "pd-ssd"
@@ -384,7 +384,7 @@ resource "google_compute_disk" "persistent" {
 }
 
 resource "google_compute_image" "example" {
-  name = "tf-test-example-image%{random_suffix}"
+  name = "%{image_name}"
 
   source_disk = google_compute_disk.persistent.id
 }
@@ -420,7 +420,7 @@ data "google_compute_image" "debian" {
 }
 
 resource "google_compute_disk" "persistent" {
-  name  = "tf-test-example-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = data.google_compute_image.debian.self_link
   size  = 10
   type  = "pd-ssd"
@@ -428,7 +428,7 @@ resource "google_compute_disk" "persistent" {
 }
 
 resource "google_compute_image" "example" {
-  name = "tf-test-example-image%{random_suffix}"
+  name = "%{image_name}"
 
   source_disk = google_compute_disk.persistent.id
 }
@@ -452,7 +452,7 @@ data "google_compute_image" "debian" {
 }
 
 resource "google_compute_disk" "persistent" {
-  name  = "tf-test-example-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = data.google_compute_image.debian.self_link
   size  = 10
   type  = "pd-ssd"
@@ -460,7 +460,7 @@ resource "google_compute_disk" "persistent" {
 }
 
 resource "google_compute_image" "example" {
-  name = "tf-test-example-image%{random_suffix}"
+  name = "%{image_name}"
 
   source_disk = google_compute_disk.persistent.id
 }
@@ -482,7 +482,7 @@ data "google_compute_image" "debian" {
 }
 
 resource "google_compute_disk" "persistent" {
-  name  = "tf-test-example-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = data.google_compute_image.debian.self_link
   size  = 10
   type  = "pd-ssd"
@@ -490,7 +490,7 @@ resource "google_compute_disk" "persistent" {
 }
 
 resource "google_compute_image" "example" {
-  name = "tf-test-example-image%{random_suffix}"
+  name = "%{image_name}"
 
   source_disk = google_compute_disk.persistent.id
 }
@@ -512,7 +512,7 @@ data "google_compute_image" "debian" {
 }
 
 resource "google_compute_disk" "persistent" {
-  name  = "tf-test-example-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = data.google_compute_image.debian.self_link
   size  = 10
   type  = "pd-ssd"
@@ -520,7 +520,7 @@ resource "google_compute_disk" "persistent" {
 }
 
 resource "google_compute_image" "example" {
-  name = "tf-test-example-image%{random_suffix}"
+  name = "%{image_name}"
 
   source_disk = google_compute_disk.persistent.id
 }
@@ -547,7 +547,7 @@ data "google_compute_image" "debian" {
 }
 
 resource "google_compute_disk" "persistent" {
-  name  = "tf-test-example-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = data.google_compute_image.debian.self_link
   size  = 10
   type  = "pd-ssd"
@@ -555,7 +555,7 @@ resource "google_compute_disk" "persistent" {
 }
 
 resource "google_compute_image" "example" {
-  name = "tf-test-example-image%{random_suffix}"
+  name = "%{image_name}"
 
   source_disk = google_compute_disk.persistent.id
 }
@@ -602,7 +602,7 @@ data "google_compute_image" "debian" {
 }
 
 resource "google_compute_disk" "persistent" {
-  name  = "tf-test-example-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = data.google_compute_image.debian.self_link
   size  = 10
   type  = "pd-ssd"
@@ -610,7 +610,7 @@ resource "google_compute_disk" "persistent" {
 }
 
 resource "google_compute_image" "example" {
-  name = "tf-test-example-image%{random_suffix}"
+  name = "%{image_name}"
 
   source_disk = google_compute_disk.persistent.id
 }
@@ -637,7 +637,7 @@ data "google_compute_image" "debian" {
 }
 
 resource "google_compute_disk" "persistent" {
-  name  = "tf-test-example-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = data.google_compute_image.debian.self_link
   size  = 10
   type  = "pd-ssd"
@@ -645,7 +645,7 @@ resource "google_compute_disk" "persistent" {
 }
 
 resource "google_compute_image" "example" {
-  name = "tf-test-example-image%{random_suffix}"
+  name = "%{image_name}"
 
   source_disk = google_compute_disk.persistent.id
 }
@@ -692,7 +692,7 @@ data "google_compute_image" "debian" {
 }
 
 resource "google_compute_disk" "persistent" {
-  name  = "tf-test-example-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = data.google_compute_image.debian.self_link
   size  = 10
   type  = "pd-ssd"
@@ -700,7 +700,7 @@ resource "google_compute_disk" "persistent" {
 }
 
 resource "google_compute_image" "example" {
-  name = "tf-test-example-image%{random_suffix}"
+  name = "%{image_name}"
 
   source_disk = google_compute_disk.persistent.id
 }

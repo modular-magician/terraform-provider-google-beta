@@ -138,7 +138,7 @@ func TestAccColabRuntimeTemplateIamPolicyGenerated(t *testing.T) {
 func testAccColabRuntimeTemplateIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_colab_runtime_template" "runtime-template" {
-  name = "tf-test-colab-runtime-template%{random_suffix}"
+  name = "%{runtime_template_name}"
   display_name = "Runtime template basic"
   location = "us-central1"
 
@@ -164,7 +164,7 @@ resource "google_colab_runtime_template_iam_member" "foo" {
 func testAccColabRuntimeTemplateIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_colab_runtime_template" "runtime-template" {
-  name = "tf-test-colab-runtime-template%{random_suffix}"
+  name = "%{runtime_template_name}"
   display_name = "Runtime template basic"
   location = "us-central1"
 
@@ -205,7 +205,7 @@ data "google_colab_runtime_template_iam_policy" "foo" {
 func testAccColabRuntimeTemplateIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_colab_runtime_template" "runtime-template" {
-  name = "tf-test-colab-runtime-template%{random_suffix}"
+  name = "%{runtime_template_name}"
   display_name = "Runtime template basic"
   location = "us-central1"
 
@@ -233,7 +233,7 @@ resource "google_colab_runtime_template_iam_policy" "foo" {
 func testAccColabRuntimeTemplateIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_colab_runtime_template" "runtime-template" {
-  name = "tf-test-colab-runtime-template%{random_suffix}"
+  name = "%{runtime_template_name}"
   display_name = "Runtime template basic"
   location = "us-central1"
 
@@ -259,7 +259,7 @@ resource "google_colab_runtime_template_iam_binding" "foo" {
 func testAccColabRuntimeTemplateIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_colab_runtime_template" "runtime-template" {
-  name = "tf-test-colab-runtime-template%{random_suffix}"
+  name = "%{runtime_template_name}"
   display_name = "Runtime template basic"
   location = "us-central1"
 

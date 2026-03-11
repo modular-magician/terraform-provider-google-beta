@@ -138,7 +138,7 @@ func TestAccComputeRegionDiskIamPolicyGenerated(t *testing.T) {
 func testAccComputeRegionDiskIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_disk" "regiondisk" {
-  name                      = "tf-test-my-region-disk%{random_suffix}"
+  name                      = "%{region_disk_name}"
   snapshot                  = google_compute_snapshot.snapdisk.id
   type                      = "pd-ssd"
   region                    = "us-central1"
@@ -148,7 +148,7 @@ resource "google_compute_region_disk" "regiondisk" {
 }
 
 resource "google_compute_disk" "disk" {
-  name  = "tf-test-my-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = "debian-cloud/debian-11"
   size  = 50
   type  = "pd-ssd"
@@ -156,7 +156,7 @@ resource "google_compute_disk" "disk" {
 }
 
 resource "google_compute_snapshot" "snapdisk" {
-  name        = "tf-test-my-snapshot%{random_suffix}"
+  name        = "%{snapshot_name}"
   source_disk = google_compute_disk.disk.name
   zone        = "us-central1-a"
 }
@@ -174,7 +174,7 @@ resource "google_compute_region_disk_iam_member" "foo" {
 func testAccComputeRegionDiskIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_disk" "regiondisk" {
-  name                      = "tf-test-my-region-disk%{random_suffix}"
+  name                      = "%{region_disk_name}"
   snapshot                  = google_compute_snapshot.snapdisk.id
   type                      = "pd-ssd"
   region                    = "us-central1"
@@ -184,7 +184,7 @@ resource "google_compute_region_disk" "regiondisk" {
 }
 
 resource "google_compute_disk" "disk" {
-  name  = "tf-test-my-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = "debian-cloud/debian-11"
   size  = 50
   type  = "pd-ssd"
@@ -192,7 +192,7 @@ resource "google_compute_disk" "disk" {
 }
 
 resource "google_compute_snapshot" "snapdisk" {
-  name        = "tf-test-my-snapshot%{random_suffix}"
+  name        = "%{snapshot_name}"
   source_disk = google_compute_disk.disk.name
   zone        = "us-central1-a"
 }
@@ -225,7 +225,7 @@ data "google_compute_region_disk_iam_policy" "foo" {
 func testAccComputeRegionDiskIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_disk" "regiondisk" {
-  name                      = "tf-test-my-region-disk%{random_suffix}"
+  name                      = "%{region_disk_name}"
   snapshot                  = google_compute_snapshot.snapdisk.id
   type                      = "pd-ssd"
   region                    = "us-central1"
@@ -235,7 +235,7 @@ resource "google_compute_region_disk" "regiondisk" {
 }
 
 resource "google_compute_disk" "disk" {
-  name  = "tf-test-my-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = "debian-cloud/debian-11"
   size  = 50
   type  = "pd-ssd"
@@ -243,7 +243,7 @@ resource "google_compute_disk" "disk" {
 }
 
 resource "google_compute_snapshot" "snapdisk" {
-  name        = "tf-test-my-snapshot%{random_suffix}"
+  name        = "%{snapshot_name}"
   source_disk = google_compute_disk.disk.name
   zone        = "us-central1-a"
 }
@@ -263,7 +263,7 @@ resource "google_compute_region_disk_iam_policy" "foo" {
 func testAccComputeRegionDiskIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_disk" "regiondisk" {
-  name                      = "tf-test-my-region-disk%{random_suffix}"
+  name                      = "%{region_disk_name}"
   snapshot                  = google_compute_snapshot.snapdisk.id
   type                      = "pd-ssd"
   region                    = "us-central1"
@@ -273,7 +273,7 @@ resource "google_compute_region_disk" "regiondisk" {
 }
 
 resource "google_compute_disk" "disk" {
-  name  = "tf-test-my-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = "debian-cloud/debian-11"
   size  = 50
   type  = "pd-ssd"
@@ -281,7 +281,7 @@ resource "google_compute_disk" "disk" {
 }
 
 resource "google_compute_snapshot" "snapdisk" {
-  name        = "tf-test-my-snapshot%{random_suffix}"
+  name        = "%{snapshot_name}"
   source_disk = google_compute_disk.disk.name
   zone        = "us-central1-a"
 }
@@ -299,7 +299,7 @@ resource "google_compute_region_disk_iam_binding" "foo" {
 func testAccComputeRegionDiskIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_compute_region_disk" "regiondisk" {
-  name                      = "tf-test-my-region-disk%{random_suffix}"
+  name                      = "%{region_disk_name}"
   snapshot                  = google_compute_snapshot.snapdisk.id
   type                      = "pd-ssd"
   region                    = "us-central1"
@@ -309,7 +309,7 @@ resource "google_compute_region_disk" "regiondisk" {
 }
 
 resource "google_compute_disk" "disk" {
-  name  = "tf-test-my-disk%{random_suffix}"
+  name  = "%{disk_name}"
   image = "debian-cloud/debian-11"
   size  = 50
   type  = "pd-ssd"
@@ -317,7 +317,7 @@ resource "google_compute_disk" "disk" {
 }
 
 resource "google_compute_snapshot" "snapdisk" {
-  name        = "tf-test-my-snapshot%{random_suffix}"
+  name        = "%{snapshot_name}"
   source_disk = google_compute_disk.disk.name
   zone        = "us-central1-a"
 }

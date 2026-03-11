@@ -138,7 +138,7 @@ func TestAccDataprocAutoscalingPolicyIamPolicyGenerated(t *testing.T) {
 func testAccDataprocAutoscalingPolicyIamMember_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_autoscaling_policy" "basic" {
-  policy_id = "tf-test-dataproc-policy%{random_suffix}"
+  policy_id = "%{name}"
   location  = "us-central1"
 
   worker_config {
@@ -168,7 +168,7 @@ resource "google_dataproc_autoscaling_policy_iam_member" "foo" {
 func testAccDataprocAutoscalingPolicyIamPolicy_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_autoscaling_policy" "basic" {
-  policy_id = "tf-test-dataproc-policy%{random_suffix}"
+  policy_id = "%{name}"
   location  = "us-central1"
 
   worker_config {
@@ -213,7 +213,7 @@ data "google_dataproc_autoscaling_policy_iam_policy" "foo" {
 func testAccDataprocAutoscalingPolicyIamPolicy_emptyBinding(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_autoscaling_policy" "basic" {
-  policy_id = "tf-test-dataproc-policy%{random_suffix}"
+  policy_id = "%{name}"
   location  = "us-central1"
 
   worker_config {
@@ -245,7 +245,7 @@ resource "google_dataproc_autoscaling_policy_iam_policy" "foo" {
 func testAccDataprocAutoscalingPolicyIamBinding_basicGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_autoscaling_policy" "basic" {
-  policy_id = "tf-test-dataproc-policy%{random_suffix}"
+  policy_id = "%{name}"
   location  = "us-central1"
 
   worker_config {
@@ -275,7 +275,7 @@ resource "google_dataproc_autoscaling_policy_iam_binding" "foo" {
 func testAccDataprocAutoscalingPolicyIamBinding_updateGenerated(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataproc_autoscaling_policy" "basic" {
-  policy_id = "tf-test-dataproc-policy%{random_suffix}"
+  policy_id = "%{name}"
   location  = "us-central1"
 
   worker_config {
