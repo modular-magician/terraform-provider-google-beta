@@ -24,6 +24,7 @@ import (
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 )
 
 func TestAccProjectIamMemberRemove_basic(t *testing.T) {
@@ -45,8 +46,12 @@ func TestAccProjectIamMemberRemove_basic(t *testing.T) {
 				ExpectNonEmptyPlan: true, // Due to adding in binding, then removing in remove resource
 			},
 			{
-				Config:   testAccCheckGoogleProjectIamMemberRemove_basic2(randomSuffix, org),
-				PlanOnly: true, // binding expects the membership to be removed. Any diff will fail the test due to PlanOnly.
+				Config: testAccCheckGoogleProjectIamMemberRemove_basic2(randomSuffix, org),
+				ConfigPlanChecks: resource.ConfigPlanChecks{ // binding expects the membership to be removed. Any diff will fail the test due to PlanOnly.
+					PostApplyPreRefresh: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
 			},
 		},
 	})
@@ -71,8 +76,12 @@ func TestAccProjectIamMemberRemove_multipleMembersInBinding(t *testing.T) {
 				ExpectNonEmptyPlan: true, // Due to adding in binding, then removing in remove resource
 			},
 			{
-				Config:   testAccCheckGoogleProjectIamMemberRemove_multipleMemberBinding2(randomSuffix, org),
-				PlanOnly: true, // binding expects the membership to be removed. Any diff will fail the test due to PlanOnly.
+				Config: testAccCheckGoogleProjectIamMemberRemove_multipleMemberBinding2(randomSuffix, org),
+				ConfigPlanChecks: resource.ConfigPlanChecks{ // binding expects the membership to be removed. Any diff will fail the test due to PlanOnly.
+					PostApplyPreRefresh: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
 			},
 		},
 	})
@@ -97,8 +106,12 @@ func TestAccProjectIamMemberRemove_memberInMultipleBindings(t *testing.T) {
 				ExpectNonEmptyPlan: true, // Due to adding in binding, then removing in remove resource
 			},
 			{
-				Config:   testAccCheckGoogleProjectIamMemberRemove_multipleMemberBinding2(randomSuffix, org),
-				PlanOnly: true, // binding expects the membership to be removed. Any diff will fail the test due to PlanOnly.
+				Config: testAccCheckGoogleProjectIamMemberRemove_multipleMemberBinding2(randomSuffix, org),
+				ConfigPlanChecks: resource.ConfigPlanChecks{ // binding expects the membership to be removed. Any diff will fail the test due to PlanOnly.
+					PostApplyPreRefresh: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
 			},
 		},
 	})
