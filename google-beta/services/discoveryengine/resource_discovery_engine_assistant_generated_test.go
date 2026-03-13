@@ -120,6 +120,108 @@ resource "google_discovery_engine_assistant" "basic" {
 `, context)
 }
 
+func TestAccDiscoveryEngineAssistant_discoveryengineAssistantWithModelArmorExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"ma_location":   "us",
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDiscoveryEngineAssistantDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDiscoveryEngineAssistant_discoveryengineAssistantWithModelArmorExample(context),
+			},
+			{
+				ResourceName:            "google_discovery_engine_assistant.with-model-armor",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"assistant_id", "collection_id", "engine_id", "location"},
+			},
+		},
+	})
+}
+
+func testAccDiscoveryEngineAssistant_discoveryengineAssistantWithModelArmorExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_discovery_engine_data_store" "with_armor" {
+  location                    = "us"
+  data_store_id               = "tf-test-example-data-store-id%{random_suffix}"
+  display_name                = "tf-test-structured-datastore"
+  industry_vertical           = "GENERIC"
+  content_config              = "NO_CONTENT"
+  solution_types              = ["SOLUTION_TYPE_SEARCH"]
+  create_advanced_site_search = false
+}
+
+resource "google_discovery_engine_search_engine" "with_armor" {
+  location      = "us"
+  collection_id = "default_collection"
+  engine_id     = "tf-test-example-engine-id%{random_suffix}"
+  display_name  = "Example Search Engine"
+  data_store_ids = [google_discovery_engine_data_store.with_armor.data_store_id]
+  search_engine_config {
+  }
+}
+
+resource "google_model_armor_template" "prompt_shield" {
+  location    = "%{ma_location}"
+  template_id = "tf-test-ma-template-id%{random_suffix}"
+  filter_config {
+    rai_settings {
+      rai_filters {
+        filter_type      = "HATE_SPEECH"
+        confidence_level = "MEDIUM_AND_ABOVE"
+      }
+      rai_filters {
+        filter_type      = "DANGEROUS"
+        confidence_level = "HIGH"
+      }
+    }
+    pi_and_jailbreak_filter_settings {
+      filter_enforcement = "ENABLED"
+      confidence_level   = "MEDIUM_AND_ABOVE"
+    }
+    malicious_uri_filter_settings {
+      filter_enforcement = "ENABLED"
+    }
+  }
+}
+
+resource "google_discovery_engine_assistant" "with-model-armor" {
+  location      = "us"
+  collection_id = "default_collection"
+  engine_id     = google_discovery_engine_search_engine.with_armor.engine_id
+  assistant_id  = "default_assistant"
+  display_name  = "Assistant with Model Armor"
+  description   = "Gemini Enterprise assistant protected by Model Armor"
+  generation_config {
+    system_instruction {
+      additional_system_instruction = "You are a helpful assistant."
+    }
+    default_language = "en"
+  }
+  customer_policy {
+    banned_phrases {
+      phrase            = "confidential"
+      match_type        = "WORD_BOUNDARY_STRING_MATCH"
+      ignore_diacritics = true
+    }
+    model_armor_config {
+      user_prompt_template = google_model_armor_template.prompt_shield.id
+      response_template    = google_model_armor_template.prompt_shield.id
+      failure_mode         = "FAIL_OPEN"
+    }
+  }
+  web_grounding_type = "WEB_GROUNDING_TYPE_GOOGLE_SEARCH"
+}
+`, context)
+}
+
 func testAccCheckDiscoveryEngineAssistantDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

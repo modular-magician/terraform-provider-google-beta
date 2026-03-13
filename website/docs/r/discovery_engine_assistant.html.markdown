@@ -78,6 +78,87 @@ resource "google_discovery_engine_assistant" "basic" {
   web_grounding_type            = "WEB_GROUNDING_TYPE_GOOGLE_SEARCH"
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=discoveryengine_assistant_with_model_armor&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Discoveryengine Assistant With Model Armor
+
+
+```hcl
+resource "google_discovery_engine_data_store" "with_armor" {
+  location                    = "us"
+  data_store_id               = "example-data-store-id"
+  display_name                = "tf-test-structured-datastore"
+  industry_vertical           = "GENERIC"
+  content_config              = "NO_CONTENT"
+  solution_types              = ["SOLUTION_TYPE_SEARCH"]
+  create_advanced_site_search = false
+}
+
+resource "google_discovery_engine_search_engine" "with_armor" {
+  location      = "us"
+  collection_id = "default_collection"
+  engine_id     = "example-engine-id"
+  display_name  = "Example Search Engine"
+  data_store_ids = [google_discovery_engine_data_store.with_armor.data_store_id]
+  search_engine_config {
+  }
+}
+
+resource "google_model_armor_template" "prompt_shield" {
+  location    = "us"
+  template_id = "ma-template-id"
+  filter_config {
+    rai_settings {
+      rai_filters {
+        filter_type      = "HATE_SPEECH"
+        confidence_level = "MEDIUM_AND_ABOVE"
+      }
+      rai_filters {
+        filter_type      = "DANGEROUS"
+        confidence_level = "HIGH"
+      }
+    }
+    pi_and_jailbreak_filter_settings {
+      filter_enforcement = "ENABLED"
+      confidence_level   = "MEDIUM_AND_ABOVE"
+    }
+    malicious_uri_filter_settings {
+      filter_enforcement = "ENABLED"
+    }
+  }
+}
+
+resource "google_discovery_engine_assistant" "with-model-armor" {
+  location      = "us"
+  collection_id = "default_collection"
+  engine_id     = google_discovery_engine_search_engine.with_armor.engine_id
+  assistant_id  = "default_assistant"
+  display_name  = "Assistant with Model Armor"
+  description   = "Gemini Enterprise assistant protected by Model Armor"
+  generation_config {
+    system_instruction {
+      additional_system_instruction = "You are a helpful assistant."
+    }
+    default_language = "en"
+  }
+  customer_policy {
+    banned_phrases {
+      phrase            = "confidential"
+      match_type        = "WORD_BOUNDARY_STRING_MATCH"
+      ignore_diacritics = true
+    }
+    model_armor_config {
+      user_prompt_template = google_model_armor_template.prompt_shield.id
+      response_template    = google_model_armor_template.prompt_shield.id
+      failure_mode         = "FAIL_OPEN"
+    }
+  }
+  web_grounding_type = "WEB_GROUNDING_TYPE_GOOGLE_SEARCH"
+}
+```
 
 ## Argument Reference
 
