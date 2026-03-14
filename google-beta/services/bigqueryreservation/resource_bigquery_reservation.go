@@ -224,6 +224,13 @@ feature.`,
 				ConflictsWith: []string{"autoscale"},
 				RequiredWith:  []string{"scaling_mode"},
 			},
+			"reservation_group": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
+				Description: `The resource name of the reservation group that this reservation belongs to.
+Example: projects/myproject/locations/us/reservationGroups/mygroup.`,
+			},
 			"scaling_mode": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -397,6 +404,12 @@ func resourceBigqueryReservationReservationCreate(d *schema.ResourceData, meta i
 	} else if v, ok := d.GetOkExists("scaling_mode"); !tpgresource.IsEmptyValue(reflect.ValueOf(scalingModeProp)) && (ok || !reflect.DeepEqual(v, scalingModeProp)) {
 		obj["scalingMode"] = scalingModeProp
 	}
+	reservationGroupProp, err := expandBigqueryReservationReservationReservationGroup(d.Get("reservation_group"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("reservation_group"); !tpgresource.IsEmptyValue(reflect.ValueOf(reservationGroupProp)) && (ok || !reflect.DeepEqual(v, reservationGroupProp)) {
+		obj["reservationGroup"] = reservationGroupProp
+	}
 	maxSlotsProp, err := expandBigqueryReservationReservationMaxSlots(d.Get("max_slots"), d, config)
 	if err != nil {
 		return err
@@ -522,6 +535,9 @@ func resourceBigqueryReservationReservationRead(d *schema.ResourceData, meta int
 	if err := d.Set("scaling_mode", flattenBigqueryReservationReservationScalingMode(res["scalingMode"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+	if err := d.Set("reservation_group", flattenBigqueryReservationReservationReservationGroup(res["reservationGroup"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Reservation: %s", err)
+	}
 	if err := d.Set("max_slots", flattenBigqueryReservationReservationMaxSlots(res["maxSlots"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
@@ -581,6 +597,12 @@ func resourceBigqueryReservationReservationUpdate(d *schema.ResourceData, meta i
 	} else if v, ok := d.GetOkExists("scaling_mode"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, scalingModeProp)) {
 		obj["scalingMode"] = scalingModeProp
 	}
+	reservationGroupProp, err := expandBigqueryReservationReservationReservationGroup(d.Get("reservation_group"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("reservation_group"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, reservationGroupProp)) {
+		obj["reservationGroup"] = reservationGroupProp
+	}
 	maxSlotsProp, err := expandBigqueryReservationReservationMaxSlots(d.Get("max_slots"), d, config)
 	if err != nil {
 		return err
@@ -619,6 +641,10 @@ func resourceBigqueryReservationReservationUpdate(d *schema.ResourceData, meta i
 
 	if d.HasChange("scaling_mode") {
 		updateMask = append(updateMask, "scalingMode")
+	}
+
+	if d.HasChange("reservation_group") {
+		updateMask = append(updateMask, "reservationGroup")
 	}
 
 	if d.HasChange("max_slots") {
@@ -896,6 +922,10 @@ func flattenBigqueryReservationReservationScalingMode(v interface{}, d *schema.R
 	return v
 }
 
+func flattenBigqueryReservationReservationReservationGroup(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenBigqueryReservationReservationMaxSlots(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	// Handles the string fixed64 format
 	if strVal, ok := v.(string); ok {
@@ -971,6 +1001,10 @@ func expandBigqueryReservationReservationSecondaryLocation(v interface{}, d tpgr
 }
 
 func expandBigqueryReservationReservationScalingMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandBigqueryReservationReservationReservationGroup(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -53,6 +53,29 @@ resource "google_bigquery_reservation" "reservation" {
     }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=bigquery_reservation_reservation_group&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Bigquery Reservation Reservation Group
+
+
+```hcl
+resource "google_bigquery_reservation" "reservation" {
+  name              = "my-reservation"
+  location          = "us-west2"
+  slot_capacity     = 0
+  edition           = "ENTERPRISE"
+  ignore_idle_slots = false
+  reservation_group = google_bigquery_reservation_group.reservation_group.id
+}
+
+resource "google_bigquery_reservation_group" "reservation_group" {
+  name     = "tf-test-group"
+  location = "us-west2"
+}
+```
 
 ## Argument Reference
 
@@ -130,6 +153,11 @@ The following arguments are supported:
   autoscaling slots. Please note, in this mode, the ignoreIdleSlots field must be set to false.
   Otherwise the request will be rejected with error code google.rpc.Code.INVALID_ARGUMENT.
   Possible values are: `SCALING_MODE_UNSPECIFIED`, `AUTOSCALE_ONLY`, `IDLE_SLOTS_ONLY`, `ALL_SLOTS`.
+
+* `reservation_group` -
+  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  The resource name of the reservation group that this reservation belongs to.
+  Example: projects/myproject/locations/us/reservationGroups/mygroup.
 
 * `max_slots` -
   (Optional, [Beta](../guides/provider_versions.html.markdown))

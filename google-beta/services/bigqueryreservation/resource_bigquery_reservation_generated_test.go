@@ -93,6 +93,49 @@ resource "google_bigquery_reservation" "reservation" {
 `, context)
 }
 
+func TestAccBigqueryReservationReservation_bigqueryReservationReservationGroupExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckBigqueryReservationReservationDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBigqueryReservationReservation_bigqueryReservationReservationGroupExample(context),
+			},
+			{
+				ResourceName:            "google_bigquery_reservation.reservation",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location", "name"},
+			},
+		},
+	})
+}
+
+func testAccBigqueryReservationReservation_bigqueryReservationReservationGroupExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_bigquery_reservation" "reservation" {
+  name              = "tf-test-my-reservation%{random_suffix}"
+  location          = "us-west2"
+  slot_capacity     = 0
+  edition           = "ENTERPRISE"
+  ignore_idle_slots = false
+  reservation_group = google_bigquery_reservation_group.reservation_group.id
+}
+
+resource "google_bigquery_reservation_group" "reservation_group" {
+  name     = "tf-test-group"
+  location = "us-west2"
+}
+`, context)
+}
+
 func TestAccBigqueryReservationReservation_bigqueryReservationWithDisasterRecoveryExample(t *testing.T) {
 	t.Parallel()
 
