@@ -150,6 +150,7 @@ resource "google_kms_autokey_config" "example-autokeyconfig" {
   provider    = google-beta
   folder      = google_folder.autokms_folder.id
   key_project = "projects/${google_project.key_project.project_id}"
+  key_project_resolution_mode = "DEDICATED_KEY_PROJECT"
   depends_on  = [time_sleep.wait_srv_acc_permissions]
 }
 
@@ -190,7 +191,11 @@ func testAccCheckKMSAutokeyConfigDestroyProducer(t *testing.T) func(s *terraform
 				return nil
 			}
 
-			if v := res["key_project"]; v != nil {
+			if v := res["keyProject"]; v != nil {
+				return fmt.Errorf("AutokeyConfig still exists at %s", url)
+			}
+
+			if v := res["keyProjectResolutionMode"]; v != nil {
 				return fmt.Errorf("AutokeyConfig still exists at %s", url)
 			}
 
