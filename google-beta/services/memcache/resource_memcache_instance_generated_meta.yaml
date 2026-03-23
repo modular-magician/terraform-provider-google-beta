@@ -26,6 +26,7 @@ fields:
     - api_field: maintenanceSchedule.endTime
     - api_field: maintenanceSchedule.scheduleDeadlineTime
     - api_field: maintenanceSchedule.startTime
+    - api_field: maintenanceVersion
     - api_field: memcacheFullVersion
     - api_field: memcacheNodes.host
     - api_field: memcacheNodes.nodeId

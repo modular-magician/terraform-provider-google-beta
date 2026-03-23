@@ -155,6 +155,10 @@ The following arguments are supported:
   the private service access connection for example, "test-default"
   associated with IP range 10.0.0.0/29.
 
+* `maintenance_version` -
+  (Optional)
+  Last self service update maintenance version triggered by the customer. If it is empty, it means that the maintenance version is not set by the user.
+
 * `region` -
   (Optional)
   The region of the Memcache instance. If it is not provided, the provider region is used.

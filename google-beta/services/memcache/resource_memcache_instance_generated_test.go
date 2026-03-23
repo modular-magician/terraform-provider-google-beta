@@ -121,6 +121,71 @@ resource "google_memcache_instance" "instance" {
 `, context)
 }
 
+func TestAccMemcacheInstance_memcacheInstanceMaintenanceVersionExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "vpc-network-1"),
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckMemcacheInstanceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccMemcacheInstance_memcacheInstanceMaintenanceVersionExample(context),
+			},
+			{
+				ResourceName:            "google_memcache_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"deletion_protection", "labels", "name", "region", "reserved_ip_range_id", "terraform_labels"},
+			},
+		},
+	})
+}
+
+func testAccMemcacheInstance_memcacheInstanceMaintenanceVersionExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_compute_network" "memcache_network" {
+  name = "%{network_name}"
+}
+
+resource "google_memcache_instance" "instance" {
+  name = "tf-test-test-instance%{random_suffix}"
+  authorized_network = data.google_compute_network.memcache_network.id
+  deletion_protection = false
+
+  labels = {
+    env = "test"
+  }
+
+  node_config {
+    cpu_count      = 1
+    memory_size_mb = 1024
+  }
+  node_count = 1
+  memcache_version = "MEMCACHE_1_5"
+  maintenance_version = "1.5.16"
+
+  maintenance_policy {
+    weekly_maintenance_window {
+      day      = "SATURDAY"
+      duration = "14400s"
+      start_time {
+        hours = 0
+        minutes = 30
+        seconds = 0
+        nanos = 0
+      }
+    }
+  }
+}
+`, context)
+}
+
 func testAccCheckMemcacheInstanceDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
