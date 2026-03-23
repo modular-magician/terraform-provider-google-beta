@@ -59,7 +59,7 @@ func TestAccIAMBetaWorkloadIdentityPoolNamespace_iamWorkloadIdentityPoolNamespac
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckIAMBetaWorkloadIdentityPoolNamespaceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -78,15 +78,11 @@ func TestAccIAMBetaWorkloadIdentityPoolNamespace_iamWorkloadIdentityPoolNamespac
 func testAccIAMBetaWorkloadIdentityPoolNamespace_iamWorkloadIdentityPoolNamespaceBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "pool" {
-  provider = google-beta
-
   workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
   mode                      = "TRUST_DOMAIN"
 }
 
 resource "google_iam_workload_identity_pool_namespace" "example" {
-  provider = google-beta
-
   workload_identity_pool_id           = google_iam_workload_identity_pool.pool.workload_identity_pool_id
   workload_identity_pool_namespace_id = "tf-test-example-namespace%{random_suffix}"
 }
@@ -102,7 +98,7 @@ func TestAccIAMBetaWorkloadIdentityPoolNamespace_iamWorkloadIdentityPoolNamespac
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckIAMBetaWorkloadIdentityPoolNamespaceDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -121,15 +117,11 @@ func TestAccIAMBetaWorkloadIdentityPoolNamespace_iamWorkloadIdentityPoolNamespac
 func testAccIAMBetaWorkloadIdentityPoolNamespace_iamWorkloadIdentityPoolNamespaceFullExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "pool" {
-  provider = google-beta
-
   workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
   mode                      = "TRUST_DOMAIN"
 }
 
 resource "google_iam_workload_identity_pool_namespace" "example" {
-  provider = google-beta
-
   workload_identity_pool_id           = google_iam_workload_identity_pool.pool.workload_identity_pool_id
   workload_identity_pool_namespace_id = "tf-test-example-namespace%{random_suffix}"
   description                         = "Example Namespace in a Workload Identity Pool"

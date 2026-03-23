@@ -92,7 +92,7 @@ func TestAccIAMBetaWorkloadIdentityPool_iamWorkloadIdentityPoolFullFederationOnl
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		ExternalProviders: map[string]resource.ExternalProvider{
 			"random": {},
 		},
@@ -114,8 +114,6 @@ func TestAccIAMBetaWorkloadIdentityPool_iamWorkloadIdentityPoolFullFederationOnl
 func testAccIAMBetaWorkloadIdentityPool_iamWorkloadIdentityPoolFullFederationOnlyModeExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  provider = google-beta
-
   workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
   display_name              = "Name of the pool"
   description               = "Identity pool operates in FEDERATION_ONLY mode"
@@ -134,7 +132,7 @@ func TestAccIAMBetaWorkloadIdentityPool_iamWorkloadIdentityPoolFullTrustDomainMo
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckIAMBetaWorkloadIdentityPoolDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -153,8 +151,6 @@ func TestAccIAMBetaWorkloadIdentityPool_iamWorkloadIdentityPoolFullTrustDomainMo
 func testAccIAMBetaWorkloadIdentityPool_iamWorkloadIdentityPoolFullTrustDomainModeExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_iam_workload_identity_pool" "example" {
-  provider = google-beta
-
   workload_identity_pool_id = "tf-test-example-pool%{random_suffix}"
   display_name              = "Name of the pool"
   description               = "Identity pool operates in TRUST_DOMAIN mode"
