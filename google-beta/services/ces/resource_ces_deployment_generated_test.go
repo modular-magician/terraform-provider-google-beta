@@ -108,6 +108,66 @@ resource "google_ces_deployment" "my-deployment" {
 `, context)
 }
 
+func TestAccCESDeployment_cesDeploymentWithNoiseSuppressionExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckCESDeploymentDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCESDeployment_cesDeploymentWithNoiseSuppressionExample(context),
+			},
+			{
+				ResourceName:            "google_ces_deployment.my-deployment",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"app", "app_version", "location"},
+			},
+		},
+	})
+}
+
+func testAccCESDeployment_cesDeploymentWithNoiseSuppressionExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_ces_app" "my-app" {
+  location     = "us"
+  display_name = "tf-test-my-app%{random_suffix}"
+  app_id       = "tf-test-app-id%{random_suffix}"
+  time_zone_settings {   
+    time_zone = "America/Los_Angeles"
+  }
+}
+
+resource "google_ces_deployment" "my-deployment" {
+  location     = "us"
+  display_name = "tf-test-my-deployment%{random_suffix}"
+  app          = google_ces_app.my-app.name
+  app_version  = "projects/example-project/locations/us/apps/example-app/versions/example-version"
+  channel_profile {
+    channel_type             = "API"
+    disable_barge_in_control = true
+    disable_dtmf             = true
+    noise_suppression_level  = "high"
+    persona_property {
+      persona = "CHATTY"
+    }
+    profile_id = "temp_profile_id"
+    web_widget_config {
+      modality         = "CHAT_AND_VOICE"
+      theme            = "DARK"
+      web_widget_title = "temp_webwidget_title"
+    }
+  }
+}
+`, context)
+}
+
 func testAccCheckCESDeploymentDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

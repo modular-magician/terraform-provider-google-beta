@@ -164,6 +164,11 @@ interrupt.`,
 							Optional:    true,
 							Description: `Whether to disable DTMF (dual-tone multi-frequency).`,
 						},
+						"noise_suppression_level": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `The noise suppression level of the channel profile. Available values are "low", "moderate", "high", "very_high".`,
+						},
 						"persona_property": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -596,6 +601,8 @@ func flattenCESDeploymentChannelProfile(v interface{}, d *schema.ResourceData, c
 		flattenCESDeploymentChannelProfileProfileId(original["profileId"], d, config)
 	transformed["web_widget_config"] =
 		flattenCESDeploymentChannelProfileWebWidgetConfig(original["webWidgetConfig"], d, config)
+	transformed["noise_suppression_level"] =
+		flattenCESDeploymentChannelProfileNoiseSuppressionLevel(original["noiseSuppressionLevel"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCESDeploymentChannelProfileChannelType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -657,6 +664,10 @@ func flattenCESDeploymentChannelProfileWebWidgetConfigTheme(v interface{}, d *sc
 }
 
 func flattenCESDeploymentChannelProfileWebWidgetConfigWebWidgetTitle(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentChannelProfileNoiseSuppressionLevel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -739,6 +750,13 @@ func expandCESDeploymentChannelProfile(v interface{}, d tpgresource.TerraformRes
 		return nil, err
 	} else if val := reflect.ValueOf(transformedWebWidgetConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["webWidgetConfig"] = transformedWebWidgetConfig
+	}
+
+	transformedNoiseSuppressionLevel, err := expandCESDeploymentChannelProfileNoiseSuppressionLevel(original["noise_suppression_level"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedNoiseSuppressionLevel); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["noiseSuppressionLevel"] = transformedNoiseSuppressionLevel
 	}
 
 	return transformed, nil
@@ -831,6 +849,10 @@ func expandCESDeploymentChannelProfileWebWidgetConfigTheme(v interface{}, d tpgr
 }
 
 func expandCESDeploymentChannelProfileWebWidgetConfigWebWidgetTitle(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentChannelProfileNoiseSuppressionLevel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

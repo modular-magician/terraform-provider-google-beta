@@ -63,6 +63,46 @@ resource "google_ces_deployment" "my-deployment" {
     }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=ces_deployment_with_noise_suppression&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Ces Deployment With Noise Suppression
+
+
+```hcl
+resource "google_ces_app" "my-app" {
+  location     = "us"
+  display_name = "my-app"
+  app_id       = "app-id"
+  time_zone_settings {   
+    time_zone = "America/Los_Angeles"
+  }
+}
+
+resource "google_ces_deployment" "my-deployment" {
+  location     = "us"
+  display_name = "my-deployment"
+  app          = google_ces_app.my-app.name
+  app_version  = "projects/example-project/locations/us/apps/example-app/versions/example-version"
+  channel_profile {
+    channel_type             = "API"
+    disable_barge_in_control = true
+    disable_dtmf             = true
+    noise_suppression_level  = "high"
+    persona_property {
+      persona = "CHATTY"
+    }
+    profile_id = "temp_profile_id"
+    web_widget_config {
+      modality         = "CHAT_AND_VOICE"
+      theme            = "DARK"
+      web_widget_title = "temp_webwidget_title"
+    }
+  }
+}
+```
 
 ## Argument Reference
 
@@ -136,6 +176,10 @@ The following arguments are supported:
   (Optional)
   Message for configuration for the web widget.
   Structure is [documented below](#nested_channel_profile_web_widget_config).
+
+* `noise_suppression_level` -
+  (Optional)
+  The noise suppression level of the channel profile. Available values are "low", "moderate", "high", "very_high".
 
 
 <a name="nested_channel_profile_persona_property"></a>The `persona_property` block supports:
