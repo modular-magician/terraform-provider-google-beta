@@ -386,6 +386,62 @@ resource "google_compute_network" "network" {
 `, context)
 }
 
+func TestAccComputeNetworkFirewallPolicyRule_networkFirewallPolicyRulePolicySourceExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"project_name":  envvar.GetTestProjectFromEnv(),
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeNetworkFirewallPolicyRuleDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeNetworkFirewallPolicyRule_networkFirewallPolicyRulePolicySourceExample(context),
+			},
+			{
+				ResourceName:            "google_compute_network_firewall_policy_rule.primary",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"firewall_policy"},
+			},
+		},
+	})
+}
+
+func testAccComputeNetworkFirewallPolicyRule_networkFirewallPolicyRulePolicySourceExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_network_firewall_policy" "basic_network_firewall_policy" {
+  name        = "tf-test-fw-policy%{random_suffix}"
+  description = "Sample global network firewall policy"
+  project     = "%{project_name}"
+}
+
+resource "google_compute_network_firewall_policy_rule" "primary" {
+  action          = "allow"
+  description     = "This is a simple rule description"
+  direction       = "INGRESS"
+  disabled        = false
+  enable_logging  = true
+  firewall_policy = google_compute_network_firewall_policy.basic_network_firewall_policy.name
+  priority        = 1000
+  rule_name       = "test-rule"
+  policy_source   = "USER_DEFINED"
+
+  match {
+    src_ip_ranges = ["11.100.0.1/32"]
+
+    layer4_configs {
+      ip_protocol = "all"
+    }
+  }
+}
+`, context)
+}
+
 func testAccCheckComputeNetworkFirewallPolicyRuleDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

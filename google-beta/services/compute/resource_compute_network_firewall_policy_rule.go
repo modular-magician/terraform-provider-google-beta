@@ -348,6 +348,20 @@ If logging is enabled, logs will be exported to the configured export destinatio
 Logs may be exported to BigQuery or Pub/Sub.
 Note: you cannot enable logging on "goto_next" rules.`,
 			},
+			"policy_source": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: `Indicates the source of this Firewall Policy. This field is optional on
+creation and defaults to USER_DEFINED.
+
+The USER_DEFINED value indicates a regular firewall policy.
+
+The SYSTEM value indicates a system-level policy managed by an
+internal service like GKE. This SYSTEM value is reserved for
+internal services and cannot be set by users during policy creation.
+Policies with a SYSTEM source cannot be modified or deleted by
+users.`,
+			},
 			"rule_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -503,6 +517,12 @@ func resourceComputeNetworkFirewallPolicyRuleCreate(d *schema.ResourceData, meta
 	} else if v, ok := d.GetOkExists("disabled"); ok || !reflect.DeepEqual(v, disabledProp) {
 		obj["disabled"] = disabledProp
 	}
+	policySourceProp, err := expandComputeNetworkFirewallPolicyRulePolicySource(d.Get("policy_source"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("policy_source"); !tpgresource.IsEmptyValue(reflect.ValueOf(policySourceProp)) && (ok || !reflect.DeepEqual(v, policySourceProp)) {
+		obj["policySource"] = policySourceProp
+	}
 
 	url, err := tpgresource.ReplaceVarsForId(d, config, "{{ComputeBasePath}}projects/{{project}}/global/firewallPolicies/{{firewall_policy}}/addRule")
 	if err != nil {
@@ -649,6 +669,9 @@ func resourceComputeNetworkFirewallPolicyRuleRead(d *schema.ResourceData, meta i
 	if err := d.Set("disabled", flattenComputeNetworkFirewallPolicyRuleDisabled(res["disabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
 	}
+	if err := d.Set("policy_source", flattenComputeNetworkFirewallPolicyRulePolicySource(res["policySource"], d, config)); err != nil {
+		return fmt.Errorf("Error reading NetworkFirewallPolicyRule: %s", err)
+	}
 
 	return nil
 }
@@ -740,6 +763,12 @@ func resourceComputeNetworkFirewallPolicyRuleUpdate(d *schema.ResourceData, meta
 		return err
 	} else if v, ok := d.GetOkExists("disabled"); ok || !reflect.DeepEqual(v, disabledProp) {
 		obj["disabled"] = disabledProp
+	}
+	policySourceProp, err := expandComputeNetworkFirewallPolicyRulePolicySource(d.Get("policy_source"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("policy_source"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, policySourceProp)) {
+		obj["policySource"] = policySourceProp
 	}
 
 	obj, err = resourceComputeNetworkFirewallPolicyRuleUpdateEncoder(d, meta, obj)
@@ -1172,6 +1201,10 @@ func flattenComputeNetworkFirewallPolicyRuleDisabled(v interface{}, d *schema.Re
 	return v
 }
 
+func flattenComputeNetworkFirewallPolicyRulePolicySource(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandComputeNetworkFirewallPolicyRuleRuleName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1523,6 +1556,10 @@ func expandComputeNetworkFirewallPolicyRuleTargetSecureTagsState(v interface{}, 
 }
 
 func expandComputeNetworkFirewallPolicyRuleDisabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeNetworkFirewallPolicyRulePolicySource(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

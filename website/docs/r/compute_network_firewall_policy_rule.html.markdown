@@ -232,6 +232,36 @@ resource "google_compute_network" "network" {
   name     = "network"
 }
 ```
+## Example Usage - Network Firewall Policy Rule Policy Source
+
+
+```hcl
+resource "google_compute_network_firewall_policy" "basic_network_firewall_policy" {
+  name        = "fw-policy"
+  description = "Sample global network firewall policy"
+  project     = "my-project-name"
+}
+
+resource "google_compute_network_firewall_policy_rule" "primary" {
+  action          = "allow"
+  description     = "This is a simple rule description"
+  direction       = "INGRESS"
+  disabled        = false
+  enable_logging  = true
+  firewall_policy = google_compute_network_firewall_policy.basic_network_firewall_policy.name
+  priority        = 1000
+  rule_name       = "test-rule"
+  policy_source   = "USER_DEFINED"
+
+  match {
+    src_ip_ranges = ["11.100.0.1/32"]
+
+    layer4_configs {
+      ip_protocol = "all"
+    }
+  }
+}
+```
 
 ## Argument Reference
 
@@ -305,6 +335,17 @@ The following arguments are supported:
   Denotes whether the firewall policy rule is disabled.
   When set to true, the firewall policy rule is not enforced and traffic behaves as if it did not exist.
   If this is unspecified, the firewall policy rule will be enabled.
+
+* `policy_source` -
+  (Optional)
+  Indicates the source of this Firewall Policy. This field is optional on
+  creation and defaults to USER_DEFINED.
+  The USER_DEFINED value indicates a regular firewall policy.
+  The SYSTEM value indicates a system-level policy managed by an
+  internal service like GKE. This SYSTEM value is reserved for
+  internal services and cannot be set by users during policy creation.
+  Policies with a SYSTEM source cannot be modified or deleted by
+  users.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

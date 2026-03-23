@@ -59,6 +59,8 @@ fields:
       field: match.src_secure_tags.state
     - api_field: rules.match.srcThreatIntelligences
       field: match.src_threat_intelligences
+    - api_field: rules.policySource
+      field: policy_source
     - api_field: rules.priority
       field: priority
     - api_field: rules.ruleName
