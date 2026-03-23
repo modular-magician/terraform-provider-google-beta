@@ -150,6 +150,43 @@ resource "google_biglake_iceberg_catalog" "my_iceberg_catalog" {
 `, context)
 }
 
+func TestAccBiglakeIcebergIcebergCatalog_biglakeIcebergCatalogBiglakeExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckBiglakeIcebergIcebergCatalogDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccBiglakeIcebergIcebergCatalog_biglakeIcebergCatalogBiglakeExample(context),
+			},
+			{
+				ResourceName:            "google_biglake_iceberg_catalog.my_iceberg_catalog",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"name", "primary_location"},
+			},
+		},
+	})
+}
+
+func testAccBiglakeIcebergIcebergCatalog_biglakeIcebergCatalogBiglakeExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_biglake_iceberg_catalog" "my_iceberg_catalog" {
+    name = "tf_test_my_iceberg_catalog%{random_suffix}"
+    catalog_type = "CATALOG_TYPE_BIGLAKE"
+    credential_mode = "CREDENTIAL_MODE_VENDED_CREDENTIALS"
+    default_location = "gs://my-bucket"
+    additional_locations = ["gs://my-other-bucket"]
+}
+`, context)
+}
+
 func testAccCheckBiglakeIcebergIcebergCatalogDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
