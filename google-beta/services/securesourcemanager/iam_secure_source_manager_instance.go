@@ -19,6 +19,8 @@
 
 package securesourcemanager
 
+// trigger multi-service VCR
+
 import (
 	"fmt"
 	"regexp"

@@ -19,6 +19,8 @@
 
 package secretmanagerregional
 
+// trigger multi-service VCR
+
 import (
 	"fmt"
 	"regexp"

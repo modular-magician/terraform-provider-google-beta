@@ -19,6 +19,8 @@
 
 package dns
 
+// trigger multi-service VCR
+
 import (
 	"fmt"
 	"regexp"

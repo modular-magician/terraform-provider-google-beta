@@ -19,6 +19,8 @@
 
 package notebooks
 
+// trigger multi-service VCR
+
 import (
 	"fmt"
 	"regexp"
