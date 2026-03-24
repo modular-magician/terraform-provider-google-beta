@@ -29,6 +29,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"slices"
 	"strconv"
 	"strings"
@@ -185,6 +186,10 @@ func VcrTest(t *testing.T, c resource.TestCase) {
 	for _, s := range c.Steps {
 		if s.ImportStateVerify && !slices.Contains(s.ImportStateVerifyIgnore, "terraform_labels") {
 			s.ImportStateVerifyIgnore = append(s.ImportStateVerifyIgnore, "terraform_labels")
+		}
+		if IsVcrEnabled() && os.Getenv("VCR_MODE") == "REPLAYING" {
+			re := regexp.MustCompile(`create_duration = "\d+[sm]"`)
+			s.Config = re.ReplaceAllString(s.Config, `create_duration = "1s"`)
 		}
 		steps = append(steps, s)
 	}
