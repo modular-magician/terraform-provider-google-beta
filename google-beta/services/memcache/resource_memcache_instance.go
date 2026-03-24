@@ -275,6 +275,11 @@ resolution and up to nine fractional digits.`,
 					},
 				},
 			},
+			"maintenance_version": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `The version of the maintenance running on the instance.`,
+			},
 			"memcache_parameters": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -336,6 +341,14 @@ provided, all zones will be used.`,
 				},
 				Set: schema.HashString,
 			},
+			"available_maintenance_versions": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: `The versions of available maintenance for the instance.`,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -351,6 +364,11 @@ provided, all zones will be used.`,
 				Computed:    true,
 				Description: `All of labels (key/value pairs) present on the resource in GCP, including the labels configured through Terraform, other clients and services.`,
 				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
+			"effective_maintenance_version": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: `The maintenance version that the instance is planned to be upgraded to.`,
 			},
 			"maintenance_schedule": {
 				Type:        schema.TypeList,
@@ -512,6 +530,12 @@ func resourceMemcacheInstanceCreate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("reserved_ip_range_id"); !tpgresource.IsEmptyValue(reflect.ValueOf(reservedIpRangeIdProp)) && (ok || !reflect.DeepEqual(v, reservedIpRangeIdProp)) {
 		obj["reservedIpRangeId"] = reservedIpRangeIdProp
 	}
+	maintenanceVersionProp, err := expandMemcacheInstanceMaintenanceVersion(d.Get("maintenance_version"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("maintenance_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(maintenanceVersionProp)) && (ok || !reflect.DeepEqual(v, maintenanceVersionProp)) {
+		obj["maintenance_version"] = maintenanceVersionProp
+	}
 	effectiveLabelsProp, err := expandMemcacheInstanceEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -662,6 +686,15 @@ func resourceMemcacheInstanceRead(d *schema.ResourceData, meta interface{}) erro
 	if err := d.Set("maintenance_schedule", flattenMemcacheInstanceMaintenanceSchedule(res["maintenanceSchedule"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	if err := d.Set("maintenance_version", flattenMemcacheInstanceMaintenanceVersion(res["maintenance_version"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err := d.Set("effective_maintenance_version", flattenMemcacheInstanceEffectiveMaintenanceVersion(res["effective_maintenance_version"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
+	if err := d.Set("available_maintenance_versions", flattenMemcacheInstanceAvailableMaintenanceVersions(res["available_maintenance_versions"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
 	if err := d.Set("terraform_labels", flattenMemcacheInstanceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
@@ -706,6 +739,12 @@ func resourceMemcacheInstanceUpdate(d *schema.ResourceData, meta interface{}) er
 	} else if v, ok := d.GetOkExists("maintenance_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, maintenancePolicyProp)) {
 		obj["maintenancePolicy"] = maintenancePolicyProp
 	}
+	maintenanceVersionProp, err := expandMemcacheInstanceMaintenanceVersion(d.Get("maintenance_version"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("maintenance_version"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, maintenanceVersionProp)) {
+		obj["maintenance_version"] = maintenanceVersionProp
+	}
 	effectiveLabelsProp, err := expandMemcacheInstanceEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -732,6 +771,10 @@ func resourceMemcacheInstanceUpdate(d *schema.ResourceData, meta interface{}) er
 
 	if d.HasChange("maintenance_policy") {
 		updateMask = append(updateMask, "maintenancePolicy")
+	}
+
+	if d.HasChange("maintenance_version") {
+		updateMask = append(updateMask, "maintenance_version")
 	}
 
 	if d.HasChange("effective_labels") {
@@ -1273,6 +1316,18 @@ func flattenMemcacheInstanceMaintenanceScheduleScheduleDeadlineTime(v interface{
 	return v
 }
 
+func flattenMemcacheInstanceMaintenanceVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenMemcacheInstanceEffectiveMaintenanceVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenMemcacheInstanceAvailableMaintenanceVersions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenMemcacheInstanceTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1561,6 +1616,10 @@ func expandMemcacheInstanceMaintenancePolicyWeeklyMaintenanceWindowStartTimeNano
 }
 
 func expandMemcacheInstanceReservedIpRangeId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandMemcacheInstanceMaintenanceVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

@@ -155,6 +155,10 @@ The following arguments are supported:
   the private service access connection for example, "test-default"
   associated with IP range 10.0.0.0/29.
 
+* `maintenance_version` -
+  (Optional)
+  The version of the maintenance running on the instance.
+
 * `region` -
   (Optional)
   The region of the Memcache instance. If it is not provided, the provider region is used.
@@ -288,6 +292,12 @@ In addition to the arguments listed above, the following computed attributes are
 * `maintenance_schedule` -
   Output only. Published maintenance schedule.
   Structure is [documented below](#nested_maintenance_schedule).
+
+* `effective_maintenance_version` -
+  The maintenance version that the instance is planned to be upgraded to.
+
+* `available_maintenance_versions` -
+  The versions of available maintenance for the instance.
 
 * `terraform_labels` -
   The combination of labels configured directly on the resource

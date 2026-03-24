@@ -6,6 +6,7 @@ api_version: v1beta2
 api_resource_type_kind: Instance
 fields:
     - api_field: authorizedNetwork
+    - api_field: available_maintenance_versions
     - api_field: createTime
     - field: deletion_protection
       provider_only: true
@@ -13,6 +14,7 @@ fields:
     - api_field: displayName
     - field: effective_labels
       provider_only: true
+    - api_field: effective_maintenance_version
     - api_field: labels
     - api_field: maintenancePolicy.createTime
     - api_field: maintenancePolicy.description
@@ -26,6 +28,7 @@ fields:
     - api_field: maintenanceSchedule.endTime
     - api_field: maintenanceSchedule.scheduleDeadlineTime
     - api_field: maintenanceSchedule.startTime
+    - api_field: maintenance_version
     - api_field: memcacheFullVersion
     - api_field: memcacheNodes.host
     - api_field: memcacheNodes.nodeId
