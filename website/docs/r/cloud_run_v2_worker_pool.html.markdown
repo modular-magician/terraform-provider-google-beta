@@ -1115,16 +1115,19 @@ When the field is set to false, deleting the WorkerPool is allowed.
 
 * `scaling_mode` -
   (Optional)
-  The scaling mode for the worker pool. It defaults to MANUAL.
-  Possible values are: `AUTOMATIC`, `MANUAL`.
+  The scaling mode for the worker pool. Currently only MANUAL is supported.
 
 * `min_instance_count` -
-  (Optional)
+  (Optional, Deprecated)
   The minimum count of instances distributed among revisions based on the specified instance split percentages.
 
+  ~> **Warning:** `minInstanceCount` is deprecated as WorkerPool does not support auto scaling and will be removed in a future major release.
+
 * `max_instance_count` -
-  (Optional)
+  (Optional, Deprecated)
   The maximum count of instances distributed among revisions based on the specified instance split percentages.
+
+  ~> **Warning:** `maxInstanceCount` is deprecated as WorkerPool does not support auto scaling and will be removed in a future major release.
 
 * `manual_instance_count` -
   (Optional)

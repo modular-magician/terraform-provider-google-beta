@@ -869,18 +869,19 @@ For example, if ALPHA is provided as input, but only BETA and GA-level features 
 						"max_instance_count": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Deprecated:  "`maxInstanceCount` is deprecated as WorkerPool does not support auto scaling and will be removed in a future major release.",
 							Description: `The maximum count of instances distributed among revisions based on the specified instance split percentages.`,
 						},
 						"min_instance_count": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Deprecated:  "`minInstanceCount` is deprecated as WorkerPool does not support auto scaling and will be removed in a future major release.",
 							Description: `The minimum count of instances distributed among revisions based on the specified instance split percentages.`,
 						},
 						"scaling_mode": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							ValidateFunc: verify.ValidateEnum([]string{"AUTOMATIC", "MANUAL", ""}),
-							Description:  `The scaling mode for the worker pool. It defaults to MANUAL. Possible values: ["AUTOMATIC", "MANUAL"]`,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `The scaling mode for the worker pool. Currently only MANUAL is supported.`,
 						},
 					},
 				},
