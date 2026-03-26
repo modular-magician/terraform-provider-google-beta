@@ -2043,16 +2043,33 @@ func resourceComputeBackendServiceCreate(d *schema.ResourceData, meta interface{
 			return errwrap.Wrapf("Error parsing Backend Service security policy: {{err}}", err)
 		}
 
-		spr := emptySecurityPolicyReference()
-		spr.SecurityPolicy = pol.RelativeLink()
-		op, err := config.NewComputeClient(userAgent).BackendServices.SetSecurityPolicy(project, obj["name"].(string), spr).Do()
+		sBody := map[string]interface{}{
+			"securityPolicy": pol.RelativeLink(),
+		}
+
+		securityPolicyPath := "{{ComputeBasePath}}projects/{{project}}/global/backendServices/{{name}}/setSecurityPolicy?prettyPrint=false"
+		sUrl, err := tpgresource.ReplaceVars(d, config, securityPolicyPath)
+		if err != nil {
+			return err
+		}
+
+		res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "POST",
+			Project:   project,
+			RawURL:    sUrl,
+			UserAgent: userAgent,
+			Body:      sBody,
+			Headers:   headers,
+		})
 		if err != nil {
 			return errwrap.Wrapf("Error setting Backend Service security policy: {{err}}", err)
 		}
+
 		// This uses the create timeout for simplicity, though technically this code appears in both create and update
-		waitErr := ComputeOperationWaitTime(config, op, project, "Setting Backend Service Security Policy", userAgent, d.Timeout(schema.TimeoutCreate))
-		if waitErr != nil {
-			return waitErr
+		err = ComputeOperationWaitTime(config, res, project, "Setting Backend Service Security Policy", userAgent, d.Timeout(schema.TimeoutCreate))
+		if err != nil {
+			return err
 		}
 	}
 	// edge security_policy isn't set by Create / Update
@@ -2062,16 +2079,33 @@ func resourceComputeBackendServiceCreate(d *schema.ResourceData, meta interface{
 			return errwrap.Wrapf("Error parsing Backend Service edge security policy: {{err}}", err)
 		}
 
-		spr := emptySecurityPolicyReference()
-		spr.SecurityPolicy = pol.RelativeLink()
-		op, err := config.NewComputeClient(userAgent).BackendServices.SetEdgeSecurityPolicy(project, obj["name"].(string), spr).Do()
+		eBody := map[string]interface{}{
+			"securityPolicy": pol.RelativeLink(),
+		}
+
+		edgeSecurityPolicyPath := "{{ComputeBasePath}}projects/{{project}}/global/backendServices/{{name}}/setEdgeSecurityPolicy?prettyPrint=false"
+		eUrl, err := tpgresource.ReplaceVars(d, config, edgeSecurityPolicyPath)
+		if err != nil {
+			return err
+		}
+
+		res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "POST",
+			Project:   project,
+			RawURL:    eUrl,
+			UserAgent: userAgent,
+			Body:      eBody,
+			Headers:   headers,
+		})
 		if err != nil {
 			return errwrap.Wrapf("Error setting Backend Service edge security policy: {{err}}", err)
 		}
+
 		// This uses the create timeout for simplicity, though technically this code appears in both create and update
-		waitErr := ComputeOperationWaitTime(config, op, project, "Setting Backend Service Edge Security Policy", userAgent, d.Timeout(schema.TimeoutCreate))
-		if waitErr != nil {
-			return waitErr
+		err = ComputeOperationWaitTime(config, res, project, "Setting Backend Service Edge Security Policy", userAgent, d.Timeout(schema.TimeoutCreate))
+		if err != nil {
+			return err
 		}
 	}
 
@@ -2567,16 +2601,33 @@ func resourceComputeBackendServiceUpdate(d *schema.ResourceData, meta interface{
 			return errwrap.Wrapf("Error parsing Backend Service security policy: {{err}}", err)
 		}
 
-		spr := emptySecurityPolicyReference()
-		spr.SecurityPolicy = pol.RelativeLink()
-		op, err := config.NewComputeClient(userAgent).BackendServices.SetSecurityPolicy(project, obj["name"].(string), spr).Do()
+		sBody := map[string]interface{}{
+			"securityPolicy": pol.RelativeLink(),
+		}
+
+		securityPolicyPath := "{{ComputeBasePath}}projects/{{project}}/global/backendServices/{{name}}/setSecurityPolicy?prettyPrint=false"
+		sUrl, err := tpgresource.ReplaceVars(d, config, securityPolicyPath)
+		if err != nil {
+			return err
+		}
+
+		res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "POST",
+			Project:   project,
+			RawURL:    sUrl,
+			UserAgent: userAgent,
+			Body:      sBody,
+			Headers:   headers,
+		})
 		if err != nil {
 			return errwrap.Wrapf("Error setting Backend Service security policy: {{err}}", err)
 		}
+
 		// This uses the create timeout for simplicity, though technically this code appears in both create and update
-		waitErr := ComputeOperationWaitTime(config, op, project, "Setting Backend Service Security Policy", userAgent, d.Timeout(schema.TimeoutCreate))
-		if waitErr != nil {
-			return waitErr
+		err = ComputeOperationWaitTime(config, res, project, "Setting Backend Service Security Policy", userAgent, d.Timeout(schema.TimeoutCreate))
+		if err != nil {
+			return err
 		}
 	}
 	// edge security_policy isn't set by Create / Update
@@ -2586,16 +2637,33 @@ func resourceComputeBackendServiceUpdate(d *schema.ResourceData, meta interface{
 			return errwrap.Wrapf("Error parsing Backend Service edge security policy: {{err}}", err)
 		}
 
-		spr := emptySecurityPolicyReference()
-		spr.SecurityPolicy = pol.RelativeLink()
-		op, err := config.NewComputeClient(userAgent).BackendServices.SetEdgeSecurityPolicy(project, obj["name"].(string), spr).Do()
+		eBody := map[string]interface{}{
+			"securityPolicy": pol.RelativeLink(),
+		}
+
+		edgeSecurityPolicyPath := "{{ComputeBasePath}}projects/{{project}}/global/backendServices/{{name}}/setEdgeSecurityPolicy?prettyPrint=false"
+		eUrl, err := tpgresource.ReplaceVars(d, config, edgeSecurityPolicyPath)
+		if err != nil {
+			return err
+		}
+
+		res, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "POST",
+			Project:   project,
+			RawURL:    eUrl,
+			UserAgent: userAgent,
+			Body:      eBody,
+			Headers:   headers,
+		})
 		if err != nil {
 			return errwrap.Wrapf("Error setting Backend Service edge security policy: {{err}}", err)
 		}
+
 		// This uses the create timeout for simplicity, though technically this code appears in both create and update
-		waitErr := ComputeOperationWaitTime(config, op, project, "Setting Backend Service Edge Security Policy", userAgent, d.Timeout(schema.TimeoutCreate))
-		if waitErr != nil {
-			return waitErr
+		err = ComputeOperationWaitTime(config, res, project, "Setting Backend Service Edge Security Policy", userAgent, d.Timeout(schema.TimeoutCreate))
+		if err != nil {
+			return err
 		}
 	}
 	return resourceComputeBackendServiceRead(d, meta)
