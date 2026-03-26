@@ -68,17 +68,17 @@ func listAndActionCertificateManagerCertificate(action sweeper.ResourceAction) e
 	// Build URL substitution maps individually to ensure proper formatting
 	intermediateValues := make([]map[string]string, 6)
 	intermediateValues[0] = map[string]string{}
-	intermediateValues[0]["region"] = "us-central1"
+	intermediateValues[0]["location"] = "us-central1"
 	intermediateValues[1] = map[string]string{}
-	intermediateValues[1]["region"] = "us-east1"
+	intermediateValues[1]["location"] = "us-east1"
 	intermediateValues[2] = map[string]string{}
-	intermediateValues[2]["region"] = "global"
+	intermediateValues[2]["location"] = "global"
 	intermediateValues[3] = map[string]string{}
-	intermediateValues[3]["region"] = "us-west2"
+	intermediateValues[3]["location"] = "us-west2"
 	intermediateValues[4] = map[string]string{}
-	intermediateValues[4]["region"] = "us-south1"
+	intermediateValues[4]["location"] = "us-south1"
 	intermediateValues[5] = map[string]string{}
-	intermediateValues[5]["region"] = "us-west1"
+	intermediateValues[5]["location"] = "us-west1"
 
 	// Create configs from intermediate values
 	for _, values := range intermediateValues {

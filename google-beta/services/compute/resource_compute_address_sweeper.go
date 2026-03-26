@@ -39,6 +39,10 @@ func init() {
 		ListAndAction:  listAndActionComputeAddress,
 		DeleteFunction: testSweepComputeAddress,
 	}
+	// Add dependencies
+	s.Dependencies = []string{
+		"google_network_services_gateway",
+	}
 
 	// Register the sweeper
 	sweeper.AddTestSweepers(s)

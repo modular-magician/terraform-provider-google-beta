@@ -39,6 +39,10 @@ func init() {
 		ListAndAction:  listAndActionNetworkConnectivityHub,
 		DeleteFunction: testSweepNetworkConnectivityHub,
 	}
+	// Add dependencies
+	s.Dependencies = []string{
+		"google_network_connectivity_spoke",
+	}
 
 	// Register the sweeper
 	sweeper.AddTestSweepers(s)

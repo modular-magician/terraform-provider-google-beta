@@ -42,6 +42,7 @@ func init() {
 	// Add dependencies
 	s.Dependencies = []string{
 		"google_network_security_firewall_endpoint_association",
+		"google_compute_firewall",
 	}
 
 	// Register the sweeper

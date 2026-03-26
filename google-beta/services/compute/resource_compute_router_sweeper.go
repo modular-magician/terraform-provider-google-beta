@@ -39,6 +39,11 @@ func init() {
 		ListAndAction:  listAndActionComputeRouter,
 		DeleteFunction: testSweepComputeRouter,
 	}
+	// Add dependencies
+	s.Dependencies = []string{
+		"google_compute_vpn_tunnel",
+		"google_network_services_edge_cache_service",
+	}
 
 	// Register the sweeper
 	sweeper.AddTestSweepers(s)

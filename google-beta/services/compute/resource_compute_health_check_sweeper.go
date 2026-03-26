@@ -42,6 +42,8 @@ func init() {
 	// Add dependencies
 	s.Dependencies = []string{
 		"google_compute_subnetwork",
+		"google_compute_backend_service",
+		"google_compute_region_backend_service",
 	}
 
 	// Register the sweeper

@@ -39,6 +39,10 @@ func init() {
 		ListAndAction:  listAndActionBeyondcorpAppConnector,
 		DeleteFunction: testSweepBeyondcorpAppConnector,
 	}
+	// Add dependencies
+	s.Dependencies = []string{
+		"google_beyondcorp_app_connection",
+	}
 
 	// Register the sweeper
 	sweeper.AddTestSweepers(s)

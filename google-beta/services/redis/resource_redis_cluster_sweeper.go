@@ -278,8 +278,20 @@ func deleteResourceRedisCluster(config *transport_tpg.Config, d *tpgresource.Res
 		}
 	}
 
-	// Only proceed with update if the field exists and needs updating
-	if fieldExists && needsUpdate {
+	isDeleting := false
+	if state, ok := obj["state"].(string); ok && (state == "DELETING" || state == "deleting") {
+		isDeleting = true
+	}
+	if status, ok := obj["status"].(string); ok && (status == "DELETING" || status == "deleting") {
+		isDeleting = true
+	}
+
+	if isDeleting {
+		log.Printf("[INFO][SWEEPER_LOG] %s resource %s is already deleting, skipping update of %s", resourceName, name, "deletionProtectionEnabled")
+	}
+
+	// Only proceed with update if the field exists and needs updating and not already deleting
+	if fieldExists && needsUpdate && !isDeleting {
 		log.Printf("[INFO][SWEEPER_LOG] Ensuring %s is set to %v for %s resource: %s",
 			"deletionProtectionEnabled", targetValue, resourceName, name)
 

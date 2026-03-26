@@ -39,6 +39,10 @@ func init() {
 		ListAndAction:  listAndActionNetworkSecuritySecurityProfile,
 		DeleteFunction: testSweepNetworkSecuritySecurityProfile,
 	}
+	// Add dependencies
+	s.Dependencies = []string{
+		"google_network_security_security_profile_group",
+	}
 
 	// Register the sweeper
 	sweeper.AddTestSweepers(s)
@@ -60,8 +64,8 @@ func listAndActionNetworkSecuritySecurityProfile(action sweeper.ResourceAction) 
 	// Build URL substitution maps individually to ensure proper formatting
 	intermediateValues := make([]map[string]string, 1)
 	intermediateValues[0] = map[string]string{}
+	intermediateValues[0]["location"] = "global"
 	intermediateValues[0]["parent"] = "organizations/" + envvar.GetTestOrgFromEnv(t)
-	intermediateValues[0]["region"] = "global"
 
 	// Create configs from intermediate values
 	for _, values := range intermediateValues {

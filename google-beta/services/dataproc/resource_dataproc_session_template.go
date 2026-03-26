@@ -641,7 +641,7 @@ func resourceDataprocSessionTemplateDelete(d *schema.ResourceData, meta interfac
 	}
 	billingProject = project
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DataprocBasePath}}{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, "{{DataprocBasePath}}projects/{{project}}/locations/{{location}}/sessionTemplates/{{name}}")
 	if err != nil {
 		return err
 	}

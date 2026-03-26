@@ -206,6 +206,8 @@ func deleteResourceDeveloperConnectConnection(config *transport_tpg.Config, d *t
 		deletionerror = err
 	}
 	url = url + name
+	// Apply additional query string defined in Sweeper config
+	url = url + "?force=true"
 
 	// Don't wait on operations as we may have a lot to delete
 	_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
