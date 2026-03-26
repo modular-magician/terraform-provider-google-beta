@@ -311,15 +311,15 @@ The following arguments are supported:
   Environment variables to be passed to the container.
   Structure is [documented below](#nested_software_config_env).
 
+* `colab_image` -
+  (Optional)
+  Colab image of the runtime.
+  Structure is [documented below](#nested_software_config_colab_image).
+
 * `post_startup_script_config` -
   (Optional)
   Post startup script config.
   Structure is [documented below](#nested_software_config_post_startup_script_config).
-
-* `colab_image` -
-  (Optional)
-  Colab Image Configuration.
-  Structure is [documented below](#nested_software_config_colab_image).
 
 
 <a name="nested_software_config_env"></a>The `env` block supports:
@@ -331,6 +331,16 @@ The following arguments are supported:
 * `value` -
   (Optional)
   Variables that reference a $(VAR_NAME) are expanded using the previous defined environment variables in the container and any service environment variables. If a variable cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded, regardless of whether the variable exists or not.
+
+<a name="nested_software_config_colab_image"></a>The `colab_image` block supports:
+
+* `release_name` -
+  (Optional)
+  The release name of the NotebookRuntime Colab image, e.g. "py310". If not specified, detault to the latest release.
+
+* `description` -
+  (Output)
+  A human-readable description of the specified colab image release, populated by the system. Example: "Python 3.10", "Latest - current Python 3.11"
 
 <a name="nested_software_config_post_startup_script_config"></a>The `post_startup_script_config` block supports:
 
@@ -346,12 +356,6 @@ The following arguments are supported:
   (Optional)
   Post startup script behavior that defines download and execution behavior.
   Possible values are: `RUN_ONCE`, `RUN_EVERY_START`, `DOWNLOAD_AND_RUN_EVERY_START`.
-
-<a name="nested_software_config_colab_image"></a>The `colab_image` block supports:
-
-* `release_name` -
-  (Optional)
-  The release name of the NotebookRuntime Colab image, e.g. "py310". If not specified, detault to the latest release.
 
 ## Attributes Reference
 

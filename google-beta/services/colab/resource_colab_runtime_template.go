@@ -336,6 +336,26 @@ Please refer to the field 'effective_labels' for all of the labels present on th
 					Schema: map[string]*schema.Schema{
 						"colab_image": {
 							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Colab image of the runtime.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"release_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `The release name of the NotebookRuntime Colab image, e.g. "py310". If not specified, detault to the latest release.`,
+									},
+									"description": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: `A human-readable description of the specified colab image release, populated by the system. Example: "Python 3.10", "Latest - current Python 3.11"`,
+									},
+								},
+							},
+						},
+						"colab_image": {
+							Type:        schema.TypeList,
 							Computed:    true,
 							Optional:    true,
 							Description: `Colab Image Configuration.`,
@@ -1055,6 +1075,8 @@ func flattenColabRuntimeTemplateSoftwareConfig(v interface{}, d *schema.Resource
 	transformed := make(map[string]interface{})
 	transformed["env"] =
 		flattenColabRuntimeTemplateSoftwareConfigEnv(original["env"], d, config)
+	transformed["colab_image"] =
+		flattenColabRuntimeTemplateSoftwareConfigColabImage(original["colabImage"], d, config)
 	transformed["post_startup_script_config"] =
 		flattenColabRuntimeTemplateSoftwareConfigPostStartupScriptConfig(original["postStartupScriptConfig"], d, config)
 	transformed["colab_image"] =
@@ -1085,6 +1107,29 @@ func flattenColabRuntimeTemplateSoftwareConfigEnvName(v interface{}, d *schema.R
 }
 
 func flattenColabRuntimeTemplateSoftwareConfigEnvValue(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenColabRuntimeTemplateSoftwareConfigColabImage(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["release_name"] =
+		flattenColabRuntimeTemplateSoftwareConfigColabImageReleaseName(original["releaseName"], d, config)
+	transformed["description"] =
+		flattenColabRuntimeTemplateSoftwareConfigColabImageDescription(original["description"], d, config)
+	return []interface{}{transformed}
+}
+func flattenColabRuntimeTemplateSoftwareConfigColabImageReleaseName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenColabRuntimeTemplateSoftwareConfigColabImageDescription(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1425,6 +1470,13 @@ func expandColabRuntimeTemplateSoftwareConfig(v interface{}, d tpgresource.Terra
 		transformed["env"] = transformedEnv
 	}
 
+	transformedColabImage, err := expandColabRuntimeTemplateSoftwareConfigColabImage(original["colab_image"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedColabImage); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["colabImage"] = transformedColabImage
+	}
+
 	transformedPostStartupScriptConfig, err := expandColabRuntimeTemplateSoftwareConfigPostStartupScriptConfig(original["post_startup_script_config"], d, config)
 	if err != nil {
 		return nil, err
@@ -1479,6 +1531,43 @@ func expandColabRuntimeTemplateSoftwareConfigEnvName(v interface{}, d tpgresourc
 }
 
 func expandColabRuntimeTemplateSoftwareConfigEnvValue(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandColabRuntimeTemplateSoftwareConfigColabImage(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedReleaseName, err := expandColabRuntimeTemplateSoftwareConfigColabImageReleaseName(original["release_name"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedReleaseName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["releaseName"] = transformedReleaseName
+	}
+
+	transformedDescription, err := expandColabRuntimeTemplateSoftwareConfigColabImageDescription(original["description"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["description"] = transformedDescription
+	}
+
+	return transformed, nil
+}
+
+func expandColabRuntimeTemplateSoftwareConfigColabImageReleaseName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandColabRuntimeTemplateSoftwareConfigColabImageDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
