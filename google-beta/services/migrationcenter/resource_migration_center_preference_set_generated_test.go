@@ -158,6 +158,55 @@ resource "google_migration_center_preference_set" "default" {
 `, context)
 }
 
+func TestAccMigrationCenterPreferenceSet_preferenceSetComputeEnginePreferencesDiskTypeExample(t *testing.T) {
+	t.Parallel()
+
+	context := map[string]interface{}{
+		"random_suffix": acctest.RandString(t, 10),
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckMigrationCenterPreferenceSetDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccMigrationCenterPreferenceSet_preferenceSetComputeEnginePreferencesDiskTypeExample(context),
+			},
+			{
+				ResourceName:            "google_migration_center_preference_set.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location", "preference_set_id"},
+			},
+		},
+	})
+}
+
+func testAccMigrationCenterPreferenceSet_preferenceSetComputeEnginePreferencesDiskTypeExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_migration_center_preference_set" "default" {
+  location          = "us-central1"
+  preference_set_id = "tf-test-preference-set-test%{random_suffix}"
+  description       = "Terraform integration test description"
+  display_name      = "Terraform integration test display"
+  virtual_machine_preferences {
+    sizing_optimization_strategy = "SIZING_OPTIMIZATION_STRATEGY_SAME_AS_SOURCE"
+    target_product = "COMPUTE_MIGRATION_TARGET_PRODUCT_COMPUTE_ENGINE"
+    compute_engine_preferences {
+      license_type = "LICENSE_TYPE_BRING_YOUR_OWN_LICENSE"
+      machine_preferences {
+        allowed_machine_series {
+          code = "C3"
+        }
+      }
+      persistent_disk_type = "PERSISTENT_DISK_TYPE_SSD"
+    }
+  }
+}
+`, context)
+}
+
 func testAccCheckMigrationCenterPreferenceSetDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
