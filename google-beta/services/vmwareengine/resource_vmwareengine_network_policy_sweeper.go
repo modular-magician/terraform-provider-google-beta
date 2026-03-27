@@ -39,6 +39,10 @@ func init() {
 		ListAndAction:  listAndActionVmwareengineNetworkPolicy,
 		DeleteFunction: testSweepVmwareengineNetworkPolicy,
 	}
+	// Add dependencies
+	s.Dependencies = []string{
+		"google_vmwareengine_external_address",
+	}
 
 	// Register the sweeper
 	sweeper.AddTestSweepers(s)

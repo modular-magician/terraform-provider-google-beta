@@ -41,6 +41,10 @@ func init() {
 	}
 	// Add parent relationship
 	s.Parents = []string{"google_vmwareengine_private_cloud"}
+	// Add dependencies
+	s.Dependencies = []string{
+		"VmwareengineExternalAccessRule",
+	}
 
 	// Register the sweeper
 	sweeper.AddTestSweepers(s)

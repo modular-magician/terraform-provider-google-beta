@@ -39,6 +39,10 @@ func init() {
 		ListAndAction:  listAndActionVmwareengineNetworkPeering,
 		DeleteFunction: testSweepVmwareengineNetworkPeering,
 	}
+	// Add dependencies
+	s.Dependencies = []string{
+		"google_vmwareengine_private_cloud",
+	}
 
 	// Register the sweeper
 	sweeper.AddTestSweepers(s)
