@@ -111,6 +111,69 @@ resource "google_netapp_volume_replication" "test_replication" {
   wait_for_mirror = true
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=netapp_volume_in_region_replication_intra_zones_file&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Netapp Volume In Region Replication Intra Zones File
+
+
+```hcl
+data "google_compute_network" "test_replication" {
+  name = "test-network"
+}
+
+resource "google_netapp_storage_pool" "source_pool" {
+  name          = "src-pool-zonal-same"
+  location      = "us-central1-a"
+  service_level = "FLEX"
+  capacity_gib  = 2048
+  type          = "UNIFIED"
+  network       = data.google_compute_network.test_replication.id
+}
+
+resource "google_netapp_storage_pool" "destination_pool" {
+  name          = "dst-pool-zonal-same"
+  location      = "us-central1-a"
+  service_level = "FLEX"
+  type          = "UNIFIED"
+  capacity_gib  = 2048
+  network       = data.google_compute_network.test_replication.id
+}
+
+resource "google_netapp_volume" "source_volume" {
+  location     = google_netapp_storage_pool.source_pool.location
+  name         = "src_vol_zonal_same"
+  capacity_gib = 100
+  share_name   = "src-share-zonal-same"
+  storage_pool = google_netapp_storage_pool.source_pool.name
+  protocols = [
+    "NFSV3"
+  ]
+  deletion_policy = "FORCE"
+}
+
+resource "google_netapp_volume_replication" "test_replication" {
+  depends_on           = [google_netapp_volume.source_volume]
+  location             = google_netapp_volume.source_volume.location
+  volume_name          = google_netapp_volume.source_volume.name
+  name                 = "rep-zonal-same"
+  replication_schedule = "EVERY_10_MINUTES"
+  description          = "This is an in-region replication resource (zonal same zone)"
+  destination_volume_parameters {
+    storage_pool = google_netapp_storage_pool.destination_pool.id
+    volume_id    = "dst_vol_zonal_same"
+    share_name   = "dst-share-zonal-same"
+    description  = "This is a replicated volume"
+  }
+  # WARNING: Setting delete_destination_volume to true, will delete the
+  # CURRENT destination volume if the replication is deleted. Omit the field 
+  # or set delete_destination_volume=false to avoid accidental volume deletion.
+  delete_destination_volume = true
+  wait_for_mirror = true
+}
+```
 
 ## Argument Reference
 

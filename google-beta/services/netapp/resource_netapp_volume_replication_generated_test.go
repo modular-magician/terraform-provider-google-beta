@@ -147,6 +147,99 @@ resource "google_netapp_volume_replication" "test_replication" {
 `, context)
 }
 
+func TestAccNetappVolumeReplication_netappVolumeInRegionReplicationIntraZonesFileExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"destination_pool_name":  "tf-test-dst-pool-zonal-same" + randomSuffix,
+		"destination_share_name": "tf-test-dst-share-zonal-same" + randomSuffix,
+		"destination_volume":     "tf_test_dst_vol_zonal_same" + randomSuffix,
+		"network_name":           acctest.BootstrapSharedServiceNetworkingConnection(t, "gcnv-network-intra-zone", acctest.ServiceNetworkWithParentService("netapp.servicenetworking.goog")),
+		"replication_name":       "tf-test-rep-zonal-same" + randomSuffix,
+		"source_pool_name":       "tf-test-src-pool-zonal-same" + randomSuffix,
+		"source_share_name":      "tf-test-src-share-zonal-same" + randomSuffix,
+		"source_volume":          "tf_test_src_vol_zonal_same" + randomSuffix,
+		"random_suffix":          randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckNetappVolumeReplicationDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccNetappVolumeReplication_netappVolumeInRegionReplicationIntraZonesFileExample(context),
+			},
+			{
+				ResourceName:            "google_netapp_volume_replication.test_replication",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"delete_destination_volume", "destination_volume_parameters", "force_stopping", "labels", "location", "name", "replication_enabled", "terraform_labels", "volume_name", "wait_for_mirror"},
+			},
+		},
+	})
+}
+
+func testAccNetappVolumeReplication_netappVolumeInRegionReplicationIntraZonesFileExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+data "google_compute_network" "test_replication" {
+  name = "%{network_name}"
+}
+
+resource "google_netapp_storage_pool" "source_pool" {
+  name          = "%{source_pool_name}"
+  location      = "us-central1-a"
+  service_level = "FLEX"
+  capacity_gib  = 2048
+  type          = "UNIFIED"
+  network       = data.google_compute_network.test_replication.id
+}
+
+resource "google_netapp_storage_pool" "destination_pool" {
+  name          = "%{destination_pool_name}"
+  location      = "us-central1-a"
+  service_level = "FLEX"
+  type          = "UNIFIED"
+  capacity_gib  = 2048
+  network       = data.google_compute_network.test_replication.id
+}
+
+resource "google_netapp_volume" "source_volume" {
+  location     = google_netapp_storage_pool.source_pool.location
+  name         = "%{source_volume}"
+  capacity_gib = 100
+  share_name   = "%{source_share_name}"
+  storage_pool = google_netapp_storage_pool.source_pool.name
+  protocols = [
+    "NFSV3"
+  ]
+  deletion_policy = "FORCE"
+}
+
+resource "google_netapp_volume_replication" "test_replication" {
+  depends_on           = [google_netapp_volume.source_volume]
+  location             = google_netapp_volume.source_volume.location
+  volume_name          = google_netapp_volume.source_volume.name
+  name                 = "%{replication_name}"
+  replication_schedule = "EVERY_10_MINUTES"
+  description          = "This is an in-region replication resource (zonal same zone)"
+  destination_volume_parameters {
+    storage_pool = google_netapp_storage_pool.destination_pool.id
+    volume_id    = "%{destination_volume}"
+    share_name   = "%{destination_share_name}"
+    description  = "This is a replicated volume"
+  }
+  # WARNING: Setting delete_destination_volume to true, will delete the
+  # CURRENT destination volume if the replication is deleted. Omit the field 
+  # or set delete_destination_volume=false to avoid accidental volume deletion.
+  delete_destination_volume = true
+  wait_for_mirror = true
+}
+`, context)
+}
+
 func testAccCheckNetappVolumeReplicationDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
