@@ -1501,7 +1501,6 @@ func resourceCloudRunServiceCreate(d *schema.ResourceData, meta interface{}) err
 func resourceCloudRunServicePollRead(d *schema.ResourceData, meta interface{}) transport_tpg.PollReadFunc {
 	return func() (map[string]interface{}, error) {
 		config := meta.(*transport_tpg.Config)
-
 		url, err := tpgresource.ReplaceVars(d, config, "{{CloudRunBasePath}}apis/serving.knative.dev/v1/namespaces/{{project}}/services/{{name}}")
 
 		if err != nil {

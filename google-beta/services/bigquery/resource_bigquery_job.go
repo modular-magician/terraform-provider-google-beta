@@ -1195,7 +1195,6 @@ func resourceBigQueryJobCreate(d *schema.ResourceData, meta interface{}) error {
 func resourceBigQueryJobPollRead(d *schema.ResourceData, meta interface{}) transport_tpg.PollReadFunc {
 	return func() (map[string]interface{}, error) {
 		config := meta.(*transport_tpg.Config)
-
 		url, err := tpgresource.ReplaceVars(d, config, "{{BigQueryBasePath}}projects/{{project}}/jobs/{{job_id}}?location={{location}}")
 
 		if err != nil {

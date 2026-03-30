@@ -581,7 +581,6 @@ func resourceFirebaseAppHostingDomainCreate(d *schema.ResourceData, meta interfa
 func resourceFirebaseAppHostingDomainPollRead(d *schema.ResourceData, meta interface{}) transport_tpg.PollReadFunc {
 	return func() (map[string]interface{}, error) {
 		config := meta.(*transport_tpg.Config)
-
 		url, err := tpgresource.ReplaceVars(d, config, "{{FirebaseAppHostingBasePath}}projects/{{project}}/locations/{{location}}/backends/{{backend}}/domains/{{domain_id}}")
 
 		if err != nil {

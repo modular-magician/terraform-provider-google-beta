@@ -365,7 +365,6 @@ func resourceCloudIdentityGroupCreate(d *schema.ResourceData, meta interface{}) 
 func resourceCloudIdentityGroupPollRead(d *schema.ResourceData, meta interface{}) transport_tpg.PollReadFunc {
 	return func() (map[string]interface{}, error) {
 		config := meta.(*transport_tpg.Config)
-
 		url, err := tpgresource.ReplaceVars(d, config, "{{CloudIdentityBasePath}}{{name}}")
 
 		if err != nil {

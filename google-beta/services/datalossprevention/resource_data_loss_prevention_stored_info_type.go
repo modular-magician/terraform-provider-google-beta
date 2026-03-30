@@ -448,7 +448,6 @@ func resourceDataLossPreventionStoredInfoTypeCreate(d *schema.ResourceData, meta
 func resourceDataLossPreventionStoredInfoTypePollRead(d *schema.ResourceData, meta interface{}) transport_tpg.PollReadFunc {
 	return func() (map[string]interface{}, error) {
 		config := meta.(*transport_tpg.Config)
-
 		url, err := tpgresource.ReplaceVars(d, config, "{{DataLossPreventionBasePath}}{{parent}}/storedInfoTypes/{{name}}")
 
 		if err != nil {

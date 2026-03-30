@@ -168,7 +168,17 @@ func resourceArtifactRegistryVPCSCConfigCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ArtifactRegistryBasePath}}projects/{{project}}/locations/{{location}}/vpcscConfig")
+	urlFormatted, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vpcscConfig")
+	if err != nil {
+		return err
+	}
+	loc := tpgresource.LocationFromId(urlFormatted)
+
+	basePath := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+
+	url, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vpcscConfig")
+	url = fmt.Sprintf("%s%s", basePath, url)
+
 	if err != nil {
 		return err
 	}
@@ -220,8 +230,17 @@ func resourceArtifactRegistryVPCSCConfigRead(d *schema.ResourceData, meta interf
 	if err != nil {
 		return err
 	}
+	urlFormatted, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vpcscConfig")
+	if err != nil {
+		return err
+	}
+	loc := tpgresource.LocationFromId(urlFormatted)
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ArtifactRegistryBasePath}}projects/{{project}}/locations/{{location}}/vpcscConfig")
+	basePath := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+
+	url, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vpcscConfig")
+	url = fmt.Sprintf("%s%s", basePath, url)
+
 	if err != nil {
 		return err
 	}
@@ -296,7 +315,17 @@ func resourceArtifactRegistryVPCSCConfigUpdate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ArtifactRegistryBasePath}}projects/{{project}}/locations/{{location}}/vpcscConfig")
+	urlFormatted, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vpcscConfig")
+	if err != nil {
+		return err
+	}
+	loc := tpgresource.LocationFromId(urlFormatted)
+
+	basePath := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+
+	url, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/vpcscConfig")
+	url = fmt.Sprintf("%s%s", basePath, url)
+
 	if err != nil {
 		return err
 	}

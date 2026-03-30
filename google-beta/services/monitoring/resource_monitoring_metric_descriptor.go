@@ -382,7 +382,6 @@ func resourceMonitoringMetricDescriptorCreate(d *schema.ResourceData, meta inter
 func resourceMonitoringMetricDescriptorPollRead(d *schema.ResourceData, meta interface{}) transport_tpg.PollReadFunc {
 	return func() (map[string]interface{}, error) {
 		config := meta.(*transport_tpg.Config)
-
 		url, err := tpgresource.ReplaceVars(d, config, "{{MonitoringBasePath}}v3/{{name}}")
 
 		if err != nil {

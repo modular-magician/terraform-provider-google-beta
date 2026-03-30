@@ -272,7 +272,6 @@ func resourceStorageHmacKeyCreate(d *schema.ResourceData, meta interface{}) erro
 func resourceStorageHmacKeyPollRead(d *schema.ResourceData, meta interface{}) transport_tpg.PollReadFunc {
 	return func() (map[string]interface{}, error) {
 		config := meta.(*transport_tpg.Config)
-
 		url, err := tpgresource.ReplaceVars(d, config, "{{StorageBasePath}}projects/{{project}}/hmacKeys/{{access_id}}")
 
 		if err != nil {

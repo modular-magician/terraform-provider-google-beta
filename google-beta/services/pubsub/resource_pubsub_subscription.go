@@ -879,7 +879,6 @@ func resourcePubsubSubscriptionCreate(d *schema.ResourceData, meta interface{}) 
 func resourcePubsubSubscriptionPollRead(d *schema.ResourceData, meta interface{}) transport_tpg.PollReadFunc {
 	return func() (map[string]interface{}, error) {
 		config := meta.(*transport_tpg.Config)
-
 		url, err := tpgresource.ReplaceVars(d, config, "{{PubsubBasePath}}projects/{{project}}/subscriptions/{{name}}")
 
 		if err != nil {
