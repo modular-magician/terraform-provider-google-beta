@@ -164,6 +164,25 @@ resource "google_discovery_engine_data_connector" "jira-with-actions" {
   }
 }
 ```
+## Example Usage - Discoveryengine Dataconnector Google Drive
+
+
+```hcl
+resource "google_discovery_engine_data_connector" "google-drive" {
+  location                = "global"
+  collection_id           = "collection-id"
+  collection_display_name = "Google Drive"
+  data_source             = "google_drive"
+  refresh_interval        = "0s"
+  entities {
+    entity_name = "google_drive"
+    params      = jsonencode({
+      included_shared_drive_ids = ["SHARED_DRIVE_ID"]
+    })
+  }
+  connector_modes = ["FEDERATED"]
+}
+```
 
 ## Argument Reference
 
@@ -173,7 +192,12 @@ The following arguments are supported:
 * `data_source` -
   (Required)
   The name of the data source.
-  Supported values: `salesforce`, `jira`, `confluence`, `bigquery`.
+  Supported values include `salesforce`, `jira`, `confluence`, `bigquery`,
+  `google_drive`, and more. For the full list of supported data sources, see
+  the [connectors documentation](https://cloud.google.com/agentspace/docs/introduction-to-connectors-and-data-stores).
+  Note: Google first-party connectors like `google_drive` require
+  ACL configuration (`google_discovery_engine_acl_config`) before
+  creating the data connector.
 
 * `refresh_interval` -
   (Required)
@@ -292,8 +316,9 @@ The following arguments are supported:
   (Optional)
   The name of the entity. Supported values by data source:
   * Salesforce: `Lead`, `Opportunity`, `Contact`, `Account`, `Case`, `Contract`, `Campaign`
-  * Jira: project, issue, attachment, comment, worklog
+  * Jira: `project`, `issue`, `attachment`, `comment`, `worklog`
   * Confluence: `Content`, `Space`
+  * Google Drive: `google_drive`
 
 * `key_property_mappings` -
   (Optional)

@@ -156,7 +156,12 @@ INVALID_ARGUMENT error is returned.`,
 				Required: true,
 				ForceNew: true,
 				Description: `The name of the data source.
-Supported values: 'salesforce', 'jira', 'confluence', 'bigquery'.`,
+Supported values include 'salesforce', 'jira', 'confluence', 'bigquery',
+'google_drive', and more. For the full list of supported data sources, see
+the [connectors documentation](https://cloud.google.com/agentspace/docs/introduction-to-connectors-and-data-stores).
+Note: Google first-party connectors like 'google_drive' require
+ACL configuration ('google_discovery_engine_acl_config') before
+creating the data connector.`,
 			},
 			"location": {
 				Type:     schema.TypeString,
@@ -300,8 +305,9 @@ used to configure where data is served.`,
 							ForceNew: true,
 							Description: `The name of the entity. Supported values by data source:
 * Salesforce: 'Lead', 'Opportunity', 'Contact', 'Account', 'Case', 'Contract', 'Campaign'
-* Jira: project, issue, attachment, comment, worklog
-* Confluence: 'Content', 'Space'`,
+* Jira: 'project', 'issue', 'attachment', 'comment', 'worklog'
+* Confluence: 'Content', 'Space'
+* Google Drive: 'google_drive'`,
 						},
 						"key_property_mappings": {
 							Type:             schema.TypeMap,
