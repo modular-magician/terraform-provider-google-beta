@@ -824,7 +824,7 @@ resource "google_netapp_storage_pool" "test_pool" {
 }
 `, context)
 }
-func TestAccNetappStoragePool_ScaleTierEnterprise(t *testing.T) {
+func TestAccNetappStoragePool_ScaleTypeEnterprise(t *testing.T) {
 	context := map[string]interface{}{
 		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "gcnv-network-config-3", acctest.ServiceNetworkWithParentService("netapp.servicenetworking.goog")),
 		"random_suffix": acctest.RandString(t, 10),
@@ -839,7 +839,7 @@ func TestAccNetappStoragePool_ScaleTierEnterprise(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNetappStoragePool_ScaleTierEnterprise(context),
+				Config: testAccNetappStoragePool_ScaleTypeEnterprise(context),
 			},
 			{
 				ResourceName:            "google_netapp_storage_pool.test_pool",
@@ -848,7 +848,7 @@ func TestAccNetappStoragePool_ScaleTierEnterprise(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"location", "name", "labels", "terraform_labels"},
 			},
 			{
-				Config: testAccNetappStoragePool_ScaleTierEnterprise_update(context),
+				Config: testAccNetappStoragePool_ScaleTypeEnterprise_update(context),
 			},
 			{
 				ResourceName:            "google_netapp_storage_pool.test_pool",
@@ -860,12 +860,12 @@ func TestAccNetappStoragePool_ScaleTierEnterprise(t *testing.T) {
 	})
 }
 
-func testAccNetappStoragePool_ScaleTierEnterprise(context map[string]interface{}) string {
+func testAccNetappStoragePool_ScaleTypeEnterprise(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_netapp_storage_pool" "test_pool" {
 	provider = google-beta
     name = "tf-test-pool%{random_suffix}"
-    location = "us-central1-a"
+    location = "us-east4-a"
     service_level = "FLEX"
     type = "UNIFIED"
     capacity_gib = "12288"
@@ -875,7 +875,7 @@ resource "google_netapp_storage_pool" "test_pool" {
         key = "test"
         value = "pool"
     }
-	scale_tier = "SCALE_TIER_ENTERPRISE"
+	scale_type = "SCALE_TYPE_SCALEOUT"
 }
 
 data "google_compute_network" "default" {
@@ -885,12 +885,12 @@ data "google_compute_network" "default" {
 `, context)
 }
 
-func testAccNetappStoragePool_ScaleTierEnterprise_update(context map[string]interface{}) string {
+func testAccNetappStoragePool_ScaleTypeEnterprise_update(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_netapp_storage_pool" "test_pool" {
 	provider = google-beta
     name = "tf-test-pool%{random_suffix}"
-    location = "us-central1-a"
+    location = "us-east4-a"
     service_level = "FLEX"
     type = "UNIFIED"
     capacity_gib = "13312"
@@ -900,7 +900,7 @@ resource "google_netapp_storage_pool" "test_pool" {
         key = "test"
         value = "pool"
     }
-	scale_tier = "SCALE_TIER_ENTERPRISE"
+	scale_type = "SCALE_TYPE_SCALEOUT"
 }
 
 data "google_compute_network" "default" {

@@ -1525,17 +1525,17 @@ func testAccNetappVolume_LargeCapacityConfig_basic(context map[string]interface{
     resource "google_netapp_storage_pool" "default" {
         provider = google-beta
         name = "tf-test-test-pool%{random_suffix}"
-        location = "us-central1-a"
+        location = "us-east4-a"
         service_level = "FLEX"
         capacity_gib = "12288"
         type = "UNIFIED"
-        scale_tier = "SCALE_TIER_ENTERPRISE"
+        scale_type = "SCALE_TYPE_SCALEOUT"
         network = data.google_compute_network.default.id
     }
 
     resource "google_netapp_volume" "test_volume" {
         provider = google-beta
-        location = "us-central1-a"
+        location = "us-east4-a"
         name = "tf_test_test_volume%{random_suffix}"
         capacity_gib = "12288"
         storage_pool = google_netapp_storage_pool.default.name
@@ -1559,17 +1559,17 @@ func testAccNetappVolume_LargeCapacityConfig_updated(context map[string]interfac
     resource "google_netapp_storage_pool" "default" {
         provider = google-beta
         name = "tf-test-test-pool%{random_suffix}"
-        location = "us-central1-a"
+        location = "us-east4-a"
         service_level = "FLEX"
         capacity_gib = "12288"
         type = "UNIFIED"
-        scale_tier = "SCALE_TIER_ENTERPRISE"
+        scale_type = "SCALE_TYPE_SCALEOUT"
         network = data.google_compute_network.default.id
     }
 
     resource "google_netapp_volume" "test_volume" {
         provider = google-beta
-        location = "us-central1-a"
+        location = "us-east4-a"
         name = "tf_test_test_volume%{random_suffix}"
         capacity_gib = "12287"
         storage_pool = google_netapp_storage_pool.default.name
