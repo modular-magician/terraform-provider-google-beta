@@ -656,9 +656,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 807
+// Generated resources: 809
 // Generated IAM resources: 360
-// Total generated resources: 1167
+// Total generated resources: 1169
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     registry.Resource("google_folder_access_approval_settings"),
 	"google_organization_access_approval_settings":                               registry.Resource("google_organization_access_approval_settings"),
@@ -1005,6 +1005,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_compute_organization_security_policy":                                registry.Resource("google_compute_organization_security_policy"),
 	"google_compute_organization_security_policy_association":                    registry.Resource("google_compute_organization_security_policy_association"),
 	"google_compute_organization_security_policy_rule":                           registry.Resource("google_compute_organization_security_policy_rule"),
+	"google_compute_organization_snapshot_recycle_bin_policy":                    registry.Resource("google_compute_organization_snapshot_recycle_bin_policy"),
 	"google_compute_packet_mirroring":                                            registry.Resource("google_compute_packet_mirroring"),
 	"google_compute_per_instance_config":                                         registry.Resource("google_compute_per_instance_config"),
 	"google_compute_preview_feature":                                             registry.Resource("google_compute_preview_feature"),
@@ -1063,6 +1064,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_compute_snapshot_iam_binding":                                        registry.Resource("google_compute_snapshot_iam_binding"),
 	"google_compute_snapshot_iam_member":                                         registry.Resource("google_compute_snapshot_iam_member"),
 	"google_compute_snapshot_iam_policy":                                         registry.Resource("google_compute_snapshot_iam_policy"),
+	"google_compute_snapshot_recycle_bin_policy":                                 registry.Resource("google_compute_snapshot_recycle_bin_policy"),
 	"google_compute_snapshot_settings":                                           registry.Resource("google_compute_snapshot_settings"),
 	"google_compute_ssl_certificate":                                             registry.Resource("google_compute_ssl_certificate"),
 	"google_compute_ssl_policy":                                                  registry.Resource("google_compute_ssl_policy"),
