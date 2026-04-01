@@ -1,0 +1,18 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_service_usage_v2_organization_consumer_policy
+generation_type: mmv1
+source_file: products/serviceusagev2/OrganizationConsumerPolicy.yaml
+api_service_name: serviceusage.googleapis.com
+api_version: v2beta
+api_resource_type_kind: ConsumerPolicy
+fields:
+    - api_field: createTime
+    - field: deletion_policy
+      provider_only: true
+    - api_field: enableRules.services
+    - api_field: etag
+    - api_field: name
+    - field: organization
+      provider_only: true
+    - api_field: updateTime
