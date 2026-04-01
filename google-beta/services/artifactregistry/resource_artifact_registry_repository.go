@@ -480,7 +480,6 @@ snapshot versions.`,
 			"remote_repository_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
 				Description: `Configuration specific for a Remote Repository.`,
 				MaxItems:    1,
 				Elem: &schema.Resource{
@@ -709,7 +708,6 @@ not be validated.`,
 						"upstream_credentials": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							ForceNew:    true,
 							Description: `The credentials used to access the remote repository.`,
 							MaxItems:    1,
 							Elem: &schema.Resource{
@@ -717,7 +715,6 @@ not be validated.`,
 									"username_password_credentials": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										ForceNew:    true,
 										Description: `Use username and password to access the remote repository.`,
 										MaxItems:    1,
 										Elem: &schema.Resource{
@@ -725,7 +722,6 @@ not be validated.`,
 												"password_secret_version": {
 													Type:     schema.TypeString,
 													Optional: true,
-													ForceNew: true,
 													Description: `The Secret Manager key version that holds the password to access the
 remote repository. Must be in the format of
 'projects/{project}/secrets/{secret}/versions/{version}'.`,
@@ -733,7 +729,6 @@ remote repository. Must be in the format of
 												"username": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													ForceNew:    true,
 													Description: `The username to access the remote repository.`,
 												},
 											},
@@ -1182,6 +1177,12 @@ func resourceArtifactRegistryRepositoryUpdate(d *schema.ResourceData, meta inter
 	} else if v, ok := d.GetOkExists("cleanup_policies"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, cleanupPoliciesProp)) {
 		obj["cleanupPolicies"] = cleanupPoliciesProp
 	}
+	remoteRepositoryConfigProp, err := expandArtifactRegistryRepositoryRemoteRepositoryConfig(d.Get("remote_repository_config"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("remote_repository_config"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, remoteRepositoryConfigProp)) {
+		obj["remoteRepositoryConfig"] = remoteRepositoryConfigProp
+	}
 	cleanupPolicyDryRunProp, err := expandArtifactRegistryRepositoryCleanupPolicyDryRun(d.Get("cleanup_policy_dry_run"), d, config)
 	if err != nil {
 		return err
@@ -1233,6 +1234,11 @@ func resourceArtifactRegistryRepositoryUpdate(d *schema.ResourceData, meta inter
 
 	if d.HasChange("cleanup_policies") {
 		updateMask = append(updateMask, "cleanupPolicies")
+	}
+
+	if d.HasChange("remote_repository_config") {
+		updateMask = append(updateMask, "remote_repository_config.upstream_credentials.username_password_credentials.username",
+			"remote_repository_config.upstream_credentials.username_password_credentials.password_secret_version")
 	}
 
 	if d.HasChange("cleanup_policy_dry_run") {
