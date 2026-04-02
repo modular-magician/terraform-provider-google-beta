@@ -260,7 +260,7 @@ The following arguments are supported:
   Structure is [documented below](#nested_reservation_sharing_policy).
 
 * `enable_emergent_maintenance` -
-  (Optional, [Beta](../guides/provider_versions.html.markdown))
+  (Optional)
   Indicates if this group of VMs have emergent maintenance enabled.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.

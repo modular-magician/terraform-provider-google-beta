@@ -309,7 +309,6 @@ Cannot be used with delete_after_duration.`,
 			"enable_emergent_maintenance": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: `Indicates if this group of VMs have emergent maintenance enabled.`,
 			},
 			"reservation_sharing_policy": {
@@ -902,6 +901,12 @@ func resourceComputeReservationUpdate(d *schema.ResourceData, meta interface{}) 
 	} else if v, ok := d.GetOkExists("reservation_sharing_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, reservationSharingPolicyProp)) {
 		obj["reservationSharingPolicy"] = reservationSharingPolicyProp
 	}
+	enableEmergentMaintenanceProp, err := expandComputeReservationEnableEmergentMaintenance(d.Get("enable_emergent_maintenance"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("enable_emergent_maintenance"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enableEmergentMaintenanceProp)) {
+		obj["enableEmergentMaintenance"] = enableEmergentMaintenanceProp
+	}
 
 	obj, err = resourceComputeReservationUpdateEncoder(d, meta, obj)
 	if err != nil {
@@ -927,6 +932,10 @@ func resourceComputeReservationUpdate(d *schema.ResourceData, meta interface{}) 
 
 	if d.HasChange("reservation_sharing_policy") {
 		updateMask = append(updateMask, "reservationSharingPolicy")
+	}
+
+	if d.HasChange("enable_emergent_maintenance") {
+		updateMask = append(updateMask, "enableEmergentMaintenance")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
