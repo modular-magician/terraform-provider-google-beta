@@ -144,6 +144,11 @@ E.g. use '/project/user' instead of '1/{project}/{user}'.`,
 				ForceNew:    true,
 				Description: `The service that the metrics belong to, e.g. 'compute.googleapis.com'.`,
 			},
+			"admin_override_ancestor": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `The resource name of the ancestor that requested the override. For example: 'organizations/12345' or 'folders/67890'. Used by admin overrides only.`,
+			},
 			"dimensions": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -193,6 +198,12 @@ func resourceServiceUsageConsumerQuotaOverrideCreate(d *schema.ResourceData, met
 		return err
 	} else if v, ok := d.GetOkExists("dimensions"); !tpgresource.IsEmptyValue(reflect.ValueOf(dimensionsProp)) && (ok || !reflect.DeepEqual(v, dimensionsProp)) {
 		obj["dimensions"] = dimensionsProp
+	}
+	adminOverrideAncestorProp, err := expandNestedServiceUsageConsumerQuotaOverrideAdminOverrideAncestor(d.Get("admin_override_ancestor"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("admin_override_ancestor"); !tpgresource.IsEmptyValue(reflect.ValueOf(adminOverrideAncestorProp)) && (ok || !reflect.DeepEqual(v, adminOverrideAncestorProp)) {
+		obj["adminOverrideAncestor"] = adminOverrideAncestorProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ServiceUsageBasePath}}projects/{{project}}/services/{{service}}/consumerQuotaMetrics/{{metric}}/limits/{{limit}}/consumerOverrides/{{name}}?force={{force}}")
@@ -337,6 +348,9 @@ func resourceServiceUsageConsumerQuotaOverrideRead(d *schema.ResourceData, meta 
 	if err := d.Set("dimensions", flattenNestedServiceUsageConsumerQuotaOverrideDimensions(res["dimensions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsumerQuotaOverride: %s", err)
 	}
+	if err := d.Set("admin_override_ancestor", flattenNestedServiceUsageConsumerQuotaOverrideAdminOverrideAncestor(res["adminOverrideAncestor"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ConsumerQuotaOverride: %s", err)
+	}
 	if err := d.Set("name", flattenNestedServiceUsageConsumerQuotaOverrideName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsumerQuotaOverride: %s", err)
 	}
@@ -365,6 +379,12 @@ func resourceServiceUsageConsumerQuotaOverrideUpdate(d *schema.ResourceData, met
 		return err
 	} else if v, ok := d.GetOkExists("override_value"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, overrideValueProp)) {
 		obj["overrideValue"] = overrideValueProp
+	}
+	adminOverrideAncestorProp, err := expandNestedServiceUsageConsumerQuotaOverrideAdminOverrideAncestor(d.Get("admin_override_ancestor"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("admin_override_ancestor"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, adminOverrideAncestorProp)) {
+		obj["adminOverrideAncestor"] = adminOverrideAncestorProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ServiceUsageBasePath}}projects/{{project}}/services/{{service}}/consumerQuotaMetrics/{{metric}}/limits/{{limit}}/consumerOverrides/{{name}}?force={{force}}")
@@ -495,6 +515,10 @@ func flattenNestedServiceUsageConsumerQuotaOverrideDimensions(v interface{}, d *
 	return v
 }
 
+func flattenNestedServiceUsageConsumerQuotaOverrideAdminOverrideAncestor(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenNestedServiceUsageConsumerQuotaOverrideName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -515,6 +539,10 @@ func expandNestedServiceUsageConsumerQuotaOverrideDimensions(v interface{}, d tp
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandNestedServiceUsageConsumerQuotaOverrideAdminOverrideAncestor(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func flattenNestedServiceUsageConsumerQuotaOverride(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {

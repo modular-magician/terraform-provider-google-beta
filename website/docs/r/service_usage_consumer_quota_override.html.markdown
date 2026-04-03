@@ -105,6 +105,29 @@ resource "google_service_usage_consumer_quota_override" "override" {
   }
 }
 ```
+## Example Usage - Consumer Quota Override Admin Override
+
+
+```hcl
+resource "google_project" "my_project" {
+  provider        = google-beta
+  name            = "tf-test-project"
+  project_id      = "quota"
+  org_id          = "123456789"
+  deletion_policy = "DELETE"
+}
+
+resource "google_service_usage_consumer_quota_override" "override" {
+  provider                = google-beta
+  project                 = google_project.my_project.project_id
+  service                 = "servicemanagement.googleapis.com"
+  metric                  = urlencode("servicemanagement.googleapis.com/default_requests")
+  limit                   = urlencode("/min/project")
+  override_value          = "95"
+  force                   = true
+  admin_override_ancestor = "organizations/123456789"
+}
+```
 
 ## Argument Reference
 
@@ -133,6 +156,10 @@ The following arguments are supported:
 * `dimensions` -
   (Optional)
   If this map is nonempty, then this override applies only to specific values for dimensions defined in the limit unit.
+
+* `admin_override_ancestor` -
+  (Optional)
+  The resource name of the ancestor that requested the override. For example: `organizations/12345` or `folders/67890`. Used by admin overrides only.
 
 * `force` -
   (Optional)

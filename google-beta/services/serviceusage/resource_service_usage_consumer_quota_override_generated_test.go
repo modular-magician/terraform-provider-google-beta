@@ -260,6 +260,58 @@ resource "google_service_usage_consumer_quota_override" "override" {
 `, context)
 }
 
+func TestAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideAdminOverrideExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"org_id":        envvar.GetTestOrgFromEnv(t),
+		"project_id":    "quota" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckServiceUsageConsumerQuotaOverrideDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideAdminOverrideExample(context),
+			},
+			{
+				ResourceName:            "google_service_usage_consumer_quota_override.override",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"force", "limit", "metric", "service"},
+			},
+		},
+	})
+}
+
+func testAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideAdminOverrideExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_project" "my_project" {
+  provider        = google-beta
+  name            = "tf-test-project"
+  project_id      = "%{project_id}"
+  org_id          = "%{org_id}"
+  deletion_policy = "DELETE"
+}
+
+resource "google_service_usage_consumer_quota_override" "override" {
+  provider                = google-beta
+  project                 = google_project.my_project.project_id
+  service                 = "servicemanagement.googleapis.com"
+  metric                  = urlencode("servicemanagement.googleapis.com/default_requests")
+  limit                   = urlencode("/min/project")
+  override_value          = "95"
+  force                   = true
+  admin_override_ancestor = "organizations/%{org_id}"
+}
+`, context)
+}
+
 func testAccCheckServiceUsageConsumerQuotaOverrideDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
