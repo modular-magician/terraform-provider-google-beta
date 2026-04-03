@@ -106,6 +106,81 @@ resource "google_dataform_repository_release_config" "release" {
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=dataform_repository_release_config_with_builtin_assertion&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Dataform Repository Release Config With Builtin Assertion
+
+
+```hcl
+resource "google_sourcerepo_repository" "git_repository" {
+  provider = google-beta
+  name     = "my/repository"
+}
+
+resource "google_secret_manager_secret" "secret" {
+  provider  = google-beta
+  secret_id = "my_secret"
+
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "secret_version" {
+  provider = google-beta
+  secret   = google_secret_manager_secret.secret.id
+
+  secret_data = "secret-data"
+}
+
+resource "google_dataform_repository" "repository" {
+  provider = google-beta
+  name     = "dataform_repository"
+  region   = "us-central1"
+
+  git_remote_settings {
+      url = google_sourcerepo_repository.git_repository.url
+      default_branch = "main"
+      authentication_token_secret_version = google_secret_manager_secret_version.secret_version.id
+  }
+
+  workspace_compilation_overrides {
+    default_database = "database"
+    schema_suffix = "_suffix"
+    table_prefix = "prefix_"
+  }
+}
+
+resource "google_dataform_repository_release_config" "release" {
+  provider = google-beta
+
+  project    = google_dataform_repository.repository.project
+  region     = google_dataform_repository.repository.region
+  repository = google_dataform_repository.repository.name
+
+  name          = "my_release"
+  git_commitish = "main"
+  cron_schedule = "0 7 * * *"
+  time_zone     = "America/New_York"
+
+  code_compilation_config {
+    default_database = "gcp-example-project"
+    default_schema   = "example-dataset"
+    default_location = "us-central1"
+    assertion_schema = "example-assertion-dataset"
+    database_suffix  = ""
+    schema_suffix    = ""
+    table_prefix     = ""
+    builtin_assertion_name_prefix = "assertions_"
+    vars = {
+      var1 = "value"
+    }
+  }
+}
+```
 
 ## Argument Reference
 
@@ -183,6 +258,10 @@ The following arguments are supported:
 * `table_prefix` -
   (Optional)
   Optional. The prefix that should be prepended to all table names.
+
+* `builtin_assertion_name_prefix` -
+  (Optional)
+  The prefix to prepend to built-in assertion names.
 
 ## Attributes Reference
 

@@ -141,6 +141,11 @@ func ResourceDataformRepositoryReleaseConfig() *schema.Resource {
 							Optional:    true,
 							Description: `Optional. The default schema (BigQuery dataset ID) for assertions.`,
 						},
+						"builtin_assertion_name_prefix": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `The prefix to prepend to built-in assertion names.`,
+						},
 						"database_suffix": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -592,6 +597,8 @@ func flattenDataformRepositoryReleaseConfigCodeCompilationConfig(v interface{}, 
 		flattenDataformRepositoryReleaseConfigCodeCompilationConfigSchemaSuffix(original["schemaSuffix"], d, config)
 	transformed["table_prefix"] =
 		flattenDataformRepositoryReleaseConfigCodeCompilationConfigTablePrefix(original["tablePrefix"], d, config)
+	transformed["builtin_assertion_name_prefix"] =
+		flattenDataformRepositoryReleaseConfigCodeCompilationConfigBuiltinAssertionNamePrefix(original["builtinAssertionNamePrefix"], d, config)
 	return []interface{}{transformed}
 }
 func flattenDataformRepositoryReleaseConfigCodeCompilationConfigDefaultDatabase(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -623,6 +630,10 @@ func flattenDataformRepositoryReleaseConfigCodeCompilationConfigSchemaSuffix(v i
 }
 
 func flattenDataformRepositoryReleaseConfigCodeCompilationConfigTablePrefix(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDataformRepositoryReleaseConfigCodeCompilationConfigBuiltinAssertionNamePrefix(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -774,6 +785,13 @@ func expandDataformRepositoryReleaseConfigCodeCompilationConfig(v interface{}, d
 		transformed["tablePrefix"] = transformedTablePrefix
 	}
 
+	transformedBuiltinAssertionNamePrefix, err := expandDataformRepositoryReleaseConfigCodeCompilationConfigBuiltinAssertionNamePrefix(original["builtin_assertion_name_prefix"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedBuiltinAssertionNamePrefix); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["builtinAssertionNamePrefix"] = transformedBuiltinAssertionNamePrefix
+	}
+
 	return transformed, nil
 }
 
@@ -813,5 +831,9 @@ func expandDataformRepositoryReleaseConfigCodeCompilationConfigSchemaSuffix(v in
 }
 
 func expandDataformRepositoryReleaseConfigCodeCompilationConfigTablePrefix(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDataformRepositoryReleaseConfigCodeCompilationConfigBuiltinAssertionNamePrefix(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
