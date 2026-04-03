@@ -225,6 +225,12 @@ BOOL`,
 					},
 				},
 			},
+			"rollout": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Specifies which rollout created this Unit Operation. This cannot be modified and is used for filtering purposes only. If a dependent unit and unit operation are created as part of another unit operation, they will use the same rolloutId.`,
+			},
 			"upgrade": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -457,6 +463,12 @@ func resourceSaasRuntimeUnitOperationCreate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("upgrade"); !tpgresource.IsEmptyValue(reflect.ValueOf(upgradeProp)) && (ok || !reflect.DeepEqual(v, upgradeProp)) {
 		obj["upgrade"] = upgradeProp
 	}
+	rolloutProp, err := expandSaasRuntimeUnitOperationRollout(d.Get("rollout"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("rollout"); !tpgresource.IsEmptyValue(reflect.ValueOf(rolloutProp)) && (ok || !reflect.DeepEqual(v, rolloutProp)) {
+		obj["rollout"] = rolloutProp
+	}
 	effectiveAnnotationsProp, err := expandSaasRuntimeUnitOperationEffectiveAnnotations(d.Get("effective_annotations"), d, config)
 	if err != nil {
 		return err
@@ -669,6 +681,9 @@ func resourceSaasRuntimeUnitOperationRead(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error reading UnitOperation: %s", err)
 	}
 	if err := d.Set("upgrade", flattenSaasRuntimeUnitOperationUpgrade(res["upgrade"], d, config)); err != nil {
+		return fmt.Errorf("Error reading UnitOperation: %s", err)
+	}
+	if err := d.Set("rollout", flattenSaasRuntimeUnitOperationRollout(res["rollout"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitOperation: %s", err)
 	}
 	if err := d.Set("effective_annotations", flattenSaasRuntimeUnitOperationEffectiveAnnotations(res["annotations"], d, config)); err != nil {
@@ -980,6 +995,10 @@ func flattenSaasRuntimeUnitOperationUpgradeRelease(v interface{}, d *schema.Reso
 	return v
 }
 
+func flattenSaasRuntimeUnitOperationRollout(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenSaasRuntimeUnitOperationEffectiveAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1190,6 +1209,10 @@ func expandSaasRuntimeUnitOperationUpgradeInputVariablesVariable(v interface{}, 
 }
 
 func expandSaasRuntimeUnitOperationUpgradeRelease(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSaasRuntimeUnitOperationRollout(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

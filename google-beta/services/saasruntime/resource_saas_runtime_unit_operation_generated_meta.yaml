@@ -31,6 +31,7 @@ fields:
     - api_field: provision.inputVariables.value
     - api_field: provision.inputVariables.variable
     - api_field: provision.release
+    - api_field: rollout
     - api_field: state
     - field: terraform_labels
       provider_only: true
