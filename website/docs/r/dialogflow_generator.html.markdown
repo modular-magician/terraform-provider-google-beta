@@ -55,16 +55,42 @@ resource "google_dialogflow_generator" "summarization_basic_generator" {
   trigger_event = "MANUAL_CALL"
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=dialogflow_generator_agent_coaching&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Dialogflow Generator Agent Coaching
+
+
+```hcl
+resource "google_dialogflow_generator" "agent_coaching_generator" {
+  location = "global"
+  description = "A v2.5 agent coaching generator."
+  inference_parameter {
+    max_output_tokens = 1024
+    temperature       = 0
+    top_k             = 40
+    top_p             = 0.95
+  }
+  agent_coaching_context {
+    version = "2.5"
+    output_language_code = "en"
+    instructions {
+      display_name = "Instruction 1"
+      display_details = "Details for instruction 1"
+      condition = "Condition 1"
+      agent_action = "Agent action 1"
+    }
+  }
+  trigger_event = "MANUAL_CALL"
+}
+```
 
 ## Argument Reference
 
 The following arguments are supported:
 
-
-* `summarization_context` -
-  (Required)
-  Input of prebuilt Summarization feature.
-  Structure is [documented below](#nested_summarization_context).
 
 * `location` -
   (Required)
@@ -74,6 +100,16 @@ The following arguments are supported:
 * `description` -
   (Optional)
   Optional. Human readable description of the generator.
+
+* `summarization_context` -
+  (Optional)
+  Input of prebuilt Summarization feature.
+  Structure is [documented below](#nested_summarization_context).
+
+* `agent_coaching_context` -
+  (Optional)
+  Optional. Agent coaching context for the generator.
+  Structure is [documented below](#nested_agent_coaching_context).
 
 * `inference_parameter` -
   (Optional)
@@ -231,6 +267,73 @@ The following arguments are supported:
   (Optional)
   Optional. Type of the summarization section.
   Possible values are: `SITUATION`, `ACTION`, `RESOLUTION`, `REASON_FOR_CANCELLATION`, `CUSTOMER_SATISFACTION`, `ENTITIES`, `CUSTOMER_DEFINED`, `SITUATION_CONCISE`, `ACTION_CONCISE`.
+
+<a name="nested_agent_coaching_context"></a>The `agent_coaching_context` block supports:
+
+* `overarching_guidance` -
+  (Optional)
+  Optional. The overarching guidance for the agent coaching. This should be set only for v1.5 and later versions.
+
+* `instructions` -
+  (Optional)
+  Optional. Customized instructions for agent coaching.
+  Structure is [documented below](#nested_agent_coaching_context_instructions).
+
+* `version` -
+  (Optional)
+  Optional. Version of the feature. If not set, default to latest version. Current candidates are ["2.5"].
+
+* `output_language_code` -
+  (Optional)
+  Optional. Output language code.
+
+
+<a name="nested_agent_coaching_context_instructions"></a>The `instructions` block supports:
+
+* `display_name` -
+  (Optional)
+  Optional. The display name of the instruction.
+
+* `display_details` -
+  (Optional)
+  Optional. The display details of the instruction.
+
+* `condition` -
+  (Optional)
+  Optional. The condition of the instruction.
+
+* `agent_action` -
+  (Optional)
+  Optional. The agent action of the instruction.
+
+* `system_action` -
+  (Optional)
+  Optional. The system action of the instruction.
+
+* `duplicate_check_result` -
+  (Optional)
+  Optional. The duplicate check result.
+  Structure is [documented below](#nested_agent_coaching_context_instructions_duplicate_check_result).
+
+* `triggering_event` -
+  (Optional)
+  Optional. The event that should trigger this instruction. If UNSPECIFIED, the instruction triggering will be same as the generator's triggerEvent.
+  Possible values are: `END_OF_UTTERANCE`, `MANUAL_CALL`, `CUSTOMER_MESSAGE`, `AGENT_MESSAGE`, `TOOL_CALL_COMPLETION`.
+
+
+<a name="nested_agent_coaching_context_instructions_duplicate_check_result"></a>The `duplicate_check_result` block supports:
+
+* `answer_record` -
+  (Optional)
+  Optional. The answer record.
+
+* `suggestion_index` -
+  (Optional)
+  Optional. The suggestion index.
+
+* `similarity_score` -
+  (Optional)
+  Optional. The similarity score.
 
 <a name="nested_inference_parameter"></a>The `inference_parameter` block supports:
 

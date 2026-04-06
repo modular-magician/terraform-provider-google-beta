@@ -98,6 +98,60 @@ resource "google_dialogflow_generator" "summarization_basic_generator" {
 `, context)
 }
 
+func TestAccDialogflowGenerator_dialogflowGeneratorAgentCoachingExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"profile_name":  "tf-test-dialogflow-profile" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckDialogflowGeneratorDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDialogflowGenerator_dialogflowGeneratorAgentCoachingExample(context),
+			},
+			{
+				ResourceName:            "google_dialogflow_generator.agent_coaching_generator",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"location"},
+			},
+		},
+	})
+}
+
+func testAccDialogflowGenerator_dialogflowGeneratorAgentCoachingExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_dialogflow_generator" "agent_coaching_generator" {
+  location = "global"
+  description = "A v2.5 agent coaching generator."
+  inference_parameter {
+    max_output_tokens = 1024
+    temperature       = 0
+    top_k             = 40
+    top_p             = 0.95
+  }
+  agent_coaching_context {
+    version = "2.5"
+    output_language_code = "en"
+    instructions {
+      display_name = "Instruction 1"
+      display_details = "Details for instruction 1"
+      condition = "Condition 1"
+      agent_action = "Agent action 1"
+    }
+  }
+  trigger_event = "MANUAL_CALL"
+}
+`, context)
+}
+
 func testAccCheckDialogflowGeneratorDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

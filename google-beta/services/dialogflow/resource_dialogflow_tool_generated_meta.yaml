@@ -1,0 +1,22 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_dialogflow_tool
+generation_type: mmv1
+source_file: products/dialogflow/Tool.yaml
+api_service_name: dialogflow.googleapis.com
+api_version: v2beta1
+api_resource_type_kind: Tool
+fields:
+    - api_field: actionConfirmationRequirement
+    - api_field: connectorSpec.name
+    - api_field: description
+    - api_field: displayName
+    - api_field: extensionSpec.name
+    - api_field: functionSpec.inputSchema
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: openApiSpec.textSchema
+    - api_field: satisfiesPzi
+    - api_field: satisfiesPzs
+    - api_field: toolKey

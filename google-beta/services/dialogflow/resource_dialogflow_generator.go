@@ -123,9 +123,147 @@ func ResourceDialogflowGenerator() *schema.Resource {
 				Required:    true,
 				Description: `desc`,
 			},
+			"agent_coaching_context": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Optional. Agent coaching context for the generator.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"instructions": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Optional. Customized instructions for agent coaching.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"agent_action": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The agent action of the instruction.`,
+									},
+									"condition": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The condition of the instruction.`,
+									},
+									"display_details": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The display details of the instruction.`,
+									},
+									"display_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The display name of the instruction.`,
+									},
+									"duplicate_check_result": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Optional. The duplicate check result.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"answer_record": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: `Optional. The answer record.`,
+												},
+												"similarity_score": {
+													Type:        schema.TypeFloat,
+													Optional:    true,
+													Description: `Optional. The similarity score.`,
+												},
+												"suggestion_index": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: `Optional. The suggestion index.`,
+												},
+											},
+										},
+									},
+									"system_action": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: `Optional. The system action of the instruction.`,
+									},
+									"triggering_event": {
+										Type:         schema.TypeString,
+										Optional:     true,
+										ValidateFunc: verify.ValidateEnum([]string{"END_OF_UTTERANCE", "MANUAL_CALL", "CUSTOMER_MESSAGE", "AGENT_MESSAGE", "TOOL_CALL_COMPLETION", ""}),
+										Description:  `Optional. The event that should trigger this instruction. If UNSPECIFIED, the instruction triggering will be same as the generator's triggerEvent. Possible values: ["END_OF_UTTERANCE", "MANUAL_CALL", "CUSTOMER_MESSAGE", "AGENT_MESSAGE", "TOOL_CALL_COMPLETION"]`,
+									},
+								},
+							},
+						},
+						"output_language_code": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Optional. Output language code.`,
+						},
+						"overarching_guidance": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: `Optional. The overarching guidance for the agent coaching. This should be set only for v1.5 and later versions.`,
+						},
+						"version": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Optional:    true,
+							Description: `Optional. Version of the feature. If not set, default to latest version. Current candidates are ["2.5"].`,
+						},
+					},
+				},
+				ExactlyOneOf: []string{"agent_coaching_context", "summarization_context"},
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `Optional. Human readable description of the generator.`,
+			},
+			"generator_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				Description: `Optional. The ID to use for the generator, which will become the final component of the generator's resource name.`,
+			},
+			"inference_parameter": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: `Optional. Inference parameters for this generator.`,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"max_output_tokens": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Optional. Maximum number of the output tokens for the generator.`,
+						},
+						"temperature": {
+							Type:        schema.TypeFloat,
+							Optional:    true,
+							Description: `Optional. Controls the randomness of LLM predictions. Low temperature = less random. High temperature = more random. If unset (or 0), uses a default value of 0.`,
+						},
+						"top_k": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Optional. Top-k changes how the model selects tokens for output. A top-k of 1 means the selected token is the most probable among all tokens in the model's vocabulary (also called greedy decoding), while a top-k of 3 means that the next token is selected from among the 3 most probable tokens (using temperature). For each token selection step, the top K tokens with the highest probabilities are sampled. Then tokens are further filtered based on topP with the final token selected using temperature sampling. Specify a lower value for less random responses and a higher value for more random responses. Acceptable value is [1, 40], default to 40.`,
+						},
+						"top_p": {
+							Type:        schema.TypeFloat,
+							Optional:    true,
+							Description: `Optional. Top-p changes how the model selects tokens for output. Tokens are selected from most K (see topK parameter) probable to least until the sum of their probabilities equals the top-p value. For example, if tokens A, B, and C have a probability of 0.3, 0.2, and 0.1 and the top-p value is 0.5, then the model will select either A or B as the next token (using temperature) and doesn't consider C. The default top-p value is 0.95. Specify a lower value for less random responses and a higher value for more random responses. Acceptable value is [0.0, 1.0], default to 0.95.`,
+						},
+					},
+				},
+			},
+			"published_model": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `Optional. The published Large Language Model name. * To use the latest model version, specify the model name without version number. Example: text-bison * To use a stable model version, specify the version number as well. Example: text-bison@002.`,
+			},
 			"summarization_context": {
 				Type:        schema.TypeList,
-				Required:    true,
+				Optional:    true,
 				Description: `Input of prebuilt Summarization feature.`,
 				MaxItems:    1,
 				Elem: &schema.Resource{
@@ -297,52 +435,7 @@ func ResourceDialogflowGenerator() *schema.Resource {
 						},
 					},
 				},
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `Optional. Human readable description of the generator.`,
-			},
-			"generator_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Optional:    true,
-				Description: `Optional. The ID to use for the generator, which will become the final component of the generator's resource name.`,
-			},
-			"inference_parameter": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: `Optional. Inference parameters for this generator.`,
-				MaxItems:    1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"max_output_tokens": {
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Description: `Optional. Maximum number of the output tokens for the generator.`,
-						},
-						"temperature": {
-							Type:        schema.TypeFloat,
-							Optional:    true,
-							Description: `Optional. Controls the randomness of LLM predictions. Low temperature = less random. High temperature = more random. If unset (or 0), uses a default value of 0.`,
-						},
-						"top_k": {
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Description: `Optional. Top-k changes how the model selects tokens for output. A top-k of 1 means the selected token is the most probable among all tokens in the model's vocabulary (also called greedy decoding), while a top-k of 3 means that the next token is selected from among the 3 most probable tokens (using temperature). For each token selection step, the top K tokens with the highest probabilities are sampled. Then tokens are further filtered based on topP with the final token selected using temperature sampling. Specify a lower value for less random responses and a higher value for more random responses. Acceptable value is [1, 40], default to 40.`,
-						},
-						"top_p": {
-							Type:        schema.TypeFloat,
-							Optional:    true,
-							Description: `Optional. Top-p changes how the model selects tokens for output. Tokens are selected from most K (see topK parameter) probable to least until the sum of their probabilities equals the top-p value. For example, if tokens A, B, and C have a probability of 0.3, 0.2, and 0.1 and the top-p value is 0.5, then the model will select either A or B as the next token (using temperature) and doesn't consider C. The default top-p value is 0.95. Specify a lower value for less random responses and a higher value for more random responses. Acceptable value is [0.0, 1.0], default to 0.95.`,
-						},
-					},
-				},
-			},
-			"published_model": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: `Optional. The published Large Language Model name. * To use the latest model version, specify the model name without version number. Example: text-bison * To use a stable model version, specify the version number as well. Example: text-bison@002.`,
+				ExactlyOneOf: []string{"agent_coaching_context", "summarization_context"},
 			},
 			"trigger_event": {
 				Type:         schema.TypeString,
@@ -385,6 +478,12 @@ func resourceDialogflowGeneratorCreate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("summarization_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(summarizationContextProp)) && (ok || !reflect.DeepEqual(v, summarizationContextProp)) {
 		obj["summarizationContext"] = summarizationContextProp
+	}
+	agentCoachingContextProp, err := expandDialogflowGeneratorAgentCoachingContext(d.Get("agent_coaching_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("agent_coaching_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(agentCoachingContextProp)) && (ok || !reflect.DeepEqual(v, agentCoachingContextProp)) {
+		obj["agentCoachingContext"] = agentCoachingContextProp
 	}
 	inferenceParameterProp, err := expandDialogflowGeneratorInferenceParameter(d.Get("inference_parameter"), d, config)
 	if err != nil {
@@ -558,6 +657,9 @@ func resourceDialogflowGeneratorRead(d *schema.ResourceData, meta interface{}) e
 	if err := d.Set("summarization_context", flattenDialogflowGeneratorSummarizationContext(res["summarizationContext"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Generator: %s", err)
 	}
+	if err := d.Set("agent_coaching_context", flattenDialogflowGeneratorAgentCoachingContext(res["agentCoachingContext"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Generator: %s", err)
+	}
 	if err := d.Set("inference_parameter", flattenDialogflowGeneratorInferenceParameter(res["inferenceParameter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Generator: %s", err)
 	}
@@ -602,6 +704,12 @@ func resourceDialogflowGeneratorUpdate(d *schema.ResourceData, meta interface{})
 	} else if v, ok := d.GetOkExists("summarization_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, summarizationContextProp)) {
 		obj["summarizationContext"] = summarizationContextProp
 	}
+	agentCoachingContextProp, err := expandDialogflowGeneratorAgentCoachingContext(d.Get("agent_coaching_context"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("agent_coaching_context"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, agentCoachingContextProp)) {
+		obj["agentCoachingContext"] = agentCoachingContextProp
+	}
 	inferenceParameterProp, err := expandDialogflowGeneratorInferenceParameter(d.Get("inference_parameter"), d, config)
 	if err != nil {
 		return err
@@ -642,6 +750,10 @@ func resourceDialogflowGeneratorUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("summarization_context") {
 		updateMask = append(updateMask, "summarizationContext")
+	}
+
+	if d.HasChange("agent_coaching_context") {
+		updateMask = append(updateMask, "agentCoachingContext")
 	}
 
 	if d.HasChange("inference_parameter") {
@@ -1042,6 +1154,127 @@ func flattenDialogflowGeneratorSummarizationContextVersion(v interface{}, d *sch
 }
 
 func flattenDialogflowGeneratorSummarizationContextOutputLanguageCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContext(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["overarching_guidance"] =
+		flattenDialogflowGeneratorAgentCoachingContextOverarchingGuidance(original["overarchingGuidance"], d, config)
+	transformed["instructions"] =
+		flattenDialogflowGeneratorAgentCoachingContextInstructions(original["instructions"], d, config)
+	transformed["version"] =
+		flattenDialogflowGeneratorAgentCoachingContextVersion(original["version"], d, config)
+	transformed["output_language_code"] =
+		flattenDialogflowGeneratorAgentCoachingContextOutputLanguageCode(original["outputLanguageCode"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowGeneratorAgentCoachingContextOverarchingGuidance(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructions(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.([]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		original := raw.(map[string]interface{})
+		if len(original) < 1 {
+			// Do not include empty json objects coming back from the api
+			continue
+		}
+		transformed = append(transformed, map[string]interface{}{
+			"display_name":           flattenDialogflowGeneratorAgentCoachingContextInstructionsDisplayName(original["displayName"], d, config),
+			"display_details":        flattenDialogflowGeneratorAgentCoachingContextInstructionsDisplayDetails(original["displayDetails"], d, config),
+			"condition":              flattenDialogflowGeneratorAgentCoachingContextInstructionsCondition(original["condition"], d, config),
+			"agent_action":           flattenDialogflowGeneratorAgentCoachingContextInstructionsAgentAction(original["agentAction"], d, config),
+			"system_action":          flattenDialogflowGeneratorAgentCoachingContextInstructionsSystemAction(original["systemAction"], d, config),
+			"duplicate_check_result": flattenDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResult(original["duplicateCheckResult"], d, config),
+			"triggering_event":       flattenDialogflowGeneratorAgentCoachingContextInstructionsTriggeringEvent(original["triggeringEvent"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsDisplayName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsDisplayDetails(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsCondition(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsAgentAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsSystemAction(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResult(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["answer_record"] =
+		flattenDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultAnswerRecord(original["answerRecord"], d, config)
+	transformed["suggestion_index"] =
+		flattenDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultSuggestionIndex(original["suggestionIndex"], d, config)
+	transformed["similarity_score"] =
+		flattenDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultSimilarityScore(original["similarityScore"], d, config)
+	return []interface{}{transformed}
+}
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultAnswerRecord(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultSuggestionIndex(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultSimilarityScore(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextInstructionsTriggeringEvent(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextVersion(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenDialogflowGeneratorAgentCoachingContextOutputLanguageCode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -1520,6 +1753,200 @@ func expandDialogflowGeneratorSummarizationContextVersion(v interface{}, d tpgre
 }
 
 func expandDialogflowGeneratorSummarizationContextOutputLanguageCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContext(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedOverarchingGuidance, err := expandDialogflowGeneratorAgentCoachingContextOverarchingGuidance(original["overarching_guidance"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOverarchingGuidance); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["overarchingGuidance"] = transformedOverarchingGuidance
+	}
+
+	transformedInstructions, err := expandDialogflowGeneratorAgentCoachingContextInstructions(original["instructions"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedInstructions); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["instructions"] = transformedInstructions
+	}
+
+	transformedVersion, err := expandDialogflowGeneratorAgentCoachingContextVersion(original["version"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedVersion); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["version"] = transformedVersion
+	}
+
+	transformedOutputLanguageCode, err := expandDialogflowGeneratorAgentCoachingContextOutputLanguageCode(original["output_language_code"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedOutputLanguageCode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["outputLanguageCode"] = transformedOutputLanguageCode
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextOverarchingGuidance(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructions(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	req := make([]interface{}, 0, len(l))
+	for _, raw := range l {
+		if raw == nil {
+			continue
+		}
+		original := raw.(map[string]interface{})
+		transformed := make(map[string]interface{})
+
+		transformedDisplayName, err := expandDialogflowGeneratorAgentCoachingContextInstructionsDisplayName(original["display_name"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDisplayName); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["displayName"] = transformedDisplayName
+		}
+
+		transformedDisplayDetails, err := expandDialogflowGeneratorAgentCoachingContextInstructionsDisplayDetails(original["display_details"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDisplayDetails); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["displayDetails"] = transformedDisplayDetails
+		}
+
+		transformedCondition, err := expandDialogflowGeneratorAgentCoachingContextInstructionsCondition(original["condition"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["condition"] = transformedCondition
+		}
+
+		transformedAgentAction, err := expandDialogflowGeneratorAgentCoachingContextInstructionsAgentAction(original["agent_action"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedAgentAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["agentAction"] = transformedAgentAction
+		}
+
+		transformedSystemAction, err := expandDialogflowGeneratorAgentCoachingContextInstructionsSystemAction(original["system_action"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedSystemAction); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["systemAction"] = transformedSystemAction
+		}
+
+		transformedDuplicateCheckResult, err := expandDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResult(original["duplicate_check_result"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedDuplicateCheckResult); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["duplicateCheckResult"] = transformedDuplicateCheckResult
+		}
+
+		transformedTriggeringEvent, err := expandDialogflowGeneratorAgentCoachingContextInstructionsTriggeringEvent(original["triggering_event"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedTriggeringEvent); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["triggeringEvent"] = transformedTriggeringEvent
+		}
+
+		req = append(req, transformed)
+	}
+	return req, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsDisplayDetails(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsAgentAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsSystemAction(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResult(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedAnswerRecord, err := expandDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultAnswerRecord(original["answer_record"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAnswerRecord); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["answerRecord"] = transformedAnswerRecord
+	}
+
+	transformedSuggestionIndex, err := expandDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultSuggestionIndex(original["suggestion_index"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSuggestionIndex); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["suggestionIndex"] = transformedSuggestionIndex
+	}
+
+	transformedSimilarityScore, err := expandDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultSimilarityScore(original["similarity_score"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSimilarityScore); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["similarityScore"] = transformedSimilarityScore
+	}
+
+	return transformed, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultAnswerRecord(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultSuggestionIndex(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsDuplicateCheckResultSimilarityScore(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextInstructionsTriggeringEvent(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextVersion(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandDialogflowGeneratorAgentCoachingContextOutputLanguageCode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

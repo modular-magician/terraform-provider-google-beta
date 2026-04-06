@@ -7,6 +7,18 @@ api_service_name: dialogflow.googleapis.com
 api_version: v2beta1
 api_resource_type_kind: Generator
 fields:
+    - api_field: agentCoachingContext.instructions.agentAction
+    - api_field: agentCoachingContext.instructions.condition
+    - api_field: agentCoachingContext.instructions.displayDetails
+    - api_field: agentCoachingContext.instructions.displayName
+    - api_field: agentCoachingContext.instructions.duplicateCheckResult.answerRecord
+    - api_field: agentCoachingContext.instructions.duplicateCheckResult.similarityScore
+    - api_field: agentCoachingContext.instructions.duplicateCheckResult.suggestionIndex
+    - api_field: agentCoachingContext.instructions.systemAction
+    - api_field: agentCoachingContext.instructions.triggeringEvent
+    - api_field: agentCoachingContext.outputLanguageCode
+    - api_field: agentCoachingContext.overarchingGuidance
+    - api_field: agentCoachingContext.version
     - api_field: description
     - api_field: generatorId
     - api_field: inferenceParameter.maxOutputTokens
