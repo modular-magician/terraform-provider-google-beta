@@ -326,6 +326,7 @@ This field does not support phone based MFA, for that use the 'enabledProviders'
 					Schema: map[string]*schema.Schema{
 						"allow_tenants": {
 							Type:        schema.TypeBool,
+							Computed:    true,
 							Optional:    true,
 							Description: `Whether this project can have tenants or not.`,
 						},
