@@ -239,8 +239,7 @@ func TestAccProvider_external_credentials_upgrade(t *testing.T) {
 			},
 			// old provider - credentials
 			{
-				ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-				ExternalProviders:        oldVersion,
+				ExternalProviders: oldVersion,
 				PreConfig: func() {
 					for _, env := range envvar.CredsEnvVars {
 						t.Setenv(env, "")
