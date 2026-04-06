@@ -41,10 +41,10 @@ The following arguments are supported:
   The Apigee environment group associated with the Apigee environment,
   in the format `organizations/{{org_name}}/environments/{{env_name}}`.
 
-
 * `name` -
-  (Optional)
+  (Required)
   The name of the newly created keystore.
+
 
 
 
