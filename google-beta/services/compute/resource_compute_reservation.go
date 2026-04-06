@@ -831,6 +831,9 @@ func resourceComputeReservationRead(d *schema.ResourceData, meta interface{}) er
 	if err := d.Set("status", flattenComputeReservationStatus(res["status"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
+	if err := d.Set("share_settings", flattenComputeReservationShareSettings(res["shareSettings"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Reservation: %s", err)
+	}
 	if err := d.Set("specific_reservation", flattenComputeReservationSpecificReservation(res["specificReservation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
@@ -1147,6 +1150,50 @@ func flattenComputeReservationSpecificReservationRequired(v interface{}, d *sche
 }
 
 func flattenComputeReservationStatus(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeReservationShareSettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["share_type"] =
+		flattenComputeReservationShareSettingsShareType(original["shareType"], d, config)
+	transformed["project_map"] =
+		flattenComputeReservationShareSettingsProjectMap(original["projectMap"], d, config)
+	transformed["projects"] =
+		flattenComputeReservationShareSettingsProjects(original["projects"], d, config)
+	return []interface{}{transformed}
+}
+func flattenComputeReservationShareSettingsShareType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeReservationShareSettingsProjectMap(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return v
+	}
+	l := v.(map[string]interface{})
+	transformed := make([]interface{}, 0, len(l))
+	for k, raw := range l {
+		original := raw.(map[string]interface{})
+		transformed = append(transformed, map[string]interface{}{
+			"id":         k,
+			"project_id": flattenComputeReservationShareSettingsProjectMapProjectId(original["projectId"], d, config),
+		})
+	}
+	return transformed
+}
+func flattenComputeReservationShareSettingsProjectMapProjectId(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeReservationShareSettingsProjects(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
