@@ -470,7 +470,7 @@ resource "google_kms_crypto_key_iam_member" "apigee_sa_keyuser" {
   crypto_key_id = google_kms_crypto_key.apigee_key.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
 
-  member = google_project_service_identity.apigee_sa.member
+  member = "serviceAccount:${google_project_service_identity.apigee_sa.email}"
 }
 
 resource "time_sleep" "wait_for_iam" {
@@ -625,7 +625,7 @@ resource "google_kms_crypto_key_iam_member" "apigee_sa_keyuser" {
   crypto_key_id = google_kms_crypto_key.apigee_key.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
 
-  member = google_project_service_identity.apigee_sa.member
+  member = "serviceAccount:${google_project_service_identity.apigee_sa.email}"
 }
 
 resource "time_sleep" "wait_for_iam" {
@@ -1056,15 +1056,32 @@ func testAccCheckApigeeOrganizationDestroyProducer(t *testing.T) func(s *terrafo
 				billingProject = config.BillingProject
 			}
 
-			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "GET",
-				Project:   billingProject,
-				RawURL:    url,
-				UserAgent: config.UserAgent,
-			})
-			if err == nil {
-				return fmt.Errorf("ApigeeOrganization still exists at %s", url)
+			// Apigee Organization deletion is asynchronous. Poll until the org is fully
+			// deleted (404) or confirmed to be in a terminal DELETING state.
+			deleted := false
+			deadline := time.Now().Add(10 * time.Minute)
+			for time.Now().Before(deadline) {
+				res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+					Config:    config,
+					Method:    "GET",
+					Project:   billingProject,
+					RawURL:    url,
+					UserAgent: config.UserAgent,
+				})
+				if err != nil {
+					// 404 (or any error) means the org is gone.
+					deleted = true
+					break
+				}
+				// If the org is in DELETING state, deletion is in progress — acceptable.
+				if state, ok := res["state"].(string); ok && state == "DELETING" {
+					deleted = true
+					break
+				}
+				time.Sleep(30 * time.Second)
+			}
+			if !deleted {
+				return fmt.Errorf("ApigeeOrganization still exists at %s after waiting", url)
 			}
 		}
 
