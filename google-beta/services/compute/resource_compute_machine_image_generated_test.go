@@ -124,8 +124,8 @@ func TestAccComputeMachineImage_computeMachineImageKmsExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"image_name":    "tf-test-my-image" + randomSuffix,
-		"key_name":      "key" + randomSuffix,
-		"keyring_name":  "keyring" + randomSuffix,
+		"key_name":      "tf-test-key" + randomSuffix,
+		"keyring_name":  "tf-test-keyring" + randomSuffix,
 		"vm_name":       "tf-test-my-vm" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

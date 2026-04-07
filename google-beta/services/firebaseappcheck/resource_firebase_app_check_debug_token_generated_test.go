@@ -57,7 +57,7 @@ func TestAccFirebaseAppCheckDebugToken_firebaseAppCheckDebugTokenBasicExample(t 
 
 	context := map[string]interface{}{
 		"project_id":    envvar.GetTestProjectFromEnv(),
-		"display_name":  "Debug Token" + randomSuffix,
+		"display_name":  "tf-test-Debug Token" + randomSuffix,
 		"token":         "5E728315-E121-467F-BCA1-1FE71130BB98",
 		"random_suffix": randomSuffix,
 	}

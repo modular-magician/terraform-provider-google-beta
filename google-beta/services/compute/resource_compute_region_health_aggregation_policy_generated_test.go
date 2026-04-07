@@ -57,7 +57,7 @@ func TestAccComputeRegionHealthAggregationPolicy_computeRegionHealthAggregationP
 
 	context := map[string]interface{}{
 		"project":       envvar.GetTestProjectFromEnv(),
-		"description":   "Example health aggregation policy basic" + randomSuffix,
+		"description":   "tf-test-Example health aggregation policy basic" + randomSuffix,
 		"name":          "tf-test-test-health-aggregation-policy" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

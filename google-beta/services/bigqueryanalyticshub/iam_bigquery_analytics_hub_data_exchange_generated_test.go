@@ -48,7 +48,7 @@ func TestAccBigqueryAnalyticsHubDataExchangeIamBindingGenerated(t *testing.T) {
 		"random_suffix":    randomSuffix,
 		"role":             "roles/viewer",
 		"data_exchange_id": "tf_test_my_data_exchange" + randomSuffix,
-		"desc":             "example data exchange" + randomSuffix,
+		"desc":             "tf-test-example data exchange" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -87,7 +87,7 @@ func TestAccBigqueryAnalyticsHubDataExchangeIamMemberGenerated(t *testing.T) {
 		"random_suffix":    randomSuffix,
 		"role":             "roles/viewer",
 		"data_exchange_id": "tf_test_my_data_exchange" + randomSuffix,
-		"desc":             "example data exchange" + randomSuffix,
+		"desc":             "tf-test-example data exchange" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -117,7 +117,7 @@ func TestAccBigqueryAnalyticsHubDataExchangeIamPolicyGenerated(t *testing.T) {
 		"random_suffix":    randomSuffix,
 		"role":             "roles/viewer",
 		"data_exchange_id": "tf_test_my_data_exchange" + randomSuffix,
-		"desc":             "example data exchange" + randomSuffix,
+		"desc":             "tf-test-example data exchange" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

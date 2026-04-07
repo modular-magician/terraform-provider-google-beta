@@ -59,7 +59,7 @@ func TestAccObservabilityProjectSettings_observabilityProjectSettingsBasicExampl
 		"org_id":        envvar.GetTestOrgFromEnv(t),
 		"project_name":  envvar.GetTestProjectFromEnv(),
 		"kms_key_name":  acctest.BootstrapKMSKeyInLocation(t, "us").CryptoKey.Name,
-		"location":      "us" + randomSuffix,
+		"location":      "tf-test-us" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -157,7 +157,7 @@ func TestAccObservabilityProjectSettings_observabilityProjectSettingsBasicGlobal
 	context := map[string]interface{}{
 		"org_id":        envvar.GetTestOrgFromEnv(t),
 		"project_name":  envvar.GetTestProjectFromEnv(),
-		"location":      "global" + randomSuffix,
+		"location":      "tf-test-global" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

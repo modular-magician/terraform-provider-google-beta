@@ -56,7 +56,7 @@ func TestAccBeyondcorpSecurityGateway_beyondcorpSecurityGatewayBasicExample(t *t
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"security_gateway_name": "default" + randomSuffix,
+		"security_gateway_name": "tf-test-default" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
 

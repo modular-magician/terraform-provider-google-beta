@@ -57,7 +57,7 @@ func TestAccComputeRegionCompositeHealthCheck_computeRegionCompositeHealthCheckB
 
 	context := map[string]interface{}{
 		"project":       envvar.GetTestProjectFromEnv(),
-		"description":   "Example composite health check basic" + randomSuffix,
+		"description":   "tf-test-Example composite health check basic" + randomSuffix,
 		"name":          "tf-test-test-composite-health-check" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

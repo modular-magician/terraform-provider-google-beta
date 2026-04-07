@@ -57,7 +57,7 @@ func TestAccComputeHaVpnGateway_haVpnGatewayBasicExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"ha_vpn_gateway1_name": "tf-test-ha-vpn-1" + randomSuffix,
-		"network1_name":        "network1" + randomSuffix,
+		"network1_name":        "tf-test-network1" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
 
@@ -107,7 +107,7 @@ func TestAccComputeHaVpnGateway_haVpnGatewayIpv6Example(t *testing.T) {
 
 	context := map[string]interface{}{
 		"ha_vpn_gateway1_name": "tf-test-ha-vpn-1" + randomSuffix,
-		"network1_name":        "network1" + randomSuffix,
+		"network1_name":        "tf-test-network1" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
 

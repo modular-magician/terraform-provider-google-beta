@@ -56,7 +56,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryBasicExample(t 
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":          "example docker repository" + randomSuffix,
+		"desc":          "tf-test-example docker repository" + randomSuffix,
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -102,7 +102,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryMultiRegionExam
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":          "example docker repository" + randomSuffix,
+		"desc":          "tf-test-example docker repository" + randomSuffix,
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -148,7 +148,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryDockerExample(t
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":          "example docker repository" + randomSuffix,
+		"desc":          "tf-test-example docker repository" + randomSuffix,
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -256,9 +256,9 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryVirtualExample(
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":                   "example virtual docker repository" + randomSuffix,
+		"desc":                   "tf-test-example virtual docker repository" + randomSuffix,
 		"repository_id":          "tf-test-my-repository" + randomSuffix,
-		"upstream_desc":          "example docker repository (upstream source)" + randomSuffix,
+		"upstream_desc":          "tf-test-example docker repository (upstream source)" + randomSuffix,
 		"upstream_policy_id":     "tf-test-my-repository-upstream" + randomSuffix,
 		"upstream_repository_id": "tf-test-my-repository-upstream" + randomSuffix,
 		"random_suffix":          randomSuffix,
@@ -333,7 +333,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteExample(t
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":          "example remote docker repository" + randomSuffix,
+		"desc":          "tf-test-example remote docker repository" + randomSuffix,
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -386,7 +386,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteAptExampl
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":          "example remote apt repository" + randomSuffix,
+		"desc":          "tf-test-example remote apt repository" + randomSuffix,
 		"repository_id": "tf-test-debian-stable" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -442,7 +442,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteYumExampl
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":          "example remote yum repository" + randomSuffix,
+		"desc":          "tf-test-example remote yum repository" + randomSuffix,
 		"repository_id": "tf-test-rocky-9" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -498,7 +498,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryCleanupExample(
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":          "example docker repository with cleanup policies" + randomSuffix,
+		"desc":          "tf-test-example docker repository with cleanup policie" + randomSuffix,
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -586,7 +586,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteDockerhub
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":               "example remote dockerhub repository with credentials" + randomSuffix,
+		"desc":               "tf-test-example remote dockerhub repository with crede" + randomSuffix,
 		"repository_id":      "tf-test-example-dockerhub-remote" + randomSuffix,
 		"secret_data":        "tf-test-remote-password" + randomSuffix,
 		"secret_id":          "tf-test-example-secret" + randomSuffix,
@@ -670,7 +670,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteDockerCus
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":               "example remote custom docker repository with credentia" + randomSuffix,
+		"desc":               "tf-test-example remote custom docker repository with c" + randomSuffix,
 		"repository_id":      "tf-test-example-docker-custom-remote" + randomSuffix,
 		"secret_data":        "tf-test-remote-password" + randomSuffix,
 		"secret_id":          "tf-test-example-secret" + randomSuffix,
@@ -756,7 +756,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteMavenCust
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":               "example remote custom maven repository with credential" + randomSuffix,
+		"desc":               "tf-test-example remote custom maven repository with cr" + randomSuffix,
 		"repository_id":      "tf-test-example-maven-custom-remote" + randomSuffix,
 		"secret_data":        "tf-test-remote-password" + randomSuffix,
 		"secret_id":          "tf-test-example-secret" + randomSuffix,
@@ -842,7 +842,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteNpmCustom
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":               "example remote custom npm repository with credentials" + randomSuffix,
+		"desc":               "tf-test-example remote custom npm repository with cred" + randomSuffix,
 		"repository_id":      "tf-test-example-npm-custom-remote" + randomSuffix,
 		"secret_data":        "tf-test-remote-password" + randomSuffix,
 		"secret_id":          "tf-test-example-secret" + randomSuffix,
@@ -928,7 +928,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemotePythonCus
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":               "example remote custom python repository with credentia" + randomSuffix,
+		"desc":               "tf-test-example remote custom python repository with c" + randomSuffix,
 		"repository_id":      "tf-test-example-python-custom-remote" + randomSuffix,
 		"secret_data":        "tf-test-remote-password" + randomSuffix,
 		"secret_id":          "tf-test-example-secret" + randomSuffix,
@@ -1014,9 +1014,9 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCommonRep
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":                     "example remote common repository with docker upstream" + randomSuffix,
+		"desc":                     "tf-test-example remote common repository with docker u" + randomSuffix,
 		"repository_id":            "tf-test-example-common-remote" + randomSuffix,
-		"upstream_repository_desc": "example upstream repository" + randomSuffix,
+		"upstream_repository_desc": "tf-test-example upstream repository" + randomSuffix,
 		"upstream_repository_id":   "tf-test-example-upstream-repo" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
@@ -1076,9 +1076,9 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCommonRep
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":                     "example remote common repository with docker upstream" + randomSuffix,
+		"desc":                     "tf-test-example remote common repository with docker u" + randomSuffix,
 		"repository_id":            "tf-test-example-common-remote" + randomSuffix,
-		"upstream_repository_desc": "example upstream repository" + randomSuffix,
+		"upstream_repository_desc": "tf-test-example upstream repository" + randomSuffix,
 		"upstream_repository_id":   "tf-test-example-upstream-repo" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
@@ -1141,7 +1141,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryRemoteCommonRep
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":               "example remote custom docker repository with credentia" + randomSuffix,
+		"desc":               "tf-test-example remote custom docker repository with c" + randomSuffix,
 		"repository_id":      "tf-test-example-docker-custom-remote" + randomSuffix,
 		"secret_data":        "tf-test-remote-password" + randomSuffix,
 		"secret_id":          "tf-test-example-secret" + randomSuffix,
@@ -1225,7 +1225,7 @@ func TestAccArtifactRegistryRepository_artifactRegistryRepositoryVulnerabilitySc
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"desc":          "example docker repository with vulnerability scanning " + randomSuffix,
+		"desc":          "tf-test-example docker repository with vulnerability s" + randomSuffix,
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

@@ -57,7 +57,7 @@ func TestAccFirebaseAppCheckPlayIntegrityConfig_firebaseAppCheckPlayIntegrityCon
 
 	context := map[string]interface{}{
 		"project_id":    envvar.GetTestProjectFromEnv(),
-		"package_name":  "package.name.playintegrity" + randomSuffix,
+		"package_name":  "tf-test-package.name.playintegrity" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -140,7 +140,7 @@ func TestAccFirebaseAppCheckPlayIntegrityConfig_firebaseAppCheckPlayIntegrityCon
 
 	context := map[string]interface{}{
 		"project_id":    envvar.GetTestProjectFromEnv(),
-		"package_name":  "package.name.playintegrity" + randomSuffix,
+		"package_name":  "tf-test-package.name.playintegrity" + randomSuffix,
 		"token_ttl":     "7200s",
 		"random_suffix": randomSuffix,
 	}

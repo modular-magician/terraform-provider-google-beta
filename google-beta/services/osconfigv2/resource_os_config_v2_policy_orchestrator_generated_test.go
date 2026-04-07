@@ -74,7 +74,7 @@ func TestAccOSConfigV2PolicyOrchestrator_osconfigv2PolicyOrchestratorBasicExampl
 		"project_number":           envvar.GetTestProjectNumberFromEnv(),
 		"orchestrated_resource_id": "tf-test-test-orchestrated-resource" + randomSuffix,
 		"os_policy_id":             "tf-test-test-os-policy" + randomSuffix,
-		"policy_orchestrator_id":   "po" + randomSuffix,
+		"policy_orchestrator_id":   "tf-test-po" + randomSuffix,
 		"random_suffix":            randomSuffix,
 	}
 

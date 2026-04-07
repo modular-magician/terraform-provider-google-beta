@@ -56,7 +56,7 @@ func TestAccSourceRepoRepository_sourcerepoRepositoryBasicExample(t *testing.T) 
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"repository_name": "my/repository" + randomSuffix,
+		"repository_name": "tf-test-my/repository" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
 

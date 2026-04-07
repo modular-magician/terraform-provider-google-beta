@@ -47,7 +47,7 @@ func TestAccSourceRepoRepositoryIamBindingGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":   randomSuffix,
 		"role":            "roles/viewer",
-		"repository_name": "my/repository" + randomSuffix,
+		"repository_name": "tf-test-my/repository" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -85,7 +85,7 @@ func TestAccSourceRepoRepositoryIamMemberGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":   randomSuffix,
 		"role":            "roles/viewer",
-		"repository_name": "my/repository" + randomSuffix,
+		"repository_name": "tf-test-my/repository" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -114,7 +114,7 @@ func TestAccSourceRepoRepositoryIamPolicyGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":   randomSuffix,
 		"role":            "roles/viewer",
-		"repository_name": "my/repository" + randomSuffix,
+		"repository_name": "tf-test-my/repository" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

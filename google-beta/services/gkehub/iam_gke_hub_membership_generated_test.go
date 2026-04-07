@@ -51,7 +51,7 @@ func TestAccGKEHubMembershipIamBindingGenerated(t *testing.T) {
 		"project":       envvar.GetTestProjectFromEnv(),
 
 		"cluster_name":    "tf-test-basic-cluster" + randomSuffix,
-		"name":            "basic" + randomSuffix,
+		"name":            "tf-test-basic" + randomSuffix,
 		"network_name":    acctest.BootstrapSharedTestNetwork(t, "gke-cluster"),
 		"subnetwork_name": acctest.BootstrapSubnet(t, "gke-cluster", acctest.BootstrapSharedTestNetwork(t, "gke-cluster")),
 	}
@@ -95,7 +95,7 @@ func TestAccGKEHubMembershipIamMemberGenerated(t *testing.T) {
 		"project":       envvar.GetTestProjectFromEnv(),
 
 		"cluster_name":    "tf-test-basic-cluster" + randomSuffix,
-		"name":            "basic" + randomSuffix,
+		"name":            "tf-test-basic" + randomSuffix,
 		"network_name":    acctest.BootstrapSharedTestNetwork(t, "gke-cluster"),
 		"subnetwork_name": acctest.BootstrapSubnet(t, "gke-cluster", acctest.BootstrapSharedTestNetwork(t, "gke-cluster")),
 	}
@@ -130,7 +130,7 @@ func TestAccGKEHubMembershipIamPolicyGenerated(t *testing.T) {
 		"project":       envvar.GetTestProjectFromEnv(),
 
 		"cluster_name":    "tf-test-basic-cluster" + randomSuffix,
-		"name":            "basic" + randomSuffix,
+		"name":            "tf-test-basic" + randomSuffix,
 		"network_name":    acctest.BootstrapSharedTestNetwork(t, "gke-cluster"),
 		"subnetwork_name": acctest.BootstrapSubnet(t, "gke-cluster", acctest.BootstrapSharedTestNetwork(t, "gke-cluster")),
 	}

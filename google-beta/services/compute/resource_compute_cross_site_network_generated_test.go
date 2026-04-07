@@ -57,7 +57,7 @@ func TestAccComputeCrossSiteNetwork_computeCrossSiteNetworkBasicExample(t *testi
 
 	context := map[string]interface{}{
 		"project":       envvar.GetTestProjectFromEnv(),
-		"description":   "Example cross site network" + randomSuffix,
+		"description":   "tf-test-Example cross site network" + randomSuffix,
 		"name":          "tf-test-test-cross-site-network" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

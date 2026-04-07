@@ -58,8 +58,8 @@ func TestAccLoggingLogScope_loggingLogScopeBasicExample(t *testing.T) {
 	context := map[string]interface{}{
 		"project":         envvar.GetTestProjectFromEnv(),
 		"log_scope_name":  "tf-test-my-log-scope" + randomSuffix,
-		"log_view_name_1": "view1" + randomSuffix,
-		"log_view_name_2": "view2" + randomSuffix,
+		"log_view_name_1": "tf-test-view1" + randomSuffix,
+		"log_view_name_2": "tf-test-view2" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
 

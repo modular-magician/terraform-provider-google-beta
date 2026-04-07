@@ -56,7 +56,7 @@ func TestAccSecretManagerSecret_secretConfigBasicExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"secret_id":     "secret" + randomSuffix,
+		"secret_id":     "tf-test-secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -114,7 +114,7 @@ func TestAccSecretManagerSecret_secretWithAnnotationsExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"secret_id":     "secret" + randomSuffix,
+		"secret_id":     "tf-test-secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -172,7 +172,7 @@ func TestAccSecretManagerSecret_secretWithVersionDestroyTtlExample(t *testing.T)
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"secret_id":     "secret" + randomSuffix,
+		"secret_id":     "tf-test-secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -221,7 +221,7 @@ func TestAccSecretManagerSecret_secretWithAutomaticCmekExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"kms_key_name":  acctest.BootstrapKMSKey(t).CryptoKey.Name,
-		"secret_id":     "secret" + randomSuffix,
+		"secret_id":     "tf-test-secret" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

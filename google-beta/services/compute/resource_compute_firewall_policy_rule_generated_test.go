@@ -59,7 +59,7 @@ func TestAccComputeFirewallPolicyRule_firewallPolicyRuleExample(t *testing.T) {
 		"org_id":        envvar.GetTestOrgFromEnv(t),
 		"service_acct":  envvar.GetTestServiceAccountFromEnv(t),
 		"address_group": "tf-test-address-group" + randomSuffix,
-		"folder":        "folder" + randomSuffix,
+		"folder":        "tf-test-folder" + randomSuffix,
 		"fw_policy":     "tf-test-fw-policy" + randomSuffix,
 		"tag_key":       "tf-test-tag-key" + randomSuffix,
 		"tag_value":     "tf-test-tag-value" + randomSuffix,
@@ -170,9 +170,9 @@ func TestAccComputeFirewallPolicyRule_firewallPolicyRuleNetworkScopeExample(t *t
 
 	context := map[string]interface{}{
 		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"folder":        "folder" + randomSuffix,
+		"folder":        "tf-test-folder" + randomSuffix,
 		"fw_policy":     "tf-test-fw-policy" + randomSuffix,
-		"network":       "network" + randomSuffix,
+		"network":       "tf-test-network" + randomSuffix,
 		"tag_key":       "tf-test-tag-key" + randomSuffix,
 		"tag_value":     "tf-test-tag-value" + randomSuffix,
 		"random_suffix": randomSuffix,
@@ -259,9 +259,9 @@ func TestAccComputeFirewallPolicyRule_firewallPolicyRuleNetworkContextExample(t 
 
 	context := map[string]interface{}{
 		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"folder":        "folder" + randomSuffix,
+		"folder":        "tf-test-folder" + randomSuffix,
 		"fw_policy":     "tf-test-fw-policy" + randomSuffix,
-		"network":       "network" + randomSuffix,
+		"network":       "tf-test-network" + randomSuffix,
 		"tag_key":       "tf-test-tag-key" + randomSuffix,
 		"tag_value":     "tf-test-tag-value" + randomSuffix,
 		"random_suffix": randomSuffix,
@@ -375,7 +375,7 @@ func TestAccComputeFirewallPolicyRule_firewallPolicyRuleSecureTagsExample(t *tes
 
 	context := map[string]interface{}{
 		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"folder":        "folder" + randomSuffix,
+		"folder":        "tf-test-folder" + randomSuffix,
 		"fw_policy":     "tf-test-fw-policy" + randomSuffix,
 		"tag_key":       "tf-test-tag-key" + randomSuffix,
 		"tag_value":     "tf-test-tag-value" + randomSuffix,

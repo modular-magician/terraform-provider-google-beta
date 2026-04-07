@@ -59,7 +59,7 @@ func TestAccIntegrationConnectorsManagedZone_integrationConnectorsManagedZoneExa
 	context := map[string]interface{}{
 		"billing_account":   envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":            envvar.GetTestOrgFromEnv(t),
-		"managed_zone_name": "test" + randomSuffix,
+		"managed_zone_name": "tf-test-test" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
 

@@ -56,7 +56,7 @@ func TestAccDatabaseMigrationServicePrivateConnection_databaseMigrationServicePr
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"create_without_validation": "false" + randomSuffix,
+		"create_without_validation": "tf-test-false" + randomSuffix,
 		"network_name":              "tf-test-my-network" + randomSuffix,
 		"private_connection_id":     "tf-test-my-connection" + randomSuffix,
 		"random_suffix":             randomSuffix,

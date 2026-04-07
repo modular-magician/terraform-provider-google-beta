@@ -49,7 +49,7 @@ func TestAccServiceManagementServiceIamBindingGenerated(t *testing.T) {
 		"role":          "roles/viewer",
 		"project_name":  envvar.GetTestProjectFromEnv(),
 
-		"name": "endpoint" + randomSuffix,
+		"name": "tf-test-endpoint" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -89,7 +89,7 @@ func TestAccServiceManagementServiceIamMemberGenerated(t *testing.T) {
 		"role":          "roles/viewer",
 		"project_name":  envvar.GetTestProjectFromEnv(),
 
-		"name": "endpoint" + randomSuffix,
+		"name": "tf-test-endpoint" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -120,7 +120,7 @@ func TestAccServiceManagementServiceIamPolicyGenerated(t *testing.T) {
 		"role":          "roles/viewer",
 		"project_name":  envvar.GetTestProjectFromEnv(),
 
-		"name": "endpoint" + randomSuffix,
+		"name": "tf-test-endpoint" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

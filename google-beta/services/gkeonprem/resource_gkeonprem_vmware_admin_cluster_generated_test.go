@@ -56,7 +56,7 @@ func TestAccGkeonpremVmwareAdminCluster_gkeonpremVmwareAdminClusterBasicExample(
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"name":          "basic" + randomSuffix,
+		"name":          "tf-test-basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -138,7 +138,7 @@ func TestAccGkeonpremVmwareAdminCluster_gkeonpremVmwareAdminClusterFullExample(t
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"name":          "full" + randomSuffix,
+		"name":          "tf-test-full" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -271,7 +271,7 @@ func TestAccGkeonpremVmwareAdminCluster_gkeonpremVmwareAdminClusterMetallbExampl
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"name":          "metallb" + randomSuffix,
+		"name":          "tf-test-metallb" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

@@ -57,8 +57,8 @@ func TestAccFirebaseAppCheckDeviceCheckConfig_firebaseAppCheckDeviceCheckConfigF
 
 	context := map[string]interface{}{
 		"project_id":       envvar.GetTestProjectFromEnv(),
-		"bundle_id":        "bundle.id.devicecheck" + randomSuffix,
-		"key_id":           "Key ID" + randomSuffix,
+		"bundle_id":        "tf-test-bundle.id.devicecheck" + randomSuffix,
+		"key_id":           "tf-test-Key ID" + randomSuffix,
 		"private_key_path": "test-fixtures/private-key-2.p8",
 		"team_id":          "9987654321",
 		"token_ttl":        "7200s",

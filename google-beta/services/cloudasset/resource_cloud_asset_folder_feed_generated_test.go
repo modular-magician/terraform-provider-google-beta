@@ -59,7 +59,7 @@ func TestAccCloudAssetFolderFeed_cloudAssetFolderFeedExample(t *testing.T) {
 		"org_id":        envvar.GetTestOrgFromEnv(t),
 		"project":       envvar.GetTestProjectFromEnv(),
 		"feed_id":       "tf-test-network-updates" + randomSuffix,
-		"folder_name":   "Networking" + randomSuffix,
+		"folder_name":   "tf-test-Networking" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

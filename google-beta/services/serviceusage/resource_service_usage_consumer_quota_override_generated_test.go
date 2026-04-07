@@ -57,7 +57,7 @@ func TestAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideExample(t *te
 
 	context := map[string]interface{}{
 		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"project_id":    "quota" + randomSuffix,
+		"project_id":    "tf-test-quota" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -114,7 +114,7 @@ func TestAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideZeroValueExam
 
 	context := map[string]interface{}{
 		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"project_id":    "quota" + randomSuffix,
+		"project_id":    "tf-test-quota" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -171,7 +171,7 @@ func TestAccServiceUsageConsumerQuotaOverride_regionConsumerQuotaOverrideExample
 
 	context := map[string]interface{}{
 		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"project_id":    "quota" + randomSuffix,
+		"project_id":    "tf-test-quota" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -231,7 +231,7 @@ func TestAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideCustomDimensi
 
 	context := map[string]interface{}{
 		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"project_id":    "quota" + randomSuffix,
+		"project_id":    "tf-test-quota" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

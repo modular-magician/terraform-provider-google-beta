@@ -56,8 +56,8 @@ func TestAccCloudbuildv2Repository_cloudbuildv2RepositoryGheExample(t *testing.T
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"connection_name": "connection" + randomSuffix,
-		"repository_name": "repository" + randomSuffix,
+		"connection_name": "tf-test-connection" + randomSuffix,
+		"repository_name": "tf-test-repository" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
 
@@ -121,8 +121,8 @@ func TestAccCloudbuildv2Repository_cloudbuildv2RepositoryGithubExample(t *testin
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"connection_name": "connection" + randomSuffix,
-		"repository_name": "repository" + randomSuffix,
+		"connection_name": "tf-test-connection" + randomSuffix,
+		"repository_name": "tf-test-repository" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
 
@@ -188,8 +188,8 @@ func TestAccCloudbuildv2Repository_cloudbuildv2RepositoryGleExample(t *testing.T
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"connection_name": "connection" + randomSuffix,
-		"repository_name": "repository" + randomSuffix,
+		"connection_name": "tf-test-connection" + randomSuffix,
+		"repository_name": "tf-test-repository" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
 

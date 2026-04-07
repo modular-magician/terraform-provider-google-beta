@@ -452,7 +452,7 @@ func TestAccColabNotebookExecution_colabNotebookExecutionDataformExample(t *test
 		"dataform_repository":   "tf-test-dataform-repository" + randomSuffix,
 		"key_name":              acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
 		"runtime_template_name": "tf-test-runtime-template-name" + randomSuffix,
-		"secret":                "secret" + randomSuffix,
+		"secret":                "tf-test-secret" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
 

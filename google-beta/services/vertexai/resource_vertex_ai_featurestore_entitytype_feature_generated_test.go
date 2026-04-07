@@ -57,7 +57,7 @@ func TestAccVertexAIFeaturestoreEntitytypeFeature_vertexAiFeaturestoreEntitytype
 
 	context := map[string]interface{}{
 		"kms_key_name":  "tf-test-kms-name" + randomSuffix,
-		"name":          "terraform" + randomSuffix,
+		"name":          "tf-test-terraform" + randomSuffix,
 		"project":       "tf-test-vertex-ai" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -126,7 +126,7 @@ func TestAccVertexAIFeaturestoreEntitytypeFeature_vertexAiFeaturestoreEntitytype
 
 	context := map[string]interface{}{
 		"kms_key_name":  "tf-test-kms-name" + randomSuffix,
-		"name":          "terraform2" + randomSuffix,
+		"name":          "tf-test-terraform2" + randomSuffix,
 		"project":       "tf-test-vertex-ai" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

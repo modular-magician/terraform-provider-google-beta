@@ -59,7 +59,7 @@ func TestAccAlloydbUser_alloydbUserBuiltinTestExample(t *testing.T) {
 		"alloydb_cluster_name":  "tf-test-alloydb-cluster" + randomSuffix,
 		"alloydb_cluster_pass":  "tf_test_cluster_secret" + randomSuffix,
 		"alloydb_instance_name": "tf-test-alloydb-instance" + randomSuffix,
-		"alloydb_user_name":     "user1" + randomSuffix,
+		"alloydb_user_name":     "tf-test-user1" + randomSuffix,
 		"alloydb_user_pass":     "tf_test_user_secret" + randomSuffix,
 		"network_name":          acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-1"),
 		"random_suffix":         randomSuffix,
@@ -132,7 +132,7 @@ func TestAccAlloydbUser_alloydbUserIamTestExample(t *testing.T) {
 		"alloydb_cluster_name":  "tf-test-alloydb-cluster" + randomSuffix,
 		"alloydb_cluster_pass":  "tf_test_cluster_secret" + randomSuffix,
 		"alloydb_instance_name": "tf-test-alloydb-instance" + randomSuffix,
-		"alloydb_user_name":     "user2@foo.com" + randomSuffix,
+		"alloydb_user_name":     "tf-test-user2@foo.com" + randomSuffix,
 		"network_name":          acctest.BootstrapSharedServiceNetworkingConnection(t, "alloydb-1"),
 		"random_suffix":         randomSuffix,
 	}

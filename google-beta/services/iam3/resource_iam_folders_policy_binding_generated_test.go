@@ -57,9 +57,9 @@ func TestAccIAM3FoldersPolicyBinding_iamFoldersPolicyBindingExample(t *testing.T
 
 	context := map[string]interface{}{
 		"org_id":            envvar.GetTestOrgFromEnv(t),
-		"display_name":      "binding for all principals in the folder" + randomSuffix,
+		"display_name":      "tf-test-binding for all principals in the folder" + randomSuffix,
 		"folder_binding_id": "tf-test-binding-for-all-folder-principals" + randomSuffix,
-		"folder_name":       "my folder" + randomSuffix,
+		"folder_name":       "tf-test-my folder" + randomSuffix,
 		"pab_policy_id":     "tf-test-my-pab-policy" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}

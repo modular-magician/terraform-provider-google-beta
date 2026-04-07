@@ -57,7 +57,7 @@ func TestAccIAMWorkforcePoolWorkforcePoolProviderScimTenant_iamWorkforcePoolProv
 
 	context := map[string]interface{}{
 		"org_id":            envvar.GetTestOrgFromEnv(t),
-		"hard_delete":       "true" + randomSuffix,
+		"hard_delete":       "tf-test-true" + randomSuffix,
 		"provider_id":       "tf-test-example-prvdr" + randomSuffix,
 		"scim_tenant_id":    "tf-test-example-scim-tenant" + randomSuffix,
 		"workforce_pool_id": "tf-test-example-pool" + randomSuffix,

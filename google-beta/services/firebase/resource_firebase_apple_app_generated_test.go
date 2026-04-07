@@ -57,7 +57,7 @@ func TestAccFirebaseAppleApp_firebaseAppleAppBasicExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"project_id":    envvar.GetTestProjectFromEnv(),
-		"bundle_id":     "apple.app.12345" + randomSuffix,
+		"bundle_id":     "tf-test-apple.app.12345" + randomSuffix,
 		"display_name":  "tf-test Display Name Basic",
 		"random_suffix": randomSuffix,
 	}
@@ -105,7 +105,7 @@ func TestAccFirebaseAppleApp_firebaseAppleAppFullExample(t *testing.T) {
 		"project_id":    envvar.GetTestProjectFromEnv(),
 		"api_key_name":  "tf-test-api-key" + randomSuffix,
 		"app_store_id":  12345,
-		"bundle_id":     "apple.app.12345" + randomSuffix,
+		"bundle_id":     "tf-test-apple.app.12345" + randomSuffix,
 		"display_name":  "tf-test Display Name Full",
 		"team_id":       9987654321,
 		"random_suffix": randomSuffix,

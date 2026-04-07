@@ -58,7 +58,7 @@ func TestAccBackupDRRestoreWorkload_backupDrRestoreWorkloadComputeInstanceBasicE
 
 	context := map[string]interface{}{
 		"project":         envvar.GetTestProjectFromEnv(),
-		"backup_id":       "backup" + randomSuffix,
+		"backup_id":       "tf-test-backup" + randomSuffix,
 		"backup_vault_id": "tf-test-backup-vault" + randomSuffix,
 		"data_source_id":  "tf-test-data-source" + randomSuffix,
 		"instance_name":   "tf-test-restored-instance" + randomSuffix,
@@ -118,7 +118,7 @@ func TestAccBackupDRRestoreWorkload_backupDrRestoreWorkloadComputeInstanceFullEx
 
 	context := map[string]interface{}{
 		"project":         envvar.GetTestProjectFromEnv(),
-		"backup_id":       "backup" + randomSuffix,
+		"backup_id":       "tf-test-backup" + randomSuffix,
 		"backup_vault_id": "tf-test-backup-vault" + randomSuffix,
 		"data_source_id":  "tf-test-data-source" + randomSuffix,
 		"instance_name":   "tf-test-restored-instance-full" + randomSuffix,
@@ -248,7 +248,7 @@ func TestAccBackupDRRestoreWorkload_backupDrRestoreWorkloadDiskBasicExample(t *t
 
 	context := map[string]interface{}{
 		"project":         envvar.GetTestProjectFromEnv(),
-		"backup_id":       "backup" + randomSuffix,
+		"backup_id":       "tf-test-backup" + randomSuffix,
 		"backup_vault_id": "tf-test-backup-vault" + randomSuffix,
 		"data_source_id":  "tf-test-data-source" + randomSuffix,
 		"disk_name":       "tf-test-restored-disk" + randomSuffix,
@@ -316,7 +316,7 @@ func TestAccBackupDRRestoreWorkload_backupDrRestoreWorkloadRegionalDiskExample(t
 
 	context := map[string]interface{}{
 		"project":         envvar.GetTestProjectFromEnv(),
-		"backup_id":       "backup" + randomSuffix,
+		"backup_id":       "tf-test-backup" + randomSuffix,
 		"backup_vault_id": "tf-test-backup-vault" + randomSuffix,
 		"data_source_id":  "tf-test-data-source" + randomSuffix,
 		"disk_name":       "tf-test-restored-regional-disk" + randomSuffix,
@@ -391,7 +391,7 @@ func TestAccBackupDRRestoreWorkload_backupDrRestoreWorkloadWithoutDeleteExample(
 
 	context := map[string]interface{}{
 		"project":         envvar.GetTestProjectFromEnv(),
-		"backup_id":       "backup" + randomSuffix,
+		"backup_id":       "tf-test-backup" + randomSuffix,
 		"backup_vault_id": "tf-test-backup-vault" + randomSuffix,
 		"data_source_id":  "tf-test-data-source" + randomSuffix,
 		"disk_name":       "tf-test-persistent-disk" + randomSuffix,

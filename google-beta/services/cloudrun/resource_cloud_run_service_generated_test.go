@@ -410,7 +410,7 @@ func TestAccCloudRunService_cloudRunServiceSecretEnvironmentVariablesExample(t *
 	context := map[string]interface{}{
 		"project":                envvar.GetTestProjectFromEnv(),
 		"cloud_run_service_name": "tf-test-cloudrun-srv" + randomSuffix,
-		"secret_id":              "secret" + randomSuffix,
+		"secret_id":              "tf-test-secret" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
 
@@ -514,7 +514,7 @@ func TestAccCloudRunService_cloudRunServiceSecretVolumesExample(t *testing.T) {
 	context := map[string]interface{}{
 		"project":                envvar.GetTestProjectFromEnv(),
 		"cloud_run_service_name": "tf-test-cloudrun-srv" + randomSuffix,
-		"secret_id":              "secret" + randomSuffix,
+		"secret_id":              "tf-test-secret" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
 

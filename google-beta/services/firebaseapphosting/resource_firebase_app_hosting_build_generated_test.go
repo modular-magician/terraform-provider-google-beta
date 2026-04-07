@@ -57,7 +57,7 @@ func TestAccFirebaseAppHostingBuild_firebaseAppHostingBuildMinimalExample(t *tes
 
 	context := map[string]interface{}{
 		"project_id":     envvar.GetTestProjectFromEnv(),
-		"backend_id":     "mini" + randomSuffix,
+		"backend_id":     "tf-test-mini" + randomSuffix,
 		"build_id":       "tf-test-mini-build" + randomSuffix,
 		"service_act_id": "tf-test-build-min",
 		"random_suffix":  randomSuffix,
@@ -149,7 +149,7 @@ func TestAccFirebaseAppHostingBuild_firebaseAppHostingBuildFullExample(t *testin
 
 	context := map[string]interface{}{
 		"project_id":     envvar.GetTestProjectFromEnv(),
-		"backend_id":     "full" + randomSuffix,
+		"backend_id":     "tf-test-full" + randomSuffix,
 		"build_id":       "tf-test-full-build" + randomSuffix,
 		"service_act_id": "tf-test-build-full",
 		"random_suffix":  randomSuffix,

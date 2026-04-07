@@ -56,7 +56,7 @@ func TestAccMonitoringGroup_monitoringGroupBasicExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"display_name":  "MonitoringGroup" + randomSuffix,
+		"display_name":  "tf-test-MonitoringGroup" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -99,8 +99,8 @@ func TestAccMonitoringGroup_monitoringGroupSubgroupExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"display_name":  "MonitoringParentGroup" + randomSuffix,
-		"display_name2": "MonitoringSubGroup" + randomSuffix,
+		"display_name":  "tf-test-MonitoringParentGroup" + randomSuffix,
+		"display_name2": "tf-test-MonitoringSubGroup" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

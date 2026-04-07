@@ -47,7 +47,7 @@ func TestAccSecretManagerSecretIamBindingGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/secretmanager.secretAccessor",
-		"secret_id":               "secret" + randomSuffix,
+		"secret_id":               "tf-test-secret" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -90,7 +90,7 @@ func TestAccSecretManagerSecretIamMemberGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/secretmanager.secretAccessor",
-		"secret_id":               "secret" + randomSuffix,
+		"secret_id":               "tf-test-secret" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -124,7 +124,7 @@ func TestAccSecretManagerSecretIamPolicyGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/secretmanager.secretAccessor",
-		"secret_id":               "secret" + randomSuffix,
+		"secret_id":               "tf-test-secret" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -167,7 +167,7 @@ func TestAccSecretManagerSecretIamBindingGenerated_withCondition(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/secretmanager.secretAccessor",
-		"secret_id":               "secret" + randomSuffix,
+		"secret_id":               "tf-test-secret" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -202,7 +202,7 @@ func TestAccSecretManagerSecretIamBindingGenerated_withAndWithoutCondition(t *te
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/secretmanager.secretAccessor",
-		"secret_id":               "secret" + randomSuffix,
+		"secret_id":               "tf-test-secret" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -247,7 +247,7 @@ func TestAccSecretManagerSecretIamMemberGenerated_withCondition(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/secretmanager.secretAccessor",
-		"secret_id":               "secret" + randomSuffix,
+		"secret_id":               "tf-test-secret" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -282,7 +282,7 @@ func TestAccSecretManagerSecretIamMemberGenerated_withAndWithoutCondition(t *tes
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/secretmanager.secretAccessor",
-		"secret_id":               "secret" + randomSuffix,
+		"secret_id":               "tf-test-secret" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -327,7 +327,7 @@ func TestAccSecretManagerSecretIamPolicyGenerated_withCondition(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/secretmanager.secretAccessor",
-		"secret_id":               "secret" + randomSuffix,
+		"secret_id":               "tf-test-secret" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",

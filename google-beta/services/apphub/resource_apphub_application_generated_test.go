@@ -153,14 +153,14 @@ func TestAccApphubApplication_apphubApplicationFullExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"application_id":  "tf-test-example-application" + randomSuffix,
-		"business_email":  "alice@google.com" + randomSuffix,
-		"business_name":   "Alice" + randomSuffix,
-		"desc":            "Application for testing" + randomSuffix,
-		"developer_email": "bob@google.com" + randomSuffix,
-		"developer_name":  "Bob" + randomSuffix,
-		"display_name":    "Application Full" + randomSuffix,
-		"operator_email":  "charlie@google.com" + randomSuffix,
-		"operator_name":   "Charlie" + randomSuffix,
+		"business_email":  "tf-test-alice@google.com" + randomSuffix,
+		"business_name":   "tf-test-Alice" + randomSuffix,
+		"desc":            "tf-test-Application for testing" + randomSuffix,
+		"developer_email": "tf-test-bob@google.com" + randomSuffix,
+		"developer_name":  "tf-test-Bob" + randomSuffix,
+		"display_name":    "tf-test-Application Full" + randomSuffix,
+		"operator_email":  "tf-test-charlie@google.com" + randomSuffix,
+		"operator_name":   "tf-test-Charlie" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
 

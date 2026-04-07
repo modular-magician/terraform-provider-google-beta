@@ -109,7 +109,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionBasicExample(t *testi
 	context := map[string]interface{}{
 		"database_instance_name": "tf-test-my-database-instance" + randomSuffix,
 		"deletion_protection":    false,
-		"username":               "user" + randomSuffix,
+		"username":               "tf-test-user" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
 
@@ -197,7 +197,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionFullExample(t *testin
 		"connection_id":          "tf-test-my-connection" + randomSuffix,
 		"database_instance_name": "tf-test-my-database-instance" + randomSuffix,
 		"deletion_protection":    false,
-		"username":               "user" + randomSuffix,
+		"username":               "tf-test-user" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
 
@@ -283,7 +283,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionAwsExample(t *testing
 
 	context := map[string]interface{}{
 		"connection_id": "tf-test-my-connection" + randomSuffix,
-		"iam_role_id":   "arn:aws:iam::999999999999:role/omnirole" + randomSuffix,
+		"iam_role_id":   "tf-test-arn:aws:iam::999999999999:role/omnirole" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -393,7 +393,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionCloudspannerExample(t
 
 	context := map[string]interface{}{
 		"connection_id": "tf-test-my-connection" + randomSuffix,
-		"database":      "projects/project/instances/instance/databases/database" + randomSuffix,
+		"database":      "tf-test-projects/project/instances/instance/databases/" + randomSuffix,
 		"database_role": "tf_test_database_role" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
@@ -448,7 +448,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionCloudspannerDataboost
 
 	context := map[string]interface{}{
 		"connection_id": "tf-test-my-connection" + randomSuffix,
-		"database":      "projects/project/instances/instance/databases/database" + randomSuffix,
+		"database":      "tf-test-projects/project/instances/instance/databases/" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -584,7 +584,7 @@ func TestAccBigqueryConnectionConnection_bigqueryConnectionSqlWithCmekExample(t 
 		"database_instance_name": "tf-test-my-database-instance" + randomSuffix,
 		"deletion_protection":    false,
 		"kms_key_name":           acctest.BootstrapKMSKey(t).CryptoKey.Name,
-		"username":               "user" + randomSuffix,
+		"username":               "tf-test-user" + randomSuffix,
 		"random_suffix":          randomSuffix,
 	}
 

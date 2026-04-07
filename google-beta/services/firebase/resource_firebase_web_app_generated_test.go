@@ -131,7 +131,7 @@ func TestAccFirebaseWebApp_firebaseWebAppCustomApiKeyExample(t *testing.T) {
 	context := map[string]interface{}{
 		"project_id":    envvar.GetTestProjectFromEnv(),
 		"api_key_name":  "tf-test-api-key" + randomSuffix,
-		"display_name":  "Display Name" + randomSuffix,
+		"display_name":  "tf-test-Display Name" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

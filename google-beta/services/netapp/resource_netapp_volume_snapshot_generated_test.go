@@ -58,7 +58,7 @@ func TestAccNetappVolumeSnapshot_volumeSnapshotCreateExample(t *testing.T) {
 	context := map[string]interface{}{
 		"network_name":  acctest.BootstrapSharedServiceNetworkingConnection(t, "gcnv-network-config-3", acctest.ServiceNetworkWithParentService("netapp.servicenetworking.goog")),
 		"pool_name":     "tf-test-test-pool" + randomSuffix,
-		"snap_name":     "testvolumesnap" + randomSuffix,
+		"snap_name":     "tf-test-testvolumesnap" + randomSuffix,
 		"volume_name":   "tf-test-test-volume" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

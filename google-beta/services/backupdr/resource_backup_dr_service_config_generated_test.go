@@ -57,7 +57,7 @@ func TestAccBackupDRServiceConfig_backupDrServiceConfigExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"project":       envvar.GetTestProjectFromEnv(),
-		"resource_type": "compute.googleapis.com/Instance" + randomSuffix,
+		"resource_type": "tf-test-compute.googleapis.com/Instance" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

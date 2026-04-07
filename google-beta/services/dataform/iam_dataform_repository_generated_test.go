@@ -50,7 +50,7 @@ func TestAccDataformRepositoryIamBindingGenerated(t *testing.T) {
 		"crypto_key_name":          "tf-test-example-crypto-key-name" + randomSuffix,
 		"data":                     "tf-test-secret-data" + randomSuffix,
 		"dataform_repository_name": "tf_test_dataform_repository" + randomSuffix,
-		"git_repository_name":      "my/repository" + randomSuffix,
+		"git_repository_name":      "tf-test-my/repository" + randomSuffix,
 		"key_ring_name":            "tf-test-example-key-ring" + randomSuffix,
 		"secret_name":              "tf-test-my-secret" + randomSuffix,
 	}
@@ -93,7 +93,7 @@ func TestAccDataformRepositoryIamMemberGenerated(t *testing.T) {
 		"crypto_key_name":          "tf-test-example-crypto-key-name" + randomSuffix,
 		"data":                     "tf-test-secret-data" + randomSuffix,
 		"dataform_repository_name": "tf_test_dataform_repository" + randomSuffix,
-		"git_repository_name":      "my/repository" + randomSuffix,
+		"git_repository_name":      "tf-test-my/repository" + randomSuffix,
 		"key_ring_name":            "tf-test-example-key-ring" + randomSuffix,
 		"secret_name":              "tf-test-my-secret" + randomSuffix,
 	}
@@ -127,7 +127,7 @@ func TestAccDataformRepositoryIamPolicyGenerated(t *testing.T) {
 		"crypto_key_name":          "tf-test-example-crypto-key-name" + randomSuffix,
 		"data":                     "tf-test-secret-data" + randomSuffix,
 		"dataform_repository_name": "tf_test_dataform_repository" + randomSuffix,
-		"git_repository_name":      "my/repository" + randomSuffix,
+		"git_repository_name":      "tf-test-my/repository" + randomSuffix,
 		"key_ring_name":            "tf-test-example-key-ring" + randomSuffix,
 		"secret_name":              "tf-test-my-secret" + randomSuffix,
 	}

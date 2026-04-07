@@ -61,9 +61,9 @@ func TestAccDatabaseMigrationServiceMigrationJob_databaseMigrationServiceMigrati
 		"migration_id":      "tf-test-my-migrationid" + randomSuffix,
 		"source_cp":         "tf-test-source-cp" + randomSuffix,
 		"source_csql":       "tf-test-source-csql" + randomSuffix,
-		"source_sqldb_cert": "cert" + randomSuffix,
-		"source_sqldb_pass": "password" + randomSuffix,
-		"source_sqldb_user": "username" + randomSuffix,
+		"source_sqldb_cert": "tf-test-cert" + randomSuffix,
+		"source_sqldb_pass": "tf-test-password" + randomSuffix,
+		"source_sqldb_user": "tf-test-username" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
 
@@ -212,9 +212,9 @@ func TestAccDatabaseMigrationServiceMigrationJob_databaseMigrationServiceMigrati
 		"migration_id":      "tf-test-my-migrationid" + randomSuffix,
 		"source_cp":         "tf-test-source-cp" + randomSuffix,
 		"source_csql":       "tf-test-source-csql" + randomSuffix,
-		"source_sqldb_cert": "cert" + randomSuffix,
-		"source_sqldb_pass": "password" + randomSuffix,
-		"source_sqldb_user": "username" + randomSuffix,
+		"source_sqldb_cert": "tf-test-cert" + randomSuffix,
+		"source_sqldb_pass": "tf-test-password" + randomSuffix,
+		"source_sqldb_user": "tf-test-username" + randomSuffix,
 		"random_suffix":     randomSuffix,
 	}
 
@@ -348,9 +348,9 @@ func TestAccDatabaseMigrationServiceMigrationJob_databaseMigrationServiceMigrati
 		"migration_id":        "tf-test-my-migrationid" + randomSuffix,
 		"source_cp":           "tf-test-source-cp" + randomSuffix,
 		"source_csql":         "tf-test-source-csql" + randomSuffix,
-		"source_sqldb_cert":   "cert" + randomSuffix,
-		"source_sqldb_pass":   "password" + randomSuffix,
-		"source_sqldb_user":   "username" + randomSuffix,
+		"source_sqldb_cert":   "tf-test-cert" + randomSuffix,
+		"source_sqldb_pass":   "tf-test-password" + randomSuffix,
+		"source_sqldb_user":   "tf-test-username" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
 

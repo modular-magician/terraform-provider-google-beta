@@ -58,7 +58,7 @@ func TestAccChronicleNativeDashboard_chronicleNativedashboardBasicExample(t *tes
 	context := map[string]interface{}{
 		"chronicle_id":          envvar.GetTestChronicleInstanceIdFromEnv(t),
 		"dashboard_description": "tf_test_dashboard_description" + randomSuffix,
-		"dashboard_name":        "dashboard" + randomSuffix,
+		"dashboard_name":        "tf-test-dashboard" + randomSuffix,
 		"random_suffix":         randomSuffix,
 	}
 

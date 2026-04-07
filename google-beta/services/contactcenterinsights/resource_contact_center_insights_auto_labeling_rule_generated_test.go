@@ -57,7 +57,7 @@ func TestAccContactCenterInsightsAutoLabelingRule_contactCenterInsightsAutoLabel
 
 	context := map[string]interface{}{
 		"id_suffix":     strings.ToLower(acctest.RandString(t, 10)),
-		"resource_name": "autolabelingrulebasic" + randomSuffix,
+		"resource_name": "tf-test-autolabelingrulebasic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

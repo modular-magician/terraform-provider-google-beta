@@ -57,7 +57,7 @@ func TestAccWorkflowsWorkflow_workflowBasicExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"account_id":    "tf-test-my-account" + randomSuffix,
-		"name":          "workflow" + randomSuffix,
+		"name":          "tf-test-workflow" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -132,7 +132,7 @@ func TestAccWorkflowsWorkflow_workflowTagsExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"account_id":    "tf-test-my-account" + randomSuffix,
-		"name":          "workflow" + randomSuffix,
+		"name":          "tf-test-workflow" + randomSuffix,
 		"tag_key":       "tf_test_tag_key" + randomSuffix,
 		"tag_value":     "tf_test_tag_value" + randomSuffix,
 		"random_suffix": randomSuffix,

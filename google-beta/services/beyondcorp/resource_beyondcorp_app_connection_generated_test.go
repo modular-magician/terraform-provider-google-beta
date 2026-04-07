@@ -124,7 +124,7 @@ func TestAccBeyondcorpAppConnection_beyondcorpAppConnectionFullExample(t *testin
 		"app_connection_name": "tf-test-my-app-connection" + randomSuffix,
 		"app_connector_name":  "tf-test-my-app-connector" + randomSuffix,
 		"app_gateway_name":    "tf-test-my-app-gateway" + randomSuffix,
-		"display_name":        "some display name" + randomSuffix,
+		"display_name":        "tf-test-some display name" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
 

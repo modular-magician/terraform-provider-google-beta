@@ -354,7 +354,7 @@ func TestAccRedisCluster_redisClusterSecondaryExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"network_name": "mynetwork" + randomSuffix,
+		"network_name": "tf-test-mynetwork" + randomSuffix,
 		"primary_cluster_deletion_protection_enabled":   false,
 		"primary_cluster_name":                          "tf-test-my-primary-cluster" + randomSuffix,
 		"primary_cluster_policy_name":                   "tf-test-mypolicy-primary-cluster" + randomSuffix,

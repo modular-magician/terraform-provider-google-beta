@@ -111,7 +111,7 @@ func TestAccBeyondcorpAppConnector_beyondcorpAppConnectorFullExample(t *testing.
 	context := map[string]interface{}{
 		"account_id":         "tf-test-my-account" + randomSuffix,
 		"app_connector_name": "tf-test-my-app-connector" + randomSuffix,
-		"display_name":       "some display name" + randomSuffix,
+		"display_name":       "tf-test-some display name" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
 

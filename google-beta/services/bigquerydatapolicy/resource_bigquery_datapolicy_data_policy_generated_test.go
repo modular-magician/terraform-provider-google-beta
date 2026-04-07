@@ -57,7 +57,7 @@ func TestAccBigqueryDatapolicyDataPolicy_bigqueryDatapolicyDataPolicyBasicExampl
 
 	context := map[string]interface{}{
 		"data_policy_id": "tf_test_data_policy" + randomSuffix,
-		"taxonomy":       "taxonomy" + randomSuffix,
+		"taxonomy":       "tf-test-taxonomy" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
 
@@ -117,7 +117,7 @@ func TestAccBigqueryDatapolicyDataPolicy_bigqueryDatapolicyDataPolicyRoutineExam
 	context := map[string]interface{}{
 		"data_policy_id": "tf_test_data_policy" + randomSuffix,
 		"dataset_id":     "tf_test_dataset_id" + randomSuffix,
-		"taxonomy":       "taxonomy" + randomSuffix,
+		"taxonomy":       "tf-test-taxonomy" + randomSuffix,
 		"random_suffix":  randomSuffix,
 	}
 

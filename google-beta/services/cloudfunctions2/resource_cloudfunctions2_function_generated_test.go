@@ -695,7 +695,7 @@ func TestAccCloudfunctions2function_cloudfunctions2SecretEnvExample(t *testing.T
 		"bucket_name":   "tf-test-gcf-source" + randomSuffix,
 		"function":      "tf-test-function-secret" + randomSuffix,
 		"location":      "us-central1",
-		"secret":        "secret" + randomSuffix,
+		"secret":        "tf-test-secret" + randomSuffix,
 		"zip_path":      "./test-fixtures/function-source.zip",
 		"random_suffix": randomSuffix,
 	}
@@ -810,7 +810,7 @@ func TestAccCloudfunctions2function_cloudfunctions2SecretVolumeExample(t *testin
 		"bucket_name":   "tf-test-gcf-source" + randomSuffix,
 		"function":      "tf-test-function-secret" + randomSuffix,
 		"location":      "us-central1",
-		"secret":        "secret" + randomSuffix,
+		"secret":        "tf-test-secret" + randomSuffix,
 		"zip_path":      "./test-fixtures/function-source.zip",
 		"random_suffix": randomSuffix,
 	}
@@ -918,7 +918,7 @@ func TestAccCloudfunctions2function_cloudfunctions2PrivateWorkerpoolExample(t *t
 		"bucket_name":   "tf-test-gcf-source" + randomSuffix,
 		"function":      "tf-test-function-workerpool" + randomSuffix,
 		"location":      "us-central1",
-		"pool":          "workerpool" + randomSuffix,
+		"pool":          "tf-test-workerpool" + randomSuffix,
 		"zip_path":      "./test-fixtures/function-source.zip",
 		"random_suffix": randomSuffix,
 	}
@@ -1013,7 +1013,7 @@ func TestAccCloudfunctions2function_cloudfunctions2CmekExample(t *testing.T) {
 		"cmek-repo":         "tf-test-cmek-repo" + randomSuffix,
 		"function":          "tf-test-function-cmek" + randomSuffix,
 		"kms_key_name":      acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
-		"kms_service_name":  "cloudkms.googleapis.com" + randomSuffix,
+		"kms_service_name":  "tf-test-cloudkms.googleapis.com" + randomSuffix,
 		"location":          "us-central1",
 		"unencoded-ar-repo": "tf-test-ar-repo" + randomSuffix,
 		"zip_path":          "./test-fixtures/function-source.zip",

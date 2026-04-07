@@ -163,7 +163,7 @@ func TestAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficRolloutPolicyExam
 	context := map[string]interface{}{
 		"project_id":     envvar.GetTestProjectFromEnv(),
 		"backend_id":     "tf-test-traffic-rp" + randomSuffix,
-		"branch":         "main" + randomSuffix,
+		"branch":         "tf-test-main" + randomSuffix,
 		"service_act_id": "tf-test-traffic-rp",
 		"random_suffix":  randomSuffix,
 	}
@@ -252,7 +252,7 @@ func TestAccFirebaseAppHostingTraffic_firebaseAppHostingTrafficRolloutPolicyDisa
 	context := map[string]interface{}{
 		"project_id":     envvar.GetTestProjectFromEnv(),
 		"backend_id":     "tf-test-traffic-rpd" + randomSuffix,
-		"branch":         "main" + randomSuffix,
+		"branch":         "tf-test-main" + randomSuffix,
 		"service_act_id": "tf-test-traffic-rpd",
 		"random_suffix":  randomSuffix,
 	}

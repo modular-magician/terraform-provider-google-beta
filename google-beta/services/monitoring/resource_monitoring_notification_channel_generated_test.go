@@ -56,7 +56,7 @@ func TestAccMonitoringNotificationChannel_notificationChannelBasicExample(t *tes
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"display_name":  "Test Notification Channel" + randomSuffix,
+		"display_name":  "tf-test-Test Notification Channel" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

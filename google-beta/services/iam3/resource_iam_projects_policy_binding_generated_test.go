@@ -57,7 +57,7 @@ func TestAccIAM3ProjectsPolicyBinding_iamProjectsPolicyBindingExample(t *testing
 
 	context := map[string]interface{}{
 		"org_id":             envvar.GetTestOrgFromEnv(t),
-		"display_name":       "binding for all principals in the project" + randomSuffix,
+		"display_name":       "tf-test-binding for all principals in the project" + randomSuffix,
 		"pab_policy_id":      "tf-test-my-pab-policy" + randomSuffix,
 		"project_binding_id": "tf-test-binding-for-all-project-principals" + randomSuffix,
 		"random_suffix":      randomSuffix,

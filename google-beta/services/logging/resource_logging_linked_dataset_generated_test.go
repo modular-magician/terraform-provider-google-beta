@@ -58,7 +58,7 @@ func TestAccLoggingLinkedDataset_loggingLinkedDatasetBasicExample(t *testing.T) 
 	context := map[string]interface{}{
 		"project":       envvar.GetTestProjectFromEnv(),
 		"bucket_id":     "tf-test-my-bucket" + randomSuffix,
-		"link_id":       "mylink" + randomSuffix,
+		"link_id":       "tf-test-mylink" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -111,7 +111,7 @@ func TestAccLoggingLinkedDataset_loggingLinkedDatasetAllParamsExample(t *testing
 	context := map[string]interface{}{
 		"project":       envvar.GetTestProjectFromEnv(),
 		"bucket_id":     "tf-test-my-bucket" + randomSuffix,
-		"link_id":       "mylink" + randomSuffix,
+		"link_id":       "tf-test-mylink" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

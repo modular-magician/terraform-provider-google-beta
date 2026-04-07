@@ -57,12 +57,12 @@ func TestAccBigqueryAnalyticsHubDataExchangeSubscription_bigqueryAnalyticshubDat
 
 	context := map[string]interface{}{
 		"data_exchange_id":                  "tf_test_my_test_dataexchange" + randomSuffix,
-		"destination_dataset_friendly_name": "Subscribed Destination Dataset" + randomSuffix,
+		"destination_dataset_friendly_name": "tf-test-Subscribed Destination Dataset" + randomSuffix,
 		"destination_dataset_id":            "tf_test_subscribed_dest_dataset" + randomSuffix,
 		"listing_dataset_id":                "tf_test_listing_src_dataset" + randomSuffix,
 		"listing_id":                        "tf_test_my_test_listing" + randomSuffix,
 		"listing_table_id":                  "tf_test_listing_src_table" + randomSuffix,
-		"subscriber_contact_email":          "testuser@example.com" + randomSuffix,
+		"subscriber_contact_email":          "tf-test-testuser@example.com" + randomSuffix,
 		"subscription_id":                   "tf_test_my_subscription_id" + randomSuffix,
 		"random_suffix":                     randomSuffix,
 	}

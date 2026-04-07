@@ -48,7 +48,7 @@ func TestAccBigqueryAnalyticsHubListingIamBindingGenerated(t *testing.T) {
 		"random_suffix":    randomSuffix,
 		"role":             "roles/viewer",
 		"data_exchange_id": "tf_test_my_data_exchange" + randomSuffix,
-		"desc":             "example data exchange" + randomSuffix,
+		"desc":             "tf-test-example data exchange" + randomSuffix,
 		"listing_id":       "tf_test_my_listing" + randomSuffix,
 	}
 
@@ -88,7 +88,7 @@ func TestAccBigqueryAnalyticsHubListingIamMemberGenerated(t *testing.T) {
 		"random_suffix":    randomSuffix,
 		"role":             "roles/viewer",
 		"data_exchange_id": "tf_test_my_data_exchange" + randomSuffix,
-		"desc":             "example data exchange" + randomSuffix,
+		"desc":             "tf-test-example data exchange" + randomSuffix,
 		"listing_id":       "tf_test_my_listing" + randomSuffix,
 	}
 
@@ -119,7 +119,7 @@ func TestAccBigqueryAnalyticsHubListingIamPolicyGenerated(t *testing.T) {
 		"random_suffix":    randomSuffix,
 		"role":             "roles/viewer",
 		"data_exchange_id": "tf_test_my_data_exchange" + randomSuffix,
-		"desc":             "example data exchange" + randomSuffix,
+		"desc":             "tf-test-example data exchange" + randomSuffix,
 		"listing_id":       "tf_test_my_listing" + randomSuffix,
 	}
 

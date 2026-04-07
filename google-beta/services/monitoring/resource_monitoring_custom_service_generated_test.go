@@ -56,7 +56,7 @@ func TestAccMonitoringService_monitoringServiceCustomExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"resource_name": "//product.googleapis.com/foo/foo/services/test" + randomSuffix,
+		"resource_name": "tf-test-//product.googleapis.com/foo/foo/services/test" + randomSuffix,
 		"service_id":    "tf-test-custom-srv" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

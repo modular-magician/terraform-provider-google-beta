@@ -398,7 +398,7 @@ func TestAccIntegrationsAuthConfig_integrationsAuthConfigServiceAccountExample(t
 	context := map[string]interface{}{
 		"auth_config_name":   "tf-test-test-authconfig-service-account" + randomSuffix,
 		"client":             acctest.BootstrapIntegrationsClient(t, "us-east4"),
-		"service_account_id": "sa" + randomSuffix,
+		"service_account_id": "tf-test-sa" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
 
@@ -456,7 +456,7 @@ func TestAccIntegrationsAuthConfig_integrationsAuthConfigOidcTokenExample(t *tes
 	context := map[string]interface{}{
 		"auth_config_name":   "tf-test-test-authconfig-oidc-token" + randomSuffix,
 		"client":             acctest.BootstrapIntegrationsClient(t, "us-east4"),
-		"service_account_id": "sa" + randomSuffix,
+		"service_account_id": "tf-test-sa" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
 

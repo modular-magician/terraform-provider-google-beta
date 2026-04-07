@@ -61,9 +61,9 @@ func TestAccApigeeDeveloperApp_apigeeDeveloperAppBasicTestExample(t *testing.T) 
 		"org_id":             envvar.GetTestOrgFromEnv(t),
 		"api_product_name":   "tf-test-sample-api" + randomSuffix,
 		"developer_app_name": "tf-test-sample-app" + randomSuffix,
-		"developer_email":    "john.doe@acme.com" + randomSuffix,
-		"instance_name":      "instance" + randomSuffix,
-		"project_name":       "prj" + randomSuffix,
+		"developer_email":    "tf-test-john.doe@acme.com" + randomSuffix,
+		"instance_name":      "tf-test-instance" + randomSuffix,
+		"project_name":       "tf-test-prj" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
 

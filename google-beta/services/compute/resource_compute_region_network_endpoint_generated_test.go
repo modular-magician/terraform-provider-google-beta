@@ -57,7 +57,7 @@ func TestAccComputeRegionNetworkEndpoint_regionNetworkEndpointInternetIpPortExam
 
 	context := map[string]interface{}{
 		"neg_name":      "tf-test-ip-port-neg" + randomSuffix,
-		"network_name":  "network" + randomSuffix,
+		"network_name":  "tf-test-network" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -118,7 +118,7 @@ func TestAccComputeRegionNetworkEndpoint_regionNetworkEndpointInternetFqdnPortEx
 
 	context := map[string]interface{}{
 		"neg_name":      "tf-test-fqdn-port-neg" + randomSuffix,
-		"network_name":  "network" + randomSuffix,
+		"network_name":  "tf-test-network" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

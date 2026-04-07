@@ -61,7 +61,7 @@ func TestAccApigeeKeystoresAliasesSelfSignedCert_apigeeEnvKeystoreAliasSelfSigne
 		"org_id":           envvar.GetTestOrgFromEnv(t),
 		"environment_name": "tf-test-env-name" + randomSuffix,
 		"keystore_name":    "tf-test-env-keystore" + randomSuffix,
-		"keystores_alias":  "alias" + randomSuffix,
+		"keystores_alias":  "tf-test-alias" + randomSuffix,
 		"project_id":       "tf-test-my-project" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}

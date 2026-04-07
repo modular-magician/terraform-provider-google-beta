@@ -56,9 +56,9 @@ func TestAccParallelstoreInstance_parallelstoreInstanceBasicBetaExample(t *testi
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"address_name":  "address" + randomSuffix,
-		"name":          "instance" + randomSuffix,
-		"network_name":  "network" + randomSuffix,
+		"address_name":  "tf-test-address" + randomSuffix,
+		"name":          "tf-test-instance" + randomSuffix,
+		"network_name":  "tf-test-network" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -137,9 +137,9 @@ func TestAccParallelstoreInstance_parallelstoreInstanceBasicExample(t *testing.T
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"address_name":  "address" + randomSuffix,
-		"name":          "instance" + randomSuffix,
-		"network_name":  "network" + randomSuffix,
+		"address_name":  "tf-test-address" + randomSuffix,
+		"name":          "tf-test-instance" + randomSuffix,
+		"network_name":  "tf-test-network" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

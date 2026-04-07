@@ -336,7 +336,7 @@ func TestAccColabSchedule_colabScheduleFullExample(t *testing.T) {
 		"key_name":              acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
 		"network_name":          "tf-test-colab-test-default" + randomSuffix,
 		"runtime_template_name": "tf-test-runtime-template" + randomSuffix,
-		"secret":                "secret" + randomSuffix,
+		"secret":                "tf-test-secret" + randomSuffix,
 		"start_time":            time.Date(time.Now().Year(), 12, 31, 0, 0, 0, 0, time.Now().Location()).AddDate(0, 0, 1).Format(time.RFC3339),
 		"random_suffix":         randomSuffix,
 	}

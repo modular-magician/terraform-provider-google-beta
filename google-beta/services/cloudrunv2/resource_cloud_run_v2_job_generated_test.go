@@ -175,7 +175,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobSqlExample(t *testing.T) {
 		"cloud_run_job_name":  "tf-test-cloudrun-job" + randomSuffix,
 		"cloud_run_sql_name":  "tf-test-cloudrun-sql" + randomSuffix,
 		"deletion_protection": false,
-		"secret_id":           "secret" + randomSuffix,
+		"secret_id":           "tf-test-secret" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
 
@@ -424,7 +424,7 @@ func TestAccCloudRunV2Job_cloudrunv2JobSecretExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"cloud_run_job_name": "tf-test-cloudrun-job" + randomSuffix,
-		"secret_id":          "secret" + randomSuffix,
+		"secret_id":          "tf-test-secret" + randomSuffix,
 		"random_suffix":      randomSuffix,
 	}
 

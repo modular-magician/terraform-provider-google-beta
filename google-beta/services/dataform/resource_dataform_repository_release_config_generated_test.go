@@ -58,7 +58,7 @@ func TestAccDataformRepositoryReleaseConfig_dataformRepositoryReleaseConfigExamp
 	context := map[string]interface{}{
 		"data":                     "tf-test-secret-data" + randomSuffix,
 		"dataform_repository_name": "tf_test_dataform_repository" + randomSuffix,
-		"git_repository_name":      "my/repository" + randomSuffix,
+		"git_repository_name":      "tf-test-my/repository" + randomSuffix,
 		"release_name":             "tf_test_my_release" + randomSuffix,
 		"secret_name":              "tf_test_my_secret" + randomSuffix,
 		"random_suffix":            randomSuffix,

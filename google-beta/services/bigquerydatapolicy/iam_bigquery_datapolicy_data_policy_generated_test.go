@@ -48,7 +48,7 @@ func TestAccBigqueryDatapolicyDataPolicyIamBindingGenerated(t *testing.T) {
 		"random_suffix":  randomSuffix,
 		"role":           "roles/viewer",
 		"data_policy_id": "tf_test_data_policy" + randomSuffix,
-		"taxonomy":       "taxonomy" + randomSuffix,
+		"taxonomy":       "tf-test-taxonomy" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -87,7 +87,7 @@ func TestAccBigqueryDatapolicyDataPolicyIamMemberGenerated(t *testing.T) {
 		"random_suffix":  randomSuffix,
 		"role":           "roles/viewer",
 		"data_policy_id": "tf_test_data_policy" + randomSuffix,
-		"taxonomy":       "taxonomy" + randomSuffix,
+		"taxonomy":       "tf-test-taxonomy" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
@@ -117,7 +117,7 @@ func TestAccBigqueryDatapolicyDataPolicyIamPolicyGenerated(t *testing.T) {
 		"random_suffix":  randomSuffix,
 		"role":           "roles/viewer",
 		"data_policy_id": "tf_test_data_policy" + randomSuffix,
-		"taxonomy":       "taxonomy" + randomSuffix,
+		"taxonomy":       "tf-test-taxonomy" + randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{

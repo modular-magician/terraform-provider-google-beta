@@ -59,7 +59,7 @@ func TestAccObservabilityFolderSettings_observabilityFolderSettingsBasicExample(
 		"org_id":        envvar.GetTestOrgFromEnv(t),
 		"folder_name":   "tf-test-tf-test-folder" + randomSuffix,
 		"kms_key_name":  acctest.BootstrapKMSKeyInLocation(t, "us").CryptoKey.Name,
-		"location":      "us" + randomSuffix,
+		"location":      "tf-test-us" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -142,7 +142,7 @@ func TestAccObservabilityFolderSettings_observabilityFolderSettingsBasicGlobalEx
 
 	context := map[string]interface{}{
 		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"location":      "global" + randomSuffix,
+		"location":      "tf-test-global" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

@@ -759,7 +759,7 @@ func TestAccDataplexDatascan_dataplexDatascanDocumentationExample(t *testing.T) 
 	context := map[string]interface{}{
 		"location":      envvar.GetTestRegionFromEnv(),
 		"project_name":  envvar.GetTestProjectFromEnv(),
-		"datascan_name": "datadocumentation" + randomSuffix,
+		"datascan_name": "tf-test-datadocumentation" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

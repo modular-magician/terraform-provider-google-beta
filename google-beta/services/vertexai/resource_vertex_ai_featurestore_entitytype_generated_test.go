@@ -59,7 +59,7 @@ func TestAccVertexAIFeaturestoreEntitytype_vertexAiFeaturestoreEntitytypeExample
 		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 		"kms_key_name":    acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
-		"name":            "terraform" + randomSuffix,
+		"name":            "tf-test-terraform" + randomSuffix,
 		"project":         "tf-test-vertex-ai" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
@@ -141,7 +141,7 @@ func TestAccVertexAIFeaturestoreEntitytype_vertexAiFeaturestoreEntitytypeWithBet
 		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 		"kms_key_name":    acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
-		"name":            "terraform2" + randomSuffix,
+		"name":            "tf-test-terraform2" + randomSuffix,
 		"project":         "tf-test-vertex-ai" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}

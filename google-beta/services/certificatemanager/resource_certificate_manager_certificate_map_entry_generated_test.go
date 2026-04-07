@@ -59,8 +59,8 @@ func TestAccCertificateManagerCertificateMapEntry_certificateManagerCertificateM
 		"cert_map_entry_name": "tf-test-cert-map-entry" + randomSuffix,
 		"dns_auth_name":       "tf-test-dns-auth" + randomSuffix,
 		"dns_auth_name2":      "tf-test-dns-auth2" + randomSuffix,
-		"dns_auth_subdomain":  "subdomain" + randomSuffix,
-		"dns_auth_subdomain2": "subdomain2" + randomSuffix,
+		"dns_auth_subdomain":  "tf-test-subdomain" + randomSuffix,
+		"dns_auth_subdomain2": "tf-test-subdomain2" + randomSuffix,
 		"random_suffix":       randomSuffix,
 	}
 

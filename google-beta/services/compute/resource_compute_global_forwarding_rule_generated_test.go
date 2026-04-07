@@ -451,7 +451,7 @@ func TestAccComputeGlobalForwardingRule_globalForwardingRuleHttpExample(t *testi
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"backend_service_name": "backend" + randomSuffix,
+		"backend_service_name": "tf-test-backend" + randomSuffix,
 		"forwarding_rule_name": "tf-test-global-rule" + randomSuffix,
 		"http_proxy_name":      "tf-test-target-proxy" + randomSuffix,
 		"random_suffix":        randomSuffix,
@@ -540,7 +540,7 @@ func TestAccComputeGlobalForwardingRule_globalForwardingRuleInternalExample(t *t
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"backend_service_name": "backend" + randomSuffix,
+		"backend_service_name": "tf-test-backend" + randomSuffix,
 		"forwarding_rule_name": "tf-test-global-rule" + randomSuffix,
 		"http_proxy_name":      "tf-test-target-proxy" + randomSuffix,
 		"igm_name":             "tf-test-igm-internal" + randomSuffix,
@@ -689,7 +689,7 @@ func TestAccComputeGlobalForwardingRule_globalForwardingRuleExternalManagedExamp
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"backend_service_name": "backend" + randomSuffix,
+		"backend_service_name": "tf-test-backend" + randomSuffix,
 		"forwarding_rule_name": "tf-test-global-rule" + randomSuffix,
 		"http_proxy_name":      "tf-test-target-proxy" + randomSuffix,
 		"random_suffix":        randomSuffix,
@@ -1187,7 +1187,7 @@ func TestAccComputeGlobalForwardingRule_privateServiceConnectGoogleApisExample(t
 
 	context := map[string]interface{}{
 		"project":              envvar.GetTestProjectFromEnv(),
-		"forwarding_rule_name": "globalrule" + randomSuffix,
+		"forwarding_rule_name": "tf-test-globalrule" + randomSuffix,
 		"global_address_name":  "tf-test-global-psconnect-ip" + randomSuffix,
 		"network_name":         "tf-test-my-network" + randomSuffix,
 		"subnetwork_name":      "tf-test-my-subnetwork" + randomSuffix,
@@ -1270,7 +1270,7 @@ func TestAccComputeGlobalForwardingRule_privateServiceConnectGoogleApisNoAutomat
 
 	context := map[string]interface{}{
 		"project":              envvar.GetTestProjectFromEnv(),
-		"forwarding_rule_name": "globalrule" + randomSuffix,
+		"forwarding_rule_name": "tf-test-globalrule" + randomSuffix,
 		"global_address_name":  "tf-test-global-psconnect-ip" + randomSuffix,
 		"network_name":         "tf-test-my-network" + randomSuffix,
 		"subnetwork_name":      "tf-test-my-subnetwork" + randomSuffix,

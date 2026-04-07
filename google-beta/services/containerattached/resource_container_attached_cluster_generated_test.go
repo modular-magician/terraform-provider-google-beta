@@ -56,7 +56,7 @@ func TestAccContainerAttachedCluster_containerAttachedClusterBasicExample(t *tes
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"name":          "basic" + randomSuffix,
+		"name":          "tf-test-basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -117,7 +117,7 @@ func TestAccContainerAttachedCluster_containerAttachedClusterFullExample(t *test
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"name":          "basic" + randomSuffix,
+		"name":          "tf-test-basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -205,7 +205,7 @@ func TestAccContainerAttachedCluster_containerAttachedClusterIgnoreErrorsExample
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"name":          "basic" + randomSuffix,
+		"name":          "tf-test-basic" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

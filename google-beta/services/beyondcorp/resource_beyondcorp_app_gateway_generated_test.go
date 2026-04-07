@@ -102,7 +102,7 @@ func TestAccBeyondcorpAppGateway_beyondcorpAppGatewayFullExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"app_gateway_name": "tf-test-my-app-gateway" + randomSuffix,
-		"display_name":     "some display name" + randomSuffix,
+		"display_name":     "tf-test-some display name" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
 

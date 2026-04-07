@@ -56,7 +56,7 @@ func TestAccParameterManagerParameter_parameterConfigBasicExample(t *testing.T) 
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"parameter_id":  "parameter" + randomSuffix,
+		"parameter_id":  "tf-test-parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -98,7 +98,7 @@ func TestAccParameterManagerParameter_parameterWithFormatExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"parameter_id":  "parameter" + randomSuffix,
+		"parameter_id":  "tf-test-parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -141,7 +141,7 @@ func TestAccParameterManagerParameter_parameterWithLabelsExample(t *testing.T) {
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"parameter_id":  "parameter" + randomSuffix,
+		"parameter_id":  "tf-test-parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 
@@ -198,7 +198,7 @@ func TestAccParameterManagerParameter_parameterWithKmsKeyExample(t *testing.T) {
 
 	context := map[string]interface{}{
 		"kms_key":       acctest.BootstrapKMSKey(t).CryptoKey.Name,
-		"parameter_id":  "parameter" + randomSuffix,
+		"parameter_id":  "tf-test-parameter" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}
 

@@ -47,7 +47,7 @@ func TestAccArtifactRegistryRepositoryIamBindingGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 		"role":          "roles/artifactregistry.reader",
-		"desc":          "example docker repository" + randomSuffix,
+		"desc":          "tf-test-example docker repository" + randomSuffix,
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 	}
 
@@ -86,7 +86,7 @@ func TestAccArtifactRegistryRepositoryIamMemberGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 		"role":          "roles/artifactregistry.reader",
-		"desc":          "example docker repository" + randomSuffix,
+		"desc":          "tf-test-example docker repository" + randomSuffix,
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 	}
 
@@ -116,7 +116,7 @@ func TestAccArtifactRegistryRepositoryIamPolicyGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix": randomSuffix,
 		"role":          "roles/artifactregistry.reader",
-		"desc":          "example docker repository" + randomSuffix,
+		"desc":          "tf-test-example docker repository" + randomSuffix,
 		"repository_id": "tf-test-my-repository" + randomSuffix,
 	}
 

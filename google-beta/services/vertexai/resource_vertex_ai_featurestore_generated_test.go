@@ -59,7 +59,7 @@ func TestAccVertexAIFeaturestore_vertexAiFeaturestoreExample(t *testing.T) {
 		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 		"kms_key_name":    acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
-		"name":            "terraform" + randomSuffix,
+		"name":            "tf-test-terraform" + randomSuffix,
 		"project":         "tf-test-appeng-flex" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
@@ -116,7 +116,7 @@ func TestAccVertexAIFeaturestore_vertexAiFeaturestoreWithBetaFieldsExample(t *te
 		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 		"kms_key_name":    acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
-		"name":            "terraform2" + randomSuffix,
+		"name":            "tf-test-terraform2" + randomSuffix,
 		"project":         "tf-test-appeng-flex" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
@@ -175,7 +175,7 @@ func TestAccVertexAIFeaturestore_vertexAiFeaturestoreScalingExample(t *testing.T
 		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 		"kms_key_name":    acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
-		"name":            "terraform3" + randomSuffix,
+		"name":            "tf-test-terraform3" + randomSuffix,
 		"project":         "tf-test-appeng-flex" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}

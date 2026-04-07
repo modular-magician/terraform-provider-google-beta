@@ -51,7 +51,7 @@ func TestAccVertexAIFeaturestoreEntitytypeIamBindingGenerated(t *testing.T) {
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 
 		"kms_key_name": acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
-		"name":         "terraform" + randomSuffix,
+		"name":         "tf-test-terraform" + randomSuffix,
 		"project":      "tf-test-vertex-ai" + randomSuffix,
 	}
 
@@ -94,7 +94,7 @@ func TestAccVertexAIFeaturestoreEntitytypeIamMemberGenerated(t *testing.T) {
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 
 		"kms_key_name": acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
-		"name":         "terraform" + randomSuffix,
+		"name":         "tf-test-terraform" + randomSuffix,
 		"project":      "tf-test-vertex-ai" + randomSuffix,
 	}
 
@@ -128,7 +128,7 @@ func TestAccVertexAIFeaturestoreEntitytypeIamPolicyGenerated(t *testing.T) {
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 
 		"kms_key_name": acctest.BootstrapKMSKeyInLocation(t, "us-central1").CryptoKey.Name,
-		"name":         "terraform" + randomSuffix,
+		"name":         "tf-test-terraform" + randomSuffix,
 		"project":      "tf-test-vertex-ai" + randomSuffix,
 	}
 

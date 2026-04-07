@@ -57,7 +57,7 @@ func TestAccIAM3PrincipalAccessBoundaryPolicy_iamPrincipalAccessBoundaryPolicyEx
 
 	context := map[string]interface{}{
 		"org_id":        envvar.GetTestOrgFromEnv(t),
-		"display_name":  "PAB policy for Organization" + randomSuffix,
+		"display_name":  "tf-test-PAB policy for Organization" + randomSuffix,
 		"pab_id":        "tf-test-pab-policy-for-org" + randomSuffix,
 		"random_suffix": randomSuffix,
 	}

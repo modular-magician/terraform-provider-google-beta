@@ -57,7 +57,7 @@ func TestAccFirebaseAppCheckAppAttestConfig_firebaseAppCheckAppAttestConfigMinim
 
 	context := map[string]interface{}{
 		"project_id":    envvar.GetTestProjectFromEnv(),
-		"bundle_id":     "bundle.id.appattest" + randomSuffix,
+		"bundle_id":     "tf-test-bundle.id.appattest" + randomSuffix,
 		"team_id":       "9987654321",
 		"random_suffix": randomSuffix,
 	}
@@ -132,7 +132,7 @@ func TestAccFirebaseAppCheckAppAttestConfig_firebaseAppCheckAppAttestConfigFullE
 
 	context := map[string]interface{}{
 		"project_id":    envvar.GetTestProjectFromEnv(),
-		"bundle_id":     "bundle.id.appattest" + randomSuffix,
+		"bundle_id":     "tf-test-bundle.id.appattest" + randomSuffix,
 		"team_id":       "9987654321",
 		"token_ttl":     "7200s",
 		"random_suffix": randomSuffix,

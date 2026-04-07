@@ -58,8 +58,8 @@ func TestAccAppEngineServiceSplitTraffic_appEngineServiceSplitTrafficExample(t *
 	context := map[string]interface{}{
 		"org_id":               envvar.GetTestOrgFromEnv(t),
 		"bucket_name":          "tf-test-appengine-static-content" + randomSuffix,
-		"service_id":           "default" + randomSuffix,
-		"split.allocations.v1": "1" + randomSuffix,
+		"service_id":           "tf-test-default" + randomSuffix,
+		"split.allocations.v1": "tf-test-1" + randomSuffix,
 		"random_suffix":        randomSuffix,
 	}
 

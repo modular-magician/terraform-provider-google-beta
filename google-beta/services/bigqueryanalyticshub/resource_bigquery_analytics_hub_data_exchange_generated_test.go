@@ -57,7 +57,7 @@ func TestAccBigqueryAnalyticsHubDataExchange_bigqueryAnalyticshubDataExchangeBas
 
 	context := map[string]interface{}{
 		"data_exchange_id": "tf_test_my_data_exchange" + randomSuffix,
-		"desc":             "example data exchange" + randomSuffix,
+		"desc":             "tf-test-example data exchange" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
 
@@ -103,7 +103,7 @@ func TestAccBigqueryAnalyticsHubDataExchange_bigqueryAnalyticshubDataExchangeDcr
 
 	context := map[string]interface{}{
 		"data_exchange_id": "tf_test_dcr_data_exchange" + randomSuffix,
-		"desc":             "example dcr data exchange" + randomSuffix,
+		"desc":             "tf-test-example dcr data exchange" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
 
@@ -152,7 +152,7 @@ func TestAccBigqueryAnalyticsHubDataExchange_bigqueryAnalyticshubDataExchangeLog
 
 	context := map[string]interface{}{
 		"data_exchange_id": "tf_test_tf_test_log_email_data_exchange" + randomSuffix,
-		"description":      "Example for log email test for data exchange" + randomSuffix,
+		"description":      "tf-test-Example for log email test for data exchange" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
 
@@ -199,7 +199,7 @@ func TestAccBigqueryAnalyticsHubDataExchange_bigqueryAnalyticshubPublicDataExcha
 
 	context := map[string]interface{}{
 		"data_exchange_id": "tf_test_public_data_exchange" + randomSuffix,
-		"desc":             "Example for public data exchange" + randomSuffix,
+		"desc":             "tf-test-Example for public data exchange" + randomSuffix,
 		"random_suffix":    randomSuffix,
 	}
 

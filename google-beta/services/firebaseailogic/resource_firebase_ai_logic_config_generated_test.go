@@ -58,7 +58,7 @@ func TestAccFirebaseAILogicConfig_firebaseailogicConfigBasicExample(t *testing.T
 	context := map[string]interface{}{
 		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":          envvar.GetTestOrgFromEnv(t),
-		"project_id":      "basic" + randomSuffix,
+		"project_id":      "tf-test-basic" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
 
@@ -151,7 +151,7 @@ func TestAccFirebaseAILogicConfig_firebaseailogicConfigFullExample(t *testing.T)
 		"billing_account": envvar.GetTestBillingAccountFromEnv(t),
 		"org_id":          envvar.GetTestOrgFromEnv(t),
 		"api_key_id":      "tf-test-gemini-api-key" + randomSuffix,
-		"project_id":      "full" + randomSuffix,
+		"project_id":      "tf-test-full" + randomSuffix,
 		"random_suffix":   randomSuffix,
 	}
 

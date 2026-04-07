@@ -47,7 +47,7 @@ func TestAccBeyondcorpSecurityGatewayIamBindingGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/beyondcorp.securityGatewayUser",
-		"security_gateway_name":   "default" + randomSuffix,
+		"security_gateway_name":   "tf-test-default" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -90,7 +90,7 @@ func TestAccBeyondcorpSecurityGatewayIamMemberGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/beyondcorp.securityGatewayUser",
-		"security_gateway_name":   "default" + randomSuffix,
+		"security_gateway_name":   "tf-test-default" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -124,7 +124,7 @@ func TestAccBeyondcorpSecurityGatewayIamPolicyGenerated(t *testing.T) {
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/beyondcorp.securityGatewayUser",
-		"security_gateway_name":   "default" + randomSuffix,
+		"security_gateway_name":   "tf-test-default" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -167,7 +167,7 @@ func TestAccBeyondcorpSecurityGatewayIamBindingGenerated_withCondition(t *testin
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/beyondcorp.securityGatewayUser",
-		"security_gateway_name":   "default" + randomSuffix,
+		"security_gateway_name":   "tf-test-default" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -202,7 +202,7 @@ func TestAccBeyondcorpSecurityGatewayIamBindingGenerated_withAndWithoutCondition
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/beyondcorp.securityGatewayUser",
-		"security_gateway_name":   "default" + randomSuffix,
+		"security_gateway_name":   "tf-test-default" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -247,7 +247,7 @@ func TestAccBeyondcorpSecurityGatewayIamMemberGenerated_withCondition(t *testing
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/beyondcorp.securityGatewayUser",
-		"security_gateway_name":   "default" + randomSuffix,
+		"security_gateway_name":   "tf-test-default" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -282,7 +282,7 @@ func TestAccBeyondcorpSecurityGatewayIamMemberGenerated_withAndWithoutCondition(
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/beyondcorp.securityGatewayUser",
-		"security_gateway_name":   "default" + randomSuffix,
+		"security_gateway_name":   "tf-test-default" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
@@ -327,7 +327,7 @@ func TestAccBeyondcorpSecurityGatewayIamPolicyGenerated_withCondition(t *testing
 	context := map[string]interface{}{
 		"random_suffix":           randomSuffix,
 		"role":                    "roles/beyondcorp.securityGatewayUser",
-		"security_gateway_name":   "default" + randomSuffix,
+		"security_gateway_name":   "tf-test-default" + randomSuffix,
 		"condition_title":         "expires_after_2019_12_31",
 		"condition_expr":          `request.time < timestamp(\"2020-01-01T00:00:00Z\")`,
 		"condition_desc":          "Expiring at midnight of 2019-12-31",
