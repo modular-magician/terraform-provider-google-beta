@@ -998,7 +998,20 @@ func resourceArtifactRegistryRepositoryCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ArtifactRegistryBasePath}}projects/{{project}}/locations/{{location}}/repositories?repository_id={{repository_id}}")
+	urlFormatted, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/repositories?repository_id={{repository_id}}")
+	if err != nil {
+		return err
+	}
+	loc := tpgresource.LocationFromId(urlFormatted)
+
+	basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+	if err != nil {
+		return fmt.Errorf("Error qualifying Create base path for Repository: %s", err)
+	}
+
+	url, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/repositories?repository_id={{repository_id}}")
+	url = fmt.Sprintf("%s%s", basePath, url)
+
 	if err != nil {
 		return err
 	}
@@ -1060,8 +1073,10 @@ func resourceArtifactRegistryRepositoryCreate(d *schema.ResourceData, meta inter
 		log.Printf("[DEBUG] (Create) identity not set: %s", err)
 	}
 
+	// Derive location for use in REP endpoints
+	location := tpgresource.LocationFromId(d.Id())
 	err = ArtifactRegistryOperationWaitTime(
-		config, res, project, "Creating Repository", userAgent,
+		config, res, project, location, "Creating Repository", userAgent,
 		d.Timeout(schema.TimeoutCreate))
 
 	if err != nil {
@@ -1081,8 +1096,19 @@ func resourceArtifactRegistryRepositoryRead(d *schema.ResourceData, meta interfa
 	if err != nil {
 		return err
 	}
+	urlFormatted, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/repositories?repository_id={{repository_id}}")
+	if err != nil {
+		return err
+	}
+	loc := tpgresource.LocationFromId(urlFormatted)
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ArtifactRegistryBasePath}}projects/{{project}}/locations/{{location}}/repositories/{{repository_id}}")
+	basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+	if err != nil {
+		return fmt.Errorf("Error qualifying base path for Repository: %s", err)
+	}
+	url, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/repositories/{{repository_id}}")
+	url = fmt.Sprintf("%s%s", basePath, url)
+
 	if err != nil {
 		return err
 	}
@@ -1291,7 +1317,15 @@ func resourceArtifactRegistryRepositoryUpdate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ArtifactRegistryBasePath}}projects/{{project}}/locations/{{location}}/repositories/{{repository_id}}")
+	loc := tpgresource.LocationFromId(d.Id())
+
+	basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+	if err != nil {
+		return fmt.Errorf("Error qualifying base path for Repository: %s", err)
+	}
+	url, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/repositories/{{repository_id}}")
+	url = fmt.Sprintf("%s%s", basePath, url)
+
 	if err != nil {
 		return err
 	}
@@ -1381,8 +1415,15 @@ func resourceArtifactRegistryRepositoryDelete(d *schema.ResourceData, meta inter
 		return fmt.Errorf("Error fetching project for Repository: %s", err)
 	}
 	billingProject = project
+	loc := tpgresource.LocationFromId(d.Id())
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ArtifactRegistryBasePath}}projects/{{project}}/locations/{{location}}/repositories/{{repository_id}}")
+	basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+	if err != nil {
+		return fmt.Errorf("Error qualifying base path for Repository: %s", err)
+	}
+	url, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/repositories/{{repository_id}}")
+	url = fmt.Sprintf("%s%s", basePath, url)
+
 	if err != nil {
 		return err
 	}
@@ -1411,8 +1452,10 @@ func resourceArtifactRegistryRepositoryDelete(d *schema.ResourceData, meta inter
 		return transport_tpg.HandleNotFoundError(err, d, "Repository")
 	}
 
+	// Derive location for use in REP endpoints
+	location := tpgresource.LocationFromId(d.Id())
 	err = ArtifactRegistryOperationWaitTime(
-		config, res, project, "Deleting Repository", userAgent,
+		config, res, project, location, "Deleting Repository", userAgent,
 		d.Timeout(schema.TimeoutDelete))
 
 	if err != nil {

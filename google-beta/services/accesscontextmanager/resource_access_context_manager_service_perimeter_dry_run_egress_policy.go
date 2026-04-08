@@ -654,6 +654,7 @@ func resourceAccessContextManagerServicePerimeterDryRunEgressPolicyDelete(d *sch
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "ServicePerimeterDryRunEgressPolicy")
 	}
+
 	url, err = transport_tpg.AddQueryParams(url, map[string]string{"updateMask": "spec.egressPolicies"})
 	if err != nil {
 		return err
