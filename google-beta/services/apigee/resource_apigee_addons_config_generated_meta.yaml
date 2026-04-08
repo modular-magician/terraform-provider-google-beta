@@ -8,6 +8,8 @@ api_version: v1
 api_resource_type_kind: AddonsConfig
 fields:
     - api_field: addonsConfig.advancedApiOpsConfig.enabled
+    - api_field: addonsConfig.analyticsConfig.enabled
+    - api_field: addonsConfig.analyticsConfig.expiresAt
     - api_field: addonsConfig.apiSecurityConfig.enabled
     - api_field: addonsConfig.apiSecurityConfig.expiresAt
     - api_field: addonsConfig.connectorsPlatformConfig.enabled

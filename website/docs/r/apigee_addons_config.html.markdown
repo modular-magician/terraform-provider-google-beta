@@ -167,6 +167,11 @@ The following arguments are supported:
   Configuration for the Monetization add-on.
   Structure is [documented below](#nested_addons_config_connectors_platform_config).
 
+* `analytics_config` -
+  (Optional)
+  Configuration for the Analytics add-on.
+  Structure is [documented below](#nested_addons_config_analytics_config).
+
 
 <a name="nested_addons_config_advanced_api_ops_config"></a>The `advanced_api_ops_config` block supports:
 
@@ -205,6 +210,16 @@ The following arguments are supported:
 * `expires_at` -
   (Output)
   Time at which the Connectors Platform add-on expires in milliseconds since epoch. If unspecified, the add-on will never expire.
+
+<a name="nested_addons_config_analytics_config"></a>The `analytics_config` block supports:
+
+* `enabled` -
+  (Optional)
+  Flag that specifies whether the Analytics add-on is enabled.
+
+* `expires_at` -
+  (Output)
+  Time at which the Analytics add-on expires in milliseconds since epoch. If unspecified, the add-on will never expire.
 
 ## Attributes Reference
 

@@ -154,6 +154,26 @@ func ResourceApigeeAddonsConfig() *schema.Resource {
 								},
 							},
 						},
+						"analytics_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: `Configuration for the Analytics add-on.`,
+							MaxItems:    1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: `Flag that specifies whether the Analytics add-on is enabled.`,
+									},
+									"expires_at": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: `Time at which the Analytics add-on expires in milliseconds since epoch. If unspecified, the add-on will never expire.`,
+									},
+								},
+							},
+						},
 						"api_security_config": {
 							Type:        schema.TypeList,
 							Optional:    true,
@@ -537,6 +557,8 @@ func flattenApigeeAddonsConfigAddonsConfig(v interface{}, d *schema.ResourceData
 		flattenApigeeAddonsConfigAddonsConfigApiSecurityConfig(original["apiSecurityConfig"], d, config)
 	transformed["connectors_platform_config"] =
 		flattenApigeeAddonsConfigAddonsConfigConnectorsPlatformConfig(original["connectorsPlatformConfig"], d, config)
+	transformed["analytics_config"] =
+		flattenApigeeAddonsConfigAddonsConfigAnalyticsConfig(original["analyticsConfig"], d, config)
 	return []interface{}{transformed}
 }
 func flattenApigeeAddonsConfigAddonsConfigAdvancedApiOpsConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -636,6 +658,29 @@ func flattenApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigExpiresAt(v in
 	return v
 }
 
+func flattenApigeeAddonsConfigAddonsConfigAnalyticsConfig(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enabled"] =
+		flattenApigeeAddonsConfigAddonsConfigAnalyticsConfigEnabled(original["enabled"], d, config)
+	transformed["expires_at"] =
+		flattenApigeeAddonsConfigAddonsConfigAnalyticsConfigExpiresAt(original["expiresAt"], d, config)
+	return []interface{}{transformed}
+}
+func flattenApigeeAddonsConfigAddonsConfigAnalyticsConfigEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenApigeeAddonsConfigAddonsConfigAnalyticsConfigExpiresAt(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandApigeeAddonsConfigAddonsConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -681,6 +726,13 @@ func expandApigeeAddonsConfigAddonsConfig(v interface{}, d tpgresource.Terraform
 		return nil, err
 	} else if val := reflect.ValueOf(transformedConnectorsPlatformConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["connectorsPlatformConfig"] = transformedConnectorsPlatformConfig
+	}
+
+	transformedAnalyticsConfig, err := expandApigeeAddonsConfigAddonsConfigAnalyticsConfig(original["analytics_config"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAnalyticsConfig); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["analyticsConfig"] = transformedAnalyticsConfig
 	}
 
 	return transformed, nil
@@ -835,5 +887,42 @@ func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigEnabled(v inter
 }
 
 func expandApigeeAddonsConfigAddonsConfigConnectorsPlatformConfigExpiresAt(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApigeeAddonsConfigAddonsConfigAnalyticsConfig(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnabled, err := expandApigeeAddonsConfigAddonsConfigAnalyticsConfigEnabled(original["enabled"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnabled); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enabled"] = transformedEnabled
+	}
+
+	transformedExpiresAt, err := expandApigeeAddonsConfigAddonsConfigAnalyticsConfigExpiresAt(original["expires_at"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedExpiresAt); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["expiresAt"] = transformedExpiresAt
+	}
+
+	return transformed, nil
+}
+
+func expandApigeeAddonsConfigAddonsConfigAnalyticsConfigEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandApigeeAddonsConfigAddonsConfigAnalyticsConfigExpiresAt(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
