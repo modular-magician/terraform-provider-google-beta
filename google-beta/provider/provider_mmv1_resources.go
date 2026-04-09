@@ -660,9 +660,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 809
+// Generated resources: 810
 // Generated IAM resources: 363
-// Total generated resources: 1172
+// Total generated resources: 1173
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     registry.Resource("google_folder_access_approval_settings"),
 	"google_organization_access_approval_settings":                               registry.Resource("google_organization_access_approval_settings"),
@@ -857,6 +857,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_chronicle_data_access_scope":                                         registry.Resource("google_chronicle_data_access_scope"),
 	"google_chronicle_data_table":                                                registry.Resource("google_chronicle_data_table"),
 	"google_chronicle_data_table_row":                                            registry.Resource("google_chronicle_data_table_row"),
+	"google_chronicle_enrichment_control":                                        registry.Resource("google_chronicle_enrichment_control"),
 	"google_chronicle_feed":                                                      registry.Resource("google_chronicle_feed"),
 	"google_chronicle_native_dashboard":                                          registry.Resource("google_chronicle_native_dashboard"),
 	"google_chronicle_reference_list":                                            registry.Resource("google_chronicle_reference_list"),

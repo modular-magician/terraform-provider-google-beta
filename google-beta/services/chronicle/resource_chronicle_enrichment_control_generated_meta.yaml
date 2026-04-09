@@ -1,0 +1,26 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_chronicle_enrichment_control
+generation_type: mmv1
+source_file: products/chronicle/EnrichmentControl.yaml
+api_service_name: chronicle.googleapis.com
+api_version: v1beta
+api_resource_type_kind: EnrichmentControl
+autogen_status: true
+fields:
+    - api_field: description
+    - api_field: displayName
+    - field: enrichment_control_id
+      provider_only: true
+    - api_field: enrichmentControlOption.enrichmentSource.externalEnrichmentSource
+    - api_field: enrichmentControlOption.enrichmentSource.logType
+    - api_field: enrichmentControlOption.enrichmentType
+    - api_field: enrichmentControlOption.targetLogType
+    - field: instance
+      provider_only: true
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: records.description
+    - api_field: records.timeRange.endTime
+    - api_field: records.timeRange.startTime
