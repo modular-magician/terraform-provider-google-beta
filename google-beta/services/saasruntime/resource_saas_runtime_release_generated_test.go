@@ -119,7 +119,7 @@ resource "google_saas_runtime_release" "example_previous" {
   release_id        = "%{previous_release_name}"
   unit_kind         = google_saas_runtime_unit_kind.example_unitkind.id
   blueprint {
-    package = "us-central1-docker.pkg.dev/ci-test-project-188019/test-repo/tf-test-easysaas-alpha-image@sha256:7992fdbaeaf998ecd31a7f937bb26e38a781ecf49b24857a6176c1e9bfc299ee"
+    package = "us-docker.pkg.dev/cloudrun/container/hello@sha256:311c390abd75b737bd1dd8db4c7e8d7eb8b49f54554a3840bf12de1ac2d58ba7"
   }
 }
 
@@ -129,7 +129,7 @@ resource "google_saas_runtime_release" "example" {
   release_id        = "%{release_name}"
   unit_kind         = google_saas_runtime_unit_kind.example_unitkind.id
   blueprint {
-    package = "us-central1-docker.pkg.dev/ci-test-project-188019/test-repo/tf-test-easysaas-beta-image@sha256:7bba0fa85b2956df7768f7b32e715b6fe11f4f4193e2a70a35bf3f286a6cdf9e"
+    package = "us-docker.pkg.dev/cloudrun/container/hello@sha256:311c390abd75b737bd1dd8db4c7e8d7eb8b49f54554a3840bf12de1ac2d58ba7"
   }
   input_variable_defaults {
     variable = "name"
