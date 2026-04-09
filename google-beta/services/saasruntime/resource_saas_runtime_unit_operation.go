@@ -175,6 +175,12 @@ More info: https://kubernetes.io/docs/user-guide/annotations
 Please refer to the field 'effective_annotations' for all of the annotations present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"cancel": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `When true, attempt to cancel the operation. Cancellation may fail if the operation is already executing. (Optional)`,
+			},
 			"deprovision": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -480,6 +486,12 @@ func resourceSaasRuntimeUnitOperationCreate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("upgrade"); !tpgresource.IsEmptyValue(reflect.ValueOf(upgradeProp)) && (ok || !reflect.DeepEqual(v, upgradeProp)) {
 		obj["upgrade"] = upgradeProp
 	}
+	cancelProp, err := expandSaasRuntimeUnitOperationCancel(d.Get("cancel"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("cancel"); !tpgresource.IsEmptyValue(reflect.ValueOf(cancelProp)) && (ok || !reflect.DeepEqual(v, cancelProp)) {
+		obj["cancel"] = cancelProp
+	}
 	effectiveAnnotationsProp, err := expandSaasRuntimeUnitOperationEffectiveAnnotations(d.Get("effective_annotations"), d, config)
 	if err != nil {
 		return err
@@ -713,6 +725,9 @@ func resourceSaasRuntimeUnitOperationRead(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error reading UnitOperation: %s", err)
 	}
 	if err := d.Set("upgrade", flattenSaasRuntimeUnitOperationUpgrade(res["upgrade"], d, config)); err != nil {
+		return fmt.Errorf("Error reading UnitOperation: %s", err)
+	}
+	if err := d.Set("cancel", flattenSaasRuntimeUnitOperationCancel(res["cancel"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitOperation: %s", err)
 	}
 	if err := d.Set("effective_annotations", flattenSaasRuntimeUnitOperationEffectiveAnnotations(res["annotations"], d, config)); err != nil {
@@ -1048,6 +1063,10 @@ func flattenSaasRuntimeUnitOperationUpgradeRelease(v interface{}, d *schema.Reso
 	return v
 }
 
+func flattenSaasRuntimeUnitOperationCancel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenSaasRuntimeUnitOperationEffectiveAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1258,6 +1277,10 @@ func expandSaasRuntimeUnitOperationUpgradeInputVariablesVariable(v interface{}, 
 }
 
 func expandSaasRuntimeUnitOperationUpgradeRelease(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSaasRuntimeUnitOperationCancel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

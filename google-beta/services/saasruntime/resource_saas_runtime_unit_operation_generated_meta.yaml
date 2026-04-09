@@ -9,6 +9,7 @@ api_resource_type_kind: UnitOperation
 autogen_status: true
 fields:
     - api_field: annotations
+    - api_field: cancel
     - api_field: conditions.lastTransitionTime
     - api_field: conditions.message
     - api_field: conditions.reason
