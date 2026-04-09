@@ -76,7 +76,7 @@ func TestAccApigeeOrganization_apigeeOrganizationCloudBasicTestExample(t *testin
 				ResourceName:            "google_apigee_organization.org",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"project_id", "properties", "retention"},
+				ImportStateVerifyIgnore: []string{"addons_config", "project_id", "properties", "retention"},
 			},
 			{
 				ResourceName:       "google_apigee_organization.org",
@@ -191,7 +191,7 @@ func TestAccApigeeOrganization_apigeeOrganizationCloudBasicDisableVpcPeeringTest
 				ResourceName:            "google_apigee_organization.org",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"project_id", "properties", "retention"},
+				ImportStateVerifyIgnore: []string{"addons_config", "project_id", "properties", "retention"},
 			},
 			{
 				ResourceName:       "google_apigee_organization.org",
@@ -267,7 +267,7 @@ func TestAccApigeeOrganization_apigeeOrganizationCloudBasicDataResidencyTestExam
 				ResourceName:            "google_apigee_organization.org",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"project_id", "properties", "retention"},
+				ImportStateVerifyIgnore: []string{"addons_config", "project_id", "properties", "retention"},
 			},
 			{
 				ResourceName:       "google_apigee_organization.org",
@@ -347,7 +347,7 @@ func TestAccApigeeOrganization_apigeeOrganizationCloudFullTestExample(t *testing
 				ResourceName:            "google_apigee_organization.org",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"project_id", "properties", "retention"},
+				ImportStateVerifyIgnore: []string{"addons_config", "project_id", "properties", "retention"},
 			},
 			{
 				ResourceName:       "google_apigee_organization.org",
@@ -538,7 +538,7 @@ func TestAccApigeeOrganization_apigeeOrganizationCloudFullDisableVpcPeeringTestE
 				ResourceName:            "google_apigee_organization.org",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"project_id", "properties", "retention"},
+				ImportStateVerifyIgnore: []string{"addons_config", "project_id", "properties", "retention"},
 			},
 			{
 				ResourceName:       "google_apigee_organization.org",
@@ -1056,15 +1056,32 @@ func testAccCheckApigeeOrganizationDestroyProducer(t *testing.T) func(s *terrafo
 				billingProject = config.BillingProject
 			}
 
-			_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-				Config:    config,
-				Method:    "GET",
-				Project:   billingProject,
-				RawURL:    url,
-				UserAgent: config.UserAgent,
-			})
-			if err == nil {
-				return fmt.Errorf("ApigeeOrganization still exists at %s", url)
+			// Apigee Organization deletion is asynchronous. Poll until the org is fully
+			// deleted (404) or confirmed to be in a terminal DELETING state.
+			deleted := false
+			deadline := time.Now().Add(10 * time.Minute)
+			for time.Now().Before(deadline) {
+				res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+					Config:    config,
+					Method:    "GET",
+					Project:   billingProject,
+					RawURL:    url,
+					UserAgent: config.UserAgent,
+				})
+				if err != nil {
+					// 404 (or any error) means the org is gone.
+					deleted = true
+					break
+				}
+				// If the org is in DELETING state, deletion is in progress — acceptable.
+				if state, ok := res["state"].(string); ok && state == "DELETING" {
+					deleted = true
+					break
+				}
+				time.Sleep(30 * time.Second)
+			}
+			if !deleted {
+				return fmt.Errorf("ApigeeOrganization still exists at %s after waiting", url)
 			}
 		}
 
