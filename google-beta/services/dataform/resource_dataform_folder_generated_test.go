@@ -61,7 +61,7 @@ func TestAccDataformFolder_dataformFolderBasicExample(t *testing.T) {
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckDataformFolderDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -86,7 +86,6 @@ func TestAccDataformFolder_dataformFolderBasicExample(t *testing.T) {
 func testAccDataformFolder_dataformFolderBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataform_folder" "dataform_folder_basic" {
-  provider = google-beta
   region = "us-central1"
   display_name = "Basic Folder-%{random_suffix}"
 }
@@ -104,7 +103,7 @@ func TestAccDataformFolder_dataformFolderFullExample(t *testing.T) {
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckDataformFolderDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -129,13 +128,11 @@ func TestAccDataformFolder_dataformFolderFullExample(t *testing.T) {
 func testAccDataformFolder_dataformFolderFullExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_dataform_folder" "dataform_folder_root" {
-  provider = google-beta
   region = "us-central1"
   display_name = "Root Folder"
 }
 
 resource "google_dataform_folder" dataform_folder_full {
-  provider = google-beta
   region = "us-central1"
   display_name = "Nested Folder"
   containing_folder = google_dataform_folder.dataform_folder_root.id

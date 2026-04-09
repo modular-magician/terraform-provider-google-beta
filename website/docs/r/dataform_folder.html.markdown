@@ -23,8 +23,6 @@ description: |-
 
 A resource represents a Dataform folder
 
-~> **Warning:** This resource is in beta, and should be used with the terraform-provider-google-beta provider.
-See [Provider Versions](../guides/provider_versions.html.markdown) for more details on beta resources.
 
 To get more information about Folder, see:
 
@@ -42,7 +40,6 @@ To get more information about Folder, see:
 
 ```hcl
 resource "google_dataform_folder" "dataform_folder_basic" {
-  provider = google-beta
   region = "us-central1"
   display_name = "Basic Folder-%{random_suffix}"
 }
@@ -57,13 +54,11 @@ resource "google_dataform_folder" "dataform_folder_basic" {
 
 ```hcl
 resource "google_dataform_folder" "dataform_folder_root" {
-  provider = google-beta
   region = "us-central1"
   display_name = "Root Folder"
 }
 
 resource "google_dataform_folder" dataform_folder_full {
-  provider = google-beta
   region = "us-central1"
   display_name = "Nested Folder"
   containing_folder = google_dataform_folder.dataform_folder_root.id
@@ -104,6 +99,7 @@ In addition to the arguments listed above, the following computed attributes are
   The Folder's name.
 
 * `folder_id` -
+  ([Beta](../guides/provider_versions.html.markdown))
   The unique identifier for the Folder.
 
 
