@@ -238,6 +238,12 @@ https://cloud.google.com/security-scanner/docs/excluded-urls`,
 Defaults to 15.`,
 				Default: 15,
 			},
+			"risk_level": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"NORMAL", "LOW", ""}),
+				Description:  `The risk level selected for the scan Possible values: ["NORMAL", "LOW"]`,
+			},
 			"schedule": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -354,6 +360,12 @@ func resourceSecurityScannerScanConfigCreate(d *schema.ResourceData, meta interf
 		return err
 	} else if v, ok := d.GetOkExists("export_to_security_command_center"); !tpgresource.IsEmptyValue(reflect.ValueOf(exportToSecurityCommandCenterProp)) && (ok || !reflect.DeepEqual(v, exportToSecurityCommandCenterProp)) {
 		obj["exportToSecurityCommandCenter"] = exportToSecurityCommandCenterProp
+	}
+	riskLevelProp, err := expandSecurityScannerScanConfigRiskLevel(d.Get("risk_level"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("risk_level"); !tpgresource.IsEmptyValue(reflect.ValueOf(riskLevelProp)) && (ok || !reflect.DeepEqual(v, riskLevelProp)) {
+		obj["riskLevel"] = riskLevelProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityScannerBasePath}}projects/{{project}}/scanConfigs")
@@ -498,6 +510,9 @@ func resourceSecurityScannerScanConfigRead(d *schema.ResourceData, meta interfac
 	if err := d.Set("export_to_security_command_center", flattenSecurityScannerScanConfigExportToSecurityCommandCenter(res["exportToSecurityCommandCenter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+	if err := d.Set("risk_level", flattenSecurityScannerScanConfigRiskLevel(res["riskLevel"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ScanConfig: %s", err)
+	}
 
 	identity, err := d.Identity()
 	if err == nil && identity != nil {
@@ -605,6 +620,12 @@ func resourceSecurityScannerScanConfigUpdate(d *schema.ResourceData, meta interf
 	} else if v, ok := d.GetOkExists("export_to_security_command_center"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, exportToSecurityCommandCenterProp)) {
 		obj["exportToSecurityCommandCenter"] = exportToSecurityCommandCenterProp
 	}
+	riskLevelProp, err := expandSecurityScannerScanConfigRiskLevel(d.Get("risk_level"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("risk_level"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, riskLevelProp)) {
+		obj["riskLevel"] = riskLevelProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityScannerBasePath}}{{name}}")
 	if err != nil {
@@ -649,6 +670,10 @@ func resourceSecurityScannerScanConfigUpdate(d *schema.ResourceData, meta interf
 
 	if d.HasChange("export_to_security_command_center") {
 		updateMask = append(updateMask, "exportToSecurityCommandCenter")
+	}
+
+	if d.HasChange("risk_level") {
+		updateMask = append(updateMask, "riskLevel")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -894,6 +919,10 @@ func flattenSecurityScannerScanConfigExportToSecurityCommandCenter(v interface{}
 	return v
 }
 
+func flattenSecurityScannerScanConfigRiskLevel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandSecurityScannerScanConfigDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1070,6 +1099,10 @@ func expandSecurityScannerScanConfigTargetPlatforms(v interface{}, d tpgresource
 }
 
 func expandSecurityScannerScanConfigExportToSecurityCommandCenter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSecurityScannerScanConfigRiskLevel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

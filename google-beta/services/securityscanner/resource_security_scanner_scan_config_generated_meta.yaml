@@ -17,6 +17,7 @@ fields:
     - api_field: exportToSecurityCommandCenter
     - api_field: maxQps
     - api_field: name
+    - api_field: riskLevel
     - api_field: schedule.intervalDurationDays
     - api_field: schedule.scheduleTime
     - api_field: startingUrls

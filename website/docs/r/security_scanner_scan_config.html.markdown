@@ -57,6 +57,28 @@ resource "google_security_scanner_scan_config" "scan-config" {
   target_platforms = ["COMPUTE"]
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=scan_config_risk_level&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Scan Config Risk Level
+
+
+```hcl
+resource "google_compute_address" "scanner_static_ip" {
+  provider = google-beta
+  name     = "scan-risk-level-ip"
+}
+
+resource "google_security_scanner_scan_config" "scan-config" {
+  provider         = google-beta
+  display_name     = "scan-config-risk-level"
+  starting_urls    = ["http://${google_compute_address.scanner_static_ip.address}"]
+  target_platforms = ["COMPUTE"]
+  risk_level       = "NORMAL"
+}
+```
 
 ## Argument Reference
 
@@ -109,6 +131,11 @@ The following arguments are supported:
   Controls export of scan configurations and results to Cloud Security Command Center.
   Default value is `ENABLED`.
   Possible values are: `ENABLED`, `DISABLED`.
+
+* `risk_level` -
+  (Optional)
+  The risk level selected for the scan
+  Possible values are: `NORMAL`, `LOW`.
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
