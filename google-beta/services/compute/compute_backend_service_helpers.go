@@ -16,15 +16,8 @@
 // ----------------------------------------------------------------------------
 package compute
 
-import (
-	compute "google.golang.org/api/compute/v0.beta"
-)
-
-// Incredibly hacky way of getting a reference to an SPR of the right type into
-// the generated BackendService code. goimports will always import `compute`, so
-// we need to provide the import manually to be able to switch libraries. Since
-// this is a problem exactly once, just provide a function in a file where we
-// *can* easily pick the imported copy, and return the correct struct.
-func emptySecurityPolicyReference() *compute.SecurityPolicyReference {
-	return &compute.SecurityPolicyReference{}
+// Returns an empty security policy reference map used as the base request body
+// for SetSecurityPolicy and SetEdgeSecurityPolicy calls.
+func emptySecurityPolicyReference() map[string]interface{} {
+	return map[string]interface{}{}
 }
