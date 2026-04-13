@@ -641,6 +641,7 @@ NUMBER>@gcp-sa-ces.iam.gserviceaccount.com.`,
 								Schema: map[string]*schema.Schema{
 									"disable_conversation_logging": {
 										Type:        schema.TypeBool,
+										Computed:    true,
 										Optional:    true,
 										Description: `Whether to disable conversation logging for the sessions.`,
 									},
