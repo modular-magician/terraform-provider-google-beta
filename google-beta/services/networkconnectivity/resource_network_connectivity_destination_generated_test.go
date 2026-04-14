@@ -73,7 +73,7 @@ func TestAccNetworkConnectivityDestination_networkConnectivityDestinationBasicEx
 				ResourceName:            "google_network_connectivity_destination.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"labels", "location", "multicloud_data_transfer_config", "name", "terraform_labels"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "multicloud_data_transfer_config", "terraform_labels"},
 			},
 			{
 				ResourceName:       "google_network_connectivity_destination.example",

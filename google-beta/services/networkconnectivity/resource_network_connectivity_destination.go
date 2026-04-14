@@ -340,6 +340,12 @@ func resourceNetworkConnectivityDestinationCreate(d *schema.ResourceData, meta i
 	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
 		obj["labels"] = effectiveLabelsProp
 	}
+	nameProp, err := expandNetworkConnectivityDestinationName(d.Get("name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+		obj["name"] = nameProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkConnectivityBasePath}}projects/{{project}}/locations/{{location}}/multicloudDataTransferConfigs/{{multicloud_data_transfer_config}}/destinations?destination_id={{name}}")
 	if err != nil {
@@ -498,6 +504,9 @@ func resourceNetworkConnectivityDestinationRead(d *schema.ResourceData, meta int
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
 	if err := d.Set("effective_labels", flattenNetworkConnectivityDestinationEffectiveLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Destination: %s", err)
+	}
+	if err := d.Set("name", flattenNetworkConnectivityDestinationName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Destination: %s", err)
 	}
 
@@ -878,6 +887,10 @@ func flattenNetworkConnectivityDestinationEffectiveLabels(v interface{}, d *sche
 	return v
 }
 
+func flattenNetworkConnectivityDestinationName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandNetworkConnectivityDestinationEtag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -962,4 +975,8 @@ func expandNetworkConnectivityDestinationEffectiveLabels(v interface{}, d tpgres
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandNetworkConnectivityDestinationName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
