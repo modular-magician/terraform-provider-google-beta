@@ -55,6 +55,32 @@ resource "google_cloud_identity_group" "cloud_identity_group_basic" {
   }
 }
 ```
+## Example Usage - Cloud Identity Groups Dynamic
+
+
+```hcl
+resource "google_cloud_identity_group" "cloud_identity_group_dynamic" {
+  display_name         = "my-dynamic-group"
+  initial_group_config = "EMPTY"
+
+  parent = "customers/A01b123xz"
+
+  group_key {
+  	id = "my-dynamic-group@example.com"
+  }
+
+  labels = {
+    "cloudidentity.googleapis.com/groups.discussion_forum" = ""
+  }
+
+  dynamic_group_metadata {
+    queries {
+      query         = "user.organizations.exists(org, org.department=='Engineering')"
+      resource_type = "USER"
+    }
+  }
+}
+```
 
 ## Argument Reference
 
@@ -91,6 +117,15 @@ The following arguments are supported:
   An extended description to help users determine the purpose of a Group.
   Must not be longer than 4,096 characters.
 
+* `dynamic_group_metadata` -
+  (Optional)
+  Dynamic group metadata. When set, the group's membership is
+  determined dynamically based on a CEL query rather than being
+  explicitly managed. Dynamic groups have a label with a key of
+  cloudidentity.googleapis.com/groups.dynamic which is automatically
+  added by the API.
+  Structure is [documented below](#nested_dynamic_group_metadata).
+
 * `initial_group_config` -
   (Optional)
   The initial configuration options for creating a Group.
@@ -121,6 +156,45 @@ The following arguments are supported:
   If specified, the EntityKey represents an external-identity-mapped group.
   The namespace must correspond to an identity source created in Admin Console
   and must be in the form of `identitysources/{identity_source_id}`.
+
+<a name="nested_dynamic_group_metadata"></a>The `dynamic_group_metadata` block supports:
+
+* `queries` -
+  (Optional)
+  Memberships will be the union of all queries. Only one query is
+  supported currently.
+  Structure is [documented below](#nested_dynamic_group_metadata_queries).
+
+* `status` -
+  (Output)
+  The current status of the dynamic group.
+  Structure is [documented below](#nested_dynamic_group_metadata_status).
+
+
+<a name="nested_dynamic_group_metadata_queries"></a>The `queries` block supports:
+
+* `query` -
+  (Required)
+  The query string. Must be a CEL expression.
+  Example: `user.organizations.exists(org, org.department=='Engineering')`
+
+* `resource_type` -
+  (Optional)
+  The resource type that the query is applied to.
+  Default value is `USER`.
+  Possible values are: `USER`.
+
+<a name="nested_dynamic_group_metadata_status"></a>The `status` block contains:
+
+* `status` -
+  (Output)
+  Status of the dynamic group.
+
+* `status_time` -
+  (Output)
+  The latest time at which the dynamic group is guaranteed
+  to be in the given status. A timestamp in RFC3339 UTC
+  "Zulu" format.
 
 ## Attributes Reference
 

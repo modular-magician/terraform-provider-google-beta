@@ -12,6 +12,10 @@ fields:
     - api_field: createTime
     - api_field: description
     - api_field: displayName
+    - api_field: dynamicGroupMetadata.queries.query
+    - api_field: dynamicGroupMetadata.queries.resourceType
+    - api_field: dynamicGroupMetadata.status.status
+    - api_field: dynamicGroupMetadata.status.statusTime
     - api_field: groupKey.id
     - api_field: groupKey.namespace
     - field: initial_group_config
