@@ -302,6 +302,12 @@ func resourceNetworkConnectivityMulticloudDataTransferConfigCreate(d *schema.Res
 	} else if v, ok := d.GetOkExists("effective_labels"); !tpgresource.IsEmptyValue(reflect.ValueOf(effectiveLabelsProp)) && (ok || !reflect.DeepEqual(v, effectiveLabelsProp)) {
 		obj["labels"] = effectiveLabelsProp
 	}
+	nameProp, err := expandNetworkConnectivityMulticloudDataTransferConfigName(d.Get("name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+		obj["name"] = nameProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{NetworkConnectivityBasePath}}projects/{{project}}/locations/{{location}}/multicloudDataTransferConfigs?multicloudDataTransferConfigId={{name}}")
 	if err != nil {
@@ -455,6 +461,9 @@ func resourceNetworkConnectivityMulticloudDataTransferConfigRead(d *schema.Resou
 		return fmt.Errorf("Error reading MulticloudDataTransferConfig: %s", err)
 	}
 	if err := d.Set("effective_labels", flattenNetworkConnectivityMulticloudDataTransferConfigEffectiveLabels(res["labels"], d, config)); err != nil {
+		return fmt.Errorf("Error reading MulticloudDataTransferConfig: %s", err)
+	}
+	if err := d.Set("name", flattenNetworkConnectivityMulticloudDataTransferConfigName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading MulticloudDataTransferConfig: %s", err)
 	}
 
@@ -831,6 +840,10 @@ func flattenNetworkConnectivityMulticloudDataTransferConfigEffectiveLabels(v int
 	return v
 }
 
+func flattenNetworkConnectivityMulticloudDataTransferConfigName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandNetworkConnectivityMulticloudDataTransferConfigEtag(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -899,4 +912,8 @@ func expandNetworkConnectivityMulticloudDataTransferConfigEffectiveLabels(v inte
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandNetworkConnectivityMulticloudDataTransferConfigName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
