@@ -221,7 +221,7 @@ for this action connector.`,
 						},
 						"is_action_configured": {
 							Type:     schema.TypeBool,
-							Computed: true,
+							Optional: true,
 							Description: `Whether the action connector is fully configured. Set by the system
 after the action configuration is validated.`,
 						},

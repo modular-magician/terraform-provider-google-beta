@@ -150,6 +150,7 @@ resource "google_discovery_engine_data_connector" "jira-with-actions" {
       auth_type                = "OAUTH"
     }
     create_bap_connection      = true
+    is_action_configured = true
   }
   bap_config {
     supported_connector_modes = ["ACTIONS"]
@@ -327,7 +328,7 @@ The following arguments are supported:
   credentials and configuration for the action connector.
 
 * `is_action_configured` -
-  (Output)
+  (Optional)
   Whether the action connector is fully configured. Set by the system
   after the action configuration is validated.
 
