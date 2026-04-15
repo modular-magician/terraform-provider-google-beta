@@ -173,6 +173,12 @@ func resourceBigqueryReservationReservationGroupCreate(d *schema.ResourceData, m
 	}
 
 	obj := make(map[string]interface{})
+	nameProp, err := expandBigqueryReservationReservationGroupName(d.Get("name"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
+		obj["name"] = nameProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{BigqueryReservationBasePath}}projects/{{project}}/locations/{{location}}/reservationGroups?reservationGroupId={{name}}")
 	if err != nil {
@@ -285,6 +291,10 @@ func resourceBigqueryReservationReservationGroupRead(d *schema.ResourceData, met
 		return fmt.Errorf("Error reading ReservationGroup: %s", err)
 	}
 
+	if err := d.Set("name", flattenBigqueryReservationReservationGroupName(res["name"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ReservationGroup: %s", err)
+	}
+
 	identity, err := d.Identity()
 	if err == nil && identity != nil {
 		if v, ok := identity.GetOk("name"); !ok && v == "" {
@@ -378,4 +388,12 @@ func resourceBigqueryReservationReservationGroupImport(d *schema.ResourceData, m
 	d.SetId(id)
 
 	return []*schema.ResourceData{d}, nil
+}
+
+func flattenBigqueryReservationReservationGroupName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func expandBigqueryReservationReservationGroupName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }

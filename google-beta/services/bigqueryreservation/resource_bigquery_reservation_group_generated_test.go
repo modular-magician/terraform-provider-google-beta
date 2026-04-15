@@ -72,7 +72,7 @@ func TestAccBigqueryReservationReservationGroup_bigqueryReservationGroupBasicExa
 				ResourceName:            "google_bigquery_reservation_group.reservation_group",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location", "name"},
+				ImportStateVerifyIgnore: []string{"location"},
 			},
 			{
 				ResourceName:       "google_bigquery_reservation_group.reservation_group",
