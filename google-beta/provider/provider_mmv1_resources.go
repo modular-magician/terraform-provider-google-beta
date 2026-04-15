@@ -663,9 +663,9 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 }
 
 // Resources
-// Generated resources: 810
+// Generated resources: 811
 // Generated IAM resources: 369
-// Total generated resources: 1179
+// Total generated resources: 1180
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     registry.Resource("google_folder_access_approval_settings"),
 	"google_organization_access_approval_settings":                               registry.Resource("google_organization_access_approval_settings"),
@@ -850,6 +850,7 @@ var generatedResources = map[string]*schema.Resource{
 	"google_certificate_manager_trust_config":                                    registry.Resource("google_certificate_manager_trust_config"),
 	"google_ces_agent":                                                           registry.Resource("google_ces_agent"),
 	"google_ces_app":                                                             registry.Resource("google_ces_app"),
+	"google_ces_app_root_agent_association":                                      registry.Resource("google_ces_app_root_agent_association"),
 	"google_ces_app_version":                                                     registry.Resource("google_ces_app_version"),
 	"google_ces_deployment":                                                      registry.Resource("google_ces_deployment"),
 	"google_ces_example":                                                         registry.Resource("google_ces_example"),

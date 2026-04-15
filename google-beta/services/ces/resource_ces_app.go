@@ -1047,6 +1047,13 @@ func resourceCESAppCreate(d *schema.ResourceData, meta interface{}) error {
 		obj["clientCertificateSettings"] = clientCertificateSettingsProp
 	}
 
+	lockName, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/apps/{{app_id}}")
+	if err != nil {
+		return err
+	}
+	transport_tpg.MutexStore.Lock(lockName)
+	defer transport_tpg.MutexStore.Unlock(lockName)
+
 	url, err := tpgresource.ReplaceVars(d, config, "{{CESBasePath}}projects/{{project}}/locations/{{location}}/apps?appId={{app_id}}")
 	if err != nil {
 		return err
@@ -1415,6 +1422,13 @@ func resourceCESAppUpdate(d *schema.ResourceData, meta interface{}) error {
 		obj["clientCertificateSettings"] = clientCertificateSettingsProp
 	}
 
+	lockName, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/apps/{{app_id}}")
+	if err != nil {
+		return err
+	}
+	transport_tpg.MutexStore.Lock(lockName)
+	defer transport_tpg.MutexStore.Unlock(lockName)
+
 	url, err := tpgresource.ReplaceVars(d, config, "{{CESBasePath}}projects/{{project}}/locations/{{location}}/apps/{{name}}")
 	if err != nil {
 		return err
@@ -1541,6 +1555,13 @@ func resourceCESAppDelete(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error fetching project for App: %s", err)
 	}
 	billingProject = project
+
+	lockName, err := tpgresource.ReplaceVars(d, config, "projects/{{project}}/locations/{{location}}/apps/{{app_id}}")
+	if err != nil {
+		return err
+	}
+	transport_tpg.MutexStore.Lock(lockName)
+	defer transport_tpg.MutexStore.Unlock(lockName)
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{CESBasePath}}projects/{{project}}/locations/{{location}}/apps/{{name}}")
 	if err != nil {
