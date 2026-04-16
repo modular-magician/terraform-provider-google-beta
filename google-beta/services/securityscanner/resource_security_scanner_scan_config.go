@@ -260,6 +260,11 @@ which means the scan will be scheduled to start immediately.`,
 					},
 				},
 			},
+			"static_ip_scan": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: `Whether the scan configuration has enabled static IP address scan feature. If enabled, the scanner will access applications from static IP addresses.`,
+			},
 			"target_platforms": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -354,6 +359,12 @@ func resourceSecurityScannerScanConfigCreate(d *schema.ResourceData, meta interf
 		return err
 	} else if v, ok := d.GetOkExists("export_to_security_command_center"); !tpgresource.IsEmptyValue(reflect.ValueOf(exportToSecurityCommandCenterProp)) && (ok || !reflect.DeepEqual(v, exportToSecurityCommandCenterProp)) {
 		obj["exportToSecurityCommandCenter"] = exportToSecurityCommandCenterProp
+	}
+	staticIpScanProp, err := expandSecurityScannerScanConfigStaticIpScan(d.Get("static_ip_scan"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("static_ip_scan"); !tpgresource.IsEmptyValue(reflect.ValueOf(staticIpScanProp)) && (ok || !reflect.DeepEqual(v, staticIpScanProp)) {
+		obj["staticIpScan"] = staticIpScanProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityScannerBasePath}}projects/{{project}}/scanConfigs")
@@ -498,6 +509,9 @@ func resourceSecurityScannerScanConfigRead(d *schema.ResourceData, meta interfac
 	if err := d.Set("export_to_security_command_center", flattenSecurityScannerScanConfigExportToSecurityCommandCenter(res["exportToSecurityCommandCenter"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ScanConfig: %s", err)
 	}
+	if err := d.Set("static_ip_scan", flattenSecurityScannerScanConfigStaticIpScan(res["staticIpScan"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ScanConfig: %s", err)
+	}
 
 	identity, err := d.Identity()
 	if err == nil && identity != nil {
@@ -605,6 +619,12 @@ func resourceSecurityScannerScanConfigUpdate(d *schema.ResourceData, meta interf
 	} else if v, ok := d.GetOkExists("export_to_security_command_center"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, exportToSecurityCommandCenterProp)) {
 		obj["exportToSecurityCommandCenter"] = exportToSecurityCommandCenterProp
 	}
+	staticIpScanProp, err := expandSecurityScannerScanConfigStaticIpScan(d.Get("static_ip_scan"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("static_ip_scan"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, staticIpScanProp)) {
+		obj["staticIpScan"] = staticIpScanProp
+	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{SecurityScannerBasePath}}{{name}}")
 	if err != nil {
@@ -649,6 +669,10 @@ func resourceSecurityScannerScanConfigUpdate(d *schema.ResourceData, meta interf
 
 	if d.HasChange("export_to_security_command_center") {
 		updateMask = append(updateMask, "exportToSecurityCommandCenter")
+	}
+
+	if d.HasChange("static_ip_scan") {
+		updateMask = append(updateMask, "staticIpScan")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -894,6 +918,10 @@ func flattenSecurityScannerScanConfigExportToSecurityCommandCenter(v interface{}
 	return v
 }
 
+func flattenSecurityScannerScanConfigStaticIpScan(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandSecurityScannerScanConfigDisplayName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -1070,6 +1098,10 @@ func expandSecurityScannerScanConfigTargetPlatforms(v interface{}, d tpgresource
 }
 
 func expandSecurityScannerScanConfigExportToSecurityCommandCenter(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSecurityScannerScanConfigStaticIpScan(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
