@@ -74,6 +74,7 @@ resource "google_cloud_run_service" "default" {
       annotations = {
         "autoscaling.knative.dev/maxScale": "1"
         "run.googleapis.com/cpu-throttling": "false"
+        "run.googleapis.com/gpu-zonal-redundancy-disabled" = "true"
       }
     }
     spec {
