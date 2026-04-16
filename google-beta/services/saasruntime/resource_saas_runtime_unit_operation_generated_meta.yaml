@@ -27,6 +27,7 @@ fields:
     - field: location
       provider_only: true
     - api_field: name
+    - api_field: parentUnitOperation
     - api_field: provision.inputVariables.type
     - api_field: provision.inputVariables.value
     - api_field: provision.inputVariables.variable

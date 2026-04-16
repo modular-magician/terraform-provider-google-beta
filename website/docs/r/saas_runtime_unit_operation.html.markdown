@@ -211,6 +211,188 @@ resource "google_saas_runtime_unit_operation" "deprovision_operation" {
   deprovision {}
 }
 ```
+## Example Usage - Saas Runtime Unit Operation With Parent
+
+
+```hcl
+locals {
+  location          = "us-east1"
+  tenant_project_id = "tenant"
+}
+
+resource "google_saas_runtime_saas" "example_saas" {
+  provider = google-beta
+  saas_id  = "example-saas"
+  location = local.location
+
+  locations {
+    name = local.location
+  }
+}
+
+resource "google_saas_runtime_unit_kind" "cluster_unit_kind" {
+  provider        = google-beta
+  location        = local.location
+  unit_kind_id    = "vm-unitkind"
+  saas            = google_saas_runtime_saas.example_saas.id
+  default_release = "projects/my-project-name/locations/${local.location}/releases/example-release"
+}
+
+resource "google_saas_runtime_release" "example_release" {
+  provider   = google-beta
+  location   = local.location
+  release_id = "example-release"
+  unit_kind  = google_saas_runtime_unit_kind.cluster_unit_kind.id
+  blueprint {
+    package = "us-central1-docker.pkg.dev/ci-test-project-188019/test-repo/tf-test-easysaas-alpha-image@sha256:7992fdbaeaf998ecd31a7f937bb26e38a781ecf49b24857a6176c1e9bfc299ee"
+  }
+}
+
+resource "google_saas_runtime_unit" "example_unit" {
+  provider  = google-beta
+  location  = local.location
+  unit_id   = "example-unit"
+  unit_kind = google_saas_runtime_unit_kind.cluster_unit_kind.id
+}
+
+resource "google_project" "tenant_project" {
+  provider        = google-beta
+  project_id      = local.tenant_project_id
+  name            = local.tenant_project_id
+  billing_account = "000000-0000000-0000000-000000"
+  org_id          = "123456789"
+  deletion_policy = "DELETE"
+}
+
+resource "google_project_service" "saas_services" {
+  provider                   = google-beta
+  project                    = google_project.tenant_project.project_id
+  service                    = "compute.googleapis.com"
+  disable_dependent_services = true
+}
+
+resource "google_service_account" "actuation_service_account" {
+  provider     = google-beta
+  account_id   = "actuator"
+  display_name = "SaaS Actuation Service Account"
+}
+
+resource "google_project_iam_member" "tenant_config_admin" {
+  provider = google-beta
+  project  = google_project.tenant_project.project_id
+  role     = "roles/config.admin"
+  member   = "serviceAccount:${google_service_account.actuation_service_account.email}"
+}
+
+resource "google_project_iam_member" "tenant_storage_admin" {
+  provider = google-beta
+  project  = google_project.tenant_project.project_id
+  role     = "roles/storage.admin"
+  member   = "serviceAccount:${google_service_account.actuation_service_account.email}"
+}
+
+resource "google_project_iam_member" "tenant_compute_admin" {
+  provider = google-beta
+  project  = google_project.tenant_project.project_id
+  role     = "roles/compute.admin"
+  member   = "serviceAccount:${google_service_account.actuation_service_account.email}"
+}
+
+resource "google_service_account_iam_member" "actuation_token_creator" {
+  provider           = google-beta
+  service_account_id = google_service_account.actuation_service_account.name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "serviceAccount:service-1111111111111@gcp-sa-saasservicemgmt.iam.gserviceaccount.com"
+}
+
+resource "google_saas_runtime_unit_operation" "parent" {
+  provider          = google-beta
+  depends_on        = [google_project_iam_member.tenant_config_admin, google_project_iam_member.tenant_storage_admin, google_project_iam_member.tenant_compute_admin, google_service_account_iam_member.actuation_token_creator, google_project_service.saas_services]
+  location          = local.location
+  unit_operation_id = "provision-unit-operation"
+  unit              = google_saas_runtime_unit.example_unit.id
+  wait_for_completion = true
+
+  provision {
+    release = google_saas_runtime_release.example_release.id
+    input_variables {
+      variable = "tenant_project_id"
+      value    = google_project.tenant_project.project_id
+      type     = "STRING"
+    }
+    input_variables {
+      variable = "tenant_project_number"
+      value    = google_project.tenant_project.number
+      type     = "INT"
+    }
+    input_variables {
+      variable = "zone"
+      value    = "us-central1-a"
+      type     = "STRING"
+    }
+    input_variables {
+      variable = "instance_name"
+      value    = "terraform-test-instance"
+      type     = "STRING"
+    }
+    input_variables {
+      variable = "actuation_sa"
+      value    = google_service_account.actuation_service_account.email
+      type     = "STRING"
+    }
+  }
+}
+
+resource "google_saas_runtime_unit_operation" "child_operation" {
+  provider          = google-beta
+  depends_on        = [google_saas_runtime_unit_operation.parent]
+  location          = local.location
+  unit_operation_id = "upgrade-unit-operation"
+  unit              = google_saas_runtime_unit.example_unit.id
+  wait_for_completion = true
+
+  parent_unit_operation = google_saas_runtime_unit_operation.parent.id
+
+  upgrade {
+    release = google_saas_runtime_release.example_release.id
+    input_variables {
+      variable = "tenant_project_id"
+      value    = google_project.tenant_project.project_id
+      type     = "STRING"
+    }
+    input_variables {
+      variable = "tenant_project_number"
+      value    = google_project.tenant_project.number
+      type     = "INT"
+    }
+    input_variables {
+      variable = "zone"
+      value    = "us-central1-a"
+      type     = "STRING"
+    }
+    input_variables {
+      variable = "instance_name"
+      value    = "terraform-test-instance"
+      type     = "STRING"
+    }
+    input_variables {
+      variable = "actuation_sa"
+      value    = google_service_account.actuation_service_account.email
+      type     = "STRING"
+    }
+  }
+}
+
+resource "google_saas_runtime_unit_operation" "deprovision_operation" {
+  provider          = google-beta
+  depends_on        = [google_saas_runtime_unit_operation.child_operation]
+  location          = local.location
+  unit_operation_id = "deprovision-unit-operation"
+  unit              = google_saas_runtime_unit.example_unit.id
+  wait_for_completion = true
+  deprovision {}
+}
+```
 
 ## Argument Reference
 
@@ -265,6 +447,10 @@ The following arguments are supported:
   also include the underlying resources represented by a Unit. Can only execute
   if the Unit is currently provisioned.
   Structure is [documented below](#nested_upgrade).
+
+* `parent_unit_operation` -
+  (Optional)
+  Reference to parent resource: UnitOperation. If an operation needs to create other operations as part of its workflow, each of the child operations should have this field set to the parent. This can be used for tracing. (Optional)
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.

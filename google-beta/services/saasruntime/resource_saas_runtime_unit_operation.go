@@ -197,6 +197,12 @@ similar to Kubernetes resource labels.
 Please refer to the field 'effective_labels' for all of the labels present on the resource.`,
 				Elem: &schema.Schema{Type: schema.TypeString},
 			},
+			"parent_unit_operation": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: `Reference to parent resource: UnitOperation. If an operation needs to create other operations as part of its workflow, each of the child operations should have this field set to the parent. This can be used for tracing. (Optional)`,
+			},
 			"provision": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -480,6 +486,12 @@ func resourceSaasRuntimeUnitOperationCreate(d *schema.ResourceData, meta interfa
 	} else if v, ok := d.GetOkExists("upgrade"); !tpgresource.IsEmptyValue(reflect.ValueOf(upgradeProp)) && (ok || !reflect.DeepEqual(v, upgradeProp)) {
 		obj["upgrade"] = upgradeProp
 	}
+	parentUnitOperationProp, err := expandSaasRuntimeUnitOperationParentUnitOperation(d.Get("parent_unit_operation"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("parent_unit_operation"); !tpgresource.IsEmptyValue(reflect.ValueOf(parentUnitOperationProp)) && (ok || !reflect.DeepEqual(v, parentUnitOperationProp)) {
+		obj["parentUnitOperation"] = parentUnitOperationProp
+	}
 	effectiveAnnotationsProp, err := expandSaasRuntimeUnitOperationEffectiveAnnotations(d.Get("effective_annotations"), d, config)
 	if err != nil {
 		return err
@@ -713,6 +725,9 @@ func resourceSaasRuntimeUnitOperationRead(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Error reading UnitOperation: %s", err)
 	}
 	if err := d.Set("upgrade", flattenSaasRuntimeUnitOperationUpgrade(res["upgrade"], d, config)); err != nil {
+		return fmt.Errorf("Error reading UnitOperation: %s", err)
+	}
+	if err := d.Set("parent_unit_operation", flattenSaasRuntimeUnitOperationParentUnitOperation(res["parentUnitOperation"], d, config)); err != nil {
 		return fmt.Errorf("Error reading UnitOperation: %s", err)
 	}
 	if err := d.Set("effective_annotations", flattenSaasRuntimeUnitOperationEffectiveAnnotations(res["annotations"], d, config)); err != nil {
@@ -1048,6 +1063,10 @@ func flattenSaasRuntimeUnitOperationUpgradeRelease(v interface{}, d *schema.Reso
 	return v
 }
 
+func flattenSaasRuntimeUnitOperationParentUnitOperation(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenSaasRuntimeUnitOperationEffectiveAnnotations(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
@@ -1258,6 +1277,10 @@ func expandSaasRuntimeUnitOperationUpgradeInputVariablesVariable(v interface{}, 
 }
 
 func expandSaasRuntimeUnitOperationUpgradeRelease(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandSaasRuntimeUnitOperationParentUnitOperation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
