@@ -18,3 +18,4 @@ fields:
     - api_field: overrideValue
     - field: service
       provider_only: true
+    - api_field: unit

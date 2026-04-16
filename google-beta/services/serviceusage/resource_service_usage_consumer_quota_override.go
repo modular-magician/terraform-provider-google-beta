@@ -189,6 +189,11 @@ E.g. use '/project/user' instead of '1/{project}/{user}'.`,
 If 'force' is 'true', that safety check is ignored.`,
 				Default: false,
 			},
+			"unit": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: `The limit unit of the limit to which this override applies. An example unit would be: '1/{project}/{region}' Note that '{project}' and '{region}' are not placeholders in this example; the literal characters '{' and '}' occur in the string.`,
+			},
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -224,6 +229,12 @@ func resourceServiceUsageConsumerQuotaOverrideCreate(d *schema.ResourceData, met
 		return err
 	} else if v, ok := d.GetOkExists("dimensions"); !tpgresource.IsEmptyValue(reflect.ValueOf(dimensionsProp)) && (ok || !reflect.DeepEqual(v, dimensionsProp)) {
 		obj["dimensions"] = dimensionsProp
+	}
+	unitProp, err := expandNestedServiceUsageConsumerQuotaOverrideUnit(d.Get("unit"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("unit"); !tpgresource.IsEmptyValue(reflect.ValueOf(unitProp)) && (ok || !reflect.DeepEqual(v, unitProp)) {
+		obj["unit"] = unitProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ServiceUsageBasePath}}projects/{{project}}/services/{{service}}/consumerQuotaMetrics/{{metric}}/limits/{{limit}}/consumerOverrides/{{name}}?force={{force}}")
@@ -399,6 +410,9 @@ func resourceServiceUsageConsumerQuotaOverrideRead(d *schema.ResourceData, meta 
 	if err := d.Set("dimensions", flattenNestedServiceUsageConsumerQuotaOverrideDimensions(res["dimensions"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsumerQuotaOverride: %s", err)
 	}
+	if err := d.Set("unit", flattenNestedServiceUsageConsumerQuotaOverrideUnit(res["unit"], d, config)); err != nil {
+		return fmt.Errorf("Error reading ConsumerQuotaOverride: %s", err)
+	}
 	if err := d.Set("name", flattenNestedServiceUsageConsumerQuotaOverrideName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading ConsumerQuotaOverride: %s", err)
 	}
@@ -493,6 +507,12 @@ func resourceServiceUsageConsumerQuotaOverrideUpdate(d *schema.ResourceData, met
 		return err
 	} else if v, ok := d.GetOkExists("override_value"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, overrideValueProp)) {
 		obj["overrideValue"] = overrideValueProp
+	}
+	unitProp, err := expandNestedServiceUsageConsumerQuotaOverrideUnit(d.Get("unit"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("unit"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, unitProp)) {
+		obj["unit"] = unitProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, "{{ServiceUsageBasePath}}projects/{{project}}/services/{{service}}/consumerQuotaMetrics/{{metric}}/limits/{{limit}}/consumerOverrides/{{name}}?force={{force}}")
@@ -623,6 +643,10 @@ func flattenNestedServiceUsageConsumerQuotaOverrideDimensions(v interface{}, d *
 	return v
 }
 
+func flattenNestedServiceUsageConsumerQuotaOverrideUnit(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenNestedServiceUsageConsumerQuotaOverrideName(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -643,6 +667,10 @@ func expandNestedServiceUsageConsumerQuotaOverrideDimensions(v interface{}, d tp
 		m[k] = val.(string)
 	}
 	return m, nil
+}
+
+func expandNestedServiceUsageConsumerQuotaOverrideUnit(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
 }
 
 func flattenNestedServiceUsageConsumerQuotaOverride(d *schema.ResourceData, meta interface{}, res map[string]interface{}) (map[string]interface{}, error) {

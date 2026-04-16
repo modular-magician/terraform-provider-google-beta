@@ -105,6 +105,32 @@ resource "google_service_usage_consumer_quota_override" "override" {
   }
 }
 ```
+## Example Usage - Consumer Quota Override Unit
+
+
+```hcl
+resource "google_project" "my_project" {
+  provider        = google-beta
+  name            = "tf-test-project"
+  project_id      = "quota"
+  org_id          = "123456789"
+  deletion_policy = "DELETE"
+}
+
+resource "google_service_usage_consumer_quota_override" "override" {
+  provider       = google-beta
+  dimensions = {
+    region = "us-central1"
+  }
+  project        = google_project.my_project.project_id
+  service        = "compute.googleapis.com"
+  metric         = urlencode("compute.googleapis.com/n2_cpus")
+  limit          = urlencode("/project/region")
+  unit           = "1/{project}/{region}"
+  override_value = "8"
+  force          = true
+}
+```
 
 ## Argument Reference
 
@@ -133,6 +159,10 @@ The following arguments are supported:
 * `dimensions` -
   (Optional)
   If this map is nonempty, then this override applies only to specific values for dimensions defined in the limit unit.
+
+* `unit` -
+  (Optional)
+  The limit unit of the limit to which this override applies. An example unit would be: `1/{project}/{region}` Note that `{project}` and `{region}` are not placeholders in this example; the literal characters `{` and `}` occur in the string.
 
 * `force` -
   (Optional)

@@ -284,6 +284,67 @@ resource "google_service_usage_consumer_quota_override" "override" {
 `, context)
 }
 
+func TestAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideUnitExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"org_id":        envvar.GetTestOrgFromEnv(t),
+		"project_id":    "quota" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckServiceUsageConsumerQuotaOverrideDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideUnitExample(context),
+			},
+			{
+				ResourceName:            "google_service_usage_consumer_quota_override.override",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"force", "limit", "metric", "service"},
+			},
+			{
+				ResourceName:       "google_service_usage_consumer_quota_override.override",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccServiceUsageConsumerQuotaOverride_consumerQuotaOverrideUnitExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_project" "my_project" {
+  provider        = google-beta
+  name            = "tf-test-project"
+  project_id      = "%{project_id}"
+  org_id          = "%{org_id}"
+  deletion_policy = "DELETE"
+}
+
+resource "google_service_usage_consumer_quota_override" "override" {
+  provider       = google-beta
+  dimensions = {
+    region = "us-central1"
+  }
+  project        = google_project.my_project.project_id
+  service        = "compute.googleapis.com"
+  metric         = urlencode("compute.googleapis.com/n2_cpus")
+  limit          = urlencode("/project/region")
+  unit           = "1/{project}/{region}"
+  override_value = "8"
+  force          = true
+}
+`, context)
+}
+
 func testAccCheckServiceUsageConsumerQuotaOverrideDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
