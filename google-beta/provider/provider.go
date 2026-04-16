@@ -608,6 +608,11 @@ func Provider() *schema.Provider {
 				Optional:     true,
 				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
 			},
+			"firebase_remote_config_custom_endpoint": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: transport_tpg.ValidateCustomEndpoint,
+			},
 			"firebase_storage_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -1334,6 +1339,7 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.FirebaseDataConnectBasePath = d.Get("firebase_data_connect_custom_endpoint").(string)
 	config.FirebaseExtensionsBasePath = d.Get("firebase_extensions_custom_endpoint").(string)
 	config.FirebaseHostingBasePath = d.Get("firebase_hosting_custom_endpoint").(string)
+	config.FirebaseRemoteConfigBasePath = d.Get("firebase_remote_config_custom_endpoint").(string)
 	config.FirebaseStorageBasePath = d.Get("firebase_storage_custom_endpoint").(string)
 	config.FirestoreBasePath = d.Get("firestore_custom_endpoint").(string)
 	config.GeminiBasePath = d.Get("gemini_custom_endpoint").(string)
