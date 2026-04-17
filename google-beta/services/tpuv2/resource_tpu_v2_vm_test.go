@@ -74,7 +74,7 @@ resource "google_tpu_v2_vm" "tpu" {
   provider = google-beta
 
   name        = "tf-test-tpu-%{random_suffix}"
-  zone        = "us-central1-c"
+  zone        = "us-central1-a"
   description = "Text description of the TPU."
 
   runtime_version  = "tpu-vm-tf-2.13.0"
@@ -111,7 +111,7 @@ resource "google_compute_disk" "disk" {
   image = "debian-cloud/debian-11"
   size  = 10
   type  = "pd-ssd"
-  zone  = "us-central1-c"
+  zone  = "us-central1-a"
 }
 `, context)
 }
@@ -124,7 +124,7 @@ resource "google_tpu_v2_vm" "tpu" {
   provider = google-beta
 
   name        = "tf-test-tpu-%{random_suffix}"
-  zone        = "us-central1-c"
+  zone        = "us-central1-a"
   description = "Text description of the TPU updated."
 
   runtime_version  = "tpu-vm-tf-2.13.0"
@@ -166,7 +166,7 @@ resource "google_compute_disk" "disk" {
   image = "debian-cloud/debian-11"
   size  = 10
   type  = "pd-ssd"
-  zone  = "us-central1-c"
+  zone  = "us-central1-a"
 }
 
 resource "google_compute_disk" "disk2" {
@@ -176,7 +176,7 @@ resource "google_compute_disk" "disk2" {
   image = "debian-cloud/debian-11"
   size  = 10
   type  = "pd-ssd"
-  zone  = "us-central1-c"
+  zone  = "us-central1-a"
 }
 `, context)
 }

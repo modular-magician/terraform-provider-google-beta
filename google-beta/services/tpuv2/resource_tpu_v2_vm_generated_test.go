@@ -95,7 +95,7 @@ resource "google_tpu_v2_vm" "tpu" {
   provider = google-beta
 
   name = "%{vm_name}"
-  zone = "us-central1-c"
+  zone = "us-central1-a"
 
   runtime_version = "tpu-vm-tf-2.13.0"
 }
@@ -159,7 +159,7 @@ resource "google_tpu_v2_vm" "tpu" {
   provider = google-beta
 
   name = "%{vm_name}"
-  zone = "us-central1-c"
+  zone = "us-central1-a"
   description = "Text description of the TPU."
 
   runtime_version  = "tpu-vm-tf-2.13.0"
@@ -243,7 +243,7 @@ resource "google_compute_disk" "disk" {
   image = "debian-cloud/debian-11"
   size  = 10
   type  = "pd-ssd"
-  zone  = "us-central1-c"
+  zone  = "us-central1-a"
 }
 
 # Wait after service account creation to limit eventual consistency errors.

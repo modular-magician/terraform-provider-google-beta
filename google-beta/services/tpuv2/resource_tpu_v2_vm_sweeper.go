@@ -60,7 +60,7 @@ func listAndActionTpuV2Vm(action sweeper.ResourceAction) error {
 	// Build URL substitution maps individually to ensure proper formatting
 	intermediateValues := make([]map[string]string, 1)
 	intermediateValues[0] = map[string]string{}
-	intermediateValues[0]["zone"] = "us-central1-c"
+	intermediateValues[0]["zone"] = "us-central1-a"
 
 	// Create configs from intermediate values
 	for _, values := range intermediateValues {
