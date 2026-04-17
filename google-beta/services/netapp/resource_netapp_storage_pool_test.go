@@ -613,7 +613,7 @@ func testAccNetappStoragePool_customPerformanceEnabledStoragePoolCreateExample_f
 	return acctest.Nprintf(`
 resource "google_netapp_storage_pool" "test_pool" {
   name = "tf-test-pool%{random_suffix}"
-  location = "us-east4-a"
+  location = "us-east4"
   service_level = "FLEX"
   capacity_gib = "2048"
   network = data.google_compute_network.default.id
@@ -632,7 +632,7 @@ func testAccNetappStoragePool_customPerformanceEnabledStoragePoolCreateExample_u
 	return acctest.Nprintf(`
 resource "google_netapp_storage_pool" "test_pool" {
   name = "tf-test-pool%{random_suffix}"
-  location = "us-east4-a"
+  location = "us-east4"
   service_level = "FLEX"
   capacity_gib = "2048"
   network = data.google_compute_network.default.id
