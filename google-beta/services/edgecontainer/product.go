@@ -26,7 +26,9 @@ const ProductName = "edgecontainer"
 
 func init() {
 	registry.Product{
-		Name:    "edgecontainer",
-		BaseUrl: "https://edgecontainer.googleapis.com/v1/",
+		Name:                 "edgecontainer",
+		BaseUrl:              "https://edgecontainer.googleapis.com/v1/",
+		CustomEndpointField:  "edgecontainer_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_EDGECONTAINER_CUSTOM_ENDPOINT",
 	}.Register()
 }

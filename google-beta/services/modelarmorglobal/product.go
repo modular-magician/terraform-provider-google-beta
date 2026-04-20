@@ -26,7 +26,9 @@ const ProductName = "modelarmorglobal"
 
 func init() {
 	registry.Product{
-		Name:    "modelarmorglobal",
-		BaseUrl: "https://modelarmor.googleapis.com/v1beta/",
+		Name:                 "modelarmorglobal",
+		BaseUrl:              "https://modelarmor.googleapis.com/v1beta/",
+		CustomEndpointField:  "model_armor_global_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_MODEL_ARMOR_GLOBAL_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "bigqueryanalyticshub"
 
 func init() {
 	registry.Product{
-		Name:    "bigqueryanalyticshub",
-		BaseUrl: "https://analyticshub.googleapis.com/v1/",
+		Name:                 "bigqueryanalyticshub",
+		BaseUrl:              "https://analyticshub.googleapis.com/v1/",
+		CustomEndpointField:  "bigquery_analytics_hub_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_BIGQUERY_ANALYTICS_HUB_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "backupdr"
 
 func init() {
 	registry.Product{
-		Name:    "backupdr",
-		BaseUrl: "https://backupdr.googleapis.com/v1/",
+		Name:                 "backupdr",
+		BaseUrl:              "https://backupdr.googleapis.com/v1/",
+		CustomEndpointField:  "backup_dr_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_BACKUP_DR_CUSTOM_ENDPOINT",
 	}.Register()
 }

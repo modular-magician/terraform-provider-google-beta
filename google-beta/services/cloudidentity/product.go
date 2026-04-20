@@ -26,7 +26,9 @@ const ProductName = "cloudidentity"
 
 func init() {
 	registry.Product{
-		Name:    "cloudidentity",
-		BaseUrl: "https://cloudidentity.googleapis.com/v1beta1/",
+		Name:                 "cloudidentity",
+		BaseUrl:              "https://cloudidentity.googleapis.com/v1beta1/",
+		CustomEndpointField:  "cloud_identity_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_CLOUD_IDENTITY_CUSTOM_ENDPOINT",
 	}.Register()
 }

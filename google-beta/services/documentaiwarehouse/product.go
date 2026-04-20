@@ -26,7 +26,9 @@ const ProductName = "documentaiwarehouse"
 
 func init() {
 	registry.Product{
-		Name:    "documentaiwarehouse",
-		BaseUrl: "https://contentwarehouse.googleapis.com/v1/",
+		Name:                 "documentaiwarehouse",
+		BaseUrl:              "https://contentwarehouse.googleapis.com/v1/",
+		CustomEndpointField:  "document_ai_warehouse_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DOCUMENT_AI_WAREHOUSE_CUSTOM_ENDPOINT",
 	}.Register()
 }

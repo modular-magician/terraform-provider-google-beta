@@ -26,7 +26,9 @@ const ProductName = "managedkafka"
 
 func init() {
 	registry.Product{
-		Name:    "managedkafka",
-		BaseUrl: "https://managedkafka.googleapis.com/v1/",
+		Name:                 "managedkafka",
+		BaseUrl:              "https://managedkafka.googleapis.com/v1/",
+		CustomEndpointField:  "managed_kafka_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_MANAGED_KAFKA_CUSTOM_ENDPOINT",
 	}.Register()
 }

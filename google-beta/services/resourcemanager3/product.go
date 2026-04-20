@@ -26,7 +26,9 @@ const ProductName = "resourcemanager3"
 
 func init() {
 	registry.Product{
-		Name:    "resourcemanager3",
-		BaseUrl: "https://cloudresourcemanager.googleapis.com/v3/",
+		Name:                 "resourcemanager3",
+		BaseUrl:              "https://cloudresourcemanager.googleapis.com/v3/",
+		CustomEndpointField:  "resource_manager3_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_RESOURCE_MANAGER3_CUSTOM_ENDPOINT",
 	}.Register()
 }

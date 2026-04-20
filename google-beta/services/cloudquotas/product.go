@@ -26,7 +26,9 @@ const ProductName = "cloudquotas"
 
 func init() {
 	registry.Product{
-		Name:    "cloudquotas",
-		BaseUrl: "https://cloudquotas.googleapis.com/v1beta/",
+		Name:                 "cloudquotas",
+		BaseUrl:              "https://cloudquotas.googleapis.com/v1beta/",
+		CustomEndpointField:  "cloud_quotas_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_CLOUD_QUOTAS_CUSTOM_ENDPOINT",
 	}.Register()
 }

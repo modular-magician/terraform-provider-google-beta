@@ -26,7 +26,9 @@ const ProductName = "sql"
 
 func init() {
 	registry.Product{
-		Name:    "sql",
-		BaseUrl: "https://sqladmin.googleapis.com/sql/v1beta4/",
+		Name:                 "sql",
+		BaseUrl:              "https://sqladmin.googleapis.com/sql/v1beta4/",
+		CustomEndpointField:  "sql_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_SQL_CUSTOM_ENDPOINT",
 	}.Register()
 }

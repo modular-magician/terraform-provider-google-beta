@@ -26,7 +26,9 @@ const ProductName = "monitoring"
 
 func init() {
 	registry.Product{
-		Name:    "monitoring",
-		BaseUrl: "https://monitoring.googleapis.com/",
+		Name:                 "monitoring",
+		BaseUrl:              "https://monitoring.googleapis.com/",
+		CustomEndpointField:  "monitoring_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_MONITORING_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "storagebatchoperations"
 
 func init() {
 	registry.Product{
-		Name:    "storagebatchoperations",
-		BaseUrl: "https://storagebatchoperations.googleapis.com/v1/",
+		Name:                 "storagebatchoperations",
+		BaseUrl:              "https://storagebatchoperations.googleapis.com/v1/",
+		CustomEndpointField:  "storage_batch_operations_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_STORAGE_BATCH_OPERATIONS_CUSTOM_ENDPOINT",
 	}.Register()
 }

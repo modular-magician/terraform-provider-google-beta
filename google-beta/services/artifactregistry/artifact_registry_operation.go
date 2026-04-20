@@ -55,7 +55,7 @@ func (w *ArtifactRegistryOperationWaiter) QueryOp() (interface{}, error) {
 	if w == nil {
 		return nil, fmt.Errorf("Cannot query operation, it's unset or nil.")
 	}
-	basePath, err := transport_tpg.ResourceBasePath(w.Config.ArtifactRegistryBasePath, w.Config.ArtifactRegistryRepBasePath, "ArtifactRegistry", w.Config, w.Location)
+	basePath, err := transport_tpg.ResourceBasePath(w.Config.BasePaths["artifactregistry"], w.Config.ArtifactRegistryRepBasePath, "ArtifactRegistry", w.Config, w.Location)
 	if err != nil {
 		return nil, err
 	}

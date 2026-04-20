@@ -26,7 +26,9 @@ const ProductName = "datapipeline"
 
 func init() {
 	registry.Product{
-		Name:    "datapipeline",
-		BaseUrl: "https://datapipelines.googleapis.com/v1/",
+		Name:                 "datapipeline",
+		BaseUrl:              "https://datapipelines.googleapis.com/v1/",
+		CustomEndpointField:  "data_pipeline_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DATA_PIPELINE_CUSTOM_ENDPOINT",
 	}.Register()
 }

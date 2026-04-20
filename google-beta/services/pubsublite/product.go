@@ -26,7 +26,9 @@ const ProductName = "pubsublite"
 
 func init() {
 	registry.Product{
-		Name:    "pubsublite",
-		BaseUrl: "https://{{region}}-pubsublite.googleapis.com/v1/admin/",
+		Name:                 "pubsublite",
+		BaseUrl:              "https://{{region}}-pubsublite.googleapis.com/v1/admin/",
+		CustomEndpointField:  "pubsub_lite_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_PUBSUB_LITE_CUSTOM_ENDPOINT",
 	}.Register()
 }

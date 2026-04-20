@@ -225,7 +225,7 @@ func resourceWorkloadIdentityServiceAgentCreate(d *schema.ResourceData, meta int
 
 	log.Printf("[DEBUG] ServiceAgentPostCreate: Attempting to get operation %s", opName)
 
-	getOpURL := config.WorkloadIdentityBasePath + opName
+	getOpURL := config.BasePaths["workloadidentity"] + opName
 	opRes, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    config,
 		Method:    "GET",

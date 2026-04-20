@@ -26,7 +26,9 @@ const ProductName = "datalossprevention"
 
 func init() {
 	registry.Product{
-		Name:    "datalossprevention",
-		BaseUrl: "https://dlp.googleapis.com/v2/",
+		Name:                 "datalossprevention",
+		BaseUrl:              "https://dlp.googleapis.com/v2/",
+		CustomEndpointField:  "data_loss_prevention_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DATA_LOSS_PREVENTION_CUSTOM_ENDPOINT",
 	}.Register()
 }

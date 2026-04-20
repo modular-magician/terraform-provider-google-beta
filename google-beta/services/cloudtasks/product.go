@@ -26,7 +26,9 @@ const ProductName = "cloudtasks"
 
 func init() {
 	registry.Product{
-		Name:    "cloudtasks",
-		BaseUrl: "https://cloudtasks.googleapis.com/v2/",
+		Name:                 "cloudtasks",
+		BaseUrl:              "https://cloudtasks.googleapis.com/v2/",
+		CustomEndpointField:  "cloud_tasks_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_CLOUD_TASKS_CUSTOM_ENDPOINT",
 	}.Register()
 }

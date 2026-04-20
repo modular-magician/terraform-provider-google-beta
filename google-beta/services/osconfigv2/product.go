@@ -26,7 +26,9 @@ const ProductName = "osconfigv2"
 
 func init() {
 	registry.Product{
-		Name:    "osconfigv2",
-		BaseUrl: "https://osconfig.googleapis.com/v2beta/",
+		Name:                 "osconfigv2",
+		BaseUrl:              "https://osconfig.googleapis.com/v2beta/",
+		CustomEndpointField:  "os_config_v2_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_OS_CONFIG_V2_CUSTOM_ENDPOINT",
 	}.Register()
 }

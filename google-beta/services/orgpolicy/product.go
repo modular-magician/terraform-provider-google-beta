@@ -26,7 +26,9 @@ const ProductName = "orgpolicy"
 
 func init() {
 	registry.Product{
-		Name:    "orgpolicy",
-		BaseUrl: "https://orgpolicy.googleapis.com/v2/",
+		Name:                 "orgpolicy",
+		BaseUrl:              "https://orgpolicy.googleapis.com/v2/",
+		CustomEndpointField:  "org_policy_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_ORG_POLICY_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "lustre"
 
 func init() {
 	registry.Product{
-		Name:    "lustre",
-		BaseUrl: "https://lustre.googleapis.com/v1/",
+		Name:                 "lustre",
+		BaseUrl:              "https://lustre.googleapis.com/v1/",
+		CustomEndpointField:  "lustre_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_LUSTRE_CUSTOM_ENDPOINT",
 	}.Register()
 }

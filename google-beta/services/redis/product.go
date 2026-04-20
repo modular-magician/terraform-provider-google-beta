@@ -26,7 +26,9 @@ const ProductName = "redis"
 
 func init() {
 	registry.Product{
-		Name:    "redis",
-		BaseUrl: "https://redis.googleapis.com/v1beta1/",
+		Name:                 "redis",
+		BaseUrl:              "https://redis.googleapis.com/v1beta1/",
+		CustomEndpointField:  "redis_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_REDIS_CUSTOM_ENDPOINT",
 	}.Register()
 }

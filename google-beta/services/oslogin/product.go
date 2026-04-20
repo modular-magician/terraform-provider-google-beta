@@ -26,7 +26,9 @@ const ProductName = "oslogin"
 
 func init() {
 	registry.Product{
-		Name:    "oslogin",
-		BaseUrl: "https://oslogin.googleapis.com/v1/",
+		Name:                 "oslogin",
+		BaseUrl:              "https://oslogin.googleapis.com/v1/",
+		CustomEndpointField:  "os_login_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_OS_LOGIN_CUSTOM_ENDPOINT",
 	}.Register()
 }

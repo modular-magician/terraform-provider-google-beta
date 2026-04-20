@@ -26,7 +26,9 @@ const ProductName = "corebilling"
 
 func init() {
 	registry.Product{
-		Name:    "corebilling",
-		BaseUrl: "https://cloudbilling.googleapis.com/v1/",
+		Name:                 "corebilling",
+		BaseUrl:              "https://cloudbilling.googleapis.com/v1/",
+		CustomEndpointField:  "core_billing_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_CORE_BILLING_CUSTOM_ENDPOINT",
 	}.Register()
 }

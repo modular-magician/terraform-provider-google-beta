@@ -26,7 +26,9 @@ const ProductName = "gemini"
 
 func init() {
 	registry.Product{
-		Name:    "gemini",
-		BaseUrl: "https://cloudaicompanion.googleapis.com/v1/",
+		Name:                 "gemini",
+		BaseUrl:              "https://cloudaicompanion.googleapis.com/v1/",
+		CustomEndpointField:  "gemini_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_GEMINI_CUSTOM_ENDPOINT",
 	}.Register()
 }

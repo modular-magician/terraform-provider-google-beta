@@ -26,7 +26,9 @@ const ProductName = "containerattached"
 
 func init() {
 	registry.Product{
-		Name:    "containerattached",
-		BaseUrl: "https://{{location}}-gkemulticloud.googleapis.com/v1/",
+		Name:                 "containerattached",
+		BaseUrl:              "https://{{location}}-gkemulticloud.googleapis.com/v1/",
+		CustomEndpointField:  "container_attached_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_CONTAINER_ATTACHED_CUSTOM_ENDPOINT",
 	}.Register()
 }

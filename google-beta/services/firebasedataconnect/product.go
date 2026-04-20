@@ -26,7 +26,9 @@ const ProductName = "firebasedataconnect"
 
 func init() {
 	registry.Product{
-		Name:    "firebasedataconnect",
-		BaseUrl: "https://firebasedataconnect.googleapis.com/v1beta/",
+		Name:                 "firebasedataconnect",
+		BaseUrl:              "https://firebasedataconnect.googleapis.com/v1beta/",
+		CustomEndpointField:  "firebase_data_connect_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_FIREBASE_DATA_CONNECT_CUSTOM_ENDPOINT",
 	}.Register()
 }

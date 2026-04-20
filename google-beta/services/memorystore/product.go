@@ -26,7 +26,9 @@ const ProductName = "memorystore"
 
 func init() {
 	registry.Product{
-		Name:    "memorystore",
-		BaseUrl: "https://memorystore.googleapis.com/v1beta/",
+		Name:                 "memorystore",
+		BaseUrl:              "https://memorystore.googleapis.com/v1beta/",
+		CustomEndpointField:  "memorystore_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_MEMORYSTORE_CUSTOM_ENDPOINT",
 	}.Register()
 }

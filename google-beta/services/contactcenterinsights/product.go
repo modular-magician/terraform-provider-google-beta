@@ -26,7 +26,9 @@ const ProductName = "contactcenterinsights"
 
 func init() {
 	registry.Product{
-		Name:    "contactcenterinsights",
-		BaseUrl: "https://contactcenterinsights.googleapis.com/v1/",
+		Name:                 "contactcenterinsights",
+		BaseUrl:              "https://contactcenterinsights.googleapis.com/v1/",
+		CustomEndpointField:  "contact_center_insights_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_CONTACT_CENTER_INSIGHTS_CUSTOM_ENDPOINT",
 	}.Register()
 }

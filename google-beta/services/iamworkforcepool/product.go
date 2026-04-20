@@ -26,7 +26,9 @@ const ProductName = "iamworkforcepool"
 
 func init() {
 	registry.Product{
-		Name:    "iamworkforcepool",
-		BaseUrl: "https://iam.googleapis.com/v1/",
+		Name:                 "iamworkforcepool",
+		BaseUrl:              "https://iam.googleapis.com/v1/",
+		CustomEndpointField:  "iam_workforce_pool_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_IAM_WORKFORCE_POOL_CUSTOM_ENDPOINT",
 	}.Register()
 }

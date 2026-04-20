@@ -26,7 +26,9 @@ const ProductName = "eventarc"
 
 func init() {
 	registry.Product{
-		Name:    "eventarc",
-		BaseUrl: "https://eventarc.googleapis.com/v1/",
+		Name:                 "eventarc",
+		BaseUrl:              "https://eventarc.googleapis.com/v1/",
+		CustomEndpointField:  "eventarc_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_EVENTARC_CUSTOM_ENDPOINT",
 	}.Register()
 }

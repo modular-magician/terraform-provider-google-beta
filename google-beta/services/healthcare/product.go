@@ -26,7 +26,9 @@ const ProductName = "healthcare"
 
 func init() {
 	registry.Product{
-		Name:    "healthcare",
-		BaseUrl: "https://healthcare.googleapis.com/v1beta1/",
+		Name:                 "healthcare",
+		BaseUrl:              "https://healthcare.googleapis.com/v1beta1/",
+		CustomEndpointField:  "healthcare_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_HEALTHCARE_CUSTOM_ENDPOINT",
 	}.Register()
 }

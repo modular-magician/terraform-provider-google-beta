@@ -26,7 +26,9 @@ const ProductName = "securesourcemanager"
 
 func init() {
 	registry.Product{
-		Name:    "securesourcemanager",
-		BaseUrl: "https://securesourcemanager.googleapis.com/v1/",
+		Name:                 "securesourcemanager",
+		BaseUrl:              "https://securesourcemanager.googleapis.com/v1/",
+		CustomEndpointField:  "secure_source_manager_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_SECURE_SOURCE_MANAGER_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "workbench"
 
 func init() {
 	registry.Product{
-		Name:    "workbench",
-		BaseUrl: "https://notebooks.googleapis.com/v2/",
+		Name:                 "workbench",
+		BaseUrl:              "https://notebooks.googleapis.com/v2/",
+		CustomEndpointField:  "workbench_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_WORKBENCH_CUSTOM_ENDPOINT",
 	}.Register()
 }

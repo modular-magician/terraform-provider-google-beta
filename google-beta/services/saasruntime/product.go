@@ -26,7 +26,9 @@ const ProductName = "saasruntime"
 
 func init() {
 	registry.Product{
-		Name:    "saasruntime",
-		BaseUrl: "https://saasservicemgmt.googleapis.com/v1beta1/",
+		Name:                 "saasruntime",
+		BaseUrl:              "https://saasservicemgmt.googleapis.com/v1beta1/",
+		CustomEndpointField:  "saas_runtime_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_SAAS_RUNTIME_CUSTOM_ENDPOINT",
 	}.Register()
 }

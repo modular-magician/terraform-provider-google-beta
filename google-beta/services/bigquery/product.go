@@ -26,7 +26,9 @@ const ProductName = "bigquery"
 
 func init() {
 	registry.Product{
-		Name:    "bigquery",
-		BaseUrl: "https://bigquery.googleapis.com/bigquery/v2/",
+		Name:                 "bigquery",
+		BaseUrl:              "https://bigquery.googleapis.com/bigquery/v2/",
+		CustomEndpointField:  "big_query_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_BIG_QUERY_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "colab"
 
 func init() {
 	registry.Product{
-		Name:    "colab",
-		BaseUrl: "https://{{location}}-aiplatform.googleapis.com/v1beta1/",
+		Name:                 "colab",
+		BaseUrl:              "https://{{location}}-aiplatform.googleapis.com/v1beta1/",
+		CustomEndpointField:  "colab_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_COLAB_CUSTOM_ENDPOINT",
 	}.Register()
 }

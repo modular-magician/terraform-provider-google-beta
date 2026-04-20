@@ -55,7 +55,7 @@ func (w *WorkbenchOperationWaiter) QueryOp() (interface{}, error) {
 		return nil, fmt.Errorf("Cannot query operation, it's unset or nil.")
 	}
 	// Returns the proper get.
-	url := fmt.Sprintf("%s%s", w.Config.WorkbenchBasePath, w.CommonOperationWaiter.Op.Name)
+	url := fmt.Sprintf("%s%s", w.Config.BasePaths["workbench"], w.CommonOperationWaiter.Op.Name)
 
 	return transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:               w.Config,

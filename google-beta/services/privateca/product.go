@@ -26,7 +26,9 @@ const ProductName = "privateca"
 
 func init() {
 	registry.Product{
-		Name:    "privateca",
-		BaseUrl: "https://privateca.googleapis.com/v1/",
+		Name:                 "privateca",
+		BaseUrl:              "https://privateca.googleapis.com/v1/",
+		CustomEndpointField:  "privateca_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_PRIVATECA_CUSTOM_ENDPOINT",
 	}.Register()
 }

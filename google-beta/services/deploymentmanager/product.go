@@ -26,7 +26,9 @@ const ProductName = "deploymentmanager"
 
 func init() {
 	registry.Product{
-		Name:    "deploymentmanager",
-		BaseUrl: "https://www.googleapis.com/deploymentmanager/v2/",
+		Name:                 "deploymentmanager",
+		BaseUrl:              "https://www.googleapis.com/deploymentmanager/v2/",
+		CustomEndpointField:  "deployment_manager_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DEPLOYMENT_MANAGER_CUSTOM_ENDPOINT",
 	}.Register()
 }

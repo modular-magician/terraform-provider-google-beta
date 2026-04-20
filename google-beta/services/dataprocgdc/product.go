@@ -26,7 +26,9 @@ const ProductName = "dataprocgdc"
 
 func init() {
 	registry.Product{
-		Name:    "dataprocgdc",
-		BaseUrl: "https://dataprocgdc.googleapis.com/v1/",
+		Name:                 "dataprocgdc",
+		BaseUrl:              "https://dataprocgdc.googleapis.com/v1/",
+		CustomEndpointField:  "dataproc_gdc_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DATAPROC_GDC_CUSTOM_ENDPOINT",
 	}.Register()
 }

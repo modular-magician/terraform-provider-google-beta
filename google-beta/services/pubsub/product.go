@@ -26,7 +26,9 @@ const ProductName = "pubsub"
 
 func init() {
 	registry.Product{
-		Name:    "pubsub",
-		BaseUrl: "https://pubsub.googleapis.com/v1/",
+		Name:                 "pubsub",
+		BaseUrl:              "https://pubsub.googleapis.com/v1/",
+		CustomEndpointField:  "pubsub_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_PUBSUB_CUSTOM_ENDPOINT",
 	}.Register()
 }

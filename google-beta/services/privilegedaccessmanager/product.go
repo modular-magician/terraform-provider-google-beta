@@ -26,7 +26,9 @@ const ProductName = "privilegedaccessmanager"
 
 func init() {
 	registry.Product{
-		Name:    "privilegedaccessmanager",
-		BaseUrl: "https://privilegedaccessmanager.googleapis.com/v1beta/",
+		Name:                 "privilegedaccessmanager",
+		BaseUrl:              "https://privilegedaccessmanager.googleapis.com/v1beta/",
+		CustomEndpointField:  "privileged_access_manager_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_PRIVILEGED_ACCESS_MANAGER_CUSTOM_ENDPOINT",
 	}.Register()
 }

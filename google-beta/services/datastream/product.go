@@ -26,7 +26,9 @@ const ProductName = "datastream"
 
 func init() {
 	registry.Product{
-		Name:    "datastream",
-		BaseUrl: "https://datastream.googleapis.com/v1/",
+		Name:                 "datastream",
+		BaseUrl:              "https://datastream.googleapis.com/v1/",
+		CustomEndpointField:  "datastream_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DATASTREAM_CUSTOM_ENDPOINT",
 	}.Register()
 }

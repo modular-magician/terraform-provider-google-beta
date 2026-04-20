@@ -26,7 +26,9 @@ const ProductName = "publicca"
 
 func init() {
 	registry.Product{
-		Name:    "publicca",
-		BaseUrl: "https://publicca.googleapis.com/v1beta1/",
+		Name:                 "publicca",
+		BaseUrl:              "https://publicca.googleapis.com/v1beta1/",
+		CustomEndpointField:  "public_ca_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_PUBLIC_CA_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "vertexai"
 
 func init() {
 	registry.Product{
-		Name:    "vertexai",
-		BaseUrl: "https://{{region}}-aiplatform.googleapis.com/v1beta1/",
+		Name:                 "vertexai",
+		BaseUrl:              "https://{{region}}-aiplatform.googleapis.com/v1beta1/",
+		CustomEndpointField:  "vertex_ai_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_VERTEX_AI_CUSTOM_ENDPOINT",
 	}.Register()
 }

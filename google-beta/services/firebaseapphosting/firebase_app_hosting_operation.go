@@ -55,7 +55,7 @@ func (w *FirebaseAppHostingOperationWaiter) QueryOp() (interface{}, error) {
 		return nil, fmt.Errorf("Cannot query operation, it's unset or nil.")
 	}
 	// Returns the proper get.
-	url := fmt.Sprintf("%s%s", w.Config.FirebaseAppHostingBasePath, w.CommonOperationWaiter.Op.Name)
+	url := fmt.Sprintf("%s%s", w.Config.BasePaths["firebaseapphosting"], w.CommonOperationWaiter.Op.Name)
 
 	return transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    w.Config,

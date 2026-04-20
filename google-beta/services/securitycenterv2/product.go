@@ -26,7 +26,9 @@ const ProductName = "securitycenterv2"
 
 func init() {
 	registry.Product{
-		Name:    "securitycenterv2",
-		BaseUrl: "https://securitycenter.googleapis.com/v2/",
+		Name:                 "securitycenterv2",
+		BaseUrl:              "https://securitycenter.googleapis.com/v2/",
+		CustomEndpointField:  "security_center_v2_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_SECURITY_CENTER_V2_CUSTOM_ENDPOINT",
 	}.Register()
 }

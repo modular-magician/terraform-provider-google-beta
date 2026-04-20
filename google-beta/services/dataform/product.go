@@ -26,7 +26,9 @@ const ProductName = "dataform"
 
 func init() {
 	registry.Product{
-		Name:    "dataform",
-		BaseUrl: "https://dataform.googleapis.com/v1beta1/",
+		Name:                 "dataform",
+		BaseUrl:              "https://dataform.googleapis.com/v1beta1/",
+		CustomEndpointField:  "dataform_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DATAFORM_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "firebasestorage"
 
 func init() {
 	registry.Product{
-		Name:    "firebasestorage",
-		BaseUrl: "https://firebasestorage.googleapis.com/v1beta/",
+		Name:                 "firebasestorage",
+		BaseUrl:              "https://firebasestorage.googleapis.com/v1beta/",
+		CustomEndpointField:  "firebase_storage_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_FIREBASE_STORAGE_CUSTOM_ENDPOINT",
 	}.Register()
 }

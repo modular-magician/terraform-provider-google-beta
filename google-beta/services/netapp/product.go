@@ -26,7 +26,9 @@ const ProductName = "netapp"
 
 func init() {
 	registry.Product{
-		Name:    "netapp",
-		BaseUrl: "https://netapp.googleapis.com/v1beta1/",
+		Name:                 "netapp",
+		BaseUrl:              "https://netapp.googleapis.com/v1beta1/",
+		CustomEndpointField:  "netapp_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_NETAPP_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "compute"
 
 func init() {
 	registry.Product{
-		Name:    "compute",
-		BaseUrl: "https://compute.googleapis.com/compute/beta/",
+		Name:                 "compute",
+		BaseUrl:              "https://compute.googleapis.com/compute/beta/",
+		CustomEndpointField:  "compute_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_COMPUTE_CUSTOM_ENDPOINT",
 	}.Register()
 }

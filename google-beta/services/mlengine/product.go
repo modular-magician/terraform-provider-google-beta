@@ -26,7 +26,9 @@ const ProductName = "mlengine"
 
 func init() {
 	registry.Product{
-		Name:    "mlengine",
-		BaseUrl: "https://ml.googleapis.com/v1/",
+		Name:                 "mlengine",
+		BaseUrl:              "https://ml.googleapis.com/v1/",
+		CustomEndpointField:  "ml_engine_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_ML_ENGINE_CUSTOM_ENDPOINT",
 	}.Register()
 }

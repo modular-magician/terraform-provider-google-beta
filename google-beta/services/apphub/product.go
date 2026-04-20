@@ -26,7 +26,9 @@ const ProductName = "apphub"
 
 func init() {
 	registry.Product{
-		Name:    "apphub",
-		BaseUrl: "https://apphub.googleapis.com/v1/",
+		Name:                 "apphub",
+		BaseUrl:              "https://apphub.googleapis.com/v1/",
+		CustomEndpointField:  "apphub_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_APPHUB_CUSTOM_ENDPOINT",
 	}.Register()
 }

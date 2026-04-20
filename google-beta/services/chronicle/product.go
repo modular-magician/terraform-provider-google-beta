@@ -26,7 +26,9 @@ const ProductName = "chronicle"
 
 func init() {
 	registry.Product{
-		Name:    "chronicle",
-		BaseUrl: "https://{{location}}-chronicle.googleapis.com/v1beta/",
+		Name:                 "chronicle",
+		BaseUrl:              "https://{{location}}-chronicle.googleapis.com/v1beta/",
+		CustomEndpointField:  "chronicle_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_CHRONICLE_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "beyondcorp"
 
 func init() {
 	registry.Product{
-		Name:    "beyondcorp",
-		BaseUrl: "https://beyondcorp.googleapis.com/v1/",
+		Name:                 "beyondcorp",
+		BaseUrl:              "https://beyondcorp.googleapis.com/v1/",
+		CustomEndpointField:  "beyondcorp_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_BEYONDCORP_CUSTOM_ENDPOINT",
 	}.Register()
 }

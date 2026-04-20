@@ -26,7 +26,9 @@ const ProductName = "sourcerepo"
 
 func init() {
 	registry.Product{
-		Name:    "sourcerepo",
-		BaseUrl: "https://sourcerepo.googleapis.com/v1/",
+		Name:                 "sourcerepo",
+		BaseUrl:              "https://sourcerepo.googleapis.com/v1/",
+		CustomEndpointField:  "source_repo_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_SOURCE_REPO_CUSTOM_ENDPOINT",
 	}.Register()
 }

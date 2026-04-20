@@ -55,7 +55,7 @@ func (w *GKEBackupOperationWaiter) QueryOp() (interface{}, error) {
 		return nil, fmt.Errorf("Cannot query operation, it's unset or nil.")
 	}
 	// Returns the proper get.
-	url := fmt.Sprintf("%s%s", w.Config.GKEBackupBasePath, w.CommonOperationWaiter.Op.Name)
+	url := fmt.Sprintf("%s%s", w.Config.BasePaths["gkebackup"], w.CommonOperationWaiter.Op.Name)
 
 	return transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    w.Config,

@@ -26,7 +26,9 @@ const ProductName = "storagetransfer"
 
 func init() {
 	registry.Product{
-		Name:    "storagetransfer",
-		BaseUrl: "https://storagetransfer.googleapis.com/v1/",
+		Name:                 "storagetransfer",
+		BaseUrl:              "https://storagetransfer.googleapis.com/v1/",
+		CustomEndpointField:  "storage_transfer_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_STORAGE_TRANSFER_CUSTOM_ENDPOINT",
 	}.Register()
 }

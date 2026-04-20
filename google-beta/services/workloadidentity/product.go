@@ -26,7 +26,9 @@ const ProductName = "workloadidentity"
 
 func init() {
 	registry.Product{
-		Name:    "workloadidentity",
-		BaseUrl: "https://workloadidentity.googleapis.com/v1/",
+		Name:                 "workloadidentity",
+		BaseUrl:              "https://workloadidentity.googleapis.com/v1/",
+		CustomEndpointField:  "workload_identity_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_WORKLOAD_IDENTITY_CUSTOM_ENDPOINT",
 	}.Register()
 }

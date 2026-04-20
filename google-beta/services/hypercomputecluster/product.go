@@ -26,7 +26,9 @@ const ProductName = "hypercomputecluster"
 
 func init() {
 	registry.Product{
-		Name:    "hypercomputecluster",
-		BaseUrl: "https://hypercomputecluster.googleapis.com/v1beta/",
+		Name:                 "hypercomputecluster",
+		BaseUrl:              "https://hypercomputecluster.googleapis.com/v1beta/",
+		CustomEndpointField:  "hypercomputecluster_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_HYPERCOMPUTECLUSTER_CUSTOM_ENDPOINT",
 	}.Register()
 }

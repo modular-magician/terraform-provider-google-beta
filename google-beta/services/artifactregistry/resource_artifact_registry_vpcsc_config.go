@@ -197,7 +197,7 @@ func resourceArtifactRegistryVPCSCConfigCreate(d *schema.ResourceData, meta inte
 	}
 	loc := tpgresource.LocationFromId(urlFormatted)
 
-	basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+	basePath, err := transport_tpg.ResourceBasePath(config.BasePaths["artifactregistry"], config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
 	if err != nil {
 		return fmt.Errorf("Error qualifying Create base path for VPCSCConfig: %s", err)
 	}
@@ -283,7 +283,7 @@ func resourceArtifactRegistryVPCSCConfigRead(d *schema.ResourceData, meta interf
 	}
 	loc := tpgresource.LocationFromId(urlFormatted)
 
-	basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+	basePath, err := transport_tpg.ResourceBasePath(config.BasePaths["artifactregistry"], config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
 	if err != nil {
 		return fmt.Errorf("Error qualifying base path for VPCSCConfig: %s", err)
 	}
@@ -410,7 +410,7 @@ func resourceArtifactRegistryVPCSCConfigUpdate(d *schema.ResourceData, meta inte
 
 	loc := tpgresource.LocationFromId(d.Id())
 
-	basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+	basePath, err := transport_tpg.ResourceBasePath(config.BasePaths["artifactregistry"], config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
 	if err != nil {
 		return fmt.Errorf("Error qualifying base path for VPCSCConfig: %s", err)
 	}

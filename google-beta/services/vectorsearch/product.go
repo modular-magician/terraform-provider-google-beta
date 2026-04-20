@@ -26,7 +26,9 @@ const ProductName = "vectorsearch"
 
 func init() {
 	registry.Product{
-		Name:    "vectorsearch",
-		BaseUrl: "https://vectorsearch.googleapis.com/v1beta/",
+		Name:                 "vectorsearch",
+		BaseUrl:              "https://vectorsearch.googleapis.com/v1beta/",
+		CustomEndpointField:  "vector_search_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_VECTOR_SEARCH_CUSTOM_ENDPOINT",
 	}.Register()
 }

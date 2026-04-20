@@ -26,7 +26,9 @@ const ProductName = "oracledatabase"
 
 func init() {
 	registry.Product{
-		Name:    "oracledatabase",
-		BaseUrl: "https://oracledatabase.googleapis.com/v1/",
+		Name:                 "oracledatabase",
+		BaseUrl:              "https://oracledatabase.googleapis.com/v1/",
+		CustomEndpointField:  "oracle_database_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_ORACLE_DATABASE_CUSTOM_ENDPOINT",
 	}.Register()
 }

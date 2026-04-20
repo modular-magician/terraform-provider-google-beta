@@ -26,7 +26,9 @@ const ProductName = "filestore"
 
 func init() {
 	registry.Product{
-		Name:    "filestore",
-		BaseUrl: "https://file.googleapis.com/v1beta1/",
+		Name:                 "filestore",
+		BaseUrl:              "https://file.googleapis.com/v1beta1/",
+		CustomEndpointField:  "filestore_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_FILESTORE_CUSTOM_ENDPOINT",
 	}.Register()
 }

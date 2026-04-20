@@ -26,7 +26,9 @@ const ProductName = "dataplex"
 
 func init() {
 	registry.Product{
-		Name:    "dataplex",
-		BaseUrl: "https://dataplex.googleapis.com/v1/",
+		Name:                 "dataplex",
+		BaseUrl:              "https://dataplex.googleapis.com/v1/",
+		CustomEndpointField:  "dataplex_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DATAPLEX_CUSTOM_ENDPOINT",
 	}.Register()
 }

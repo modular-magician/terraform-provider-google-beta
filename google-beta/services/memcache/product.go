@@ -26,7 +26,9 @@ const ProductName = "memcache"
 
 func init() {
 	registry.Product{
-		Name:    "memcache",
-		BaseUrl: "https://memcache.googleapis.com/v1beta2/",
+		Name:                 "memcache",
+		BaseUrl:              "https://memcache.googleapis.com/v1beta2/",
+		CustomEndpointField:  "memcache_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_MEMCACHE_CUSTOM_ENDPOINT",
 	}.Register()
 }

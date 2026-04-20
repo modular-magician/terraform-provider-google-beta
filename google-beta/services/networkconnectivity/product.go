@@ -26,7 +26,9 @@ const ProductName = "networkconnectivity"
 
 func init() {
 	registry.Product{
-		Name:    "networkconnectivity",
-		BaseUrl: "https://networkconnectivity.googleapis.com/v1beta/",
+		Name:                 "networkconnectivity",
+		BaseUrl:              "https://networkconnectivity.googleapis.com/v1beta/",
+		CustomEndpointField:  "network_connectivity_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_NETWORK_CONNECTIVITY_CUSTOM_ENDPOINT",
 	}.Register()
 }

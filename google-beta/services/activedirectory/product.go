@@ -26,7 +26,9 @@ const ProductName = "activedirectory"
 
 func init() {
 	registry.Product{
-		Name:    "activedirectory",
-		BaseUrl: "https://managedidentities.googleapis.com/v1beta1/",
+		Name:                 "activedirectory",
+		BaseUrl:              "https://managedidentities.googleapis.com/v1beta1/",
+		CustomEndpointField:  "active_directory_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_ACTIVE_DIRECTORY_CUSTOM_ENDPOINT",
 	}.Register()
 }

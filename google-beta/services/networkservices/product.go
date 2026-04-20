@@ -26,7 +26,9 @@ const ProductName = "networkservices"
 
 func init() {
 	registry.Product{
-		Name:    "networkservices",
-		BaseUrl: "https://networkservices.googleapis.com/v1/",
+		Name:                 "networkservices",
+		BaseUrl:              "https://networkservices.googleapis.com/v1/",
+		CustomEndpointField:  "network_services_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_NETWORK_SERVICES_CUSTOM_ENDPOINT",
 	}.Register()
 }

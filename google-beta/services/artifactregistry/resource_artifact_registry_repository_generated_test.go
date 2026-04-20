@@ -1287,7 +1287,7 @@ func testAccCheckArtifactRegistryRepositoryDestroyProducer(t *testing.T) func(s 
 			}
 
 			loc := tpgresource.LocationFromId(urlFormatted)
-			basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+			basePath, err := transport_tpg.ResourceBasePath(config.BasePaths["artifactregistry"], config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
 			if err != nil {
 				return err
 			}

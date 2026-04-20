@@ -55,7 +55,7 @@ func (w *DatabaseMigrationServiceOperationWaiter) QueryOp() (interface{}, error)
 		return nil, fmt.Errorf("Cannot query operation, it's unset or nil.")
 	}
 	// Returns the proper get.
-	url := fmt.Sprintf("%s%s", w.Config.DatabaseMigrationServiceBasePath, w.CommonOperationWaiter.Op.Name)
+	url := fmt.Sprintf("%s%s", w.Config.BasePaths["databasemigrationservice"], w.CommonOperationWaiter.Op.Name)
 
 	return transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 		Config:    w.Config,

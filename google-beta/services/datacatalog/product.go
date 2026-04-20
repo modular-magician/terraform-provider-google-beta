@@ -26,7 +26,9 @@ const ProductName = "datacatalog"
 
 func init() {
 	registry.Product{
-		Name:    "datacatalog",
-		BaseUrl: "https://datacatalog.googleapis.com/v1beta1/",
+		Name:                 "datacatalog",
+		BaseUrl:              "https://datacatalog.googleapis.com/v1beta1/",
+		CustomEndpointField:  "data_catalog_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DATA_CATALOG_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "securityposture"
 
 func init() {
 	registry.Product{
-		Name:    "securityposture",
-		BaseUrl: "https://securityposture.googleapis.com/v1/",
+		Name:                 "securityposture",
+		BaseUrl:              "https://securityposture.googleapis.com/v1/",
+		CustomEndpointField:  "securityposture_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_SECURITYPOSTURE_CUSTOM_ENDPOINT",
 	}.Register()
 }

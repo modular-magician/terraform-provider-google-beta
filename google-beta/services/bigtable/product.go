@@ -26,7 +26,9 @@ const ProductName = "bigtable"
 
 func init() {
 	registry.Product{
-		Name:    "bigtable",
-		BaseUrl: "https://bigtableadmin.googleapis.com/v2/",
+		Name:                 "bigtable",
+		BaseUrl:              "https://bigtableadmin.googleapis.com/v2/",
+		CustomEndpointField:  "bigtable_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_BIGTABLE_CUSTOM_ENDPOINT",
 	}.Register()
 }

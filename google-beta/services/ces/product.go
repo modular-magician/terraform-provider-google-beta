@@ -26,7 +26,9 @@ const ProductName = "ces"
 
 func init() {
 	registry.Product{
-		Name:    "ces",
-		BaseUrl: "https://ces.googleapis.com/v1/",
+		Name:                 "ces",
+		BaseUrl:              "https://ces.googleapis.com/v1/",
+		CustomEndpointField:  "ces_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_CES_CUSTOM_ENDPOINT",
 	}.Register()
 }

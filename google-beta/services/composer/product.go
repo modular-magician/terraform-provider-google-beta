@@ -26,7 +26,9 @@ const ProductName = "composer"
 
 func init() {
 	registry.Product{
-		Name:    "composer",
-		BaseUrl: "https://composer.googleapis.com/v1beta1/",
+		Name:                 "composer",
+		BaseUrl:              "https://composer.googleapis.com/v1beta1/",
+		CustomEndpointField:  "composer_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_COMPOSER_CUSTOM_ENDPOINT",
 	}.Register()
 }

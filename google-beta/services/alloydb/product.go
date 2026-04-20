@@ -26,7 +26,9 @@ const ProductName = "alloydb"
 
 func init() {
 	registry.Product{
-		Name:    "alloydb",
-		BaseUrl: "https://alloydb.googleapis.com/v1beta/",
+		Name:                 "alloydb",
+		BaseUrl:              "https://alloydb.googleapis.com/v1beta/",
+		CustomEndpointField:  "alloydb_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_ALLOYDB_CUSTOM_ENDPOINT",
 	}.Register()
 }

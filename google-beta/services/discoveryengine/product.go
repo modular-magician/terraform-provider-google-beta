@@ -26,7 +26,9 @@ const ProductName = "discoveryengine"
 
 func init() {
 	registry.Product{
-		Name:    "discoveryengine",
-		BaseUrl: "https://{{location}}-discoveryengine.googleapis.com/v1/",
+		Name:                 "discoveryengine",
+		BaseUrl:              "https://{{location}}-discoveryengine.googleapis.com/v1/",
+		CustomEndpointField:  "discovery_engine_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DISCOVERY_ENGINE_CUSTOM_ENDPOINT",
 	}.Register()
 }

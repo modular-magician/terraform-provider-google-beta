@@ -26,7 +26,9 @@ const ProductName = "secretmanager"
 
 func init() {
 	registry.Product{
-		Name:    "secretmanager",
-		BaseUrl: "https://secretmanager.googleapis.com/v1/",
+		Name:                 "secretmanager",
+		BaseUrl:              "https://secretmanager.googleapis.com/v1/",
+		CustomEndpointField:  "secret_manager_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_SECRET_MANAGER_CUSTOM_ENDPOINT",
 	}.Register()
 }

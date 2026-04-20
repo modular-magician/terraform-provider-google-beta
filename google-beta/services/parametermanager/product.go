@@ -26,7 +26,9 @@ const ProductName = "parametermanager"
 
 func init() {
 	registry.Product{
-		Name:    "parametermanager",
-		BaseUrl: "https://parametermanager.googleapis.com/v1/",
+		Name:                 "parametermanager",
+		BaseUrl:              "https://parametermanager.googleapis.com/v1/",
+		CustomEndpointField:  "parameter_manager_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_PARAMETER_MANAGER_CUSTOM_ENDPOINT",
 	}.Register()
 }

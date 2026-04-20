@@ -26,7 +26,9 @@ const ProductName = "observability"
 
 func init() {
 	registry.Product{
-		Name:    "observability",
-		BaseUrl: "https://observability.googleapis.com/v1/",
+		Name:                 "observability",
+		BaseUrl:              "https://observability.googleapis.com/v1/",
+		CustomEndpointField:  "observability_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_OBSERVABILITY_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "bigqueryreservation"
 
 func init() {
 	registry.Product{
-		Name:    "bigqueryreservation",
-		BaseUrl: "https://bigqueryreservation.googleapis.com/v1/",
+		Name:                 "bigqueryreservation",
+		BaseUrl:              "https://bigqueryreservation.googleapis.com/v1/",
+		CustomEndpointField:  "bigquery_reservation_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_BIGQUERY_RESERVATION_CUSTOM_ENDPOINT",
 	}.Register()
 }

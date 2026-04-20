@@ -26,7 +26,9 @@ const ProductName = "datafusion"
 
 func init() {
 	registry.Product{
-		Name:    "datafusion",
-		BaseUrl: "https://datafusion.googleapis.com/v1beta1/",
+		Name:                 "datafusion",
+		BaseUrl:              "https://datafusion.googleapis.com/v1beta1/",
+		CustomEndpointField:  "data_fusion_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DATA_FUSION_CUSTOM_ENDPOINT",
 	}.Register()
 }

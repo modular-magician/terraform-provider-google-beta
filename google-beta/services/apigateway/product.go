@@ -26,7 +26,9 @@ const ProductName = "apigateway"
 
 func init() {
 	registry.Product{
-		Name:    "apigateway",
-		BaseUrl: "https://apigateway.googleapis.com/v1beta/",
+		Name:                 "apigateway",
+		BaseUrl:              "https://apigateway.googleapis.com/v1beta/",
+		CustomEndpointField:  "api_gateway_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_API_GATEWAY_CUSTOM_ENDPOINT",
 	}.Register()
 }

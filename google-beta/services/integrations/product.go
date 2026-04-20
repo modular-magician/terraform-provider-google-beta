@@ -26,7 +26,9 @@ const ProductName = "integrations"
 
 func init() {
 	registry.Product{
-		Name:    "integrations",
-		BaseUrl: "https://integrations.googleapis.com/v1/",
+		Name:                 "integrations",
+		BaseUrl:              "https://integrations.googleapis.com/v1/",
+		CustomEndpointField:  "integrations_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_INTEGRATIONS_CUSTOM_ENDPOINT",
 	}.Register()
 }

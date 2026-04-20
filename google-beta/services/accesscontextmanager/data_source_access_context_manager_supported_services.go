@@ -81,7 +81,7 @@ func dataSourceAccessContextManagerSupportedServicesRead(d *schema.ResourceData,
 		return err
 	}
 
-	urlRequest := config.AccessContextManagerBasePath + "services"
+	urlRequest := config.BasePaths["accesscontextmanager"] + "services"
 
 	headers := make(http.Header)
 	supportedServices := make([]map[string]interface{}, 0)

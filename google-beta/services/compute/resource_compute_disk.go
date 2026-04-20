@@ -386,13 +386,13 @@ func ExpandStoragePoolUrl(v interface{}, d tpgresource.TerraformResourceData, co
 		return formattedStr, nil
 	} else if strings.HasPrefix(formattedStr, "projects/") {
 		// If the self link references a project, we'll just stuck the compute prefix on it
-		replacedStr = config.ComputeBasePath + formattedStr
+		replacedStr = config.BasePaths["compute"] + formattedStr
 	} else if strings.HasPrefix(formattedStr, "zones/") {
 		// For regional or zonal resources which include their region or zone, just put the project in front.
-		replacedStr = config.ComputeBasePath + "projects/" + project + "/" + formattedStr
+		replacedStr = config.BasePaths["compute"] + "projects/" + project + "/" + formattedStr
 	} else {
 		// Anything else is assumed to be a zonal resource, with a partial link that begins with the resource name.
-		replacedStr = config.ComputeBasePath + "projects/" + project + "/zones/" + zone + "/storagePools/" + formattedStr
+		replacedStr = config.BasePaths["compute"] + "projects/" + project + "/zones/" + zone + "/storagePools/" + formattedStr
 	}
 	return replacedStr, nil
 }
@@ -1729,7 +1729,7 @@ func resourceComputeDiskDelete(d *schema.ResourceData, meta interface{}) error {
 			snapshotObj["snapshotEncryptionKey"] = snapshotEncryptionKey
 		}
 
-		snapshotUrl := fmt.Sprintf("%sprojects/%s/global/snapshots", config.ComputeBasePath, project)
+		snapshotUrl := fmt.Sprintf("%sprojects/%s/global/snapshots", config.BasePaths["compute"], project)
 
 		res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 			Config:    config,
@@ -1765,7 +1765,7 @@ func resourceComputeDiskDelete(d *schema.ResourceData, meta interface{}) error {
 			}
 
 			// Get instance details using REST API
-			instanceUrl, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%sprojects/%s/zones/%s/instances/%s", config.ComputeBasePath, instanceProject, instanceZone, instanceName))
+			instanceUrl, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%sprojects/%s/zones/%s/instances/%s", config.BasePaths["compute"], instanceProject, instanceZone, instanceName))
 			if err != nil {
 				return err
 			}
@@ -1803,7 +1803,7 @@ func resourceComputeDiskDelete(d *schema.ResourceData, meta interface{}) error {
 
 		for _, call := range detachCalls {
 			detachUrl := fmt.Sprintf("%sprojects/%s/zones/%s/instances/%s/detachDisk?deviceName=%s",
-				config.ComputeBasePath, call.project, call.zone, call.instance, call.deviceName)
+				config.BasePaths["compute"], call.project, call.zone, call.instance, call.deviceName)
 
 			res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
 				Config:    config,

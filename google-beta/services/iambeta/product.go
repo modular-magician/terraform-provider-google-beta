@@ -26,7 +26,9 @@ const ProductName = "iambeta"
 
 func init() {
 	registry.Product{
-		Name:    "iambeta",
-		BaseUrl: "https://iam.googleapis.com/v1/",
+		Name:                 "iambeta",
+		BaseUrl:              "https://iam.googleapis.com/v1/",
+		CustomEndpointField:  "iam_beta_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_IAM_BETA_CUSTOM_ENDPOINT",
 	}.Register()
 }

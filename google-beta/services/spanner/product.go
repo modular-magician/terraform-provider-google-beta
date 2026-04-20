@@ -26,7 +26,9 @@ const ProductName = "spanner"
 
 func init() {
 	registry.Product{
-		Name:    "spanner",
-		BaseUrl: "https://spanner.googleapis.com/v1/",
+		Name:                 "spanner",
+		BaseUrl:              "https://spanner.googleapis.com/v1/",
+		CustomEndpointField:  "spanner_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_SPANNER_CUSTOM_ENDPOINT",
 	}.Register()
 }

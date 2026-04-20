@@ -26,7 +26,9 @@ const ProductName = "iap"
 
 func init() {
 	registry.Product{
-		Name:    "iap",
-		BaseUrl: "https://iap.googleapis.com/v1/",
+		Name:                 "iap",
+		BaseUrl:              "https://iap.googleapis.com/v1/",
+		CustomEndpointField:  "iap_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_IAP_CUSTOM_ENDPOINT",
 	}.Register()
 }

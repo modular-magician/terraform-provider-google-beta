@@ -1020,7 +1020,7 @@ func resourceArtifactRegistryRepositoryCreate(d *schema.ResourceData, meta inter
 	}
 	loc := tpgresource.LocationFromId(urlFormatted)
 
-	basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+	basePath, err := transport_tpg.ResourceBasePath(config.BasePaths["artifactregistry"], config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
 	if err != nil {
 		return fmt.Errorf("Error qualifying Create base path for Repository: %s", err)
 	}
@@ -1118,7 +1118,7 @@ func resourceArtifactRegistryRepositoryRead(d *schema.ResourceData, meta interfa
 	}
 	loc := tpgresource.LocationFromId(urlFormatted)
 
-	basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+	basePath, err := transport_tpg.ResourceBasePath(config.BasePaths["artifactregistry"], config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
 	if err != nil {
 		return fmt.Errorf("Error qualifying base path for Repository: %s", err)
 	}
@@ -1335,7 +1335,7 @@ func resourceArtifactRegistryRepositoryUpdate(d *schema.ResourceData, meta inter
 
 	loc := tpgresource.LocationFromId(d.Id())
 
-	basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+	basePath, err := transport_tpg.ResourceBasePath(config.BasePaths["artifactregistry"], config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
 	if err != nil {
 		return fmt.Errorf("Error qualifying base path for Repository: %s", err)
 	}
@@ -1433,7 +1433,7 @@ func resourceArtifactRegistryRepositoryDelete(d *schema.ResourceData, meta inter
 	billingProject = project
 	loc := tpgresource.LocationFromId(d.Id())
 
-	basePath, err := transport_tpg.ResourceBasePath(config.ArtifactRegistryBasePath, config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
+	basePath, err := transport_tpg.ResourceBasePath(config.BasePaths["artifactregistry"], config.ArtifactRegistryRepBasePath, "ArtifactRegistry", config, loc)
 	if err != nil {
 		return fmt.Errorf("Error qualifying base path for Repository: %s", err)
 	}

@@ -26,7 +26,9 @@ const ProductName = "artifactregistry"
 
 func init() {
 	registry.Product{
-		Name:    "artifactregistry",
-		BaseUrl: "https://artifactregistry.googleapis.com/v1/",
+		Name:                 "artifactregistry",
+		BaseUrl:              "https://artifactregistry.googleapis.com/v1/",
+		CustomEndpointField:  "artifact_registry_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_ARTIFACT_REGISTRY_CUSTOM_ENDPOINT",
 	}.Register()
 }

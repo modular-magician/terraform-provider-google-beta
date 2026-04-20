@@ -26,7 +26,9 @@ const ProductName = "identityplatform"
 
 func init() {
 	registry.Product{
-		Name:    "identityplatform",
-		BaseUrl: "https://identitytoolkit.googleapis.com/v2/",
+		Name:                 "identityplatform",
+		BaseUrl:              "https://identitytoolkit.googleapis.com/v2/",
+		CustomEndpointField:  "identity_platform_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_IDENTITY_PLATFORM_CUSTOM_ENDPOINT",
 	}.Register()
 }

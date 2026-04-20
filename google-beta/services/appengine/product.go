@@ -26,7 +26,9 @@ const ProductName = "appengine"
 
 func init() {
 	registry.Product{
-		Name:    "appengine",
-		BaseUrl: "https://appengine.googleapis.com/v1beta/",
+		Name:                 "appengine",
+		BaseUrl:              "https://appengine.googleapis.com/v1beta/",
+		CustomEndpointField:  "app_engine_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_APP_ENGINE_CUSTOM_ENDPOINT",
 	}.Register()
 }

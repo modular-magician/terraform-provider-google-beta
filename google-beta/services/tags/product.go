@@ -26,7 +26,9 @@ const ProductName = "tags"
 
 func init() {
 	registry.Product{
-		Name:    "tags",
-		BaseUrl: "https://cloudresourcemanager.googleapis.com/v3/",
+		Name:                 "tags",
+		BaseUrl:              "https://cloudresourcemanager.googleapis.com/v3/",
+		CustomEndpointField:  "tags_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_TAGS_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "kms"
 
 func init() {
 	registry.Product{
-		Name:    "kms",
-		BaseUrl: "https://cloudkms.googleapis.com/v1/",
+		Name:                 "kms",
+		BaseUrl:              "https://cloudkms.googleapis.com/v1/",
+		CustomEndpointField:  "kms_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_KMS_CUSTOM_ENDPOINT",
 	}.Register()
 }

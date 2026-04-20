@@ -26,7 +26,9 @@ const ProductName = "cloudasset"
 
 func init() {
 	registry.Product{
-		Name:    "cloudasset",
-		BaseUrl: "https://cloudasset.googleapis.com/v1/",
+		Name:                 "cloudasset",
+		BaseUrl:              "https://cloudasset.googleapis.com/v1/",
+		CustomEndpointField:  "cloud_asset_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_CLOUD_ASSET_CUSTOM_ENDPOINT",
 	}.Register()
 }

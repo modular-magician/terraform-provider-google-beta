@@ -26,7 +26,9 @@ const ProductName = "looker"
 
 func init() {
 	registry.Product{
-		Name:    "looker",
-		BaseUrl: "https://looker.googleapis.com/v1/",
+		Name:                 "looker",
+		BaseUrl:              "https://looker.googleapis.com/v1/",
+		CustomEndpointField:  "looker_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_LOOKER_CUSTOM_ENDPOINT",
 	}.Register()
 }

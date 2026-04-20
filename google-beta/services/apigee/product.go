@@ -26,7 +26,9 @@ const ProductName = "apigee"
 
 func init() {
 	registry.Product{
-		Name:    "apigee",
-		BaseUrl: "https://apigee.googleapis.com/v1/",
+		Name:                 "apigee",
+		BaseUrl:              "https://apigee.googleapis.com/v1/",
+		CustomEndpointField:  "apigee_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_APIGEE_CUSTOM_ENDPOINT",
 	}.Register()
 }

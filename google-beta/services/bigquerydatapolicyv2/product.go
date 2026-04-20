@@ -26,7 +26,9 @@ const ProductName = "bigquerydatapolicyv2"
 
 func init() {
 	registry.Product{
-		Name:    "bigquerydatapolicyv2",
-		BaseUrl: "https://bigquerydatapolicy.googleapis.com/v2/",
+		Name:                 "bigquerydatapolicyv2",
+		BaseUrl:              "https://bigquerydatapolicy.googleapis.com/v2/",
+		CustomEndpointField:  "bigquery_datapolicyv2_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_BIGQUERY_DATAPOLICYV2_CUSTOM_ENDPOINT",
 	}.Register()
 }

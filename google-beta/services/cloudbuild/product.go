@@ -26,7 +26,9 @@ const ProductName = "cloudbuild"
 
 func init() {
 	registry.Product{
-		Name:    "cloudbuild",
-		BaseUrl: "https://cloudbuild.googleapis.com/v1/",
+		Name:                 "cloudbuild",
+		BaseUrl:              "https://cloudbuild.googleapis.com/v1/",
+		CustomEndpointField:  "cloud_build_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_CLOUD_BUILD_CUSTOM_ENDPOINT",
 	}.Register()
 }

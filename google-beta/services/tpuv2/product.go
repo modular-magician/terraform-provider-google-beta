@@ -26,7 +26,9 @@ const ProductName = "tpuv2"
 
 func init() {
 	registry.Product{
-		Name:    "tpuv2",
-		BaseUrl: "https://tpu.googleapis.com/v2alpha1/",
+		Name:                 "tpuv2",
+		BaseUrl:              "https://tpu.googleapis.com/v2alpha1/",
+		CustomEndpointField:  "tpu_v2_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_TPU_V2_CUSTOM_ENDPOINT",
 	}.Register()
 }

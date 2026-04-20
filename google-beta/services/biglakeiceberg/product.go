@@ -26,7 +26,9 @@ const ProductName = "biglakeiceberg"
 
 func init() {
 	registry.Product{
-		Name:    "biglakeiceberg",
-		BaseUrl: "https://biglake.googleapis.com/",
+		Name:                 "biglakeiceberg",
+		BaseUrl:              "https://biglake.googleapis.com/",
+		CustomEndpointField:  "biglake_iceberg_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_BIGLAKE_ICEBERG_CUSTOM_ENDPOINT",
 	}.Register()
 }

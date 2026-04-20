@@ -26,7 +26,9 @@ const ProductName = "dialogflow"
 
 func init() {
 	registry.Product{
-		Name:    "dialogflow",
-		BaseUrl: "https://dialogflow.googleapis.com/v2beta1/",
+		Name:                 "dialogflow",
+		BaseUrl:              "https://dialogflow.googleapis.com/v2beta1/",
+		CustomEndpointField:  "dialogflow_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_DIALOGFLOW_CUSTOM_ENDPOINT",
 	}.Register()
 }

@@ -26,7 +26,9 @@ const ProductName = "securityscanner"
 
 func init() {
 	registry.Product{
-		Name:    "securityscanner",
-		BaseUrl: "https://websecurityscanner.googleapis.com/v1beta/",
+		Name:                 "securityscanner",
+		BaseUrl:              "https://websecurityscanner.googleapis.com/v1beta/",
+		CustomEndpointField:  "security_scanner_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_SECURITY_SCANNER_CUSTOM_ENDPOINT",
 	}.Register()
 }

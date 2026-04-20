@@ -26,7 +26,9 @@ const ProductName = "gkebackup"
 
 func init() {
 	registry.Product{
-		Name:    "gkebackup",
-		BaseUrl: "https://gkebackup.googleapis.com/v1/",
+		Name:                 "gkebackup",
+		BaseUrl:              "https://gkebackup.googleapis.com/v1/",
+		CustomEndpointField:  "gke_backup_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_GKE_BACKUP_CUSTOM_ENDPOINT",
 	}.Register()
 }

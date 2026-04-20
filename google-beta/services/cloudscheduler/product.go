@@ -26,7 +26,9 @@ const ProductName = "cloudscheduler"
 
 func init() {
 	registry.Product{
-		Name:    "cloudscheduler",
-		BaseUrl: "https://cloudscheduler.googleapis.com/v1/",
+		Name:                 "cloudscheduler",
+		BaseUrl:              "https://cloudscheduler.googleapis.com/v1/",
+		CustomEndpointField:  "cloud_scheduler_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_CLOUD_SCHEDULER_CUSTOM_ENDPOINT",
 	}.Register()
 }

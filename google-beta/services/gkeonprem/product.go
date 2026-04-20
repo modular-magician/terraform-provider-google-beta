@@ -26,7 +26,9 @@ const ProductName = "gkeonprem"
 
 func init() {
 	registry.Product{
-		Name:    "gkeonprem",
-		BaseUrl: "https://gkeonprem.googleapis.com/v1/",
+		Name:                 "gkeonprem",
+		BaseUrl:              "https://gkeonprem.googleapis.com/v1/",
+		CustomEndpointField:  "gkeonprem_custom_endpoint",
+		CustomEndpointEnvVar: "GOOGLE_GKEONPREM_CUSTOM_ENDPOINT",
 	}.Register()
 }
