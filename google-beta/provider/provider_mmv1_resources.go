@@ -602,6 +602,7 @@ var generatedIAMDatasources = map[string]*schema.Resource{
 	"google_iap_web_type_compute_iam_policy":                       registry.DataSource("google_iap_web_type_compute_iam_policy"),
 	"google_kms_ekm_connection_iam_policy":                         registry.DataSource("google_kms_ekm_connection_iam_policy"),
 	"google_logging_log_view_iam_policy":                           registry.DataSource("google_logging_log_view_iam_policy"),
+	"google_network_connectivity_hub_iam_policy":                   registry.DataSource("google_network_connectivity_hub_iam_policy"),
 	"google_network_security_address_group_iam_policy":             registry.DataSource("google_network_security_address_group_iam_policy"),
 	"google_notebooks_instance_iam_policy":                         registry.DataSource("google_notebooks_instance_iam_policy"),
 	"google_notebooks_runtime_iam_policy":                          registry.DataSource("google_notebooks_runtime_iam_policy"),
@@ -664,8 +665,8 @@ var handwrittenIAMDatasources = map[string]*schema.Resource{
 
 // Resources
 // Generated resources: 811
-// Generated IAM resources: 369
-// Total generated resources: 1180
+// Generated IAM resources: 372
+// Total generated resources: 1183
 var generatedResources = map[string]*schema.Resource{
 	"google_folder_access_approval_settings":                                     registry.Resource("google_folder_access_approval_settings"),
 	"google_organization_access_approval_settings":                               registry.Resource("google_organization_access_approval_settings"),
@@ -1527,6 +1528,9 @@ var generatedResources = map[string]*schema.Resource{
 	"google_network_connectivity_gateway_advertised_route":                       registry.Resource("google_network_connectivity_gateway_advertised_route"),
 	"google_network_connectivity_group":                                          registry.Resource("google_network_connectivity_group"),
 	"google_network_connectivity_hub":                                            registry.Resource("google_network_connectivity_hub"),
+	"google_network_connectivity_hub_iam_binding":                                registry.Resource("google_network_connectivity_hub_iam_binding"),
+	"google_network_connectivity_hub_iam_member":                                 registry.Resource("google_network_connectivity_hub_iam_member"),
+	"google_network_connectivity_hub_iam_policy":                                 registry.Resource("google_network_connectivity_hub_iam_policy"),
 	"google_network_connectivity_multicloud_data_transfer_config":                registry.Resource("google_network_connectivity_multicloud_data_transfer_config"),
 	"google_network_connectivity_policy_based_route":                             registry.Resource("google_network_connectivity_policy_based_route"),
 	"google_network_connectivity_regional_endpoint":                              registry.Resource("google_network_connectivity_regional_endpoint"),
