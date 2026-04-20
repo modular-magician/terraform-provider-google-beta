@@ -443,6 +443,89 @@ resource "google_compute_organization_security_policy_rule" "policy" {
 `, context)
 }
 
+func TestAccComputeOrganizationSecurityPolicyRule_organizationSecurityPolicyRuleWithBodyExcludeExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"org_id":        envvar.GetTestOrgFromEnv(t),
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckComputeOrganizationSecurityPolicyRuleDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeOrganizationSecurityPolicyRule_organizationSecurityPolicyRuleWithBodyExcludeExample(context),
+			},
+			{
+				ResourceName:            "google_compute_organization_security_policy_rule.policy",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"policy_id"},
+			},
+			{
+				ResourceName:       "google_compute_organization_security_policy_rule.policy",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccComputeOrganizationSecurityPolicyRule_organizationSecurityPolicyRuleWithBodyExcludeExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_organization_security_policy" "policy" {
+  provider   = google-beta
+  short_name = "tf-test%{random_suffix}"
+  parent     = "organizations/%{org_id}"
+  type       = "CLOUD_ARMOR"
+}
+
+resource "google_compute_organization_security_policy_rule" "policy" {
+  provider  = google-beta
+  policy_id = google_compute_organization_security_policy.policy.id
+  
+  action   = "allow" 
+  priority = 100
+
+  match {
+    versioned_expr = "SRC_IPS_V1"
+    config {
+      src_ip_ranges = ["192.168.0.0/16"]
+    }
+  }
+
+  preconfigured_waf_config {
+
+    exclusion {
+      target_rule_set = "sqli-v33-stable"
+      target_rule_ids = ["owasp-crs-v030301-id942100-sqli"]
+
+      request_query_param {
+        operator = "CONTAINS"
+        value    = "debug_token"
+      }
+
+      request_header {
+        operator = "STARTS_WITH"
+        value    = "X-Internal-Custom"
+      }
+
+      request_cookie {
+        operator = "EQUALS"
+        value    = "session_id"
+      }
+    }
+  }
+}
+`, context)
+}
+
 func testAccCheckComputeOrganizationSecurityPolicyRuleDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

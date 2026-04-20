@@ -219,6 +219,55 @@ resource "google_compute_organization_security_policy_rule" "policy" {
   priority = 100
 }
 ```
+## Example Usage - Organization Security Policy Rule With Body Exclude
+
+
+```hcl
+resource "google_compute_organization_security_policy" "policy" {
+  provider   = google-beta
+  short_name = "tf-test%{random_suffix}"
+  parent     = "organizations/123456789"
+  type       = "CLOUD_ARMOR"
+}
+
+resource "google_compute_organization_security_policy_rule" "policy" {
+  provider  = google-beta
+  policy_id = google_compute_organization_security_policy.policy.id
+  
+  action   = "allow" 
+  priority = 100
+
+  match {
+    versioned_expr = "SRC_IPS_V1"
+    config {
+      src_ip_ranges = ["192.168.0.0/16"]
+    }
+  }
+
+  preconfigured_waf_config {
+
+    exclusion {
+      target_rule_set = "sqli-v33-stable"
+      target_rule_ids = ["owasp-crs-v030301-id942100-sqli"]
+
+      request_query_param {
+        operator = "CONTAINS"
+        value    = "debug_token"
+      }
+
+      request_header {
+        operator = "STARTS_WITH"
+        value    = "X-Internal-Custom"
+      }
+
+      request_cookie {
+        operator = "EQUALS"
+        value    = "session_id"
+      }
+    }
+  }
+}
+```
 
 ## Argument Reference
 
