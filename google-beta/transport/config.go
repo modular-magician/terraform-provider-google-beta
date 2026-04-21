@@ -834,7 +834,7 @@ var DefaultRepStatus = map[string]bool{
 	ApihubBasePathKey:                   false,
 	AppEngineBasePathKey:                false,
 	ApphubBasePathKey:                   false,
-	ArtifactRegistryBasePathKey:         false,
+	ArtifactRegistryBasePathKey:         true,
 	BackupDRBasePathKey:                 false,
 	BeyondcorpBasePathKey:               false,
 	BiglakeBasePathKey:                  false,
