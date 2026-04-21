@@ -48,6 +48,7 @@ resource "google_compute_future_reservation" "gce_future_reservation" {
   provider = google-beta
   name     = "gce-future-reservation"
   project  = "my-project-name"
+  zone     = "us-central1-a"
   auto_delete_auto_created_reservations = true
   planning_status = "DRAFT"
   name_prefix = "fr-basic"
@@ -72,6 +73,7 @@ resource "google_compute_future_reservation" "gce_future_reservation" {
   provider = google-beta
   name     = "gce-future-reservation-aggregate-reservation"
   project  = "my-project-name"
+  zone     = "us-central1-a"
   auto_delete_auto_created_reservations = true
   planning_status = "DRAFT"
   name_prefix = "fr-basic"
@@ -115,8 +117,12 @@ The following arguments are supported:
   RFC1035. Specifically, the name must be 1-63 characters long and match
   the regular expression `[a-z]([-a-z0-9]*[a-z0-9])?` which means the
   first character must be a lowercase letter, and all following
-  characters must be a dash, lowercase letter, or digit, except the las
+  characters must be a dash, lowercase letter, or digit, except the last
   character, which cannot be a dash.
+
+* `zone` -
+  (Required)
+  The zone where the future reservation is located.
 
 
 * `description` -
@@ -383,9 +389,6 @@ In addition to the arguments listed above, the following computed attributes are
 
 * `id` - an identifier for the resource with format `projects/{{project}}/zones/{{zone}}/futureReservations/{{name}}`
 
-* `zone` -
-  URL of the Zone where this future reservation resides.
-
 * `creation_timestamp` -
   The creation timestamp for this future reservation in RFC3339 text format.
 
@@ -643,8 +646,8 @@ In Terraform v1.12.0 and later, use an [`identity` block](https://developer.hash
 ```tf
 import {
   identity = {
-    zone = "<-optional value->"
     name = "<-required value->"
+    zone = "<-required value->"
     project = "<-optional value->"
   }
   to = google_compute_future_reservation.default
