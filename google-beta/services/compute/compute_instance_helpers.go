@@ -565,6 +565,7 @@ func flattenNetworkInterfaces(d *schema.ResourceData, config *transport_tpg.Conf
 			"queue_count":                 iface.QueueCount,
 			"internal_ipv6_prefix_length": iface.InternalIpv6PrefixLength,
 			"igmp_query":                  iface.IgmpQuery,
+			"enable_vpc_scoped_dns":       iface.EnableVpcScopedDns,
 		}
 		// Instance template interfaces never have names, so they're absent
 		// in the instance template network_interface schema. We want to use the
@@ -676,6 +677,9 @@ func expandNetworkInterfaces(d tpgresource.TerraformResourceData, config *transp
 		if macAddressObj, ok := data["mac_address"]; ok {
 			macAddress = macAddressObj.(string)
 		}
+		if v, ok := data["enable_vpc_scoped_dns"]; ok && v != nil && v.(bool) && networkAttachment == "" {
+			return nil, fmt.Errorf("enable_vpc_scoped_dns can only be set when network_attachment is provided")
+		}
 
 		ifaces[i] = &compute.NetworkInterface{
 			NetworkIP:                data["network_ip"].(string),
@@ -693,6 +697,9 @@ func expandNetworkInterfaces(d tpgresource.TerraformResourceData, config *transp
 			InternalIpv6PrefixLength: int64(data["internal_ipv6_prefix_length"].(int)),
 			IgmpQuery:                data["igmp_query"].(string),
 			MacAddress:               macAddress,
+		}
+		if v, ok := data["enable_vpc_scoped_dns"]; ok && v != nil {
+			ifaces[i].EnableVpcScopedDns = v.(bool)
 		}
 	}
 	return ifaces, nil

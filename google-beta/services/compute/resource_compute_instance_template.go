@@ -531,6 +531,12 @@ Google Cloud KMS. Only one of kms_key_self_link, rsa_encrypted_key and raw_key m
 							DiffSuppressFunc: tpgresource.CompareSelfLinkOrResourceName,
 							Description:      `The URL of the network attachment that this interface should connect to in the following format: projects/{projectNumber}/regions/{region_name}/networkAttachments/{network_attachment_name}.`,
 						},
+						"enable_vpc_scoped_dns": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `If set to true, enables DNS resolution over this PSC interface. Valid only with network_attachment. Note: This is currently in restricted preview and requires project allow-listing.`,
+						},
 
 						"parent_nic_name": {
 							Type:        schema.TypeString,
