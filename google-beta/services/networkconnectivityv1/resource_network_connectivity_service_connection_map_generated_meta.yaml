@@ -1,0 +1,32 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_network_connectivity_service_connection_map
+generation_type: mmv1
+source_file: products/networkconnectivityv1/ServiceConnectionMap.yaml
+api_service_name: networkconnectivity.googleapis.com
+api_version: v1
+api_resource_type_kind: ServiceConnectionMap
+fields:
+    - api_field: consumerPscConfigs.consumerInstanceProject
+    - api_field: consumerPscConfigs.disableGlobalAccess
+    - api_field: consumerPscConfigs.network
+    - api_field: consumerPscConfigs.producerInstanceId
+    - api_field: consumerPscConfigs.project
+    - api_field: consumerPscConfigs.serviceAttachmentIpAddressMap
+    - api_field: consumerPscConfigs.state
+    - api_field: createTime
+    - api_field: description
+    - field: effective_labels
+      provider_only: true
+    - api_field: infrastructure
+    - api_field: labels
+    - field: location
+      provider_only: true
+    - field: name
+      provider_only: true
+    - api_field: producerPscConfigs.serviceAttachmentUri
+    - api_field: serviceClass
+    - api_field: serviceClassUri
+    - field: terraform_labels
+      provider_only: true
+    - api_field: updateTime
