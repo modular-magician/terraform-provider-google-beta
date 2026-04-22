@@ -86,6 +86,35 @@ resource "google_discovery_engine_data_store" "advanced" {
   skip_default_schema_creation = false
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=discoveryengine_targetsite_skip_wait&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Discoveryengine Targetsite Skip Wait
+
+
+```hcl
+resource "google_discovery_engine_target_site" "skip_wait" {
+  location             = google_discovery_engine_data_store.skip_wait.location
+  data_store_id        = google_discovery_engine_data_store.skip_wait.data_store_id
+  provided_uri_pattern = "cloud.google.com/docs/*"
+  type                 = "INCLUDE"
+  exact_match          = false
+  skip_wait            = true
+}
+
+resource "google_discovery_engine_data_store" "skip_wait" {
+  location                     = "global"
+  data_store_id                = "data-store-id"
+  display_name                 = "tf-test-skip-wait-site-search-datastore"
+  industry_vertical            = "GENERIC"
+  content_config               = "PUBLIC_WEBSITE"
+  solution_types               = ["SOLUTION_TYPE_SEARCH"]
+  create_advanced_site_search  = false
+  skip_default_schema_creation = false
+}
+```
 
 ## Argument Reference
 
@@ -123,6 +152,15 @@ The following arguments are supported:
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
+
+* `skip_wait` - (Optional) If set to true, skip waiting for the long-running indexing operation to
+complete after creating the target site. The resource will be saved to
+Terraform state immediately after creation. Indexing continues
+asynchronously in the background.
+
+This is useful for large web crawl data stores where indexing can take
+up to 480 minutes, which would otherwise cause `terraform apply` to
+hang. Defaults to `false` (wait for completion).
 
 
 

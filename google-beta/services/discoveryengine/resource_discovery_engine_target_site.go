@@ -100,6 +100,7 @@ func ResourceDiscoveryEngineTargetSite() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceDiscoveryEngineTargetSiteCreate,
 		Read:   resourceDiscoveryEngineTargetSiteRead,
+		Update: resourceDiscoveryEngineTargetSiteUpdate,
 		Delete: resourceDiscoveryEngineTargetSiteDelete,
 
 		Importer: &schema.ResourceImporter{
@@ -108,6 +109,7 @@ func ResourceDiscoveryEngineTargetSite() *schema.Resource {
 
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(480 * time.Minute),
+			Update: schema.DefaultTimeout(480 * time.Minute),
 			Delete: schema.DefaultTimeout(480 * time.Minute),
 		},
 
@@ -260,6 +262,19 @@ characters.`,
 				Computed:    true,
 				Description: `The target site's last updated time.`,
 			},
+			"skip_wait": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `If set to true, skip waiting for the long-running indexing operation to
+complete after creating the target site. The resource will be saved to
+Terraform state immediately after creation. Indexing continues
+asynchronously in the background.
+
+This is useful for large web crawl data stores where indexing can take
+up to 480 minutes, which would otherwise cause 'terraform apply' to
+hang. Defaults to 'false' (wait for completion).`,
+				Default: false,
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -339,21 +354,91 @@ func resourceDiscoveryEngineTargetSiteCreate(d *schema.ResourceData, meta interf
 	}
 	d.SetId(id)
 
-	// Use the resource in the operation response to populate
-	// identity fields and d.Id() before read
-	var opRes map[string]interface{}
-	err = DiscoveryEngineOperationWaitTimeWithResponse(
-		config, res, &opRes, project, "Creating TargetSite", userAgent,
-		d.Timeout(schema.TimeoutCreate))
-	if err != nil {
-		// The resource didn't actually create
-		d.SetId("")
+	if d.Get("skip_wait").(bool) {
+		// When skip_wait is true, don't wait for the LRO to complete.
+		// The 480-minute wait is for background indexing which we intentionally skip.
+		// For unverified domains the API returns done=true synchronously and the
+		// target site name is available directly in the POST response.
+		// For verified domains the API returns a bare operation with no response
+		// until full indexing completes. In that case we find the target site via
+		// a List call — the site is registered immediately after the POST returns.
+		var targetSiteName string
 
-		return fmt.Errorf("Error waiting to create TargetSite: %s", err)
-	}
+		if responseMap, ok := res["response"].(map[string]interface{}); ok {
+			// Fast path: synchronous response (unverified domains).
+			targetSiteName, _ = responseMap["name"].(string)
+		}
 
-	if err := d.Set("name", flattenDiscoveryEngineTargetSiteName(opRes["name"], d, config)); err != nil {
-		return err
+		if targetSiteName == "" {
+			// Slow path: verified domain — find the newly created site via List.
+			listURL, err := tpgresource.ReplaceVars(d, config, "{{DiscoveryEngineBasePath}}projects/{{project}}/locations/{{location}}/collections/default_collection/dataStores/{{data_store_id}}/siteSearchEngine/targetSites")
+			if err != nil {
+				return fmt.Errorf("Error constructing list URL for TargetSite: %s", err)
+			}
+			providedPattern := d.Get("provided_uri_pattern").(string)
+
+			err = transport_tpg.PollingWaitTime(
+				func() (map[string]interface{}, error) {
+					return transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+						Config:    config,
+						Method:    "GET",
+						Project:   billingProject,
+						RawURL:    listURL,
+						UserAgent: userAgent,
+						Headers:   headers,
+					})
+				},
+				func(resp map[string]interface{}, respErr error) transport_tpg.PollResult {
+					if respErr != nil {
+						return transport_tpg.ErrorPollResult(respErr)
+					}
+					targetSites, ok := resp["targetSites"].([]interface{})
+					if !ok {
+						return transport_tpg.PendingStatusPollResult("targetSites not yet available")
+					}
+					for _, site := range targetSites {
+						siteMap, ok := site.(map[string]interface{})
+						if !ok {
+							continue
+						}
+						if siteMap["generatedUriPattern"] == providedPattern {
+							if name, ok := siteMap["name"].(string); ok && name != "" {
+								targetSiteName = name
+								return transport_tpg.SuccessPollResult()
+							}
+						}
+					}
+					return transport_tpg.PendingStatusPollResult("target site not yet in list")
+				},
+				"Creating TargetSite",
+				30*time.Second,
+				1,
+			)
+			if err != nil {
+				d.SetId("")
+				return fmt.Errorf("Error creating TargetSite: could not find newly created site with pattern %q in list response: %s", providedPattern, err)
+			}
+		}
+
+		if err := d.Set("name", flattenDiscoveryEngineTargetSiteName(targetSiteName, d, config)); err != nil {
+			return err
+		}
+	} else {
+		// Normal path: wait for the LRO to complete and populate computed fields.
+		var opRes map[string]interface{}
+		err = DiscoveryEngineOperationWaitTimeWithResponse(
+			config, res, &opRes, project, "Creating TargetSite", userAgent,
+			d.Timeout(schema.TimeoutCreate))
+		if err != nil {
+			// The resource didn't actually create
+			d.SetId("")
+
+			return fmt.Errorf("Error waiting to create TargetSite: %s", err)
+		}
+
+		if err := d.Set("name", flattenDiscoveryEngineTargetSiteName(opRes["name"], d, config)); err != nil {
+			return err
+		}
 	}
 
 	// This may have caused the ID to update - update it if so.
@@ -434,6 +519,12 @@ func resourceDiscoveryEngineTargetSiteRead(d *schema.ResourceData, meta interfac
 
 	log.Printf("[DEBUG] Finished reading DiscoveryEngineTargetSite %q: %#v", d.Id(), res)
 
+	// Explicitly set virtual fields to default values if unset
+	if _, ok := d.GetOkExists("skip_wait"); !ok {
+		if err := d.Set("skip_wait", false); err != nil {
+			return fmt.Errorf("Error setting skip_wait: %s", err)
+		}
+	}
 	if err := d.Set("project", project); err != nil {
 		return fmt.Errorf("Error reading TargetSite: %s", err)
 	}
@@ -497,6 +588,11 @@ func resourceDiscoveryEngineTargetSiteRead(d *schema.ResourceData, meta interfac
 	}
 
 	return nil
+}
+
+func resourceDiscoveryEngineTargetSiteUpdate(d *schema.ResourceData, meta interface{}) error {
+	// Only the root field "labels", "terraform_labels", and virtual fields are mutable
+	return resourceDiscoveryEngineTargetSiteRead(d, meta)
 }
 
 func resourceDiscoveryEngineTargetSiteDelete(d *schema.ResourceData, meta interface{}) error {
