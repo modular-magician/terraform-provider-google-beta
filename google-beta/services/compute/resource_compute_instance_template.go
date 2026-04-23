@@ -18,6 +18,7 @@ package compute
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -1568,7 +1569,11 @@ func buildDisks(d *schema.ResourceData, config *transport_tpg.Config) ([]*comput
 		}
 
 		if v, ok := d.GetOk(prefix + ".guest_os_features"); ok {
-			disk.GuestOsFeatures = expandComputeInstanceGuestOsFeatures(v.([]interface{}))
+			var typedGuestOsFeatures []*compute.GuestOsFeature
+			if gofBytes, err := json.Marshal(expandComputeInstanceGuestOsFeatures(v.([]interface{}))); err == nil {
+				json.Unmarshal(gofBytes, &typedGuestOsFeatures)
+			}
+			disk.GuestOsFeatures = typedGuestOsFeatures
 		}
 
 		if v, ok := d.GetOk(prefix + ".architecture"); ok {
@@ -1662,28 +1667,52 @@ func resourceComputeInstanceTemplateCreate(d *schema.ResourceData, meta interfac
 	}
 	resourcePolicies := expandInstanceTemplateResourcePolicies(d, "resource_policies")
 
-	instanceProperties := &compute.InstanceProperties{
-		CanIpForward:               d.Get("can_ip_forward").(bool),
-		Description:                d.Get("instance_description").(string),
-		GuestAccelerators:          expandInstanceTemplateGuestAccelerators(d, config),
-		MachineType:                d.Get("machine_type").(string),
-		MinCpuPlatform:             d.Get("min_cpu_platform").(string),
-		Disks:                      disks,
-		Metadata:                   metadata,
-		PartnerMetadata:            PartnerMetadata,
-		NetworkInterfaces:          networks,
-		NetworkPerformanceConfig:   networkPerformanceConfig,
-		Scheduling:                 scheduling,
-		ServiceAccounts:            expandServiceAccounts(d.Get("service_account").([]interface{})),
-		Tags:                       resourceInstanceTags(d),
-		ConfidentialInstanceConfig: expandConfidentialInstanceConfig(d),
-		ShieldedInstanceConfig:     expandShieldedVmConfigs(d),
-		AdvancedMachineFeatures:    expandAdvancedMachineFeatures(d),
-		DisplayDevice:              expandDisplayDevice(d),
-		ResourcePolicies:           resourcePolicies,
-		ReservationAffinity:        reservationAffinity,
-		KeyRevocationActionType:    d.Get("key_revocation_action_type").(string),
+	instancePropertiesMap := map[string]interface{}{
+		"canIpForward":               d.Get("can_ip_forward").(bool),
+		"description":                d.Get("instance_description").(string),
+		"machineType":                d.Get("machine_type").(string),
+		"minCpuPlatform":             d.Get("min_cpu_platform").(string),
+		"metadata":                   metadata,
+		"networkInterfaces":          networks,
+		"networkPerformanceConfig":   networkPerformanceConfig,
+		"scheduling":                 scheduling,
+		"serviceAccounts":            expandServiceAccounts(d.Get("service_account").([]interface{})),
+		"tags":                       resourceInstanceTags(d),
+		"confidentialInstanceConfig": expandConfidentialInstanceConfig(d),
+		"shieldedInstanceConfig":     expandShieldedVmConfigs(d),
+		"advancedMachineFeatures":    expandAdvancedMachineFeatures(d),
+		"reservationAffinity":        reservationAffinity,
+		"keyRevocationActionType":    d.Get("key_revocation_action_type").(string),
 	}
+	if PartnerMetadata != nil {
+		instancePropertiesMap["partnerMetadata"] = PartnerMetadata
+	}
+	if displayDevice := expandDisplayDevice(d); displayDevice != nil {
+		instancePropertiesMap["displayDevice"] = displayDevice
+	}
+
+	if _, ok := d.GetOk("effective_labels"); ok {
+		instancePropertiesMap["labels"] = tpgresource.ExpandEffectiveLabels(d)
+	}
+
+	if _, ok := d.GetOk("resource_manager_tags"); ok {
+		instancePropertiesMap["resourceManagerTags"] = tpgresource.ExpandStringMap(d, "resource_manager_tags")
+	}
+
+	ipBytes, err := json.Marshal(instancePropertiesMap)
+	if err != nil {
+		return err
+	}
+
+	var instanceProperties compute.InstanceProperties
+	if err := json.Unmarshal(ipBytes, &instanceProperties); err != nil {
+		return err
+	}
+
+	// Re-assign typed slices/structs
+	instanceProperties.GuestAccelerators = expandInstanceTemplateGuestAccelerators(d, config)
+	instanceProperties.Disks = disks
+	instanceProperties.ResourcePolicies = resourcePolicies
 
 	if _, ok := d.GetOk("effective_labels"); ok {
 		instanceProperties.Labels = tpgresource.ExpandEffectiveLabels(d)
@@ -1708,7 +1737,7 @@ func resourceComputeInstanceTemplateCreate(d *schema.ResourceData, meta interfac
 	}
 	instanceTemplate := &compute.InstanceTemplate{
 		Description: d.Get("description").(string),
-		Properties:  instanceProperties,
+		Properties:  &instanceProperties,
 		Name:        itName,
 	}
 
@@ -2243,11 +2272,16 @@ func expandResourceComputeInstanceTemplateScheduling(d *schema.ResourceData, met
 		return nil, err
 	}
 
-	// Make sure we have an appropriate value for OnHostMaintenance if Preemptible
-	if expanded.Preemptible && expanded.OnHostMaintenance == "" {
-		expanded.OnHostMaintenance = "TERMINATE"
+	var typedScheduling *compute.Scheduling
+	if schedBytes, err := json.Marshal(expanded); err == nil {
+		json.Unmarshal(schedBytes, &typedScheduling)
 	}
-	return expanded, nil
+
+	// Make sure we have an appropriate value for OnHostMaintenance if Preemptible
+	if typedScheduling.Preemptible && typedScheduling.OnHostMaintenance == "" {
+		typedScheduling.OnHostMaintenance = "TERMINATE"
+	}
+	return typedScheduling, nil
 }
 
 func resourceComputeInstanceTemplateImportState(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
