@@ -15,7 +15,7 @@
 //
 // ----------------------------------------------------------------------------
 
-package billingbudgets_test
+package billing_test
 
 import (
 	"fmt"
@@ -50,7 +50,7 @@ var (
 	_ = googleapi.Error{}
 )
 
-func TestAccBillingBudgetsBudget_billingBudgetBasicExample(t *testing.T) {
+func TestAccBillingBudget_billingBudgetBasicExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
@@ -64,10 +64,10 @@ func TestAccBillingBudgetsBudget_billingBudgetBasicExample(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckBillingBudgetsBudgetDestroyProducer(t),
+		CheckDestroy:             testAccCheckBillingBudgetDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBillingBudgetsBudget_billingBudgetBasicExample(context),
+				Config: testAccBillingBudget_billingBudgetBasicExample(context),
 			},
 			{
 				ResourceName:            "google_billing_budget.budget",
@@ -85,7 +85,7 @@ func TestAccBillingBudgetsBudget_billingBudgetBasicExample(t *testing.T) {
 	})
 }
 
-func testAccBillingBudgetsBudget_billingBudgetBasicExample(context map[string]interface{}) string {
+func testAccBillingBudget_billingBudgetBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 data "google_billing_account" "account" {
   billing_account = "%{billing_acct}"
@@ -107,7 +107,7 @@ resource "google_billing_budget" "budget" {
 `, context)
 }
 
-func TestAccBillingBudgetsBudget_billingBudgetLastperiodExample(t *testing.T) {
+func TestAccBillingBudget_billingBudgetLastperiodExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
@@ -121,10 +121,10 @@ func TestAccBillingBudgetsBudget_billingBudgetLastperiodExample(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckBillingBudgetsBudgetDestroyProducer(t),
+		CheckDestroy:             testAccCheckBillingBudgetDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBillingBudgetsBudget_billingBudgetLastperiodExample(context),
+				Config: testAccBillingBudget_billingBudgetLastperiodExample(context),
 			},
 			{
 				ResourceName:            "google_billing_budget.budget",
@@ -142,7 +142,7 @@ func TestAccBillingBudgetsBudget_billingBudgetLastperiodExample(t *testing.T) {
 	})
 }
 
-func testAccBillingBudgetsBudget_billingBudgetLastperiodExample(context map[string]interface{}) string {
+func testAccBillingBudget_billingBudgetLastperiodExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 data "google_billing_account" "account" {
   billing_account = "%{billing_acct}"
@@ -173,7 +173,7 @@ resource "google_billing_budget" "budget" {
 `, context)
 }
 
-func TestAccBillingBudgetsBudget_billingBudgetFilterExample(t *testing.T) {
+func TestAccBillingBudget_billingBudgetFilterExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
@@ -188,10 +188,10 @@ func TestAccBillingBudgetsBudget_billingBudgetFilterExample(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckBillingBudgetsBudgetDestroyProducer(t),
+		CheckDestroy:             testAccCheckBillingBudgetDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBillingBudgetsBudget_billingBudgetFilterExample(context),
+				Config: testAccBillingBudget_billingBudgetFilterExample(context),
 			},
 			{
 				ResourceName:            "google_billing_budget.budget",
@@ -209,7 +209,7 @@ func TestAccBillingBudgetsBudget_billingBudgetFilterExample(t *testing.T) {
 	})
 }
 
-func testAccBillingBudgetsBudget_billingBudgetFilterExample(context map[string]interface{}) string {
+func testAccBillingBudget_billingBudgetFilterExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 data "google_billing_account" "account" {
   billing_account = "%{billing_acct}"
@@ -248,7 +248,7 @@ resource "google_billing_budget" "budget" {
 `, context)
 }
 
-func TestAccBillingBudgetsBudget_billingBudgetNotifyExample(t *testing.T) {
+func TestAccBillingBudget_billingBudgetNotifyExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
@@ -263,10 +263,10 @@ func TestAccBillingBudgetsBudget_billingBudgetNotifyExample(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckBillingBudgetsBudgetDestroyProducer(t),
+		CheckDestroy:             testAccCheckBillingBudgetDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBillingBudgetsBudget_billingBudgetNotifyExample(context),
+				Config: testAccBillingBudget_billingBudgetNotifyExample(context),
 			},
 			{
 				ResourceName:            "google_billing_budget.budget",
@@ -284,7 +284,7 @@ func TestAccBillingBudgetsBudget_billingBudgetNotifyExample(t *testing.T) {
 	})
 }
 
-func testAccBillingBudgetsBudget_billingBudgetNotifyExample(context map[string]interface{}) string {
+func testAccBillingBudget_billingBudgetNotifyExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 data "google_billing_account" "account" {
   billing_account = "%{billing_acct}"
@@ -335,7 +335,7 @@ resource "google_monitoring_notification_channel" "notification_channel" {
 `, context)
 }
 
-func TestAccBillingBudgetsBudget_billingBudgetNotifyProjectRecipientExample(t *testing.T) {
+func TestAccBillingBudget_billingBudgetNotifyProjectRecipientExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
@@ -349,10 +349,10 @@ func TestAccBillingBudgetsBudget_billingBudgetNotifyProjectRecipientExample(t *t
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckBillingBudgetsBudgetDestroyProducer(t),
+		CheckDestroy:             testAccCheckBillingBudgetDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBillingBudgetsBudget_billingBudgetNotifyProjectRecipientExample(context),
+				Config: testAccBillingBudget_billingBudgetNotifyProjectRecipientExample(context),
 			},
 			{
 				ResourceName:            "google_billing_budget.budget",
@@ -370,7 +370,7 @@ func TestAccBillingBudgetsBudget_billingBudgetNotifyProjectRecipientExample(t *t
 	})
 }
 
-func testAccBillingBudgetsBudget_billingBudgetNotifyProjectRecipientExample(context map[string]interface{}) string {
+func testAccBillingBudget_billingBudgetNotifyProjectRecipientExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 data "google_billing_account" "account" {
   billing_account = "%{billing_acct}"
@@ -402,7 +402,7 @@ resource "google_billing_budget" "budget" {
 `, context)
 }
 
-func TestAccBillingBudgetsBudget_billingBudgetCustomperiodExample(t *testing.T) {
+func TestAccBillingBudget_billingBudgetCustomperiodExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
@@ -416,10 +416,10 @@ func TestAccBillingBudgetsBudget_billingBudgetCustomperiodExample(t *testing.T) 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckBillingBudgetsBudgetDestroyProducer(t),
+		CheckDestroy:             testAccCheckBillingBudgetDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBillingBudgetsBudget_billingBudgetCustomperiodExample(context),
+				Config: testAccBillingBudget_billingBudgetCustomperiodExample(context),
 			},
 			{
 				ResourceName:            "google_billing_budget.budget",
@@ -437,7 +437,7 @@ func TestAccBillingBudgetsBudget_billingBudgetCustomperiodExample(t *testing.T) 
 	})
 }
 
-func testAccBillingBudgetsBudget_billingBudgetCustomperiodExample(context map[string]interface{}) string {
+func testAccBillingBudget_billingBudgetCustomperiodExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 data "google_billing_account" "account" {
   billing_account = "%{billing_acct}"
@@ -486,7 +486,7 @@ resource "google_billing_budget" "budget" {
 `, context)
 }
 
-func TestAccBillingBudgetsBudget_billingBudgetOptionalExample(t *testing.T) {
+func TestAccBillingBudget_billingBudgetOptionalExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
@@ -501,10 +501,10 @@ func TestAccBillingBudgetsBudget_billingBudgetOptionalExample(t *testing.T) {
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckBillingBudgetsBudgetDestroyProducer(t),
+		CheckDestroy:             testAccCheckBillingBudgetDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBillingBudgetsBudget_billingBudgetOptionalExample(context),
+				Config: testAccBillingBudget_billingBudgetOptionalExample(context),
 			},
 			{
 				ResourceName:            "google_billing_budget.budget",
@@ -522,7 +522,7 @@ func TestAccBillingBudgetsBudget_billingBudgetOptionalExample(t *testing.T) {
 	})
 }
 
-func testAccBillingBudgetsBudget_billingBudgetOptionalExample(context map[string]interface{}) string {
+func testAccBillingBudget_billingBudgetOptionalExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 data "google_billing_account" "account" {
   billing_account = "%{billing_acct}"
@@ -553,7 +553,7 @@ resource "google_pubsub_topic" "budget" {
 `, context)
 }
 
-func testAccCheckBillingBudgetsBudgetDestroyProducer(t *testing.T) func(s *terraform.State) error {
+func testAccCheckBillingBudgetDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
 			if rs.Type != "google_billing_budget" {
@@ -565,7 +565,7 @@ func testAccCheckBillingBudgetsBudgetDestroyProducer(t *testing.T) func(s *terra
 
 			config := acctest.GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{BillingBudgetsBasePath}}billingAccounts/{{billing_account}}/budgets/{{name}}")
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{BillingBasePath}}billingAccounts/{{billing_account}}/budgets/{{name}}")
 			if err != nil {
 				return err
 			}
@@ -584,7 +584,7 @@ func testAccCheckBillingBudgetsBudgetDestroyProducer(t *testing.T) func(s *terra
 				UserAgent: config.UserAgent,
 			})
 			if err == nil {
-				return fmt.Errorf("BillingBudgetsBudget still exists at %s", url)
+				return fmt.Errorf("BillingBudget still exists at %s", url)
 			}
 		}
 

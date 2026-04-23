@@ -282,14 +282,13 @@ type Config struct {
 	BigqueryDataTransferBasePath     string
 	BigqueryReservationBasePath      string
 	BigtableBasePath                 string
-	BillingBudgetsBasePath           string
+	BillingBasePath                  string
 	BinaryAuthorizationBasePath      string
 	BlockchainNodeEngineBasePath     string
 	CertificateManagerBasePath       string
 	CESBasePath                      string
 	ChronicleBasePath                string
 	CloudAssetBasePath               string
-	CloudBillingBasePath             string
 	CloudBuildBasePath               string
 	Cloudbuildv2BasePath             string
 	ClouddeployBasePath              string
@@ -311,6 +310,7 @@ type Config struct {
 	ContainerBasePath                string
 	ContainerAnalysisBasePath        string
 	ContainerAttachedBasePath        string
+	CoreBillingBasePath              string
 	DatabaseMigrationServiceBasePath string
 	DataCatalogBasePath              string
 	DataformBasePath                 string
@@ -432,6 +432,7 @@ type Config struct {
 	WorkloadIdentityBasePath         string
 	WorkstationsBasePath             string
 
+	CloudBillingBasePath      string
 	DataflowBasePath          string
 	IamCredentialsBasePath    string
 	ResourceManagerV3BasePath string
@@ -476,14 +477,13 @@ const BigqueryDatapolicyv2BasePathKey = "BigqueryDatapolicyv2"
 const BigqueryDataTransferBasePathKey = "BigqueryDataTransfer"
 const BigqueryReservationBasePathKey = "BigqueryReservation"
 const BigtableBasePathKey = "Bigtable"
-const BillingBudgetsBasePathKey = "BillingBudgets"
+const BillingBasePathKey = "Billing"
 const BinaryAuthorizationBasePathKey = "BinaryAuthorization"
 const BlockchainNodeEngineBasePathKey = "BlockchainNodeEngine"
 const CertificateManagerBasePathKey = "CertificateManager"
 const CESBasePathKey = "CES"
 const ChronicleBasePathKey = "Chronicle"
 const CloudAssetBasePathKey = "CloudAsset"
-const CloudBillingBasePathKey = "CloudBilling"
 const CloudBuildBasePathKey = "CloudBuild"
 const Cloudbuildv2BasePathKey = "Cloudbuildv2"
 const ClouddeployBasePathKey = "Clouddeploy"
@@ -505,6 +505,7 @@ const ContactCenterInsightsBasePathKey = "ContactCenterInsights"
 const ContainerBasePathKey = "Container"
 const ContainerAnalysisBasePathKey = "ContainerAnalysis"
 const ContainerAttachedBasePathKey = "ContainerAttached"
+const CoreBillingBasePathKey = "CoreBilling"
 const DatabaseMigrationServiceBasePathKey = "DatabaseMigrationService"
 const DataCatalogBasePathKey = "DataCatalog"
 const DataformBasePathKey = "Dataform"
@@ -625,6 +626,7 @@ const WorkbenchBasePathKey = "Workbench"
 const WorkflowsBasePathKey = "Workflows"
 const WorkloadIdentityBasePathKey = "WorkloadIdentity"
 const WorkstationsBasePathKey = "Workstations"
+const CloudBillingBasePathKey = "CloudBilling"
 const DataflowBasePathKey = "Dataflow"
 const IAMBasePathKey = "IAM"
 const IamCredentialsBasePathKey = "IamCredentials"
@@ -657,14 +659,13 @@ var DefaultBasePaths = map[string]string{
 	BigqueryDataTransferBasePathKey:     "https://bigquerydatatransfer.googleapis.com/v1/",
 	BigqueryReservationBasePathKey:      "https://bigqueryreservation.googleapis.com/v1/",
 	BigtableBasePathKey:                 "https://bigtableadmin.googleapis.com/v2/",
-	BillingBudgetsBasePathKey:           "https://billingbudgets.googleapis.com/v1/",
+	BillingBasePathKey:                  "https://billingbudgets.googleapis.com/v1/",
 	BinaryAuthorizationBasePathKey:      "https://binaryauthorization.googleapis.com/v1/",
 	BlockchainNodeEngineBasePathKey:     "https://blockchainnodeengine.googleapis.com/v1/",
 	CertificateManagerBasePathKey:       "https://certificatemanager.googleapis.com/v1/",
 	CESBasePathKey:                      "https://ces.googleapis.com/v1/",
 	ChronicleBasePathKey:                "https://{{location}}-chronicle.googleapis.com/v1beta/",
 	CloudAssetBasePathKey:               "https://cloudasset.googleapis.com/v1/",
-	CloudBillingBasePathKey:             "https://cloudbilling.googleapis.com/v1/",
 	CloudBuildBasePathKey:               "https://cloudbuild.googleapis.com/v1/",
 	Cloudbuildv2BasePathKey:             "https://cloudbuild.googleapis.com/v2/",
 	ClouddeployBasePathKey:              "https://clouddeploy.googleapis.com/v1/",
@@ -686,6 +687,7 @@ var DefaultBasePaths = map[string]string{
 	ContainerBasePathKey:                "https://container.googleapis.com/v1beta1/",
 	ContainerAnalysisBasePathKey:        "https://containeranalysis.googleapis.com/v1beta1/",
 	ContainerAttachedBasePathKey:        "https://{{location}}-gkemulticloud.googleapis.com/v1/",
+	CoreBillingBasePathKey:              "https://cloudbilling.googleapis.com/v1/",
 	DatabaseMigrationServiceBasePathKey: "https://datamigration.googleapis.com/v1/",
 	DataCatalogBasePathKey:              "https://datacatalog.googleapis.com/v1beta1/",
 	DataformBasePathKey:                 "https://dataform.googleapis.com/v1beta1/",
@@ -806,6 +808,7 @@ var DefaultBasePaths = map[string]string{
 	WorkflowsBasePathKey:                "https://workflows.googleapis.com/v1/",
 	WorkloadIdentityBasePathKey:         "https://workloadidentity.googleapis.com/v1/",
 	WorkstationsBasePathKey:             "https://workstations.googleapis.com/v1beta/",
+	CloudBillingBasePathKey:             "https://cloudbilling.googleapis.com/v1/",
 	DataflowBasePathKey:                 "https://dataflow.googleapis.com/v1b3/",
 	IAMBasePathKey:                      "https://iam.googleapis.com/v1/",
 	IamCredentialsBasePathKey:           "https://iamcredentials.googleapis.com/v1/",
@@ -847,14 +850,13 @@ var DefaultRepStatus = map[string]bool{
 	BigqueryDataTransferBasePathKey:     false,
 	BigqueryReservationBasePathKey:      false,
 	BigtableBasePathKey:                 false,
-	BillingBudgetsBasePathKey:           false,
+	BillingBasePathKey:                  false,
 	BinaryAuthorizationBasePathKey:      false,
 	BlockchainNodeEngineBasePathKey:     false,
 	CertificateManagerBasePathKey:       false,
 	CESBasePathKey:                      false,
 	ChronicleBasePathKey:                false,
 	CloudAssetBasePathKey:               false,
-	CloudBillingBasePathKey:             false,
 	CloudBuildBasePathKey:               false,
 	Cloudbuildv2BasePathKey:             false,
 	ClouddeployBasePathKey:              false,
@@ -876,6 +878,7 @@ var DefaultRepStatus = map[string]bool{
 	ContainerBasePathKey:                false,
 	ContainerAnalysisBasePathKey:        false,
 	ContainerAttachedBasePathKey:        false,
+	CoreBillingBasePathKey:              false,
 	DatabaseMigrationServiceBasePathKey: false,
 	DataCatalogBasePathKey:              false,
 	DataformBasePathKey:                 false,
@@ -1180,10 +1183,10 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 			"GOOGLE_BIGTABLE_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[BigtableBasePathKey]))
 	}
-	if d.Get("billing_budgets_custom_endpoint") == "" {
-		d.Set("billing_budgets_custom_endpoint", MultiEnvDefault([]string{
-			"GOOGLE_BILLING_BUDGETS_CUSTOM_ENDPOINT",
-		}, DefaultBasePaths[BillingBudgetsBasePathKey]))
+	if d.Get("billing_custom_endpoint") == "" {
+		d.Set("billing_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_BILLING_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[BillingBasePathKey]))
 	}
 	if d.Get("binary_authorization_custom_endpoint") == "" {
 		d.Set("binary_authorization_custom_endpoint", MultiEnvDefault([]string{
@@ -1214,11 +1217,6 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 		d.Set("cloud_asset_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_CLOUD_ASSET_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[CloudAssetBasePathKey]))
-	}
-	if d.Get("cloud_billing_custom_endpoint") == "" {
-		d.Set("cloud_billing_custom_endpoint", MultiEnvDefault([]string{
-			"GOOGLE_CLOUD_BILLING_CUSTOM_ENDPOINT",
-		}, DefaultBasePaths[CloudBillingBasePathKey]))
 	}
 	if d.Get("cloud_build_custom_endpoint") == "" {
 		d.Set("cloud_build_custom_endpoint", MultiEnvDefault([]string{
@@ -1324,6 +1322,11 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 		d.Set("container_attached_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_CONTAINER_ATTACHED_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[ContainerAttachedBasePathKey]))
+	}
+	if d.Get("core_billing_custom_endpoint") == "" {
+		d.Set("core_billing_custom_endpoint", MultiEnvDefault([]string{
+			"GOOGLE_CORE_BILLING_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[CoreBillingBasePathKey]))
 	}
 	if d.Get("database_migration_service_custom_endpoint") == "" {
 		d.Set("database_migration_service_custom_endpoint", MultiEnvDefault([]string{
@@ -1924,6 +1927,12 @@ func SetEndpointDefaults(d *schema.ResourceData) error {
 		d.Set("workstations_custom_endpoint", MultiEnvDefault([]string{
 			"GOOGLE_WORKSTATIONS_CUSTOM_ENDPOINT",
 		}, DefaultBasePaths[WorkstationsBasePathKey]))
+	}
+
+	if d.Get(CloudBillingCustomEndpointEntryKey) == "" {
+		d.Set(CloudBillingCustomEndpointEntryKey, MultiEnvDefault([]string{
+			"GOOGLE_CLOUD_BILLING_CUSTOM_ENDPOINT",
+		}, DefaultBasePaths[CloudBillingBasePathKey]))
 	}
 
 	if d.Get(DataflowCustomEndpointEntryKey) == "" {
@@ -3014,14 +3023,13 @@ func ConfigureBasePaths(c *Config) {
 	c.BigqueryDataTransferBasePath = DefaultBasePaths[BigqueryDataTransferBasePathKey]
 	c.BigqueryReservationBasePath = DefaultBasePaths[BigqueryReservationBasePathKey]
 	c.BigtableBasePath = DefaultBasePaths[BigtableBasePathKey]
-	c.BillingBudgetsBasePath = DefaultBasePaths[BillingBudgetsBasePathKey]
+	c.BillingBasePath = DefaultBasePaths[BillingBasePathKey]
 	c.BinaryAuthorizationBasePath = DefaultBasePaths[BinaryAuthorizationBasePathKey]
 	c.BlockchainNodeEngineBasePath = DefaultBasePaths[BlockchainNodeEngineBasePathKey]
 	c.CertificateManagerBasePath = DefaultBasePaths[CertificateManagerBasePathKey]
 	c.CESBasePath = DefaultBasePaths[CESBasePathKey]
 	c.ChronicleBasePath = DefaultBasePaths[ChronicleBasePathKey]
 	c.CloudAssetBasePath = DefaultBasePaths[CloudAssetBasePathKey]
-	c.CloudBillingBasePath = DefaultBasePaths[CloudBillingBasePathKey]
 	c.CloudBuildBasePath = DefaultBasePaths[CloudBuildBasePathKey]
 	c.Cloudbuildv2BasePath = DefaultBasePaths[Cloudbuildv2BasePathKey]
 	c.ClouddeployBasePath = DefaultBasePaths[ClouddeployBasePathKey]
@@ -3043,6 +3051,7 @@ func ConfigureBasePaths(c *Config) {
 	c.ContainerBasePath = DefaultBasePaths[ContainerBasePathKey]
 	c.ContainerAnalysisBasePath = DefaultBasePaths[ContainerAnalysisBasePathKey]
 	c.ContainerAttachedBasePath = DefaultBasePaths[ContainerAttachedBasePathKey]
+	c.CoreBillingBasePath = DefaultBasePaths[CoreBillingBasePathKey]
 	c.DatabaseMigrationServiceBasePath = DefaultBasePaths[DatabaseMigrationServiceBasePathKey]
 	c.DataCatalogBasePath = DefaultBasePaths[DataCatalogBasePathKey]
 	c.DataformBasePath = DefaultBasePaths[DataformBasePathKey]
@@ -3165,6 +3174,7 @@ func ConfigureBasePaths(c *Config) {
 	c.WorkstationsBasePath = DefaultBasePaths[WorkstationsBasePathKey]
 
 	// Handwritten Products / Versioned / Atypical Entries
+	c.CloudBillingBasePath = DefaultBasePaths[CloudBillingBasePathKey]
 	c.DataflowBasePath = DefaultBasePaths[DataflowBasePathKey]
 	c.IamCredentialsBasePath = DefaultBasePaths[IamCredentialsBasePathKey]
 	c.ResourceManagerV3BasePath = DefaultBasePaths[ResourceManagerV3BasePathKey]

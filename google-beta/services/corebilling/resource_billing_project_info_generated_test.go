@@ -15,7 +15,7 @@
 //
 // ----------------------------------------------------------------------------
 
-package cloudbilling_test
+package corebilling_test
 
 import (
 	"fmt"
@@ -50,7 +50,7 @@ var (
 	_ = googleapi.Error{}
 )
 
-func TestAccCloudBillingProjectInfo_billingProjectInfoBasicExample(t *testing.T) {
+func TestAccCoreBillingProjectInfo_billingProjectInfoBasicExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
@@ -64,16 +64,16 @@ func TestAccCloudBillingProjectInfo_billingProjectInfoBasicExample(t *testing.T)
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckCloudBillingProjectInfoDestroyProducer(t),
+		CheckDestroy:             testAccCheckCoreBillingProjectInfoDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCloudBillingProjectInfo_billingProjectInfoBasicExample(context),
+				Config: testAccCoreBillingProjectInfo_billingProjectInfoBasicExample(context),
 			},
 		},
 	})
 }
 
-func testAccCloudBillingProjectInfo_billingProjectInfoBasicExample(context map[string]interface{}) string {
+func testAccCoreBillingProjectInfo_billingProjectInfoBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
 resource "google_project" "project" {
   project_id = "tf-test%{random_suffix}"
@@ -92,7 +92,7 @@ resource "google_billing_project_info" "default" {
 `, context)
 }
 
-func testAccCheckCloudBillingProjectInfoDestroyProducer(t *testing.T) func(s *terraform.State) error {
+func testAccCheckCoreBillingProjectInfoDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
 			if rs.Type != "google_billing_project_info" {

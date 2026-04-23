@@ -196,6 +196,12 @@ func (p *FrameworkProvider) Schema(_ context.Context, _ provider.SchemaRequest, 
 			},
 
 			// Handwritten Products / Versioned / Atypical Entries
+			"cloud_billing_custom_endpoint": &schema.StringAttribute{
+				Optional: true,
+				Validators: []validator.String{
+					transport_tpg.CustomEndpointValidator(),
+				},
+			},
 			"dataflow_custom_endpoint": &schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
@@ -209,6 +215,12 @@ func (p *FrameworkProvider) Schema(_ context.Context, _ provider.SchemaRequest, 
 				},
 			},
 			"resource_manager_v3_custom_endpoint": &schema.StringAttribute{
+				Optional: true,
+				Validators: []validator.String{
+					transport_tpg.CustomEndpointValidator(),
+				},
+			},
+			"runtimeconfig_custom_endpoint": &schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
 					transport_tpg.CustomEndpointValidator(),
@@ -265,29 +277,6 @@ func (p *FrameworkProvider) Schema(_ context.Context, _ provider.SchemaRequest, 
 				},
 			},
 			"recaptcha_enterprise_custom_endpoint": &schema.StringAttribute{
-				Optional: true,
-				Validators: []validator.String{
-					transport_tpg.CustomEndpointValidator(),
-				},
-			},
-			// Tombstoned - nonfunctional. https://github.com/hashicorp/terraform-provider-google/issues/26814
-			"runtimeconfig_custom_endpoint": &schema.StringAttribute{
-				Optional: true,
-				Validators: []validator.String{
-					transport_tpg.CustomEndpointValidator(),
-				},
-			},
-
-			// Tombstoned - nonfunctional. https://github.com/hashicorp/terraform-provider-google/issues/27037
-			"core_billing_custom_endpoint": &schema.StringAttribute{
-				Optional: true,
-				Validators: []validator.String{
-					transport_tpg.CustomEndpointValidator(),
-				},
-			},
-
-			// Tombstoned - nonfunctional. https://github.com/hashicorp/terraform-provider-google/issues/27038
-			"billing_custom_endpoint": &schema.StringAttribute{
 				Optional: true,
 				Validators: []validator.String{
 					transport_tpg.CustomEndpointValidator(),
