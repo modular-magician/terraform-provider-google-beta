@@ -637,14 +637,15 @@ func resourceComputeRouterNatAddressDelete(d *schema.ResourceData, meta interfac
 
 	log.Printf("[DEBUG] Deleting RouterNatAddress %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   headers,
+		Config:        config,
+		Method:        "PATCH",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutDelete),
+		Headers:       headers,
+		SendRequestId: false,
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "RouterNatAddress")

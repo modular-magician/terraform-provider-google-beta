@@ -526,6 +526,7 @@ func resourceBigqueryDataTransferConfigCreate(d *schema.ResourceData, meta inter
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IamMemberMissing},
 	})
 	if err != nil {
@@ -900,6 +901,7 @@ func resourceBigqueryDataTransferConfigDelete(d *schema.ResourceData, meta inter
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IamMemberMissing},
 	})
 	if err != nil {

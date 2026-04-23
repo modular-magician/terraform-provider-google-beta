@@ -907,14 +907,15 @@ func resourceComputeRouterNatCreate(d *schema.ResourceData, meta interface{}) er
 		}
 	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-		Headers:   headers,
+		Config:        config,
+		Method:        "PATCH",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutCreate),
+		Headers:       headers,
+		SendRequestId: true,
 	})
 	if err != nil {
 		return fmt.Errorf("Error creating RouterNat: %s", err)
@@ -1404,14 +1405,15 @@ func resourceComputeRouterNatDelete(d *schema.ResourceData, meta interface{}) er
 
 	log.Printf("[DEBUG] Deleting RouterNat %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "PATCH",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   headers,
+		Config:        config,
+		Method:        "PATCH",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutDelete),
+		Headers:       headers,
+		SendRequestId: true,
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "RouterNat")

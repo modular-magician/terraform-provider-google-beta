@@ -278,6 +278,7 @@ func resourceGeminiCodeRepositoryIndexCreate(d *schema.ResourceData, meta interf
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsCodeRepositoryIndexUnreadyError, transport_tpg.IsRepositoryGroupQueueError},
 	})
 	if err != nil {
@@ -582,6 +583,7 @@ func resourceGeminiCodeRepositoryIndexDelete(d *schema.ResourceData, meta interf
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsCodeRepositoryIndexUnreadyError, transport_tpg.IsRepositoryGroupQueueError},
 	})
 	if err != nil {

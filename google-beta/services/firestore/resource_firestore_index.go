@@ -611,6 +611,7 @@ func resourceFirestoreIndexDelete(d *schema.ResourceData, meta interface{}) erro
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.FirestoreIndex409Retry},
 	})
 	if err != nil {

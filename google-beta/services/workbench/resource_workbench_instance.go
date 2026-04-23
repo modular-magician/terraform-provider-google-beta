@@ -1128,6 +1128,7 @@ func resourceWorkbenchInstanceCreate(d *schema.ResourceData, meta interface{}) e
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsWorkbenchQueueError},
 	})
 	if err != nil {
@@ -1620,6 +1621,7 @@ func resourceWorkbenchInstanceDelete(d *schema.ResourceData, meta interface{}) e
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsWorkbenchQueueError},
 	})
 	if err != nil {

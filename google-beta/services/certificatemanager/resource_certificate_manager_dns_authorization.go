@@ -308,14 +308,15 @@ func resourceCertificateManagerDnsAuthorizationCreate(d *schema.ResourceData, me
 
 	headers := make(http.Header)
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-		Headers:   headers,
+		Config:        config,
+		Method:        "POST",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutCreate),
+		Headers:       headers,
+		SendRequestId: false,
 	})
 	if err != nil {
 		return fmt.Errorf("Error creating DnsAuthorization: %s", err)
@@ -596,14 +597,15 @@ func resourceCertificateManagerDnsAuthorizationDelete(d *schema.ResourceData, me
 
 	log.Printf("[DEBUG] Deleting DnsAuthorization %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   headers,
+		Config:        config,
+		Method:        "DELETE",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutDelete),
+		Headers:       headers,
+		SendRequestId: false,
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "DnsAuthorization")

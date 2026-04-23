@@ -620,6 +620,7 @@ func resourceDataplexEntryCreate(d *schema.ResourceData, meta interface{}) error
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsDataplex1PEntryIngestedError},
 	})
 	if err != nil {
@@ -990,6 +991,7 @@ func resourceDataplexEntryDelete(d *schema.ResourceData, meta interface{}) error
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsDataplex1PEntryIngestedError},
 	})
 	if err != nil {

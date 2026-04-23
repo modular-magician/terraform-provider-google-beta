@@ -454,6 +454,7 @@ func resourceCloudRunDomainMappingCreate(d *schema.ResourceData, meta interface{
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsCloudRunCreationConflict},
 	})
 	if err != nil {
@@ -682,6 +683,7 @@ func resourceCloudRunDomainMappingDelete(d *schema.ResourceData, meta interface{
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsCloudRunCreationConflict},
 	})
 	if err != nil {

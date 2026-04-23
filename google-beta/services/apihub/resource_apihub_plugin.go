@@ -543,14 +543,15 @@ func resourceApihubPluginCreate(d *schema.ResourceData, meta interface{}) error 
 
 	headers := make(http.Header)
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-		Headers:   headers,
+		Config:        config,
+		Method:        "POST",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutCreate),
+		Headers:       headers,
+		SendRequestId: false,
 	})
 	if err != nil {
 		return fmt.Errorf("Error creating Plugin: %s", err)
@@ -728,14 +729,15 @@ func resourceApihubPluginDelete(d *schema.ResourceData, meta interface{}) error 
 
 	log.Printf("[DEBUG] Deleting Plugin %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   headers,
+		Config:        config,
+		Method:        "DELETE",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutDelete),
+		Headers:       headers,
+		SendRequestId: false,
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "Plugin")

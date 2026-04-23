@@ -387,14 +387,15 @@ func resourceNetworkServicesWasmPluginCreate(d *schema.ResourceData, meta interf
 
 	headers := make(http.Header)
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-		Headers:   headers,
+		Config:        config,
+		Method:        "POST",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutCreate),
+		Headers:       headers,
+		SendRequestId: false,
 	})
 	if err != nil {
 		return fmt.Errorf("Error creating WasmPlugin: %s", err)
@@ -714,14 +715,15 @@ func resourceNetworkServicesWasmPluginDelete(d *schema.ResourceData, meta interf
 
 	log.Printf("[DEBUG] Deleting WasmPlugin %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   headers,
+		Config:        config,
+		Method:        "DELETE",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutDelete),
+		Headers:       headers,
+		SendRequestId: false,
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "WasmPlugin")

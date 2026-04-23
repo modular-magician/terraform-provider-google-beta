@@ -361,14 +361,15 @@ func resourceComputeGlobalAddressCreate(d *schema.ResourceData, meta interface{}
 		obj["networkTier"] = "PREMIUM"
 	}
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "POST",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutCreate),
-		Headers:   headers,
+		Config:        config,
+		Method:        "POST",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutCreate),
+		Headers:       headers,
+		SendRequestId: true,
 	})
 	if err != nil {
 		return fmt.Errorf("Error creating GlobalAddress: %s", err)
@@ -700,14 +701,15 @@ func resourceComputeGlobalAddressDelete(d *schema.ResourceData, meta interface{}
 
 	log.Printf("[DEBUG] Deleting GlobalAddress %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   headers,
+		Config:        config,
+		Method:        "DELETE",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutDelete),
+		Headers:       headers,
+		SendRequestId: true,
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "GlobalAddress")

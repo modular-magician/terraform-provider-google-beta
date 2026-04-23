@@ -282,6 +282,7 @@ func resourceFilestoreSnapshotCreate(d *schema.ResourceData, meta interface{}) e
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorAbortPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.Is429QuotaError},
 	})
 	if err != nil {
@@ -603,6 +604,7 @@ func resourceFilestoreSnapshotDelete(d *schema.ResourceData, meta interface{}) e
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorAbortPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.Is429QuotaError},
 	})
 	if err != nil {

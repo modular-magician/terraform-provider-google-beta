@@ -495,6 +495,7 @@ func resourceDataplexEntryLinkCreate(d *schema.ResourceData, meta interface{}) e
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsDataplex1PEntryNotFoundError},
 	})
 	if err != nil {
@@ -774,6 +775,7 @@ func resourceDataplexEntryLinkDelete(d *schema.ResourceData, meta interface{}) e
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsDataplex1PEntryNotFoundError},
 	})
 	if err != nil {

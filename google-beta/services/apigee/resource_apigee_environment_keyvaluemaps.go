@@ -298,14 +298,15 @@ func resourceApigeeEnvironmentKeyvaluemapsDelete(d *schema.ResourceData, meta in
 
 	log.Printf("[DEBUG] Deleting EnvironmentKeyvaluemaps %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
-		Config:    config,
-		Method:    "DELETE",
-		Project:   billingProject,
-		RawURL:    url,
-		UserAgent: userAgent,
-		Body:      obj,
-		Timeout:   d.Timeout(schema.TimeoutDelete),
-		Headers:   headers,
+		Config:        config,
+		Method:        "DELETE",
+		Project:       billingProject,
+		RawURL:        url,
+		UserAgent:     userAgent,
+		Body:          obj,
+		Timeout:       d.Timeout(schema.TimeoutDelete),
+		Headers:       headers,
+		SendRequestId: false,
 	})
 	if err != nil {
 		return transport_tpg.HandleNotFoundError(err, d, "EnvironmentKeyvaluemaps")

@@ -201,6 +201,7 @@ func resourceIapClientCreate(d *schema.ResourceData, meta interface{}) error {
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IapClient409Operation},
 	})
 	if err != nil {
@@ -340,6 +341,7 @@ func resourceIapClientDelete(d *schema.ResourceData, meta interface{}) error {
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IapClient409Operation},
 	})
 	if err != nil {

@@ -223,6 +223,7 @@ func resourceAppEngineApplicationUrlDispatchRulesCreate(d *schema.ResourceData, 
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsAppEngineRetryableError},
 	})
 	if err != nil {
@@ -454,6 +455,7 @@ func resourceAppEngineApplicationUrlDispatchRulesDelete(d *schema.ResourceData, 
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsAppEngineRetryableError},
 	})
 	if err != nil {

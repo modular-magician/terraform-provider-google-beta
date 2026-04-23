@@ -513,6 +513,7 @@ func resourceOrgPolicyPolicyCreate(d *schema.ResourceData, meta interface{}) err
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsOrgpolicyRetryableError},
 	})
 	if err != nil {
@@ -746,6 +747,7 @@ func resourceOrgPolicyPolicyDelete(d *schema.ResourceData, meta interface{}) err
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsOrgpolicyRetryableError},
 	})
 	if err != nil {

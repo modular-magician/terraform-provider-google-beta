@@ -552,6 +552,7 @@ func resourceComputeRouteCreate(d *schema.ResourceData, meta interface{}) error 
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        true,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsPeeringOperationInProgress},
 	})
 	if err != nil {
@@ -790,6 +791,7 @@ func resourceComputeRouteDelete(d *schema.ResourceData, meta interface{}) error 
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        true,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsPeeringOperationInProgress},
 	})
 	if err != nil {

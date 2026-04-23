@@ -221,6 +221,7 @@ func resourceSiteVerificationWebResourceCreate(d *schema.ResourceData, meta inte
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsSiteVerificationRetryableError},
 	})
 	if err != nil {
@@ -356,6 +357,7 @@ func resourceSiteVerificationWebResourceDelete(d *schema.ResourceData, meta inte
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsSiteVerificationRetryableError},
 	})
 	if err != nil {

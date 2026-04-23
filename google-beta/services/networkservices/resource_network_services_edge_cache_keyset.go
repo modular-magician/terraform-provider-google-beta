@@ -309,6 +309,7 @@ func resourceNetworkServicesEdgeCacheKeysetCreate(d *schema.ResourceData, meta i
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorAbortPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.Is429QuotaError},
 	})
 	if err != nil {
@@ -601,6 +602,7 @@ func resourceNetworkServicesEdgeCacheKeysetDelete(d *schema.ResourceData, meta i
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorAbortPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.Is429QuotaError},
 	})
 	if err != nil {

@@ -371,6 +371,7 @@ func resourceApigeeInstanceCreate(d *schema.ResourceData, meta interface{}) erro
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsApigeeRetryableError},
 	})
 	if err != nil {
@@ -640,6 +641,7 @@ func resourceApigeeInstanceDelete(d *schema.ResourceData, meta interface{}) erro
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsApigeeRetryableError},
 	})
 	if err != nil {

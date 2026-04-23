@@ -393,6 +393,7 @@ func resourceMonitoringNotificationChannelCreate(d *schema.ResourceData, meta in
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsMonitoringConcurrentEditError},
 	})
 	if err != nil {
@@ -692,6 +693,7 @@ func resourceMonitoringNotificationChannelDelete(d *schema.ResourceData, meta in
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.IsMonitoringConcurrentEditError},
 	})
 	if err != nil {

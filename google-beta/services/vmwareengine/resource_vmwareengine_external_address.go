@@ -236,6 +236,7 @@ func resourceVmwareengineExternalAddressCreate(d *schema.ResourceData, meta inte
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.ExternalIpServiceNotActive},
 	})
 	if err != nil {
@@ -491,6 +492,7 @@ func resourceVmwareengineExternalAddressDelete(d *schema.ResourceData, meta inte
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutDelete),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.ExternalIpServiceNotActive},
 	})
 	if err != nil {

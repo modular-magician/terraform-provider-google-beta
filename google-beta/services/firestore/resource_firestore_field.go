@@ -291,6 +291,7 @@ func resourceFirestoreFieldCreate(d *schema.ResourceData, meta interface{}) erro
 		Body:                 obj,
 		Timeout:              d.Timeout(schema.TimeoutCreate),
 		Headers:              headers,
+		SendRequestId:        false,
 		ErrorRetryPredicates: []transport_tpg.RetryErrorPredicateFunc{transport_tpg.FirestoreField409RetryUnderlyingDataChanged},
 	})
 	if err != nil {
