@@ -758,6 +758,55 @@ resource "google_compute_resource_policy" "baz" {
 `, context)
 }
 
+func TestAccComputeResourcePolicy_resourcePolicyPlacementPolicyMultisliceExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"name":          "tf-test-gce-policy" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeResourcePolicyDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeResourcePolicy_resourcePolicyPlacementPolicyMultisliceExample(context),
+			},
+			{
+				ResourceName:            "google_compute_resource_policy.default",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"region"},
+			},
+			{
+				ResourceName:       "google_compute_resource_policy.default",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccComputeResourcePolicy_resourcePolicyPlacementPolicyMultisliceExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_resource_policy" "default" {
+  name   = "%{name}"
+  region = "us-central1"
+  group_placement_policy {
+    vm_count = 2
+    collocation = "COLLOCATED"
+    accelerator_topology_mode = "AUTO_CONNECT"
+    slice_count = 2
+  }
+}
+`, context)
+}
+
 func testAccCheckComputeResourcePolicyDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

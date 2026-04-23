@@ -9,10 +9,12 @@ api_resource_type_kind: ResourcePolicy
 fields:
     - api_field: description
     - api_field: diskConsistencyGroupPolicy.enabled
+    - api_field: groupPlacementPolicy.acceleratorTopologyMode
     - api_field: groupPlacementPolicy.availabilityDomainCount
     - api_field: groupPlacementPolicy.collocation
     - api_field: groupPlacementPolicy.gpuTopology
     - api_field: groupPlacementPolicy.maxDistance
+    - api_field: groupPlacementPolicy.sliceCount
     - api_field: groupPlacementPolicy.tpuTopology
     - api_field: groupPlacementPolicy.vmCount
     - api_field: instanceSchedulePolicy.expirationTime

@@ -188,6 +188,13 @@ which cannot be a dash.`,
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"accelerator_topology_mode": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							ValidateFunc: verify.ValidateEnum([]string{"AUTO_CONNECT", "PROVISION_ONLY", ""}),
+							Description: `Specifies the connection mode for the accelerator topology. If not
+specified, the default is AUTO_CONNECT. Possible values: ["AUTO_CONNECT", "PROVISION_ONLY"]`,
+						},
 						"availability_domain_count": {
 							Type:     schema.TypeInt,
 							Optional: true,
@@ -215,6 +222,11 @@ attached. Possible values: ["COLLOCATED"]`,
 							Optional:      true,
 							Description:   `Specifies the number of max logical switches.`,
 							ConflictsWith: []string{"group_placement_policy.0.gpu_topology"},
+						},
+						"slice_count": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: `Specifies the number of slices in a multislice workload.`,
 						},
 						"tpu_topology": {
 							Type:        schema.TypeString,
@@ -1222,6 +1234,10 @@ func flattenComputeResourcePolicyGroupPlacementPolicy(v interface{}, d *schema.R
 		flattenComputeResourcePolicyGroupPlacementPolicyGpuTopology(original["gpuTopology"], d, config)
 	transformed["tpu_topology"] =
 		flattenComputeResourcePolicyGroupPlacementPolicyTpuTopology(original["tpuTopology"], d, config)
+	transformed["accelerator_topology_mode"] =
+		flattenComputeResourcePolicyGroupPlacementPolicyAcceleratorTopologyMode(original["acceleratorTopologyMode"], d, config)
+	transformed["slice_count"] =
+		flattenComputeResourcePolicyGroupPlacementPolicySliceCount(original["sliceCount"], d, config)
 	return []interface{}{transformed}
 }
 func flattenComputeResourcePolicyGroupPlacementPolicyVmCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1285,6 +1301,27 @@ func flattenComputeResourcePolicyGroupPlacementPolicyGpuTopology(v interface{}, 
 
 func flattenComputeResourcePolicyGroupPlacementPolicyTpuTopology(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
+}
+
+func flattenComputeResourcePolicyGroupPlacementPolicyAcceleratorTopologyMode(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeResourcePolicyGroupPlacementPolicySliceCount(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	// Handles the string fixed64 format
+	if strVal, ok := v.(string); ok {
+		if intVal, err := tpgresource.StringToFixed64(strVal); err == nil {
+			return intVal
+		}
+	}
+
+	// number values are represented as float64
+	if floatVal, ok := v.(float64); ok {
+		intVal := int(floatVal)
+		return intVal
+	}
+
+	return v // let terraform core handle it otherwise
 }
 
 func flattenComputeResourcePolicyInstanceSchedulePolicy(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1773,6 +1810,20 @@ func expandComputeResourcePolicyGroupPlacementPolicy(v interface{}, d tpgresourc
 		transformed["tpuTopology"] = transformedTpuTopology
 	}
 
+	transformedAcceleratorTopologyMode, err := expandComputeResourcePolicyGroupPlacementPolicyAcceleratorTopologyMode(original["accelerator_topology_mode"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedAcceleratorTopologyMode); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["acceleratorTopologyMode"] = transformedAcceleratorTopologyMode
+	}
+
+	transformedSliceCount, err := expandComputeResourcePolicyGroupPlacementPolicySliceCount(original["slice_count"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSliceCount); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["sliceCount"] = transformedSliceCount
+	}
+
 	return transformed, nil
 }
 
@@ -1797,6 +1848,14 @@ func expandComputeResourcePolicyGroupPlacementPolicyGpuTopology(v interface{}, d
 }
 
 func expandComputeResourcePolicyGroupPlacementPolicyTpuTopology(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeResourcePolicyGroupPlacementPolicyAcceleratorTopologyMode(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandComputeResourcePolicyGroupPlacementPolicySliceCount(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

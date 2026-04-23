@@ -308,6 +308,26 @@ resource "google_compute_resource_policy" "baz" {
   }
 }
 ```
+<div class = "oics-button" style="float: right; margin: 0 0 -15px">
+  <a href="https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fterraform-google-modules%2Fdocs-examples.git&cloudshell_image=gcr.io%2Fcloudshell-images%2Fcloudshell%3Alatest&cloudshell_print=.%2Fmotd&cloudshell_tutorial=.%2Ftutorial.md&cloudshell_working_dir=resource_policy_placement_policy_multislice&open_in_editor=main.tf" target="_blank">
+    <img alt="Open in Cloud Shell" src="//gstatic.com/cloudssh/images/open-btn.svg" style="max-height: 44px; margin: 32px auto; max-width: 100%;">
+  </a>
+</div>
+## Example Usage - Resource Policy Placement Policy Multislice
+
+
+```hcl
+resource "google_compute_resource_policy" "default" {
+  name   = "gce-policy"
+  region = "us-central1"
+  group_placement_policy {
+    vm_count = 2
+    collocation = "COLLOCATED"
+    accelerator_topology_mode = "AUTO_CONNECT"
+    slice_count = 2
+  }
+}
+```
 
 ## Argument Reference
 
@@ -509,6 +529,16 @@ The following arguments are supported:
 * `tpu_topology` -
   (Optional, [Beta](../guides/provider_versions.html.markdown))
   Specifies the shape of the TPU slice.
+
+* `accelerator_topology_mode` -
+  (Optional)
+  Specifies the connection mode for the accelerator topology. If not
+  specified, the default is AUTO_CONNECT.
+  Possible values are: `AUTO_CONNECT`, `PROVISION_ONLY`.
+
+* `slice_count` -
+  (Optional)
+  Specifies the number of slices in a multislice workload.
 
 <a name="nested_instance_schedule_policy"></a>The `instance_schedule_policy` block supports:
 
