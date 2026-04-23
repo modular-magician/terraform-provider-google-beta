@@ -470,6 +470,7 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.DataCatalogBasePath = d.Get("data_catalog_custom_endpoint").(string)
 	config.DataformBasePath = d.Get("dataform_custom_endpoint").(string)
 	config.DataFusionBasePath = d.Get("data_fusion_custom_endpoint").(string)
+	config.DataLineageBasePath = d.Get("data_lineage_custom_endpoint").(string)
 	config.DataLossPreventionBasePath = d.Get("data_loss_prevention_custom_endpoint").(string)
 	config.DataPipelineBasePath = d.Get("data_pipeline_custom_endpoint").(string)
 	config.DataplexBasePath = d.Get("dataplex_custom_endpoint").(string)
