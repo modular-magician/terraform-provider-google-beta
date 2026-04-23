@@ -19,6 +19,7 @@ package fwprovider
 import (
 	"github.com/hashicorp/terraform-plugin-framework/list"
 
+	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/bigquery"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
 )
 
@@ -33,4 +34,5 @@ var generatedListResources = []func() list.ListResource{}
 var handwrittenListResources = []func() list.ListResource{
 	listResourceFunc(resourcemanager.NewGoogleServiceAccountListResource()),
 	listResourceFunc(resourcemanager.NewGoogleProjectServiceListResource()),
+	listResourceFunc(bigquery.NewGoogleBigQueryTableListResource()),
 }
