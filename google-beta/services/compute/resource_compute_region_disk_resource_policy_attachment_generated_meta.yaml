@@ -9,6 +9,8 @@ api_resource_type_kind: Disk
 fields:
     - field: disk
       provider_only: true
+    - api_field: resourcePolicies.locationHint
+      field: location_hint
     - api_field: resourcePolicies.name
       field: name
     - field: region

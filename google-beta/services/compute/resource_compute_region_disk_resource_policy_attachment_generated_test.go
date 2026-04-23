@@ -138,6 +138,95 @@ data "google_compute_image" "my_image" {
 `, context)
 }
 
+func TestAccComputeRegionDiskResourcePolicyAttachment_regionDiskResourcePolicyAttachmentLocationHintExample(t *testing.T) {
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"base_disk_name": "tf-test-my-base-disk" + randomSuffix,
+		"disk_name":      "tf-test-my-disk" + randomSuffix,
+		"policy_name":    "tf-test-my-resource-policy" + randomSuffix,
+		"snapshot_name":  "tf-test-my-snapshot" + randomSuffix,
+		"random_suffix":  randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
+		CheckDestroy:             testAccCheckComputeRegionDiskResourcePolicyAttachmentDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccComputeRegionDiskResourcePolicyAttachment_regionDiskResourcePolicyAttachmentLocationHintExample(context),
+			},
+			{
+				ResourceName:            "google_compute_region_disk_resource_policy_attachment.attachment",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"disk", "region"},
+			},
+			{
+				ResourceName:       "google_compute_region_disk_resource_policy_attachment.attachment",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccComputeRegionDiskResourcePolicyAttachment_regionDiskResourcePolicyAttachmentLocationHintExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_compute_region_disk_resource_policy_attachment" "attachment" {
+  name = google_compute_resource_policy.policy.name
+  disk = google_compute_region_disk.ssd.name
+  region = "us-central1"
+  location_hint = "us-central1-a"
+}
+
+resource "google_compute_disk" "disk" {
+  name  = "%{base_disk_name}"
+  image = "debian-cloud/debian-11"
+  size  = 50
+  type  = "pd-ssd"
+  zone  = "us-central1-a"
+}
+
+resource "google_compute_snapshot" "snapdisk" {
+  name  = "%{snapshot_name}"
+  source_disk = google_compute_disk.disk.name
+  zone        = "us-central1-a"
+}
+
+resource "google_compute_region_disk" "ssd" {
+  name  = "%{disk_name}"
+  replica_zones = ["us-central1-a", "us-central1-f"]
+  snapshot = google_compute_snapshot.snapdisk.id
+  size  = 50
+  type  = "pd-ssd"
+  region  = "us-central1"
+}
+
+resource "google_compute_resource_policy" "policy" {
+  name = "%{policy_name}"
+  region = "us-central1"
+  snapshot_schedule_policy {
+    schedule {
+      daily_schedule {
+        days_in_cycle = 1
+        start_time = "04:00"
+      }
+    }
+  }
+}
+
+data "google_compute_image" "my_image" {
+  family  = "debian-11"
+  project = "debian-cloud"
+}
+`, context)
+}
+
 func testAccCheckComputeRegionDiskResourcePolicyAttachmentDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {

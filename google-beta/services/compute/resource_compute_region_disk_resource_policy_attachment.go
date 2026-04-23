@@ -157,6 +157,13 @@ func ResourceComputeRegionDiskResourcePolicyAttachment() *schema.Resource {
 				Description: `The resource policy to be attached to the disk for scheduling snapshot
 creation. Do not specify the self link.`,
 			},
+			"location_hint": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Description: `An opaque location hint used to place the disk close to other resources.
+This field is for use by internal tools that use the public API.`,
+			},
 			"region": {
 				Type:             schema.TypeString,
 				Computed:         true,
@@ -189,6 +196,12 @@ func resourceComputeRegionDiskResourcePolicyAttachmentCreate(d *schema.ResourceD
 		return err
 	} else if v, ok := d.GetOkExists("name"); !tpgresource.IsEmptyValue(reflect.ValueOf(nameProp)) && (ok || !reflect.DeepEqual(v, nameProp)) {
 		obj["name"] = nameProp
+	}
+	locationHintProp, err := expandNestedComputeRegionDiskResourcePolicyAttachmentLocationHint(d.Get("location_hint"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("location_hint"); !tpgresource.IsEmptyValue(reflect.ValueOf(locationHintProp)) && (ok || !reflect.DeepEqual(v, locationHintProp)) {
+		obj["locationHint"] = locationHintProp
 	}
 
 	obj, err = resourceComputeRegionDiskResourcePolicyAttachmentEncoder(d, meta, obj)
@@ -349,6 +362,9 @@ func resourceComputeRegionDiskResourcePolicyAttachmentRead(d *schema.ResourceDat
 	if err := d.Set("name", flattenNestedComputeRegionDiskResourcePolicyAttachmentName(res["name"], d, config)); err != nil {
 		return fmt.Errorf("Error reading RegionDiskResourcePolicyAttachment: %s", err)
 	}
+	if err := d.Set("location_hint", flattenNestedComputeRegionDiskResourcePolicyAttachmentLocationHint(res["locationHint"], d, config)); err != nil {
+		return fmt.Errorf("Error reading RegionDiskResourcePolicyAttachment: %s", err)
+	}
 
 	identity, err := d.Identity()
 	if err == nil && identity != nil {
@@ -480,7 +496,15 @@ func flattenNestedComputeRegionDiskResourcePolicyAttachmentName(v interface{}, d
 	return v
 }
 
+func flattenNestedComputeRegionDiskResourcePolicyAttachmentLocationHint(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandNestedComputeRegionDiskResourcePolicyAttachmentName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandNestedComputeRegionDiskResourcePolicyAttachmentLocationHint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
