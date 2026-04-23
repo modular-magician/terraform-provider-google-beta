@@ -31,6 +31,8 @@ fields:
     - api_field: destinationConfigs.key
     - api_field: destinationConfigs.params
       json: true
+    - field: detach_stores_on_destroy
+      provider_only: true
     - api_field: entities.dataStore
     - api_field: entities.entityName
     - api_field: entities.keyPropertyMappings

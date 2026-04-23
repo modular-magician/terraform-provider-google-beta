@@ -333,6 +333,10 @@ The following arguments are supported:
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
 
+* `detach_stores_on_destroy` - (Optional) If set to `true`, Terraform will detach the associated Data Stores from any Search Engine before deleting the Data Connector.
+This addresses a circular dependency issue where deleting the Data Connector fails if its stores are in use.
+Defaults to `false`.
+
 
 
 <a name="nested_entities"></a>The `entities` block supports:

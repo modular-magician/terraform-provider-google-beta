@@ -581,6 +581,14 @@ This project must be allowlisted by in order for the connector to function.`,
 				Computed:    true,
 				Description: `Timestamp when the DataConnector was updated.`,
 			},
+			"detach_stores_on_destroy": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Description: `If set to 'true', Terraform will detach the associated Data Stores from any Search Engine before deleting the Data Connector.
+This addresses a circular dependency issue where deleting the Data Connector fails if its stores are in use.
+Defaults to 'false'.`,
+				Default: false,
+			},
 			"project": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -814,6 +822,12 @@ func resourceDiscoveryEngineDataConnectorRead(d *schema.ResourceData, meta inter
 
 	log.Printf("[DEBUG] Finished reading DiscoveryEngineDataConnector %q: %#v", d.Id(), res)
 
+	// Explicitly set virtual fields to default values if unset
+	if _, ok := d.GetOkExists("detach_stores_on_destroy"); !ok {
+		if err := d.Set("detach_stores_on_destroy", false); err != nil {
+			return fmt.Errorf("Error setting detach_stores_on_destroy: %s", err)
+		}
+	}
 	if err := d.Set("project", project); err != nil {
 		return fmt.Errorf("Error reading DataConnector: %s", err)
 	}
@@ -1158,6 +1172,140 @@ func resourceDiscoveryEngineDataConnectorDelete(d *schema.ResourceData, meta int
 	}
 
 	headers := make(http.Header)
+	if d.Get("detach_stores_on_destroy").(bool) {
+		log.Printf("[DEBUG] detach_stores_on_destroy is true, checking for linked search engines")
+
+		// 1. Get stores from entities
+		entitiesObj := d.Get("entities")
+		entities, ok := entitiesObj.([]interface{})
+		if !ok {
+			return fmt.Errorf("error converting entities to []interface{}")
+		}
+
+		var storeIds []string
+		for _, entityObj := range entities {
+			entity, ok := entityObj.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			storeNameObj, ok := entity["data_store"]
+			if !ok {
+				continue
+			}
+			storeName, ok := storeNameObj.(string)
+			if !ok || storeName == "" {
+				continue
+			}
+			// Extract store ID from full name: projects/*/locations/*/collections/*/dataStores/*
+			parts := strings.Split(storeName, "/")
+			if len(parts) > 0 {
+				storeIds = append(storeIds, parts[len(parts)-1])
+			}
+		}
+
+		if len(storeIds) == 0 {
+			log.Printf("[DEBUG] No stores found in DataConnector to detach")
+			return nil
+		}
+
+		log.Printf("[DEBUG] Stores to detach: %v", storeIds)
+
+		// 2. List engines in the collection
+		project, err := tpgresource.GetProject(d, config)
+		if err != nil {
+			return err
+		}
+		location := d.Get("location").(string)
+		collectionId := d.Get("collection_id").(string)
+
+		baseUrl, err := tpgresource.ReplaceVars(d, config, "{{DiscoveryEngineBasePath}}")
+		if err != nil {
+			return err
+		}
+		enginesUrl := baseUrl + fmt.Sprintf("projects/%s/locations/%s/collections/%s/engines", project, location, collectionId)
+
+		resp, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+			Config:    config,
+			Method:    "GET",
+			Project:   project,
+			RawURL:    enginesUrl,
+			UserAgent: userAgent,
+		})
+		if err != nil {
+			return fmt.Errorf("error listing engines: %s", err)
+		}
+
+		enginesObj, ok := resp["engines"]
+		if !ok {
+			log.Printf("[DEBUG] No engines found in collection")
+			return nil
+		}
+		engines, ok := enginesObj.([]interface{})
+		if !ok {
+			return fmt.Errorf("error converting engines to []interface{}")
+		}
+
+		for _, engineObj := range engines {
+			engine, ok := engineObj.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			engineName := engine["name"].(string)
+			dataStoreIdsObj, ok := engine["dataStoreIds"]
+			if !ok {
+				continue
+			}
+			dataStoreIds, ok := dataStoreIdsObj.([]interface{})
+			if !ok {
+				continue
+			}
+
+			var newStoreIds []string
+			modified := false
+			for _, idObj := range dataStoreIds {
+				id, ok := idObj.(string)
+				if !ok {
+					continue
+				}
+				matched := false
+				for _, targetId := range storeIds {
+					if id == targetId {
+						matched = true
+						modified = true
+						break
+					}
+				}
+				if !matched {
+					newStoreIds = append(newStoreIds, id)
+				}
+			}
+
+			if modified {
+				log.Printf("[DEBUG] Detaching stores from engine %s", engineName)
+				// Call PATCH on engine to update dataStoreIds
+				engineUrl := baseUrl + engineName
+				updateMask := "dataStoreIds"
+
+				// Construct request body
+				body := map[string]interface{}{
+					"dataStoreIds": newStoreIds,
+				}
+
+				_, err = transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
+					Config:    config,
+					Method:    "PATCH",
+					Project:   project,
+					RawURL:    engineUrl + "?updateMask=" + updateMask,
+					UserAgent: userAgent,
+					Body:      body,
+				})
+				if err != nil {
+					return fmt.Errorf("error updating engine %s: %s", engineName, err)
+				}
+				log.Printf("[DEBUG] Successfully detached stores from engine %s", engineName)
+			}
+		}
+	}
 
 	log.Printf("[DEBUG] Deleting DataConnector %q", d.Id())
 	res, err := transport_tpg.SendRequest(transport_tpg.SendRequestOptions{
@@ -1202,6 +1350,11 @@ func resourceDiscoveryEngineDataConnectorImport(d *schema.ResourceData, meta int
 		return nil, fmt.Errorf("Error constructing id: %s", err)
 	}
 	d.SetId(id)
+
+	// Explicitly set virtual fields to default values on import
+	if err := d.Set("detach_stores_on_destroy", false); err != nil {
+		return nil, fmt.Errorf("Error setting detach_stores_on_destroy: %s", err)
+	}
 
 	return []*schema.ResourceData{d}, nil
 }
