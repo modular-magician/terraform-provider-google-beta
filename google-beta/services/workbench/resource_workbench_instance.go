@@ -486,6 +486,11 @@ func ResourceWorkbenchInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: `Optional. If true, the workbench instance will not register with the proxy.`,
 			},
+			"enable_deletion_protection": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: `Optional. If true, deletion protection will be enabled for this Workbench Instance.`,
+			},
 			"enable_managed_euc": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -653,6 +658,15 @@ up to a maximum of 64000 GB (64 TB). If not specified, this defaults to
 only applicable if disk_encryption is CMEK. Format: 'projects/{project_id}/locations/{location}/keyRings/{key_ring_id}/cryptoKeys/{key_id}'
 Learn more about using your own encryption keys.'`,
 									},
+									"resource_policies": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										ForceNew:    true,
+										Description: `Optional. Resource policies applied to this disk.`,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
 								},
 							},
 						},
@@ -684,6 +698,12 @@ https://cloud.google.com/vpc/docs/using-routes#canipforward`,
 							DiffSuppressFunc: WorkbenchInstanceMetadataDiffSuppress,
 							Description:      `Optional. Custom metadata to apply to this instance.`,
 							Elem:             &schema.Schema{Type: schema.TypeString},
+						},
+						"min_cpu_platform": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: `Optional. The minimum CPU platform to use for this instance.`,
 						},
 						"network_interfaces": {
 							Type:        schema.TypeList,
@@ -1092,6 +1112,12 @@ func resourceWorkbenchInstanceCreate(d *schema.ResourceData, meta interface{}) e
 	} else if v, ok := d.GetOkExists("enable_managed_euc"); !tpgresource.IsEmptyValue(reflect.ValueOf(enableManagedEucProp)) && (ok || !reflect.DeepEqual(v, enableManagedEucProp)) {
 		obj["enableManagedEuc"] = enableManagedEucProp
 	}
+	enableDeletionProtectionProp, err := expandWorkbenchInstanceEnableDeletionProtection(d.Get("enable_deletion_protection"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("enable_deletion_protection"); !tpgresource.IsEmptyValue(reflect.ValueOf(enableDeletionProtectionProp)) && (ok || !reflect.DeepEqual(v, enableDeletionProtectionProp)) {
+		obj["enableDeletionProtection"] = enableDeletionProtectionProp
+	}
 	effectiveLabelsProp, err := expandWorkbenchInstanceEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -1281,6 +1307,9 @@ func resourceWorkbenchInstanceRead(d *schema.ResourceData, meta interface{}) err
 	if err := d.Set("enable_managed_euc", flattenWorkbenchInstanceEnableManagedEuc(res["enableManagedEuc"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
+	if err := d.Set("enable_deletion_protection", flattenWorkbenchInstanceEnableDeletionProtection(res["enableDeletionProtection"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Instance: %s", err)
+	}
 	if err := d.Set("terraform_labels", flattenWorkbenchInstanceTerraformLabels(res["labels"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Instance: %s", err)
 	}
@@ -1369,6 +1398,12 @@ func resourceWorkbenchInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 	} else if v, ok := d.GetOkExists("enable_managed_euc"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enableManagedEucProp)) {
 		obj["enableManagedEuc"] = enableManagedEucProp
 	}
+	enableDeletionProtectionProp, err := expandWorkbenchInstanceEnableDeletionProtection(d.Get("enable_deletion_protection"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("enable_deletion_protection"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, enableDeletionProtectionProp)) {
+		obj["enableDeletionProtection"] = enableDeletionProtectionProp
+	}
 	effectiveLabelsProp, err := expandWorkbenchInstanceEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -1395,6 +1430,10 @@ func resourceWorkbenchInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 
 	if d.HasChange("enable_managed_euc") {
 		updateMask = append(updateMask, "enableManagedEuc")
+	}
+
+	if d.HasChange("enable_deletion_protection") {
+		updateMask = append(updateMask, "enableDeletionProtection")
 	}
 
 	if d.HasChange("effective_labels") {
@@ -1457,6 +1496,9 @@ func resourceWorkbenchInstanceUpdate(d *schema.ResourceData, meta interface{}) e
 	}
 	if d.HasChange("effective_labels") {
 		newUpdateMask = append(newUpdateMask, "labels")
+	}
+	if d.HasChange("enable_deletion_protection") {
+		newUpdateMask = append(newUpdateMask, "enableDeletionProtection")
 	}
 	if d.HasChange("gce_setup.0.container_image") {
 		newUpdateMask = append(newUpdateMask, "gce_setup.container_image")
@@ -1702,6 +1744,8 @@ func flattenWorkbenchInstanceGceSetup(v interface{}, d *schema.ResourceData, con
 		flattenWorkbenchInstanceGceSetupConfidentialInstanceConfig(original["confidentialInstanceConfig"], d, config)
 	transformed["reservation_affinity"] =
 		flattenWorkbenchInstanceGceSetupReservationAffinity(original["reservationAffinity"], d, config)
+	transformed["min_cpu_platform"] =
+		flattenWorkbenchInstanceGceSetupMinCpuPlatform(original["minCpuPlatform"], d, config)
 	return []interface{}{transformed}
 }
 func flattenWorkbenchInstanceGceSetupMachineType(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -1866,10 +1910,11 @@ func flattenWorkbenchInstanceGceSetupDataDisks(v interface{}, d *schema.Resource
 			continue
 		}
 		transformed = append(transformed, map[string]interface{}{
-			"disk_size_gb":    flattenWorkbenchInstanceGceSetupDataDisksDiskSizeGb(original["diskSizeGb"], d, config),
-			"disk_type":       flattenWorkbenchInstanceGceSetupDataDisksDiskType(original["diskType"], d, config),
-			"disk_encryption": flattenWorkbenchInstanceGceSetupDataDisksDiskEncryption(original["diskEncryption"], d, config),
-			"kms_key":         flattenWorkbenchInstanceGceSetupDataDisksKmsKey(original["kmsKey"], d, config),
+			"disk_size_gb":      flattenWorkbenchInstanceGceSetupDataDisksDiskSizeGb(original["diskSizeGb"], d, config),
+			"disk_type":         flattenWorkbenchInstanceGceSetupDataDisksDiskType(original["diskType"], d, config),
+			"disk_encryption":   flattenWorkbenchInstanceGceSetupDataDisksDiskEncryption(original["diskEncryption"], d, config),
+			"kms_key":           flattenWorkbenchInstanceGceSetupDataDisksKmsKey(original["kmsKey"], d, config),
+			"resource_policies": flattenWorkbenchInstanceGceSetupDataDisksResourcePolicies(original["resourcePolicies"], d, config),
 		})
 	}
 	return transformed
@@ -1887,6 +1932,10 @@ func flattenWorkbenchInstanceGceSetupDataDisksDiskEncryption(v interface{}, d *s
 }
 
 func flattenWorkbenchInstanceGceSetupDataDisksKmsKey(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenWorkbenchInstanceGceSetupDataDisksResourcePolicies(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2004,6 +2053,10 @@ func flattenWorkbenchInstanceGceSetupReservationAffinityKey(v interface{}, d *sc
 }
 
 func flattenWorkbenchInstanceGceSetupReservationAffinityValues(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenWorkbenchInstanceGceSetupMinCpuPlatform(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2129,6 +2182,10 @@ func flattenWorkbenchInstanceEnableThirdPartyIdentity(v interface{}, d *schema.R
 }
 
 func flattenWorkbenchInstanceEnableManagedEuc(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenWorkbenchInstanceEnableDeletionProtection(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2266,6 +2323,13 @@ func expandWorkbenchInstanceGceSetup(v interface{}, d tpgresource.TerraformResou
 		return nil, err
 	} else if val := reflect.ValueOf(transformedReservationAffinity); val.IsValid() && !tpgresource.IsEmptyValue(val) {
 		transformed["reservationAffinity"] = transformedReservationAffinity
+	}
+
+	transformedMinCpuPlatform, err := expandWorkbenchInstanceGceSetupMinCpuPlatform(original["min_cpu_platform"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedMinCpuPlatform); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["minCpuPlatform"] = transformedMinCpuPlatform
 	}
 
 	return transformed, nil
@@ -2593,6 +2657,13 @@ func expandWorkbenchInstanceGceSetupDataDisks(v interface{}, d tpgresource.Terra
 			transformed["kmsKey"] = transformedKmsKey
 		}
 
+		transformedResourcePolicies, err := expandWorkbenchInstanceGceSetupDataDisksResourcePolicies(original["resource_policies"], d, config)
+		if err != nil {
+			return nil, err
+		} else if val := reflect.ValueOf(transformedResourcePolicies); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformed["resourcePolicies"] = transformedResourcePolicies
+		}
+
 		req = append(req, transformed)
 	}
 	return req, nil
@@ -2611,6 +2682,10 @@ func expandWorkbenchInstanceGceSetupDataDisksDiskEncryption(v interface{}, d tpg
 }
 
 func expandWorkbenchInstanceGceSetupDataDisksKmsKey(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandWorkbenchInstanceGceSetupDataDisksResourcePolicies(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
@@ -2798,6 +2873,10 @@ func expandWorkbenchInstanceGceSetupReservationAffinityValues(v interface{}, d t
 	return v, nil
 }
 
+func expandWorkbenchInstanceGceSetupMinCpuPlatform(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandWorkbenchInstanceInstanceOwners(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -2811,6 +2890,10 @@ func expandWorkbenchInstanceEnableThirdPartyIdentity(v interface{}, d tpgresourc
 }
 
 func expandWorkbenchInstanceEnableManagedEuc(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandWorkbenchInstanceEnableDeletionProtection(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 
