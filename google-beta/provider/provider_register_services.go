@@ -17,7 +17,7 @@
 package provider
 
 import (
-	// Register services with at least one Magic Modules resource by importing them.
+	// Register all services by importing them.
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/accessapproval"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/accesscontextmanager"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/activedirectory"
@@ -120,6 +120,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/iam2"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/iam3"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/iambeta"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/iamcredentials"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/iamworkforcepool"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/iap"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/identityplatform"
@@ -161,7 +162,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/recaptchaenterprise"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/redis"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager"
-	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanager3"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/resourcemanagerv3"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/runtimeconfig"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/saasruntime"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/secretmanager"
@@ -186,6 +187,7 @@ import (
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/storageinsights"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/storagetransfer"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/tags"
+	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/tagslocation"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/tpuv2"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/transcoder"
 	_ "github.com/hashicorp/terraform-provider-google-beta/google-beta/services/vectorsearch"
