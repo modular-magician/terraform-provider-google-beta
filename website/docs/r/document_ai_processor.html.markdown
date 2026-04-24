@@ -40,9 +40,9 @@ To get more information about Processor, see:
 
 ```hcl
 resource "google_document_ai_processor" "processor" {
-  location = "us"
+  location     = "us"
   display_name = "test-processor"
-  type = "OCR_PROCESSOR"
+  type         = "OCR_PROCESSOR"
 }
 ```
 

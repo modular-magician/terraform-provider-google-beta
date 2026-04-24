@@ -50,32 +50,33 @@ var (
 	_ = googleapi.Error{}
 )
 
-func TestAccDocumentAIProcessor_documentaiProcessorExample(t *testing.T) {
+func TestAccDocumentAISchema_documentaiSchemaBasicExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"processor_name": "tf-test-test-processor" + randomSuffix,
-		"random_suffix":  randomSuffix,
+		"display_name":  "tf-test-test-schema" + randomSuffix,
+		"location":      "us" + randomSuffix,
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckDocumentAIProcessorDestroyProducer(t),
+		CheckDestroy:             testAccCheckDocumentAISchemaDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDocumentAIProcessor_documentaiProcessorExample(context),
+				Config: testAccDocumentAISchema_documentaiSchemaBasicExample(context),
 			},
 			{
-				ResourceName:            "google_document_ai_processor.processor",
+				ResourceName:            "google_document_ai_schema.schema",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
 			},
 			{
-				ResourceName:       "google_document_ai_processor.processor",
+				ResourceName:       "google_document_ai_schema.schema",
 				RefreshState:       true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
@@ -84,42 +85,42 @@ func TestAccDocumentAIProcessor_documentaiProcessorExample(t *testing.T) {
 	})
 }
 
-func testAccDocumentAIProcessor_documentaiProcessorExample(context map[string]interface{}) string {
+func testAccDocumentAISchema_documentaiSchemaBasicExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_document_ai_processor" "processor" {
-  location     = "us"
-  display_name = "%{processor_name}"
-  type         = "OCR_PROCESSOR"
+resource "google_document_ai_schema" "schema" {
+  location     = "%{location}"
+  display_name = "%{display_name}"
 }
 `, context)
 }
 
-func TestAccDocumentAIProcessor_documentaiProcessorEuExample(t *testing.T) {
+func TestAccDocumentAISchema_documentaiSchemaBasicEuExample(t *testing.T) {
 	t.Parallel()
 
 	randomSuffix := acctest.RandString(t, 10)
 
 	context := map[string]interface{}{
-		"processor_name": "tf-test-test-processor" + randomSuffix,
-		"random_suffix":  randomSuffix,
+		"display_name":  "tf-test-test-schema" + randomSuffix,
+		"location":      "eu" + randomSuffix,
+		"random_suffix": randomSuffix,
 	}
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
 		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
-		CheckDestroy:             testAccCheckDocumentAIProcessorDestroyProducer(t),
+		CheckDestroy:             testAccCheckDocumentAISchemaDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDocumentAIProcessor_documentaiProcessorEuExample(context),
+				Config: testAccDocumentAISchema_documentaiSchemaBasicEuExample(context),
 			},
 			{
-				ResourceName:            "google_document_ai_processor.processor",
+				ResourceName:            "google_document_ai_schema.schema",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"location"},
+				ImportStateVerifyIgnore: []string{"labels", "location", "terraform_labels"},
 			},
 			{
-				ResourceName:       "google_document_ai_processor.processor",
+				ResourceName:       "google_document_ai_schema.schema",
 				RefreshState:       true,
 				ExpectNonEmptyPlan: true,
 				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
@@ -128,20 +129,19 @@ func TestAccDocumentAIProcessor_documentaiProcessorEuExample(t *testing.T) {
 	})
 }
 
-func testAccDocumentAIProcessor_documentaiProcessorEuExample(context map[string]interface{}) string {
+func testAccDocumentAISchema_documentaiSchemaBasicEuExample(context map[string]interface{}) string {
 	return acctest.Nprintf(`
-resource "google_document_ai_processor" "processor" {
-  location = "eu"
-  display_name = "%{processor_name}"
-  type = "OCR_PROCESSOR"
+resource "google_document_ai_schema" "schema" {
+  location     = "%{location}"
+  display_name = "%{display_name}"
 }
 `, context)
 }
 
-func testAccCheckDocumentAIProcessorDestroyProducer(t *testing.T) func(s *terraform.State) error {
+func testAccCheckDocumentAISchemaDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
-			if rs.Type != "google_document_ai_processor" {
+			if rs.Type != "google_document_ai_schema" {
 				continue
 			}
 			if strings.HasPrefix(name, "data.") {
@@ -150,7 +150,7 @@ func testAccCheckDocumentAIProcessorDestroyProducer(t *testing.T) func(s *terraf
 
 			config := acctest.GoogleProviderConfig(t)
 
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{DocumentAIBasePath}}projects/{{project}}/locations/{{location}}/processors/{{name}}")
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{DocumentAIBasePath}}projects/{{project}}/locations/{{location}}/schemas/{{name}}")
 			if err != nil {
 				return err
 			}
@@ -169,7 +169,7 @@ func testAccCheckDocumentAIProcessorDestroyProducer(t *testing.T) func(s *terraf
 				UserAgent: config.UserAgent,
 			})
 			if err == nil {
-				return fmt.Errorf("DocumentAIProcessor still exists at %s", url)
+				return fmt.Errorf("DocumentAISchema still exists at %s", url)
 			}
 		}
 
