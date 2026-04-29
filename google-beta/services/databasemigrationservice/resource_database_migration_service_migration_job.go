@@ -462,7 +462,7 @@ func resourceDatabaseMigrationServiceMigrationJobCreate(d *schema.ResourceData, 
 		obj["labels"] = effectiveLabelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DatabaseMigrationServiceBasePath}}projects/{{project}}/locations/{{location}}/migrationJobs?migrationJobId={{migration_job_id}}")
+	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/{{location}}/migrationJobs?migrationJobId={{migration_job_id}}"))
 	if err != nil {
 		return err
 	}
@@ -546,7 +546,7 @@ func resourceDatabaseMigrationServiceMigrationJobRead(d *schema.ResourceData, me
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DatabaseMigrationServiceBasePath}}projects/{{project}}/locations/{{location}}/migrationJobs/{{migration_job_id}}")
+	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/{{location}}/migrationJobs/{{migration_job_id}}"))
 	if err != nil {
 		return err
 	}
@@ -706,7 +706,7 @@ func resourceDatabaseMigrationServiceMigrationJobUpdate(d *schema.ResourceData, 
 		obj["labels"] = effectiveLabelsProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{DatabaseMigrationServiceBasePath}}projects/{{project}}/locations/{{location}}/migrationJobs/{{migration_job_id}}")
+	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/{{location}}/migrationJobs/{{migration_job_id}}"))
 	if err != nil {
 		return err
 	}
@@ -807,8 +807,7 @@ func resourceDatabaseMigrationServiceMigrationJobDelete(d *schema.ResourceData, 
 		return fmt.Errorf("Error fetching project for MigrationJob: %s", err)
 	}
 	billingProject = project
-
-	url, err := tpgresource.ReplaceVars(d, config, "{{DatabaseMigrationServiceBasePath}}projects/{{project}}/locations/{{location}}/migrationJobs/{{migration_job_id}}")
+	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/{{location}}/migrationJobs/{{migration_job_id}}"))
 	if err != nil {
 		return err
 	}

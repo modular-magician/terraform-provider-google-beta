@@ -388,7 +388,7 @@ func resourceComputeRegionCommitmentCreate(d *schema.ResourceData, meta interfac
 		obj["region"] = regionProp
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/commitments")
+	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/regions/{{region}}/commitments"))
 	if err != nil {
 		return err
 	}
@@ -472,7 +472,7 @@ func resourceComputeRegionCommitmentRead(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	url, err := tpgresource.ReplaceVars(d, config, "{{ComputeBasePath}}projects/{{project}}/regions/{{region}}/commitments/{{name}}")
+	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/regions/{{region}}/commitments/{{name}}"))
 	if err != nil {
 		return err
 	}
