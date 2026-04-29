@@ -1901,6 +1901,12 @@ func expandSecurityposturePosturePolicySetsPoliciesConstraint(v interface{}, d t
 	return transformed, nil
 }
 
+// expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraint is a custom expander for the orgPolicyConstraint block.
+// It is self-contained (does not call generated child expanders) because using custom_expand
+// on a NestedObject prevents the template from recursively generating those child functions.
+// The key behaviour difference from the generated code is for the `enforce` field:
+// it is only included in the API request when the user explicitly set it in config,
+// which is determined by inspecting d.GetRawConfig() for null vs. false.
 func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraint(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	if v == nil {
 		return nil, nil
@@ -1913,186 +1919,146 @@ func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraint
 	original := raw.(map[string]interface{})
 	transformed := make(map[string]interface{})
 
-	transformedCannedConstraintId, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintCannedConstraintId(original["canned_constraint_id"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedCannedConstraintId); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["cannedConstraintId"] = transformedCannedConstraintId
+	// cannedConstraintId — inlined, trivial passthrough.
+	cannedConstraintId, _ := original["canned_constraint_id"].(string)
+	if cannedConstraintId != "" {
+		transformed["cannedConstraintId"] = cannedConstraintId
 	}
 
-	transformedPolicyRules, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRules(original["policy_rules"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedPolicyRules); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["policyRules"] = transformedPolicyRules
-	}
+	// Determine, per policy_rules entry, whether `enforce` was explicitly set in config.
+	// d.GetRawConfig() preserves null (unset) vs. false (explicitly set to false).
+	enforceIsSet := securitypostureGetEnforceIsSetForOrgPolicyConstraint(d, cannedConstraintId)
 
-	return transformed, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintCannedConstraintId(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRules(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	l := v.([]interface{})
-	req := make([]interface{}, 0, len(l))
-	for _, raw := range l {
-		if raw == nil {
+	policyRulesRaw, _ := original["policy_rules"].([]interface{})
+	policyRules := make([]interface{}, 0, len(policyRulesRaw))
+	for i, ruleRaw := range policyRulesRaw {
+		if ruleRaw == nil {
 			continue
 		}
-		original := raw.(map[string]interface{})
-		transformed := make(map[string]interface{})
+		rule := ruleRaw.(map[string]interface{})
+		transformedRule := make(map[string]interface{})
 
-		transformedValues, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesValues(original["values"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedValues); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["values"] = transformedValues
+		// values — inlined nested object expansion.
+		if valuesRaw, ok := rule["values"].([]interface{}); ok && len(valuesRaw) > 0 && valuesRaw[0] != nil {
+			valuesMap := valuesRaw[0].(map[string]interface{})
+			transformedValues := make(map[string]interface{})
+			if av, ok := valuesMap["allowed_values"]; ok {
+				if val := reflect.ValueOf(av); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+					transformedValues["allowedValues"] = av
+				}
+			}
+			if dv, ok := valuesMap["denied_values"]; ok {
+				if val := reflect.ValueOf(dv); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+					transformedValues["deniedValues"] = dv
+				}
+			}
+			if len(transformedValues) > 0 {
+				transformedRule["values"] = transformedValues
+			}
 		}
 
-		transformedAllowAll, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesAllowAll(original["allow_all"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedAllowAll); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["allowAll"] = transformedAllowAll
+		// allow_all / deny_all — inlined boolean passthrough with empty-value guard.
+		if val := reflect.ValueOf(rule["allow_all"]); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformedRule["allowAll"] = rule["allow_all"]
+		}
+		if val := reflect.ValueOf(rule["deny_all"]); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+			transformedRule["denyAll"] = rule["deny_all"]
 		}
 
-		transformedDenyAll, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesDenyAll(original["deny_all"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedDenyAll); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["denyAll"] = transformedDenyAll
+		// enforce — only include when explicitly set by the user in config.
+		if i < len(enforceIsSet) && enforceIsSet[i] {
+			transformedRule["enforce"] = rule["enforce"]
 		}
 
-		transformedEnforce, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesEnforce(original["enforce"], d, config)
-		if err != nil {
-			return nil, err
-		} else {
-			transformed["enforce"] = transformedEnforce
+		// condition — inlined nested object expansion.
+		if condRaw, ok := rule["condition"].([]interface{}); ok && len(condRaw) > 0 && condRaw[0] != nil {
+			condMap := condRaw[0].(map[string]interface{})
+			transformedCond := make(map[string]interface{})
+			for tfKey, apiKey := range map[string]string{
+				"expression":  "expression",
+				"title":       "title",
+				"description": "description",
+				"location":    "location",
+			} {
+				if v, ok := condMap[tfKey]; ok {
+					if val := reflect.ValueOf(v); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+						transformedCond[apiKey] = v
+					}
+				}
+			}
+			if len(transformedCond) > 0 {
+				transformedRule["condition"] = transformedCond
+			}
 		}
 
-		transformedCondition, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesCondition(original["condition"], d, config)
-		if err != nil {
-			return nil, err
-		} else if val := reflect.ValueOf(transformedCondition); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-			transformed["condition"] = transformedCondition
-		}
-
-		req = append(req, transformed)
+		policyRules = append(policyRules, transformedRule)
 	}
-	return req, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesValues(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedAllowedValues, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesValuesAllowedValues(original["allowed_values"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedAllowedValues); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["allowedValues"] = transformedAllowedValues
-	}
-
-	transformedDeniedValues, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesValuesDeniedValues(original["denied_values"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedDeniedValues); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["deniedValues"] = transformedDeniedValues
+	if len(policyRules) > 0 {
+		transformed["policyRules"] = policyRules
 	}
 
 	return transformed, nil
 }
 
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesValuesAllowedValues(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesValuesDeniedValues(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesAllowAll(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesDenyAll(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesEnforce(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesCondition(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	l := v.([]interface{})
-	if len(l) == 0 || l[0] == nil {
-		return nil, nil
-	}
-	raw := l[0]
-	original := raw.(map[string]interface{})
-	transformed := make(map[string]interface{})
-
-	transformedExpression, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesConditionExpression(original["expression"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedExpression); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["expression"] = transformedExpression
+// securitypostureGetEnforceIsSetForOrgPolicyConstraint traverses the raw cty config to find
+// which policy_rules[i].enforce values were explicitly set (non-null) for the constraint
+// identified by cannedConstraintId. It returns a slice where result[i] == true means the
+// i-th rule had enforce explicitly set by the user.
+func securitypostureGetEnforceIsSetForOrgPolicyConstraint(d tpgresource.TerraformResourceData, cannedConstraintId string) []bool {
+	rawCfg := d.GetRawConfig()
+	if rawCfg.IsNull() || !rawCfg.IsKnown() {
+		return nil
 	}
 
-	transformedTitle, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesConditionTitle(original["title"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedTitle); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["title"] = transformedTitle
+	policySets := rawCfg.GetAttr("policy_sets")
+	if policySets.IsNull() || !policySets.IsKnown() {
+		return nil
 	}
 
-	transformedDescription, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesConditionDescription(original["description"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedDescription); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["description"] = transformedDescription
+	for psIt := policySets.ElementIterator(); psIt.Next(); {
+		_, psVal := psIt.Element()
+		policies := psVal.GetAttr("policies")
+		if policies.IsNull() || !policies.IsKnown() {
+			continue
+		}
+		for pIt := policies.ElementIterator(); pIt.Next(); {
+			_, pVal := pIt.Element()
+			constraint := pVal.GetAttr("constraint")
+			if constraint.IsNull() || !constraint.IsKnown() {
+				continue
+			}
+			for cIt := constraint.ElementIterator(); cIt.Next(); {
+				_, cVal := cIt.Element()
+				orgPolicyConstraint := cVal.GetAttr("org_policy_constraint")
+				if orgPolicyConstraint.IsNull() || !orgPolicyConstraint.IsKnown() {
+					continue
+				}
+				for opcIt := orgPolicyConstraint.ElementIterator(); opcIt.Next(); {
+					_, opcVal := opcIt.Element()
+					idVal := opcVal.GetAttr("canned_constraint_id")
+					if idVal.IsNull() || !idVal.IsKnown() {
+						continue
+					}
+					if idVal.AsString() != cannedConstraintId {
+						continue
+					}
+					// Found the matching constraint — collect enforce null-status per rule.
+					policyRules := opcVal.GetAttr("policy_rules")
+					if policyRules.IsNull() || !policyRules.IsKnown() {
+						return nil
+					}
+					var result []bool
+					for prIt := policyRules.ElementIterator(); prIt.Next(); {
+						_, prVal := prIt.Element()
+						enforce := prVal.GetAttr("enforce")
+						result = append(result, !enforce.IsNull())
+					}
+					return result
+				}
+			}
+		}
 	}
-
-	transformedLocation, err := expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesConditionLocation(original["location"], d, config)
-	if err != nil {
-		return nil, err
-	} else if val := reflect.ValueOf(transformedLocation); val.IsValid() && !tpgresource.IsEmptyValue(val) {
-		transformed["location"] = transformedLocation
-	}
-
-	return transformed, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesConditionExpression(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesConditionTitle(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesConditionDescription(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
-}
-
-func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintPolicyRulesConditionLocation(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
-	return v, nil
+	return nil
 }
 
 func expandSecurityposturePosturePolicySetsPoliciesConstraintOrgPolicyConstraintCustom(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
