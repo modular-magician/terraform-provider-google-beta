@@ -35,6 +35,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-mux/tf5muxserver"
 	"github.com/hashicorp/terraform-plugin-testing/echoprovider"
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/knownvalue"
+	"github.com/hashicorp/terraform-plugin-testing/querycheck"
+	"github.com/hashicorp/terraform-plugin-testing/querycheck/queryfilter"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/hashicorp/terraform-provider-google-beta/google-beta/envvar"
 	transport_tpg "github.com/hashicorp/terraform-provider-google-beta/google-beta/transport"
@@ -234,6 +238,48 @@ provider "echo" {
 }
 resource "echo" "test" {}
 `, ephemeralReference)
+}
+
+// utilities for generated list resource tests
+
+// ListDisplayName captures a resource's display-name attribute during a create step
+// and provides a helper for ergonomic query display name checks.
+type ListDisplayName struct {
+	value string
+	attr  string
+}
+
+// Capture sets the value from the resource state for the given address and attribute candidates.
+func (c *ListDisplayName) Capture(resourceAddr string, attrCandidates []string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[resourceAddr]
+		if !ok {
+			return fmt.Errorf("resource not found in state: %s", resourceAddr)
+		}
+		for _, k := range attrCandidates {
+			if v, ok := rs.Primary.Attributes[k]; ok && v != "" {
+				c.value = v
+				c.attr = k
+				return nil
+			}
+		}
+		return fmt.Errorf("no display name attribute found in state for resource %s; tried %v", resourceAddr, attrCandidates)
+	}
+}
+
+// Check returns a querycheck.QueryResultCheck using ExpectResourceDisplayName and queryfilter.ByDisplayName.
+// Example usage: listDisplayName.Check("google_service_account.all_in_project")
+func (c *ListDisplayName) Check(resourceAddr string) querycheck.QueryResultCheck {
+	return querycheck.ExpectResourceDisplayName(
+		resourceAddr,
+		queryfilter.ByDisplayName(c.KnownValueCheck()),
+		c.KnownValueCheck(),
+	)
+}
+
+// KnownValueCheck returns a knownvalue.Check for the captured value.
+func (c *ListDisplayName) KnownValueCheck() knownvalue.Check {
+	return knownvalue.StringExact(c.value)
 }
 
 // This is a Printf sibling (Nprintf; Named Printf), which handles strings like
