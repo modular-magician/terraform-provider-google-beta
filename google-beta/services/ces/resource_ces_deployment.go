@@ -232,6 +232,23 @@ CHAT_AND_VOICE
 VOICE_ONLY
 CHAT_ONLY`,
 									},
+									"security_settings": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: `Security settings for the web widget.`,
+										MaxItems:    1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enable_public_access": {
+													Type:     schema.TypeBool,
+													Optional: true,
+													Description: `Whether to enable public access for the web widget deployment.
+When true, the widget can be embedded without additional
+authentication.`,
+												},
+											},
+										},
+									},
 									"theme": {
 										Type:     schema.TypeString,
 										Optional: true,
@@ -740,6 +757,8 @@ func flattenCESDeploymentChannelProfileWebWidgetConfig(v interface{}, d *schema.
 		flattenCESDeploymentChannelProfileWebWidgetConfigTheme(original["theme"], d, config)
 	transformed["web_widget_title"] =
 		flattenCESDeploymentChannelProfileWebWidgetConfigWebWidgetTitle(original["webWidgetTitle"], d, config)
+	transformed["security_settings"] =
+		flattenCESDeploymentChannelProfileWebWidgetConfigSecuritySettings(original["securitySettings"], d, config)
 	return []interface{}{transformed}
 }
 func flattenCESDeploymentChannelProfileWebWidgetConfigModality(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
@@ -751,6 +770,23 @@ func flattenCESDeploymentChannelProfileWebWidgetConfigTheme(v interface{}, d *sc
 }
 
 func flattenCESDeploymentChannelProfileWebWidgetConfigWebWidgetTitle(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenCESDeploymentChannelProfileWebWidgetConfigSecuritySettings(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	if v == nil {
+		return nil
+	}
+	original := v.(map[string]interface{})
+	if len(original) == 0 {
+		return nil
+	}
+	transformed := make(map[string]interface{})
+	transformed["enable_public_access"] =
+		flattenCESDeploymentChannelProfileWebWidgetConfigSecuritySettingsEnablePublicAccess(original["enablePublicAccess"], d, config)
+	return []interface{}{transformed}
+}
+func flattenCESDeploymentChannelProfileWebWidgetConfigSecuritySettingsEnablePublicAccess(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -913,6 +949,13 @@ func expandCESDeploymentChannelProfileWebWidgetConfig(v interface{}, d tpgresour
 		transformed["webWidgetTitle"] = transformedWebWidgetTitle
 	}
 
+	transformedSecuritySettings, err := expandCESDeploymentChannelProfileWebWidgetConfigSecuritySettings(original["security_settings"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedSecuritySettings); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["securitySettings"] = transformedSecuritySettings
+	}
+
 	return transformed, nil
 }
 
@@ -925,6 +968,32 @@ func expandCESDeploymentChannelProfileWebWidgetConfigTheme(v interface{}, d tpgr
 }
 
 func expandCESDeploymentChannelProfileWebWidgetConfigWebWidgetTitle(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
+func expandCESDeploymentChannelProfileWebWidgetConfigSecuritySettings(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	if v == nil {
+		return nil, nil
+	}
+	l := v.([]interface{})
+	if len(l) == 0 || l[0] == nil {
+		return nil, nil
+	}
+	raw := l[0]
+	original := raw.(map[string]interface{})
+	transformed := make(map[string]interface{})
+
+	transformedEnablePublicAccess, err := expandCESDeploymentChannelProfileWebWidgetConfigSecuritySettingsEnablePublicAccess(original["enable_public_access"], d, config)
+	if err != nil {
+		return nil, err
+	} else if val := reflect.ValueOf(transformedEnablePublicAccess); val.IsValid() && !tpgresource.IsEmptyValue(val) {
+		transformed["enablePublicAccess"] = transformedEnablePublicAccess
+	}
+
+	return transformed, nil
+}
+
+func expandCESDeploymentChannelProfileWebWidgetConfigSecuritySettingsEnablePublicAccess(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
 

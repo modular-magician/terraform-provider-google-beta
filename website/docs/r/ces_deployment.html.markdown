@@ -59,6 +59,9 @@ resource "google_ces_deployment" "my-deployment" {
             modality = "CHAT_AND_VOICE"
             theme = "DARK"
             web_widget_title = "temp_webwidget_title"
+            security_settings {
+                enable_public_access = true
+            }
         }
     }
 }
@@ -170,6 +173,20 @@ The following arguments are supported:
 * `web_widget_title` -
   (Optional)
   The title of the web widget.
+
+* `security_settings` -
+  (Optional)
+  Security settings for the web widget.
+  Structure is [documented below](#nested_channel_profile_web_widget_config_security_settings).
+
+
+<a name="nested_channel_profile_web_widget_config_security_settings"></a>The `security_settings` block supports:
+
+* `enable_public_access` -
+  (Optional)
+  Whether to enable public access for the web widget deployment.
+  When true, the widget can be embedded without additional
+  authentication.
 
 ## Attributes Reference
 
