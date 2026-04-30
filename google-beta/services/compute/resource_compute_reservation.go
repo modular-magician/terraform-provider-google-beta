@@ -331,6 +331,28 @@ Cannot be used with delete_after_duration.`,
 					},
 				},
 			},
+			"resource_policies": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				Description: `Resource policies to attach to this reservation. Each map entry uses a
+user-defined key; the value is the full or partial URL of the resource policy
+(for example, a group placement policy for compact placement).
+
+**Compact placement** is the only supported policy type for reservations.
+You cannot use **spread** placement policies, **shared** reservations, or
+reservations **tied to commitments**. A given compact placement policy can
+only be attached to **one** reservation at a time. You cannot use a compact
+policy whose **maximum distance** is '1' with a reservation. For
+'group_placement_policy' on the resource policy, do not set 'vm_count' for use
+with a reservation; the API requires an incremental compact policy for
+reservations and rejects vm_count-scoped group placement in that case.
+
+Set 'specific_reservation_required' to 'true' when using this field for
+compact placement. For details, see
+[About reservations](https://cloud.google.com/compute/docs/instances/reservations-overview)
+and [Restrictions for compact placement policies](https://cloud.google.com/compute/docs/instances/placement-policies-overview#restrictions_for_compact_placement_policies).`,
+				Elem: &schema.Schema{Type: schema.TypeString},
+			},
 			"share_settings": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -382,7 +404,10 @@ Cannot be used with delete_after_duration.`,
 				ForceNew: true,
 				Description: `When set to true, only VMs that target this reservation by name can
 consume this reservation. Otherwise, it can be consumed by VMs with
-affinity for any reservation. Defaults to false.`,
+affinity for any reservation. Defaults to false.
+
+If you set 'resource_policies' to attach a compact placement policy, the
+API requires this field to be 'true'.`,
 				Default: false,
 			},
 			"commitment": {
@@ -668,6 +693,12 @@ func resourceComputeReservationCreate(d *schema.ResourceData, meta interface{}) 
 	} else if v, ok := d.GetOkExists("enable_emergent_maintenance"); !tpgresource.IsEmptyValue(reflect.ValueOf(enableEmergentMaintenanceProp)) && (ok || !reflect.DeepEqual(v, enableEmergentMaintenanceProp)) {
 		obj["enableEmergentMaintenance"] = enableEmergentMaintenanceProp
 	}
+	resourcePoliciesProp, err := expandComputeReservationResourcePolicies(d.Get("resource_policies"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("resource_policies"); !tpgresource.IsEmptyValue(reflect.ValueOf(resourcePoliciesProp)) && (ok || !reflect.DeepEqual(v, resourcePoliciesProp)) {
+		obj["resourcePolicies"] = resourcePoliciesProp
+	}
 	zoneProp, err := expandComputeReservationZone(d.Get("zone"), d, config)
 	if err != nil {
 		return err
@@ -855,6 +886,12 @@ func resourceComputeReservationUpdate(d *schema.ResourceData, meta interface{}) 
 	} else if v, ok := d.GetOkExists("reservation_sharing_policy"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, reservationSharingPolicyProp)) {
 		obj["reservationSharingPolicy"] = reservationSharingPolicyProp
 	}
+	resourcePoliciesProp, err := expandComputeReservationResourcePolicies(d.Get("resource_policies"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("resource_policies"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, resourcePoliciesProp)) {
+		obj["resourcePolicies"] = resourcePoliciesProp
+	}
 
 	obj, err = resourceComputeReservationUpdateEncoder(d, meta, obj)
 	if err != nil {
@@ -880,6 +917,10 @@ func resourceComputeReservationUpdate(d *schema.ResourceData, meta interface{}) 
 
 	if d.HasChange("reservation_sharing_policy") {
 		updateMask = append(updateMask, "reservationSharingPolicy")
+	}
+
+	if d.HasChange("resource_policies") {
+		updateMask = append(updateMask, "resourcePolicies")
 	}
 	// updateMask is a URL parameter but not present in the schema, so ReplaceVars
 	// won't set it
@@ -1349,6 +1390,10 @@ func flattenComputeReservationLinkedCommitments(v interface{}, d *schema.Resourc
 }
 
 func flattenComputeReservationSatisfiesPzs(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
+func flattenComputeReservationResourcePolicies(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	return v
 }
 
@@ -2040,6 +2085,17 @@ func expandComputeReservationEnableEmergentMaintenance(v interface{}, d tpgresou
 	return v, nil
 }
 
+func expandComputeReservationResourcePolicies(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
+	if v == nil {
+		return map[string]string{}, nil
+	}
+	m := make(map[string]string)
+	for k, val := range v.(map[string]interface{}) {
+		m[k] = val.(string)
+	}
+	return m, nil
+}
+
 func expandComputeReservationZone(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	f, err := tpgresource.ParseGlobalFieldValue("zones", v.(string), "project", d, config, true)
 	if err != nil {
@@ -2185,6 +2241,18 @@ func resourceComputeReservationUpdateEncoder(d *schema.ResourceData, meta interf
 		}
 	}
 
+	// Include other PATCH fields from the expanded update body (this encoder only
+	// handles share settings and specific reservation count).
+	for k, v := range obj {
+		if _, exists := newObj[k]; exists {
+			continue
+		}
+		if k == "specificReservation" && newObj["specificSkuCount"] != nil {
+			continue
+		}
+		newObj[k] = v
+	}
+
 	return newObj, nil
 }
 
@@ -2231,6 +2299,9 @@ func ResourceComputeReservationFlatten(d *schema.ResourceData, meta interface{},
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
 	if err = d.Set("satisfies_pzs", flattenComputeReservationSatisfiesPzs(res["satisfiesPzs"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Reservation: %s", err)
+	}
+	if err = d.Set("resource_policies", flattenComputeReservationResourcePolicies(res["resourcePolicies"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Reservation: %s", err)
 	}
 	if err = d.Set("resource_status", flattenComputeReservationResourceStatus(res["resourceStatus"], d, config)); err != nil {

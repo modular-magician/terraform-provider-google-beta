@@ -22,6 +22,7 @@ fields:
     - api_field: name
     - api_field: reservationBlockCount
     - api_field: reservationSharingPolicy.serviceShareType
+    - api_field: resourcePolicies
     - api_field: resourceStatus.healthInfo.degradedBlockCount
     - api_field: resourceStatus.healthInfo.healthStatus
     - api_field: resourceStatus.healthInfo.healthyBlockCount

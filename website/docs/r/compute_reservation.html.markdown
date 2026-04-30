@@ -238,6 +238,8 @@ The following arguments are supported:
   When set to true, only VMs that target this reservation by name can
   consume this reservation. Otherwise, it can be consumed by VMs with
   affinity for any reservation. Defaults to false.
+  If you set `resource_policies` to attach a compact placement policy, the
+  API requires this field to be `true`.
 
 * `share_settings` -
   (Optional)
@@ -262,6 +264,24 @@ The following arguments are supported:
 * `enable_emergent_maintenance` -
   (Optional, [Beta](../guides/provider_versions.html.markdown))
   Indicates if this group of VMs have emergent maintenance enabled.
+
+* `resource_policies` -
+  (Optional)
+  Resource policies to attach to this reservation. Each map entry uses a
+  user-defined key; the value is the full or partial URL of the resource policy
+  (for example, a group placement policy for compact placement).
+  **Compact placement** is the only supported policy type for reservations.
+  You cannot use **spread** placement policies, **shared** reservations, or
+  reservations **tied to commitments**. A given compact placement policy can
+  only be attached to **one** reservation at a time. You cannot use a compact
+  policy whose **maximum distance** is `1` with a reservation. For
+  `group_placement_policy` on the resource policy, do not set `vm_count` for use
+  with a reservation; the API requires an incremental compact policy for
+  reservations and rejects vm_count-scoped group placement in that case.
+  Set `specific_reservation_required` to `true` when using this field for
+  compact placement. For details, see
+  [About reservations](https://cloud.google.com/compute/docs/instances/reservations-overview)
+  and [Restrictions for compact placement policies](https://cloud.google.com/compute/docs/instances/placement-policies-overview#restrictions_for_compact_placement_policies).
 
 * `project` - (Optional) The ID of the project in which the resource belongs.
     If it is not provided, the provider project is used.
