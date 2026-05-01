@@ -1,0 +1,19 @@
+# Copyright IBM Corp. 2014, 2026
+# SPDX-License-Identifier: MPL-2.0
+resource: google_contact_center_insights_qa_question_tag
+generation_type: mmv1
+source_file: products/contactcenterinsights/QaQuestionTag.yaml
+api_service_name: contactcenterinsights.googleapis.com
+api_version: v1
+api_resource_type_kind: QaQuestionTag
+autogen_status: true
+fields:
+    - api_field: createTime
+    - api_field: displayName
+    - field: location
+      provider_only: true
+    - api_field: name
+    - api_field: qaQuestionIds
+    - field: qa_question_tag_id
+      provider_only: true
+    - api_field: updateTime
