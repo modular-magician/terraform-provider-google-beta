@@ -331,6 +331,7 @@ type Config struct {
 	FirebaseStorageBasePath          string
 	FirestoreBasePath                string
 	GeminiBasePath                   string
+	GeminiDataAnalyticsBasePath      string
 	GKEBackupBasePath                string
 	GKEHubBasePath                   string
 	GKEHub2BasePath                  string
@@ -520,6 +521,7 @@ const FirebaserulesBasePathKey = "Firebaserules"
 const FirebaseStorageBasePathKey = "FirebaseStorage"
 const FirestoreBasePathKey = "Firestore"
 const GeminiBasePathKey = "Gemini"
+const GeminiDataAnalyticsBasePathKey = "GeminiDataAnalytics"
 const GKEBackupBasePathKey = "GKEBackup"
 const GKEHubBasePathKey = "GKEHub"
 const GKEHub2BasePathKey = "GKEHub2"
@@ -704,6 +706,7 @@ var DefaultBasePaths = map[string]string{
 	FirebaseStorageBasePathKey:          "https://firebasestorage.googleapis.com/v1beta/",
 	FirestoreBasePathKey:                "https://firestore.googleapis.com/v1/",
 	GeminiBasePathKey:                   "https://cloudaicompanion.googleapis.com/v1/",
+	GeminiDataAnalyticsBasePathKey:      "https://geminidataanalytics.googleapis.com/v1beta/",
 	GKEBackupBasePathKey:                "https://gkebackup.googleapis.com/v1/",
 	GKEHubBasePathKey:                   "https://gkehub.googleapis.com/v1beta/",
 	GKEHub2BasePathKey:                  "https://gkehub.googleapis.com/v1beta/",
@@ -891,6 +894,7 @@ var DefaultRepStatus = map[string]bool{
 	FirebaseStorageBasePathKey:          false,
 	FirestoreBasePathKey:                false,
 	GeminiBasePathKey:                   false,
+	GeminiDataAnalyticsBasePathKey:      false,
 	GKEBackupBasePathKey:                false,
 	GKEHubBasePathKey:                   false,
 	GKEHub2BasePathKey:                  false,
@@ -1711,6 +1715,7 @@ func ConfigureBasePaths(c *Config) {
 	c.FirebaseStorageBasePath = DefaultBasePaths[FirebaseStorageBasePathKey]
 	c.FirestoreBasePath = DefaultBasePaths[FirestoreBasePathKey]
 	c.GeminiBasePath = DefaultBasePaths[GeminiBasePathKey]
+	c.GeminiDataAnalyticsBasePath = DefaultBasePaths[GeminiDataAnalyticsBasePathKey]
 	c.GKEBackupBasePath = DefaultBasePaths[GKEBackupBasePathKey]
 	c.GKEHubBasePath = DefaultBasePaths[GKEHubBasePathKey]
 	c.GKEHub2BasePath = DefaultBasePaths[GKEHub2BasePathKey]

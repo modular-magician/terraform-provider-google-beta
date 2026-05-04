@@ -497,6 +497,7 @@ func ProviderConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	config.FirebaseStorageBasePath = transport_tpg.BaseUrl(registry.GetProduct("firebasestorage"), &config)
 	config.FirestoreBasePath = transport_tpg.BaseUrl(registry.GetProduct("firestore"), &config)
 	config.GeminiBasePath = transport_tpg.BaseUrl(registry.GetProduct("gemini"), &config)
+	config.GeminiDataAnalyticsBasePath = transport_tpg.BaseUrl(registry.GetProduct("geminidataanalytics"), &config)
 	config.GKEBackupBasePath = transport_tpg.BaseUrl(registry.GetProduct("gkebackup"), &config)
 	config.GKEHubBasePath = transport_tpg.BaseUrl(registry.GetProduct("gkehub"), &config)
 	config.GKEHub2BasePath = transport_tpg.BaseUrl(registry.GetProduct("gkehub2"), &config)
