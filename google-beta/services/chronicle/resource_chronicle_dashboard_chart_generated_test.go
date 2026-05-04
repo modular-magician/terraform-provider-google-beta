@@ -63,7 +63,7 @@ func TestAccChronicleDashboardChart_chronicleDashboardchartBasicExample(t *testi
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckChronicleDashboardChartDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -89,7 +89,6 @@ func testAccChronicleDashboardChart_chronicleDashboardchartBasicExample(context 
 	return acctest.Nprintf(`
 # A Native Dashboard is required to create a Dashboard Chart.
 resource "google_chronicle_native_dashboard" "my_dashboard" {
-  provider     = google-beta
   location     = "us" 
   instance     = "%{chronicle_id}"
   display_name = "tf-test-dashboard-1%{random_suffix}"
@@ -112,7 +111,6 @@ resource "google_chronicle_native_dashboard" "my_dashboard" {
 }
 
 resource "google_chronicle_dashboard_chart" "my_chart" {
-  provider         = google-beta
   location         = "us" # Example region, adjust as necessary
   instance         = "%{chronicle_id}"
   # This parameter creates an implicit dependency: Terraform will create
@@ -189,7 +187,7 @@ func TestAccChronicleDashboardChart_chronicleDashboardchartFullExample(t *testin
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
-		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderFactories(t),
 		CheckDestroy:             testAccCheckChronicleDashboardChartDestroyProducer(t),
 		Steps: []resource.TestStep{
 			{
@@ -215,7 +213,6 @@ func testAccChronicleDashboardChart_chronicleDashboardchartFullExample(context m
 	return acctest.Nprintf(`
 # A Native Dashboard is required to create a Dashboard Chart.
 resource "google_chronicle_native_dashboard" "my_dashboard" {
-  provider     = google-beta
   location     = "us" # Example region, adjust as necessary
   instance     = "%{chronicle_id}"
   display_name = "%{dashboard_name}"
@@ -242,7 +239,6 @@ resource "google_chronicle_native_dashboard" "my_dashboard" {
 }
 
 resource "google_chronicle_dashboard_chart" "my_chart" {
-  provider         = google-beta
   location         = google_chronicle_native_dashboard.my_dashboard.location
   instance         = google_chronicle_native_dashboard.my_dashboard.instance
   native_dashboard = google_chronicle_native_dashboard.my_dashboard.name
@@ -343,7 +339,6 @@ resource "google_chronicle_dashboard_chart" "my_chart" {
 }
 
 resource "google_chronicle_dashboard_chart" "button_tile" {
-  provider         = google-beta
   location         = google_chronicle_native_dashboard.my_dashboard.location
   instance         = google_chronicle_native_dashboard.my_dashboard.instance
   native_dashboard = google_chronicle_native_dashboard.my_dashboard.name
@@ -375,7 +370,6 @@ resource "google_chronicle_dashboard_chart" "button_tile" {
 }
 
 resource "google_chronicle_dashboard_chart" "markdown_tile" {
-  provider         = google-beta
   location         = google_chronicle_native_dashboard.my_dashboard.location
   instance         = google_chronicle_native_dashboard.my_dashboard.instance
   native_dashboard = google_chronicle_native_dashboard.my_dashboard.name
