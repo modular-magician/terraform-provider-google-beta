@@ -1018,9 +1018,6 @@ func resourceArtifactRegistryRepositoryCreate(d *schema.ResourceData, meta inter
 	if err != nil {
 		return err
 	}
-	if strings.Contains(url, "{{location}}") {
-		return fmt.Errorf("failed to qualify endpoint for a resource with a regionalized endpoint %s", url)
-	}
 
 	log.Printf("[DEBUG] Creating new Repository: %#v", obj)
 	billingProject := ""
@@ -1106,9 +1103,6 @@ func resourceArtifactRegistryRepositoryRead(d *schema.ResourceData, meta interfa
 	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/{{location}}/repositories/{{repository_id}}"))
 	if err != nil {
 		return err
-	}
-	if strings.Contains(url, "{{location}}") {
-		return fmt.Errorf("failed to qualify endpoint for a resource with a regionalized endpoint %s", url)
 	}
 
 	billingProject := ""
@@ -1269,9 +1263,6 @@ func resourceArtifactRegistryRepositoryUpdate(d *schema.ResourceData, meta inter
 	if err != nil {
 		return err
 	}
-	if strings.Contains(url, "{{location}}") {
-		return fmt.Errorf("failed to qualify endpoint for a resource with a regionalized endpoint %s", url)
-	}
 
 	log.Printf("[DEBUG] Updating Repository %q: %#v", d.Id(), obj)
 	headers := make(http.Header)
@@ -1361,9 +1352,6 @@ func resourceArtifactRegistryRepositoryDelete(d *schema.ResourceData, meta inter
 	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/{{location}}/repositories/{{repository_id}}"))
 	if err != nil {
 		return err
-	}
-	if strings.Contains(url, "{{location}}") {
-		return fmt.Errorf("failed to qualify endpoint for a resource with a regionalized endpoint %s", url)
 	}
 
 	var obj map[string]interface{}
