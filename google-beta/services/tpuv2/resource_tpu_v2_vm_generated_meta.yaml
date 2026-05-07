@@ -11,6 +11,7 @@ fields:
     - api_field: acceleratorConfig.type
     - api_field: acceleratorType
     - api_field: apiVersion
+    - api_field: autocheckpointEnabled
     - api_field: cidrBlock
     - api_field: dataDisks.mode
     - api_field: dataDisks.sourceDisk

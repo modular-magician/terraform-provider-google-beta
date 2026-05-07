@@ -236,6 +236,11 @@ as 'accelerator_type'. If neither is specified, 'accelerator_type' defaults to '
 'accelerator_config'. If neither is specified, 'accelerator_type' defaults to 'v2-8'.`,
 				ConflictsWith: []string{"accelerator_config"},
 			},
+			"autocheckpoint_enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: `Whether Autocheckpoint is enabled.`,
+			},
 			"cidr_block": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -690,6 +695,12 @@ func resourceTpuV2VmCreate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("tags"); !tpgresource.IsEmptyValue(reflect.ValueOf(tagsProp)) && (ok || !reflect.DeepEqual(v, tagsProp)) {
 		obj["tags"] = tagsProp
 	}
+	autocheckpointEnabledProp, err := expandTpuV2VmAutocheckpointEnabled(d.Get("autocheckpoint_enabled"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("autocheckpoint_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(autocheckpointEnabledProp)) && (ok || !reflect.DeepEqual(v, autocheckpointEnabledProp)) {
+		obj["autocheckpointEnabled"] = autocheckpointEnabledProp
+	}
 	effectiveLabelsProp, err := expandTpuV2VmEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -910,6 +921,12 @@ func resourceTpuV2VmUpdate(d *schema.ResourceData, meta interface{}) error {
 	} else if v, ok := d.GetOkExists("tags"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, tagsProp)) {
 		obj["tags"] = tagsProp
 	}
+	autocheckpointEnabledProp, err := expandTpuV2VmAutocheckpointEnabled(d.Get("autocheckpoint_enabled"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("autocheckpoint_enabled"); !tpgresource.IsEmptyValue(reflect.ValueOf(v)) && (ok || !reflect.DeepEqual(v, autocheckpointEnabledProp)) {
+		obj["autocheckpointEnabled"] = autocheckpointEnabledProp
+	}
 	effectiveLabelsProp, err := expandTpuV2VmEffectiveLabels(d.Get("effective_labels"), d, config)
 	if err != nil {
 		return err
@@ -940,6 +957,10 @@ func resourceTpuV2VmUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	if d.HasChange("tags") {
 		updateMask = append(updateMask, "tags")
+	}
+
+	if d.HasChange("autocheckpoint_enabled") {
+		updateMask = append(updateMask, "autocheckpointEnabled")
 	}
 
 	if d.HasChange("effective_labels") {
@@ -1457,6 +1478,10 @@ func flattenTpuV2VmSymptomsWorkerId(v interface{}, d *schema.ResourceData, confi
 	return v
 }
 
+func flattenTpuV2VmAutocheckpointEnabled(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func flattenTpuV2VmTerraformLabels(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
 	if v == nil {
 		return v
@@ -1842,6 +1867,10 @@ func expandTpuV2VmTags(v interface{}, d tpgresource.TerraformResourceData, confi
 	return v, nil
 }
 
+func expandTpuV2VmAutocheckpointEnabled(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func expandTpuV2VmEffectiveLabels(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (map[string]string, error) {
 	if v == nil {
 		return map[string]string{}, nil
@@ -1923,6 +1952,9 @@ func ResourceTpuV2VmFlatten(d *schema.ResourceData, meta interface{}, res map[st
 		return fmt.Errorf("Error reading Vm: %s", err)
 	}
 	if err = d.Set("symptoms", flattenTpuV2VmSymptoms(res["symptoms"], d, config)); err != nil {
+		return fmt.Errorf("Error reading Vm: %s", err)
+	}
+	if err = d.Set("autocheckpoint_enabled", flattenTpuV2VmAutocheckpointEnabled(res["autocheckpointEnabled"], d, config)); err != nil {
 		return fmt.Errorf("Error reading Vm: %s", err)
 	}
 	if err = d.Set("terraform_labels", flattenTpuV2VmTerraformLabels(res["labels"], d, config)); err != nil {
