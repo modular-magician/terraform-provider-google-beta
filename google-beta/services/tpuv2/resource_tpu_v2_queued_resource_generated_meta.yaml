@@ -8,6 +8,7 @@ api_version: v2alpha1
 api_resource_type_kind: QueuedResource
 fields:
     - api_field: name
+    - api_field: provisioningModel
     - api_field: tpu.nodeSpec.node.acceleratorType
     - api_field: tpu.nodeSpec.node.description
     - api_field: tpu.nodeSpec.node.networkConfig.canIpForward

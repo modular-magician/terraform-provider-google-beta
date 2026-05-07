@@ -145,6 +145,13 @@ func ResourceTpuV2QueuedResource() *schema.Resource {
 				ForceNew:    true,
 				Description: `The immutable name of the Queued Resource.`,
 			},
+			"provisioning_model": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: verify.ValidateEnum([]string{"STANDARD", "SPOT", "RESERVATION_BOUND", "FLEX_START", ""}),
+				Description:  `The provisioning model for the resource. Possible values: ["STANDARD", "SPOT", "RESERVATION_BOUND", "FLEX_START"]`,
+			},
 			"tpu": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -294,6 +301,12 @@ func resourceTpuV2QueuedResourceCreate(d *schema.ResourceData, meta interface{})
 		return err
 	} else if v, ok := d.GetOkExists("tpu"); !tpgresource.IsEmptyValue(reflect.ValueOf(tpuProp)) && (ok || !reflect.DeepEqual(v, tpuProp)) {
 		obj["tpu"] = tpuProp
+	}
+	provisioningModelProp, err := expandTpuV2QueuedResourceProvisioningModel(d.Get("provisioning_model"), d, config)
+	if err != nil {
+		return err
+	} else if v, ok := d.GetOkExists("provisioning_model"); !tpgresource.IsEmptyValue(reflect.ValueOf(provisioningModelProp)) && (ok || !reflect.DeepEqual(v, provisioningModelProp)) {
+		obj["provisioningModel"] = provisioningModelProp
 	}
 
 	url, err := tpgresource.ReplaceVars(d, config, fmt.Sprintf("%s%s", transport_tpg.BaseUrl(Product, config), "projects/{{project}}/locations/{{zone}}/queuedResources?queuedResourceId={{name}}"))
@@ -658,6 +671,10 @@ func flattenTpuV2QueuedResourceTpuNodeSpecNodeNetworkConfigQueueCount(v interfac
 	return v // let terraform core handle it otherwise
 }
 
+func flattenTpuV2QueuedResourceProvisioningModel(v interface{}, d *schema.ResourceData, config *transport_tpg.Config) interface{} {
+	return v
+}
+
 func expandTpuV2QueuedResourceName(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
 	return v, nil
 }
@@ -856,6 +873,10 @@ func expandTpuV2QueuedResourceTpuNodeSpecNodeNetworkConfigQueueCount(v interface
 	return v, nil
 }
 
+func expandTpuV2QueuedResourceProvisioningModel(v interface{}, d tpgresource.TerraformResourceData, config *transport_tpg.Config) (interface{}, error) {
+	return v, nil
+}
+
 func ResourceTpuV2QueuedResourceFlatten(d *schema.ResourceData, meta interface{}, res map[string]interface{}, config *transport_tpg.Config, project string, userAgent string, billingProject string, url string, headers http.Header) error {
 	var err error
 
@@ -863,6 +884,9 @@ func ResourceTpuV2QueuedResourceFlatten(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("Error reading QueuedResource: %s", err)
 	}
 	if err = d.Set("tpu", flattenTpuV2QueuedResourceTpu(res["tpu"], d, config)); err != nil {
+		return fmt.Errorf("Error reading QueuedResource: %s", err)
+	}
+	if err = d.Set("provisioning_model", flattenTpuV2QueuedResourceProvisioningModel(res["provisioningModel"], d, config)); err != nil {
 		return fmt.Errorf("Error reading QueuedResource: %s", err)
 	}
 

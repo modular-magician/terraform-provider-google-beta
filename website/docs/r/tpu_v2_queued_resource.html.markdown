@@ -104,6 +104,32 @@ resource "google_compute_network" "network" {
   auto_create_subnetworks = false
 }
 ```
+## Example Usage - Tpu V2 Queued Resource Provisioning Options
+
+
+```hcl
+resource "google_tpu_v2_queued_resource" "qr" {
+  provider = google-beta
+
+  name    = "test-qr"
+  zone    = "us-central1-c"
+  project = "my-project-name"
+
+  tpu {
+    node_spec {
+      parent  = "projects/my-project-name/locations/us-central1-c"
+      node_id = "test-tpu"
+      node {
+        runtime_version  = "tpu-vm-tf-2.13.0"
+        accelerator_type = "v2-8"
+        description      = "Text description of the TPU."
+      }
+    }
+  }
+
+  provisioning_model = "SPOT"
+}
+```
 
 ## Argument Reference
 
@@ -119,6 +145,11 @@ The following arguments are supported:
   (Optional)
   Defines a TPU resource.
   Structure is [documented below](#nested_tpu).
+
+* `provisioning_model` -
+  (Optional)
+  The provisioning model for the resource.
+  Possible values are: `STANDARD`, `SPOT`, `RESERVATION_BOUND`, `FLEX_START`.
 
 * `zone` -
   (Optional)

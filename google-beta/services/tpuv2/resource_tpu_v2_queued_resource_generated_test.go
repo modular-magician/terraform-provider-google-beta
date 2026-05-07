@@ -200,6 +200,69 @@ resource "google_compute_network" "network" {
 `, context)
 }
 
+func TestAccTpuV2QueuedResource_tpuV2QueuedResourceProvisioningOptionsExample(t *testing.T) {
+	acctest.SkipIfVcr(t)
+	t.Parallel()
+
+	randomSuffix := acctest.RandString(t, 10)
+
+	context := map[string]interface{}{
+		"project":       envvar.GetTestProjectFromEnv(),
+		"qr_name":       "tf-test-test-qr" + randomSuffix,
+		"tpu_name":      "tf-test-test-tpu" + randomSuffix,
+		"random_suffix": randomSuffix,
+	}
+
+	acctest.VcrTest(t, resource.TestCase{
+		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
+		ProtoV5ProviderFactories: acctest.ProtoV5ProviderBetaFactories(t),
+		CheckDestroy:             testAccCheckTpuV2QueuedResourceDestroyProducer(t),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTpuV2QueuedResource_tpuV2QueuedResourceProvisioningOptionsExample(context),
+			},
+			{
+				ResourceName:            "google_tpu_v2_queued_resource.qr",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"zone"},
+			},
+			{
+				ResourceName:       "google_tpu_v2_queued_resource.qr",
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+				ImportStateKind:    resource.ImportBlockWithResourceIdentity,
+			},
+		},
+	})
+}
+
+func testAccTpuV2QueuedResource_tpuV2QueuedResourceProvisioningOptionsExample(context map[string]interface{}) string {
+	return acctest.Nprintf(`
+resource "google_tpu_v2_queued_resource" "qr" {
+  provider = google-beta
+
+  name    = "%{qr_name}"
+  zone    = "us-central1-c"
+  project = "%{project}"
+
+  tpu {
+    node_spec {
+      parent  = "projects/%{project}/locations/us-central1-c"
+      node_id = "%{tpu_name}"
+      node {
+        runtime_version  = "tpu-vm-tf-2.13.0"
+        accelerator_type = "v2-8"
+        description      = "Text description of the TPU."
+      }
+    }
+  }
+
+  provisioning_model = "SPOT"
+}
+`, context)
+}
+
 func testAccCheckTpuV2QueuedResourceDestroyProducer(t *testing.T) func(s *terraform.State) error {
 	return func(s *terraform.State) error {
 		for name, rs := range s.RootModule().Resources {
